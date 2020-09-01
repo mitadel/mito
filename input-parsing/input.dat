@@ -1,0 +1,14 @@
+output
+ b
+a
+-1.e9
+ 1proc              output directory c
+ outputa              output directory
+output              output directory#aaaa
+outP-utb_1              output directory #aaaa
+ 1.e9                bulk modulus a # [Pa]
+ -1.e9                bulk modulus b # [Pa]
+ -1111.1E01                Poisson's ratio
+1e-1                Poisson's ratio a#
+010.159e+010 a               #
+500 Nmax               #
