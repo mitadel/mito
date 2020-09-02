@@ -2,8 +2,6 @@
 #include <iostream>
 #include <array>
 
-#define TEMPLATE 1
-
 namespace mito {
     typedef double real;
 
@@ -13,14 +11,9 @@ namespace mito {
     using tensor = std::array<real, D * D>;
 
     // should we call it 'field' instead of 'function'? 
-    #if TEMPLATE
     template <typename X, typename Y>
     using function = Y(*)(const X&, real);
-    #else 
-    // the following two lines are equivalent
-    //typedef std::function<vector<3>(const vector<3>&, real)> function;
-    using function = vector<3>(*)(const vector<3>&, real);
-    #endif
+
 }
 
 std::ostream& operator<<(std::ostream& os, const mito::vector<3>& x)
@@ -74,21 +67,14 @@ mito::real myFunctionTensor3DtoReal(const mito::tensor<3>& x, mito::real t)
     return x[0] + x[4] + x[8]; 
 }
 
-#if TEMPLATE
 template <typename X, typename Y>
 int AddDirichletBC(std::string boundaryLabel, const mito::function<X, Y> & myF) 
-#else
-int AddDirichletBC(std::string boundaryLabel, const mito::function & myF) 
-#endif
 {
     std::cout << "Setting Dirichlet BC on " << boundaryLabel << std::endl;
 
-#if TEMPLATE
     X x;
     std::fill(x.begin(), x.end(), 0.0);
-#else
-    mito::vector<3> x = {0.0, 0.0, 0.0};
-#endif
+
     mito::real t = 0.0;
 
     std::cout << "Evaluating BC function at " << x << std::endl;
@@ -107,18 +93,13 @@ int main() {
 
     AddDirichletBC("boundary subset A", &myFunctionA);
 
-    #if TEMPLATE
     mito::function<mito::vector<3>, mito::vector<3> > myFunction{ 
-    #else
-    mito::function myFunction{ 
-    #endif
         [](const mito::vector<3>& x, mito::real t){ 
         return mito::vector<3>{(x[0]-1)*(x[1]+1), 0.0, 0.0};
         }
     };
     AddDirichletBC("boundary subset B", myFunction);
 
-    #if TEMPLATE
     mito::function<mito::vector<3>,mito::vector<2> > myFunction3DtoReal{ 
         [](const mito::vector<3>& x, mito::real t){ 
         return mito::vector<2>{(x[0]-1)*(x[1]+1), 0.0};
@@ -139,20 +120,12 @@ int main() {
 
     mito::function<mito::real,mito::real> myFunctionRealtoReal( 
         [](const mito::real& x, mito::real t){ 
-        return (x-1);
+            return (x-1);
         }
     );
     AddDirichletBC("boundary subset: other function vector2D to real", myOtherFunctionVector2DtoReal);
 
     AddDirichletBC("boundary subset: tensor3D to real", &myFunctionTensor3DtoReal);
-
-    #else
-    // for some reason this does not work with template implementation
-    // lambda function 
-    AddDirichletBC("boundary subset C", {
-        [](const mito::vector<3>& x, mito::real t)
-        {return mito::vector<3>{(x[0]-1)*(x[1]+1), 0.0, 0.0};}});
-    #endif
 
     return 0;
 }
