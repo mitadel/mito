@@ -8,6 +8,8 @@ namespace mito {
     typedef double real;
     typedef std::array<real, 3> vector3D;
     typedef std::array<real, 2> vector2D;
+    typedef std::array<real, 9> tensor3D;
+    typedef std::array<real, 4> tensor2D;
     // should we call it 'field' instead of 'function'? 
     #if TEMPLATE
     template <typename X, typename Y>
@@ -31,6 +33,25 @@ std::ostream& operator<<(std::ostream& os, const mito::vector2D& x)
     return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const mito::tensor3D& x)
+{
+    os << "(" 
+        << x[0] << ", " << x[1] << ", " << x[2] << "; "
+        << x[3] << ", " << x[4] << ", " << x[5] << "; "
+        << x[6] << ", " << x[7] << ", " << x[8] 
+        << ")";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const mito::tensor2D& x)
+{
+    os << "(" 
+        << x[0] << ", " << x[1] << "; "
+        << x[2] << ", " << x[3] 
+        << ")";
+    return os;
+}
+
 mito::vector3D myFunctionA(const mito::vector3D& x, mito::real t)
 {
     return {(x[0]-1)*(x[1]-1), 0.0, 0.0}; 
@@ -44,6 +65,11 @@ mito::vector2D myFunctionC(const mito::vector3D& x, mito::real t)
 mito::real myFunctionVector2DtoReal(const mito::vector2D& x, mito::real t)
 {
     return (x[0]-1)*(x[1]-1); 
+}
+
+mito::real myFunctionTensor3DtoReal(const mito::tensor3D& x, mito::real t)
+{
+    return x[0] + x[4] + x[8]; 
 }
 
 #if TEMPLATE
@@ -113,6 +139,8 @@ int main() {
         }
     );
     AddDirichletBC("boundary subset: other function vector2D to real", myOtherFunctionVector2DtoReal);
+
+    AddDirichletBC("boundary subset: tensor3D to real", &myFunctionTensor3DtoReal);
 
     #else
     // for some reason this does not work with template implementation
