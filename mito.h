@@ -1,6 +1,7 @@
 #include <array>
 #include <functional>
 #include <iostream>
+#include <cassert>
 
 //https://stackoverflow.com/questions/4295432/typedef-function-pointer
 //https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
@@ -12,12 +13,14 @@ namespace mito {
     template <size_t D>
     using vector = std::array<real, D>;
     // typedef for tensors
-    template <size_t D>
-    using tensor = std::array<real, D * D>;
+    template <size_t D1, size_t D2 = D1>
+    using tensor = std::array<real, D1 * D2>;
     // templatized typedef for fields
-    // should we call it 'field' instead of 'function'? 
     template <typename X, typename Y>
-    using function = Y(*)(const X&, real);
+    using field = Y(*)(const X&, real);
+    // templatized typedef for functions
+    template <typename X, typename Y>
+    using function = Y(*)(const X&);
 }
 
 // overload operator<< for vectors and tensors
@@ -51,10 +54,9 @@ std::ostream& operator<<(std::ostream& os, const mito::tensor<2>& x)
         << ")";
     return os;
 }
-
 namespace mito {
 template <typename X, typename Y>
-int AddDirichletBC(std::string boundaryLabel, const function<X, Y> & myF) 
+int AddDirichletBC(std::string boundaryLabel, const field<X, Y> & myF) 
 {
     std::cout << "Setting Dirichlet BC on " << boundaryLabel << std::endl;
 
@@ -63,7 +65,7 @@ int AddDirichletBC(std::string boundaryLabel, const function<X, Y> & myF)
 
     real t = 0.0;
 
-    std::cout << "\tEvaluating BC function at " << x << std::endl;
+    std::cout << "\tEvaluating BC field at " << x << std::endl;
 
     auto y = myF(x, t);
 
