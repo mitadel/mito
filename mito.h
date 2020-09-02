@@ -54,6 +54,55 @@ std::ostream& operator<<(std::ostream& os, const mito::tensor<2>& x)
         << ")";
     return os;
 }
+
+namespace mito {
+
+    real ComputeDeterminant(const tensor<3>& A)
+    {
+        return A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6]) +
+               A[2] * (A[3] * A[7] - A[4] * A[6]);
+    }
+
+    real ComputeDeterminant(const tensor<2>& A)
+    {
+        return A[0] * A[3] - A[1] * A[2];
+    }
+
+    real ComputeInverse(const tensor<3>& A, tensor<3>& invA)
+    {
+        real det = ComputeDeterminant(A);
+        assert(det != 0.0);
+
+        real detinv = 1.0 / det;
+        invA[0] = detinv * (A[4] * A[8] - A[5] * A[7]);
+        invA[1] = detinv * (-A[1] * A[8] + A[2] * A[7]);
+        invA[2] = detinv * (A[1] * A[5] - A[2] * A[4]);
+        invA[3] = detinv * (-A[3] * A[8] + A[5] * A[6]);
+        invA[4] = detinv * (A[0] * A[8] - A[2] * A[6]);
+        invA[5] = detinv * (-A[0] * A[5] + A[2] * A[3]);
+        invA[6] = detinv * (A[3] * A[7] - A[4] * A[6]);
+        invA[7] = detinv * (-A[0] * A[7] + A[1] * A[6]);
+        invA[8] = detinv * (A[0] * A[4] - A[1] * A[3]);
+    
+        return det;
+    }
+
+    real ComputeInverse(const tensor<2>& A, tensor<2>& invA)
+    {
+        real det = ComputeDeterminant(A);
+        assert(det != 0.0);
+
+        real detinv = 1.0 / det;
+        invA[0] = detinv * (A[3]);
+        invA[1] = detinv * (-A[1]);
+        invA[2] = detinv * (-A[2]);
+        invA[3] = detinv * (A[0]);
+
+        return det;
+
+    }
+}
+
 namespace mito {
 template <typename X, typename Y>
 int AddDirichletBC(std::string boundaryLabel, const field<X, Y> & myF) 
