@@ -5,51 +5,51 @@
 #include <summit/fem/function_space.h>
 #include <summit/systems/statics_system.h>
 #include <summit/solvers/linear_solver.h>
-#include <summit/systems/system_writer.h>
-#include <summit/mathlib/point.h>
 
-// radius of the hole
-static real R = 0.01;
-// length of the plate
-static real L = 0.03;
-// shear modulus
-static real MU = 70e9;
-// Poisson's ratio
-static real NU = 0.3;
-// far field sigma_xx
-static real SIGMA_INF = 0.01*MU;
-// tolerance for nodes localization
-static real TOL_X = 1.e-8;
-
-std::array<real> functorB(const std::array<real>& x, real t)
+summit::vector<3> sourceTerm(const summit::vector<3>& x, summit::real t)
 {
-    return std::array<real>(3, 0.0);
+    return {x[0]*t, x[1], x[2]}; 
 }
 
-typedef summit::functor std::functional(std::array<real>&(const std::array<real>& x, real t));
+summit::vector<3> dirichletBC(const summit::vector<3>& x, summit::real t)
+{
+    return {0.0, 0.0, 0.0}; 
+}
 
-summit::functor sourceTerm({ return std::array<real>(3, 0.0);});
+summit::vector<3> neumannBC(const summit::vector<3>& x, summit::real t)
+{
+    return {-1.0, 0.0, 0.0}; 
+}
 
 int main (int argc, char ** argv) 
 {    
-    // instantiate a mesh object
-    summit::Mesh mesh("MESH/plate_with_hole.summit"); 
-    // ---> The mesh is not needed after the discretization 
-    //      Who destroys the mesh?
+    // ------------------------------------
+    // input file
+    // ------------------------------------
+    summit::InputFile input("input.dat");
+    // print all parameters in input file
+    input.Display();
+    // material density 
+    real rho = input.GetReal("density");
+    // material Young's modulus
+    real E = input.GetReal("Young's modulus");
+    // material Poisson's ratio
+    real nu = input.GetReal("Poisson's ratio");
 
-    // TODO: define constitutive law from upper level 
-    // (stress and tangent as functions of u and gradu)
+    // ------------------------------------
+    // mesh file
+    // Remark 1: not needed after the discretization, must be somehow destroyed
+    // Remark 2: the mesh file also contains the boundary 'physical' entities
+    // ------------------------------------
+    // instantiate a mesh object
+    summit::Mesh mesh("mesh.summit"); 
+
     // ------------------------------------
     // material
+    // Remark: would be nice to somehow define constitutive law from upper level
     // ------------------------------------
-    // density (not used: this is a static calculation)
-    real rho = 2500.;
-    // Young's modulus
-    real E = 2. * MU * (1. + NU);
-    // 2D mode (0 = plane stress 2D, 1 = plain strain 2D, 2 = general 3D)
-    int mode = 1;
     // instantiate an elastic material
-    summit::Elastic elasticMaterial(rho, E, NU, 1 /*numIntVars*/, mode);
+    summit::Elastic elasticMaterial(rho, E, nu, 1 /*numIntVars*/, 1 /*plain strain*/);
 
     // ------------------------------------
     // material library
@@ -63,6 +63,9 @@ int main (int argc, char ** argv)
 
     // ------------------------------------
     // function space
+    // Remark: Ideally the function space should own the mesh and destroy it when done with
+    //         the discretization. However, in multi-physics problems, we might need to use the same 
+    //         mesh to build different sets of shape functions...
     // ------------------------------------
     // instantiate a function space object
     summit::FunctionSpace functionSpace(mesh, "CG", "P1");
@@ -73,36 +76,29 @@ int main (int argc, char ** argv)
     // instantiate a system binding the functionSpace (math) and the materialLibrary (physics)
     summit::System system(functionSpace, materialLibrary);
     system.AddSourceTerm(sourceTerm);
-    system.AddDirichletBC("boundaryA", functorA);
-    system.AddNeumannBC("boundaryB", functorB);
+    system.AddDirichletBC("boundary A", dirichletBC);
+    system.AddNeumannBC("boundary B", neumannBC);
 
-    system.AddForPrint("displacement");
-    system.AddForPrint("boundary");
-    system.AddForPrint("forces");
-    system.AddForPrint("stress");
-    system.AddForPrint("analytic displacement", functorAnalytic);
-    system.WriteVTU("output", 0 /*step*/)
+    // ------------------------------------
+    // VTU writer
+    // ------------------------------------
+    // add fields to print
+    system.AddToVTU("displacement");
+    system.AddToVTU("boundary");
+    system.AddToVTU("forces");
+    system.AddToVTU("stress");
+    system.AddToVTU("analytic displacement", functorAnalytic);
 
     // ------------------------------------
     // solver
     // ------------------------------------
     // instantiate a linear solver
     summit::LinearSolver solver(&system);
-        
-    // ------------------------------------
-    // solution
-    // ------------------------------------
-
-    // solve the problem (this assembles and solves the linear system of equations)
+    // solve the problem (this assembles and solves the algebraic system of equations)
     solver.Solve();
-
-    // update the fields (e.g. stress, strain) in the system 
-    system.Update(comMan);
-
     // write the solution to output file
-    system.WriteVTU("output", 1);
+    system.PrintVTU("output", 0 /*step*/);
 
     // all done
     return 0;
-
 }

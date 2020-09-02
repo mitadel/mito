@@ -1,0 +1,3 @@
+1000    # density
+1e6     # Young's modulus
+0.3     # Poisson's ratio
