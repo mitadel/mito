@@ -59,6 +59,13 @@ int main (int argc, char ** argv)
     // instantiate an elastic material
     summit::Elastic elasticMaterial(rho, E, nu, 1 /*numIntVars*/, 1 /*plain strain*/);
 
+    /*
+    stress, tangent, update     are function pointers
+    parameters                  is the set of material parameters
+    internalVariables           is the set of internal variables
+    summit::CustomMaterial myMaterial(&stress, &tangent, &update, parameters, internalVariables);
+    */
+
     // ------------------------------------
     // material library
     // ------------------------------------
