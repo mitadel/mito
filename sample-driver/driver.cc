@@ -21,6 +21,14 @@ summit::vector<3> neumannBC(const summit::vector<3>& x, summit::real t)
     return {-1.0, 0.0, 0.0}; 
 }
 
+bool filterLeft(const summit::vector<3>& x)
+{
+    if (std::fabs(x[0]) < 1e-8)
+        return true;
+
+    return false; 
+}
+
 int main (int argc, char ** argv) 
 {    
     // ------------------------------------
@@ -77,6 +85,7 @@ int main (int argc, char ** argv)
     summit::System system(functionSpace, materialLibrary);
     system.AddSourceTerm(sourceTerm);
     system.AddDirichletBC("boundary A", dirichletBC);
+    system.AddDirichletBC(filterLeft, dirichletBC);
     system.AddNeumannBC("boundary B", neumannBC);
 
     // ------------------------------------
