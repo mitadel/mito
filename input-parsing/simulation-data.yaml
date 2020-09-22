@@ -1,0 +1,69 @@
+domain:
+    mesh:
+        filename: mesh.msh 
+        element type: TET
+        polynomial order: 2
+        discretization: CG
+
+
+external loading:
+    boundary conditions:
+        dirichlet:
+            boundary region tag: [topboundary]
+            value: 0.0
+        neumann: 
+            boundary region tag: [bottomboundary]
+            value: [0 -1*t n[2]]
+    body forces:
+        body region tag: [1]
+        value: [0 -9.81 0]
+
+
+materials:
+    - 
+        name: myelasticmat
+        type: elastic
+        properties: 
+            - Young's modulus: 1.e6
+            - Poisson's ratio: 0.3
+            - density: 1000
+        body region tag: [1, 2]
+    - 
+        name: myplasticmat
+        type: J2plastic
+        properties: 
+            - Young's modulus: 1.e6
+            - Poisson's ratio: 0.3
+            - density: 1000
+            - yield stress: 1.e6
+        body region tag: [3]
+
+
+output: 
+    - 
+        format: vtk
+        directory: output
+        print every: 100
+        record: [displacement, stress, pressure]
+
+    -    
+        format: hdf5
+        directory: CHK
+        print every: 100
+        
+
+solver:
+    type: explicit dynamics
+    time step: compute stable
+    maximum time: 1.e-3
+    initial conditions:
+        - velocity:
+            body region tag: 1
+            value: [0 100*x[0] 0]
+        - displacement:
+            body region tag: 1
+            value: [0 0 0]
+
+
+printouts:
+    
