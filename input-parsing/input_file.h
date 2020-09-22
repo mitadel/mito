@@ -12,12 +12,12 @@ class InputFile {
     // constructor from command line arguments "--input input.dat"
     InputFile(int argc, char** argv); 
     // printout values
-    void Display();
+    void Display() const;
     
     // retrieve number stored in dictionary through its key
-    inline real GetReal(std::string key) {return _dictionaryReals.at(key);}
+    inline real GetReal(std::string key) const {return _dictionaryReals.at(key);}
     // retrieve string stored in dictionary through its key
-    inline std::string GetString(std::string key) {return _dictionaryStrings.at(key);}
+    inline std::string GetString(std::string key) const {return _dictionaryStrings.at(key);}
 
   // private methods
   private:

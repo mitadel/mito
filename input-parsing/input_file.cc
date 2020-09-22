@@ -37,6 +37,7 @@ InputFile::InputFile(std::string inputFileName)
 } 
 
 /* helper function to get input file name from command line arguments */
+namespace {
 std::string getFileName(int argc, char** argv)
 {
     // default input filename
@@ -60,14 +61,15 @@ std::string getFileName(int argc, char** argv)
 
     return inputFileName;
 }
+}
 
 InputFile::InputFile(int argc, char** argv) 
     : InputFile(getFileName(argc, argv)) {}
 
-void InputFile::Display() 
+void InputFile::Display() const
 {
     // report
-    std::cout << "The following input paramters were read:" << std::endl;
+    std::cout << "The following input parameters were read:" << std::endl;
     std::cout << "------------------------------------------------------------" << std::endl;
     std::cout << "Numeric values:" << std::endl;
     // display real values 
