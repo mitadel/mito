@@ -10,13 +10,13 @@ external loading:
     boundary conditions:
         dirichlet:
             boundary region tag: [topboundary]
-            value: 0.0
+            value: "0.0"
         neumann: 
             boundary region tag: [bottomboundary]
-            value: [0 -1*t n[2]]
+            value: "[0 -1*t n[2]]"
     body forces:
         body region tag: [1]
-        value: [0 -9.81 0]
+        value: "[0 -9.81 0]"
 
 
 materials:
@@ -59,11 +59,11 @@ solver:
     initial conditions:
         - velocity:
             body region tag: 1
-            value: [0 100*x[0] 0]
+            value: "[0 100*x[0] 0]"
         - displacement:
             body region tag: 1
-            value: [0 0 0]
+            value: "[0 0 0]"
 
 
-printouts:
+# printouts:
     
