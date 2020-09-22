@@ -1,0 +1,5 @@
+output directory: output
+bulk modulus a: 1.e9
+bulk modulus b: 2e9
+Poisson's ratio: 0.3
+Nmax: 500

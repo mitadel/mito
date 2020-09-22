@@ -1,11 +1,22 @@
-#include "input_file.h"
+#define WITH_YAML
 
+#ifdef WITH_YAML
+#include "yaml_input_file.h"
+static const std::string inputFileName = "input.yaml";
+#else
+#include "input_file.h"
 static const std::string inputFileName = "input.dat";
+#endif
 
 int main (int argc, char** argv) {
 
-    //InputFile input(inputFileName);
-    InputFile input(argc, argv);
+#ifdef WITH_YAML
+    YAMLInputFile input(inputFileName);
+    //YAMLInputFile input(argc, argv);
+#else
+    InputFile input(inputFileName);
+    //InputFile input(argc, argv);
+#endif
     input.Display();
 
     real nu             = input.GetReal("Poisson's ratio");
