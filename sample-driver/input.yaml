@@ -1,0 +1,7 @@
+materials:
+    -
+        type: elastic
+        properties:
+            - density: 1000*kg
+            - Young's modulus: 1e6*Pa
+            - Poisson's ratio: 0.3
