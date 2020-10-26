@@ -2,96 +2,108 @@
 # 1) Should we be breaking down by physics instead? 
 # 2) The discretization should depend on the physics (CG vs DG, P2 vs P1, ...)  
 
-domain:
-    mesh:
-        filename: mesh.msh # Volume and boundary region labels in the mesh 
-        element type: TET
-        polynomial order: 2
-        discretization: CG
+domain: 
+    mesh: mesh.msh # Volume and boundary region labels in the mesh
+    element type: TET
 
 # Complete collection of physics 
-# [structural.statics, structural.dynamics, structural.modal, 
+# [structure.statics, structure.dynamics, structure.modal, 
 #   thermal.steadystate, thermal.transient, 
 #   magnetic.statics, electric.statics, ...
 #   fluid.steadystate, fluid.dynamics,
-# structural, fluid, temperature, ... are associated to one single primal variable
+# structure, fluid, temperature, ... are associated to one single primal variable
 # statics, dynamics, fracture, lubrication, ... add components of the governing equations
-physics: # associated to one single primal variable 
-    - body: [structural.statics, thermal.statics, fluid.statics]
-    - internal boundary: [structural.fracture, fluid.lubrication]
-    - external boundary: []
+physics:
+    - structure: 
+        response: statics
+        #- structure.dynamics: # explicitnewmark, implicitnewmark
+        polynomial order: 2
+        discretization: DG
+        where: body, internalboundary
+    - thermal:
+        response: steadystate
+        polynomial order: 1
+        discretization: CG
+        where: body, internalboundary
+    - fluid: 
+        response: steadystate
+        polynomial order: 1
+        discretization: CG
+        where: body, internalboundary
 
-external loading:
-    structural:
-        - 
-            region tag: [leftboundary, rightboundary]
-            type: FixedSupport # Abaqus: [Acceleration, StandardEarthGravity, RotationalVelocity, 
+
+problem setting:
+    structure:
+        -   region: [leftboundary, rightboundary]
+            type: FixedSupport # Ansys: [Acceleration, StandardEarthGravity, RotationalVelocity, 
                 #   RotationalAcceleration, Pressure, HydrostaticPressure, Force, RemoteForce,
                 #   Moment, FixedSupport, Displacement, RemoteDisplacement, FrictionlessSupport,
                 #   FluidSolidInterface, SystemCouplingRegion, NodalForce, NodalPressure, 
                 #   NodalDisplacement]
-        #-   
-        #    region tag: [body]
+        -   region: [1]
+            type: InitialVelocity
+            value: "[0, 100*x[0], 0]" # X for undeformed, x for current
+        -   region: [1]
+            type: InitialDisplacement
+            value: "[0, 0, 0]"
+        #-   region: [body]
         #    type: BodyForce
         #    value: [0.0, 0.0, -9.81]
     thermal:
-        -
-            region tag: [leftboundary, rightboundary]
-            type: Temperature # Abaqus: [Temperature, Convection, Radiation, HeatFlow, Insulated, 
+        -   region: [leftboundary, rightboundary]
+            type: Temperature # Ansys: [Temperature, Convection, Radiation, HeatFlow, Insulated, 
                 #   HeatFlux, InternalHeatGeneration]
             value: 0.0
         #- 
-        #    region tag: [body]
+        #    region: [body]
         #    type: Convection
         #    value: [Coefficient = 1e-5, AmbientTemperature = 22]
     fluid:
-        - 
-            region tag: [inflow]
+        -   region: [inflow]
             type: InjectionFlow
             value: 0.004 #m3/s
 
-# should we include initial conditions here (e.g. under setup) or include them in the solver?
 
+# should we include initial conditions here (e.g. under setup) or include them in the solver?
 materials:
     - body:
-        - 
-            name: myelasticmat
-            type: elastic
-            properties: 
-                - Young's modulus: 1.e6
-                - Poisson's ratio: 0.3
-                - density: 1000
-                - thermal expansion coefficient: 1.2e-5 # 1/C 
-                - isotropic thermal conductivity: 
-            region: [1, 2]
-        - 
-            name: myplasticmat
-            type: J2plastic
-            properties: 
-                - Young's modulus: 1.e6
-                - Poisson's ratio: 0.3
-                - density: 1000
-                - yield stress: 1.e6
-            region: [3]
+        - name: mymat
+            - structure: 
+                - constitutive law: poroelastic
+                - properties: 
+                    - Young's modulus: 1.e6
+                    - Poisson's ratio: 0.3
+                    - density: 1000
+                    - thermal expansion coefficient: 1.2e-5 # 1/C  (contributes to strain, hence stress)
+            - thermal:
+                - constitutive law: linear isotropic
+                - properties: 
+                    - thermal conductivity: 1.0 # (contributes to heat flux)  
+            - fluid:
+                - constitutive law: Darcy flow
+                - properties:
+                    - porosity: 0.1
+            - region: [1]
     - internal boundary:
-        - 
-            name: crackinterface
-            type: cohesive
-            properties:
-                - penalty: 
-                - critical stress:
-                - energy release rate: 
-                - friction coefficient:
-            region pair: all #[[1, 1], [1, 2]]
-        - 
-            name: fracturingfluid
-            type: lubrication
-            properties: 
-                - viscosity: 
-                - density:
-            region pair: all #[[1, 1], [1,3]]
-    - external boundary:
-        - 
+        - name: myfracture
+            - structure: 
+                - constitutive law: cohesive
+                - properties:
+                    - penalty: 1
+                    - critical stress: 1
+                    - energy release rate: 1
+                    - friction coefficient: 1
+            - thermal:
+                - constitutive law: linear isotropic
+                - properties:
+                    - thermal conductivity: 1.0   
+            - fluid:
+                - constitutive law: lubrication
+                - properties: 
+                    - viscosity: 1
+                    - density: 1000
+            - region: all #[[1, 1], [1, 2]]
+
 
 output: 
     - 
@@ -106,22 +118,29 @@ output:
         directory: CHK
         print every: 100
 
-# QUESTION: should this section be called coupling instead?
+
 solver: 
-    decoupled: # monolithic, staggered, or decoupled
-        - structural.statics:
-            type: linear # linear, newton, or arclength 
-        - thermal.statics:
-            type: linear 
-        - fluid.lubrication:
-            type: linear
-        #- structural.dynamics: # explicitnewmark, implicitnewmark
-    time step: stable
-    maximum time: 1.e-3
-    initial conditions:
-        - velocity:
-            body region tag: 1
-            value: "[0 100*x[0] 0]"
-        - displacement:
-            body region tag: 1
-            value: "[0 0 0]"
+    - A: [structure, thermal, fluid]
+      solver: newton
+      convergence criterion: residual
+      maximum number of iterations: 20
+      tolerance: 1.e-3
+    coupling: A
+    time step: 0.1
+    maximum time: 10
+
+solver: 
+    - A: structure
+      solver: linear
+    - B: fluid
+      solver: linear
+    - C: thermal
+      solver: linear
+    coupling: {A, B, C}
+    time step: 0.1
+    maximum time: 10
+
+    # * means iterate what comes before until convergence
+    #coupling :{"[structure, fluid]": newton, "thermal": linear}* 
+    #coupling: {structure: linear, fluid: linear, thermal: linear}*
+    #coupling: {structure: linear, fluid: linear, thermal: linear}
