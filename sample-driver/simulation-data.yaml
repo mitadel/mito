@@ -1,0 +1,127 @@
+# QUESTIONS
+# 1) Should we be breaking down by physics instead? 
+# 2) The discretization should depend on the physics (CG vs DG, P2 vs P1, ...)  
+
+domain:
+    mesh:
+        filename: mesh.msh # Volume and boundary region labels in the mesh 
+        element type: TET
+        polynomial order: 2
+        discretization: CG
+
+# Complete collection of physics 
+# [structural.statics, structural.dynamics, structural.modal, 
+#   thermal.steadystate, thermal.transient, 
+#   magnetic.statics, electric.statics, ...
+#   fluid.steadystate, fluid.dynamics,
+# structural, fluid, temperature, ... are associated to one single primal variable
+# statics, dynamics, fracture, lubrication, ... add components of the governing equations
+physics: # associated to one single primal variable 
+    - body: [structural.statics, thermal.statics, fluid.statics]
+    - internal boundary: [structural.fracture, fluid.lubrication]
+    - external boundary: []
+
+external loading:
+    structural:
+        - 
+            region tag: [leftboundary, rightboundary]
+            type: FixedSupport # Abaqus: [Acceleration, StandardEarthGravity, RotationalVelocity, 
+                #   RotationalAcceleration, Pressure, HydrostaticPressure, Force, RemoteForce,
+                #   Moment, FixedSupport, Displacement, RemoteDisplacement, FrictionlessSupport,
+                #   FluidSolidInterface, SystemCouplingRegion, NodalForce, NodalPressure, 
+                #   NodalDisplacement]
+        #-   
+        #    region tag: [body]
+        #    type: BodyForce
+        #    value: [0.0, 0.0, -9.81]
+    thermal:
+        -
+            region tag: [leftboundary, rightboundary]
+            type: Temperature # Abaqus: [Temperature, Convection, Radiation, HeatFlow, Insulated, 
+                #   HeatFlux, InternalHeatGeneration]
+            value: 0.0
+        #- 
+        #    region tag: [body]
+        #    type: Convection
+        #    value: [Coefficient = 1e-5, AmbientTemperature = 22]
+    fluid:
+        - 
+            region tag: [inflow]
+            type: InjectionFlow
+            value: 0.004 #m3/s
+
+# should we include initial conditions here (e.g. under setup) or include them in the solver?
+
+materials:
+    - body:
+        - 
+            name: myelasticmat
+            type: elastic
+            properties: 
+                - Young's modulus: 1.e6
+                - Poisson's ratio: 0.3
+                - density: 1000
+                - thermal expansion coefficient: 1.2e-5 # 1/C 
+                - isotropic thermal conductivity: 
+            region: [1, 2]
+        - 
+            name: myplasticmat
+            type: J2plastic
+            properties: 
+                - Young's modulus: 1.e6
+                - Poisson's ratio: 0.3
+                - density: 1000
+                - yield stress: 1.e6
+            region: [3]
+    - internal boundary:
+        - 
+            name: crackinterface
+            type: cohesive
+            properties:
+                - penalty: 
+                - critical stress:
+                - energy release rate: 
+                - friction coefficient:
+            region pair: all #[[1, 1], [1, 2]]
+        - 
+            name: fracturingfluid
+            type: lubrication
+            properties: 
+                - viscosity: 
+                - density:
+            region pair: all #[[1, 1], [1,3]]
+    - external boundary:
+        - 
+
+output: 
+    - 
+        format: vtk
+        name: state
+        directory: output
+        print every: 100
+        record: [displacement, stress, pressure]
+    -    
+        format: hdf5
+        name: checkpoint
+        directory: CHK
+        print every: 100
+
+# QUESTION: should this section be called coupling instead?
+solver: 
+    decoupled: # monolithic, staggered, or decoupled
+        - structural.statics:
+            type: linear # linear, newton, or arclength 
+        - thermal.statics:
+            type: linear 
+        - fluid.lubrication:
+            type: linear
+        #- structural.dynamics: # explicitnewmark, implicitnewmark
+    time step: stable
+    maximum time: 1.e-3
+    initial conditions:
+        - velocity:
+            body region tag: 1
+            value: "[0 100*x[0] 0]"
+        - displacement:
+            body region tag: 1
+            value: "[0 0 0]"
