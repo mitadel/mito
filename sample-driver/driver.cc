@@ -36,13 +36,13 @@ int main (int argc, char ** argv)
     // ------------------------------------
     mito::InputFile input("input.dat");
     // print all parameters in input file
-    input.Display();
+    input.display();
     // material density 
-    real rho = input.GetReal("density");
+    real rho = input.getReal("density");
     // material Young's modulus
-    real E = input.GetReal("Young's modulus");
+    real E = input.getReal("Young's modulus");
     // material Poisson's ratio
-    real nu = input.GetReal("Poisson's ratio");
+    real nu = input.getReal("Poisson's ratio");
 
     // ------------------------------------
     // mesh file
@@ -74,9 +74,9 @@ int main (int argc, char ** argv)
     // instantiate a material library
     mito::MaterialLibrary materialLibrary();
     // add elastic material to the material library
-    materialLibrary.AddMaterial(1, &elasticMaterial);
+    materialLibrary.addMaterial(1, &elasticMaterial);
     // print all material properties in material library
-    materialLibrary.Display();
+    materialLibrary.display();
 
     // ------------------------------------
     // function space
@@ -88,41 +88,44 @@ int main (int argc, char ** argv)
     mito::FunctionSpace functionSpace(mesh, "CG", "P1");
 
     // ------------------------------------
+    // load 
+    // ------------------------------------
+    // define the load to apply to the system (e.g. BCs and source terms)
+    mito::Load load;
+    load.addSourceTerm(sourceTerm);
+    load.addDirichletBC("boundary A", dirichletBC);
+    load.addDirichletBC(filterLeft, dirichletBC);
+    load.addNeumannBC("boundary B", neumannBC);
+
+    // ------------------------------------
     // system
     // ------------------------------------
     // instantiate a system binding the functionSpace (math) and the materialLibrary (physics)
     mito::System system(functionSpace, materialLibrary);
-    system.AddSourceTerm(sourceTerm);
-    system.AddDirichletBC("boundary A", dirichletBC);
-    system.AddDirichletBC(filterLeft, dirichletBC);
-    system.AddNeumannBC("boundary B", neumannBC);
-
-    // define the load to apply to the system (e.g. BCs and source terms)
-    mito::Load 
-    system.Add(load);
+    system.addLoad(load);
 
     // ------------------------------------
     // VTU writer
     // ------------------------------------
     // add fields to print
     auto vtu = vtuWriter("output");
-    vtu.Record("boundary") 
-    vtu.Record("forces") 
-    vtu.Record("stress") 
-    vtu.Record("analytic displacement", functorAnalytic); 
-    system.AddToWriter(vtu);
+    vtu.record("boundary") 
+    vtu.record("forces") 
+    vtu.record("stress") 
+    vtu.record("analytic displacement", functorAnalytic); 
+    system.addWriter(vtu);
 
     // ------------------------------------
     // solver
     // ------------------------------------
     // instantiate a linear solver
     mito::LinearSolver solver;
-    solver.Add(system);
+    solver.add(system);
 
     time loop {
         // solve the problem (this assembles and solves the algebraic system of equations)
-        solver.Step(dt);
-        system.Write(t);
+        solver.step(dt);
+        system.write(t);
     }
 
     // all done
