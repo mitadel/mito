@@ -1,10 +1,8 @@
-# QUESTIONS
-# 1) Should we be breaking down by physics instead? 
-# 2) The discretization should depend on the physics (CG vs DG, P2 vs P1, ...)  
-
+# 
 domain: 
     mesh: mesh.msh # Volume and boundary region labels in the mesh
     element type: TET
+    tetra: 0        # to do mesh refinement with tetra subdivision
 
 # Complete collection of physics 
 # [structure.statics, structure.dynamics, structure.modal, 
@@ -17,19 +15,19 @@ physics:
     - structure: 
         response: statics
         #- structure.dynamics: # explicitnewmark, implicitnewmark
-        polynomial order: 2
+        polynomial: 2
         discretization: DG
-        where: body, internalboundary
+        where: body, body.internalboundary # body is a label identifying a piece of the mesh
     - thermal:
         response: steadystate
-        polynomial order: 1
+        polynomial: 1
         discretization: CG
-        where: body, internalboundary
+        where: body, body.internalboundary
     - fluid: 
         response: steadystate
-        polynomial order: 1
+        polynomial: 1
         discretization: CG
-        where: body, internalboundary
+        where: body, body.internalboundary
 
 
 problem setting:
@@ -40,15 +38,18 @@ problem setting:
                 #   Moment, FixedSupport, Displacement, RemoteDisplacement, FrictionlessSupport,
                 #   FluidSolidInterface, SystemCouplingRegion, NodalForce, NodalPressure, 
                 #   NodalDisplacement]
-        -   region: [1]
+        -   region: [topboundary]
+            type: NodalForce
+            value: "[0, 0, -1]"
+        -   region: [body]
             type: InitialVelocity
             value: "[0, 100*x[0], 0]" # X for undeformed, x for current
-        -   region: [1]
+        -   region: [body]
             type: InitialDisplacement
             value: "[0, 0, 0]"
-        #-   region: [body]
-        #    type: BodyForce
-        #    value: [0.0, 0.0, -9.81]
+        -   region: [body]
+            type: BodyForce
+            value: [0.0, 0.0, -9.81]
     thermal:
         -   region: [leftboundary, rightboundary]
             type: Temperature # Ansys: [Temperature, Convection, Radiation, HeatFlow, Insulated, 
@@ -70,40 +71,41 @@ materials:
         - name: mymat
             - structure: 
                 - constitutive law: poroelastic
-                - properties: 
+                - poroelastic: 
                     - Young's modulus: 1.e6
                     - Poisson's ratio: 0.3
                     - density: 1000
                     - thermal expansion coefficient: 1.2e-5 # 1/C  (contributes to strain, hence stress)
+                - elastic: 
+                    - Young's modulus: 1.e6
+                    - Poisson's ratio: 0.3
+                    - density: 1000
             - thermal:
                 - constitutive law: linear isotropic
-                - properties: 
-                    - thermal conductivity: 1.0 # (contributes to heat flux)  
+                - linear isotropic: 
+                    - conductivity: 1.0 # (contributes to heat flux)  
             - fluid:
                 - constitutive law: Darcy flow
-                - properties:
+                - Darcy flow:
                     - porosity: 0.1
-            - region: [1]
-    - internal boundary:
+    - body.internalBoundary:
         - name: myfracture
             - structure: 
                 - constitutive law: cohesive
-                - properties:
+                - cohesive:
                     - penalty: 1
                     - critical stress: 1
                     - energy release rate: 1
                     - friction coefficient: 1
             - thermal:
                 - constitutive law: linear isotropic
-                - properties:
+                - linear isotropic:
                     - thermal conductivity: 1.0   
             - fluid:
                 - constitutive law: lubrication
-                - properties: 
+                - lubrication: 
                     - viscosity: 1
                     - density: 1000
-            - region: all #[[1, 1], [1, 2]]
-
 
 output: 
     - 
