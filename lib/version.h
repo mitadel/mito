@@ -1,0 +1,20 @@
+// code guard
+#if !defined(mito_version_h)
+#define mito_version_h
+
+// support
+#include <tuple>
+#include <string>
+
+// my declarations
+namespace mito {
+    // my version is an array of three integers and the git hash
+    using version_t = std::tuple<int, int, int, std::string>;
+
+    // access to the version number of the {mito} library
+    version_t version();
+}
+
+#endif
+
+// end of file
