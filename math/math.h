@@ -6,10 +6,12 @@ namespace mito {
 template <DIM D1, DIM D2 = D1>
 class Function {
 
+    typedef function<vector<D1>, real> function_t;
+
   public:
     // constructors
-    Function(function<vector<D1>, real> f) : _f(f), _Df() {}
-    Function(function<vector<D1>, real> f, std::array<function<vector<D1>, real>, D1> Df) : 
+    Function(function_t f) : _f(f), _Df() {}
+    Function(function_t f, std::array<function_t, D1> Df) : 
         _f(f), _Df(Df) {}
 
     ~Function() {}
@@ -22,7 +24,7 @@ class Function {
 
   public:
     // accessor for function partial derivatives
-    inline const function<vector<D1>, real> & Df(size_t i) const {
+    inline const function_t & Df(size_t i) const {
         // assert the function knows its partial derivatives
         assert (_Df.size() > 0);
         // return the i-th partial derivative
@@ -31,9 +33,9 @@ class Function {
 
   private:
     // the function
-    function<vector<D1>, real> _f;
+    function_t _f;
     // the derivatives of f with respect to X (position in the reference configuration)
-    std::array<function<vector<D1>, real>, D1> _Df;
+    std::array<function_t, D1> _Df;
 };
 
 // function to compute the Divergence of a function at point X
