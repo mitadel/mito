@@ -18,17 +18,15 @@ int main () {
     // its partial derivatives 
     std::array<mito::function<mito::vector<mito::DIM2>, mito::real>, mito::DIM2> Df = {Dx, Dy};
 
-    // instantiate a function object (NOTE: it should not be mandatory to pass the derivative to 
-    // the constructor)
-    mito::Function<mito::DIM2> cosFunction(f, Df);
+    // instantiate a function object
+    mito::ScalarField<mito::DIM2> cosine(f, Df);
 
     // a point in the reference configuration
     mito::vector<mito::DIM2> X = {0.0, 0.0};
 
-    // evaluate f and its derivatives
-    std::cout << cosFunction(X) << std::endl; 
-    std::cout << mito::Grad<mito::DIM2>(cosFunction, X) << std::endl; 
-    std::cout << mito::Div<mito::DIM2>(cosFunction, X) << std::endl; 
+    // evaluate f and its gradient
+    std::cout << cosine(X) << std::endl; 
+    std::cout << mito::Grad<mito::DIM2>(cosine, X) << std::endl; 
 
     return 0;
 }
