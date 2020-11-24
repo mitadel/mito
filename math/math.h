@@ -17,25 +17,30 @@ class Function {
         return _f(X);
     }
 
-    inline vector<D1> Grad(const vector<D1> & X) const {
-        vector<D1> GradX;
-        for (int i = 0; i < D1; ++i) {
-            GradX[i] = _Df[i](X);
-        }
-        return GradX;
-    }
-
-    inline real Div(const vector<D1> & X) const {
-    real DivX = 0.0;
-    for (int i = 0; i < D1; ++i) {
-        DivX += _Df[i](X);
-    }
-    return DivX;
-    }
+  public:
+    const function<vector<D1>, real> & Df(size_t i) const {return _Df[i];}
 
   private:
     function<vector<D1>, real> _f;
     std::array<function<vector<D1>, real>, D1> _Df;
 };
+
+template<DIM D1>
+inline real Div(const Function<D1> & function, const vector<D1> & X) {
+    real DivX = 0.0;
+    for (size_t i(0); i < D1; ++i) {
+        DivX += function.Df(i)(X);
+    }
+    return DivX;
+}
+
+template<DIM D1>
+inline vector<D1> Grad(const Function<D1> & function, const vector<D1> & X) {
+    vector<D1> GradX;
+    for (size_t i = 0; i < D1; ++i) {
+        GradX[i] = function.Df(i)(X);
+    }
+    return GradX;
+}
 
 }
