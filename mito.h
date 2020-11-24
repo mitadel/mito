@@ -7,6 +7,8 @@
 //https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
 
 namespace mito {
+    // enum for 1D, 2D or 2D
+    enum DIM {DIM1 = 1, DIM2 = 2, DIM3 = 3};
     // typedef for scalars
     typedef double real;
     // typedef for vectors
