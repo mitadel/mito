@@ -1,3 +1,6 @@
+#ifndef __MITO__
+#define __MITO__
+
 #include <array>
 #include <functional>
 #include <iostream>
@@ -125,3 +128,5 @@ int AddDirichletBC(std::string boundaryLabel, const field<X, Y> & myF)
     return 0;
 }
 }
+#endif //__MITO__
+// end of file

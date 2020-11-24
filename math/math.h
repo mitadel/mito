@@ -1,4 +1,6 @@
 #include "../mito.h"
+#include "../elements/elements.h"
+//#include "../quadrature/quadrature.h"
 
 namespace mito {
 
@@ -6,6 +8,7 @@ namespace mito {
 template <DIM D, DIM D2 = D>
 class ScalarField {
 
+    // typedef for a scalar valued function
     typedef function<vector<D>, real > function_t;
 
   public:
@@ -110,6 +113,25 @@ inline VectorField<D, D> Grad(const ScalarField<D> & function) {
     VectorField<D, D> GradX(std::move(components));
     return std::move(GradX);
 }
+
+template<DIM D>
+class Integrator 
+{
+  public:
+    Integrator(const ElementSet<D> & elementSet, size_t degree) 
+        /*: _quadRule(elementSet.type() + std::to_string(degree))*/ {
+        std::cout << "elementSet.type() = " << elementSet.type() << std::endl;
+    }
+
+    real integrate(const ScalarField<D> & function) {
+        std::cout << "integrating ... " << std::endl;
+        return 0.0;
+    }
+
+  private:
+    //QuadRule _quadRule;
+
+};
 
 }
 

@@ -1,5 +1,6 @@
 #include <cmath>
 #include "../math.h"
+#include "../../elements/elements.h"
 
 using mito::function;
 using mito::vector;
@@ -46,6 +47,13 @@ int main () {
     mito::VectorField<2, DIM2> gradient = mito::Grad<DIM2>(cosine);
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << 
         gradient(X) << std::endl; 
+
+    // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
+    //static mito::ElementSetTri elementSet;
+    mito::ElementSetTri elementSet;
+    size_t r = 1;
+    mito::Integrator<DIM2> integrator(elementSet, r /*degree of exactness*/);
+    real result = integrator.integrate(cosine);
 
     return 0;
 }
