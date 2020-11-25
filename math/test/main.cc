@@ -1,6 +1,7 @@
 #include <cmath>
 #include "../math.h"
 #include "../../elements/elements.h"
+#include "../../quadrature/quadrature.h"
 
 using mito::function;
 using mito::vector;
@@ -54,6 +55,25 @@ int main () {
     size_t r = 1;
     mito::Integrator<DIM2> integrator(elementSet, r /*degree of exactness*/);
     real result = integrator.integrate(cosine);
+
+    mito::QuadRuleTri1 quadratureRule;
+    std::cout << quadratureRule.point(0) << std::endl;
+    std::cout << quadratureRule.weight(0) << std::endl;
+
+    // vertices of one element
+    std::vector<mito::vector<DIM2> > vertices(3);
+    vertices[0][0] = 0.0; 
+    vertices[0][1] = 0.0; 
+
+    vertices[1][0] = 1.0; 
+    vertices[1][1] = 0.0; 
+
+    vertices[2][0] = 0.5; 
+    vertices[2][1] = 0.5; 
+
+    std::vector<mito::vector<DIM2> > quadCoordinates(quadratureRule.npoints());
+    quadratureRule.quadraturePointsCurrentElement(vertices, quadCoordinates);
+    std::cout << quadCoordinates[0] << std::endl;
 
     return 0;
 }
