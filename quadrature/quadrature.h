@@ -1,8 +1,9 @@
 #include "../mito.h"
-#include <vector>
 
 namespace mito {
 
+// template with respect to the dimension d of the parameteric space on the reference element 
+// and on the dimension D of the physical space of the integration domain 
 template <DIM d, DIM D>
 class QuadRule {
   public:
@@ -14,20 +15,32 @@ class QuadRule {
     inline int npoints() const {
         return _weights.size();
     }
+
     inline double weight(size_t i) const {
         assert(i < _weights.size());
         return _weights[i];
     }
+
     inline const mito::vector<d>& point(size_t i) const {
         assert(i < _points.size());
         return _points[i];
     }
 
-    // NOTE: The number of vertices coincides with d, is it always the case?
-    inline void quadraturePointsCurrentElement(const std::vector<mito::vector<D> > & vertices, 
-        std::vector<mito::vector<D> > & coordinates) const {
+    inline const std::vector<double>& weights() const {
+        return _weights;
+    }
 
-        assert (coordinates.size() == _points.size());
+    inline const std::vector<mito::vector<d> >& points() const {
+        return _points;
+    }
+
+    inline std::vector<mito::vector<D> > quadraturePointsCurrentElement(
+        const std::vector<mito::vector<D> > & vertices) const {
+
+        // NOTE: The number of vertices coincides with d, is it always the case?
+        assert(vertices.size() == d);
+
+        std::vector<mito::vector<D> > coordinates(_points.size());
 
         for (size_t i = 0; i < _points.size(); ++i) {
             for (size_t j = 0; j < D; ++j) {
@@ -39,7 +52,7 @@ class QuadRule {
         }
 
         // all done
-        return;
+        return std::move(coordinates);
     } 
 
   protected:
@@ -47,14 +60,43 @@ class QuadRule {
     std::vector<mito::vector<d> > _points;
 };
 
+// Triangle order 1
 class QuadRuleTri1 : public QuadRule<DIM3, DIM2> {
   public:
 
-    // Triangle order 1
-    QuadRuleTri1() : QuadRule<DIM3, DIM2>({1.0 / 2.0} /*weights*/, 
-        {{1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0}} /*points*/) {}
+    // Cowper quadrature rule (1-point formula)
+    QuadRuleTri1() : QuadRule<DIM3, DIM2>(
+        {/*weights*/
+            1.0 / 2.0
+        },
+        {/*points*/
+            {1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0}
+        }
+        ) {}
 
     ~QuadRuleTri1() {}
+
+};
+
+// Triangle order 2
+class QuadRuleTri2 : public QuadRule<DIM3, DIM2> {
+  public:
+
+    // Cowper quadrature rule (1-point formula)
+    QuadRuleTri2() : QuadRule<DIM3, DIM2>(
+        {/*weights*/ 
+            1.0 / 6.0, 
+            1.0 / 6.0, 
+            1.0 / 6.0
+        },
+        {/*points*/
+            {2.0 / 3.0, 1.0 / 6.0, 1.0 / 6.0},
+            {1.0 / 6.0, 2.0 / 3.0, 1.0 / 6.0},
+            {1.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0}
+        }
+        ) {}
+
+    ~QuadRuleTri2() {}
 
 };
 
