@@ -49,9 +49,32 @@ int main () {
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << 
         gradient(X) << std::endl; 
 
+    // connectivity of the mesh
+    mito::Connectivity connectivity(4 /*number of elements*/, 3 /*number of element nodes*/, 
+        { 0, 1, 3, // Element 0: Nodes 0, 1, 3
+          1, 2, 3, // Element 1: Nodes 1, 2, 3
+          3, 2, 4, // Element 2: Nodes 3, 2, 4
+          0, 3, 4  // Element 3: Nodes 0, 3, 4
+        });
+    std::cout << "Connectivity: " << connectivity() << std::endl;
+
+    // coordinates of the mesh nodes
+    mito::NodalField<real> coordinates(5, 2, "coordinates");
+    coordinates(0, 0) = 0.0;
+    coordinates(0, 1) = 0.0;              /* Node 0 */
+    coordinates(1, 0) = 1.0;
+    coordinates(1, 1) = 0.0;              /* Node 1 */
+    coordinates(2, 0) = 1.0;
+    coordinates(2, 1) = 1.0;              /* Node 2 */
+    coordinates(3, 0) = 0.5;
+    coordinates(3, 1) = 0.5;              /* Node 3 */
+    coordinates(4, 0) = 0.0;
+    coordinates(4, 1) = 1.0;              /* Node 4 */
+    std::cout << coordinates << std::endl;
+
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     //static mito::ElementSetTri elementSet;
-    mito::ElementSetTri elementSet;
+    mito::ElementSetTri elementSet(connectivity, coordinates);
     size_t r = 1;
     mito::Integrator<DIM2> integrator(elementSet, r /*degree of exactness*/);
     real result = integrator.integrate(cosine);
