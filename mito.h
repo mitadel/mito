@@ -2,6 +2,7 @@
 #define __MITO__
 
 #include <array>
+#include <vector>
 #include <functional>
 #include <iostream>
 #include <cassert>
@@ -57,6 +58,26 @@ std::ostream& operator<<(std::ostream& os, const mito::tensor<2>& x)
         << x[0] << ", " << x[1] << "; "
         << x[2] << ", " << x[3] 
         << ")";
+    return os;
+}
+
+template<typename X>
+std::ostream& operator<<(std::ostream& os, const std::vector<X>& x){
+    
+    if (x.size() == 0) {
+        os << "[]";
+        return os;
+    }
+
+    os << "[" << x[0];
+
+    for (size_t i = 1; i < x.size(); ++i)
+    {
+        os << ", " << x[i];
+    }
+
+    os << "]";
+
     return os;
 }
 
