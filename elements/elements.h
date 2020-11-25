@@ -13,7 +13,7 @@ class ElementSet
   public:
 
     ElementSet(ElementType type) : _type(type) {}
-    ~ElementSet() {}
+    virtual ~ElementSet() {}
 
     ElementType type() const {return _type;}
     DIM dim() const {return D;};
