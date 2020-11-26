@@ -85,21 +85,26 @@ class Connectivity {
 template <DIM D>
 class Elements {
   public:
-    Elements(size_t nelements, size_t nvertices) : _vertices(nelements), _nvertices(nvertices) {}
+    Elements(size_t nelements, size_t nvertices) : _nelements(nelements), 
+        _nvertices(nvertices), _vertices(nelements * nvertices) {}
     ~Elements() {}
 
-    const real * vertex(size_t v) const {
-        assert(v < _nvertices);
-        return _vertices[v].data();
+    const mito::vector<D> & vertex(size_t e, size_t v) const {
+        assert(e < _nelements && v < _nvertices);
+        return _vertices[e * _nvertices + v];
     }
-    real * vertex(size_t v) {
-        assert(v < _nvertices);
-        return _vertices[v].data();
+
+    mito::vector<D> & vertex(size_t e, size_t v) {
+        assert(e < _nelements && v < _nvertices);
+        return _vertices[e * _nvertices + v];
     }  
 
+    size_t nelements() const {return _nelements;} 
+
   private:
-    std::vector<mito::vector<D> > _vertices;
+    size_t _nelements;
     size_t _nvertices;
+    std::vector<mito::vector<D> > _vertices;
 };
 
 // template with respect to physical dimension D, and to number of nodes per element
@@ -118,7 +123,7 @@ class ElementSet
                     //       the connectivity...
                     const size_t & id = connectivity(e, a);
                     for (size_t d = 0; d < D; ++d) {
-                        _elements.vertex(a)[d] = coordinates(id, d);
+                        _elements.vertex(e, a)[d] = coordinates(id, d);
                     }
                 }
             }
