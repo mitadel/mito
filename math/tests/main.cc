@@ -93,8 +93,28 @@ int main () {
     //static mito::ElementSetTri elementSet;
     mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
     mito::Integrator<mito::TRI, 1 /*degree of exactness*/> integrator(elementSet.elements());
-    real result = integrator.integrate(cosine);
-    std::cout << "Result of integration = " << result << std::endl;
+    real result = integrator.integrate(cosine);     // exact 0.946083
+    std::cout << "Integration of cos(x*y): Result = " << result * 0.5 << std::endl;
+
+    // instantiate a scalar function object
+    mito::ScalarField<DIM2> one([](const vector<DIM2>& x){ return 1.0; });
+    result = integrator.integrate(one);     // exact 1.0
+    std::cout << "Integration of 1: Result = " << result * 0.5 << std::endl;
+
+    // instantiate a scalar function object
+    mito::ScalarField<DIM2> linear([](const vector<DIM2>& x){ return x[0]; });
+    result = integrator.integrate(linear);  // exact 0.5
+    std::cout << "Integration of x: Result = " << result * 0.5 << std::endl;
+
+    // instantiate a scalar function object
+    mito::ScalarField<DIM2> xy([](const vector<DIM2>& x){ return x[0]*x[1]; });
+    result = integrator.integrate(xy);      // exact 0.25
+    std::cout << "Integration of x*y: Result = " << result * 0.5 << std::endl;
+
+    // instantiate a scalar function object
+    mito::ScalarField<DIM2> xx([](const vector<DIM2>& x){ return x[0]*x[0]; });
+    result = integrator.integrate(xx);      // exact 1.0/3.0
+    std::cout << "Integration of x*x: Result = " << result * 0.5 << std::endl;
 
     return 0;
 }
