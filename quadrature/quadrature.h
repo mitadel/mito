@@ -16,7 +16,7 @@ class QuadRule {
     virtual ~QuadRule() {}; 
 
     // accessors
-    inline int nquad() const {
+    inline int nQuad() const {
         return _quadWeights.size();
     }
 
