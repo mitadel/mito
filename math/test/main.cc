@@ -92,8 +92,7 @@ int main () {
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     //static mito::ElementSetTri elementSet;
     mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
-    size_t r = 1;
-    mito::Integrator<DIM2> integrator(elementSet.elements(), r /*degree of exactness*/);
+    mito::Integrator<mito::TRI, 1 /*degree of exactness*/> integrator(elementSet.elements());
     real result = integrator.integrate(cosine);
 
     // vertices of one element

@@ -1,6 +1,6 @@
 #include "../mito.h"
 #include "../elements/elements.h"
-//#include "../quadrature/quadrature.h"
+#include "../quadrature/quadrature.h"
 
 namespace mito {
 
@@ -114,13 +114,17 @@ inline VectorField<D, D> Grad(const ScalarField<D> & function) {
     return std::move(GradX);
 }
 
-template<DIM D>
+// template with respect to element type T and to degree of exactness r of quadrature rule 
+template<ElementType T, size_t r>
 class Integrator 
 {
+    static const DIM D = physicalDim<T>();
+    static const DIM d = parametricDim<T>();
+
   public:
-    Integrator(const Elements<D> & elements, size_t degree) 
-        /*: _quadRule(elementSet.type() + std::to_string(degree))*/ {
-    }
+    Integrator(const Elements<D> & elements) 
+        : _elements(elements), _quadRule(QuadratureRule<T, r>())
+        {}
 
     real integrate(const ScalarField<D> & function) {
         std::cout << "integrating ... " << std::endl;
@@ -128,7 +132,8 @@ class Integrator
     }
 
   private:
-    //QuadRule<D> _quadRule;
+    QuadRule<d, D > _quadRule;
+    const Elements<D > & _elements;
 
 };
 
