@@ -2,6 +2,7 @@
 #define __MITO__QUADRATURE__
 
 #include "../mito.h"
+#include "../elements/elements.h"
 
 namespace mito {
 
@@ -58,6 +59,28 @@ class QuadRule {
         // all done
         return std::move(coordinates);
     } 
+
+    // TOFIX: This should return an ElementQuadratureField 
+    inline std::vector<mito::vector<D> > quadraturePoints(const Elements<D> & elements) const {
+
+        std::vector<mito::vector<D> > coordinates(elements.nElements() * _quadPoints.size());
+
+        for (size_t e = 0; e < elements.nElements(); ++e) {
+            for (size_t i = 0; i < _quadPoints.size(); ++i) {
+                for (size_t j = 0; j < D; ++j) {
+                    coordinates[e * _quadPoints.size() + i][j] = 0.0;
+                    for (size_t v = 0; v < elements.nVertices(); ++v) {
+                        const mito::vector<D> & vertex = elements.vertex(e, v);
+                        coordinates[e * _quadPoints.size() + i][j] 
+                            += _quadPoints[i][j]*vertex[j];
+                    }
+                }
+            }
+        }
+
+        // all done
+        return std::move(coordinates);
+    }
 
   protected:
     std::vector<double> _quadWeights;
