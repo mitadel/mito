@@ -12,7 +12,7 @@
 
 namespace mito {
     // enum for 1D, 2D or 2D
-    enum DIM {DIM1 = 1, DIM2 = 2, DIM3 = 3};
+    enum DIM {DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4};
     // typedef for scalars
     typedef double real;
     // typedef for vectors
