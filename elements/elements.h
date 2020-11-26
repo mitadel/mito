@@ -57,6 +57,11 @@ class Connectivity {
         return _connectivityArray;
     }
 
+    inline size_t nelements() const
+    {
+        return _nel;
+    }
+
   private:
     // number of elements
     size_t _nel;
@@ -64,20 +69,38 @@ class Connectivity {
     std::vector<size_t> _connectivityArray; 
 };
 
+template <DIM D>
+class Elements {
+  public:
+    Elements(size_t nelements) : _vertices(nelements) {}
+    ~Elements() {}
+
+  private:
+    std::vector<mito::vector<D>> _vertices;
+};
+
 template<DIM D, size_t N>
 class ElementSet
 {
   public:
     ElementSet(ElementType type, const Connectivity<N> & connectivity, 
-        const NodalField<real> & coordinates) : _type(type), _connectivity(connectivity) {}
+        const NodalField<real> & coordinates) : _type(type), _connectivity(connectivity), 
+        _elements(connectivity.nelements()) {
+            // TODO: Fill in _elements ...
+
+            // all done
+            return;
+        }
     virtual ~ElementSet() {}
 
     inline ElementType type() const {return _type;}
-    inline DIM dim() const {return D;};
+    inline DIM dim() const {return D;}
+    inline const Elements<D> & elements() const {return _elements;}
 
   private: 
     ElementType _type;
     const Connectivity<N> & _connectivity;
+    Elements<D> _elements;
 };
 
 // template with respect to degree P
