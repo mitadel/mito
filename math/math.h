@@ -27,6 +27,15 @@ class ScalarField {
         return _f(X);
     }
 
+    inline std::vector<real> operator()(const std::vector<vector<D > > & X) const {
+        std::vector<real> values(X.size(), 0.0);
+        // evaluate operator() at all elements of X 
+        for (size_t i = 0; i < X.size(); ++i) {
+            values[i] = operator()(X[i]);
+        }
+        return std::move(values);
+    }
+
   public:
     // accessor for function partial derivatives
     inline const function_t & Df(size_t i) const {
@@ -128,7 +137,21 @@ class Integrator
 
     real integrate(const ScalarField<D> & function) {
         std::cout << "integrating ... " << std::endl;
-        return 0.0;
+
+        std::vector<vector<D> > coordinates = _quadRule.quadraturePoints(_elements);
+        std::vector<real> values = function(coordinates); 
+
+        real result = 0.0;
+
+        // TODO: elem_t, quad_t, dim_t, ...
+        for (size_t e = 0; e < _elements.nElements(); ++e) {
+            for (size_t q = 0; q < _quadRule.nQuad(); ++q) {
+                result += values[e * _quadRule.nQuad() + q] * _quadRule.weight(q) 
+                    * _elements.jacobian(e);
+            }
+        }
+
+        return result;
     }
 
   private:
