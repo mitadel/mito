@@ -7,31 +7,32 @@ namespace mito {
 template <DIM d, DIM D>
 class QuadRule {
   public:
-    QuadRule(const std::vector<double> && weights, const std::vector<mito::vector<d> > && points) : 
-        _weights(weights), _points(points) {}
+    QuadRule(const std::vector<double> && quadWeights, 
+        const std::vector<mito::vector<d> > && quadPoints) 
+        : _quadWeights(quadWeights), _quadPoints(quadPoints) {}
     virtual ~QuadRule() {}; 
 
     // accessors
-    inline int npoints() const {
-        return _weights.size();
+    inline int nquad() const {
+        return _quadWeights.size();
     }
 
     inline double weight(size_t i) const {
-        assert(i < _weights.size());
-        return _weights[i];
+        assert(i < _quadWeights.size());
+        return _quadWeights[i];
     }
 
     inline const mito::vector<d>& point(size_t i) const {
-        assert(i < _points.size());
-        return _points[i];
+        assert(i < _quadPoints.size());
+        return _quadPoints[i];
     }
 
     inline const std::vector<double>& weights() const {
-        return _weights;
+        return _quadWeights;
     }
 
     inline const std::vector<mito::vector<d> >& points() const {
-        return _points;
+        return _quadPoints;
     }
 
     inline std::vector<mito::vector<D> > quadraturePointsCurrentElement(
@@ -40,13 +41,13 @@ class QuadRule {
         // NOTE: The number of vertices coincides with d, is it always the case?
         assert(vertices.size() == d);
 
-        std::vector<mito::vector<D> > coordinates(_points.size());
+        std::vector<mito::vector<D> > coordinates(_quadPoints.size());
 
-        for (size_t i = 0; i < _points.size(); ++i) {
+        for (size_t i = 0; i < _quadPoints.size(); ++i) {
             for (size_t j = 0; j < D; ++j) {
                 coordinates[i][j] = 0.0;
                 for (size_t a = 0; a < vertices.size(); ++a) {
-                    coordinates[i][j] += _points[i][j]*vertices[a][j];
+                    coordinates[i][j] += _quadPoints[i][j]*vertices[a][j];
                 }
             }
         }
@@ -56,8 +57,8 @@ class QuadRule {
     } 
 
   protected:
-    std::vector<double> _weights;
-    std::vector<mito::vector<d> > _points;
+    std::vector<double> _quadWeights;
+    std::vector<mito::vector<d> > _quadPoints;
 };
 
 // Triangle order 1
