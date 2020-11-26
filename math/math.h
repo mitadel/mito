@@ -114,6 +114,7 @@ inline VectorField<D, D> Grad(const ScalarField<D> & function) {
     return std::move(GradX);
 }
 
+#if 0
 template<DIM D>
 class Integrator 
 {
@@ -129,9 +130,10 @@ class Integrator
     }
 
   private:
-    //QuadRule _quadRule;
+    //QuadRule<D> _quadRule;
 
 };
+#endif
 
 }
 

@@ -49,8 +49,25 @@ int main () {
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << 
         gradient(X) << std::endl; 
 
+    /**
+     * Mesh with four elements:
+        (0,1)           (1,1)
+          4               2
+          +---------------+
+          | .           . |
+          |   .       .   |
+          |     .   .     |
+          |       . 3     |
+          |     .   .     |
+          |   .       .   |
+          | .           . |
+          +---------------+
+          0               1
+        (0,0)           (1,0)
+    */
+
     // connectivity of the mesh
-    mito::Connectivity connectivity(4 /*number of elements*/, 3 /*number of element nodes*/, 
+    mito::Connectivity<3 /* nodes per element */> connectivity (4 /*number of elements*/, 
         { 0, 1, 3, // Element 0: Nodes 0, 1, 3
           1, 2, 3, // Element 1: Nodes 1, 2, 3
           3, 2, 4, // Element 2: Nodes 3, 2, 4
@@ -74,10 +91,10 @@ int main () {
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     //static mito::ElementSetTri elementSet;
-    mito::ElementSetTri elementSet(connectivity, coordinates);
+    mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
     size_t r = 1;
-    mito::Integrator<DIM2> integrator(elementSet, r /*degree of exactness*/);
-    real result = integrator.integrate(cosine);
+    //mito::Integrator<DIM2> integrator(elementSet, r /*degree of exactness*/);
+    //real result = integrator.integrate(cosine);
 
     // vertices of one element
     std::vector<mito::vector<DIM2> > verticesElement(3);

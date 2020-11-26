@@ -8,13 +8,15 @@ namespace mito {
 
 enum ElementType {TRI, TET};
 
+// template with respect to N, number of nodes per element
+template <size_t N>
 class Connectivity {
   public:
-    Connectivity(size_t nel, size_t nen) : _nel(nel), _nen(nen), _connectivityArray(nel * nen, 0) {}
-    Connectivity(size_t nel, size_t nen, std::vector<size_t> &&connectivityArray) : 
-        _nel(nel), _nen(nen), _connectivityArray(connectivityArray) {
+    Connectivity(size_t nel) : _nel(nel), _connectivityArray(nel * N, 0) {}
+    Connectivity(size_t nel, std::vector<size_t> &&connectivityArray) : 
+        _nel(nel), _connectivityArray(connectivityArray) {
             // assert that vector's dimension is compatible with nel and nen
-            assert(_connectivityArray.size() == _nel * _nen);
+            assert(_connectivityArray.size() == _nel * N);
             // all done
             return;
         }
@@ -23,26 +25,26 @@ class Connectivity {
 
     inline const size_t & operator()(size_t e, size_t a) const
     {
-        assert(e < _nel && a < _nen);
-        return _connectivityArray[e * _nen + a ];
+        assert(e < _nel && a < N);
+        return _connectivityArray[e * N + a ];
     }
 
     inline size_t & operator()(size_t e, size_t a)
     {
-        assert(e < _nel && a < _nen);
-        return _connectivityArray[e * _nen + a ];
+        assert(e < _nel && a < N);
+        return _connectivityArray[e * N + a ];
     }
 
     inline const size_t & operator()(size_t e) const
     {
         assert(e < _nel);
-        return _connectivityArray[e * _nen];
+        return _connectivityArray[e * N];
     }
 
     inline size_t & operator()(size_t e)
     {
         assert(e < _nel);
-        return _connectivityArray[e * _nen];
+        return _connectivityArray[e * N];
     }
 
     inline const std::vector<size_t> & operator()() const
@@ -58,17 +60,15 @@ class Connectivity {
   private:
     // number of elements
     size_t _nel;
-    // number of nodes per element
-    size_t _nen;
     // connectivity array
     std::vector<size_t> _connectivityArray; 
 };
 
-template<DIM D>
+template<DIM D, size_t N>
 class ElementSet
 {
   public:
-    ElementSet(ElementType type, const Connectivity & connectivity, 
+    ElementSet(ElementType type, const Connectivity<N> & connectivity, 
         const NodalField<real> & coordinates) : _type(type), _connectivity(connectivity) {}
     virtual ~ElementSet() {}
 
@@ -77,14 +77,17 @@ class ElementSet
 
   private: 
     ElementType _type;
-    const Connectivity & _connectivity;
+    const Connectivity<N> & _connectivity;
 };
 
-class ElementSetTri : public ElementSet<DIM2>
+// template with respect to degree P
+template <size_t P>
+class ElementSetTri : public ElementSet<DIM2, (P + 1) * (P + 2) / 2>
 {
   public:
-    ElementSetTri(const Connectivity & connectivity, const NodalField<real> & coordinates) : 
-        ElementSet<DIM2>(TRI, connectivity, coordinates) {}
+    ElementSetTri(const Connectivity<(P + 1) * (P + 2) / 2> & connectivity, 
+        const NodalField<real> & coordinates) 
+        : ElementSet<DIM2, (P + 1) * (P + 2) / 2>(TRI, connectivity, coordinates) {}
     ~ElementSetTri() {}
 
 };
