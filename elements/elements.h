@@ -125,7 +125,12 @@ template <DIM D>
 class Elements {
   public:
     Elements(size_t nElements, size_t nVertices) : _nElements(nElements), 
-        _nVertices(nVertices), _vertices(nElements * nVertices), _jacobians(nElements) {}
+        _nVertices(nVertices), _vertices(nElements * nVertices), _jacobians(nElements) {
+            // compute jacobians
+
+            // all done
+            return;
+        }
     ~Elements() {}
 
     const mito::vector<D> & vertex(size_t e, size_t v) const {
@@ -140,11 +145,13 @@ class Elements {
 
     inline size_t nElements() const {return _nElements;} 
     inline size_t nVertices() const {return _nVertices;} 
+    inline real jacobian(size_t e) const {return _jacobians[e];} 
 
   private:
     size_t _nElements;
     size_t _nVertices;
     std::vector<mito::vector<D> > _vertices;
+    std::vector<real> _jacobians;
 };
 
 // template with respect to physical dimension D, and to number of nodes per element
