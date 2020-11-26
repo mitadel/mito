@@ -21,6 +21,45 @@ inline size_t nvertices<TET>(){
     return 4;
 }
 
+template <ElementType type>
+constexpr inline DIM parametricDim();
+        
+template <>
+constexpr inline DIM parametricDim<TRI>(){
+    return DIM3;
+}
+
+template <>
+constexpr inline DIM parametricDim<TET>(){
+    return DIM4;
+}
+
+template <ElementType type>
+constexpr inline DIM physicalDim();
+        
+template <>
+constexpr inline DIM physicalDim<TRI>(){
+    return DIM2;
+}
+
+template <>
+constexpr inline DIM physicalDim<TET>(){
+    return DIM3;
+}
+
+template <ElementType type>
+inline std::string name();
+        
+template <>
+inline std::string name<TRI>(){
+    return "TRI";
+}
+
+template <>
+inline std::string name<TET>(){
+    return "TET";
+}
+
 // template with respect to N, number of nodes per element
 template <size_t N>
 class Connectivity {
@@ -100,6 +139,7 @@ class Elements {
     }  
 
     size_t nelements() const {return _nelements;} 
+    size_t nvertices() const {return _nvertices;} 
 
   private:
     size_t _nelements;
