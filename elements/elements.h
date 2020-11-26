@@ -10,29 +10,38 @@ enum ElementType {TRI, TET};
 
 class Connectivity {
   public:
-    Connectivity(size_t nel, size_t nen) : _nel(nel), _nen(nen), _connectivityArray(nel * nen) {}
-    Connectivity(size_t nel, size_t nen, std::vector<size_t> connectivityArray) : 
-        _nel(nel), _nen(nen), _connectivityArray(connectivityArray) {}
+    Connectivity(size_t nel, size_t nen) : _nel(nel), _nen(nen), _connectivityArray(nel * nen, 0) {}
+    Connectivity(size_t nel, size_t nen, std::vector<size_t> &&connectivityArray) : 
+        _nel(nel), _nen(nen), _connectivityArray(connectivityArray) {
+            // assert that vector's dimension is compatible with nel and nen
+            assert(_connectivityArray.size() == _nel * _nen);
+            // all done
+            return;
+        }
 
     ~Connectivity() {}
 
     inline const size_t & operator()(size_t e, size_t a) const
     {
+        assert(e < _nel && a < _nen);
         return _connectivityArray[e * _nen + a ];
     }
 
     inline size_t & operator()(size_t e, size_t a)
     {
+        assert(e < _nel && a < _nen);
         return _connectivityArray[e * _nen + a ];
     }
 
     inline const size_t & operator()(size_t e) const
     {
+        assert(e < _nel);
         return _connectivityArray[e * _nen];
     }
 
     inline size_t & operator()(size_t e)
     {
+        assert(e < _nel);
         return _connectivityArray[e * _nen];
     }
 
@@ -63,8 +72,8 @@ class ElementSet
         const NodalField<real> & coordinates) : _type(type), _connectivity(connectivity) {}
     virtual ~ElementSet() {}
 
-    ElementType type() const {return _type;}
-    DIM dim() const {return D;};
+    inline ElementType type() const {return _type;}
+    inline DIM dim() const {return D;};
 
   private: 
     ElementType _type;
