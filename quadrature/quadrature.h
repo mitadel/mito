@@ -1,3 +1,6 @@
+#ifndef __MITO__QUADRATURE__
+#define __MITO__QUADRATURE__
+
 #include "../mito.h"
 
 namespace mito {
@@ -101,6 +104,24 @@ class QuadRuleTri2 : public QuadRule<DIM3, DIM2> {
 
 };
 
+// Factory function to instantiate quadrature rules
+template<ElementType T, size_t r>
+QuadRule<parametricDim<T>(), physicalDim<T>() > QuadratureRule();
+
+template<>
+QuadRule<parametricDim<TRI>(), physicalDim<TRI>() > QuadratureRule<TRI, 1>() {
+    QuadRuleTri1 quadrule; 
+    return std::move(quadrule);
+};
+
+template<>
+QuadRule<parametricDim<TRI>(), physicalDim<TRI>() > QuadratureRule<TRI, 2>() {
+    QuadRuleTri2 quadrule; 
+    return std::move(quadrule);
+};
+
 }  // namespace mito
+
+#endif //__MITO__QUADRATURE__
 
 // end of file
