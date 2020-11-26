@@ -93,8 +93,8 @@ int main () {
     //static mito::ElementSetTri elementSet;
     mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
     size_t r = 1;
-    //mito::Integrator<DIM2> integrator(elementSet, r /*degree of exactness*/);
-    //real result = integrator.integrate(cosine);
+    mito::Integrator<DIM2> integrator(elementSet.elements(), r /*degree of exactness*/);
+    real result = integrator.integrate(cosine);
 
     // vertices of one element
     std::vector<mito::vector<DIM2> > verticesElement(3);

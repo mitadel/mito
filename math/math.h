@@ -114,14 +114,12 @@ inline VectorField<D, D> Grad(const ScalarField<D> & function) {
     return std::move(GradX);
 }
 
-#if 0
 template<DIM D>
 class Integrator 
 {
   public:
-    Integrator(const ElementSet<D> & elementSet, size_t degree) 
+    Integrator(const Elements<D> & elements, size_t degree) 
         /*: _quadRule(elementSet.type() + std::to_string(degree))*/ {
-        std::cout << "elementSet.type() = " << elementSet.type() << std::endl;
     }
 
     real integrate(const ScalarField<D> & function) {
@@ -133,7 +131,6 @@ class Integrator
     //QuadRule<D> _quadRule;
 
 };
-#endif
 
 }
 
