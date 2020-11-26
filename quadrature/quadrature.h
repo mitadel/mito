@@ -109,7 +109,7 @@ class QuadRuleTri1 : public QuadRule<DIM3, DIM2> {
 class QuadRuleTri2 : public QuadRule<DIM3, DIM2> {
   public:
 
-    // Cowper quadrature rule (1-point formula)
+    // Cowper quadrature rule (3-point formula)
     QuadRuleTri2() : QuadRule<DIM3, DIM2>(
         {/*weights*/ 
             1.0 / 6.0, 
