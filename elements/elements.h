@@ -8,6 +8,19 @@ namespace mito {
 
 enum ElementType {TRI, TET};
 
+template <ElementType type>
+inline size_t nvertices();
+        
+template <>
+inline size_t nvertices<TRI>(){
+    return 3;
+}
+
+template <>
+inline size_t nvertices<TET>(){
+    return 4;
+}
+
 // template with respect to N, number of nodes per element
 template <size_t N>
 class Connectivity {
@@ -72,25 +85,48 @@ class Connectivity {
 template <DIM D>
 class Elements {
   public:
-    Elements(size_t nelements) : _vertices(nelements) {}
+    Elements(size_t nelements, size_t nvertices) : _vertices(nelements), _nvertices(nvertices) {}
     ~Elements() {}
 
+    const real * vertex(size_t v) const {
+        assert(v < _nvertices);
+        return _vertices[v].data();
+    }
+    real * vertex(size_t v) {
+        assert(v < _nvertices);
+        return _vertices[v].data();
+    }  
+
   private:
-    std::vector<mito::vector<D>> _vertices;
+    std::vector<mito::vector<D> > _vertices;
+    size_t _nvertices;
 };
 
+// template with respect to physical dimension D, and to number of nodes per element
 template<DIM D, size_t N>
 class ElementSet
 {
   public:
-    ElementSet(ElementType type, const Connectivity<N> & connectivity, 
-        const NodalField<real> & coordinates) : _type(type), _connectivity(connectivity), 
-        _elements(connectivity.nelements()) {
+    ElementSet(ElementType type, size_t nvertices, const Connectivity<N> & connectivity, 
+        const NodalField<real> & coordinates) : _type(type), _nvertices(nvertices), 
+        _connectivity(connectivity), _elements(connectivity.nelements(), _nvertices) {
             // TODO: Fill in _elements ...
+
+            for (size_t e = 0; e < _connectivity.nelements(); ++e) {
+                for (size_t a = 0; a < _nvertices; ++a) {
+                    // TOFIX: Here we assume that the vertices are the first _nvertices entries of 
+                    //       the connectivity...
+                    const size_t & id = connectivity(e, a);
+                    for (size_t d = 0; d < D; ++d) {
+                        _elements.vertex(a)[d] = coordinates(id, d);
+                    }
+                }
+            }
 
             // all done
             return;
         }
+
     virtual ~ElementSet() {}
 
     inline ElementType type() const {return _type;}
@@ -99,6 +135,8 @@ class ElementSet
 
   private: 
     ElementType _type;
+    // number of vertices per element
+    size_t _nvertices;
     const Connectivity<N> & _connectivity;
     Elements<D> _elements;
 };
@@ -110,7 +148,8 @@ class ElementSetTri : public ElementSet<DIM2, (P + 1) * (P + 2) / 2>
   public:
     ElementSetTri(const Connectivity<(P + 1) * (P + 2) / 2> & connectivity, 
         const NodalField<real> & coordinates) 
-        : ElementSet<DIM2, (P + 1) * (P + 2) / 2>(TRI, connectivity, coordinates) {}
+        : ElementSet<DIM2, (P + 1) * (P + 2) / 2>(TRI, nvertices<TRI>(), connectivity, 
+            coordinates) {}
     ~ElementSetTri() {}
 
 };
