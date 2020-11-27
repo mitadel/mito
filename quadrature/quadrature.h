@@ -60,7 +60,7 @@ class QuadRule {
             for (size_t j = 0; j < D; ++j) {
                 coordinates[i][j] = 0.0;
                 for (size_t a = 0; a < vertices.size(); ++a) {
-                    coordinates[i][j] += _quadPoints[i][j]*vertices[a][j];
+                    coordinates[i][j] += _quadPoints[i][a]*vertices[a][j];
                 }
             }
         }
@@ -84,7 +84,7 @@ class QuadRule {
                     for (size_t v = 0; v < elements.nVertices(); ++v) {
                         const mito::vector<D> & vertex = elements.vertex(e, v);
                         coordinates[e * _quadPoints.size() + i][j] 
-                            += _quadPoints[i][j]*vertex[j];
+                            += _quadPoints[i][v]*vertex[j];
                     }
                 }
             }
