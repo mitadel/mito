@@ -2,7 +2,7 @@
 #include <map>
 #include <yaml-cpp/yaml.h>
 
-typedef double real;
+using real = double;
 
 class YAMLInputFile {
 

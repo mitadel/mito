@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 
-typedef double real;
+using real = double;
 
 class InputFile {
 
