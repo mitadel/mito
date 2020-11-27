@@ -60,8 +60,8 @@ class VectorField
     VectorField(std::array<ScalarField<D>, N> components) : _components(components) {}
     ~VectorField() {}
 
-    inline vector<N> operator()(const vector<D> & X) const {
-        vector<N> result;
+    inline std::array<real, N> operator()(const vector<D> & X) const {
+        std::array<real, N> result;
         for (int i = 0; i < N; ++i) {
             result[i] = _components[i](X);
         }

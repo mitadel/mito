@@ -16,10 +16,10 @@ namespace mito {
     // typedef for scalars
     using real = double;
     // typedef for vectors
-    template <size_t D>
+    template <DIM D>
     using vector = std::array<real, D>;
     // typedef for tensors
-    template <size_t D1, size_t D2 = D1>
+    template <DIM D1, DIM D2 = D1>
     using tensor = std::array<real, D1 * D2>;
     // templatized typedef for fields
     template <typename X, typename Y>
@@ -30,19 +30,19 @@ namespace mito {
 }
 
 // overload operator<< for vectors and tensors
-std::ostream& operator<<(std::ostream& os, const mito::vector<3>& x)
+std::ostream& operator<<(std::ostream& os, const mito::vector<mito::DIM3>& x)
 {
     os << "(" << x[0] << ", " << x[1] << ", " << x[2] << ")";
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const mito::vector<2>& x)
+std::ostream& operator<<(std::ostream& os, const mito::vector<mito::DIM2>& x)
 {
     os << "(" << x[0] << ", " << x[1] << ")";
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const mito::tensor<3>& x)
+std::ostream& operator<<(std::ostream& os, const mito::tensor<mito::DIM3>& x)
 {
     os << "(" 
         << x[0] << ", " << x[1] << ", " << x[2] << "; "
@@ -52,7 +52,7 @@ std::ostream& operator<<(std::ostream& os, const mito::tensor<3>& x)
     return os;
 }
 
-std::ostream& operator<<(std::ostream& os, const mito::tensor<2>& x)
+std::ostream& operator<<(std::ostream& os, const mito::tensor<mito::DIM2>& x)
 {
     os << "(" 
         << x[0] << ", " << x[1] << "; "
@@ -83,18 +83,18 @@ std::ostream& operator<<(std::ostream& os, const std::vector<X>& x){
 
 namespace mito {
 
-    real ComputeDeterminant(const tensor<3>& A)
+    real ComputeDeterminant(const tensor<mito::DIM3>& A)
     {
         return A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6]) +
                A[2] * (A[3] * A[7] - A[4] * A[6]);
     }
 
-    real ComputeDeterminant(const tensor<2>& A)
+    real ComputeDeterminant(const tensor<mito::DIM2>& A)
     {
         return A[0] * A[3] - A[1] * A[2];
     }
 
-    real ComputeInverse(const tensor<3>& A, tensor<3>& invA)
+    real ComputeInverse(const tensor<mito::DIM3>& A, tensor<mito::DIM3>& invA)
     {
         real det = ComputeDeterminant(A);
         assert(det != 0.0);
@@ -113,7 +113,7 @@ namespace mito {
         return det;
     }
 
-    real ComputeInverse(const tensor<2>& A, tensor<2>& invA)
+    real ComputeInverse(const tensor<mito::DIM2>& A, tensor<mito::DIM2>& invA)
     {
         real det = ComputeDeterminant(A);
         assert(det != 0.0);
