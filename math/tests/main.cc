@@ -47,7 +47,7 @@ int main () {
         mito::divX<DIM2>(cosineVector, X) << std::endl; 
 
     // build vector field with gradient of cosine function 
-    mito::VectorField<DIM2 /* N */, DIM2 /* D */> gradient = mito::gradX<DIM2>(cosine);
+    mito::VectorField<DIM2 /* N */, DIM2 /* D */> gradient = mito::gradX(cosine);
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << 
         gradient(X) << std::endl; 
 
@@ -69,7 +69,7 @@ int main () {
     */
 
     // connectivity of the mesh
-    mito::Connectivity<3 /* nodes per element */> connectivity (4 /*number of elements*/, 
+    mito::Connectivity<3 /* nodes per element */> connectivity (4 /* number of elements */, 
         { 0, 1, 3, // Element 0: Nodes 0, 1, 3
           1, 2, 3, // Element 1: Nodes 1, 2, 3
           3, 2, 4, // Element 2: Nodes 3, 2, 4
@@ -94,36 +94,43 @@ int main () {
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     //static mito::ElementSetTri elementSet;
     mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
-    mito::Integrator<mito::TRI, 1 /*degree of exactness*/> integrator(elementSet.elements());
+    mito::Integrator<mito::TRI, 2 /* degree of exactness */> integrator(elementSet.elements());
     real result = integrator.integrate(cosine);     // exact 0.946083...
-    std::cout << "Integration of cos(x*y): Result = " << result * 0.5 << std::endl;
+    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
+    std::cout << "Integration of cos(x*y): Result = " << result
+        << ", Error = " << std::fabs(result - 0.946083)
+        << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> one([](const vector<DIM2>& x){ return 1.0; });
     result = integrator.integrate(one);     // exact 1.0
-    std::cout << "Integration of 1: Result = " 
-        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */
+    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
+    std::cout << "Integration of 1: Result = " << result 
+        << ", Error = " << std::fabs(result - 1.0)
         << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> linear([](const vector<DIM2>& x){ return x[0]; });
     result = integrator.integrate(linear);  // exact 0.5
-    std::cout << "Integration of x: Result = " 
-        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */ 
+    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
+    std::cout << "Integration of x: Result = " << result 
+        << ", Error = " << std::fabs(result - 0.5)
         << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xy([](const vector<DIM2>& x){ return x[0]*x[1]; });
     result = integrator.integrate(xy);      // exact 0.25
-    std::cout << "Integration of x*y: Result = " 
-        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */
+    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
+    std::cout << "Integration of x*y: Result = " << result 
+        << ", Error = " << std::fabs(result - 0.25)
         << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xx([](const vector<DIM2>& x){ return x[0]*x[0]; });
     result = integrator.integrate(xx);      // exact 1.0/3.0
-    std::cout << "Integration of x*x: Result = "
-        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */ 
+    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
+    std::cout << "Integration of x*x: Result = " << result 
+        << ", Error = " << std::fabs(result - 1.0/3.0)
         << std::endl;
 
     return 0;
