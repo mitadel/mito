@@ -58,15 +58,15 @@ class ScalarField {
 };
 
 // template on vector dimension N, spatial dimension D
-template <size_t N, DIM D>
+template <DIM N, DIM D>
 class VectorField
 {
   public:
     VectorField(std::array<ScalarField<D>, N> components) : _components(components) {}
     ~VectorField() {}
 
-    inline std::array<real, N> operator()(const vector<D> & X) const {
-        std::array<real, N> result;
+    inline vector<N> operator()(const vector<D> & X) const {
+        vector<N> result;
         for (int i = 0; i < N; ++i) {
             result[i] = _components[i](X);
         }
