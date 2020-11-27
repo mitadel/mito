@@ -37,17 +37,17 @@ int main () {
     std::cout << "Evaluating cosine function cos(x[0] * x[1]) at X = " << X << " : " << 
         cosine(X) << std::endl; 
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << 
-        mito::Grad<DIM2>(cosine, X) << std::endl; 
+        mito::gradX<DIM2>(cosine, X) << std::endl; 
 
     // instantiate a vector function object
     mito::VectorField<2 /* N */, DIM2 /* D */> cosineVector({cosine, cosine});
 
     // evaluate divergence
     std::cout << "Evaluating divergence of cosine vector function at X = " << X << " : " << 
-        mito::Div<DIM2>(cosineVector, X) << std::endl; 
+        mito::divX<DIM2>(cosineVector, X) << std::endl; 
 
     // build vector field with gradient of cosine function 
-    mito::VectorField<2 /* N */, DIM2 /* D */> gradient = mito::Grad<DIM2>(cosine);
+    mito::VectorField<2 /* N */, DIM2 /* D */> gradient = mito::gradX<DIM2>(cosine);
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << 
         gradient(X) << std::endl; 
 

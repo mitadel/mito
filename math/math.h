@@ -93,27 +93,29 @@ class VectorField
 
 // function to compute the Divergence of a vector field at point X 
 template<DIM D>
-inline real Div(const VectorField<D, D> & function, const vector<D> & X) {
-    real DivX = 0.0;
+inline real divX(const VectorField<D, D> & function, const vector<D> & X) {
+    real result = 0.0;
     for (size_t i(0); i < D; ++i) {
-        DivX += function[i].Df(i)(X);
+        result += function[i].Df(i)(X);
     }
-    return DivX;
+    return result;
 }
 
-// function to compute the Gradient of a scalar field at point X
+// function to compute the gradient of a scalar field with respect to the reference configuration 
+// at point X
 template<DIM D>
-inline vector<D> Grad(const ScalarField<D> & function, const vector<D> & X) {
-    vector<D> GradX;
+inline vector<D> gradX(const ScalarField<D> & function, const vector<D> & X) {
+    vector<D> result;
     for (size_t i = 0; i < D; ++i) {
-        GradX[i] = function.Df(i)(X);
+        result[i] = function.Df(i)(X);
     }
-    return std::move(GradX);
+    return std::move(result);
 }
 
-// function to compute the Gradient of a vector field at point X
+// function to compute the gradient of a vector field with respect to the reference configuration 
+// at point X
 template<DIM D>
-inline VectorField<D, D> Grad(const ScalarField<D> & function) {
+inline VectorField<D, D> gradX(const ScalarField<D> & function) {
     // TOFIX: This is the reason why we need a simple constructor with no arguments...
     //       We could avoid it if we could write something like:
     //          std::array<ScalarField<D>, D> components{function.Df(0), ..., function.Df(D-1)};
@@ -125,8 +127,8 @@ inline VectorField<D, D> Grad(const ScalarField<D> & function) {
         components[i] = function.Df(i);
     }
 
-    VectorField<D, D> GradX(std::move(components));
-    return std::move(GradX);
+    VectorField<D, D> result(std::move(components));
+    return std::move(result);
 }
 
 // TODO: Keep in mind that we will need integrator and the above defined fields to compute integrals 
