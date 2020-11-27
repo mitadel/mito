@@ -146,8 +146,8 @@ class Integrator
         // TODO: elem_t, quad_t, dim_t, ...
         for (size_t e = 0; e < _elements.nElements(); ++e) {
             for (size_t q = 0; q < _quadRule.nQuad(); ++q) {
-                result += values[e * _quadRule.nQuad() + q] * _quadRule.weight(q) 
-                    * _elements.jacobian(e);
+                result += values[e * _quadRule.nQuad() + q] * _quadRule.weight(q); 
+                    /* * _elements.jacobian(e); Jacobians are dummy for now and identically zero */ 
             }
         }
 

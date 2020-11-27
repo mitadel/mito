@@ -99,22 +99,30 @@ int main () {
     // instantiate a scalar function object
     mito::ScalarField<DIM2> one([](const vector<DIM2>& x){ return 1.0; });
     result = integrator.integrate(one);     // exact 1.0
-    std::cout << "Integration of 1: Result = " << result * 0.5 << std::endl;
+    std::cout << "Integration of 1: Result = " 
+        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */
+        << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> linear([](const vector<DIM2>& x){ return x[0]; });
     result = integrator.integrate(linear);  // exact 0.5
-    std::cout << "Integration of x: Result = " << result * 0.5 << std::endl;
+    std::cout << "Integration of x: Result = " 
+        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */ 
+        << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xy([](const vector<DIM2>& x){ return x[0]*x[1]; });
     result = integrator.integrate(xy);      // exact 0.25
-    std::cout << "Integration of x*y: Result = " << result * 0.5 << std::endl;
+    std::cout << "Integration of x*y: Result = " 
+        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */
+        << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xx([](const vector<DIM2>& x){ return x[0]*x[0]; });
     result = integrator.integrate(xx);      // exact 1.0/3.0
-    std::cout << "Integration of x*x: Result = " << result * 0.5 << std::endl;
+    std::cout << "Integration of x*x: Result = "
+        << result * 0.5 /* 0.5 is to adjust the missing jacobian multiplication */ 
+        << std::endl;
 
     return 0;
 }
