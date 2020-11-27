@@ -12,13 +12,13 @@
 
 // TOFIX: size_t is evil
 
-// TOFIX: Templating mito::vector and mito::tensor with respect to the enum DIM DOES DO the 
-//        trick of preventing the user from instantiating mito::vector<15>.
-//        "error: invalid conversion from 'int' to 'mito::DIM' [-fpermissive]"
-
 // TOFIX: Consider using tuples when possible as opposed to std::array and std::vector 
 
 namespace mito {
+    // Templating mito::vector and mito::tensor with respect to the enum DIM DOES the trick of 
+    // preventing the user from instantiating mito::vector<15>:
+    //   "error: invalid conversion from 'int' to 'mito::DIM' [-fpermissive]"
+
     // enum for 1D, 2D, 3D, 4D (4D is used for parametric coordinates)
     enum DIM {DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4};
     // typedef for scalars
