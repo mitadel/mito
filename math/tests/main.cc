@@ -8,6 +8,8 @@ using mito::vector;
 using mito::real;
 using mito::DIM2;
 
+// TODO: When everything is in place to compute integrals, add Stokes' theorem as a test.
+
 int main () {
 
     // a scalar function 
@@ -38,14 +40,14 @@ int main () {
         mito::Grad<DIM2>(cosine, X) << std::endl; 
 
     // instantiate a vector function object
-    mito::VectorField<2, DIM2> cosineVector({cosine, cosine});
+    mito::VectorField<2 /* N */, DIM2 /* D */> cosineVector({cosine, cosine});
 
     // evaluate divergence
     std::cout << "Evaluating divergence of cosine vector function at X = " << X << " : " << 
         mito::Div<DIM2>(cosineVector, X) << std::endl; 
 
     // build vector field with gradient of cosine function 
-    mito::VectorField<2, DIM2> gradient = mito::Grad<DIM2>(cosine);
+    mito::VectorField<2 /* N */, DIM2 /* D */> gradient = mito::Grad<DIM2>(cosine);
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << 
         gradient(X) << std::endl; 
 
@@ -93,7 +95,7 @@ int main () {
     //static mito::ElementSetTri elementSet;
     mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
     mito::Integrator<mito::TRI, 1 /*degree of exactness*/> integrator(elementSet.elements());
-    real result = integrator.integrate(cosine);     // exact 0.946083
+    real result = integrator.integrate(cosine);     // exact 0.946083...
     std::cout << "Integration of cos(x*y): Result = " << result * 0.5 << std::endl;
 
     // instantiate a scalar function object

@@ -2,7 +2,12 @@
 #include "../elements/elements.h"
 #include "../quadrature/quadrature.h"
 
+// TOFIX: Check the std::move throughout. I am not sure they do what I expect them to.
+
 namespace mito {
+
+// TODO: Once we converge on what ScalarField, and VectorField look like, we should expand this to
+//       second and fourth order tensors.
 
 // f(X,x,t) with (X \in R^D, x \in R^D2, t \in R) -> R
 template <DIM D, DIM D2 = D>
@@ -114,6 +119,7 @@ inline VectorField<D, D> Grad(const ScalarField<D> & function) {
     //          std::array<ScalarField<D>, D> components{function.Df(0), ..., function.Df(D-1)};
     // e.g.:
     //std::array<ScalarField<D>, D> components {function.Df(0), function.Df(1)};
+    // Checkout: parameter pack, variadic template...
     std::array<ScalarField<D>, D> components;
     for (size_t i = 0; i < D; ++i) {
         components[i] = function.Df(i);
@@ -122,6 +128,9 @@ inline VectorField<D, D> Grad(const ScalarField<D> & function) {
     VectorField<D, D> GradX(std::move(components));
     return std::move(GradX);
 }
+
+// TODO: Keep in mind that we will need integrator and the above defined fields to compute integrals 
+//       of contact forces down the road. Do we have enough machinery for that? 
 
 // template with respect to element type T and to degree of exactness r of quadrature rule 
 template<ElementType T, size_t r>
@@ -143,7 +152,12 @@ class Integrator
 
         real result = 0.0;
 
-        // TODO: elem_t, quad_t, dim_t, ...
+        // TOFIX: Typedef elem_t, quad_t, dim_t so as to give a compilation error if misused
+        //        Also: consider using p2::grid to decouple memory from indexing. 
+        //        Syntax is as follows:
+        //              index_t i {e, q, j};
+        //              values[i];
+
         for (size_t e = 0; e < _elements.nElements(); ++e) {
             for (size_t q = 0; q < _quadRule.nQuad(); ++q) {
                 result += values[e * _quadRule.nQuad() + q] * _quadRule.weight(q); 

@@ -10,8 +10,16 @@
 //https://stackoverflow.com/questions/4295432/typedef-function-pointer
 //https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
 
+// TOFIX: size_t is evil
+
+// TOFIX: Templating mito::vector and mito::tensor with respect to the enum DIM DOES DO the 
+//        trick of preventing the user from instantiating mito::vector<15>.
+//        "error: invalid conversion from 'int' to 'mito::DIM' [-fpermissive]"
+
+// TOFIX: Consider using tuples when possible as opposed to std::array and std::vector 
+
 namespace mito {
-    // enum for 1D, 2D or 2D
+    // enum for 1D, 2D, 3D, 4D (4D is used for parametric coordinates)
     enum DIM {DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4};
     // typedef for scalars
     using real = double;
@@ -28,6 +36,9 @@ namespace mito {
     template <typename X, typename Y>
     using function = Y(*)(const X&);
 }
+
+// TOFIX: Something is wrong with the overloads of operator<<. Sometimes the compiler won't find 
+//        the proper one and give an error. 
 
 // overload operator<< for vectors and tensors
 std::ostream& operator<<(std::ostream& os, const mito::vector<mito::DIM3>& x)

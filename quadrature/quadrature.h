@@ -6,6 +6,10 @@
 
 namespace mito {
 
+// TOFIX: Consider introducing a reference element class. Both the quadrule and the elements class 
+//        can be templated on it, so as to guarantee compatibility between quadrule for the 
+//        integration and the domain of integration at compile time. 
+
 // template with respect to the dimension d of the parameteric space on the reference element 
 // and on the dimension D of the physical space of the integration domain 
 template <DIM d, DIM D>
@@ -39,10 +43,15 @@ class QuadRule {
         return _quadPoints;
     }
 
+    // TOFIX: Methods quadraturePointsCurrentElement and quadraturePoints are actually mapping from 
+    //        the reference element to the current element. This mapping should not be computed by 
+    //        the quadrature rule nor by the elements, but should be a helper global function using
+    //        the public interface of the quadrature rule and of the elements class.
     inline std::vector<mito::vector<D> > quadraturePointsCurrentElement(
         const std::vector<mito::vector<D> > & vertices) const {
 
-        // NOTE: The number of vertices coincides with d, is it always the case?
+        // NOTE: The number of vertices coincides with d. This is the case for simplices but it 
+        //       might not always be the case.
         assert(vertices.size() == d);
 
         std::vector<mito::vector<D> > coordinates(_quadPoints.size());
@@ -60,11 +69,14 @@ class QuadRule {
         return std::move(coordinates);
     } 
 
-    // TOFIX: This should return an ElementQuadratureField 
+    // TOFIX: This should return an ElementQuadratureField. But how do quadrature fields fit in now 
+    //        that we have completely decoupled the integration from the element sets?
+
     inline std::vector<mito::vector<D> > quadraturePoints(const Elements<D> & elements) const {
 
         std::vector<mito::vector<D> > coordinates(elements.nElements() * _quadPoints.size());
 
+        // TOFIX: We should avoid the 4 nested for loops
         for (size_t e = 0; e < elements.nElements(); ++e) {
             for (size_t i = 0; i < _quadPoints.size(); ++i) {
                 for (size_t j = 0; j < D; ++j) {
@@ -86,6 +98,9 @@ class QuadRule {
     std::vector<double> _quadWeights;
     std::vector<mito::vector<d> > _quadPoints;
 };
+
+// TOFIX: QuadRuleTri1 and QuadRuleTri2 should not be classes deriving from QuadRule<DIM3, DIM2> 
+//        but rather instances of QuadRule<DIM3, DIM2>.  
 
 // Triangle order 1
 class QuadRuleTri1 : public QuadRule<DIM3, DIM2> {
@@ -134,13 +149,13 @@ QuadRule<parametricDim<T>(), physicalDim<T>() > QuadratureRule();
 template<>
 QuadRule<parametricDim<TRI>(), physicalDim<TRI>() > QuadratureRule<TRI, 1>() {
     QuadRuleTri1 quadrule; 
-    return std::move(quadrule);
+    return quadrule;
 };
 
 template<>
 QuadRule<parametricDim<TRI>(), physicalDim<TRI>() > QuadratureRule<TRI, 2>() {
     QuadRuleTri2 quadrule; 
-    return std::move(quadrule);
+    return quadrule;
 };
 
 }  // namespace mito

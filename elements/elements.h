@@ -6,6 +6,8 @@
 
 namespace mito {
 
+// TOFIX: Instead of this:
+
 enum ElementType {TRI, TET};
 
 template <ElementType type>
@@ -59,6 +61,27 @@ template <>
 inline std::string name<TET>(){
     return "TET";
 }
+
+// TOFIX:
+//        consider this:
+/*
+struct TRI {
+  static constexpr std::string name = "TRI";
+  static constexpr int physicalDim = 2;
+  static constexpr int parametricDim = physicalDim + 1;
+  static constexpr int nVertices = physicalDim + 1;
+}
+
+struct TET {
+  static constexpr std::string name = "TET";
+  static constexpr int physicalDim = 3;
+  static constexpr int parametricDim = physicalDim + 1;
+  static constexpr int nVertices = physicalDim + 1;
+}
+*/
+//        The advantage is to collect all in the same place the info that element types will need 
+//        to provide. Also, since we are using templates, we do not need TRI and TET to be of the 
+//        same type but just to be able to provide this information.  
 
 // template with respect to N, number of nodes per element
 template <size_t N>
