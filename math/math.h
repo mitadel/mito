@@ -21,8 +21,6 @@ class ScalarField {
     ScalarField(function_t f) : _f(f), _Df() {}
     ScalarField(function_t f, std::array<function_t, D> Df) : 
         _f(f), _Df(Df) {}
-    // TOFIX: This constructor should be deleted, but it is needed. See comment below. 
-    ScalarField() : _f(), _Df() {}
 
     ~ScalarField() {}
 
@@ -112,23 +110,18 @@ inline vector<D> gradX(const ScalarField<D> & function, const vector<D> & X) {
     return std::move(result);
 }
 
+// helper function to compute the gradient of a vector field with respect to the reference 
+// configuration at point X (template with index sequence)
+template<DIM D, std::size_t... I>
+inline VectorField<D, D> _gradX(const ScalarField<D> & function, std::index_sequence<I...>) {
+    return VectorField<D, D>({ function.Df(I)... });
+}
+
 // function to compute the gradient of a vector field with respect to the reference configuration 
 // at point X
 template<DIM D>
 inline VectorField<D, D> gradX(const ScalarField<D> & function) {
-    // TOFIX: This is the reason why we need a simple constructor with no arguments...
-    //       We could avoid it if we could write something like:
-    //          std::array<ScalarField<D>, D> components{function.Df(0), ..., function.Df(D-1)};
-    // e.g.:
-    //std::array<ScalarField<D>, D> components {function.Df(0), function.Df(1)};
-    // Checkout: parameter pack, variadic template...
-    std::array<ScalarField<D>, D> components;
-    for (size_t i = 0; i < D; ++i) {
-        components[i] = function.Df(i);
-    }
-
-    VectorField<D, D> result(std::move(components));
-    return std::move(result);
+    return _gradX(function, std::make_index_sequence<D>{});
 }
 
 // TODO: Keep in mind that we will need integrator and the above defined fields to compute integrals 
