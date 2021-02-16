@@ -33,7 +33,7 @@ namespace mito {
     template <typename X, typename Y>
     using field = Y(*)(const X&, real);
     // templatized typedef for functions
-    template <typename X, typename Y>
+    template <typename X, typename Y = real>
     using function = Y(*)(const X&);
 }
 

@@ -14,7 +14,7 @@ template <DIM D, DIM D2 = D>
 class ScalarField {
 
     // typedef for a scalar valued function
-    using function_t = function<vector<D>, real >;
+    using function_t = function<vector<D>>;
 
   public:
     // constructors

@@ -13,19 +13,19 @@ using mito::DIM2;
 int main () {
 
     // a scalar function 
-    function<vector<DIM2>, real > f{ 
+    function<vector<DIM2>> f{ 
         [](const vector<DIM2>& x){ return cos(x[0] * x[1]); } };
 
     // df/dx[0]
-    function<vector<DIM2>, real > Dx{ 
+    function<vector<DIM2>> Dx{ 
         [](const vector<DIM2>& x){ return -sin(x[0] * x[1])* x[1]; } };
 
     // df/dx[1] 
-    function<vector<DIM2>, real > Dy{ 
+    function<vector<DIM2>> Dy{ 
         [](const vector<DIM2>& x){ return -sin(x[0] * x[1])* x[0]; } };
 
     // its partial derivatives 
-    std::array<function<vector<DIM2>, real>, DIM2> Df = {Dx, Dy};
+    std::array<function<vector<DIM2>>, DIM2> Df = {Dx, Dy};
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> cosine(f, Df);
