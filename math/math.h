@@ -128,15 +128,15 @@ inline VectorField<D, D> gradX(const ScalarField<D> & function) {
 //       of contact forces down the road. Do we have enough machinery for that? 
 
 // template with respect to element type T and to degree of exactness r of quadrature rule 
-template<ElementType T, int r>
+template<class ElementType, int r>
 class Integrator 
 {
-    static const DIM D = physicalDim<T>();
-    static const DIM d = parametricDim<T>();
+    static const DIM D = ElementType::physicalDim;
+    static const DIM d = ElementType::parametricDim;
 
   public:
     Integrator(const Elements<D> & elements) 
-        : _elements(elements), _quadRule(QuadratureRule<T, r>())
+        : _elements(elements), _quadRule(QuadratureRule<ElementType, r>())
         {}
 
     real integrate(const ScalarField<D> & function) {

@@ -143,17 +143,17 @@ class QuadRuleTri2 : public QuadRule<DIM3, DIM2> {
 };
 
 // Factory function to instantiate quadrature rules
-template<ElementType T, int r>
-QuadRule<parametricDim<T>(), physicalDim<T>() > QuadratureRule();
+template<class ElementType, int r>
+QuadRule<ElementType::parametricDim, ElementType::physicalDim > QuadratureRule();
 
 template<>
-QuadRule<parametricDim<TRI>(), physicalDim<TRI>() > QuadratureRule<TRI, 1>() {
+QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 1>() {
     QuadRuleTri1 quadrule; 
     return quadrule;
 };
 
 template<>
-QuadRule<parametricDim<TRI>(), physicalDim<TRI>() > QuadratureRule<TRI, 2>() {
+QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 2>() {
     QuadRuleTri2 quadrule; 
     return quadrule;
 };
