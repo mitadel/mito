@@ -99,33 +99,26 @@ class QuadRule {
     std::vector<mito::vector<d> > _quadPoints;
 };
 
-// TOFIX: QuadRuleTri1 and QuadRuleTri2 should not be classes deriving from QuadRule<DIM3, DIM2> 
-//        but rather instances of QuadRule<DIM3, DIM2>.  
+// Factory function to instantiate quadrature rules
+template<class ElementType, int r>
+QuadRule<ElementType::parametricDim, ElementType::physicalDim > QuadratureRule();
 
-// Triangle order 1
-class QuadRuleTri1 : public QuadRule<DIM3, DIM2> {
-  public:
-
-    // Cowper quadrature rule (1-point formula)
-    QuadRuleTri1() : QuadRule<DIM3, DIM2>(
+template<>
+QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 1>() {
+    // Triangle order 1
+    QuadRule<TRI::parametricDim, TRI::physicalDim> quadrule(
         {/*weights*/
             1.0 / 2.0
         },
         {/*points*/
             {1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0}
-        }
-        ) {}
-
-    ~QuadRuleTri1() {}
-
+        });
+    return quadrule;
 };
 
-// Triangle order 2
-class QuadRuleTri2 : public QuadRule<DIM3, DIM2> {
-  public:
-
-    // Cowper quadrature rule (3-point formula)
-    QuadRuleTri2() : QuadRule<DIM3, DIM2>(
+template<>
+QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 2>() {
+    QuadRule<TRI::parametricDim, TRI::physicalDim> quadrule(
         {/*weights*/ 
             1.0 / 6.0, 
             1.0 / 6.0, 
@@ -136,25 +129,7 @@ class QuadRuleTri2 : public QuadRule<DIM3, DIM2> {
             {1.0 / 6.0, 2.0 / 3.0, 1.0 / 6.0},
             {1.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0}
         }
-        ) {}
-
-    ~QuadRuleTri2() {}
-
-};
-
-// Factory function to instantiate quadrature rules
-template<class ElementType, int r>
-QuadRule<ElementType::parametricDim, ElementType::physicalDim > QuadratureRule();
-
-template<>
-QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 1>() {
-    QuadRuleTri1 quadrule; 
-    return quadrule;
-};
-
-template<>
-QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 2>() {
-    QuadRuleTri2 quadrule; 
+    );
     return quadrule;
 };
 
