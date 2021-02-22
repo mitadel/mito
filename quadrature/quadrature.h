@@ -25,12 +25,12 @@ class QuadRule {
         return _quadWeights.size();
     }
 
-    inline double weight(size_t i) const {
+    inline double weight(int i) const {
         assert(i < _quadWeights.size());
         return _quadWeights[i];
     }
 
-    inline const mito::vector<d>& point(size_t i) const {
+    inline const mito::vector<d>& point(int i) const {
         assert(i < _quadPoints.size());
         return _quadPoints[i];
     }
@@ -56,10 +56,10 @@ class QuadRule {
 
         std::vector<mito::vector<D> > coordinates(_quadPoints.size());
 
-        for (size_t i = 0; i < _quadPoints.size(); ++i) {
-            for (size_t j = 0; j < D; ++j) {
+        for (auto i = 0; i < _quadPoints.size(); ++i) {
+            for (auto j = 0; j < D; ++j) {
                 coordinates[i][j] = 0.0;
-                for (size_t a = 0; a < vertices.size(); ++a) {
+                for (auto a = 0; a < vertices.size(); ++a) {
                     coordinates[i][j] += _quadPoints[i][a]*vertices[a][j];
                 }
             }
@@ -77,11 +77,11 @@ class QuadRule {
         std::vector<mito::vector<D> > coordinates(elements.nElements() * _quadPoints.size());
 
         // TOFIX: We should avoid the 4 nested for loops
-        for (size_t e = 0; e < elements.nElements(); ++e) {
-            for (size_t i = 0; i < _quadPoints.size(); ++i) {
-                for (size_t j = 0; j < D; ++j) {
+        for (auto e = 0; e < elements.nElements(); ++e) {
+            for (auto i = 0; i < _quadPoints.size(); ++i) {
+                for (auto j = 0; j < D; ++j) {
                     coordinates[e * _quadPoints.size() + i][j] = 0.0;
-                    for (size_t v = 0; v < elements.nVertices(); ++v) {
+                    for (auto v = 0; v < elements.nVertices(); ++v) {
                         const mito::vector<D> & vertex = elements.vertex(e, v);
                         coordinates[e * _quadPoints.size() + i][j] 
                             += _quadPoints[i][v]*vertex[j];
@@ -143,7 +143,7 @@ class QuadRuleTri2 : public QuadRule<DIM3, DIM2> {
 };
 
 // Factory function to instantiate quadrature rules
-template<ElementType T, size_t r>
+template<ElementType T, int r>
 QuadRule<parametricDim<T>(), physicalDim<T>() > QuadratureRule();
 
 template<>

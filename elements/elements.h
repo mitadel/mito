@@ -11,15 +11,15 @@ namespace mito {
 enum ElementType {TRI, TET};
 
 template <ElementType type>
-inline size_t nVertices();
+inline int nVertices();
         
 template <>
-inline size_t nVertices<TRI>(){
+inline int nVertices<TRI>(){
     return 3;
 }
 
 template <>
-inline size_t nVertices<TET>(){
+inline int nVertices<TET>(){
     return 4;
 }
 
@@ -84,11 +84,11 @@ struct TET {
 //        same type but just to be able to provide this information.  
 
 // template with respect to N, number of nodes per element
-template <size_t N>
+template <int N>
 class Connectivity {
   public:
-    Connectivity(size_t nel) : _nel(nel), _connectivityArray(nel * N, 0) {}
-    Connectivity(size_t nel, std::vector<size_t> &&connectivityArray) : 
+    Connectivity(int nel) : _nel(nel), _connectivityArray(nel * N, 0) {}
+    Connectivity(int nel, std::vector<int> &&connectivityArray) : 
         _nel(nel), _connectivityArray(connectivityArray) {
             // assert that vector's dimension is compatible with nel and nen
             assert(_connectivityArray.size() == _nel * N);
@@ -98,56 +98,56 @@ class Connectivity {
 
     ~Connectivity() {}
 
-    inline const size_t & operator()(size_t e, size_t a) const
+    inline const int & operator()(int e, int a) const
     {
         assert(e < _nel && a < N);
         return _connectivityArray[e * N + a ];
     }
 
-    inline size_t & operator()(size_t e, size_t a)
+    inline int & operator()(int e, int a)
     {
         assert(e < _nel && a < N);
         return _connectivityArray[e * N + a ];
     }
 
-    inline const size_t & operator()(size_t e) const
+    inline const int & operator()(int e) const
     {
         assert(e < _nel);
         return _connectivityArray[e * N];
     }
 
-    inline size_t & operator()(size_t e)
+    inline int & operator()(int e)
     {
         assert(e < _nel);
         return _connectivityArray[e * N];
     }
 
-    inline const std::vector<size_t> & operator()() const
+    inline const std::vector<int> & operator()() const
     {
         return _connectivityArray;
     }
 
-    inline std::vector<size_t> & operator()()
+    inline std::vector<int> & operator()()
     {
         return _connectivityArray;
     }
 
-    inline size_t nElements() const
+    inline int nElements() const
     {
         return _nel;
     }
 
   private:
     // number of elements
-    size_t _nel;
+    int _nel;
     // connectivity array
-    std::vector<size_t> _connectivityArray; 
+    std::vector<int> _connectivityArray; 
 };
 
 template <DIM D>
 class Elements {
   public:
-    Elements(size_t nElements, size_t nVertices) : _nElements(nElements), 
+    Elements(int nElements, int nVertices) : _nElements(nElements), 
         _nVertices(nVertices), _vertices(nElements * nVertices), _jacobians(nElements) {
             // compute jacobians
 
@@ -156,43 +156,43 @@ class Elements {
         }
     ~Elements() {}
 
-    const mito::vector<D> & vertex(size_t e, size_t v) const {
+    const mito::vector<D> & vertex(int e, int v) const {
         assert(e < _nElements && v < _nVertices);
         return _vertices[e * _nVertices + v];
     }
 
-    mito::vector<D> & vertex(size_t e, size_t v) {
+    mito::vector<D> & vertex(int e, int v) {
         assert(e < _nElements && v < _nVertices);
         return _vertices[e * _nVertices + v];
     }  
 
-    inline size_t nElements() const {return _nElements;} 
-    inline size_t nVertices() const {return _nVertices;} 
-    inline real jacobian(size_t e) const {return _jacobians[e];} 
+    inline int nElements() const {return _nElements;} 
+    inline int nVertices() const {return _nVertices;} 
+    inline real jacobian(int e) const {return _jacobians[e];} 
 
   private:
-    size_t _nElements;
-    size_t _nVertices;
+    int _nElements;
+    int _nVertices;
     std::vector<mito::vector<D> > _vertices;
     std::vector<real> _jacobians;
 };
 
 // template with respect to physical dimension D, and to number of nodes per element
-template<DIM D, size_t N>
+template<DIM D, int N>
 class ElementSet
 {
   public:
-    ElementSet(ElementType type, size_t nVertices, const Connectivity<N> & connectivity, 
+    ElementSet(ElementType type, int nVertices, const Connectivity<N> & connectivity, 
         const NodalField<real> & coordinates) : _type(type), _nVertices(nVertices), 
         _connectivity(connectivity), _elements(connectivity.nElements(), _nVertices) {
             // TODO: Fill in _elements ...
 
-            for (size_t e = 0; e < _connectivity.nElements(); ++e) {
-                for (size_t a = 0; a < _nVertices; ++a) {
+            for (auto e = 0; e < _connectivity.nElements(); ++e) {
+                for (auto a = 0; a < _nVertices; ++a) {
                     // TOFIX: Here we assume that the vertices are the first _nVertices entries of 
                     //       the connectivity...
-                    const size_t & id = connectivity(e, a);
-                    for (size_t d = 0; d < D; ++d) {
+                    const int & id = connectivity(e, a);
+                    for (auto d = 0; d < D; ++d) {
                         _elements.vertex(e, a)[d] = coordinates(id, d);
                     }
                 }
@@ -211,13 +211,13 @@ class ElementSet
   private: 
     ElementType _type;
     // number of vertices per element
-    size_t _nVertices;
+    int _nVertices;
     const Connectivity<N> & _connectivity;
     Elements<D> _elements;
 };
 
 // template with respect to degree P
-template <size_t P>
+template <int P>
 class ElementSetTri : public ElementSet<DIM2, (P + 1) * (P + 2) / 2>
 {
   public:

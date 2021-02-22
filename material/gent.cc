@@ -9,7 +9,7 @@ class Gent {
     Gent(real rho, real kappa, real mu, real Jm) : 
         _rho(rho), _kappa(kappa), _mu(mu), _Jm(Jm) {};
     
-    template<size_t D /*dim*/>
+    template<DIM D /*dim*/>
     void Constitutive(const vector<D>& u, const tensor<D>& Du, tensor<D>& P);
 
   private:
@@ -19,7 +19,7 @@ class Gent {
     real _Jm;
 };
 
-template<size_t D /*dim*/>
+template<DIM D /*dim*/>
 void
 Gent::Constitutive(const vector<D>& u, const tensor<D>& Du, tensor<D>& P)
 {

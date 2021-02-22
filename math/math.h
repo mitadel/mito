@@ -33,7 +33,7 @@ class ScalarField {
     inline std::vector<real> operator()(const std::vector<vector<D > > & X) const {
         std::vector<real> values(X.size(), 0.0);
         // evaluate operator() at all elements of X 
-        for (size_t i = 0; i < X.size(); ++i) {
+        for (auto i = 0; i < X.size(); ++i) {
             values[i] = operator()(X[i]);
         }
         return std::move(values);
@@ -41,7 +41,7 @@ class ScalarField {
 
   public:
     // accessor for function partial derivatives
-    inline const function_t & Df(size_t i) const {
+    inline const function_t & Df(dim_t i) const {
         // assert there exists the i-th partial derivative
         assert (i < _Df.size());
         // return the i-th partial derivative
@@ -71,14 +71,14 @@ class VectorField
         return std::move(result);
     }
 
-    inline const ScalarField<D> & operator[](size_t i) const {
+    inline const ScalarField<D> & operator[](dim_t i) const {
         // assert there exists the i-th partial derivative
         assert (i < _components.size());
         // return the i-th component
         return _components[i];
     }
 
-    inline ScalarField<D> & operator[](size_t i) {
+    inline ScalarField<D> & operator[](dim_t i) {
         // assert there exists the i-th partial derivative
         assert (i < _components.size());
         // return the i-th component
@@ -93,7 +93,7 @@ class VectorField
 template<DIM D>
 inline real divX(const VectorField<D, D> & function, const vector<D> & X) {
     real result = 0.0;
-    for (size_t i(0); i < D; ++i) {
+    for (auto i(0); i < D; ++i) {
         result += function[i].Df(i)(X);
     }
     return result;
@@ -104,7 +104,7 @@ inline real divX(const VectorField<D, D> & function, const vector<D> & X) {
 template<DIM D>
 inline vector<D> gradX(const ScalarField<D> & function, const vector<D> & X) {
     vector<D> result;
-    for (size_t i = 0; i < D; ++i) {
+    for (auto i = 0; i < D; ++i) {
         result[i] = function.Df(i)(X);
     }
     return std::move(result);
@@ -128,7 +128,7 @@ inline VectorField<D, D> gradX(const ScalarField<D> & function) {
 //       of contact forces down the road. Do we have enough machinery for that? 
 
 // template with respect to element type T and to degree of exactness r of quadrature rule 
-template<ElementType T, size_t r>
+template<ElementType T, int r>
 class Integrator 
 {
     static const DIM D = physicalDim<T>();
@@ -153,8 +153,8 @@ class Integrator
         //              index_t i {e, q, j};
         //              values[i];
 
-        for (size_t e = 0; e < _elements.nElements(); ++e) {
-            for (size_t q = 0; q < _quadRule.nQuad(); ++q) {
+        for (auto e = 0; e < _elements.nElements(); ++e) {
+            for (auto q = 0; q < _quadRule.nQuad(); ++q) {
                 result += values[e * _quadRule.nQuad() + q] * _quadRule.weight(q); 
                     /* * _elements.jacobian(e); Jacobians are dummy for now and identically zero */ 
             }

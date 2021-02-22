@@ -6,7 +6,7 @@ template <typename T>
 class NodalField {
   public:
 
-    NodalField(size_t nodes, size_t dim, std::string name = "") 
+    NodalField(int nodes, int dim, std::string name = "") 
         : _nodes(nodes), _dim(dim), _name(name), _nodalField(_nodes * _dim, 0.0) {}
 
     ~NodalField(){}
@@ -14,11 +14,11 @@ class NodalField {
     /**
      * Operator()
      */
-    const T& operator()(const size_t a, const size_t i) const {
+    const T& operator()(const int a, const int i) const {
         return _nodalField[_dim * a + i];
     }
 
-    T& operator()(const size_t a, const size_t i) {
+    T& operator()(const int a, const int i) {
         return _nodalField[_dim * a + i];
     }
 
@@ -56,7 +56,7 @@ class NodalField {
         return _nodes;
     }
 
-    inline size_t size() const {
+    inline int size() const {
         return _nodes * _dim;
     }
 
@@ -71,12 +71,12 @@ class NodalField {
     /**
      * number of nodes
      */
-    size_t _nodes;
+    int _nodes;
 
     /**
      * dimension
      */
-    size_t _dim;
+    int _dim;
 
     /**
      * name of the nodal field
@@ -101,15 +101,15 @@ std::ostream& operator<<(std::ostream& os, const NodalField<T>& nodalField){
     }
 
     os << "[(" << nodalField(0, 0); 
-    for (size_t d = 1; d < nodalField.dim(); ++d) {
+    for (auto d = 1; d < nodalField.dim(); ++d) {
         os << ", " << nodalField(0, d);
     }
     os << ")";
 
-    for (size_t i = 1; i < nodalField.nodes(); ++i)
+    for (auto i = 1; i < nodalField.nodes(); ++i)
     {
         os << ", (" << nodalField(i, 0);
-        for (size_t d = 1; d < nodalField.dim(); ++d) {
+        for (auto d = 1; d < nodalField.dim(); ++d) {
             os << ", " << nodalField(i, d);
         }
         os << ")";

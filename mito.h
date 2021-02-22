@@ -10,8 +10,6 @@
 //https://stackoverflow.com/questions/4295432/typedef-function-pointer
 //https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
 
-// TOFIX: size_t is evil
-
 // TOFIX: Consider using tuples when possible as opposed to std::array and std::vector 
 
 namespace mito {
@@ -23,6 +21,8 @@ namespace mito {
     enum DIM {DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4};
     // typedef for scalars
     using real = double;
+    // typedef for dim loop
+    using dim_t = int;
     // typedef for vectors
     template <DIM D>
     using vector = std::array<real, D>;
@@ -82,7 +82,7 @@ std::ostream& operator<<(std::ostream& os, const std::vector<X>& x){
 
     os << "[" << x[0];
 
-    for (size_t i = 1; i < x.size(); ++i)
+    for (auto i = 1; i < x.size(); ++i)
     {
         os << ", " << x[i];
     }
