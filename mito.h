@@ -92,6 +92,26 @@ std::ostream& operator<<(std::ostream& os, const std::vector<X>& x){
     return os;
 }
 
+template<typename X, long unsigned int N>
+std::ostream& operator<<(std::ostream& os, const std::array<X, N>& x){
+    
+    if (N == 0) {
+        os << "[]";
+        return os;
+    }
+
+    os << "[" << x[0];
+
+    for (auto i = 1; i < N; ++i)
+    {
+        os << ", " << x[i];
+    }
+
+    os << "]";
+
+    return os;
+}
+
 namespace mito {
 
     real ComputeDeterminant(const tensor<mito::DIM3>& A)
