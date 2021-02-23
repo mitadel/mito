@@ -164,7 +164,7 @@ class Integrator
     }
 
   private:
-    QuadRule<d, D > _quadRule;
+    QuadRule<ElementType> _quadRule;
     const Elements<D > & _elements;
 
 };

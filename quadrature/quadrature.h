@@ -10,10 +10,14 @@ namespace mito {
 //        can be templated on it, so as to guarantee compatibility between quadrule for the 
 //        integration and the domain of integration at compile time. 
 
-// template with respect to the dimension d of the parameteric space on the reference element 
-// and on the dimension D of the physical space of the integration domain 
-template <DIM d, DIM D>
+template <class ElementType>
 class QuadRule {
+
+    // the dimension D of the physical space of the integration domain 
+    static const DIM D = ElementType::physicalDim;
+    // the dimension d of the parameteric space on the reference element 
+    static const DIM d = ElementType::parametricDim;
+
   public:
     QuadRule(const std::vector<double> && quadWeights, 
         const std::vector<mito::vector<d> > && quadPoints) 
@@ -101,12 +105,12 @@ class QuadRule {
 
 // Factory function to instantiate quadrature rules
 template<class ElementType, int r>
-QuadRule<ElementType::parametricDim, ElementType::physicalDim > QuadratureRule();
+QuadRule<ElementType> QuadratureRule();
 
 template<>
-QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 1>() {
+QuadRule<TRI> QuadratureRule<TRI, 1>() {
     // Triangle order 1
-    QuadRule<TRI::parametricDim, TRI::physicalDim> quadrule(
+    QuadRule<TRI> quadrule(
         {/*weights*/
             1.0 / 2.0
         },
@@ -117,8 +121,8 @@ QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 1>() {
 };
 
 template<>
-QuadRule<TRI::parametricDim, TRI::physicalDim> QuadratureRule<TRI, 2>() {
-    QuadRule<TRI::parametricDim, TRI::physicalDim> quadrule(
+QuadRule<TRI> QuadratureRule<TRI, 2>() {
+    QuadRule<TRI> quadrule(
         {/*weights*/ 
             1.0 / 6.0, 
             1.0 / 6.0, 
