@@ -10,7 +10,7 @@ namespace mito {
 //        can be templated on it, so as to guarantee compatibility between quadrule for the 
 //        integration and the domain of integration at compile time. 
 
-template <class ElementType>
+template <class ElementType, int Q /* number of quadrature points */>
 class QuadRule {
 
     // the dimension D of the physical space of the integration domain 
@@ -19,31 +19,32 @@ class QuadRule {
     static const DIM d = ElementType::parametricDim;
 
   public:
-    QuadRule(const std::vector<double> && quadWeights, 
-        const std::vector<mito::vector<d> > && quadPoints) 
+    QuadRule(const std::array<double, Q> && quadWeights, 
+        const std::array<mito::vector<d>, Q> && quadPoints) 
         : _quadWeights(quadWeights), _quadPoints(quadPoints) {}
+
     virtual ~QuadRule() {}; 
 
     // accessors
     inline int nQuad() const {
-        return _quadWeights.size();
+        return Q;
     }
 
     inline double weight(int i) const {
-        assert(i < _quadWeights.size());
+        assert(i < Q);
         return _quadWeights[i];
     }
 
     inline const mito::vector<d>& point(int i) const {
-        assert(i < _quadPoints.size());
+        assert(i < Q);
         return _quadPoints[i];
     }
 
-    inline const std::vector<double>& weights() const {
+    inline const std::array<double, Q>& weights() const {
         return _quadWeights;
     }
 
-    inline const std::vector<mito::vector<d> >& points() const {
+    inline const std::array<mito::vector<d>, Q>& points() const {
         return _quadPoints;
     }
 
@@ -82,7 +83,7 @@ class QuadRule {
 
         // TOFIX: We should avoid the 4 nested for loops
         for (auto e = 0; e < elements.nElements(); ++e) {
-            for (auto i = 0; i < _quadPoints.size(); ++i) {
+            for (auto i = 0; i < Q; ++i) {
                 for (auto j = 0; j < D; ++j) {
                     coordinates[e * _quadPoints.size() + i][j] = 0.0;
                     for (auto v = 0; v < elements.nVertices(); ++v) {
@@ -99,41 +100,54 @@ class QuadRule {
     }
 
   protected:
-    std::vector<double> _quadWeights;
-    std::vector<mito::vector<d> > _quadPoints;
+    std::array<double, Q> _quadWeights;
+    std::array<mito::vector<d>, Q> _quadPoints;
 };
+
+// Helper function to return the number of quadrature points of a quadrature rule based on the 
+// element type and the degree of exactness
+template<class ElementType, int r> 
+constexpr int nquad();
+
+template<>
+constexpr int nquad<TRI, 1 /* degree of exactness */>() {return 1;}
+
+template<>
+constexpr int nquad<TRI, 2 /* degree of exactness */>() {return 3;}
 
 // Factory function to instantiate quadrature rules
 template<class ElementType, int r>
-QuadRule<ElementType> QuadratureRule();
+QuadRule<ElementType, nquad<ElementType, r>() > QuadratureRule();
 
 template<>
-QuadRule<TRI> QuadratureRule<TRI, 1>() {
+QuadRule<TRI, 1 /* Q */> 
+QuadratureRule<TRI, 1 /* degree of exactness */>() {
     // Triangle order 1
-    QuadRule<TRI> quadrule(
-        {/*weights*/
+    QuadRule<TRI, 1 /* Q */ > quadrule(
+        {{/*weights*/
             1.0 / 2.0
-        },
-        {/*points*/
+        }},
+        {{/*points*/
             {1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0}
-        });
+        }});
     return quadrule;
 };
 
 template<>
-QuadRule<TRI> QuadratureRule<TRI, 2>() {
-    QuadRule<TRI> quadrule(
-        {/*weights*/ 
+QuadRule<TRI, 3 /* Q */> 
+QuadratureRule<TRI, 2 /* degree of exactness */>() {
+    // Triangle order 2
+    QuadRule<TRI, 3 /* Q */ > quadrule(
+        {{/*weights*/ 
             1.0 / 6.0, 
             1.0 / 6.0, 
             1.0 / 6.0
-        },
-        {/*points*/
+        }},
+        {{/*points*/
             {2.0 / 3.0, 1.0 / 6.0, 1.0 / 6.0},
             {1.0 / 6.0, 2.0 / 3.0, 1.0 / 6.0},
             {1.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0}
-        }
-    );
+        }});
     return quadrule;
 };
 

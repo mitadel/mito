@@ -133,6 +133,7 @@ class Integrator
 {
     static const DIM D = ElementType::physicalDim;
     static const DIM d = ElementType::parametricDim;
+    static const int Q = nquad<ElementType, r>();
 
   public:
     Integrator(const Elements<D> & elements) 
@@ -153,6 +154,7 @@ class Integrator
         //              index_t i {e, q, j};
         //              values[i];
 
+        //for (auto & e : _elements) {
         for (auto e = 0; e < _elements.nElements(); ++e) {
             for (auto q = 0; q < _quadRule.nQuad(); ++q) {
                 result += values[e * _quadRule.nQuad() + q] * _quadRule.weight(q); 
@@ -164,7 +166,7 @@ class Integrator
     }
 
   private:
-    QuadRule<ElementType> _quadRule;
+    QuadRule<ElementType, Q> _quadRule;
     const Elements<D > & _elements;
 
 };
