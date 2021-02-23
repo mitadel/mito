@@ -14,14 +14,14 @@ struct TRI {
   static constexpr auto name = "TRI";
   static constexpr DIM physicalDim = DIM2;
   static constexpr DIM parametricDim = DIM3;
-  static constexpr int nVertices = physicalDim + 1;
+  static constexpr int nVertices = 3;
 };
 
 struct TET {
   static constexpr auto name = "TET";
   static constexpr DIM physicalDim = DIM3;
   static constexpr DIM parametricDim = DIM4;
-  static constexpr int nVertices = physicalDim + 1;
+  static constexpr int nVertices = 4;
 };
 
 // template with respect to N, number of nodes per element
@@ -90,10 +90,11 @@ template <class ElementType>
 class Elements {
 
     static const DIM D = ElementType::physicalDim;
+    static const int V = ElementType::nVertices;
 
   public:
-    Elements(int nElements, int nVertices) : _nElements(nElements), 
-        _nVertices(nVertices), _vertices(nElements * nVertices), _jacobians(nElements) {
+    Elements(int nElements) : _nElements(nElements), _vertices(nElements * V), 
+        _jacobians(nElements) {
             // compute jacobians
 
             // all done
@@ -102,41 +103,40 @@ class Elements {
     ~Elements() {}
 
     const mito::vector<D> & vertex(int e, int v) const {
-        assert(e < _nElements && v < _nVertices);
-        return _vertices[e * _nVertices + v];
+        assert(e < _nElements && v < V);
+        return _vertices[e * V + v];
     }
 
     mito::vector<D> & vertex(int e, int v) {
-        assert(e < _nElements && v < _nVertices);
-        return _vertices[e * _nVertices + v];
+        assert(e < _nElements && v < V);
+        return _vertices[e * V + v];
     }  
 
     inline int nElements() const {return _nElements;} 
-    inline int nVertices() const {return _nVertices;} 
+    inline int nVertices() const {return V;} 
     inline real jacobian(int e) const {return _jacobians[e];} 
 
   private:
     int _nElements;
-    int _nVertices;
     std::vector<mito::vector<D> > _vertices;
     std::vector<real> _jacobians;
 };
 
 // template with respect to element type and to number of nodes per element
-template<class ElementType, size_t N>
+template<class ElementType, int N>
 class ElementSet
 {
     static const DIM D = ElementType::physicalDim;
-    static const size_t nVertices = ElementType::nVertices;
+    static const int V = ElementType::nVertices;
 
   public:
 
     ElementSet(const Connectivity<N> & connectivity, const NodalField<real> & coordinates) :
-        _connectivity(connectivity), _elements(connectivity.nElements(), nVertices) {
+        _connectivity(connectivity), _elements(connectivity.nElements()) {
             // TODO: Fill in _elements ...
 
             for (auto e = 0; e < _connectivity.nElements(); ++e) {
-                for (auto a = 0; a < nVertices; ++a) {
+                for (auto a = 0; a < V; ++a) {
                     // TOFIX: Here we assume that the vertices are the first nVertices entries of 
                     //       the connectivity...
                     const int & id = connectivity(e, a);
