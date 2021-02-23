@@ -132,7 +132,6 @@ template<class ElementType, int r>
 class Integrator 
 {
     static const DIM D = ElementType::physicalDim;
-    static const DIM d = ElementType::parametricDim;
     static const int V = ElementType::nVertices;
     static const int Q = nquad<ElementType, r>();
 
@@ -145,10 +144,10 @@ class Integrator
         // TOFIX: We should avoid the 4 nested for loops
         for (auto e = 0; e < _elements.nElements(); ++e) {
             for (auto q = 0; q < Q; ++q) {
-                for (auto i = 0; i < D; ++i) {
+                for (auto d = 0; d < D; ++d) {
                     for (auto v = 0; v < V; ++v) {
                         const mito::vector<D> & vertex = _elements.vertex(e, v);
-                        _coordinates[e * Q + q][i] += _quadRule.point(q)[v] * vertex[i]; 
+                        _coordinates[e * Q + q][d] += _quadRule.point(q)[v] * vertex[d]; 
                     }
                 }
             }
