@@ -1,16 +1,33 @@
 #include <cmath>
 #include "../math.h"
+#include "../point.h"
 #include "../../elements/elements.h"
 #include "../../quadrature/quadrature.h"
 
 using mito::function;
 using mito::vector;
 using mito::real;
+using mito::DIM1;
 using mito::DIM2;
+using mito::DIM3;
+using mito::point;
+using mito::x0;
+using mito::x1;
+using mito::x2;
+using mito::x3;
 
 // TODO: When everything is in place to compute integrals, add Stokes' theorem as a test.
 
 int main () {
+
+    point<DIM1> a(10.0);
+    std::cout << a << std::endl;
+
+    point<DIM2> b(10.0, 2.0);
+    std::cout << b << std::endl;
+
+    point<DIM3> c(10.0, 2.0, 1.0);
+    std::cout << c << std::endl;
 
     // a scalar function 
     function<vector<DIM2>> f{ 
