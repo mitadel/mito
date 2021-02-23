@@ -13,6 +13,8 @@ class QuadRule {
     static const DIM D = ElementType::physicalDim;
     // the dimension d of the parameteric space on the reference element 
     static const DIM d = ElementType::parametricDim;
+    // the number of vertices of the reference element
+    static const int V = ElementType::nVertices;
 
   public:
     QuadRule(const std::array<double, Q> && quadWeights, 
@@ -53,15 +55,15 @@ class QuadRule {
 
         // NOTE: The number of vertices coincides with d. This is the case for simplices but it 
         //       might not always be the case.
-        assert(vertices.size() == d);
+        assert(V == d);
 
-        std::vector<mito::vector<D> > coordinates(_quadPoints.size());
+        std::vector<mito::vector<D> > coordinates(Q);
 
-        for (auto i = 0; i < _quadPoints.size(); ++i) {
-            for (auto j = 0; j < D; ++j) {
-                coordinates[i][j] = 0.0;
-                for (auto a = 0; a < vertices.size(); ++a) {
-                    coordinates[i][j] += _quadPoints[i][a]*vertices[a][j];
+        for (auto q = 0; q < Q; ++q) {
+            for (auto d = 0; d < D; ++d) {
+                coordinates[q][d] = 0.0;
+                for (auto v = 0; v < V; ++v) {
+                    coordinates[q][d] += _quadPoints[q][v]*vertices[v][d];
                 }
             }
         }
@@ -80,13 +82,13 @@ class QuadRule {
 
         // TOFIX: We should avoid the 4 nested for loops
         for (auto e = 0; e < elements.nElements(); ++e) {
-            for (auto i = 0; i < Q; ++i) {
-                for (auto j = 0; j < D; ++j) {
-                    coordinates[e * _quadPoints.size() + i][j] = 0.0;
-                    for (auto v = 0; v < elements.nVertices(); ++v) {
+            for (auto q = 0; q < Q; ++q) {
+                for (auto d = 0; d < D; ++d) {
+                    coordinates[e * _quadPoints.size() + q][d] = 0.0;
+                    for (auto v = 0; v < V; ++v) {
                         const mito::vector<D> & vertex = elements.vertex(e, v);
-                        coordinates[e * _quadPoints.size() + i][j] 
-                            += _quadPoints[i][v]*vertex[j];
+                        coordinates[e * _quadPoints.size() + q][d] 
+                            += _quadPoints[q][v]*vertex[d];
                     }
                 }
             }
