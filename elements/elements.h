@@ -85,8 +85,12 @@ class Connectivity {
     std::vector<int> _connectivityArray; 
 };
 
-template <DIM D>
+// Collection of homogeneous elements
+template <class ElementType>
 class Elements {
+
+    static const DIM D = ElementType::physicalDim;
+
   public:
     Elements(int nElements, int nVertices) : _nElements(nElements), 
         _nVertices(nVertices), _vertices(nElements * nVertices), _jacobians(nElements) {
@@ -149,11 +153,11 @@ class ElementSet
     virtual ~ElementSet() {}
 
     inline DIM dim() const {return D;}
-    inline const Elements<D> & elements() const {return _elements;}
+    inline const Elements<ElementType> & elements() const {return _elements;}
 
   private: 
     const Connectivity<N> & _connectivity;
-    Elements<D> _elements;
+    Elements<ElementType> _elements;
 };
 
 // template with respect to degree P

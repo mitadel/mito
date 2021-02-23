@@ -136,7 +136,7 @@ class Integrator
     static const int Q = nquad<ElementType, r>();
 
   public:
-    Integrator(const Elements<D> & elements) 
+    Integrator(const Elements<ElementType> & elements) 
         : _elements(elements), _quadRule(QuadratureRule<ElementType, r>())
         {}
 
@@ -167,7 +167,7 @@ class Integrator
 
   private:
     QuadRule<ElementType, Q> _quadRule;
-    const Elements<D > & _elements;
+    const Elements<ElementType> & _elements;
 
 };
 

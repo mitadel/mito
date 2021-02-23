@@ -6,10 +6,6 @@
 
 namespace mito {
 
-// TOFIX: Consider introducing a reference element class. Both the quadrule and the elements class 
-//        can be templated on it, so as to guarantee compatibility between quadrule for the 
-//        integration and the domain of integration at compile time. 
-
 template <class ElementType, int Q /* number of quadrature points */>
 class QuadRule {
 
@@ -77,7 +73,8 @@ class QuadRule {
     // TOFIX: This should return an ElementQuadratureField. But how do quadrature fields fit in now 
     //        that we have completely decoupled the integration from the element sets?
 
-    inline std::vector<mito::vector<D> > quadraturePoints(const Elements<D> & elements) const {
+    inline std::vector<mito::vector<D> > 
+        quadraturePoints(const Elements<ElementType> & elements) const {
 
         std::vector<mito::vector<D> > coordinates(elements.nElements() * _quadPoints.size());
 
