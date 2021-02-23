@@ -20,18 +20,10 @@ int main () {
     std::cout << "Quad Points (reference): " << quadratureRule1.points() << std::endl;
     std::cout << "Quad Weights: " << quadratureRule1.weights() << std::endl;
 
-    const std::vector<mito::vector<DIM2> > quadCoordinates1 = 
-        quadratureRule1.quadraturePointsCurrentElement(verticesElement);
-    std::cout << "Quad Points (element) " << quadCoordinates1 << std::endl;
-
     std::cout << "Three-point quadrature rule (r = 2):" << std::endl;
     const auto quadratureRule2 = mito::QuadratureRule<TRI, 2>();
     std::cout << "Quad Points (reference): " << quadratureRule2.points() << std::endl;
     std::cout << "Quad Weights: " << quadratureRule2.weights() << std::endl;
-
-    const std::vector<mito::vector<DIM2> > quadCoordinates2 = 
-        quadratureRule2.quadraturePointsCurrentElement(verticesElement);
-    std::cout << "Quad Points (element) " << quadCoordinates2 << std::endl;
 
     return 0;
 }

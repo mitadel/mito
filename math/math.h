@@ -133,18 +133,43 @@ class Integrator
 {
     static const DIM D = ElementType::physicalDim;
     static const DIM d = ElementType::parametricDim;
+    static const int V = ElementType::nVertices;
     static const int Q = nquad<ElementType, r>();
+
+  private:
+    // QUESTION: Who should be in charge of computing the coordinates of the quadrature points 
+    //           in the elements? The quadrature rule has the coordinates of the quadrature points 
+    //           on the reference element, the elements have the coordinate of the vertices.
+    void _computeQuadPointCoordinates() {
+
+        // TOFIX: We should avoid the 4 nested for loops
+        for (auto e = 0; e < _elements.nElements(); ++e) {
+            for (auto q = 0; q < Q; ++q) {
+                for (auto i = 0; i < D; ++i) {
+                    for (auto v = 0; v < V; ++v) {
+                        const mito::vector<D> & vertex = _elements.vertex(e, v);
+                        _coordinates[e * Q + q][i] += _quadRule.point(q)[v] * vertex[i]; 
+                    }
+                }
+            }
+        }
+
+        // all done
+        return;
+    }
 
   public:
     Integrator(const Elements<ElementType> & elements) 
-        : _elements(elements), _quadRule(QuadratureRule<ElementType, r>())
-        {}
+        : _elements(elements), _quadRule(QuadratureRule<ElementType, r>()), 
+            _coordinates(elements.nElements() * Q)
+        {
+            _computeQuadPointCoordinates();
+        }
 
     real integrate(const ScalarField<D> & function) {
         std::cout << "integrating ... " << std::endl;
 
-        std::vector<vector<D> > coordinates = _quadRule.quadraturePoints(_elements);
-        std::vector<real> values = function(coordinates); 
+        std::vector<real> values = function(_coordinates); 
 
         real result = 0.0;
 
@@ -166,8 +191,12 @@ class Integrator
     }
 
   private:
+    // the quadrature rule
     QuadRule<ElementType, Q> _quadRule;
+    // the domain of integration
     const Elements<ElementType> & _elements;
+    // the coordinates of the quadrature points in the domain of integration
+    std::vector<mito::vector<D> > _coordinates;
 
 };
 

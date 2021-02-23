@@ -13,8 +13,6 @@ class QuadRule {
     static const DIM D = ElementType::physicalDim;
     // the dimension d of the parameteric space on the reference element 
     static const DIM d = ElementType::parametricDim;
-    // the number of vertices of the reference element
-    static const int V = ElementType::nVertices;
 
   public:
     QuadRule(const std::array<double, Q> && quadWeights, 
@@ -44,58 +42,6 @@ class QuadRule {
 
     inline const std::array<mito::vector<d>, Q>& points() const {
         return _quadPoints;
-    }
-
-    // TOFIX: Methods quadraturePointsCurrentElement and quadraturePoints are actually mapping from 
-    //        the reference element to the current element. This mapping should not be computed by 
-    //        the quadrature rule nor by the elements, but should be a helper global function using
-    //        the public interface of the quadrature rule and of the elements class.
-    inline std::vector<mito::vector<D> > quadraturePointsCurrentElement(
-        const std::vector<mito::vector<D> > & vertices) const {
-
-        // NOTE: The number of vertices coincides with d. This is the case for simplices but it 
-        //       might not always be the case.
-        assert(V == d);
-
-        std::vector<mito::vector<D> > coordinates(Q);
-
-        for (auto q = 0; q < Q; ++q) {
-            for (auto d = 0; d < D; ++d) {
-                coordinates[q][d] = 0.0;
-                for (auto v = 0; v < V; ++v) {
-                    coordinates[q][d] += _quadPoints[q][v]*vertices[v][d];
-                }
-            }
-        }
-
-        // all done
-        return std::move(coordinates);
-    } 
-
-    // TOFIX: This should return an ElementQuadratureField. But how do quadrature fields fit in now 
-    //        that we have completely decoupled the integration from the element sets?
-
-    inline std::vector<mito::vector<D> > 
-        quadraturePoints(const Elements<ElementType> & elements) const {
-
-        std::vector<mito::vector<D> > coordinates(elements.nElements() * _quadPoints.size());
-
-        // TOFIX: We should avoid the 4 nested for loops
-        for (auto e = 0; e < elements.nElements(); ++e) {
-            for (auto q = 0; q < Q; ++q) {
-                for (auto d = 0; d < D; ++d) {
-                    coordinates[e * _quadPoints.size() + q][d] = 0.0;
-                    for (auto v = 0; v < V; ++v) {
-                        const mito::vector<D> & vertex = elements.vertex(e, v);
-                        coordinates[e * _quadPoints.size() + q][d] 
-                            += _quadPoints[q][v]*vertex[d];
-                    }
-                }
-            }
-        }
-
-        // all done
-        return std::move(coordinates);
     }
 
   protected:
