@@ -111,7 +111,8 @@ int main () {
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     //static mito::ElementSetTri elementSet;
     mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
-    mito::Integrator<mito::TRI, 2 /* degree of exactness */> integrator(elementSet.elements());
+    mito::Integrator<mito::GAUSS, mito::TRI, 2 /* degree of exactness */> 
+        integrator(elementSet.elements());
     real result = integrator.integrate(cosine);     // exact 0.946083...
     result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
     std::cout << "Integration of cos(x*y): Result = " << result

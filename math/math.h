@@ -128,12 +128,15 @@ inline VectorField<D, D> gradX(const ScalarField<D> & function) {
 //       of contact forces down the road. Do we have enough machinery for that? 
 
 // template with respect to element type T and to degree of exactness r of quadrature rule 
-template<class ElementType, int r>
+template<class QuadratureType, class ElementType, int r>
 class Integrator 
 {
     static const DIM D = ElementType::physicalDim;
     static const int V = ElementType::nVertices;
-    static const int Q = nquad<ElementType, r>();
+    using QuadratureRule = SampleQuadratureRule<QuadratureType, ElementType, r>;
+    // the quadrature rule
+    static const auto _quadratureRule = QuadratureRule::Get();
+    static const int Q = _quadratureRule.size();
 
   private:
     // QUESTION: Who should be in charge of computing the coordinates of the quadrature points 
@@ -141,7 +144,10 @@ class Integrator
     //           on the reference element, the elements have the coordinate of the vertices.
     void _computeQuadPointCoordinates() {
 
+#if 0
         // TOFIX: We should avoid the 4 nested for loops
+        // QUESTION: 3 out 4 of these loops can be unrolled as Q, D, V are template parameters
+        //           Is there anything we can do about it? 
         for (auto e = 0; e < _elements.nElements(); ++e) {
             for (auto q = 0; q < Q; ++q) {
                 for (auto d = 0; d < D; ++d) {
@@ -152,6 +158,7 @@ class Integrator
                 }
             }
         }
+#endif
 
         // all done
         return;
@@ -159,8 +166,7 @@ class Integrator
 
   public:
     Integrator(const Elements<ElementType> & elements) 
-        : _elements(elements), _quadRule(QuadratureRule<ElementType, r>()), 
-            _coordinates(elements.nElements() * Q)
+        : _elements(elements), _coordinates(elements.nElements() * Q)
         {
             _computeQuadPointCoordinates();
         }
@@ -178,6 +184,7 @@ class Integrator
         //              index_t i {e, q, j};
         //              values[i];
 
+#if 0
         //for (auto & e : _elements) {
         for (auto e = 0; e < _elements.nElements(); ++e) {
             for (auto q = 0; q < _quadRule.nQuad(); ++q) {
@@ -187,11 +194,10 @@ class Integrator
         }
 
         return result;
+#endif
     }
 
   private:
-    // the quadrature rule
-    QuadRule<ElementType, Q> _quadRule;
     // the domain of integration
     const Elements<ElementType> & _elements;
     // the coordinates of the quadrature points in the domain of integration
