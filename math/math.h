@@ -144,7 +144,6 @@ class Integrator
     //           on the reference element, the elements have the coordinate of the vertices.
     void _computeQuadPointCoordinates() {
 
-#if 0
         // TOFIX: We should avoid the 4 nested for loops
         // QUESTION: 3 out 4 of these loops can be unrolled as Q, D, V are template parameters
         //           Is there anything we can do about it? 
@@ -153,12 +152,12 @@ class Integrator
                 for (auto d = 0; d < D; ++d) {
                     for (auto v = 0; v < V; ++v) {
                         const mito::vector<D> & vertex = _elements.vertex(e, v);
-                        _coordinates[e * Q + q][d] += _quadRule.point(q)[v] * vertex[d]; 
+                        _coordinates[e * Q + q][d] += 
+                            std::get<0>(_quadratureRule[q])[v] * vertex[d]; 
                     }
                 }
             }
         }
-#endif
 
         // all done
         return;
@@ -183,18 +182,15 @@ class Integrator
         //        Syntax is as follows:
         //              index_t i {e, q, j};
         //              values[i];
-
-#if 0
         //for (auto & e : _elements) {
         for (auto e = 0; e < _elements.nElements(); ++e) {
-            for (auto q = 0; q < _quadRule.nQuad(); ++q) {
-                result += values[e * _quadRule.nQuad() + q] * _quadRule.weight(q); 
+            for (auto q = 0; q < Q; ++q) {
+                result += values[e * Q + q] * std::get<1>(_quadratureRule[q]);
                     /* * _elements.jacobian(e); Jacobians are dummy for now and identically zero */ 
             }
         }
 
         return result;
-#endif
     }
 
   private:
