@@ -89,8 +89,8 @@ class Connectivity {
 template <class ElementType>
 class Elements {
 
-    static const DIM D = ElementType::physicalDim;
-    static const int V = ElementType::nVertices;
+    static constexpr DIM D = ElementType::physicalDim;
+    static constexpr int V = ElementType::nVertices;
 
   public:
     Elements(int nElements) : _nElements(nElements), _vertices(nElements * V), 
@@ -126,8 +126,8 @@ class Elements {
 template<class ElementType, int N>
 class ElementSet
 {
-    static const DIM D = ElementType::physicalDim;
-    static const int V = ElementType::nVertices;
+    static constexpr DIM D = ElementType::physicalDim;
+    static constexpr int V = ElementType::nVertices;
 
   public:
 

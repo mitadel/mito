@@ -2,10 +2,10 @@
 
 #ifdef WITH_YAML
 #include "yaml_input_file.h"
-static const std::string inputFileName = "input.yaml";
+static constexpr std::string inputFileName = "input.yaml";
 #else
 #include "input_file.h"
-static const std::string inputFileName = "input.dat";
+static constexpr std::string inputFileName = "input.dat";
 #endif
 
 int main (int argc, char** argv) {

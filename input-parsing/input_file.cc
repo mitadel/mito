@@ -5,7 +5,7 @@
 #include <algorithm>
 
 /* helper functions to trim string */
-static const std::string WHITESPACE = " \n\r\t\f\v";
+static constexpr std::string WHITESPACE = " \n\r\t\f\v";
 std::string ltrim(const std::string& s)
 {
 	int start = s.find_first_not_of(WHITESPACE);

@@ -131,12 +131,12 @@ inline VectorField<D, D> gradX(const ScalarField<D> & function) {
 template<class QuadratureType, class ElementType, int r>
 class Integrator 
 {
-    static const DIM D = ElementType::physicalDim;
-    static const int V = ElementType::nVertices;
+    static constexpr DIM D = ElementType::physicalDim;
+    static constexpr int V = ElementType::nVertices;
     using QuadratureRule = SampleQuadratureRule<QuadratureType, ElementType, r>;
     // the quadrature rule
     static constexpr auto _quadratureRule = QuadratureRule::Get();
-    static const int Q = _quadratureRule.size();
+    static constexpr int Q = _quadratureRule.size();
 
   private:
     // QUESTION: Who should be in charge of computing the coordinates of the quadrature points 
