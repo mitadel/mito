@@ -137,6 +137,9 @@ class Integrator
     // the quadrature rule
     static constexpr auto _quadratureRule = QuadratureRule::Get();
     static constexpr int Q = _quadratureRule.size();
+    // TOFIX: this should be the sum of the weights of the given quadrature rule
+    // and should be computed at compile time based on QuadratureType
+    static constexpr real areaReferenceElement = 0.5; 
 
   private:
     // QUESTION: Who should be in charge of computing the coordinates of the quadrature points 
@@ -185,8 +188,8 @@ class Integrator
         //for (auto & e : _elements) {
         for (auto e = 0; e < _elements.nElements(); ++e) {
             for (auto q = 0; q < Q; ++q) {
-                result += values[e * Q + q] * std::get<1>(_quadratureRule[q]);
-                    /* * _elements.jacobian(e); Jacobians are dummy for now and identically zero */ 
+                result += values[e * Q + q] * std::get<1>(_quadratureRule[q])
+                    * _elements.jacobian(e) / areaReferenceElement; 
             }
         }
 

@@ -120,6 +120,14 @@ std::ostream& operator<<(std::ostream& os, const std::array<X, N>& x){
 
 namespace mito {
 
+    template <DIM D>
+    int Factorial()
+    {
+        return D * Factorial<DIM(D - 1)>();
+    }
+    template <> 
+    int Factorial<mito::DIM1>() {return 1;}
+
     real ComputeDeterminant(const tensor<mito::DIM3>& A)
     {
         return A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6]) +

@@ -115,7 +115,6 @@ int main () {
         integrator(elementSet.elements());
 
     real result = integrator.integrate(cosine);     // exact 0.946083...
-    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
     std::cout << "Integration of cos(x*y): Result = " << result
         << ", Error = " << std::fabs(result - 0.946083)
         << std::endl;
@@ -123,7 +122,6 @@ int main () {
     // instantiate a scalar function object
     mito::ScalarField<DIM2> one([](const vector<DIM2>& x){ return 1.0; });
     result = integrator.integrate(one);     // exact 1.0
-    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
     std::cout << "Integration of 1: Result = " << result 
         << ", Error = " << std::fabs(result - 1.0)
         << std::endl;
@@ -131,7 +129,6 @@ int main () {
     // instantiate a scalar function object
     mito::ScalarField<DIM2> linear([](const vector<DIM2>& x){ return x[0]; });
     result = integrator.integrate(linear);  // exact 0.5
-    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
     std::cout << "Integration of x: Result = " << result 
         << ", Error = " << std::fabs(result - 0.5)
         << std::endl;
@@ -139,7 +136,6 @@ int main () {
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xy([](const vector<DIM2>& x){ return x[0]*x[1]; });
     result = integrator.integrate(xy);      // exact 0.25
-    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
     std::cout << "Integration of x*y: Result = " << result 
         << ", Error = " << std::fabs(result - 0.25)
         << std::endl;
@@ -147,7 +143,6 @@ int main () {
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xx([](const vector<DIM2>& x){ return x[0]*x[0]; });
     result = integrator.integrate(xx);      // exact 1.0/3.0
-    result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
     std::cout << "Integration of x*x: Result = " << result 
         << ", Error = " << std::fabs(result - 1.0/3.0)
         << std::endl;

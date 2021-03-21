@@ -94,12 +94,7 @@ class Elements {
 
   public:
     Elements(int nElements) : _nElements(nElements), _vertices(nElements * V), 
-        _jacobians(nElements) {
-            // compute jacobians
-
-            // all done
-            return;
-        }
+        _jacobians(nElements) {}
     ~Elements() {}
 
     const mito::vector<D> & vertex(int e, int v) const {
@@ -111,6 +106,29 @@ class Elements {
         assert(e < _nElements && v < V);
         return _vertices[e * V + v];
     }  
+
+    // computes volume of a simplex of vertices a1, ..., aV based on the formula 
+    // fabs(det(a1, 1; ...; aV, 1)) / D!, with D = V - 1 being the dimension of the phyisical space
+    void computeJacobians() {
+        
+        static tensor<mito::DIM(D + 1)> verticesTensor;
+
+        // TOFIX: This formula does not work for triangles in 3D, or for lines in 2D or 3D...
+        static_assert(V == int(D)+1);
+
+        for (auto e = 0; e < _nElements; ++e) {
+            std::fill(verticesTensor.begin(), verticesTensor.end(), 0.0);
+            for (auto a = 0; a < V; ++a) {
+                for (auto d = 0; d < D; ++d) {
+                    verticesTensor[a * V + d] = _vertices[e * V + a][d];
+                }
+                verticesTensor[a * V + D] = 1.0;
+            }
+            _jacobians[e] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
+        }
+
+        return;
+    }
 
     inline int nElements() const {return _nElements;} 
     inline int nVertices() const {return V;} 
@@ -145,6 +163,8 @@ class ElementSet
                     }
                 }
             }
+
+            _elements.computeJacobians();
 
             // all done
             return;
