@@ -113,11 +113,7 @@ int main () {
     mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
     mito::Integrator<mito::GAUSS, mito::TRI, 2 /* degree of exactness */> 
         integrator(elementSet.elements());
-#if 1
-    static const auto _quadratureRule = 
-        mito::SampleQuadratureRule<mito::GAUSS, mito::TRI, 2>::Get();
-    std::cout << "\t " << std::get<0>(_quadratureRule[0])[0] << std::endl;
-#else
+
     real result = integrator.integrate(cosine);     // exact 0.946083...
     result *= 0.5; /* 0.5 is to adjust the missing jacobian multiplication */
     std::cout << "Integration of cos(x*y): Result = " << result
@@ -155,7 +151,7 @@ int main () {
     std::cout << "Integration of x*x: Result = " << result 
         << ", Error = " << std::fabs(result - 1.0/3.0)
         << std::endl;
-#endif
+
     return 0;
 }
 

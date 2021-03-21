@@ -135,7 +135,7 @@ class Integrator
     static const int V = ElementType::nVertices;
     using QuadratureRule = SampleQuadratureRule<QuadratureType, ElementType, r>;
     // the quadrature rule
-    static const auto _quadratureRule = QuadratureRule::Get();
+    static constexpr auto _quadratureRule = QuadratureRule::Get();
     static const int Q = _quadratureRule.size();
 
   private:
