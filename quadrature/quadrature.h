@@ -38,6 +38,25 @@ constexpr auto SampleQuadratureRule<GAUSS, TRI, 2>::Get() {
     }});
 }
 
+template<>
+constexpr auto SampleQuadratureRule<GAUSS, SEG, 1>::Get() {
+    return 
+    std::array<std::tuple<vector<parametricDim>, double>, 1 /* nPoints */>(
+    {{/*{point}, weight*/
+        std::make_tuple(vector<parametricDim>({1.0, 1.0}), 2.0)
+    }});
+}
+
+template<>
+constexpr auto SampleQuadratureRule<GAUSS, SEG, 2>::Get() {
+    return 
+    std::array<std::tuple<vector<parametricDim>, double>, 2 /* nPoints */>(
+    {{    /*{point}, weight*/
+        std::make_tuple(vector<parametricDim>({sqrt(3.0)/3.0, 1.0-sqrt(3.0)/3.0}), 1.0),
+        std::make_tuple(vector<parametricDim>({1.0-sqrt(3.0)/3.0, sqrt(3.0)/3.0}), 1.0)
+    }});
+}
+
 }  // namespace mito
 
 #endif //__MITO__QUADRATURE__

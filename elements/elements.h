@@ -10,6 +10,12 @@ namespace mito {
  *  Structs for the element type
  */
 
+struct SEG {
+  static constexpr auto name = "SEG";
+  static constexpr DIM parametricDim = DIM2;
+  static constexpr int nVertices = 2;
+};
+
 struct TRI {
   static constexpr auto name = "TRI";
   static constexpr DIM parametricDim = DIM3;
