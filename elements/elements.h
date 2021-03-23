@@ -12,14 +12,12 @@ namespace mito {
 
 struct TRI {
   static constexpr auto name = "TRI";
-  static constexpr DIM physicalDim = DIM2;
   static constexpr DIM parametricDim = DIM3;
   static constexpr int nVertices = 3;
 };
 
 struct TET {
   static constexpr auto name = "TET";
-  static constexpr DIM physicalDim = DIM3;
   static constexpr DIM parametricDim = DIM4;
   static constexpr int nVertices = 4;
 };
@@ -86,10 +84,9 @@ class Connectivity {
 };
 
 // Collection of homogeneous elements
-template <class ElementType>
+template <class ElementType, DIM D>
 class Elements {
 
-    static constexpr DIM D = ElementType::physicalDim;
     static constexpr int V = ElementType::nVertices;
 
   public:
@@ -141,10 +138,9 @@ class Elements {
 };
 
 // template with respect to element type and to number of nodes per element
-template<class ElementType, int N>
+template<class ElementType, DIM D, int N>
 class ElementSet
 {
-    static constexpr DIM D = ElementType::physicalDim;
     static constexpr int V = ElementType::nVertices;
 
   public:
@@ -173,21 +169,21 @@ class ElementSet
     virtual ~ElementSet() {}
 
     inline DIM dim() const {return D;}
-    inline const Elements<ElementType> & elements() const {return _elements;}
+    inline const Elements<ElementType, D> & elements() const {return _elements;}
 
   private: 
     const Connectivity<N> & _connectivity;
-    Elements<ElementType> _elements;
+    Elements<ElementType, D> _elements;
 };
 
 // template with respect to degree P
 template <size_t P>
-class ElementSetTri : public ElementSet<TRI, (P + 1) * (P + 2) / 2>
+class ElementSetTri : public ElementSet<TRI, DIM2, (P + 1) * (P + 2) / 2>
 {
   public:
     ElementSetTri(const Connectivity<(P + 1) * (P + 2) / 2> & connectivity, 
         const NodalField<real> & coordinates) 
-        : ElementSet<TRI, (P + 1) * (P + 2) / 2>(connectivity, coordinates) {}
+        : ElementSet<TRI, DIM2, (P + 1) * (P + 2) / 2>(connectivity, coordinates) {}
 
     ~ElementSetTri() {}
 

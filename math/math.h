@@ -128,10 +128,9 @@ inline VectorField<D, D> gradX(const ScalarField<D> & function) {
 //       of contact forces down the road. Do we have enough machinery for that? 
 
 // template with respect to element type T and to degree of exactness r of quadrature rule 
-template<class QuadratureType, class ElementType, int r>
+template<class QuadratureType, class ElementType, int r, DIM D>
 class Integrator 
 {
-    static constexpr DIM D = ElementType::physicalDim;
     static constexpr int V = ElementType::nVertices;
     using QuadratureRule = SampleQuadratureRule<QuadratureType, ElementType, r>;
     // the quadrature rule
@@ -167,7 +166,7 @@ class Integrator
     }
 
   public:
-    Integrator(const Elements<ElementType> & elements) 
+    Integrator(const Elements<ElementType, D> & elements) 
         : _elements(elements), _coordinates(elements.nElements() * Q)
         {
             _computeQuadPointCoordinates();
@@ -198,7 +197,7 @@ class Integrator
 
   private:
     // the domain of integration
-    const Elements<ElementType> & _elements;
+    const Elements<ElementType, D> & _elements;
     // the coordinates of the quadrature points in the domain of integration
     std::vector<mito::vector<D> > _coordinates;
 
