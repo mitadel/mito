@@ -96,7 +96,7 @@ int main () {
     std::cout << "Connectivity: " << connectivity() << std::endl;
 
     // coordinates of the mesh nodes
-    mito::NodalField<real> coordinates(5, 2, "coordinates");
+    mito::NodalField<real, DIM2> coordinates(5, "coordinates");
     coordinates(0, 0) = 0.0;
     coordinates(0, 1) = 0.0;              /* Node 0 */
     coordinates(1, 0) = 1.0;

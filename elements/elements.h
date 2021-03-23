@@ -92,7 +92,8 @@ class Elements {
   private:
 
     template<int N>
-    void _fillVertices(const Connectivity<N> & connectivity, const NodalField<real> & coordinates) {
+    void _fillVertices(const Connectivity<N> & connectivity, 
+        const NodalField<real, D> & coordinates) {
 
         for (auto e = 0; e < _nElements; ++e) {
             for (auto a = 0; a < V; ++a) {
@@ -134,7 +135,7 @@ class Elements {
 
   public:
     template<int N>
-    Elements(const Connectivity<N> & connectivity, const NodalField<real> & coordinates) : 
+    Elements(const Connectivity<N> & connectivity, const NodalField<real, D> & coordinates) : 
         _nElements(connectivity.nElements()), _vertices(_nElements * V), _jacobians(_nElements) {
 
         // fill container with elements vertices based on connectivity and coordinates
@@ -177,7 +178,7 @@ class ElementSet
 
   public:
 
-    ElementSet(const Connectivity<N> & connectivity, const NodalField<real> & coordinates) :
+    ElementSet(const Connectivity<N> & connectivity, const NodalField<real, D> & coordinates) :
         _connectivity(connectivity), _elements(connectivity, coordinates) {}
 
     virtual ~ElementSet() {}
@@ -195,9 +196,10 @@ template <size_t P>
 class ElementSetTri : public ElementSet<TRI, DIM2, (P + 1) * (P + 2) / 2>
 {
   public:
+    template<DIM D>
     ElementSetTri(const Connectivity<(P + 1) * (P + 2) / 2> & connectivity, 
-        const NodalField<real> & coordinates) 
-        : ElementSet<TRI, DIM2, (P + 1) * (P + 2) / 2>(connectivity, coordinates) {}
+        const NodalField<real, D> & coordinates) 
+        : ElementSet<TRI, D, (P + 1) * (P + 2) / 2>(connectivity, coordinates) {}
 
     ~ElementSetTri() {}
 

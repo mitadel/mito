@@ -2,12 +2,12 @@
 
 namespace mito {
 
-template <typename T>
+template <typename T, int D>
 class NodalField {
   public:
 
-    NodalField(int nodes, int dim, std::string name = "") 
-        : _nodes(nodes), _dim(dim), _name(name), _nodalField(_nodes * _dim, 0.0) {}
+    NodalField(int nodes, std::string name = "") 
+        : _nodes(nodes), _name(name), _nodalField(_nodes * D, 0.0) {}
 
     ~NodalField(){}
 
@@ -15,11 +15,13 @@ class NodalField {
      * Operator()
      */
     const T& operator()(const int a, const int i) const {
-        return _nodalField[_dim * a + i];
+        assert(i < D);
+        return _nodalField[D * a + i];
     }
 
     T& operator()(const int a, const int i) {
-        return _nodalField[_dim * a + i];
+        assert(i < D);
+        return _nodalField[D * a + i];
     }
 
     /**
@@ -49,7 +51,7 @@ class NodalField {
     }
 
     inline int dim() const {
-        return _dim;
+        return D;
     }
 
     inline int nodes() const {
@@ -57,7 +59,7 @@ class NodalField {
     }
 
     inline int size() const {
-        return _nodes * _dim;
+        return _nodes * D;
     }
 
     /**
@@ -74,11 +76,6 @@ class NodalField {
     int _nodes;
 
     /**
-     * dimension
-     */
-    int _dim;
-
-    /**
      * name of the nodal field
      */
     std::string _name;
@@ -90,8 +87,8 @@ class NodalField {
 
 };
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, const NodalField<T>& nodalField){
+template<typename T, int D>
+std::ostream& operator<<(std::ostream& os, const NodalField<T, D>& nodalField){
     
     os << "Nodal field \"" << nodalField.name() << "\" : ";
 
@@ -101,7 +98,7 @@ std::ostream& operator<<(std::ostream& os, const NodalField<T>& nodalField){
     }
 
     os << "[(" << nodalField(0, 0); 
-    for (auto d = 1; d < nodalField.dim(); ++d) {
+    for (auto d = 1; d < D; ++d) {
         os << ", " << nodalField(0, d);
     }
     os << ")";
@@ -109,7 +106,7 @@ std::ostream& operator<<(std::ostream& os, const NodalField<T>& nodalField){
     for (auto i = 1; i < nodalField.nodes(); ++i)
     {
         os << ", (" << nodalField(i, 0);
-        for (auto d = 1; d < nodalField.dim(); ++d) {
+        for (auto d = 1; d < D; ++d) {
             os << ", " << nodalField(i, d);
         }
         os << ")";
