@@ -15,7 +15,9 @@ using mito::x0;
 using mito::x1;
 using mito::x2;
 using mito::x3;
+using mito::SEG;
 using mito::TRI;
+using mito::GAUSS;
 
 // TODO: When everything is in place to compute integrals, add Stokes' theorem as a test.
 
@@ -95,6 +97,15 @@ int main () {
         });
     std::cout << "Connectivity: " << connectivity() << std::endl;
 
+    // connectivity of the mesh
+    mito::Connectivity<2 /* nodes per element */> connectivityBoundary (4 /* number of elements */, 
+        { 1, 2, // Element 0: Nodes 1, 2
+          2, 4, // Element 1: Nodes 2, 4
+          4, 0, // Element 2: Nodes 4, 0
+          0, 1  // Element 3: Nodes 0, 1
+        });
+    std::cout << "Connectivity boundary: " << connectivityBoundary() << std::endl;
+
     // coordinates of the mesh nodes
     mito::NodalField<real, DIM2> coordinates(5, "coordinates");
     coordinates(0, 0) = 0.0;
@@ -112,38 +123,42 @@ int main () {
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     //static mito::ElementSetTri elementSet;
     mito::Elements<TRI, DIM2> bodyElements(connectivity, coordinates);
-    mito::Integrator<mito::GAUSS, TRI, 2 /* degree of exactness */, DIM2> 
-        integrator(bodyElements);
+    mito::Integrator<GAUSS, TRI, 2 /* degree of exactness */, DIM2> 
+        bodyIntegrator(bodyElements);
 
-    real result = integrator.integrate(cosine);     // exact 0.946083...
+    mito::Elements<SEG, DIM2> boundaryElements(connectivityBoundary, coordinates);
+    mito::Integrator<GAUSS, SEG, 2 /* degree of exactness */, DIM2> 
+        boundaryIntegrator(boundaryElements);
+
+    real result = bodyIntegrator.integrate(cosine);     // exact 0.946083...
     std::cout << "Integration of cos(x*y): Result = " << result
         << ", Error = " << std::fabs(result - 0.946083)
         << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> one([](const vector<DIM2>& x){ return 1.0; });
-    result = integrator.integrate(one);     // exact 1.0
+    result = bodyIntegrator.integrate(one);     // exact 1.0
     std::cout << "Integration of 1: Result = " << result 
         << ", Error = " << std::fabs(result - 1.0)
         << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> linear([](const vector<DIM2>& x){ return x[0]; });
-    result = integrator.integrate(linear);  // exact 0.5
+    result = bodyIntegrator.integrate(linear);  // exact 0.5
     std::cout << "Integration of x: Result = " << result 
         << ", Error = " << std::fabs(result - 0.5)
         << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xy([](const vector<DIM2>& x){ return x[0]*x[1]; });
-    result = integrator.integrate(xy);      // exact 0.25
+    result = bodyIntegrator.integrate(xy);      // exact 0.25
     std::cout << "Integration of x*y: Result = " << result 
         << ", Error = " << std::fabs(result - 0.25)
         << std::endl;
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xx([](const vector<DIM2>& x){ return x[0]*x[0]; });
-    result = integrator.integrate(xx);      // exact 1.0/3.0
+    result = bodyIntegrator.integrate(xx);      // exact 1.0/3.0
     std::cout << "Integration of x*x: Result = " << result 
         << ", Error = " << std::fabs(result - 1.0/3.0)
         << std::endl;
