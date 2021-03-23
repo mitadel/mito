@@ -128,6 +128,34 @@ namespace mito {
     template <> 
     int Factorial<mito::DIM1>() {return 1;}
 
+    real ComputeDeterminant(const tensor<mito::DIM4>& A)
+    {
+        return A[1] * A[11] * A[14] * A[4] 
+                - A[1] * A[10] * A[15] * A[4] 
+                - A[11] * A[13] * A[2] * A[4] 
+                + A[10] * A[13] * A[3] * A[4] 
+                - A[0] * A[11] * A[14] * A[5] 
+                + A[0] * A[10] * A[15] * A[5] 
+                + A[11] * A[12] * A[2] * A[5] 
+                - A[10] * A[12] * A[3] * A[5] 
+                - A[1] * A[11] * A[12] * A[6] 
+                + A[0] * A[11] * A[13] * A[6] 
+                + A[1] * A[10] * A[12] * A[7] 
+                - A[0] * A[10] * A[13] * A[7] 
+                - A[15] * A[2] * A[5] * A[8] 
+                + A[14] * A[3] * A[5] * A[8] 
+                + A[1] * A[15] * A[6] * A[8] 
+                - A[13] * A[3] * A[6] * A[8] 
+                - A[1] * A[14] * A[7] * A[8] 
+                + A[13] * A[2] * A[7] * A[8] 
+                + A[15] * A[2] * A[4] * A[9] 
+                - A[14] * A[3] * A[4] * A[9] 
+                - A[0] * A[15] * A[6] * A[9] 
+                + A[12] * A[3] * A[6] * A[9] 
+                + A[0] * A[14] * A[7] * A[9] 
+                - A[12] * A[2] * A[7] * A[9];
+    }
+
     real ComputeDeterminant(const tensor<mito::DIM3>& A)
     {
         return A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6]) +
