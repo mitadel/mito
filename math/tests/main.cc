@@ -15,6 +15,7 @@ using mito::x0;
 using mito::x1;
 using mito::x2;
 using mito::x3;
+using mito::TRI;
 
 // TODO: When everything is in place to compute integrals, add Stokes' theorem as a test.
 
@@ -110,9 +111,9 @@ int main () {
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     //static mito::ElementSetTri elementSet;
-    mito::ElementSetTri<1 /* polynomial order */> elementSet(connectivity, coordinates);
-    mito::Integrator<mito::GAUSS, mito::TRI, 2 /* degree of exactness */, DIM2> 
-        integrator(elementSet.elements());
+    mito::Elements<TRI, DIM2> bodyElements(connectivity, coordinates);
+    mito::Integrator<mito::GAUSS, TRI, 2 /* degree of exactness */, DIM2> 
+        integrator(bodyElements);
 
     real result = integrator.integrate(cosine);     // exact 0.946083...
     std::cout << "Integration of cos(x*y): Result = " << result

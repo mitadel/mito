@@ -89,9 +89,64 @@ class Elements {
 
     static constexpr int V = ElementType::nVertices;
 
+  private:
+
+    template<int N>
+    void _fillVertices(const Connectivity<N> & connectivity, const NodalField<real> & coordinates) {
+
+        for (auto e = 0; e < _nElements; ++e) {
+            for (auto a = 0; a < V; ++a) {
+                // TOFIX: Here we assume that the vertices are the first nVertices entries of 
+                //       the connectivity...
+                const int & id = connectivity(e, a);
+                for (auto d = 0; d < D; ++d) {
+                    vertex(e, a)[d] = coordinates(id, d);
+                }
+            }
+        }
+
+        // all done
+        return;
+    }
+
+    // computes volume of a simplex of vertices a1, ..., aV based on the formula 
+    // fabs(det(a1, 1; ...; aV, 1)) / D!, with D = V - 1 being the dimension of the phyisical space
+    void _computeJacobians() {
+        
+        static tensor<mito::DIM(D + 1)> verticesTensor;
+
+        // TOFIX: This formula does not work for triangles in 3D, or for lines in 2D or 3D...
+        static_assert(V == int(D)+1);
+
+        for (auto e = 0; e < _nElements; ++e) {
+            std::fill(verticesTensor.begin(), verticesTensor.end(), 0.0);
+            for (auto a = 0; a < V; ++a) {
+                for (auto d = 0; d < D; ++d) {
+                    verticesTensor[a * V + d] = vertex(e, a)[d];
+                }
+                verticesTensor[a * V + D] = 1.0;
+            }
+            _jacobians[e] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
+        }
+
+        return;
+    }
+
   public:
-    Elements(int nElements) : _nElements(nElements), _vertices(nElements * V), 
-        _jacobians(nElements) {}
+    template<int N>
+    Elements(const Connectivity<N> & connectivity, const NodalField<real> & coordinates) : 
+        _nElements(connectivity.nElements()), _vertices(_nElements * V), _jacobians(_nElements) {
+
+        // fill container with elements vertices based on connectivity and coordinates
+        _fillVertices(connectivity, coordinates); 
+
+        // compute the volume of each element 
+        _computeJacobians();
+
+        // all done
+        return;
+    }
+
     ~Elements() {}
 
     const mito::vector<D> & vertex(int e, int v) const {
@@ -103,29 +158,6 @@ class Elements {
         assert(e < _nElements && v < V);
         return _vertices[e * V + v];
     }  
-
-    // computes volume of a simplex of vertices a1, ..., aV based on the formula 
-    // fabs(det(a1, 1; ...; aV, 1)) / D!, with D = V - 1 being the dimension of the phyisical space
-    void computeJacobians() {
-        
-        static tensor<mito::DIM(D + 1)> verticesTensor;
-
-        // TOFIX: This formula does not work for triangles in 3D, or for lines in 2D or 3D...
-        static_assert(V == int(D)+1);
-
-        for (auto e = 0; e < _nElements; ++e) {
-            std::fill(verticesTensor.begin(), verticesTensor.end(), 0.0);
-            for (auto a = 0; a < V; ++a) {
-                for (auto d = 0; d < D; ++d) {
-                    verticesTensor[a * V + d] = _vertices[e * V + a][d];
-                }
-                verticesTensor[a * V + D] = 1.0;
-            }
-            _jacobians[e] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
-        }
-
-        return;
-    }
 
     inline int nElements() const {return _nElements;} 
     inline int nVertices() const {return V;} 
@@ -146,25 +178,7 @@ class ElementSet
   public:
 
     ElementSet(const Connectivity<N> & connectivity, const NodalField<real> & coordinates) :
-        _connectivity(connectivity), _elements(connectivity.nElements()) {
-            // TODO: Fill in _elements ...
-
-            for (auto e = 0; e < _connectivity.nElements(); ++e) {
-                for (auto a = 0; a < V; ++a) {
-                    // TOFIX: Here we assume that the vertices are the first nVertices entries of 
-                    //       the connectivity...
-                    const int & id = connectivity(e, a);
-                    for (auto d = 0; d < D; ++d) {
-                        _elements.vertex(e, a)[d] = coordinates(id, d);
-                    }
-                }
-            }
-
-            _elements.computeJacobians();
-
-            // all done
-            return;
-        }
+        _connectivity(connectivity), _elements(connectivity, coordinates) {}
 
     virtual ~ElementSet() {}
 
