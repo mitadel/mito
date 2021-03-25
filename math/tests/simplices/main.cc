@@ -1,27 +1,60 @@
+#include <map>
 #include "../../simplex.h"
+
+using mito::DIM2;
+using mito::point_t;
+using mito::vertex_t;
+using mito::segment_t;
+using mito::triangle_t;
 
 int main () {
 
-    vertex_t vertex0;
-    std::cout << "vertex0 = " << vertex0 << std::endl;
+    mito::VertexCoordinatesMap<DIM2> vertexCoordinatesMap;
 
+    /**
+     * Mesh with four elements:
+        (0,1)           (1,1)
+          4       6         2
+          +-----------------+
+          | .             . |
+          |   .5       4.   |
+          |     .   .       |
+         7|       .3       3|
+          |     .     .     |
+          |   .2      1 .   |
+          | .             . |
+          +-----------------+
+          0       0        1
+        (0,0)             (1,0)
+    */
+
+    vertex_t vertex0; 
+    vertexCoordinatesMap.insert(vertex0, point_t<DIM2>(0.0,0.0));
     vertex_t vertex1;
-    std::cout << "vertex1 = " << vertex1 << std::endl;
-
+    vertexCoordinatesMap.insert(vertex1, point_t<DIM2>(1.0,0.0));
     vertex_t vertex2;
-    std::cout << "vertex2 = " << vertex2 << std::endl;
+    vertexCoordinatesMap.insert(vertex2, point_t<DIM2>(1.0,1.0));
+    vertex_t vertex3;
+    vertexCoordinatesMap.insert(vertex3, point_t<DIM2>(0.5,0.5));
+    vertex_t vertex4;
+    vertexCoordinatesMap.insert(vertex4, point_t<DIM2>(0.0,1.0));
 
-    segment_t segmentA({vertex0, vertex1});
-    std::cout << "segment = " << segmentA << std::endl;
+    segment_t segment0({vertex0, vertex1});
+    segment_t segment1({vertex1, vertex3});
+    segment_t segment2({vertex3, vertex0});
+    segment_t segment3({vertex1, vertex2});
+    segment_t segment4({vertex2, vertex3});
+    segment_t segment5({vertex4, vertex3});
+    segment_t segment6({vertex2, vertex4});
+    segment_t segment7({vertex4, vertex0});
 
-    segment_t segmentB({vertex1, vertex2});
-    std::cout << "segment = " << segmentB << std::endl;
+    triangle_t element0 ({segment0, segment1, segment2});
+    triangle_t element1 ({segment3, segment4, segment1});
+    triangle_t element2 ({segment6, segment5, segment4});
+    triangle_t element3 ({segment4, segment0, segment3});
 
-    segment_t segmentC({vertex2, vertex0});
-    std::cout << "segment = " << segmentB << std::endl;
-
-    triangle_t triangle({segmentA, segmentB, segmentC});
-    std::cout << "triangle = " << triangle << std::endl;
+    // TODO: An ElementSet could be represented as a vector of simplices of dimension D and a 
+    //      vertexCoordinatesMap<D>.
 
     // all done
     return 0; 
