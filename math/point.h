@@ -3,7 +3,7 @@
 namespace mito {
 
 template <DIM D>
-class point {
+class Point {
 
   private:
     // real_wrap<I>... expands to (real, real, ..., real), D times
@@ -45,12 +45,12 @@ class point {
         return std::get<i>(_tuple);
     } 
 
-    inline point() : _tuple() {
+    inline Point() : _tuple() {
         _initialize(std::make_index_sequence<D>{});
     }
 
     template<class... real, typename std::enable_if<sizeof...(real) == D, int>::type = 0>
-    point(real... args) : _tuple() {
+    Point(real... args) : _tuple() {
         _initialize(std::make_index_sequence<D>{}, args...);
     }
 
@@ -58,35 +58,38 @@ class point {
     tuple_type _tuple;
 };
 
-// overload operator<< for point
-std::ostream& operator<<(std::ostream& os, const mito::point<mito::DIM1>& x)
+template<DIM D>
+using point_t = Point<D>;
+
+} // namespace mito
+
+// overload operator<< for Point
+std::ostream& operator<<(std::ostream& os, const mito::Point<mito::DIM1>& x)
 {
     os << "(" << x[mito::x0] << ")";
     return os;
 }
 
-// overload operator<< for point
-std::ostream& operator<<(std::ostream& os, const mito::point<mito::DIM2>& x)
+// overload operator<< for Point
+std::ostream& operator<<(std::ostream& os, const mito::Point<mito::DIM2>& x)
 {
     os << "(" << x[mito::x0] << ", " << x[mito::x1] << ")";
     return os;
 }
 
-// overload operator<< for point
-std::ostream& operator<<(std::ostream& os, const mito::point<mito::DIM3>& x)
+// overload operator<< for Point
+std::ostream& operator<<(std::ostream& os, const mito::Point<mito::DIM3>& x)
 {
     os << "(" << x[mito::x0] << ", " << x[mito::x1] << ", " << x[mito::x2] << ")";
     return os;
 }
 
-// overload operator<< for point
-std::ostream& operator<<(std::ostream& os, const mito::point<mito::DIM4>& x)
+// overload operator<< for Point
+std::ostream& operator<<(std::ostream& os, const mito::Point<mito::DIM4>& x)
 {
     os << "(" << x[mito::x0] << ", " << x[mito::x1] 
         << ", " << x[mito::x2] << "," << x[mito::x3] << ")";
     return os;
 }
-
-} // namespace mito
 
 // end of file

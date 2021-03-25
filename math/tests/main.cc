@@ -10,7 +10,7 @@ using mito::real;
 using mito::DIM1;
 using mito::DIM2;
 using mito::DIM3;
-using mito::point;
+using mito::Point;
 using mito::x0;
 using mito::x1;
 using mito::x2;
@@ -23,13 +23,13 @@ using mito::GAUSS;
 
 int main () {
 
-    point<DIM1> a(10.0);
+    Point<DIM1> a(10.0);
     std::cout << a << std::endl;
 
-    point<DIM2> b(10.0, 2.0);
+    Point<DIM2> b(10.0, 2.0);
     std::cout << b << std::endl;
 
-    point<DIM3> c(10.0, 2.0, 1.0);
+    Point<DIM3> c(10.0, 2.0, 1.0);
     std::cout << c << std::endl;
 
     // a scalar function 
