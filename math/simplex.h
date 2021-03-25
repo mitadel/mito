@@ -1,4 +1,7 @@
 #include "../mito.h"
+#include "point.h"
+
+namespace mito {
 
 template <int D> 
 class Simplex 
@@ -21,9 +24,37 @@ class Simplex<0>
     ~Simplex(){};
 };
 
+using vertex_t = Simplex<0>;
+using segment_t = Simplex<1>;
+using triangle_t = Simplex<2>;
+using tetrahedron_t = Simplex<3>;
+
+template<DIM D>
+// QUESTION: can we call this 'connectivity'? 
+class VertexCoordinatesMap {
+
+    //using map_t = std::unordered_map<std::reference_wrapper<vertex_t>, point_t<D>>;
+    using map_t = std::unordered_map<const vertex_t*, const point_t<D>*>;
+
+  public:
+    VertexCoordinatesMap() : _map() {};
+
+    auto insert(const vertex_t & vertex, const point_t<D>&& point) {
+        return _map.insert(
+            //std::pair<std::reference_wrapper<vertex_t>, point_t<D>>(vertex, point)
+            std::pair<const vertex_t*, const point_t<D>*>(&vertex, &point)
+        );
+    }
+
+  private:
+    map_t _map;
+};
+
+}
+
 // overload operator<< for simplices
 template<int D>
-std::ostream& operator<<(std::ostream& os, const Simplex<D>& s)
+std::ostream& operator<<(std::ostream& os, const mito::Simplex<D>& s)
 {
     os << &s << " composed of:" << std::endl;
     for(const auto & entity : s.entities()) {
@@ -34,13 +65,8 @@ std::ostream& operator<<(std::ostream& os, const Simplex<D>& s)
 
 // overload operator<< specialization for simplices with D = 0 (vertices)
 template<>
-std::ostream& operator<<(std::ostream& os, const Simplex<0>& s)
+std::ostream& operator<<(std::ostream& os, const mito::Simplex<0>& s)
 {
     os << &s;
     return os;
 }
-
-using vertex_t = Simplex<0>;
-using segment_t = Simplex<1>;
-using triangle_t = Simplex<2>;
-using tetrahedron_t = Simplex<3>;
