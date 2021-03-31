@@ -51,6 +51,7 @@ int main () {
     triangle_t element0 ({segment0, segment1, segment2});
     triangle_t element1 ({segment3, segment4, segment1});
     triangle_t element2 ({segment6, segment5, segment4});
+    triangle_t element3 ({segment7, segment2, segment5});
 
     std::vector<triangle_t> elements = {element0, element1, element2, element3};
 
