@@ -32,6 +32,8 @@ namespace mito {
     // typedef for vectors
     template <DIM D>
     using vector = std::array<real, D>;
+    template<DIM D>
+    using point_t = mito::vector<D>; //Point<D>;
     // typedef for tensors
     template <DIM D1, DIM D2 = D1>
     using tensor = std::array<real, D1 * D2>;

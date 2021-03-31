@@ -58,9 +58,6 @@ class Point {
     tuple_type _tuple;
 };
 
-template<DIM D>
-using point_t = Point<D>;
-
 } // namespace mito
 
 // overload operator<< for Point
