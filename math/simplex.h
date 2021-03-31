@@ -19,6 +19,32 @@ class Simplex
         }
     }
 
+    bool sanityCheck() const {
+        // check the subentities
+        for(const auto & entity : entities()) {
+            // if a subentity is broken, the sanity check fails
+            if(!entity.get().sanityCheck()) {
+                // all done
+                return false;
+            }
+        }
+
+        // use a set to cleanup duplicates
+        std::set<const Simplex<0>* /* vertex_t* */> vertices;
+        // collect vertices of every subentity of this simplex
+        for(const auto & entity : entities()) {
+            entity.get().getVertices(vertices);
+        }
+        // if this simplex does not have D+1 vertices, something went wrong
+        if (vertices.size() != int(D) + 1) {
+            // all done
+            return false;
+        }
+
+        // all done
+        return true;
+    }
+
   private:
     std::array< std::reference_wrapper<Simplex<D-1>>, D+1> _entities;
 };
@@ -36,6 +62,11 @@ class Simplex<0>
         // all done
         return; 
     }
+
+    bool sanityCheck() const {
+        return true;
+    }
+
 };
 
 template <int D> 
