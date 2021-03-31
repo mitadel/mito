@@ -3,6 +3,7 @@
 
 using mito::DIM2;
 using mito::TRI;
+using mito::GAUSS;
 
 int main () {
 
@@ -16,14 +17,17 @@ int main () {
     verticesElement[2][1] = 0.5; 
 
     std::cout << "One-point quadrature rule (r = 1) : " << std::endl;
-    const auto quadratureRule1 = mito::QuadratureRule<TRI, 1>();
-    std::cout << "Quad Points (reference): " << quadratureRule1.points() << std::endl;
-    std::cout << "Quad Weights: " << quadratureRule1.weights() << std::endl;
+    const auto quadratureRule1 = mito::SampleQuadratureRule<GAUSS, TRI, 1>::Get();
+    // TODO: Overload operator << for quadrature rules
+    // These lines do not build with the current implementation of quadrature rules
+    //std::cout << "Quad Points (reference): " << quadratureRule1.points() << std::endl;
+    //std::cout << "Quad Weights: " << quadratureRule1.weights() << std::endl;
 
     std::cout << "Three-point quadrature rule (r = 2):" << std::endl;
-    const auto quadratureRule2 = mito::QuadratureRule<TRI, 2>();
-    std::cout << "Quad Points (reference): " << quadratureRule2.points() << std::endl;
-    std::cout << "Quad Weights: " << quadratureRule2.weights() << std::endl;
+    const auto quadratureRule2 = mito::SampleQuadratureRule<GAUSS, TRI, 2>::Get();
+    // These lines do not build with the current implementation of quadrature rules
+    //std::cout << "Quad Points (reference): " << quadratureRule2.points() << std::endl;
+    //std::cout << "Quad Weights: " << quadratureRule2.weights() << std::endl;
 
     return 0;
 }
