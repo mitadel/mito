@@ -45,6 +45,7 @@ template<DIM D>
 class VertexCoordinatesMap {
 
     //using map_t = std::unordered_map<std::reference_wrapper<vertex_t>, point_t<D>>;
+    // TODO: test O for access
     using map_t = std::unordered_map<const vertex_t*, const point_t<D>*>;
 
   public:
@@ -55,6 +56,11 @@ class VertexCoordinatesMap {
             //std::pair<std::reference_wrapper<vertex_t>, point_t<D>>(vertex, point)
             std::pair<const vertex_t*, const point_t<D>*>(&vertex, &point)
         );
+    }
+
+    const point_t<D>& operator[](const vertex_t & vertex) const {
+        auto point = _map.find(&vertex);
+        return *(point->second);
     }
 
   private:
