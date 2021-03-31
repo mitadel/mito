@@ -12,7 +12,8 @@ class Simplex
 
     const auto & entities() const {return _entities;}
 
-  public:
+
+  private:
     std::array< std::reference_wrapper<Simplex<D-1>>, D+1> _entities;
 };
 
