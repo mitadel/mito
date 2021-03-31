@@ -24,6 +24,17 @@ class Simplex<0>
     ~Simplex(){};
 };
 
+template <int D> 
+class OrientedSimplex : public Simplex<D>
+{
+  public:
+    OrientedSimplex(std::array< std::reference_wrapper<Simplex<D-1>>, D+1>&& entities, 
+        bool orientation) : Simplex<D>(entities), _orientation(orientation) {}
+
+  private:
+    bool _orientation;    
+};
+
 using vertex_t = Simplex<0>;
 using segment_t = Simplex<1>;
 using triangle_t = Simplex<2>;
