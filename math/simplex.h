@@ -1,5 +1,6 @@
 #include "../mito.h"
 #include "point.h"
+#include <set>
 
 namespace mito {
 
@@ -12,6 +13,11 @@ class Simplex
 
     const auto & entities() const {return _entities;}
 
+    void getVertices(std::set<const Simplex<0>* /* vertex_t* */>& vertices) const {
+        for(const auto & entity : entities()) {
+            entity.get().getVertices(vertices);
+        }
+    }
 
   private:
     std::array< std::reference_wrapper<Simplex<D-1>>, D+1> _entities;
@@ -23,6 +29,13 @@ class Simplex<0>
   public:
     Simplex(){};
     ~Simplex(){};
+
+    void getVertices(std::set<const Simplex<0>* /* vertex_t* */>& vertices) const {
+        // insert this vertex
+        vertices.insert(this);
+        // all done
+        return; 
+    }
 };
 
 template <int D> 
