@@ -112,6 +112,44 @@ class VertexCoordinatesMap {
     map_t _map;
 };
 
+
+template<class element_t, DIM D>
+class ElementSet2 {
+
+  public: 
+
+    ElementSet2(std::vector<element_t> && elements, VertexCoordinatesMap<D> && coordinatesMap)
+        : _elements(elements), _coordinatesMap(coordinatesMap), _jacobians(elements.size(), 0.0)
+    {
+        // compute the jacobians of the map from reference to current element for each element 
+        _computeJacobians();
+
+    }
+
+    ~ElementSet2() {}
+
+    bool sanityCheck() {
+        bool check = true;
+        for (const auto & e : _elements) {
+            if(!e.sanityCheck()) {
+                std::cout << "Failed sanity check for element " << e << std::endl;
+                check = false;
+            }
+        }
+        return check;
+    }
+
+  private:
+    void _computeJacobians() {
+        return;
+    }
+
+  private:    
+    const std::vector<element_t> _elements;
+    const VertexCoordinatesMap<D> _coordinatesMap;
+    std::vector<real> _jacobians;
+};
+
 }
 
 // overload operator<< for simplices

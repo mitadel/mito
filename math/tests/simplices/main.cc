@@ -51,10 +51,19 @@ int main () {
     triangle_t element0 ({segment0, segment1, segment2});
     triangle_t element1 ({segment3, segment4, segment1});
     triangle_t element2 ({segment6, segment5, segment4});
-    triangle_t element3 ({segment4, segment0, segment3});
 
-    // TODO: An ElementSet could be represented as a vector of simplices of dimension D and a 
+    std::vector<triangle_t> elements = {element0, element1, element2, element3};
+
+    // sanity check
+    for (const auto & e : elements) {
+        if(!e.sanityCheck()) {
+            std::cout << "Failed sanity check for element " << e << std::endl;
+        }
+    }
+
+    // TODO: An ElementSet could be represented as a collection of simplices of dimension D and a 
     //      vertexCoordinatesMap<D>.
+    mito::ElementSet2 elementSet(std::move(elements), std::move(vertexCoordinatesMap));
 
     // all done
     return 0; 
