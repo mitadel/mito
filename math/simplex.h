@@ -112,6 +112,59 @@ class VertexCoordinatesMap {
     map_t _map;
 };
 
+template<class element_t, DIM D>
+void computeSimplicesVolume(const std::vector<element_t> & elements, 
+    const VertexCoordinatesMap<D> &coordinatesMap, std::vector<real> & volumes) 
+{
+    // number of vertices
+    constexpr int V = int(D)+1;
+
+    static tensor<mito::DIM(V)> verticesTensor;
+
+    // get number of elements
+    int nElements = volumes.size();
+
+    int countE = 0;
+    for (const auto & e : elements) {
+        std::fill(verticesTensor.begin(), verticesTensor.end(), 0.0);
+        // use a set to collect vertices without repeated entries 
+        std::set<const vertex_t*> vertices;
+        e.getVertices(vertices);
+        // assert you found D+1 vertices
+        assert(V == vertices.size());
+
+        int countV = 0;
+        for(const auto & v : vertices) {
+            for (auto d = 0; d < D; ++d) {
+                verticesTensor[countV * V + d] = coordinatesMap[*v][d];
+            }
+            verticesTensor[countV * V + D] = 1.0;
+            ++countV;
+        }
+        volumes[countE] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
+        ++countE;
+    }
+    // all done
+    return;
+}
+
+template<class element_t, DIM D>
+void computeElementsVolume(const std::vector<element_t> & elements, 
+    const VertexCoordinatesMap<D> &coordinatesMap, std::vector<real> & volumes);
+
+template<>
+void computeElementsVolume<triangle_t, DIM2>(const std::vector<triangle_t> & elements, 
+    const VertexCoordinatesMap<DIM2> &coordinatesMap, std::vector<real> & volumes)
+{
+    return computeSimplicesVolume<triangle_t, DIM2>(elements, coordinatesMap, volumes);
+}
+
+template<>
+void computeElementsVolume<tetrahedron_t, DIM3>(const std::vector<tetrahedron_t> & elements, 
+    const VertexCoordinatesMap<DIM3> &coordinatesMap, std::vector<real> & volumes)
+{
+    return computeSimplicesVolume<tetrahedron_t, DIM3>(elements, coordinatesMap, volumes);
+}
 
 template<class element_t, DIM D>
 class ElementSet2 {
@@ -141,7 +194,8 @@ class ElementSet2 {
 
   private:
     void _computeJacobians() {
-        return;
+        return computeElementsVolume<element_t /* element type */, D /* spatial dim*/>
+            (_elements, _coordinatesMap, _jacobians);
     }
 
   private:    

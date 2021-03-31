@@ -6,6 +6,7 @@
 #include <functional>
 #include <iostream>
 #include <cassert>
+#include <math.h>
 
 //https://stackoverflow.com/questions/4295432/typedef-function-pointer
 //https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
