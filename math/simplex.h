@@ -96,6 +96,29 @@ class VertexCoordinatesMap {
   public:
     VertexCoordinatesMap() : _map() {};
 
+    ~VertexCoordinatesMap() {
+        // delete physical points associated to vertices
+        for(auto vertex : _map) {
+            delete vertex.second;
+        }
+        // all done
+        return;
+    }
+
+    void print(){
+        // iterate on map
+        for(auto item : _map) {
+            std::cout << "Vertex: " << item.first << std::endl;
+            std::cout << "Point: " << *item.second << std::endl;
+        }
+        // all done
+        return;
+    }
+
+    auto size() {
+        return _map.size();
+    }
+
     auto insert(const vertex_t & vertex, const point_t<D>&& point) {
         return _map.insert(
             //std::pair<std::reference_wrapper<vertex_t>, point_t<D>>(vertex, point)
