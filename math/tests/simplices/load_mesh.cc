@@ -59,11 +59,11 @@ bool LoadMesh(std::string fileName) {
     int N_element_sets = 0; 
     readUntilNextSpace(&fileStream, N_element_sets);
  
-    // TODO: Subdivide by materials?
+    // QUESTION: Not sure that we need this... 
     assert(N_element_sets == 1);
 
     // fill in vertices
-    std::vector<mito::vertex_t*> vertices(N_vertices);
+    std::vector<mito::vertex_t*> vertices(N_vertices, nullptr);
     mito::VertexCoordinatesMap<D> vertexCoordinatesMap; 
     for (auto & vertex : vertices) {
         // instantiate new vertex
@@ -71,14 +71,14 @@ bool LoadMesh(std::string fileName) {
         // instantiate new point
         mito::point_t<D> * point = new mito::point_t<D>();
         for (int d = 0; d < D; ++d) {
-            // read vertices coordinates
+            // read point coordinates
             readUntilNextSpace(&fileStream, (*point)[d]);
         }
-        // associate the new vertex with the new point
+        // associate the new vertex to the new point
         vertexCoordinatesMap.insert(*vertex, std::move(*point));
     }
 
-    // sanity check
+    // sanity check: the number of vertices in the map is N_vertices
     assert(vertexCoordinatesMap.size() == N_vertices);
     //vertexCoordinatesMap.print();
 
@@ -133,13 +133,13 @@ bool LoadMesh(std::string fileName) {
         }
     }
 
-    // finalize
+    // finalize file stream
     ignoreRestOfLine(&fileStream);
     assert(fileStream.eof());
     fileStream.close();
 
     // free memory
-    for (auto & vertex : vertices) {
+    for (const auto & vertex : vertices) {
         delete vertex;
     }
 
