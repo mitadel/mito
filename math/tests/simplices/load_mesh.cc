@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <map>
 
 template<typename T>
 void readUntilNextSpace(std::istream * const stream, T & word) {
@@ -82,8 +83,8 @@ bool LoadMesh(std::string fileName) {
     //vertexCoordinatesMap.print();
 
     // fill in elements
-    std::vector<const mito::Simplex<D>*> elements(N_elements);
-    for (auto & element : elements) {
+    std::map<std::string, std::vector<const mito::MeshEntity *>> element_sets;
+    for (int i = 0; i < N_elements; ++i) {
         int dim_element = 0; 
         readUntilNextSpace(&fileStream, dim_element);
 
@@ -102,28 +103,34 @@ bool LoadMesh(std::string fileName) {
             mito::segment_t segment1({*vertices[index1], *vertices[index2]});
             mito::segment_t segment2({*vertices[index2], *vertices[index0]});
 
-            int element_set_id = 0; 
-            readUntilNextSpace(&fileStream, element_set_id);
-
-            // TOFIX: Remove the assert after subdividing by materials
-            // eventually it will be something like 
-            //element_set[element_set_id][i] = element
-            assert(element_set_id == 1);
-
             // QUESTION: With this implementation, edges have no dignity of their own but are
             //           just 'edges of a triangle'. This will make us lose some information,
             //           because we will see as different segments the same edge seen from two 
             //           different triangles, although of course they have the same vertices.
-            element = new mito::triangle_t ({segment0, segment1, segment2});
+            const mito::triangle_t * element = new mito::triangle_t({segment0, segment1, segment2});
+
+            // QUESTION: Can the label be more than one? 
+            // read label for element
+            std::string element_set_id; 
+            readUntilNextSpace(&fileStream, element_set_id);
+
+            // add this element to the element_sets labelled with element_set_id 
+            element_sets[element_set_id].push_back(element);
         }
     }
 
-    // sanity check
-    assert(elements.size() == N_elements);
+    // sanity check: the number of total elements across element sets is N_elements
+    int sum = 0;
+    for(const auto & element_set : element_sets) {
+        sum += element_set.second.size();
+    }
+    assert(sum == N_elements);
 
-    // sanity check
-    for (const auto & e : elements) {
-        assert(e->sanityCheck());
+    // sanity check: each element is self-consistent 
+    for(const auto & element_set : element_sets) {
+        for (const auto & element : element_set.second) {
+            assert(element->sanityCheck());
+        }
     }
 
     // finalize
@@ -137,8 +144,10 @@ bool LoadMesh(std::string fileName) {
     }
 
     // free memory
-    for (auto & element : elements) {
-        delete element;
+    for(const auto & element_set : element_sets) {
+        for (const auto & element : element_set.second) {
+            delete element;
+        }
     }
 
     // all done

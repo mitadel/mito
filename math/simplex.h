@@ -1,15 +1,27 @@
 #include "../mito.h"
 #include "point.h"
 #include <set>
+#include <unordered_map>
 
 namespace mito {
 
+class MeshEntity {
+  protected:
+    MeshEntity() {}
+  public:
+    virtual ~MeshEntity() {}
+
+    virtual bool sanityCheck() const = 0;
+};
+
 template <int D> 
-class Simplex 
+class Simplex : public MeshEntity
 {
   public:
-    Simplex(std::array< std::reference_wrapper<Simplex<D-1>>, D+1>&& entities) : 
+    Simplex(std::array< std::reference_wrapper<Simplex<D-1>>, D+1>&& entities) : MeshEntity(),
         _entities(entities){}
+
+    ~Simplex() {}
 
     const auto & entities() const {return _entities;}
 
@@ -19,7 +31,7 @@ class Simplex
         }
     }
 
-    bool sanityCheck() const {
+    bool sanityCheck() const override {
         // check the subentities
         for(const auto & entity : entities()) {
             // if a subentity is broken, the sanity check fails
@@ -50,11 +62,11 @@ class Simplex
 };
 
 template <> 
-class Simplex<0> 
+class Simplex<0> : public MeshEntity
 {
   public:
-    Simplex(){};
-    ~Simplex(){};
+    Simplex() : MeshEntity() {}
+    ~Simplex(){}
 
     void getVertices(std::set<const Simplex<0>* /* vertex_t* */>& vertices) const {
         // insert this vertex
@@ -63,7 +75,7 @@ class Simplex<0>
         return; 
     }
 
-    bool sanityCheck() const {
+    bool sanityCheck() const override {
         return true;
     }
 
@@ -75,6 +87,8 @@ class OrientedSimplex : public Simplex<D>
   public:
     OrientedSimplex(std::array< std::reference_wrapper<Simplex<D-1>>, D+1>&& entities, 
         bool orientation) : Simplex<D>(entities), _orientation(orientation) {}
+
+    ~OrientedSimplex() {}
 
   private:
     bool _orientation;    
