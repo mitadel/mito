@@ -81,11 +81,9 @@ bool LoadMesh(std::string fileName) {
     assert(vertexCoordinatesMap.size() == N_vertices);
     //vertexCoordinatesMap.print();
 
-    // TOFIX: How to properly resize elements? Should this be a vector of pointers to elements?
-    //std::vector<mito::Simplex<D>> elements(N_elements);
-    std::vector<mito::Simplex<D>> elements;
-
-    for (int i = 0; i < N_elements; ++i) {
+    // fill in elements
+    std::vector<const mito::Simplex<D>*> elements(N_elements);
+    for (auto & element : elements) {
         int dim_element = 0; 
         readUntilNextSpace(&fileStream, dim_element);
 
@@ -104,8 +102,6 @@ bool LoadMesh(std::string fileName) {
             mito::segment_t segment1({*vertices[index1], *vertices[index2]});
             mito::segment_t segment2({*vertices[index2], *vertices[index0]});
 
-            mito::triangle_t element ({segment0, segment1, segment2});
-
             int element_set_id = 0; 
             readUntilNextSpace(&fileStream, element_set_id);
 
@@ -114,8 +110,11 @@ bool LoadMesh(std::string fileName) {
             //element_set[element_set_id][i] = element
             assert(element_set_id == 1);
 
-            // TOFIX: not efficient
-            elements.push_back(element);
+            // QUESTION: With this implementation, edges have no dignity of their own but are
+            //           just 'edges of a triangle'. This will make us lose some information,
+            //           because we will see as different segments the same edge seen from two 
+            //           different triangles, although of course they have the same vertices.
+            element = new mito::triangle_t ({segment0, segment1, segment2});
         }
     }
 
@@ -124,7 +123,7 @@ bool LoadMesh(std::string fileName) {
 
     // sanity check
     for (const auto & e : elements) {
-        assert(e.sanityCheck());
+        assert(e->sanityCheck());
     }
 
     // finalize
@@ -135,6 +134,11 @@ bool LoadMesh(std::string fileName) {
     // free memory
     for (auto & vertex : vertices) {
         delete vertex;
+    }
+
+    // free memory
+    for (auto & element : elements) {
+        delete element;
     }
 
     // all done
