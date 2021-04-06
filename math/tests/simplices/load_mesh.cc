@@ -83,7 +83,7 @@ bool LoadMesh(std::string fileName) {
     //vertexCoordinatesMap.print();
 
     // fill in elements
-    std::map<std::string, std::vector<const mito::MeshEntity *>> element_sets;
+    std::map<std::string, std::vector<const mito::triangle_t *>> element_sets;
     for (int i = 0; i < N_elements; ++i) {
         int dim_element = 0; 
         readUntilNextSpace(&fileStream, dim_element);

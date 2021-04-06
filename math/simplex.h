@@ -5,20 +5,11 @@
 
 namespace mito {
 
-class MeshEntity {
-  protected:
-    MeshEntity() {}
-  public:
-    virtual ~MeshEntity() {}
-
-    virtual bool sanityCheck() const = 0;
-};
-
 template <int D> 
-class Simplex : public MeshEntity
+class Simplex
 {
   public:
-    Simplex(std::array< std::reference_wrapper<Simplex<D-1>>, D+1>&& entities) : MeshEntity(),
+    Simplex(std::array< std::reference_wrapper<Simplex<D-1>>, D+1>&& entities) :
         _entities(entities){}
 
     ~Simplex() {}
@@ -31,7 +22,7 @@ class Simplex : public MeshEntity
         }
     }
 
-    bool sanityCheck() const override {
+    bool sanityCheck() const {
         // check the subentities
         for(const auto & entity : entities()) {
             // if a subentity is broken, the sanity check fails
@@ -62,10 +53,10 @@ class Simplex : public MeshEntity
 };
 
 template <> 
-class Simplex<0> : public MeshEntity
+class Simplex<0>
 {
   public:
-    Simplex() : MeshEntity() {}
+    Simplex() {}
     ~Simplex(){}
 
     void getVertices(std::set<const Simplex<0>* /* vertex_t* */>& vertices) const {
@@ -75,7 +66,7 @@ class Simplex<0> : public MeshEntity
         return; 
     }
 
-    bool sanityCheck() const override {
+    bool sanityCheck() const {
         return true;
     }
 
