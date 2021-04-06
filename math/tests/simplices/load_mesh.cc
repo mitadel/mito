@@ -1,37 +1,8 @@
 #include "../../simplex.h"
 #include "../../../mito.h"
-#include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <map>
-
-template<typename T>
-void readUntilNextSpace(std::istream * const stream, T & word) {
-
-    // tools for reading file
-    std::string line;
-    std::stringstream sstream;
-
-    // get line until separator
-    std::getline(*stream, line, ' ');
-
-    // convert the string into the type to return
-    sstream.clear();
-    sstream << line;
-    sstream >> word; 
-
-    // all done
-    return;
-}
-
-void ignoreRestOfLine(std::istream * const stream) {
-    // get rest of the line
-    std::string line;
-    std::getline(*stream, line);
-    // all done
-    return;
-}
 
 template <mito::DIM D>
 bool LoadMesh(std::string fileName) {
@@ -42,23 +13,23 @@ bool LoadMesh(std::string fileName) {
 
     // read dimension of physical space
     int dim = 0;
-    readUntilNextSpace(&fileStream, dim);
+    fileStream >> dim;
 
     // TOFIX
     assert(int(D) == dim);
 
     // read number of vertices
     int N_vertices = 0; 
-    readUntilNextSpace(&fileStream, N_vertices);
+    fileStream >> N_vertices;
 
     // read number of elements
     int N_elements = 0; 
-    readUntilNextSpace(&fileStream, N_elements);
+    fileStream >> N_elements;
 
     // read number of element sets
     int N_element_sets = 0; 
-    readUntilNextSpace(&fileStream, N_element_sets);
- 
+    fileStream >> N_element_sets;
+
     // QUESTION: Not sure that we need this... 
     assert(N_element_sets == 1);
 
@@ -72,7 +43,7 @@ bool LoadMesh(std::string fileName) {
         mito::point_t<D> * point = new mito::point_t<D>();
         for (int d = 0; d < D; ++d) {
             // read point coordinates
-            readUntilNextSpace(&fileStream, (*point)[d]);
+            fileStream >> (*point)[d];
         }
         // associate the new vertex to the new point
         vertexCoordinatesMap.insert(*vertex, std::move(*point));
@@ -85,19 +56,19 @@ bool LoadMesh(std::string fileName) {
     // fill in elements
     std::map<std::string, std::vector<const mito::triangle_t *>> element_sets;
     for (int i = 0; i < N_elements; ++i) {
-        int dim_element = 0; 
-        readUntilNextSpace(&fileStream, dim_element);
+        int element_type = 0; 
+        fileStream >> element_type;
 
-        if (dim_element == 3) {
+        if (element_type == 3) {
 
             int index0 = 0; 
-            readUntilNextSpace(&fileStream, index0);
+            fileStream >> index0;
 
             int index1 = 0; 
-            readUntilNextSpace(&fileStream, index1);
+            fileStream >> index1;
 
             int index2 = 0; 
-            readUntilNextSpace(&fileStream, index2);
+            fileStream >> index2;
 
             mito::segment_t segment0({*vertices[index0], *vertices[index1]});
             mito::segment_t segment1({*vertices[index1], *vertices[index2]});
@@ -111,8 +82,8 @@ bool LoadMesh(std::string fileName) {
 
             // QUESTION: Can the label be more than one? 
             // read label for element
-            std::string element_set_id; 
-            readUntilNextSpace(&fileStream, element_set_id);
+            std::string element_set_id;
+            fileStream >> element_set_id;
 
             // add this element to the element_sets labelled with element_set_id 
             element_sets[element_set_id].push_back(element);
@@ -134,8 +105,6 @@ bool LoadMesh(std::string fileName) {
     }
 
     // finalize file stream
-    ignoreRestOfLine(&fileStream);
-    assert(fileStream.eof());
     fileStream.close();
 
     // free memory
