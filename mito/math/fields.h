@@ -1,3 +1,6 @@
+#ifndef __MITO__FIELDS__
+#define __MITO__FIELDS__
+
 #include "../mito.h"
 
 // TOFIX: Check the std::move throughout. I am not sure they do what I expect them to.
@@ -132,5 +135,7 @@ namespace mito {
     }
 
 }
+
+#endif    //__MITO__FIELDS__
 
 // end of file

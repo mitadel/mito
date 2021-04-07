@@ -1,8 +1,8 @@
 #include <cmath>
-#include "../math.h"
-#include "../point.h"
+#include "../../math/fields.h"
 #include "../../elements/elements.h"
 #include "../../quadrature/quadrature.h"
+#include "../../quadrature/integrator.h"
 
 using mito::function;
 using mito::vector;
@@ -10,11 +10,6 @@ using mito::real;
 using mito::DIM1;
 using mito::DIM2;
 using mito::DIM3;
-using mito::Point;
-using mito::x0;
-using mito::x1;
-using mito::x2;
-using mito::x3;
 using mito::SEG;
 using mito::TRI;
 using mito::GAUSS;
@@ -24,15 +19,6 @@ using mito::GAUSS;
 int
 main()
 {
-
-    Point<DIM1> a(10.0);
-    std::cout << a << std::endl;
-
-    Point<DIM2> b(10.0, 2.0);
-    std::cout << b << std::endl;
-
-    Point<DIM3> c(10.0, 2.0, 1.0);
-    std::cout << c << std::endl;
 
     // a scalar function
     function<vector<DIM2>> f { [](const vector<DIM2> & x) {
@@ -139,30 +125,35 @@ main()
     real result = bodyIntegrator.integrate(cosine);    // exact 0.946083...
     std::cout << "Integration of cos(x*y): Result = " << result
               << ", Error = " << std::fabs(result - 0.946083) << std::endl;
+    assert(std::fabs(result - 0.946083) < 1.e-3);
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> one([](const vector<DIM2> & x) { return 1.0; });
     result = bodyIntegrator.integrate(one);    // exact 1.0
     std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
               << std::endl;
+    assert(std::fabs(result - 1.0) < 1.e-16);
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> linear([](const vector<DIM2> & x) { return x[0]; });
     result = bodyIntegrator.integrate(linear);    // exact 0.5
     std::cout << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
               << std::endl;
+    assert(std::fabs(result - 0.5) < 1.e-16);
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xy([](const vector<DIM2> & x) { return x[0] * x[1]; });
     result = bodyIntegrator.integrate(xy);    // exact 0.25
     std::cout << "Integration of x*y: Result = " << result
               << ", Error = " << std::fabs(result - 0.25) << std::endl;
+    assert(std::fabs(result - 0.25) < 1.e-16);
 
     // instantiate a scalar function object
     mito::ScalarField<DIM2> xx([](const vector<DIM2> & x) { return x[0] * x[0]; });
     result = bodyIntegrator.integrate(xx);    // exact 1.0/3.0
     std::cout << "Integration of x*x: Result = " << result
               << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
+    assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
     return 0;
 }
