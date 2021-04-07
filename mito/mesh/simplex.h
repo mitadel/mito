@@ -1,5 +1,4 @@
 #include "../mito.h"
-#include "point.h"
 #include <set>
 #include <unordered_map>
 
@@ -103,15 +102,7 @@ namespace mito {
     public:
         VertexCoordinatesMap() : _map() {};
 
-        ~VertexCoordinatesMap()
-        {
-            // delete physical points associated to vertices
-            for (auto vertex : _map) {
-                delete vertex.second;
-            }
-            // all done
-            return;
-        }
+        ~VertexCoordinatesMap() {}
 
         void print()
         {

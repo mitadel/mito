@@ -42,13 +42,13 @@ LoadMesh(std::string fileName)
         // instantiate new vertex
         vertex = new mito::vertex_t();
         // instantiate new point
-        mito::point_t<D> * point = new mito::point_t<D>();
+        mito::point_t<D> point;
         for (int d = 0; d < D; ++d) {
             // read point coordinates
-            fileStream >> (*point)[d];
+            fileStream >> point[d];
         }
         // associate the new vertex to the new point
-        vertexCoordinatesMap.insert(*vertex, std::move(*point));
+        vertexCoordinatesMap.insert(*vertex, std::move(point));
     }
 
     // sanity check: the number of vertices in the map is N_vertices
