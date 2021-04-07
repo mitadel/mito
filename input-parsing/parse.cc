@@ -8,22 +8,24 @@ static constexpr std::string inputFileName = "input.yaml";
 static constexpr std::string inputFileName = "input.dat";
 #endif
 
-int main (int argc, char** argv) {
+int
+main(int argc, char ** argv)
+{
 
 #ifdef WITH_YAML
     YAMLInputFile input(inputFileName);
-    //YAMLInputFile input(argc, argv);
+    // YAMLInputFile input(argc, argv);
 #else
     InputFile input(inputFileName);
-    //InputFile input(argc, argv);
+    // InputFile input(argc, argv);
 #endif
     input.Display();
 
-    real nu             = input.GetReal("Poisson's ratio");
-    std::string output  = input.GetString("output directory");
-    real Ka             = input.GetReal("bulk modulus a");
-    real Kb             = input.GetReal("bulk modulus b");
-    int Nmax            = input.GetReal("Nmax");
+    real nu = input.GetReal("Poisson's ratio");
+    std::string output = input.GetString("output directory");
+    real Ka = input.GetReal("bulk modulus a");
+    real Kb = input.GetReal("bulk modulus b");
+    int Nmax = input.GetReal("Nmax");
 
     std::cout << "Poisson's ratio\t" << nu << std::endl;
     std::cout << "output\t" << output << std::endl;

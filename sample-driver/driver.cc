@@ -6,38 +6,43 @@
 #include <mito/systems/statics_system.h>
 #include <mito/solvers/linear_solver.h>
 
-mito::vector<3> sourceTerm(const mito::vector<3>& x, mito::real t)
+mito::vector<3>
+sourceTerm(const mito::vector<3> & x, mito::real t)
 {
-    return {x[0]*t, x[1], x[2]}; 
+    return { x[0] * t, x[1], x[2] };
 }
 
-mito::vector<3> dirichletBC(const mito::vector<3>& x, mito::real t)
+mito::vector<3>
+dirichletBC(const mito::vector<3> & x, mito::real t)
 {
-    return {0.0, 0.0, 0.0}; 
+    return { 0.0, 0.0, 0.0 };
 }
 
-mito::vector<3> neumannBC(const mito::vector<3>& x, mito::real t)
+mito::vector<3>
+neumannBC(const mito::vector<3> & x, mito::real t)
 {
-    return {-1.0, 0.0, 0.0}; 
+    return { -1.0, 0.0, 0.0 };
 }
 
-bool filterLeft(const mito::vector<3>& x)
+bool
+filterLeft(const mito::vector<3> & x)
 {
     if (std::fabs(x[0]) < 1e-8)
         return true;
 
-    return false; 
+    return false;
 }
 
-int main (int argc, char ** argv) 
-{    
+int
+main(int argc, char ** argv)
+{
     // ------------------------------------
     // input file
     // ------------------------------------
     mito::InputFile input("input.dat");
     // print all parameters in input file
     input.display();
-    // material density 
+    // material density
     real rho = input.getReal("density");
     // material Young's modulus
     real E = input.getReal("Young's modulus");
@@ -50,7 +55,7 @@ int main (int argc, char ** argv)
     // Remark 2: the mesh file also contains the boundary 'physical' entities
     // ------------------------------------
     // instantiate a mesh object
-    mito::Mesh mesh("mesh.mito"); 
+    mito::Mesh mesh("mesh.mito");
 
     // ------------------------------------
     // material
@@ -81,14 +86,14 @@ int main (int argc, char ** argv)
     // ------------------------------------
     // function space
     // Remark: Ideally the function space should own the mesh and destroy it when done with
-    //         the discretization. However, in multi-physics problems, we might need to use the same 
+    //         the discretization. However, in multi-physics problems, we might need to use the same
     //         mesh to build different sets of shape functions...
     // ------------------------------------
     // instantiate a function space object
     mito::FunctionSpace functionSpace(mesh, "CG", "P1");
 
     // ------------------------------------
-    // load 
+    // load
     // ------------------------------------
     // define the load to apply to the system (e.g. BCs and source terms)
     mito::Load load;
@@ -109,10 +114,8 @@ int main (int argc, char ** argv)
     // ------------------------------------
     // add fields to print
     auto vtu = vtuWriter("output");
-    vtu.record("boundary") 
-    vtu.record("forces") 
-    vtu.record("stress") 
-    vtu.record("analytic displacement", functorAnalytic); 
+    vtu.record("boundary") vtu.record("forces") vtu.record("stress")
+        vtu.record("analytic displacement", functorAnalytic);
     system.addWriter(vtu);
 
     // ------------------------------------
@@ -122,7 +125,8 @@ int main (int argc, char ** argv)
     mito::LinearSolver solver;
     solver.add(system);
 
-    time loop {
+    time loop
+    {
         // solve the problem (this assembles and solves the algebraic system of equations)
         solver.step(dt);
         system.write(t);
