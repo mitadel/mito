@@ -18,7 +18,7 @@ namespace mito {
         // typedef for a scalar valued function
         using function_t = function<vector<D>>;
 
-    public:
+      public:
         // constructors
         ScalarField(function_t f) : _f(f), _Df() {}
         ScalarField(function_t f, std::array<function_t, D> Df) : _f(f), _Df(Df) {}
@@ -42,7 +42,7 @@ namespace mito {
             return std::move(values);
         }
 
-    public:
+      public:
         // accessor for function partial derivatives
         inline const function_t & Df(dim_t i) const
         {
@@ -52,7 +52,7 @@ namespace mito {
             return _Df[i];
         }
 
-    private:
+      private:
         // the function
         function_t _f;
         // the derivatives of f with respect to X (position in the reference configuration)
@@ -62,7 +62,7 @@ namespace mito {
     // template on vector dimension N, spatial dimension D
     template <DIM N, DIM D>
     class VectorField {
-    public:
+      public:
         VectorField(std::array<ScalarField<D>, N> components) : _components(components) {}
         ~VectorField() {}
 
@@ -91,7 +91,7 @@ namespace mito {
             return _components[i];
         }
 
-    private:
+      private:
         std::array<ScalarField<D>, N> _components;
     };
 

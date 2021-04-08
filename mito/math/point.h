@@ -5,7 +5,7 @@ namespace mito {
     template <DIM D>
     class Point {
 
-    private:
+      private:
         // real_wrap<I>... expands to (real, real, ..., real), D times
         template <size_t>
         using real_wrap = real;
@@ -21,7 +21,7 @@ namespace mito {
         // this expands to tuple<real, real, ..., real>, D times
         using tuple_type = typename tuple_wrap<>::type;
 
-    private:
+      private:
         template <size_t... I>
         void _initialize(std::index_sequence<I...>)
         {
@@ -34,7 +34,7 @@ namespace mito {
             ((std::get<I>(_tuple) = args), ...);
         }
 
-    public:
+      public:
         template <class I>
         real & operator[](I i)
         {
@@ -55,7 +55,7 @@ namespace mito {
             _initialize(std::make_index_sequence<D> {}, args...);
         }
 
-    private:
+      private:
         tuple_type _tuple;
     };
 

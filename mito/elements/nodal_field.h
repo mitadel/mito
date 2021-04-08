@@ -4,7 +4,7 @@ namespace mito {
 
     template <typename T, int D>
     class NodalField {
-    public:
+      public:
         NodalField(int nodes, std::string name = "") :
             _nodes(nodes),
             _name(name),
@@ -55,7 +55,7 @@ namespace mito {
          */
         inline void init() { std::fill(_nodalField.begin(), _nodalField.end(), 0.0); }
 
-    private:
+      private:
         /**
          * number of nodes
          */

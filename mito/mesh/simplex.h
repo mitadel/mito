@@ -6,7 +6,7 @@ namespace mito {
 
     template <int D>
     class Simplex {
-    public:
+      public:
         Simplex(std::array<std::reference_wrapper<Simplex<D - 1>>, D + 1> && entities) :
             _entities(entities)
         {}
@@ -49,13 +49,13 @@ namespace mito {
             return true;
         }
 
-    private:
+      private:
         std::array<std::reference_wrapper<Simplex<D - 1>>, D + 1> _entities;
     };
 
     template <>
     class Simplex<0> {
-    public:
+      public:
         Simplex() {}
         ~Simplex() {}
 
@@ -72,7 +72,7 @@ namespace mito {
 
     template <int D>
     class OrientedSimplex : public Simplex<D> {
-    public:
+      public:
         OrientedSimplex(
             std::array<std::reference_wrapper<Simplex<D - 1>>, D + 1> && entities,
             bool orientation) :
@@ -82,7 +82,7 @@ namespace mito {
 
         ~OrientedSimplex() {}
 
-    private:
+      private:
         bool _orientation;
     };
 
@@ -99,7 +99,7 @@ namespace mito {
         // TODO: test O for access
         using map_t = std::unordered_map<const vertex_t *, const point_t<D> *>;
 
-    public:
+      public:
         VertexCoordinatesMap() : _map() {};
 
         ~VertexCoordinatesMap() {}
@@ -130,7 +130,7 @@ namespace mito {
             return *(point->second);
         }
 
-    private:
+      private:
         map_t _map;
     };
 
@@ -195,7 +195,7 @@ namespace mito {
     template <class element_t, DIM D>
     class ElementSet2 {
 
-    public:
+      public:
         ElementSet2(std::vector<element_t> && elements, VertexCoordinatesMap<D> && coordinatesMap) :
             _elements(elements),
             _coordinatesMap(coordinatesMap),
@@ -219,14 +219,14 @@ namespace mito {
             return check;
         }
 
-    private:
+      private:
         void _computeJacobians()
         {
             return computeElementsVolume<element_t /* element type */, D /* spatial dim*/>(
                 _elements, _coordinatesMap, _jacobians);
         }
 
-    private:
+      private:
         const std::vector<element_t> _elements;
         const VertexCoordinatesMap<D> _coordinatesMap;
         std::vector<real> _jacobians;

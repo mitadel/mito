@@ -6,7 +6,7 @@ namespace mito {
     template <DIM D>
     class Mesh {
 
-    private:
+      private:
         // typedef for a collection of mesh entities
         template <typename T>
         using entity_collection = std::vector<T>;
@@ -31,7 +31,7 @@ namespace mito {
         //      entity_collection<Simplex<D>>
         using entities_tuple_t = typename entities_tuple<>::type;
 
-    public:
+      public:
         Mesh() {}
         ~Mesh() {}
 

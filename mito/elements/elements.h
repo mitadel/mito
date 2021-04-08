@@ -31,7 +31,7 @@ namespace mito {
     // template with respect to N, number of nodes per element
     template <int N>
     class Connectivity {
-    public:
+      public:
         Connectivity(int nel) : _nel(nel), _connectivityArray(nel * N, 0) {}
         Connectivity(int nel, std::vector<int> && connectivityArray) :
             _nel(nel),
@@ -75,7 +75,7 @@ namespace mito {
 
         inline int nElements() const { return _nel; }
 
-    private:
+      private:
         // number of elements
         int _nel;
         // connectivity array
@@ -178,7 +178,7 @@ namespace mito {
 
         static constexpr int V = ElementType::nVertices;
 
-    private:
+      private:
         template <int N>
         void _fillVertices(
             const Connectivity<N> & connectivity, const NodalField<real, D> & coordinates)
@@ -211,7 +211,7 @@ namespace mito {
             return;
         }
 
-    public:
+      public:
         template <int N>
         Elements(const Connectivity<N> & connectivity, const NodalField<real, D> & coordinates) :
             _nElements(connectivity.nElements()),
@@ -247,7 +247,7 @@ namespace mito {
         inline int nVertices() const { return V; }
         inline real jacobian(int e) const { return _jacobians[e]; }
 
-    private:
+      private:
         int _nElements;
         std::vector<mito::vector<D>> _vertices;
         std::vector<real> _jacobians;
@@ -258,7 +258,7 @@ namespace mito {
     class ElementSet {
         static constexpr int V = ElementType::nVertices;
 
-    public:
+      public:
         ElementSet(const Connectivity<N> & connectivity, const NodalField<real, D> & coordinates) :
             _connectivity(connectivity),
             _elements(connectivity, coordinates)
@@ -269,7 +269,7 @@ namespace mito {
         inline DIM dim() const { return D; }
         inline const Elements<ElementType, D> & elements() const { return _elements; }
 
-    private:
+      private:
         const Connectivity<N> & _connectivity;
         Elements<ElementType, D> _elements;
     };
@@ -277,7 +277,7 @@ namespace mito {
     // template with respect to degree P
     template <size_t P>
     class ElementSetTri : public ElementSet<TRI, DIM2, (P + 1) * (P + 2) / 2> {
-    public:
+      public:
         template <DIM D>
         ElementSetTri(
             const Connectivity<(P + 1) * (P + 2) / 2> & connectivity,

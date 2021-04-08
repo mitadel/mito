@@ -5,7 +5,7 @@ namespace mito {
 
     class Gent {
 
-    public:
+      public:
         Gent(real rho, real kappa, real mu, real Jm) :
             _rho(rho),
             _kappa(kappa),
@@ -15,7 +15,7 @@ namespace mito {
         template <DIM D /*dim*/>
         void Constitutive(const vector<D> & u, const tensor<D> & Du, tensor<D> & P);
 
-    private:
+      private:
         real _rho;
         real _kappa;
         real _mu;

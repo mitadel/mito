@@ -23,7 +23,7 @@ namespace mito {
         // and should be computed at compile time based on QuadratureType
         static constexpr real areaReferenceElement = 0.5;
 
-    private:
+      private:
         // QUESTION: Who should be in charge of computing the coordinates of the quadrature points
         //           in the elements? The quadrature rule has the coordinates of the quadrature
         //           points on the reference element, the elements have the coordinate of the
@@ -50,7 +50,7 @@ namespace mito {
             return;
         }
 
-    public:
+      public:
         Integrator(const Elements<ElementType, D> & elements) :
             _elements(elements),
             _coordinates(elements.nElements() * Q)
@@ -82,7 +82,7 @@ namespace mito {
             return result;
         }
 
-    private:
+      private:
         // the domain of integration
         const Elements<ElementType, D> & _elements;
         // the coordinates of the quadrature points in the domain of integration
