@@ -1,10 +1,19 @@
-all: main
+MODULE_NAME=pi
+MAIN=main
 
-main: pi.pcm
-	clang++ -o main -std=c++2a -fprebuilt-module-path=. main.cpp pi.cpp
+all: $(MAIN)
 
-pi.pcm: pi.cpp
-	clang++ -std=c++2a -c pi.cpp -Xclang -emit-module-interface -o pi.pcm
+$(MAIN): $(MODULE_NAME).pcm $(MAIN).o $(MODULE_NAME).o
+	clang++  $(MODULE_NAME).pcm $(MAIN).o $(MODULE_NAME).o -o $(MAIN)
+
+$(MAIN).o: $(MAIN).cpp $(MODULE_NAME).pcm
+	clang++ -std=c++2a -fmodules-ts -c $(MAIN).cpp -fmodule-file=$(MODULE_NAME).pcm -o $(MAIN).o
+
+$(MODULE_NAME).o: $(MODULE_NAME).cpp $(MODULE_NAME).pcm
+	clang++ -std=c++2a -fmodules-ts -c $(MODULE_NAME).cpp -fmodule-file=$(MODULE_NAME).pcm -o $(MODULE_NAME).o 
+
+$(MODULE_NAME).pcm: $(MODULE_NAME).cpp
+	clang++ -std=c++2a -fmodules-ts --precompile $(MODULE_NAME).cppm -o $(MODULE_NAME).pcm
 
 clean: 
-	rm main pi.pcm
+	rm $(MAIN) $(MODULE_NAME).pcm $(MODULE_NAME).o $(MAIN).o
