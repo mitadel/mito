@@ -31,7 +31,7 @@ applyCrunchFactor(double number)
 
 // we can have namespaces within modules. The name of this namespace does not need to match the
 // module's name
-namespace numbers {
+namespace mito {
 
     // this function is exported, so it is visible outside, when we import this module
     double crunch(double number)

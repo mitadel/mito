@@ -5,7 +5,7 @@
 // Check also https://accu.org/journals/overload/28/159/sidwell/ on how to build modules with gcc
 //
 // To compile this file do the following
-// Build module first: 
+// Build module first:
 //  clang++ -std=c++2a -c pi.cpp -Xclang -emit-module-interface -o pi.pcm
 // Then build main file
 //  clang++ -std=c++2a -fprebuilt-module-path=. main.cpp pi.cpp
@@ -15,17 +15,19 @@
 // get support from module Pi
 import Pi;
 
-int main() {
+int
+main()
+{
     // use a function imported from the module
-    auto value = numbers::crunch(42);
+    auto value = mito::crunch(42);
 
     // say something
     std::cout << "value = " << value << std::endl;
 
-    #ifndef CRUNCH_FACTOR
-        std::cout << "Note that CRUNCH_FACTOR is not defined here, although it is defined in the " 
-            << "module" << std::endl;
-    #endif
+#ifndef CRUNCH_FACTOR
+    std::cout << "Note that CRUNCH_FACTOR is not defined here, although it is defined in the "
+              << "module" << std::endl;
+#endif
 
     // all done
     return 0;

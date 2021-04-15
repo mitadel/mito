@@ -5,7 +5,7 @@ module;
 export module Pi;
 
 // we can have namespaces within modules
-namespace numbers {
+namespace mito {
 
     // this function is exported, so it is visible outside, when we import this module
     export double crunch(double number);
