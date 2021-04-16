@@ -1,31 +1,15 @@
 #include <iostream>
 
-// get support from module Pi
-import Animal;
-
-void
-hello()
-{
-    std::cout << "Hello from cat..." << std::endl;
-}
-
-namespace mito {
-    class Cat : public Animal {
-
-      public:
-        Cat() : Animal() {}
-        ~Cat() {}
-
-        void sayHello() const override { return hello(); }
-    };
-}
+// get support from module
+import Cat;
 
 int
 main()
 {
     // use a function imported from the module
     mito::Cat cat;
-    cat.sayHello();
+    cat.hello();
+    cat.aFunction();
 
     // all done
     return 0;

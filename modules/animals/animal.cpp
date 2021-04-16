@@ -1,22 +1,15 @@
 // declare the module
 module;
 
-// declare the module and export it
-export module Animal;
+#include <iostream>
 
-// we can have namespaces within modules
-namespace mito {
+// declare the module
+module Animal;
 
-    // this class is exported, so it is visible outside, when we import this module
-    export class Animal {
-
-      public:
-        Animal() {}
-        ~Animal() {}
-
-        virtual void hello() const = 0;
-    };
-
-}    // end of namespace
+void
+mito::Animal::aFunction() const
+{
+    std::cout << "A function was called!" << std::endl;
+}
 
 // end of file
