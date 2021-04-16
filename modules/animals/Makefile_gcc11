@@ -1,0 +1,24 @@
+CXX = /usr/local/gcc11/bin/g++
+
+all: main
+
+main: main.o cat-i.o cat.o animal-i.o animal.o
+	$(CXX) -o main main.o cat-i.o cat.o animal-i.o animal.o
+
+main.o: main.cpp cat-i.o cat.o
+	$(CXX) -fmodules-ts -std=c++20 -c main.cpp
+
+animal.o: animal.cpp animal-i.o
+	$(CXX) -fmodules-ts -std=c++20 -c animal.cpp
+
+animal-i.o: animal-i.cpp
+	$(CXX) -fmodules-ts -std=c++20 -c animal-i.cpp
+
+cat.o: cat.cpp cat-i.o
+	$(CXX) -fmodules-ts -std=c++20 -c cat.cpp
+
+cat-i.o: cat-i.cpp animal-i.o animal.o
+	$(CXX) -fmodules-ts -std=c++20 -c cat-i.cpp
+
+clean: 
+	rm -r gcm.cache main main.o animal-i.o animal.o cat-i.o cat.o
