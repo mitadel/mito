@@ -1,0 +1,14 @@
+CXX = /usr/local/gcc11/bin/g++
+
+all: 
+	mkdir -p build
+	make build/animal.o
+
+build/animal.o: animal.cpp build/animal-i.o
+	$(CXX) -fmodules-ts -std=c++20 -o build/animal.o -c animal.cpp 
+
+build/animal-i.o: animal-i.cpp
+	$(CXX) -fmodules-ts -std=c++20 -o build/animal-i.o -c animal-i.cpp
+
+clean: 
+	rm -r build gcm.cache
