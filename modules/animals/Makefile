@@ -1,7 +1,7 @@
 all: main
 
-main: main.o animal.pcm animal.o cat.pcm
-	clang++ -std=c++2a -fprebuilt-module-path=. animal.o main.o -o main
+main: main.o animal.pcm animal.o cat.pcm cat.o
+	clang++ -std=c++2a -fprebuilt-module-path=. main.o animal.o cat.o -o main
 
 main.o: main.cpp animal.pcm cat.pcm
 	clang++ -std=c++2a -fprebuilt-module-path=. -c main.cpp -o main.o
@@ -12,8 +12,11 @@ animal.o: animal.cpp animal.pcm
 animal.pcm: animal.cpp
 	clang++ -std=c++2a --precompile animal.cppm -o animal.pcm
 
-cat.pcm: cat.cpp animal.pcm
-	clang++ -std=c++2a -fprebuilt-module-path=. -c cat.cpp -Xclang -emit-module-interface -o cat.pcm
+cat.o: cat.cpp cat.pcm animal.pcm
+	clang++ -std=c++2a -c cat.cpp -fmodule-file=cat.pcm -o cat.o 
+
+cat.pcm: cat.cpp
+	clang++ -std=c++2a -fprebuilt-module-path=. --precompile cat.cppm -o cat.pcm
 
 clean: 
-	rm main main.o animal.pcm animal.o cat.pcm
+	rm main main.o animal.pcm animal.o cat.pcm cat.o
