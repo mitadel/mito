@@ -1,6 +1,6 @@
 #include "../mito.h"
 #include "simplex.h"
-
+#include <map>
 namespace mito {
 
     template <DIM D>
@@ -32,9 +32,15 @@ namespace mito {
         using entities_tuple_t = typename entities_tuple<>::type;
 
       public:
-        Mesh() {}
+        Mesh(std::string meshFileName) : _entities(), _edges() { _loadMesh(meshFileName); }
+
         ~Mesh() {}
 
+
+      private:
+        void _loadMesh(std::string meshFileName) { return; }
+
+      private:
         // container to store D+1 containers of d dimensional entities with d = 0, ..., D
         entities_tuple_t _entities;
     };

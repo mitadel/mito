@@ -1,5 +1,6 @@
 #include "../../mito.h"
 #include "../../mesh/simplex.h"
+#include "../../mesh/mesh.h"
 #include <fstream>
 #include <string>
 #include <map>
@@ -130,7 +131,8 @@ int
 main()
 {
 
-    LoadMesh<mito::DIM2>("rectangle.summit");
+    mito::Mesh<mito::DIM2> mesh("rectangle.summit");
+
     std::cout << "Loaded mesh" << std::endl;
 
     return 0;
