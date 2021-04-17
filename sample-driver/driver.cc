@@ -64,7 +64,7 @@ main(int argc, char ** argv)
     // instantiate an elastic material
     mito::material::Elastic elasticMaterial(rho, E, nu, 1 /*numIntVars*/, 1 /*plain strain*/);
     // or...
-    auto material = mito::material::elastic(rho, E, nu);
+    // auto material = mito::material::elastic(rho, E, nu);
 
     /*
     stress, tangent, update     are function pointers
@@ -74,14 +74,18 @@ main(int argc, char ** argv)
     */
 
     // ------------------------------------
-    // material library
+    // MATERIAL LIBRARY
     // ------------------------------------
     // instantiate a material library
     mito::MaterialLibrary materialLibrary();
     // add elastic material to the material library
-    materialLibrary.addMaterial(1, &elasticMaterial);
+    materialLibrary.addMaterial(elasticMaterial);
     // print all material properties in material library
     materialLibrary.display();
+
+    // ------------------------------------
+    // MECHANICS
+    // ------------------------------------
 
     // ------------------------------------
     // function space
@@ -89,41 +93,64 @@ main(int argc, char ** argv)
     //         the discretization. However, in multi-physics problems, we might need to use the same
     //         mesh to build different sets of shape functions...
     // ------------------------------------
-    // instantiate a function space object
-    mito::FunctionSpace functionSpace(mesh, "CG", "P1");
+    // instantiate a function space object for the mechanical problem
+    mito::FunctionSpace shapeMechanics(mesh, "CG", "P2");
 
     // ------------------------------------
     // load
     // ------------------------------------
     // define the load to apply to the system (e.g. BCs and source terms)
-    mito::Load load;
-    load.addSourceTerm(sourceTerm);
-    load.addDirichletBC("boundary A", dirichletBC);
-    load.addDirichletBC(filterLeft, dirichletBC);
-    load.addNeumannBC("boundary B", neumannBC);
+    mito::Load loadMechanics;
+    loadMechanics.addSourceTerm(sourceTerm);
+    loadMechanics.addDirichletBC("boundary A", dirichletBC);
+    loadMechanics.addDirichletBC(filterLeft, dirichletBC);
+    loadMechanics.addNeumannBC("boundary B", neumannBC);
 
     // ------------------------------------
     // system
     // ------------------------------------
     // instantiate a system binding the functionSpace (math) and the materialLibrary (physics)
-    mito::System system(functionSpace, materialLibrary);
-    system.addLoad(load);
+    mito::System mechanicsSystem(shapeMechanics, materialLibrary, MECHANICS.STATICS);
+    mechanicsSystem.setLoad(loadMechanics);
+
+    // ------------------------------------
+    // THERMAL
+    // ------------------------------------
+
+    // instantiate a function space object for the mechanical problem
+    mito::FunctionSpace shapeThermal(mesh, "CG", "P1");
+
+    // define the load to apply to the system (e.g. BCs and source terms)
+    mito::Load loadThermal;
+    loadThermal.addNeumannBC("boundary A", heatFlow);
+
+    // instantiate a system binding the functionSpace (math) and the materialLibrary (physics)
+    mito::System thermalSystem(shapeThermal, materialLibrary, THERMAL.STATICS);
+    thermalSystem.setLoad(loadThermal);
+
+    // ------------------------------------
+    // MULTIPHYSICS
+    // ------------------------------------
+    mito::MultiphysicsSystem multiphysicsSystem(mechanicsSystem, thermalSystem);
 
     // ------------------------------------
     // VTU writer
     // ------------------------------------
     // add fields to print
     auto vtu = vtuWriter("output");
-    vtu.record("boundary") vtu.record("forces") vtu.record("stress")
-        vtu.record("analytic displacement", functorAnalytic);
-    system.addWriter(vtu);
+    vtu.record("boundary");
+    vtu.record("forces");
+    vtu.record("stress");
+    vtu.record("analytic displacement", functorAnalytic);
+    multiphysicsSystem.addWriter(vtu);
+    // or ...
+    thermalSystem.addWriter(vtu);
 
     // ------------------------------------
     // solver
     // ------------------------------------
     // instantiate a linear solver
-    mito::LinearSolver solver;
-    solver.add(system);
+    mito::LinearSolver solver(multiphysicsSystem);
 
     time loop
     {
