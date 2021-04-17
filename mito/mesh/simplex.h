@@ -1,3 +1,6 @@
+#ifndef __MITO_SIMPLEX__
+#define __MITO_SIMPLEX__
+
 #include "../mito.h"
 #include <set>
 #include <unordered_map>
@@ -254,3 +257,5 @@ operator<<(std::ostream & os, const mito::Simplex<0> & s)
     os << &s;
     return os;
 }
+
+#endif    //__MITO_SIMPLEX__
