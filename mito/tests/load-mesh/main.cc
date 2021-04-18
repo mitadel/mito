@@ -67,12 +67,15 @@ LoadMesh(std::string fileName)
 
             int index0 = 0;
             fileStream >> index0;
+            --index0;
 
             int index1 = 0;
             fileStream >> index1;
+            --index1;
 
             int index2 = 0;
             fileStream >> index2;
+            --index2;
 
             mito::segment_t * segment0 =
                 new mito::segment_t({ vertices[index0], vertices[index1] });

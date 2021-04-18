@@ -180,12 +180,15 @@ namespace mito {
         {
             int index0 = 0;
             fileStream >> index0;
+            --index0;
 
             int index1 = 0;
             fileStream >> index1;
+            --index1;
 
             int index2 = 0;
             fileStream >> index2;
+            --index2;
 
             mito::vertex_t * vertex0 = _getEntity<DIM0>(index0);
             mito::vertex_t * vertex1 = _getEntity<DIM0>(index1);
