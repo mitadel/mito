@@ -18,8 +18,8 @@ namespace mito {
     // preventing the user from instantiating mito::vector<15>:
     //   "error: invalid conversion from 'int' to 'mito::DIM' [-fpermissive]"
 
-    // enum for 1D, 2D, 3D, 4D (4D is used for parametric coordinates)
-    enum DIM { DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4 };
+    // enum for 0D, 1D, 2D, 3D, 4D (4D is used for parametric coordinates)
+    enum DIM { DIM0 = 0, DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4 };
 
     static constexpr auto x0 = std::integral_constant<int, 0> {};
     static constexpr auto x1 = std::integral_constant<int, 1> {};
