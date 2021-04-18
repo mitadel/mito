@@ -73,16 +73,16 @@ LoadMesh(std::string fileName)
             int index2 = 0;
             fileStream >> index2;
 
-            mito::segment_t segment0({ *vertices[index0], *vertices[index1] });
-            mito::segment_t segment1({ *vertices[index1], *vertices[index2] });
-            mito::segment_t segment2({ *vertices[index2], *vertices[index0] });
+            mito::segment_t segment0({ vertices[index0], vertices[index1] });
+            mito::segment_t segment1({ vertices[index1], vertices[index2] });
+            mito::segment_t segment2({ vertices[index2], vertices[index0] });
 
             // QUESTION: With this implementation, edges have no dignity of their own but are
             //           just 'edges of a triangle'. This will make us lose some information,
             //           because we will see as different segments the same edge seen from two
             //           different triangles, although of course they have the same vertices.
             const mito::triangle_t * element =
-                new mito::triangle_t({ segment0, segment1, segment2 });
+                new mito::triangle_t({ &segment0, &segment1, &segment2 });
 
             // QUESTION: Can the label be more than one?
             // read label for element
@@ -132,8 +132,7 @@ main()
 {
 
     mito::Mesh<mito::DIM2> mesh("rectangle.summit");
-
-    std::cout << "Loaded mesh" << std::endl;
+    std::cout << "Loaded mesh!" << std::endl;
 
     return 0;
 }

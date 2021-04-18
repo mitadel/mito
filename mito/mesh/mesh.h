@@ -66,7 +66,6 @@ namespace mito {
          * @brief Inserts an entity in the composition map
          *
          * @tparam I dimension of the entity to insert
-         * @param composition array of the I+1 entities of dimension I-1 composing the entity
          * @param entity mesh entity to be inserted
          * @return the pair returned by the map insertion:
          *          pair::first is an iterator pointing to either the newly inserted element or to
@@ -74,15 +73,11 @@ namespace mito {
          *          pair::second is true (false) if the entity was inserted (was already in the map)
          */
         template <int I>
-        auto _insertEntityComposition(
-            std::array<Simplex<I - 1> *, I + 1> composition, Simplex<I> & entity)
+        auto _insertEntityComposition(Simplex<I> & entity)
         {
-            // sort the composition container (with the address of the entities) before insertion
-            // to guarantee uniqueness with respect to the composing entities
-            std::sort(composition.begin(), composition.end());
             return std::get<I - 1>(_compositions)
                 .insert(std::pair<std::array<Simplex<I - 1> *, I + 1>, Simplex<I> *>(
-                    composition, &entity));
+                    entity.entities(), &entity));
         }
 
         template <int I>
@@ -182,10 +177,9 @@ namespace mito {
                     mito::vertex_t * vertex1 = _getEntity<DIM0>(index1);
                     mito::vertex_t * vertex2 = _getEntity<DIM0>(index2);
 
-                    // TOFIX: we should avoid the repetition of {vertex0, vertex1} to create the
-                    //        segment and to insert it
-                    mito::segment_t * segment0 = new mito::segment_t({ *vertex0, *vertex1 });
-                    auto ret0 = _insertEntityComposition({ vertex0, vertex1 }, *segment0);
+                    // std::cout << "\tSegment0" << std::endl;
+                    mito::segment_t * segment0 = new mito::segment_t({ vertex0, vertex1 });
+                    auto ret0 = _insertEntityComposition(*segment0);
                     mito::segment_t * unique_segment0 = ret0.first->second;
                     // TOFIX: double check this delete... Maybe valgrind the whole thing...
                     if (ret0.second == true) {
@@ -194,8 +188,8 @@ namespace mito {
                         delete segment0;
                     }
 
-                    mito::segment_t * segment1 = new mito::segment_t({ *vertex1, *vertex2 });
-                    auto ret1 = _insertEntityComposition({ vertex1, vertex2 }, *segment1);
+                    mito::segment_t * segment1 = new mito::segment_t({ vertex1, vertex2 });
+                    auto ret1 = _insertEntityComposition(*segment1);
                     mito::segment_t * unique_segment1 = ret1.first->second;
                     if (ret1.second == true) {
                         _addEntity(std::move(*segment1));
@@ -203,8 +197,8 @@ namespace mito {
                         delete segment1;
                     }
 
-                    mito::segment_t * segment2 = new mito::segment_t({ *vertex2, *vertex0 });
-                    auto ret2 = _insertEntityComposition({ vertex2, vertex0 }, *segment2);
+                    mito::segment_t * segment2 = new mito::segment_t({ vertex2, vertex0 });
+                    auto ret2 = _insertEntityComposition(*segment2);
                     mito::segment_t * unique_segment2 = ret2.first->second;
                     if (ret2.second == true) {
                         _addEntity(std::move(*segment2));
@@ -218,10 +212,9 @@ namespace mito {
                     std::string element_set_id;
                     fileStream >> element_set_id;
 
-                    mito::triangle_t * element = new mito::triangle_t(
-                        { *unique_segment0, *unique_segment1, *unique_segment2 });
-                    auto ret = _insertEntityComposition(
-                        { unique_segment0, unique_segment1, unique_segment2 }, *element);
+                    mito::triangle_t * element =
+                        new mito::triangle_t({ unique_segment0, unique_segment1, unique_segment2 });
+                    auto ret = _insertEntityComposition(*element);
                     assert(ret.second == true);
                     _addEntity(std::move(*element));
                 }

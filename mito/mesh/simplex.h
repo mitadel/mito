@@ -10,9 +10,12 @@ namespace mito {
     template <int D>
     class Simplex {
       public:
-        Simplex(std::array<std::reference_wrapper<Simplex<D - 1>>, D + 1> && entities) :
-            _entities(entities)
-        {}
+        Simplex(std::array<Simplex<D - 1> *, D + 1> && entities) : _entities(entities)
+        {
+            // sort the entities (using the address of the entities) so that two simplices
+            // having the same entities will result in two identical instances of class Simplex
+            std::sort(_entities.begin(), _entities.end());
+        }
 
         ~Simplex() {}
 
@@ -21,7 +24,7 @@ namespace mito {
         void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
         {
             for (const auto & entity : entities()) {
-                entity.get().getVertices(vertices);
+                entity->getVertices(vertices);
             }
         }
 
@@ -30,7 +33,7 @@ namespace mito {
             // check the subentities
             for (const auto & entity : entities()) {
                 // if a subentity is broken, the sanity check fails
-                if (!entity.get().sanityCheck()) {
+                if (!entity->sanityCheck()) {
                     // all done
                     return false;
                 }
@@ -40,7 +43,7 @@ namespace mito {
             std::set<const Simplex<0> * /* vertex_t* */> vertices;
             // collect vertices of every subentity of this simplex
             for (const auto & entity : entities()) {
-                entity.get().getVertices(vertices);
+                entity->getVertices(vertices);
             }
             // if this simplex does not have D+1 vertices, something went wrong
             if (vertices.size() != int(D) + 1) {
@@ -53,7 +56,7 @@ namespace mito {
         }
 
       private:
-        std::array<std::reference_wrapper<Simplex<D - 1>>, D + 1> _entities;
+        std::array<Simplex<D - 1> *, D + 1> _entities;
     };
 
     template <>
@@ -76,9 +79,7 @@ namespace mito {
     template <int D>
     class OrientedSimplex : public Simplex<D> {
       public:
-        OrientedSimplex(
-            std::array<std::reference_wrapper<Simplex<D - 1>>, D + 1> && entities,
-            bool orientation) :
+        OrientedSimplex(std::array<Simplex<D - 1> *, D + 1> && entities, bool orientation) :
             Simplex<D>(entities),
             _orientation(orientation)
         {}
