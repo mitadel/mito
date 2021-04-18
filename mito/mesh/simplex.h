@@ -245,7 +245,7 @@ operator<<(std::ostream & os, const mito::Simplex<D> & s)
 {
     os << &s << " composed of:" << std::endl;
     for (const auto & entity : s.entities()) {
-        std::cout << "\t" << entity.get() << std::endl;
+        std::cout << "\t" << *entity << std::endl;
     }
     return os;
 }
