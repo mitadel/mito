@@ -57,7 +57,10 @@ namespace mito {
         using composition_tuple_t = typename composition_tuple<>::type;
 
       public:
-        Mesh(std::string meshFileName) : _entities(), _compositions() { _loadMesh(meshFileName); }
+        Mesh(std::string meshFileName) : _entities(), _compositions(), _vertexCoordinatesMap()
+        {
+            _loadMesh(meshFileName);
+        }
 
         ~Mesh() {}
 
@@ -139,7 +142,6 @@ namespace mito {
             assert(N_element_sets == 1);
 
             // fill in vertices
-            mito::VertexCoordinatesMap<D> vertexCoordinatesMap;
             for (int n = 0; n < N_vertices; ++n) {
                 // instantiate new vertex
                 mito::vertex_t * vertex = new mito::vertex_t();
@@ -150,10 +152,10 @@ namespace mito {
                     fileStream >> point[d];
                 }
                 // associate the new vertex to the new point
-                vertexCoordinatesMap.insert(*vertex, std::move(point));
+                _vertexCoordinatesMap.insert(*vertex, std::move(point));
                 _addEntity(std::move(*vertex));
             }
-            // vertexCoordinatesMap.print();
+            // _vertexCoordinatesMap.print();
 
             // sanity check: the number of vertices in the map is N_vertices
             assert(_nEntities<DIM0>() == N_vertices);
@@ -238,6 +240,8 @@ namespace mito {
         // container to store D maps with the composition of i-dimensional entities in terms
         // of arrays of (i-1)-dimensional entities
         composition_tuple_t _compositions;
+        // a map between the vertices addresses and a physical point in D-dimensional space
+        mito::VertexCoordinatesMap<D> _vertexCoordinatesMap;
     };
 
 }
