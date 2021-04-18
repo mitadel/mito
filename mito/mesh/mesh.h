@@ -15,11 +15,11 @@ namespace mito {
 
         // typedef for a collection of simplices of dimension I-1
         template <size_t I>
-        using simplex_entity_collection = entity_collection<Simplex<I>>;
+        using simplex_entity_collection = entity_collection<Simplex<I> *>;
 
         // simplex_entity_collection<I>... expands to:
-        // entity_collection<Simplex<0>>, entity_collection<Simplex<1>>, ...,
-        //      entity_collection<Simplex<D>>
+        // entity_collection<Simplex<0>*>, entity_collection<Simplex<1>*>, ...,
+        //      entity_collection<Simplex<D>*>
         template <typename = std::make_index_sequence<D + 1>>
         struct entities_tuple;
 
@@ -29,8 +29,8 @@ namespace mito {
         };
 
         // this expands to:
-        // tuple<entity_collection<Simplex<0>>, entity_collection<Simplex<1>>, ...,
-        //      entity_collection<Simplex<D>>
+        // tuple<entity_collection<Simplex<0>*>, entity_collection<Simplex<1>*>, ...,
+        //      entity_collection<Simplex<D>*>
         using entities_tuple_t = typename entities_tuple<>::type;
 
       private:
@@ -62,7 +62,23 @@ namespace mito {
             _loadMesh(meshFileName);
         }
 
-        ~Mesh() {}
+        ~Mesh()
+        {
+            for (auto element : std::get<DIM0>(_entities)) {
+                delete element;
+            }
+
+            for (auto element : std::get<DIM1>(_entities)) {
+                delete element;
+            }
+
+            for (auto element : std::get<DIM2>(_entities)) {
+                delete element;
+            }
+
+            // all done
+            return;
+        }
 
       public:
         bool sanityCheck()
@@ -77,7 +93,7 @@ namespace mito {
 
             // sanity check: each element is self-consistent
             for (const auto & element : std::get<D>(_entities)) {
-                if (!element.sanityCheck()) {
+                if (!element->sanityCheck()) {
                     return false;
                 }
             }
@@ -130,7 +146,7 @@ namespace mito {
             // if the entity did not exist
             if (ret.second == true) {
                 // add the entity as a new one
-                _addEntity(std::move(*entity));
+                _addEntity(entity);
             } else {
                 // TOFIX: double check this delete... Maybe valgrind the whole thing...
                 // delete the new entity (it was just a repeated entry)
@@ -146,7 +162,7 @@ namespace mito {
         }
 
         template <int I>
-        void _addEntity(Simplex<I> && entity)
+        void _addEntity(Simplex<I> * entity)
         {
             // TOFIX: is push_back expensive even when we reserve the space? No, but we only
             // know in advance how many nodes and elements are in the mesh, not how many edges
@@ -164,7 +180,7 @@ namespace mito {
             // associate the new vertex to the new point
             _vertexCoordinatesMap.insert(*vertex, std::move(point));
             // add the newly created vertex
-            _addEntity(std::move(*vertex));
+            _addEntity(vertex);
 
             // all done
             return;
@@ -173,7 +189,7 @@ namespace mito {
         template <int I>
         auto _getEntity(int n)
         {
-            return &std::get<I>(_entities)[n];
+            return std::get<I>(_entities)[n];
         }
 
         void _readTriangle(std::ifstream & fileStream)
