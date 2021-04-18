@@ -149,13 +149,46 @@ namespace mito {
         }
 
         template <int I>
-        int _nEntities()
+        int _nEntities() const
         {
             // all done
             return std::get<I>(_entities).size();
         }
 
       private:
+        void _readTriangle(std::ifstream & fileStream)
+        {
+            int index0 = 0;
+            fileStream >> index0;
+
+            int index1 = 0;
+            fileStream >> index1;
+
+            int index2 = 0;
+            fileStream >> index2;
+
+            mito::vertex_t * vertex0 = _getEntity<DIM0>(index0);
+            mito::vertex_t * vertex1 = _getEntity<DIM0>(index1);
+            mito::vertex_t * vertex2 = _getEntity<DIM0>(index2);
+
+            // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
+            mito::segment_t * segment0 = _addUniqueEntity<DIM1>({ vertex0, vertex1 });
+            mito::segment_t * segment1 = _addUniqueEntity<DIM1>({ vertex1, vertex2 });
+            mito::segment_t * segment2 = _addUniqueEntity<DIM1>({ vertex2, vertex0 });
+
+            // QUESTION: Can the label be more than one?
+            // read label for element
+            // TOFIX: Ignored for now
+            std::string element_set_id;
+            fileStream >> element_set_id;
+
+            // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
+            mito::triangle_t * element = _addUniqueEntity<DIM2>({ segment0, segment1, segment2 });
+
+            // all done
+            return;
+        }
+
         void _loadMesh(std::string meshFileName)
         {
             std::cout << "Loading mesh..." << std::endl;
@@ -210,34 +243,9 @@ namespace mito {
                 fileStream >> element_type;
 
                 if (element_type == 3) {
-
-                    int index0 = 0;
-                    fileStream >> index0;
-
-                    int index1 = 0;
-                    fileStream >> index1;
-
-                    int index2 = 0;
-                    fileStream >> index2;
-
-                    mito::vertex_t * vertex0 = _getEntity<DIM0>(index0);
-                    mito::vertex_t * vertex1 = _getEntity<DIM0>(index1);
-                    mito::vertex_t * vertex2 = _getEntity<DIM0>(index2);
-
-                    // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
-                    mito::segment_t * segment0 = _addUniqueEntity<DIM1>({ vertex0, vertex1 });
-                    mito::segment_t * segment1 = _addUniqueEntity<DIM1>({ vertex1, vertex2 });
-                    mito::segment_t * segment2 = _addUniqueEntity<DIM1>({ vertex2, vertex0 });
-
-                    // QUESTION: Can the label be more than one?
-                    // read label for element
-                    // TOFIX: Ignored for now
-                    std::string element_set_id;
-                    fileStream >> element_set_id;
-
-                    // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
-                    mito::triangle_t * element =
-                        _addUniqueEntity<DIM2>({ segment0, segment1, segment2 });
+                    _readTriangle(fileStream);
+                } else {
+                    std::cout << "Error: Unknown element type" << std::endl;
                 }
             }
 
@@ -271,3 +279,5 @@ namespace mito {
     };
 
 }
+
+// end of file
