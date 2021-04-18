@@ -66,7 +66,7 @@ namespace mito {
 
       public:
         /**
-         * @brief Inserts an entity in the composition map
+         * @brief Registers an entity in the composition map
          *
          * @tparam I dimension of the entity to insert
          * @param entity mesh entity to be inserted
@@ -76,18 +76,67 @@ namespace mito {
          *          pair::second is true (false) if the entity was inserted (was already in the map)
          */
         template <int I>
-        auto _insertEntityComposition(Simplex<I> & entity)
+        auto _registerEntityComposition(Simplex<I> & entity)
         {
             return std::get<I - 1>(_compositions)
                 .insert(std::pair<std::array<Simplex<I - 1> *, I + 1>, Simplex<I> *>(
                     entity.entities(), &entity));
         }
 
+        /**
+         * @brief Adds a new composed entity (i.e. edge, face, element) if it is not a repetition
+         *         of an equivalent already registered composed entity
+         *
+         * @tparam I dimension of the composed entity to add (DIM1, DIM2, ..., D)
+         * @param composition entity composition in terms of I + 1 entities of dimension (I - 1)
+         * @return mito::Simplex<I>* a pointer either to the newly added entity or to the equivalent
+         *                              already registered composed entity
+         */
+        template <int I>
+        mito::Simplex<I> * _addUniqueEntity(std::array<Simplex<I - 1> *, I + 1> && composition)
+        {
+            // instantiate new entity with this composition
+            mito::Simplex<I> * entity = new mito::Simplex<I>(std::move(composition));
+            // look up the new entity with its composition and register it if it does not exist yet
+            auto ret = _registerEntityComposition(*entity);
+            // if the entity did not exist
+            if (ret.second == true) {
+                // add the entity as a new one
+                _addEntity(std::move(*entity));
+            } else {
+                // TOFIX: double check this delete... Maybe valgrind the whole thing...
+                // delete the new entity (it was just a repeated entry)
+                delete entity;
+            }
+
+            // if I == D then ret.second == true, that is there shall be no repetitions of the
+            // elements of highest dimension
+            assert((I != D) || ret.second);
+
+            // return a pointer to the newly added entity
+            return ret.first->second;
+        }
+
         template <int I>
         void _addEntity(Simplex<I> && entity)
         {
-            // TOFIX: is push_back expensive even when we reserve the space?
+            // TOFIX: is push_back expensive even when we reserve the space? No, but we only
+            // know in advance how many nodes and elements are in the mesh, not how many edges
+            // or faces, so we cannot reserve memory for edges and faces in advance...
             std::get<I>(_entities).push_back(entity);
+
+            // all done
+            return;
+        }
+
+        void _addVertex(mito::point_t<D> && point)
+        {
+            // instantiate new vertex
+            mito::vertex_t * vertex = new mito::vertex_t();
+            // associate the new vertex to the new point
+            _vertexCoordinatesMap.insert(*vertex, std::move(point));
+            // add the newly created vertex
+            _addEntity(std::move(*vertex));
 
             // all done
             return;
@@ -143,17 +192,13 @@ namespace mito {
 
             // fill in vertices
             for (int n = 0; n < N_vertices; ++n) {
-                // instantiate new vertex
-                mito::vertex_t * vertex = new mito::vertex_t();
                 // instantiate new point
                 mito::point_t<D> point;
                 for (int d = 0; d < D; ++d) {
                     // read point coordinates
                     fileStream >> point[d];
                 }
-                // associate the new vertex to the new point
-                _vertexCoordinatesMap.insert(*vertex, std::move(point));
-                _addEntity(std::move(*vertex));
+                _addVertex(std::move(point));
             }
             // _vertexCoordinatesMap.print();
 
@@ -179,34 +224,10 @@ namespace mito {
                     mito::vertex_t * vertex1 = _getEntity<DIM0>(index1);
                     mito::vertex_t * vertex2 = _getEntity<DIM0>(index2);
 
-                    // std::cout << "\tSegment0" << std::endl;
-                    mito::segment_t * segment0 = new mito::segment_t({ vertex0, vertex1 });
-                    auto ret0 = _insertEntityComposition(*segment0);
-                    mito::segment_t * unique_segment0 = ret0.first->second;
-                    // TOFIX: double check this delete... Maybe valgrind the whole thing...
-                    if (ret0.second == true) {
-                        _addEntity(std::move(*segment0));
-                    } else {
-                        delete segment0;
-                    }
-
-                    mito::segment_t * segment1 = new mito::segment_t({ vertex1, vertex2 });
-                    auto ret1 = _insertEntityComposition(*segment1);
-                    mito::segment_t * unique_segment1 = ret1.first->second;
-                    if (ret1.second == true) {
-                        _addEntity(std::move(*segment1));
-                    } else {
-                        delete segment1;
-                    }
-
-                    mito::segment_t * segment2 = new mito::segment_t({ vertex2, vertex0 });
-                    auto ret2 = _insertEntityComposition(*segment2);
-                    mito::segment_t * unique_segment2 = ret2.first->second;
-                    if (ret2.second == true) {
-                        _addEntity(std::move(*segment2));
-                    } else {
-                        delete segment2;
-                    }
+                    // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
+                    mito::segment_t * segment0 = _addUniqueEntity<DIM1>({ vertex0, vertex1 });
+                    mito::segment_t * segment1 = _addUniqueEntity<DIM1>({ vertex1, vertex2 });
+                    mito::segment_t * segment2 = _addUniqueEntity<DIM1>({ vertex2, vertex0 });
 
                     // QUESTION: Can the label be more than one?
                     // read label for element
@@ -214,11 +235,9 @@ namespace mito {
                     std::string element_set_id;
                     fileStream >> element_set_id;
 
+                    // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
                     mito::triangle_t * element =
-                        new mito::triangle_t({ unique_segment0, unique_segment1, unique_segment2 });
-                    auto ret = _insertEntityComposition(*element);
-                    assert(ret.second == true);
-                    _addEntity(std::move(*element));
+                        _addUniqueEntity<DIM2>({ segment0, segment1, segment2 });
                 }
             }
 
@@ -226,6 +245,13 @@ namespace mito {
             for (const auto & element : std::get<D>(_entities)) {
                 assert(element.sanityCheck());
             }
+
+#if 0
+            std::cout << "Mesh composition: " << std::endl;
+            std::cout << "DIM0: " << std::get<DIM0>(_entities).size() << " entities " << std::endl;
+            std::cout << "DIM1: " << std::get<DIM1>(_entities).size() << " entities " << std::endl;
+            std::cout << "DIM2: " << std::get<DIM2>(_entities).size() << " entities " << std::endl;
+#endif
 
             // finalize file stream
             fileStream.close();
