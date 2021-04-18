@@ -65,15 +65,43 @@ namespace mito {
         ~Mesh() {}
 
       public:
+        bool sanityCheck()
+        {
+#if 0
+            // print summary
+            std::cout << "Mesh composition: " << std::endl;
+            std::cout << "DIM0: " << std::get<DIM0>(_entities).size() << " entities " << std::endl;
+            std::cout << "DIM1: " << std::get<DIM1>(_entities).size() << " entities " << std::endl;
+            std::cout << "DIM2: " << std::get<DIM2>(_entities).size() << " entities " << std::endl;
+#endif
+
+            // sanity check: each element is self-consistent
+            for (const auto & element : std::get<D>(_entities)) {
+                if (!element.sanityCheck()) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        template <int I>
+        int nEntities() const
+        {
+            // all done
+            return std::get<I>(_entities).size();
+        }
+
+      private:
         /**
          * @brief Registers an entity in the composition map
          *
          * @tparam I dimension of the entity to insert
          * @param entity mesh entity to be inserted
          * @return the pair returned by the map insertion:
-         *          pair::first is an iterator pointing to either the newly inserted element or to
-         *                      the element with an equivalent key
-         *          pair::second is true (false) if the entity was inserted (was already in the map)
+         *          pair::first is an iterator pointing to either the newly inserted element or
+         * to the element with an equivalent key pair::second is true (false) if the entity was
+         * inserted (was already in the map)
          */
         template <int I>
         auto _registerEntityComposition(Simplex<I> & entity)
@@ -148,14 +176,6 @@ namespace mito {
             return &std::get<I>(_entities)[n];
         }
 
-        template <int I>
-        int _nEntities() const
-        {
-            // all done
-            return std::get<I>(_entities).size();
-        }
-
-      private:
         void _readTriangle(std::ifstream & fileStream)
         {
             int index0 = 0;
@@ -184,6 +204,41 @@ namespace mito {
 
             // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
             mito::triangle_t * element = _addUniqueEntity<DIM2>({ segment0, segment1, segment2 });
+
+            // all done
+            return;
+        }
+
+        void _readVertices(std::ifstream & fileStream, int N_vertices)
+        {
+            // fill in vertices
+            for (int n = 0; n < N_vertices; ++n) {
+                // instantiate new point
+                mito::point_t<D> point;
+                for (int d = 0; d < D; ++d) {
+                    // read point coordinates
+                    fileStream >> point[d];
+                }
+                _addVertex(std::move(point));
+            }
+            // _vertexCoordinatesMap.print();
+
+            // all done
+            return;
+        }
+
+        void _readElements(std::ifstream & fileStream, int N_elements)
+        {
+            for (int i = 0; i < N_elements; ++i) {
+                int element_type = 0;
+                fileStream >> element_type;
+
+                if (element_type == 3) {
+                    _readTriangle(fileStream);
+                } else {
+                    std::cout << "Error: Unknown element type" << std::endl;
+                }
+            }
 
             // all done
             return;
@@ -223,43 +278,20 @@ namespace mito {
             // QUESTION: Not sure that we need this...
             assert(N_element_sets == 1);
 
-            // fill in vertices
-            for (int n = 0; n < N_vertices; ++n) {
-                // instantiate new point
-                mito::point_t<D> point;
-                for (int d = 0; d < D; ++d) {
-                    // read point coordinates
-                    fileStream >> point[d];
-                }
-                _addVertex(std::move(point));
-            }
-            // _vertexCoordinatesMap.print();
+            // read the vertices
+            _readVertices(fileStream, N_vertices);
+
+            // read the elements
+            _readElements(fileStream, N_elements);
 
             // sanity check: the number of vertices in the map is N_vertices
-            assert(_nEntities<DIM0>() == N_vertices);
+            assert(nEntities<DIM0>() == N_vertices);
 
-            for (int i = 0; i < N_elements; ++i) {
-                int element_type = 0;
-                fileStream >> element_type;
+            // sanity check: the number of elements of highest dimension in the map is N_elements
+            assert(nEntities<D>() == N_elements);
 
-                if (element_type == 3) {
-                    _readTriangle(fileStream);
-                } else {
-                    std::cout << "Error: Unknown element type" << std::endl;
-                }
-            }
-
-            // sanity check: each element is self-consistent
-            for (const auto & element : std::get<D>(_entities)) {
-                assert(element.sanityCheck());
-            }
-
-#if 0
-            std::cout << "Mesh composition: " << std::endl;
-            std::cout << "DIM0: " << std::get<DIM0>(_entities).size() << " entities " << std::endl;
-            std::cout << "DIM1: " << std::get<DIM1>(_entities).size() << " entities " << std::endl;
-            std::cout << "DIM2: " << std::get<DIM2>(_entities).size() << " entities " << std::endl;
-#endif
+            // sanity check: run sanity check for all mesh entities in cascade
+            assert(sanityCheck());
 
             // finalize file stream
             fileStream.close();
