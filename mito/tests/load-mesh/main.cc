@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <time.h>
 
 template <mito::DIM D>
 bool
@@ -130,9 +131,17 @@ LoadMesh(std::string fileName)
 int
 main()
 {
+    clock_t t;
 
+    //
+    t = clock();
     mito::Mesh<mito::DIM2> mesh("rectangle.summit");
-    std::cout << "Loaded mesh!" << std::endl;
+    std::cout << "Loaded mesh (without repeated entities) in " << clock() - t << std::endl;
+
+    //
+    t = clock();
+    LoadMesh<mito::DIM2>("rectangle.summit");
+    std::cout << "Loaded mesh (with repeated entities) in " << clock() - t << std::endl;
 
     return 0;
 }
