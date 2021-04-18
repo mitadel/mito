@@ -41,19 +41,19 @@ main()
     vertex_t vertex4;
     vertexCoordinatesMap.insert(vertex4, point_t<DIM2>({ 0.0, 1.0 }));
 
-    segment_t segment0({ vertex0, vertex1 });
-    segment_t segment1({ vertex1, vertex3 });
-    segment_t segment2({ vertex3, vertex0 });
-    segment_t segment3({ vertex1, vertex2 });
-    segment_t segment4({ vertex2, vertex3 });
-    segment_t segment5({ vertex4, vertex3 });
-    segment_t segment6({ vertex2, vertex4 });
-    segment_t segment7({ vertex4, vertex0 });
+    segment_t segment0({ &vertex0, &vertex1 });
+    segment_t segment1({ &vertex1, &vertex3 });
+    segment_t segment2({ &vertex3, &vertex0 });
+    segment_t segment3({ &vertex1, &vertex2 });
+    segment_t segment4({ &vertex2, &vertex3 });
+    segment_t segment5({ &vertex4, &vertex3 });
+    segment_t segment6({ &vertex2, &vertex4 });
+    segment_t segment7({ &vertex4, &vertex0 });
 
-    triangle_t element0({ segment0, segment1, segment2 });
-    triangle_t element1({ segment3, segment4, segment1 });
-    triangle_t element2({ segment6, segment5, segment4 });
-    triangle_t element3({ segment7, segment2, segment5 });
+    triangle_t element0({ &segment0, &segment1, &segment2 });
+    triangle_t element1({ &segment3, &segment4, &segment1 });
+    triangle_t element2({ &segment6, &segment5, &segment4 });
+    triangle_t element3({ &segment7, &segment2, &segment5 });
 
     std::vector<triangle_t> elements = { element0, element1, element2, element3 };
 
