@@ -63,19 +63,32 @@ namespace mito {
             _loadMesh(meshFileName);
         }
 
+        template <size_t I>
+        void _deleteEntities()
+        {
+            // delete entities of dimension I
+            for (auto element : std::get<I>(_entities)) {
+                delete element;
+            }
+
+            // all done
+            return;
+        }
+
+        template <size_t... I>
+        void _deleteAllEntities(std::index_sequence<I...>)
+        {
+            // delete entities of dimension I for all I's in the index sequence
+            ((_deleteEntities<I>()), ...);
+
+            // all done
+            return;
+        }
+
         ~Mesh()
         {
-            for (auto element : std::get<DIM0>(_entities)) {
-                delete element;
-            }
-
-            for (auto element : std::get<DIM1>(_entities)) {
-                delete element;
-            }
-
-            for (auto element : std::get<DIM2>(_entities)) {
-                delete element;
-            }
+            // delete all entities from dimension 0 (included) to D (included)
+            _deleteAllEntities(std::make_index_sequence<D + 1> {});
 
             // all done
             return;
