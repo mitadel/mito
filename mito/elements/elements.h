@@ -87,9 +87,9 @@ namespace mito {
         const std::vector<mito::vector<D>> & vertices, std::vector<real> & volumes)
     {
         // number of vertices
-        constexpr int V = int(D) + 1;
+        constexpr DIM V = D + 1;
 
-        static tensor<mito::DIM(V)> verticesTensor;
+        static tensor<V> verticesTensor;
 
         // get number of elements
         int nElements = volumes.size();
@@ -115,7 +115,7 @@ namespace mito {
         const std::vector<mito::vector<D>> & vertices, std::vector<real> & lengths)
     {
         // number of vertices
-        constexpr int V = 2;
+        constexpr DIM V = DIM2;
 
         // get number of elements
         int nElements = lengths.size();

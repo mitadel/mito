@@ -7,7 +7,7 @@
 
 namespace mito {
 
-    template <int D>
+    template <DIM D>
     class Simplex {
       public:
         Simplex(std::array<Simplex<D - 1> *, D + 1> && entities) : _entities(entities)
@@ -30,7 +30,7 @@ namespace mito {
 
         const auto & entities() const { return _entities; }
 
-        void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
+        void getVertices(std::set<const Simplex<DIM0> * /* vertex_t* */> & vertices) const
         {
             for (const auto & entity : entities()) {
                 entity->getVertices(vertices);
@@ -49,7 +49,7 @@ namespace mito {
             }
 
             // use a set to cleanup duplicates
-            std::set<const Simplex<0> * /* vertex_t* */> vertices;
+            std::set<const Simplex<DIM0> * /* vertex_t* */> vertices;
             // collect vertices of every subentity of this simplex
             for (const auto & entity : entities()) {
                 entity->getVertices(vertices);
@@ -69,13 +69,10 @@ namespace mito {
     };
 
     template <>
-    class Simplex<0> {
+    class Simplex<DIM0> {
       public:
         Simplex() {}
         ~Simplex() {}
-
-        // delete default constructor
-        Simplex() = delete;
 
         // delete copy constructor
         Simplex(const Simplex &) = delete;
@@ -83,7 +80,7 @@ namespace mito {
         // delete assignment operator
         Simplex & operator=(const Simplex &) = delete;
 
-        void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
+        void getVertices(std::set<const Simplex<DIM0> * /* vertex_t* */> & vertices) const
         {
             // insert this vertex
             vertices.insert(this);
@@ -94,7 +91,7 @@ namespace mito {
         bool sanityCheck() const { return true; }
     };
 
-    template <int D>
+    template <DIM D>
     class OrientedSimplex : public Simplex<D> {
       public:
         OrientedSimplex(std::array<Simplex<D - 1> *, D + 1> && entities, bool orientation) :
@@ -117,10 +114,10 @@ namespace mito {
         bool _orientation;
     };
 
-    using vertex_t = Simplex<0>;
-    using segment_t = Simplex<1>;
-    using triangle_t = Simplex<2>;
-    using tetrahedron_t = Simplex<3>;
+    using vertex_t = Simplex<DIM0>;
+    using segment_t = Simplex<DIM1>;
+    using triangle_t = Simplex<DIM2>;
+    using tetrahedron_t = Simplex<DIM3>;
 
     template <DIM D>
     // QUESTION: can we call this 'connectivity'?
@@ -177,9 +174,8 @@ namespace mito {
         std::vector<real> & volumes)
     {
         // number of vertices
-        constexpr int V = int(D) + 1;
-
-        static tensor<mito::DIM(V)> verticesTensor;
+        constexpr DIM V = D + 1;
+        static tensor<V> verticesTensor;
 
         // get number of elements
         int nElements = volumes.size();
@@ -281,7 +277,7 @@ namespace mito {
 }
 
 // overload operator<< for simplices
-template <int D>
+template <mito::DIM D>
 std::ostream &
 operator<<(std::ostream & os, const mito::Simplex<D> & s)
 {
@@ -295,7 +291,7 @@ operator<<(std::ostream & os, const mito::Simplex<D> & s)
 // overload operator<< specialization for simplices with D = 0 (vertices)
 template <>
 std::ostream &
-operator<<(std::ostream & os, const mito::Simplex<0> & s)
+operator<<(std::ostream & os, const mito::Simplex<mito::DIM0> & s)
 {
     os << &s;
     return os;

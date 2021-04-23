@@ -21,6 +21,16 @@ namespace mito {
     // enum for 0D, 1D, 2D, 3D, 4D (4D is used for parametric coordinates)
     enum DIM { DIM0 = 0, DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4 };
 
+    constexpr mito::DIM operator-(const mito::DIM & lhs, const int & rhs)
+    {
+        return mito::DIM(int(lhs) - rhs);
+    }
+
+    constexpr mito::DIM operator+(const mito::DIM & lhs, const int & rhs)
+    {
+        return mito::DIM(int(lhs) + rhs);
+    }
+
     static constexpr auto x0 = std::integral_constant<int, 0> {};
     static constexpr auto x1 = std::integral_constant<int, 1> {};
     static constexpr auto x2 = std::integral_constant<int, 2> {};
