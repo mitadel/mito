@@ -19,6 +19,15 @@ namespace mito {
 
         ~Simplex() {}
 
+        // delete default constructor
+        Simplex() = delete;
+
+        // delete copy constructor
+        Simplex(const Simplex &) = delete;
+
+        // delete assignment operator
+        Simplex & operator=(const Simplex &) = delete;
+
         const auto & entities() const { return _entities; }
 
         void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
@@ -65,6 +74,15 @@ namespace mito {
         Simplex() {}
         ~Simplex() {}
 
+        // delete default constructor
+        Simplex() = delete;
+
+        // delete copy constructor
+        Simplex(const Simplex &) = delete;
+
+        // delete assignment operator
+        Simplex & operator=(const Simplex &) = delete;
+
         void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
         {
             // insert this vertex
@@ -85,6 +103,15 @@ namespace mito {
         {}
 
         ~OrientedSimplex() {}
+
+        // delete default constructor
+        OrientedSimplex() = delete;
+
+        // delete copy constructor
+        OrientedSimplex(const OrientedSimplex &) = delete;
+
+        // delete assignment operator
+        OrientedSimplex & operator=(const OrientedSimplex &) = delete;
 
       private:
         bool _orientation;
@@ -107,6 +134,12 @@ namespace mito {
         VertexCoordinatesMap() : _map() {};
 
         ~VertexCoordinatesMap() {}
+
+        // delete copy constructor
+        VertexCoordinatesMap(const VertexCoordinatesMap &) = delete;
+
+        // delete assignment operator
+        VertexCoordinatesMap & operator=(const VertexCoordinatesMap &) = delete;
 
         void print()
         {
@@ -210,6 +243,15 @@ namespace mito {
         }
 
         ~ElementSet2() {}
+
+        // delete default constructor
+        ElementSet2() = delete;
+
+        // delete copy constructor
+        ElementSet2(const ElementSet2 &) = delete;
+
+        // delete assignment operator
+        ElementSet2 & operator=(const ElementSet2 &) = delete;
 
         bool sanityCheck()
         {

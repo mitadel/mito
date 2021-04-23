@@ -80,6 +80,15 @@ namespace mito {
             return;
         }
 
+        // delete default constructor
+        Mesh() = delete;
+
+        // delete copy constructor
+        Mesh(const Mesh &) = delete;
+
+        // delete assignment operator
+        Mesh & operator=(const Mesh &) = delete;
+
       public:
         bool sanityCheck()
         {
