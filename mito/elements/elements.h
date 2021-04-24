@@ -14,30 +14,41 @@ namespace mito {
         // number of vertices
         constexpr int V = int(D) + 1;
 
+        // a container to store the coordinates of each vertex in a tensor
         static tensor<mito::dim_t(V)> verticesTensor;
 
-        // get number of elements
-        int nElements = volumes.size();
+        // assert memory allocation is consistent
+        assert(volumes.size() == elements.size());
 
-        int countE = 0;
-        for (const auto & e : elements) {
+        // loop on elements
+        int e = 0;
+        for (const auto & element : elements) {
+
+            // reinitialize verticesTensor for a new element
             std::fill(verticesTensor.begin(), verticesTensor.end(), 0.0);
+
             // use a set to collect vertices without repeated entries
             std::set<const vertex_t *> vertices;
-            e->getVertices(vertices);
+            element->getVertices(vertices);
             // assert you found D+1 vertices
             assert(V == vertices.size());
 
-            int countV = 0;
-            for (const auto & v : vertices) {
+            // loop on vertices
+            int v = 0;
+            for (const auto & vertex : vertices) {
+                // fill up verticesTensor container
                 for (auto d = 0; d < D; ++d) {
-                    verticesTensor[countV * V + d] = coordinatesMap[*v][d];
+                    verticesTensor[v * V + d] = coordinatesMap[vertex][d];
                 }
-                verticesTensor[countV * V + D] = 1.0;
-                ++countV;
+                verticesTensor[v * V + D] = 1.0;
+                // update vertices counter
+                ++v;
             }
-            volumes[countE] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
-            ++countE;
+
+            // compute the volume of the e-th element
+            volumes[e] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
+            // update elements counter
+            ++e;
         }
 
         // all done
