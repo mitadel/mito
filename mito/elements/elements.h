@@ -76,6 +76,71 @@ namespace mito {
         return computeSimplicesVolume<DIM3>(elements, coordinatesMap, volumes);
     }
 
+    template <>
+    void computeElementsVolume<segment_t, DIM1>(
+        const std::vector<segment_t *> & elements,
+        const VertexCoordinatesMap<DIM1> & coordinatesMap, std::vector<real> & volumes)
+    {
+        return computeSimplicesVolume<DIM1>(elements, coordinatesMap, volumes);
+    }
+
+    template <dim_t D>
+    void computeSegmentsLength(
+        const std::vector<segment_t *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
+        std::vector<real> & length)
+    {
+        // number of vertices
+        constexpr int V = DIM2;
+
+        // assert memory allocation is consistent
+        assert(length.size() == elements.size());
+
+        // loop on elements
+        int e = 0;
+        for (const auto & element : elements) {
+
+            // collect vertices
+            std::set<const vertex_t *> vertices_set;
+            element->getVertices(vertices_set);
+            std::vector<const vertex_t *> vertices(vertices_set.begin(), vertices_set.end());
+
+            // assert the size of vertices container is equal to the number of vertices
+            assert(vertices.size() == V);
+
+            // compute the distance between the two vertices
+            real dist = 0.0;
+            for (auto d = 0; d < D; ++d) {
+                real dist_d = coordinatesMap[vertices[0]][d] - coordinatesMap[vertices[1]][d];
+                dist = dist_d * dist_d;
+            }
+
+            // store the distance between the two vertices as the element length
+            length[e] = sqrt(dist);
+
+            // update elements counter
+            ++e;
+        }
+
+        // all done
+        return;
+    }
+
+    template <>
+    void computeElementsVolume<segment_t, DIM2>(
+        const std::vector<segment_t *> & elements,
+        const VertexCoordinatesMap<DIM2> & coordinatesMap, std::vector<real> & volumes)
+    {
+        return computeSegmentsLength<DIM2>(elements, coordinatesMap, volumes);
+    }
+
+    template <>
+    void computeElementsVolume<segment_t, DIM3>(
+        const std::vector<segment_t *> & elements,
+        const VertexCoordinatesMap<DIM3> & coordinatesMap, std::vector<real> & volumes)
+    {
+        return computeSegmentsLength<DIM3>(elements, coordinatesMap, volumes);
+    }
+
     // QUESTION:
     // In the case of a bulk element or a line element in 3D the differential in the
     // integral is different (dV, or |r'(d)| dt). Is it a good idea to implement the jacobian, the
