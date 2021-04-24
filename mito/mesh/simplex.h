@@ -64,6 +64,10 @@ namespace mito {
             return true;
         }
 
+      public:
+        static constexpr DIM parametricDim = D + 1;
+        static constexpr int nVertices = D;
+
       private:
         std::array<Simplex<D - 1> *, D + 1> _entities;
     };
@@ -158,6 +162,12 @@ namespace mito {
                 std::pair<const vertex_t *, const point_t<D> *>(&vertex, &point));
         }
 
+        const point_t<D> & operator[](const vertex_t * vertex) const
+        {
+            auto point = _map.find(vertex);
+            return *(point->second);
+        }
+
         const point_t<D> & operator[](const vertex_t & vertex) const
         {
             auto point = _map.find(&vertex);
@@ -166,112 +176,6 @@ namespace mito {
 
       private:
         map_t _map;
-    };
-
-    template <class element_t, DIM D>
-    void computeSimplicesVolume(
-        const std::vector<element_t> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
-        std::vector<real> & volumes)
-    {
-        // number of vertices
-        constexpr DIM V = D + 1;
-        static tensor<V> verticesTensor;
-
-        // get number of elements
-        int nElements = volumes.size();
-
-        int countE = 0;
-        for (const auto & e : elements) {
-            std::fill(verticesTensor.begin(), verticesTensor.end(), 0.0);
-            // use a set to collect vertices without repeated entries
-            std::set<const vertex_t *> vertices;
-            e.getVertices(vertices);
-            // assert you found D+1 vertices
-            assert(V == vertices.size());
-
-            int countV = 0;
-            for (const auto & v : vertices) {
-                for (auto d = 0; d < D; ++d) {
-                    verticesTensor[countV * V + d] = coordinatesMap[*v][d];
-                }
-                verticesTensor[countV * V + D] = 1.0;
-                ++countV;
-            }
-            volumes[countE] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
-            ++countE;
-        }
-        // all done
-        return;
-    }
-
-    template <class element_t, DIM D>
-    void computeElementsVolume(
-        const std::vector<element_t> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
-        std::vector<real> & volumes);
-
-    template <>
-    void computeElementsVolume<triangle_t, DIM2>(
-        const std::vector<triangle_t> & elements, const VertexCoordinatesMap<DIM2> & coordinatesMap,
-        std::vector<real> & volumes)
-    {
-        return computeSimplicesVolume<triangle_t, DIM2>(elements, coordinatesMap, volumes);
-    }
-
-    template <>
-    void computeElementsVolume<tetrahedron_t, DIM3>(
-        const std::vector<tetrahedron_t> & elements,
-        const VertexCoordinatesMap<DIM3> & coordinatesMap, std::vector<real> & volumes)
-    {
-        return computeSimplicesVolume<tetrahedron_t, DIM3>(elements, coordinatesMap, volumes);
-    }
-
-    template <class element_t, DIM D>
-    class ElementSet2 {
-
-      public:
-        ElementSet2(std::vector<element_t> && elements, VertexCoordinatesMap<D> && coordinatesMap) :
-            _elements(elements),
-            _coordinatesMap(coordinatesMap),
-            _jacobians(elements.size(), 0.0)
-        {
-            // compute the jacobians of the map from reference to current element for each element
-            _computeJacobians();
-        }
-
-        ~ElementSet2() {}
-
-        // delete default constructor
-        ElementSet2() = delete;
-
-        // delete copy constructor
-        ElementSet2(const ElementSet2 &) = delete;
-
-        // delete assignment operator
-        ElementSet2 & operator=(const ElementSet2 &) = delete;
-
-        bool sanityCheck()
-        {
-            bool check = true;
-            for (const auto & e : _elements) {
-                if (!e.sanityCheck()) {
-                    std::cout << "Failed sanity check for element " << e << std::endl;
-                    check = false;
-                }
-            }
-            return check;
-        }
-
-      private:
-        void _computeJacobians()
-        {
-            return computeElementsVolume<element_t /* element type */, D /* spatial dim*/>(
-                _elements, _coordinatesMap, _jacobians);
-        }
-
-      private:
-        const std::vector<element_t> _elements;
-        const VertexCoordinatesMap<D> _coordinatesMap;
-        std::vector<real> _jacobians;
     };
 
 }

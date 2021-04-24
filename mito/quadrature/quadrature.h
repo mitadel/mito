@@ -2,14 +2,14 @@
 #define __MITO__QUADRATURE__
 
 #include "../mito.h"
-#include "../elements/elements.h"
+#include "../mesh/simplex.h"
 
 namespace mito {
 
-    template <class QuadratureType, class ElementType, int r>
+    template <class QuadratureType, class element_t, int r>
     struct SampleQuadratureRule {
         static constexpr auto degreeExactness = r;
-        static constexpr auto parametricDim = ElementType::parametricDim;
+        static constexpr DIM parametricDim = element_t::parametricDim;
         static constexpr auto Get();
     };
 
@@ -18,7 +18,7 @@ namespace mito {
     };
 
     template <>
-    constexpr auto SampleQuadratureRule<GAUSS, TRI, 1>::Get()
+    constexpr auto SampleQuadratureRule<GAUSS, triangle_t, 1>::Get()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 1 /* nPoints */>(
             { { /*{point}, weight*/
@@ -27,7 +27,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto SampleQuadratureRule<GAUSS, TRI, 2>::Get()
+    constexpr auto SampleQuadratureRule<GAUSS, triangle_t, 2>::Get()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 3 /* nPoints */>(
             { { /*{point}, weight*/
@@ -40,7 +40,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto SampleQuadratureRule<GAUSS, SEG, 1>::Get()
+    constexpr auto SampleQuadratureRule<GAUSS, segment_t, 1>::Get()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 1 /* nPoints */>(
             { { /*{point}, weight*/
@@ -48,7 +48,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto SampleQuadratureRule<GAUSS, SEG, 2>::Get()
+    constexpr auto SampleQuadratureRule<GAUSS, segment_t, 2>::Get()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 2 /* nPoints */>(
             { { /*{point}, weight*/

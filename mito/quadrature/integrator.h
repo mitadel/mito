@@ -12,10 +12,10 @@ namespace mito {
     //       of contact forces down the road. Do we have enough machinery for that?
 
     // template with respect to element type T and to degree of exactness r of quadrature rule
-    template <class QuadratureType, class ElementType, int r, DIM D>
+    template <class QuadratureType, class element_t, int r, DIM D>
     class Integrator {
-        static constexpr int V = ElementType::nVertices;
-        using QuadratureRule = SampleQuadratureRule<QuadratureType, ElementType, r>;
+        static constexpr int V = element_t::nVertices;
+        using QuadratureRule = SampleQuadratureRule<QuadratureType, element_t, r>;
         // the quadrature rule
         static constexpr auto _quadratureRule = QuadratureRule::Get();
         static constexpr int Q = _quadratureRule.size();
@@ -34,16 +34,27 @@ namespace mito {
             // TOFIX: We should avoid the 4 nested for loops
             // QUESTION: 3 out 4 of these loops can be unrolled as Q, D, V are template parameters
             //           Is there anything we can do about it?
-            for (auto e = 0; e < _elements.nElements(); ++e) {
-                for (auto q = 0; q < Q; ++q) {
-                    for (auto d = 0; d < D; ++d) {
-                        for (auto v = 0; v < V; ++v) {
-                            const mito::vector<D> & vertex = _elements.vertex(e, v);
+
+            // loop on elements
+            int e = 0;
+            for (const auto & element : _elementSet.elements()) {
+                // use a set to collect vertices without repeated entries
+                std::set<const vertex_t *> vertices;
+                element->getVertices(vertices);
+                // loop on vertices
+                int v = 0;
+                for (const auto & vertex : vertices) {
+                    // loop on quadrature point
+                    for (int q = 0; q < Q; ++q) {
+                        for (int d = 0; d < D; ++d) {
+                            const auto & vertexCoordinates = _elementSet.coordinatesVertex(vertex);
                             _coordinates[e * Q + q][d] +=
-                                std::get<0>(_quadratureRule[q])[v] * vertex[d];
+                                std::get<0>(_quadratureRule[q])[v] * vertexCoordinates[d];
                         }
                     }
+                    ++v;
                 }
+                ++e;
             }
 
             // all done
@@ -51,9 +62,9 @@ namespace mito {
         }
 
       public:
-        Integrator(const Elements<ElementType, D> & elements) :
-            _elements(elements),
-            _coordinates(elements.nElements() * Q)
+        Integrator(const ElementSet<element_t, D> & elementSet) :
+            _elementSet(elementSet),
+            _coordinates(elementSet.nElements() * Q)
         {
             _computeQuadPointCoordinates();
         }
@@ -66,16 +77,17 @@ namespace mito {
 
             real result = 0.0;
 
-            // TOFIX: Typedef elem_t, quad_t, dim_t so as to give a compilation error if misused
+            // TOFIX: Typedef elem_t, quad_t, dim_t so as to give a compilation error if
+            // misused
             //        Also: consider using p2::grid to decouple memory from indexing.
             //        Syntax is as follows:
             //              index_t i {e, q, j};
             //              values[i];
-            // for (auto & e : _elements) {
-            for (auto e = 0; e < _elements.nElements(); ++e) {
+            // for (auto & e : _elementSet) {
+            for (auto e = 0; e < _elementSet.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
                     result += values[e * Q + q] * std::get<1>(_quadratureRule[q])
-                            * _elements.jacobian(e) / areaReferenceElement;
+                            * _elementSet.jacobian(e) / areaReferenceElement;
                 }
             }
 
@@ -84,11 +96,11 @@ namespace mito {
 
       private:
         // the domain of integration
-        const Elements<ElementType, D> & _elements;
+        const ElementSet<element_t, D> & _elementSet;
         // the coordinates of the quadrature points in the domain of integration
         std::vector<mito::vector<D>> _coordinates;
     };
 
-}
+}    // namespace  mito
 
 // end of file
