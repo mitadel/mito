@@ -85,5 +85,6 @@
         "__memory": "cpp",
         "unordered_set": "cpp"
     },
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
 }
