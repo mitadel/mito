@@ -44,7 +44,7 @@ namespace mito {
 
       public:
         // accessor for function partial derivatives
-        inline const function_t & Df(dim_t i) const
+        inline const function_t & Df(int i) const
         {
             // assert there exists the i-th partial derivative
             assert(i < _Df.size());
@@ -75,7 +75,7 @@ namespace mito {
             return std::move(result);
         }
 
-        inline const ScalarField<D> & operator[](dim_t i) const
+        inline const ScalarField<D> & operator[](int i) const
         {
             // assert there exists the i-th partial derivative
             assert(i < _components.size());
@@ -83,7 +83,7 @@ namespace mito {
             return _components[i];
         }
 
-        inline ScalarField<D> & operator[](dim_t i)
+        inline ScalarField<D> & operator[](int i)
         {
             // assert there exists the i-th partial derivative
             assert(i < _components.size());

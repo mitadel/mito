@@ -38,8 +38,6 @@ namespace mito {
 
     // typedef for scalars
     using real = double;
-    // typedef for dim loop
-    using dim_t = int;
     // typedef for vectors
     template <DIM D>
     using vector = std::array<real, D>;
