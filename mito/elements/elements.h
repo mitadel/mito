@@ -6,9 +6,9 @@
 
 namespace mito {
 
-    template <class element_t, DIM D>
+    template <DIM D>
     void computeSimplicesVolume(
-        const std::vector<element_t *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
+        const std::vector<Simplex<D> *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
         std::vector<real> & volumes)
     {
         // number of vertices
@@ -54,7 +54,7 @@ namespace mito {
         const std::vector<triangle_t *> & elements,
         const VertexCoordinatesMap<DIM2> & coordinatesMap, std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<triangle_t, DIM2>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<DIM2>(elements, coordinatesMap, volumes);
     }
 
     template <>
@@ -62,7 +62,7 @@ namespace mito {
         const std::vector<tetrahedron_t *> & elements,
         const VertexCoordinatesMap<DIM3> & coordinatesMap, std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<tetrahedron_t, DIM3>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<DIM3>(elements, coordinatesMap, volumes);
     }
 
     // QUESTION:
