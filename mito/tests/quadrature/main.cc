@@ -154,6 +154,30 @@ main()
               << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
     assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
+    // attach different coordinates (3D coordinates to the same vertices as above)
+    mito::VertexCoordinatesMap<DIM3> vertexCoordinatesMap3D;
+    vertexCoordinatesMap3D.insert(vertex0, point_t<DIM3>({ 0.0, 0.0, 0.0 }));
+    vertexCoordinatesMap3D.insert(vertex1, point_t<DIM3>({ 1.0, 0.0, 1.0 }));
+    vertexCoordinatesMap3D.insert(vertex2, point_t<DIM3>({ 1.0, 1.0, 1.0 }));
+    vertexCoordinatesMap3D.insert(vertex3, point_t<DIM3>({ 0.5, 0.5, 0.5 }));
+    vertexCoordinatesMap3D.insert(vertex4, point_t<DIM3>({ 0.0, 1.0, 0.0 }));
+
+    // instantiate an element set with the same elements as above but the new coordinates map
+    std::vector<triangle_t *> elements3D = { &element0, &element1, &element2, &element3 };
+    mito::ElementSet bodyElementSet3D(std::move(elements3D), vertexCoordinatesMap3D);
+
+    // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
+    // static mito::ElementSetTri elementSet;
+    mito::Integrator<GAUSS, triangle_t, 2 /* degree of exactness */, DIM3> bodyIntegrator3D(
+        bodyElementSet3D);
+
+    // instantiate a scalar function object
+    mito::ScalarField<DIM3> xy3D([](const vector<DIM3> & x) { return x[0] * x[1]; });
+    result = bodyIntegrator3D.integrate(xy3D);    // exact 0.35355339059327384
+    std::cout << "Integration of x*y in 3D: Result = " << result
+              << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;
+    assert(std::fabs(result - 0.35355339059327384) < 1.e-15);
+
     return 0;
 }
 
