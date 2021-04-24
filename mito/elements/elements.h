@@ -1,8 +1,8 @@
 #ifndef __MITO__ELEMENTS__
 #define __MITO__ELEMENTS__
 
-#include "../mito.h"
 #include "../mesh/simplex.h"
+#include "../mesh/vertex_coordinates_map.h"
 
 namespace mito {
 

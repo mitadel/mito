@@ -1,5 +1,5 @@
-#include "../mito.h"
 #include "simplex.h"
+#include "vertex_coordinates_map.h"
 #include <map>
 #include <fstream>
 
