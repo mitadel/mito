@@ -12,7 +12,7 @@ namespace mito {
     //       of contact forces down the road. Do we have enough machinery for that?
 
     // template with respect to element type T and to degree of exactness r of quadrature rule
-    template <class quadrature_t, class element_t, int r, DIM D>
+    template <class quadrature_t, class element_t, int r, dim_t D>
     class Integrator {
         static constexpr int V = element_t::nVertices;
         using QuadratureRule = SampleQuadratureRule<quadrature_t, element_t, r>;

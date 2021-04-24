@@ -6,7 +6,7 @@
 #include <map>
 #include <time.h>
 
-template <mito::DIM D>
+template <mito::dim_t D>
 bool
 LoadMesh(std::string fileName)
 {

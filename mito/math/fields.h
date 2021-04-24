@@ -12,7 +12,7 @@ namespace mito {
     //       second and fourth order tensors.
 
     // f(X,x,t) with (X \in R^D, x \in R^D2, t \in R) -> R
-    template <DIM D, DIM D2 = D>
+    template <dim_t D, dim_t D2 = D>
     class ScalarField {
 
         // typedef for a scalar valued function
@@ -60,7 +60,7 @@ namespace mito {
     };
 
     // template on vector dimension N, spatial dimension D
-    template <DIM N, DIM D>
+    template <dim_t N, dim_t D>
     class VectorField {
       public:
         VectorField(std::array<ScalarField<D>, N> components) : _components(components) {}
@@ -96,7 +96,7 @@ namespace mito {
     };
 
     // function to compute the Divergence of a vector field at point X
-    template <DIM D>
+    template <dim_t D>
     inline real divX(const VectorField<D, D> & function, const vector<D> & X)
     {
         real result = 0.0;
@@ -108,7 +108,7 @@ namespace mito {
 
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point X
-    template <DIM D>
+    template <dim_t D>
     inline vector<D> gradX(const ScalarField<D> & function, const vector<D> & X)
     {
         vector<D> result;
@@ -120,7 +120,7 @@ namespace mito {
 
     // helper function to compute the gradient of a vector field with respect to the reference
     // configuration at point X (template with index sequence)
-    template <DIM D, std::size_t... I>
+    template <dim_t D, std::size_t... I>
     inline VectorField<D, D> _gradX(const ScalarField<D> & function, std::index_sequence<I...>)
     {
         return VectorField<D, D>({ function.Df(I)... });
@@ -128,7 +128,7 @@ namespace mito {
 
     // function to compute the gradient of a vector field with respect to the reference
     // configuration at point X
-    template <DIM D>
+    template <dim_t D>
     inline VectorField<D, D> gradX(const ScalarField<D> & function)
     {
         return _gradX(function, std::make_index_sequence<D> {});

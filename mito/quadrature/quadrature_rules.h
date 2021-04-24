@@ -9,7 +9,7 @@ namespace mito {
     template <class quadrature_t, class element_t, int r>
     struct SampleQuadratureRule {
         static constexpr auto degreeExactness = r;
-        static constexpr DIM parametricDim = element_t::parametricDim;
+        static constexpr dim_t parametricDim = element_t::parametricDim;
         static constexpr auto Get();
     };
 

@@ -14,21 +14,21 @@
 // TOFIX: Consider using tuples when possible as opposed to std::array and std::vector
 
 namespace mito {
-    // Templating mito::vector and mito::tensor with respect to the enum DIM DOES the trick of
+    // Templating mito::vector and mito::tensor with respect to the enum dim_t DOES the trick of
     // preventing the user from instantiating mito::vector<15>:
-    //   "error: invalid conversion from 'int' to 'mito::DIM' [-fpermissive]"
+    //   "error: invalid conversion from 'int' to 'mito::dim_t' [-fpermissive]"
 
     // enum for 0D, 1D, 2D, 3D, 4D (4D is used for parametric coordinates)
-    enum DIM { DIM0 = 0, DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4 };
+    enum dim_t { DIM0 = 0, DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4 };
 
-    constexpr mito::DIM operator-(const mito::DIM & lhs, const int & rhs)
+    constexpr mito::dim_t operator-(const mito::dim_t & lhs, const int & rhs)
     {
-        return mito::DIM(int(lhs) - rhs);
+        return mito::dim_t(int(lhs) - rhs);
     }
 
-    constexpr mito::DIM operator+(const mito::DIM & lhs, const int & rhs)
+    constexpr mito::dim_t operator+(const mito::dim_t & lhs, const int & rhs)
     {
-        return mito::DIM(int(lhs) + rhs);
+        return mito::dim_t(int(lhs) + rhs);
     }
 
     static constexpr auto x0 = std::integral_constant<int, 0> {};
@@ -39,12 +39,12 @@ namespace mito {
     // typedef for scalars
     using real = double;
     // typedef for vectors
-    template <DIM D>
+    template <dim_t D>
     using vector = std::array<real, D>;
-    template <DIM D>
+    template <dim_t D>
     using point_t = mito::vector<D>;    // Point<D>;
     // typedef for tensors
-    template <DIM D1, DIM D2 = D1>
+    template <dim_t D1, dim_t D2 = D1>
     using tensor = std::array<real, D1 * D2>;
     // templatized typedef for fields
     template <typename X, typename Y>
@@ -131,10 +131,10 @@ operator<<(std::ostream & os, const std::array<X, N> & x)
 
 namespace mito {
 
-    template <DIM D>
+    template <dim_t D>
     int Factorial()
     {
-        return D * Factorial<DIM(D - 1)>();
+        return D * Factorial<dim_t(D - 1)>();
     }
     template <>
     int Factorial<mito::DIM1>()

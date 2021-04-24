@@ -2,7 +2,7 @@
 
 namespace mito {
 
-    template <DIM D>
+    template <dim_t D>
     class Point {
 
       private:

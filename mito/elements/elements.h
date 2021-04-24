@@ -6,7 +6,7 @@
 
 namespace mito {
 
-    template <DIM D>
+    template <dim_t D>
     void computeSimplicesVolume(
         const std::vector<Simplex<D> *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
         std::vector<real> & volumes)
@@ -14,7 +14,7 @@ namespace mito {
         // number of vertices
         constexpr int V = int(D) + 1;
 
-        static tensor<mito::DIM(V)> verticesTensor;
+        static tensor<mito::dim_t(V)> verticesTensor;
 
         // get number of elements
         int nElements = volumes.size();
@@ -44,7 +44,7 @@ namespace mito {
         return;
     }
 
-    template <class element_t, DIM D>
+    template <class element_t, dim_t D>
     void computeElementsVolume(
         const std::vector<element_t *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
         std::vector<real> & volumes);
@@ -71,7 +71,7 @@ namespace mito {
     // derivative of the parametrization, the normal times the area differential, as the returned
     // value by a method called, say, differential?
 
-    template <class element_t, DIM D>
+    template <class element_t, dim_t D>
     class ElementSet {
 
       public:

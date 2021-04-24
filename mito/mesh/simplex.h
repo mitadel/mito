@@ -7,7 +7,7 @@
 
 namespace mito {
 
-    template <DIM D>
+    template <dim_t D>
     class Simplex {
       public:
         Simplex(std::array<Simplex<D - 1> *, D + 1> && entities) : _entities(entities)
@@ -65,7 +65,7 @@ namespace mito {
         }
 
       public:
-        static constexpr DIM parametricDim = D + 1;
+        static constexpr dim_t parametricDim = D + 1;
         static constexpr int nVertices = D;
 
       private:
@@ -95,7 +95,7 @@ namespace mito {
         bool sanityCheck() const { return true; }
     };
 
-    template <DIM D>
+    template <dim_t D>
     class OrientedSimplex : public Simplex<D> {
       public:
         OrientedSimplex(std::array<Simplex<D - 1> *, D + 1> && entities, bool orientation) :
@@ -123,7 +123,7 @@ namespace mito {
     using triangle_t = Simplex<DIM2>;
     using tetrahedron_t = Simplex<DIM3>;
 
-    template <DIM D>
+    template <dim_t D>
     // QUESTION: can we call this 'connectivity'?
     class VertexCoordinatesMap {
 
@@ -181,7 +181,7 @@ namespace mito {
 }
 
 // overload operator<< for simplices
-template <mito::DIM D>
+template <mito::dim_t D>
 std::ostream &
 operator<<(std::ostream & os, const mito::Simplex<D> & s)
 {
