@@ -148,6 +148,60 @@ namespace mito {
         return computeSegmentsLength<DIM3>(elements, coordinatesMap, volumes);
     }
 
+    // follows implementation by Kahan2014
+    template <dim_t D = DIM3>
+    void computeTriangleArea(
+        const std::vector<triangle_t *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
+        std::vector<real> & areas)
+    {
+        // loop on elements
+        int e = 0;
+        for (const auto & element : elements) {
+
+            // collect vertices
+            std::set<const vertex_t *> vertices_set;
+            element->getVertices(vertices_set);
+            std::vector<const vertex_t *> vertices(vertices_set.begin(), vertices_set.end());
+
+            // compute lengths of three edges
+            std::array<real, 3> edges_lengths;
+            edges_lengths[0] =
+                computeDistance<D>(coordinatesMap[vertices[0]], coordinatesMap[vertices[1]]);
+            edges_lengths[1] =
+                computeDistance<D>(coordinatesMap[vertices[0]], coordinatesMap[vertices[2]]);
+            edges_lengths[2] =
+                computeDistance<D>(coordinatesMap[vertices[1]], coordinatesMap[vertices[2]]);
+
+            // sort edges lengths in ascending order
+            std::sort(edges_lengths.begin(), edges_lengths.end());
+
+            // a >= b >= c
+            real a = edges_lengths[2];
+            real b = edges_lengths[1];
+            real c = edges_lengths[0];
+            real amb = a - b;
+            real bmc = b - c;
+            real bpc = b + c;
+
+            // compute area of element e
+            areas[e] = 0.25 * sqrt((a + bpc) * (c - amb) * (c + amb) * (a + bmc));
+
+            // update elements counter
+            ++e;
+        }
+
+        // all done
+        return;
+    }
+
+    template <>
+    void computeElementsVolume<triangle_t, DIM3>(
+        const std::vector<triangle_t *> & elements,
+        const VertexCoordinatesMap<DIM3> & coordinatesMap, std::vector<real> & volumes)
+    {
+        return computeTriangleArea(elements, coordinatesMap, volumes);
+    }
+
     // QUESTION:
     // In the case of a bulk element or a line element in 3D the differential in the
     // integral is different (dV, or |r'(d)| dt). Is it a good idea to implement the jacobian, the
