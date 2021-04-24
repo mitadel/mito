@@ -7,6 +7,19 @@
 namespace mito {
 
     template <dim_t D>
+    real computeDistance(const point_t<D> & pointA, const point_t<D> & pointB)
+    {
+        // return the distance between the two points
+        real dist2 = 0.0;
+        for (auto d = 0; d < D; ++d) {
+            real dist_d = pointA[d] - pointB[d];
+            dist2 += dist_d * dist_d;
+        }
+
+        return sqrt(dist2);
+    }
+
+    template <dim_t D>
     void computeSimplicesVolume(
         const std::vector<Simplex<D> *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
         std::vector<real> & volumes)
@@ -107,15 +120,9 @@ namespace mito {
             // assert the size of vertices container is equal to the number of vertices
             assert(vertices.size() == V);
 
-            // compute the distance between the two vertices
-            real dist = 0.0;
-            for (auto d = 0; d < D; ++d) {
-                real dist_d = coordinatesMap[vertices[0]][d] - coordinatesMap[vertices[1]][d];
-                dist = dist_d * dist_d;
-            }
-
             // store the distance between the two vertices as the element length
-            length[e] = sqrt(dist);
+            length[e] =
+                computeDistance<D>(coordinatesMap[vertices[0]], coordinatesMap[vertices[1]]);
 
             // update elements counter
             ++e;
