@@ -1,8 +1,8 @@
-#ifndef __MITO__ELEMENTS__
-#define __MITO__ELEMENTS__
+#ifndef __MITO__ELEMENT_SET__
+#define __MITO__ELEMENT_SET__
 
-#include "../mesh/simplex.h"
-#include "../mesh/vertex_coordinates_map.h"
+#include "simplex.h"
+#include "vertex_coordinates_map.h"
 
 namespace mito {
 
@@ -206,6 +206,6 @@ namespace mito {
 
 }    // namespace mito
 
-#endif    //__MITO__ELEMENTS__
+#endif    //__MITO__ELEMENT_SET__
 
 // end of file

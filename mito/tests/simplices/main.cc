@@ -1,6 +1,6 @@
 #include <map>
 #include "../../mesh/simplex.h"
-#include "../../elements/elements.h"
+#include "../../mesh/element_set.h"
 
 using mito::DIM2;
 using mito::point_t;
