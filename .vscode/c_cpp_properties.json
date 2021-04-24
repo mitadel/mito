@@ -7,10 +7,10 @@
             ],
             "defines": [],
             "macFrameworkPath": [],
-            "compilerPath": "/opt/local/bin/gcc",
+            "compilerPath": "/opt/local/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++20",
-            "intelliSenseMode": "macos-gcc-x64"
+            "intelliSenseMode": "macos-clang-x64"
         },
         {
             "name": "Linux",
@@ -19,10 +19,10 @@
             ],
             "defines": [],
             "macFrameworkPath": [],
-            "compilerPath": "/usr/bin/gcc",
+            "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++20",
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "linux-clang-x64"
         }
     ],
     "version": 4
