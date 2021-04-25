@@ -1,6 +1,7 @@
 #include "../mito.h"
 #include "../mesh/element_set.h"
 #include "../math/fields.h"
+#include "../elements/quadrature_field.h"
 #include "quadrature_rules.h"
 
 namespace mito {
@@ -39,7 +40,7 @@ namespace mito {
                     for (int q = 0; q < Q; ++q) {
                         for (int d = 0; d < D; ++d) {
                             const auto & vertexCoordinates = _elementSet.coordinatesVertex(vertex);
-                            _coordinates[e * Q + q][d] +=
+                            _coordinates(e, q)[d] +=
                                 _quadratureRule.getPoint(q)[v] * vertexCoordinates[d];
                         }
                     }
@@ -55,7 +56,7 @@ namespace mito {
       public:
         Integrator(const ElementSet<element_t, D> & elementSet) :
             _elementSet(elementSet),
-            _coordinates(elementSet.nElements() * Q)
+            _coordinates(elementSet.nElements())
         {
             _computeQuadPointCoordinates();
         }
@@ -88,14 +89,14 @@ namespace mito {
       private:
         // the quadrature rule
         static constexpr auto _quadratureRule = QuadratureRule::Get();
-        // the domain of integration
-        const ElementSet<element_t, D> & _elementSet;
-        // the coordinates of the quadrature points in the domain of integration
-        std::vector<mito::vector<D>> _coordinates;
         // the number of element vertices
         static constexpr int V = element_t::nVertices;
         // the number of quadrature points
         static constexpr int Q = _quadratureRule.size();
+        // the domain of integration
+        const ElementSet<element_t, D> & _elementSet;
+        // the coordinates of the quadrature points in the domain of integration
+        quadrature_field_t<Q, D> _coordinates;
     };
 
 }    // namespace  mito
