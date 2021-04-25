@@ -31,7 +31,7 @@ namespace mito {
             return;
         }
 
-        auto size() { return _map.size(); }
+        int size() { return _map.size(); }
 
         auto insert(const vertex_t & vertex, const point_t<D> && point)
         {

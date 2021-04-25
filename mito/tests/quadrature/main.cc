@@ -127,7 +127,7 @@ main()
     assert(std::fabs(result - 0.946083) < 1.e-3);
 
     // instantiate a scalar function object
-    mito::ScalarField<DIM2> one([](const vector<DIM2> & x) { return 1.0; });
+    mito::ScalarField<DIM2> one([]([[maybe_unused]] const vector<DIM2> & x) { return 1.0; });
     result = bodyIntegrator.integrate(one);    // exact 1.0
     std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
               << std::endl;

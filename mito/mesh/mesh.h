@@ -244,7 +244,7 @@ namespace mito {
             fileStream >> element_set_id;
 
             // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
-            mito::triangle_t * element = _addUniqueEntity<DIM2>({ segment0, segment1, segment2 });
+            _addUniqueEntity<DIM2>({ segment0, segment1, segment2 });
 
             // all done
             return;

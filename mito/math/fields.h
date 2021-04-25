@@ -36,10 +36,10 @@ namespace mito {
         {
             std::vector<real> values(X.size(), 0.0);
             // evaluate operator() at all elements of X
-            for (auto i = 0; i < X.size(); ++i) {
+            for (int i = 0; i < (int) X.size(); ++i) {
                 values[i] = operator()(X[i]);
             }
-            return std::move(values);
+            return values;
         }
 
       public:
@@ -47,7 +47,7 @@ namespace mito {
         inline const function_t & Df(int i) const
         {
             // assert there exists the i-th partial derivative
-            assert(i < _Df.size());
+            assert(i < (int) _Df.size());
             // return the i-th partial derivative
             return _Df[i];
         }
@@ -72,13 +72,13 @@ namespace mito {
             for (int i = 0; i < N; ++i) {
                 result[i] = _components[i](X);
             }
-            return std::move(result);
+            return result;
         }
 
         inline const ScalarField<D> & operator[](int i) const
         {
             // assert there exists the i-th partial derivative
-            assert(i < _components.size());
+            assert(i < (int) _components.size());
             // return the i-th component
             return _components[i];
         }
@@ -100,7 +100,7 @@ namespace mito {
     inline real divX(const VectorField<D, D> & function, const vector<D> & X)
     {
         real result = 0.0;
-        for (auto i(0); i < D; ++i) {
+        for (dim_t i(0); i < D; ++i) {
             result += function[i].Df(i)(X);
         }
         return result;
@@ -112,10 +112,10 @@ namespace mito {
     inline vector<D> gradX(const ScalarField<D> & function, const vector<D> & X)
     {
         vector<D> result;
-        for (auto i = 0; i < D; ++i) {
+        for (dim_t i(0); i < D; ++i) {
             result[i] = function.Df(i)(X);
         }
-        return std::move(result);
+        return result;
     }
 
     // helper function to compute the gradient of a vector field with respect to the reference
