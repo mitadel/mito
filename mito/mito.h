@@ -39,8 +39,8 @@ namespace mito {
     // typedef for scalars
     using real = double;
     // typedef for vectors
-    template <dim_t D>
-    using vector = std::array<real, D>;
+    template <dim_t D, class T = real>
+    using vector = std::array<T, D>;
     template <dim_t D>
     using point_t = mito::vector<D>;    // Point<D>;
     // typedef for tensors
