@@ -3,8 +3,6 @@
 
 #include "../mito.h"
 
-// TOFIX: Check the std::move throughout. I am not sure they do what I expect them to.
-
 namespace mito {
 
     // TODO: Once we converge on what ScalarField, and VectorField look like, we should expand this
@@ -100,7 +98,7 @@ namespace mito {
     inline real divX(const VectorField<D, D> & function, const vector<D> & X)
     {
         real result = 0.0;
-        for (dim_t i(0); i < D; ++i) {
+        for (int i = 0; i < D; ++i) {
             result += function[i].Df(i)(X);
         }
         return result;
@@ -112,7 +110,7 @@ namespace mito {
     inline vector<D> gradX(const ScalarField<D> & function, const vector<D> & X)
     {
         vector<D> result;
-        for (dim_t i(0); i < D; ++i) {
+        for (int i = 0; i < D; ++i) {
             result[i] = function.Df(i)(X);
         }
         return result;
