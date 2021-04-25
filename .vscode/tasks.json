@@ -8,21 +8,21 @@
 			"args": [
 				"-g",
 				"-std=c++2a",
+				"-Wall",
+				"-Wextra",
+				"-pedantic",
+				"-Werror",
 				"${file}",
 				"-o",
 				"${fileDirname}/${fileBasenameNoExtension}"
 			],
-			"options": {
-				"cwd": "/opt/local/bin"
-			},
 			"problemMatcher": [
 				"$gcc"
 			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"detail": "compiler: /opt/local/bin/g++"
+			}
 		}
 	]
 }
