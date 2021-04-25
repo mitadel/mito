@@ -11,14 +11,49 @@ namespace mito {
         static constexpr auto degreeExactness = r;
         static constexpr dim_t parametricDim = element_t::parametricDim;
         static constexpr auto Get();
+
+      private:
+        static constexpr auto GetQuadratureRule();
     };
 
     struct GAUSS {
         static constexpr auto name = "GAUSS";
     };
 
+    template <class quadrature_t, class element_t, int r>
+    constexpr auto QuadratureRulesFactory<quadrature_t, element_t, r>::Get()
+    {
+        // get the appropriate quadrature rule
+        constexpr auto quadrature_rule =
+            QuadratureRulesFactory<quadrature_t, element_t, r>::GetQuadratureRule();
+
+        // lambda function to compute the sum of Q quadrature weights at compile time
+        constexpr auto sum = [quadrature_rule]<int Q>() consteval->double
+        {
+            constexpr auto sum_impl = [quadrature_rule]<int q>(auto & sum_ref) consteval->double
+            {
+                if constexpr (q == -1)
+                    return 0.0;
+                else
+                    return std::get<1>(quadrature_rule[q])
+                         + sum_ref.template operator()<q - 1>(sum_ref);
+            };
+            return sum_impl.template operator()<Q - 1>(sum_impl);
+        };
+
+        // the number of quadrature weights
+        constexpr auto Q = quadrature_rule.size();
+        // have the compiler compute the sum of the quadrature weights
+        constexpr double weightsSum = sum.template operator()<Q>();
+        // assert the quadrature weights are a partition of unity
+        static_assert(weightsSum == 1.0);
+
+        // return the quadrature rule
+        return quadrature_rule;
+    }
+
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, triangle_t, 1>::Get()
+    constexpr auto QuadratureRulesFactory<GAUSS, triangle_t, 1>::GetQuadratureRule()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 1 /* nPoints */>(
             { { /*{point}, weight*/
@@ -27,7 +62,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, triangle_t, 2>::Get()
+    constexpr auto QuadratureRulesFactory<GAUSS, triangle_t, 2>::GetQuadratureRule()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 3 /* nPoints */>(
             { { /*{point}, weight*/
@@ -40,7 +75,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, segment_t, 1>::Get()
+    constexpr auto QuadratureRulesFactory<GAUSS, segment_t, 1>::GetQuadratureRule()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 1 /* nPoints */>(
             { { /*{point}, weight*/
@@ -48,7 +83,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, segment_t, 2>::Get()
+    constexpr auto QuadratureRulesFactory<GAUSS, segment_t, 2>::GetQuadratureRule()
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 2 /* nPoints */>(
             { { /*{point}, weight*/
