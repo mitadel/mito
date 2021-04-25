@@ -171,7 +171,6 @@ namespace mito {
                 // add the entity as a new one
                 _addEntity(entity);
             } else {
-                // TOFIX: double check this delete... Maybe valgrind the whole thing...
                 // delete the new entity (it was just a repeated entry)
                 delete entity;
             }
@@ -298,7 +297,7 @@ namespace mito {
             int dim = 0;
             fileStream >> dim;
 
-            // TOFIX
+            // assert this mesh object is of same dimension of the mesh being read
             assert(int(D) == dim);
 
             // read number of vertices

@@ -3,8 +3,6 @@
 #include "../math/fields.h"
 #include "quadrature_rules.h"
 
-// TOFIX: Check the std::move throughout. I am not sure they do what I expect them to.
-
 namespace mito {
 
     // TODO: Keep in mind that we will need integrator and the above defined fields to compute

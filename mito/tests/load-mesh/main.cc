@@ -19,7 +19,7 @@ LoadMesh(std::string fileName)
     int dim = 0;
     fileStream >> dim;
 
-    // TOFIX
+    // assert the template parameter is equal to the dimension of the mesh being read
     assert(int(D) == dim);
 
     // read number of vertices
