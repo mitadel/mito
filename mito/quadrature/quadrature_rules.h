@@ -23,7 +23,7 @@ namespace mito {
         return std::array<std::tuple<vector<parametricDim>, double>, 1 /* nPoints */>(
             { { /*{point}, weight*/
                 std::make_tuple(
-                    vector<parametricDim>({ 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 }), 1.0 / 2.0) } });
+                    vector<parametricDim>({ 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 }), 1.0) } });
     }
 
     template <>
@@ -32,11 +32,11 @@ namespace mito {
         return std::array<std::tuple<vector<parametricDim>, double>, 3 /* nPoints */>(
             { { /*{point}, weight*/
                 std::make_tuple(
-                    vector<parametricDim>({ 2.0 / 3.0, 1.0 / 6.0, 1.0 / 6.0 }), 1.0 / 6.0),
+                    vector<parametricDim>({ 2.0 / 3.0, 1.0 / 6.0, 1.0 / 6.0 }), 1.0 / 3.0),
                 std::make_tuple(
-                    vector<parametricDim>({ 1.0 / 6.0, 2.0 / 3.0, 1.0 / 6.0 }), 1.0 / 6.0),
+                    vector<parametricDim>({ 1.0 / 6.0, 2.0 / 3.0, 1.0 / 6.0 }), 1.0 / 3.0),
                 std::make_tuple(
-                    vector<parametricDim>({ 1.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0 }), 1.0 / 6.0) } });
+                    vector<parametricDim>({ 1.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0 }), 1.0 / 3.0) } });
     }
 
     template <>
@@ -44,7 +44,7 @@ namespace mito {
     {
         return std::array<std::tuple<vector<parametricDim>, double>, 1 /* nPoints */>(
             { { /*{point}, weight*/
-                std::make_tuple(vector<parametricDim>({ 1.0, 1.0 }), 2.0) } });
+                std::make_tuple(vector<parametricDim>({ 1.0, 1.0 }), 1.0) } });
     }
 
     template <>
@@ -53,9 +53,9 @@ namespace mito {
         return std::array<std::tuple<vector<parametricDim>, double>, 2 /* nPoints */>(
             { { /*{point}, weight*/
                 std::make_tuple(
-                    vector<parametricDim>({ sqrt(3.0) / 3.0, 1.0 - sqrt(3.0) / 3.0 }), 1.0),
+                    vector<parametricDim>({ sqrt(3.0) / 3.0, 1.0 - sqrt(3.0) / 3.0 }), 0.5),
                 std::make_tuple(
-                    vector<parametricDim>({ 1.0 - sqrt(3.0) / 3.0, sqrt(3.0) / 3.0 }), 1.0) } });
+                    vector<parametricDim>({ 1.0 - sqrt(3.0) / 3.0, sqrt(3.0) / 3.0 }), 0.5) } });
     }
 
 }    // namespace mito

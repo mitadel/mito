@@ -78,7 +78,7 @@ namespace mito {
             for (auto e = 0; e < _elementSet.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
                     result += values[e * Q + q] * std::get<1>(_quadratureRule[q])
-                            * _elementSet.jacobian(e) / _areaReferenceElement;
+                            * _elementSet.jacobian(e);
                 }
             }
 
@@ -96,9 +96,6 @@ namespace mito {
         static constexpr int V = element_t::nVertices;
         // the number of quadrature points
         static constexpr int Q = _quadratureRule.size();
-        // TOFIX: this should be the sum of the weights of the given quadrature rule
-        // and should be computed at compile time based on quadrature_t
-        static constexpr real _areaReferenceElement = 0.5;
     };
 
 }    // namespace  mito
