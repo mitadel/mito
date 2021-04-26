@@ -39,7 +39,7 @@ with open(output_file, 'w') as f:
             raise NameError("Please name the test as main.cc")
 
         # Temporary folder for compile and run the test
-        tmp_folder_path = folder_path + "temp_build/"
+        tmp_folder_path = folder_path + "build_temp/"
         if os.path.isdir(tmp_folder_path):
             clean_up(tmp_folder_path)
         os.mkdir(tmp_folder_path)
