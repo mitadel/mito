@@ -4,7 +4,7 @@
 		{
 			"type": "cppbuild",
 			"label": "C/C++: g++ build active file",
-			"command": "/opt/local/bin/g++",
+			"command": "g++",
 			"args": [
 				"-g",
 				"-std=c++2a",
