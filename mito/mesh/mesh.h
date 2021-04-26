@@ -292,6 +292,7 @@ namespace mito {
             // open mesh file
             std::ifstream fileStream;
             fileStream.open(meshFileName);
+            assert(fileStream.is_open());
 
             // read dimension of physical space
             int dim = 0;

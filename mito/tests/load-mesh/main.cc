@@ -14,6 +14,7 @@ LoadMesh(std::string fileName)
     // open mesh file
     std::ifstream fileStream;
     fileStream.open(fileName);
+    assert(fileStream.is_open());
 
     // read dimension of physical space
     int dim = 0;
