@@ -1,17 +1,18 @@
 import os
 import shutil
 import subprocess
+import sys
 
-root = os.getcwd()
-tests_folder = root + "/mito/tests/"
+root = sys.path[0] + "/"
+tests_folder = root + "../mito/tests/"
 if not os.path.isdir(tests_folder):
-    raise NameError("Please run the script from the root dir")
+    raise NameError("Please check that tests folder exists")
 
 # List of all folders
 folders = [x for x in os.listdir(
     tests_folder) if os.path.isdir(tests_folder + x)]
 
-output_file = tests_folder + 'out.log'
+output_file = root + 'out.log'
 
 with open(output_file, 'w') as f:
     for folder in folders:
@@ -20,6 +21,8 @@ with open(output_file, 'w') as f:
         test_name = "main"
         test_path = folder_path + test_name
         test_ext = ".cc"
+        if not os.path.isfile(test_path + test_ext):
+            raise NameError("Please name the test as main.cc")
 
         # Temporary folder for compile and run the test
         tmp_folder_path = folder_path + "temp_build/"
