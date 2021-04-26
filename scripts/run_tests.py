@@ -69,4 +69,4 @@ with open(output_file, 'w') as f:
         print_result(folder, f, "SUCCESS")
         clean_up(tmp_folder_path)
 
-print("all done!")
+print("All done, see file {} for output log.".format(output_file))
