@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.cppm": "cpp"
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+}
