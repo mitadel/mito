@@ -3,6 +3,20 @@ import shutil
 import subprocess
 import sys
 
+
+def clean_up(folder):
+    shutil.rmtree(tmp_folder_path)
+
+
+def print_result(folder, file, output, pair_error_reason=None):
+    result = folder + ": " + output + "\n"
+    print(result)
+    f.write(result)
+    if pair_error_reason:
+        f.write(pair_error_reason[1] + ": \n" + pair_error_reason[0] + "\n")
+    f.write("\n")
+
+
 root = sys.path[0] + "/"
 tests_folder = root + "../mito/tests/"
 if not os.path.isdir(tests_folder):
@@ -27,7 +41,7 @@ with open(output_file, 'w') as f:
         # Temporary folder for compile and run the test
         tmp_folder_path = folder_path + "temp_build/"
         if os.path.isdir(tmp_folder_path):
-            shutil.rmtree(tmp_folder_path)
+            clean_up(tmp_folder_path)
         os.mkdir(tmp_folder_path)
 
         # Commands to execute
@@ -39,23 +53,20 @@ with open(output_file, 'w') as f:
         compile_process = subprocess.run(
             compile_cmd.split(' '), capture_output=True, text=True)
         if compile_process.stderr:
-            f.write(folder + ": FAIL\n")
-            f.write("Compilation error: \n" + compile_process.stderr)
-            shutil.rmtree(tmp_folder_path)
-            f.write("\n")
+            print_result(folder, f, "FAIL",
+                         (compile_process.stderr, "Compilation error"))
+            clean_up(tmp_folder_path)
             continue
 
         run_process = subprocess.run(
             run_cmd.split(' '), capture_output=True, text=True)
         if run_process.stderr:
-            f.write(folder + ": FAIL\n")
-            f.write("Runtime error: \n" + run_process.stderr)
-            shutil.rmtree(tmp_folder_path)
-            f.write("\n")
+            print_result(folder, f, "FAIL",
+                         (run_process.stderr, "Runtime error"))
+            clean_up(tmp_folder_path)
             continue
 
-        f.write(folder + ": SUCCESS\n")
-        f.write("\n")
-        shutil.rmtree(tmp_folder_path)
+        print_result(folder, f, "SUCCESS")
+        clean_up(tmp_folder_path)
 
 print("all done!")
