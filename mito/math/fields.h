@@ -107,7 +107,7 @@ namespace mito {
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point X
     template <dim_t D>
-    inline auto gradX(const ScalarField<D> & function, const vector<D> & X)
+    inline auto grad(const ScalarField<D> & function, const vector<D> & X)
     {
         vector<D> result;
         for (int i = 0; i < D; ++i) {
@@ -119,7 +119,7 @@ namespace mito {
     // helper function to compute the gradient of a vector field with respect to the reference
     // configuration at point X (template with index sequence)
     template <dim_t D, std::size_t... I>
-    inline VectorField<D, D> _gradX(const ScalarField<D> & function, std::index_sequence<I...>)
+    inline VectorField<D, D> _grad(const ScalarField<D> & function, std::index_sequence<I...>)
     {
         return VectorField<D, D>({ function[0].Df(I)... });
     }
@@ -127,9 +127,9 @@ namespace mito {
     // function to compute the gradient of a vector field with respect to the reference
     // configuration at point X
     template <dim_t D>
-    inline VectorField<D, D> gradX(const ScalarField<D> & function)
+    inline VectorField<D, D> grad(const ScalarField<D> & function)
     {
-        return _gradX(function, std::make_index_sequence<D> {});
+        return _grad(function, std::make_index_sequence<D> {});
     }
 }
 

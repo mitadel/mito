@@ -50,7 +50,7 @@ main()
     std::cout << "Evaluating cosine function cos(x[0] * x[1]) at X = " << X << " : " << f_cosine(X)
               << std::endl;
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : "
-              << mito::gradX<DIM2>(cosine, X) << std::endl;
+              << mito::grad<DIM2>(cosine, X) << std::endl;
 
     // instantiate a vector function object
     mito::VectorField<DIM2 /* D */, DIM2 /* N */> cosineVector({ f_cosine, f_cosine });
@@ -60,7 +60,7 @@ main()
               << mito::divX<DIM2>(cosineVector, X) << std::endl;
 
     // build vector field with gradient of cosine function
-    mito::VectorField<DIM2 /* D */, DIM2 /* N */> gradient = mito::gradX(cosine);
+    mito::VectorField<DIM2 /* D */, DIM2 /* N */> gradient = mito::grad(cosine);
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << gradient(X)
               << std::endl;
 
