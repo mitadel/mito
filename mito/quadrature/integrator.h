@@ -65,7 +65,8 @@ namespace mito {
         {
             std::cout << "integrating ... " << std::endl;
 
-            std::vector<real> values = function(_coordinates);
+            // TOFIX
+            std::vector<real> values = function[0](_coordinates);
 
             real result = 0.0;
 

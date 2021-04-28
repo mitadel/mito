@@ -5,32 +5,28 @@
 
 namespace mito {
 
-    // TODO: Once we converge on what ScalarField, and VectorField look like, we should expand this
-    // to
-    //       second and fourth order tensors.
-
-    // f(X,x,t) with (X \in R^D, x \in R^D2, t \in R) -> R
-    template <dim_t D, dim_t D2 = D>
-    class ScalarField {
+    // f(X,t) with (X \in R^D, t \in R) -> R
+    template <dim_t D>
+    class Field {
 
         // typedef for a scalar valued function
         using function_t = function<vector<D>>;
 
       public:
         // constructors
-        ScalarField(function_t f) : _f(f), _Df() {}
-        ScalarField(function_t f, std::array<function_t, D> Df) : _f(f), _Df(Df) {}
+        Field(function_t f) : _f(f), _Df() {}
+        Field(function_t f, std::array<function_t, D> Df) : _f(f), _Df(Df) {}
 
-        ~ScalarField() {}
+        ~Field() {}
 
         // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
-        inline real operator()(const vector<D> & X) const
+        inline auto operator()(const vector<D> & X) const
         {
             // evaluate _f
             return _f(X);
         }
 
-        inline std::vector<real> operator()(const std::vector<vector<D>> & X) const
+        inline auto operator()(const std::vector<vector<D>> & X) const
         {
             std::vector<real> values(X.size(), 0.0);
             // evaluate operator() at all elements of X
@@ -42,7 +38,7 @@ namespace mito {
 
       public:
         // accessor for function partial derivatives
-        inline const function_t & Df(int i) const
+        inline const auto & Df(int i) const
         {
             // assert there exists the i-th partial derivative
             assert(i < (int) _Df.size());
@@ -58,13 +54,14 @@ namespace mito {
     };
 
     // template on vector dimension N, spatial dimension D
-    template <dim_t N, dim_t D>
+    template <dim_t D, dim_t N>
     class VectorField {
+
       public:
-        VectorField(std::array<ScalarField<D>, N> components) : _components(components) {}
+        VectorField(std::array<Field<D>, N> components) : _components(components) {}
         ~VectorField() {}
 
-        inline vector<N> operator()(const vector<D> & X) const
+        inline auto operator()(const vector<D> & X) const
         {
             vector<N> result;
             for (int i = 0; i < N; ++i) {
@@ -73,7 +70,7 @@ namespace mito {
             return result;
         }
 
-        inline const ScalarField<D> & operator[](int i) const
+        inline const auto & operator[](int i) const
         {
             // assert there exists the i-th partial derivative
             assert(i < (int) _components.size());
@@ -81,7 +78,7 @@ namespace mito {
             return _components[i];
         }
 
-        inline ScalarField<D> & operator[](int i)
+        inline auto & operator[](int i)
         {
             // assert there exists the i-th partial derivative
             assert(i < _components.size());
@@ -90,8 +87,11 @@ namespace mito {
         }
 
       private:
-        std::array<ScalarField<D>, N> _components;
+        std::array<Field<D>, N> _components;
     };
+
+    template <dim_t D>
+    using ScalarField = VectorField<D, DIM1>;
 
     // function to compute the Divergence of a vector field at point X
     template <dim_t D>
@@ -107,11 +107,11 @@ namespace mito {
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point X
     template <dim_t D>
-    inline vector<D> gradX(const ScalarField<D> & function, const vector<D> & X)
+    inline auto gradX(const ScalarField<D> & function, const vector<D> & X)
     {
         vector<D> result;
         for (int i = 0; i < D; ++i) {
-            result[i] = function.Df(i)(X);
+            result[i] = function[0].Df(i)(X);
         }
         return result;
     }
@@ -121,7 +121,7 @@ namespace mito {
     template <dim_t D, std::size_t... I>
     inline VectorField<D, D> _gradX(const ScalarField<D> & function, std::index_sequence<I...>)
     {
-        return VectorField<D, D>({ function.Df(I)... });
+        return VectorField<D, D>({ function[0].Df(I)... });
     }
 
     // function to compute the gradient of a vector field with respect to the reference
@@ -131,7 +131,6 @@ namespace mito {
     {
         return _gradX(function, std::make_index_sequence<D> {});
     }
-
 }
 
 #endif    //__MITO__FIELDS__

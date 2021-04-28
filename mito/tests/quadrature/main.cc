@@ -40,26 +40,27 @@ main()
     std::array<function<vector<DIM2>>, DIM2> Df = { Dx, Dy };
 
     // instantiate a scalar function object
-    mito::ScalarField<DIM2> cosine(f, Df);
+    mito::Field<DIM2> f_cosine(f, Df);
+    mito::ScalarField<DIM2> cosine({ f_cosine });
 
     // a point in the reference configuration
     vector<DIM2> X = { 0.0, 0.0 };
 
     // evaluate f and its gradient
-    std::cout << "Evaluating cosine function cos(x[0] * x[1]) at X = " << X << " : " << cosine(X)
+    std::cout << "Evaluating cosine function cos(x[0] * x[1]) at X = " << X << " : " << f_cosine(X)
               << std::endl;
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : "
               << mito::gradX<DIM2>(cosine, X) << std::endl;
 
     // instantiate a vector function object
-    mito::VectorField<DIM2 /* N */, DIM2 /* D */> cosineVector({ cosine, cosine });
+    mito::VectorField<DIM2 /* D */, DIM2 /* N */> cosineVector({ f_cosine, f_cosine });
 
     // evaluate divergence
     std::cout << "Evaluating divergence of cosine vector function at X = " << X << " : "
               << mito::divX<DIM2>(cosineVector, X) << std::endl;
 
     // build vector field with gradient of cosine function
-    mito::VectorField<DIM2 /* N */, DIM2 /* D */> gradient = mito::gradX(cosine);
+    mito::VectorField<DIM2 /* D */, DIM2 /* N */> gradient = mito::gradX(cosine);
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : " << gradient(X)
               << std::endl;
 
@@ -127,28 +128,32 @@ main()
     assert(std::fabs(result - 0.946083) < 1.e-3);
 
     // instantiate a scalar function object
-    mito::ScalarField<DIM2> one([]([[maybe_unused]] const vector<DIM2> & x) { return 1.0; });
+    mito::Field<DIM2> f_one([]([[maybe_unused]] const vector<DIM2> & x) { return 1.0; });
+    mito::ScalarField<DIM2> one({ f_one });
     result = bodyIntegrator.integrate(one);    // exact 1.0
     std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
               << std::endl;
     assert(std::fabs(result - 1.0) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::ScalarField<DIM2> linear([](const vector<DIM2> & x) { return x[0]; });
+    mito::Field<DIM2> f_linear([](const vector<DIM2> & x) { return x[0]; });
+    mito::ScalarField<DIM2> linear({ f_linear });
     result = bodyIntegrator.integrate(linear);    // exact 0.5
     std::cout << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
               << std::endl;
     assert(std::fabs(result - 0.5) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::ScalarField<DIM2> xy([](const vector<DIM2> & x) { return x[0] * x[1]; });
+    mito::Field<DIM2> f_xy([](const vector<DIM2> & x) { return x[0] * x[1]; });
+    mito::ScalarField<DIM2> xy({ f_xy });
     result = bodyIntegrator.integrate(xy);    // exact 0.25
     std::cout << "Integration of x*y: Result = " << result
               << ", Error = " << std::fabs(result - 0.25) << std::endl;
     assert(std::fabs(result - 0.25) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::ScalarField<DIM2> xx([](const vector<DIM2> & x) { return x[0] * x[0]; });
+    mito::Field<DIM2> f_xx([](const vector<DIM2> & x) { return x[0] * x[0]; });
+    mito::ScalarField<DIM2> xx({ f_xx });
     result = bodyIntegrator.integrate(xx);    // exact 1.0/3.0
     std::cout << "Integration of x*x: Result = " << result
               << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
@@ -172,7 +177,8 @@ main()
         bodyElementSet3D);
 
     // instantiate a scalar function object
-    mito::ScalarField<DIM3> xy3D([](const vector<DIM3> & x) { return x[0] * x[1]; });
+    mito::Field<DIM3> f_xy3D([](const vector<DIM3> & x) { return x[0] * x[1]; });
+    mito::ScalarField<DIM3> xy3D({ f_xy3D });
     result = bodyIntegrator3D.integrate(xy3D);    // exact 0.35355339059327384
     std::cout << "Integration of x*y in 3D: Result = " << result
               << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;
