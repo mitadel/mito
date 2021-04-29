@@ -17,6 +17,12 @@ namespace mito {
         Field(function_t f) : _f(f), _Df() {}
         Field(function_t f, std::array<function_t, D> Df) : _f(f), _Df(Df) {}
 
+        // delete default constructor
+        Field() = delete;
+
+        // delete assignment operator
+        Field & operator=(const Field &) = delete;
+
         ~Field() {}
 
         // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
@@ -60,6 +66,15 @@ namespace mito {
       public:
         VectorField(std::array<Field<D>, N> components) : _components(components) {}
         ~VectorField() {}
+
+        // delete default constructor
+        VectorField() = delete;
+
+        // delete copy constructor
+        VectorField(const VectorField &) = delete;
+
+        // delete assignment operator
+        VectorField & operator=(const VectorField &) = delete;
 
         inline auto operator()(const vector<D> & X) const
         {
