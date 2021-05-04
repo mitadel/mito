@@ -224,14 +224,21 @@ namespace mito {
 
         ~ElementSet() {}
 
+      private:
         // delete default constructor
         ElementSet() = delete;
 
         // delete copy constructor
         ElementSet(const ElementSet &) = delete;
 
+        // delete move constructor
+        ElementSet(const ElementSet &&) = delete;
+
         // delete assignment operator
-        ElementSet & operator=(const ElementSet &) = delete;
+        const ElementSet & operator=(const ElementSet &) = delete;
+
+        // delete move assignment operator
+        const ElementSet & operator=(const ElementSet &&) = delete;
 
       public:
         bool sanityCheck()

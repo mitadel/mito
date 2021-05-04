@@ -94,14 +94,21 @@ namespace mito {
             return;
         }
 
+      private:
         // delete default constructor
         Mesh() = delete;
 
         // delete copy constructor
         Mesh(const Mesh &) = delete;
 
+        // delete move constructor
+        Mesh(const Mesh &&) = delete;
+
         // delete assignment operator
-        Mesh & operator=(const Mesh &) = delete;
+        const Mesh & operator=(const Mesh &) = delete;
+
+        // delete move assignment operator
+        const Mesh & operator=(const Mesh &&) = delete;
 
       public:
         bool sanityCheck()

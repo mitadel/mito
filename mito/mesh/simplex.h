@@ -19,15 +19,23 @@ namespace mito {
 
         ~Simplex() {}
 
+      private:
         // delete default constructor
         Simplex() = delete;
 
         // delete copy constructor
         Simplex(const Simplex &) = delete;
 
-        // delete assignment operator
-        Simplex & operator=(const Simplex &) = delete;
+        // delete move constructor
+        Simplex(const Simplex &&) = delete;
 
+        // delete assignment operator
+        const Simplex & operator=(const Simplex &) = delete;
+
+        // delete move assignment operator
+        const Simplex & operator=(const Simplex &&) = delete;
+
+      public:
         const auto & entities() const { return _entities; }
 
         void getVertices(std::set<const Simplex<DIM0> * /* vertex_t* */> & vertices) const
@@ -78,12 +86,20 @@ namespace mito {
         Simplex() {}
         ~Simplex() {}
 
+      private:
         // delete copy constructor
         Simplex(const Simplex &) = delete;
 
-        // delete assignment operator
-        Simplex & operator=(const Simplex &) = delete;
+        // delete move constructor
+        Simplex(const Simplex &&) = delete;
 
+        // delete assignment operator
+        const Simplex & operator=(const Simplex &) = delete;
+
+        // delete move assignment operator
+        const Simplex & operator=(const Simplex &&) = delete;
+
+      public:
         void getVertices(std::set<const Simplex<DIM0> * /* vertex_t* */> & vertices) const
         {
             // insert this vertex
@@ -105,14 +121,21 @@ namespace mito {
 
         ~OrientedSimplex() {}
 
+      private:
         // delete default constructor
         OrientedSimplex() = delete;
 
         // delete copy constructor
         OrientedSimplex(const OrientedSimplex &) = delete;
 
+        // delete move constructor
+        OrientedSimplex(const OrientedSimplex &&) = delete;
+
         // delete assignment operator
-        OrientedSimplex & operator=(const OrientedSimplex &) = delete;
+        const OrientedSimplex & operator=(const OrientedSimplex &) = delete;
+
+        // delete move assignment operator
+        const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
       private:
         bool _orientation;

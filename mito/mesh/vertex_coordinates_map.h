@@ -14,12 +14,20 @@ namespace mito {
 
         ~VertexCoordinatesMap() {}
 
+      private:
         // delete copy constructor
         VertexCoordinatesMap(const VertexCoordinatesMap &) = delete;
 
-        // delete assignment operator
-        VertexCoordinatesMap & operator=(const VertexCoordinatesMap &) = delete;
+        // delete move constructor
+        VertexCoordinatesMap(const VertexCoordinatesMap &&) = delete;
 
+        // delete assignment operator
+        const VertexCoordinatesMap & operator=(const VertexCoordinatesMap &) = delete;
+
+        // delete move assignment operator
+        const VertexCoordinatesMap & operator=(const VertexCoordinatesMap &&) = delete;
+
+      public:
         void print()
         {
             // iterate on map
