@@ -112,7 +112,7 @@ main()
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     // static mito::ElementSetTri elementSet;
-    mito::ElementSet bodyElementSet(std::move(elements), vertexCoordinatesMap);
+    mito::ElementSet bodyElementSet(elements, vertexCoordinatesMap);
     mito::Integrator<GAUSS, triangle_t, 2 /* degree of exactness */, DIM2> bodyIntegrator(
         bodyElementSet);
 
@@ -168,8 +168,7 @@ main()
     vertexCoordinatesMap3D.insert(vertex4, point_t<DIM3>({ 0.0, 1.0, 0.0 }));
 
     // instantiate an element set with the same elements as above but the new coordinates map
-    std::vector<triangle_t *> elements3D = { &element0, &element1, &element2, &element3 };
-    mito::ElementSet bodyElementSet3D(std::move(elements3D), vertexCoordinatesMap3D);
+    mito::ElementSet bodyElementSet3D(elements, vertexCoordinatesMap3D);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     // static mito::ElementSetTri elementSet;

@@ -213,6 +213,17 @@ namespace mito {
 
       public:
         ElementSet(
+            const std::vector<element_t *> & elements,
+            const VertexCoordinatesMap<D> & coordinatesMap) :
+            _elements(elements),
+            _coordinatesMap(coordinatesMap),
+            _jacobians(elements.size(), 0.0)
+        {
+            // compute the jacobians of the map from reference to current element for each element
+            _computeJacobians();
+        }
+
+        ElementSet(
             std::vector<element_t *> && elements, const VertexCoordinatesMap<D> & coordinatesMap) :
             _elements(elements),
             _coordinatesMap(coordinatesMap),
@@ -221,6 +232,14 @@ namespace mito {
             // compute the jacobians of the map from reference to current element for each element
             _computeJacobians();
         }
+
+        ElementSet(
+            const std::vector<element_t *> & elements,
+            const VertexCoordinatesMap<D> && coordinatesMap) = delete;
+
+        ElementSet(
+            std::vector<element_t *> && elements,
+            const VertexCoordinatesMap<D> && coordinatesMap) = delete;
 
         ~ElementSet() {}
 

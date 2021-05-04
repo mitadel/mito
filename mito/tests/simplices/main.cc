@@ -66,7 +66,7 @@ main()
     }
 
     // instantiate an ElementSet as a collection of simplices and a vertex-coordinates mapping.
-    mito::ElementSet elementSet(std::move(elements), vertexCoordinatesMap);
+    mito::ElementSet elementSet(elements, vertexCoordinatesMap);
 
     // all done
     return 0;
