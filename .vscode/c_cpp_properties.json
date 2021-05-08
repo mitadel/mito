@@ -6,7 +6,6 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [],
-            "macFrameworkPath": [],
             "compilerPath": "/opt/local/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++20",
@@ -18,7 +17,6 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [],
-            "macFrameworkPath": [],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++20",
