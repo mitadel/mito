@@ -9,12 +9,24 @@ namespace mito {
 
     template <dim_t D>
     class Simplex {
+
       public:
+        Simplex(const std::array<Simplex<D - 1> *, D + 1> & entities) : _entities(entities)
+        {
+            // initialize object
+            _initialize();
+
+            // all done
+            return;
+        }
+
         Simplex(std::array<Simplex<D - 1> *, D + 1> && entities) : _entities(entities)
         {
-            // sort the entities (using the address of the entities) so that two simplices
-            // having the same entities will result in two identical instances of class Simplex
-            std::sort(_entities.begin(), _entities.end());
+            // initialize object
+            _initialize();
+
+            // all done
+            return;
         }
 
         ~Simplex() {}
@@ -34,6 +46,17 @@ namespace mito {
 
         // delete move assignment operator
         const Simplex & operator=(const Simplex &&) = delete;
+
+      private:
+        void _initialize()
+        {
+            // sort the entities (using the address of the entities) so that two simplices
+            // having the same entities will result in two identical instances of class Simplex
+            std::sort(_entities.begin(), _entities.end());
+
+            // all done
+            return;
+        }
 
       public:
         const auto & entities() const { return _entities; }
