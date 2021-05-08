@@ -50,6 +50,32 @@
             }
         },
         {
+            "type": "cppbuild",
+            "label": "C/C++: clang++ build active file",
+            "command": "clang++",
+            "args": [
+                "-g",
+                "-std=c++2a",
+                "-stdlib=libc++",
+                // the following four lines point clang to the gcc standard library
+                "-nostdinc++",
+                "-I/opt/local/include/gcc/c++", // TOFIX: directories not general across OS
+                "-I/opt/local/include/gcc/c++/x86_64-apple-darwin20",
+                "/opt/local/lib/libstdc++.6.dylib",
+                "-Wall",
+                "-Wextra",
+                "-pedantic",
+                "-Werror",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "type": "shell",
             "label": "Run all tests",
             "command": "python3 scripts/run_tests.py",
