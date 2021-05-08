@@ -14,22 +14,7 @@
 // TOFIX: Consider using tuples when possible as opposed to std::array and std::vector
 
 namespace mito {
-    // Templating mito::vector and mito::tensor with respect to the enum dim_t DOES the trick of
-    // preventing the user from instantiating mito::vector<15>:
-    //   "error: invalid conversion from 'int' to 'mito::dim_t' [-fpermissive]"
-
-    // enum for 0D, 1D, 2D, 3D, 4D (4D is used for parametric coordinates)
-    enum dim_t { DIM0 = 0, DIM1 = 1, DIM2 = 2, DIM3 = 3, DIM4 = 4 };
-
-    constexpr mito::dim_t operator-(const mito::dim_t & lhs, const int & rhs)
-    {
-        return mito::dim_t(int(lhs) - rhs);
-    }
-
-    constexpr mito::dim_t operator+(const mito::dim_t & lhs, const int & rhs)
-    {
-        return mito::dim_t(int(lhs) + rhs);
-    }
+    using dim_t = int;
 
     static constexpr auto x0 = std::integral_constant<int, 0> {};
     static constexpr auto x1 = std::integral_constant<int, 1> {};
@@ -59,21 +44,21 @@ namespace mito {
 
 // overload operator<< for vectors and tensors
 std::ostream &
-operator<<(std::ostream & os, const mito::vector<mito::DIM3> & x)
+operator<<(std::ostream & os, const mito::vector<3> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ", " << x[2] << ")";
     return os;
 }
 
 std::ostream &
-operator<<(std::ostream & os, const mito::vector<mito::DIM2> & x)
+operator<<(std::ostream & os, const mito::vector<2> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ")";
     return os;
 }
 
 std::ostream &
-operator<<(std::ostream & os, const mito::tensor<mito::DIM3> & x)
+operator<<(std::ostream & os, const mito::tensor<3> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ", " << x[2] << "; " << x[3] << ", " << x[4] << ", "
        << x[5] << "; " << x[6] << ", " << x[7] << ", " << x[8] << ")";
@@ -81,7 +66,7 @@ operator<<(std::ostream & os, const mito::tensor<mito::DIM3> & x)
 }
 
 std::ostream &
-operator<<(std::ostream & os, const mito::tensor<mito::DIM2> & x)
+operator<<(std::ostream & os, const mito::tensor<2> & x)
 {
     os << "(" << x[0] << ", " << x[1] << "; " << x[2] << ", " << x[3] << ")";
     return os;
@@ -137,12 +122,12 @@ namespace mito {
         return D * Factorial<dim_t(D - 1)>();
     }
     template <>
-    int Factorial<mito::DIM1>()
+    int Factorial<1>()
     {
         return 1;
     }
 
-    real ComputeDeterminant(const tensor<mito::DIM4> & A)
+    real ComputeDeterminant(const tensor<4> & A)
     {
         return A[1] * A[11] * A[14] * A[4] - A[1] * A[10] * A[15] * A[4]
              - A[11] * A[13] * A[2] * A[4] + A[10] * A[13] * A[3] * A[4]
@@ -156,15 +141,15 @@ namespace mito {
              + A[12] * A[3] * A[6] * A[9] + A[0] * A[14] * A[7] * A[9] - A[12] * A[2] * A[7] * A[9];
     }
 
-    real ComputeDeterminant(const tensor<mito::DIM3> & A)
+    real ComputeDeterminant(const tensor<3> & A)
     {
         return A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6])
              + A[2] * (A[3] * A[7] - A[4] * A[6]);
     }
 
-    real ComputeDeterminant(const tensor<mito::DIM2> & A) { return A[0] * A[3] - A[1] * A[2]; }
+    real ComputeDeterminant(const tensor<2> & A) { return A[0] * A[3] - A[1] * A[2]; }
 
-    real ComputeInverse(const tensor<mito::DIM3> & A, tensor<mito::DIM3> & invA)
+    real ComputeInverse(const tensor<3> & A, tensor<3> & invA)
     {
         real det = ComputeDeterminant(A);
         assert(det != 0.0);
@@ -183,7 +168,7 @@ namespace mito {
         return det;
     }
 
-    real ComputeInverse(const tensor<mito::DIM2> & A, tensor<mito::DIM2> & invA)
+    real ComputeInverse(const tensor<2> & A, tensor<2> & invA)
     {
         real det = ComputeDeterminant(A);
         assert(det != 0.0);

@@ -2,9 +2,6 @@
 #include <ranges>
 #include "../../math/point.h"
 
-using mito::DIM1;
-using mito::DIM2;
-using mito::DIM3;
 using mito::Point;
 using mito::x0;
 using mito::x1;
@@ -63,13 +60,13 @@ int
 main()
 {
 
-    Point<DIM1> a(10.0);
+    Point<1> a(10.0);
     std::cout << a << std::endl;
 
-    Point<DIM2> b(10.0, 2.0);
+    Point<2> b(10.0, 2.0);
     std::cout << b << std::endl;
 
-    Point<DIM3> c(10.0, 2.0, 1.0);
+    Point<3> c(10.0, 2.0, 1.0);
     std::cout << c << std::endl;
 
     std::vector<int> nums { 1 };

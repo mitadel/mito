@@ -61,7 +61,7 @@ namespace mito {
       public:
         const auto & entities() const { return _entities; }
 
-        void getVertices(std::set<const Simplex<DIM0> * /* vertex_t* */> & vertices) const
+        void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
         {
             for (const auto & entity : entities()) {
                 entity->getVertices(vertices);
@@ -80,7 +80,7 @@ namespace mito {
             }
 
             // use a set to cleanup duplicates
-            std::set<const Simplex<DIM0> * /* vertex_t* */> vertices;
+            std::set<const Simplex<0> * /* vertex_t* */> vertices;
             // collect vertices of every subentity of this simplex
             for (const auto & entity : entities()) {
                 entity->getVertices(vertices);
@@ -104,7 +104,7 @@ namespace mito {
     };
 
     template <>
-    class Simplex<DIM0> {
+    class Simplex<0> {
       public:
         Simplex() {}
         ~Simplex() {}
@@ -123,7 +123,7 @@ namespace mito {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
-        void getVertices(std::set<const Simplex<DIM0> * /* vertex_t* */> & vertices) const
+        void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
         {
             // insert this vertex
             vertices.insert(this);
@@ -164,10 +164,10 @@ namespace mito {
         bool _orientation;
     };
 
-    using vertex_t = Simplex<DIM0>;
-    using segment_t = Simplex<DIM1>;
-    using triangle_t = Simplex<DIM2>;
-    using tetrahedron_t = Simplex<DIM3>;
+    using vertex_t = Simplex<0>;
+    using segment_t = Simplex<1>;
+    using triangle_t = Simplex<2>;
+    using tetrahedron_t = Simplex<3>;
 
 }    // namespace mito
 
@@ -186,7 +186,7 @@ operator<<(std::ostream & os, const mito::Simplex<D> & s)
 // overload operator<< specialization for simplices with D = 0 (vertices)
 template <>
 std::ostream &
-operator<<(std::ostream & os, const mito::Simplex<mito::DIM0> & s)
+operator<<(std::ostream & os, const mito::Simplex<0> & s)
 {
     os << &s;
     return os;

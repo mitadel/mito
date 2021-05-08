@@ -63,7 +63,7 @@ namespace mito {
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<mito::DIM1> & x)
+operator<<(std::ostream & os, const mito::Point<1> & x)
 {
     os << "(" << x[mito::x0] << ")";
     return os;
@@ -71,7 +71,7 @@ operator<<(std::ostream & os, const mito::Point<mito::DIM1> & x)
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<mito::DIM2> & x)
+operator<<(std::ostream & os, const mito::Point<2> & x)
 {
     os << "(" << x[mito::x0] << ", " << x[mito::x1] << ")";
     return os;
@@ -79,7 +79,7 @@ operator<<(std::ostream & os, const mito::Point<mito::DIM2> & x)
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<mito::DIM3> & x)
+operator<<(std::ostream & os, const mito::Point<3> & x)
 {
     os << "(" << x[mito::x0] << ", " << x[mito::x1] << ", " << x[mito::x2] << ")";
     return os;
@@ -87,7 +87,7 @@ operator<<(std::ostream & os, const mito::Point<mito::DIM3> & x)
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<mito::DIM4> & x)
+operator<<(std::ostream & os, const mito::Point<4> & x)
 {
     os << "(" << x[mito::x0] << ", " << x[mito::x1] << ", " << x[mito::x2] << "," << x[mito::x3]
        << ")";

@@ -106,7 +106,7 @@ namespace mito {
     };
 
     template <dim_t D>
-    using ScalarField = VectorField<D, DIM1>;
+    using ScalarField = VectorField<D, 1>;
 
     // function to compute the Divergence of a vector field at point X
     template <dim_t D>

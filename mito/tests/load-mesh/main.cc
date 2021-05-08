@@ -145,12 +145,12 @@ main()
 
     //
     t = clock();
-    mito::Mesh<mito::DIM2> mesh("rectangle.summit");
+    mito::Mesh<2> mesh("rectangle.summit");
     std::cout << "Loaded mesh (without repeated entities) in " << clock() - t << std::endl;
 
     //
     t = clock();
-    LoadMesh<mito::DIM2>("rectangle.summit");
+    LoadMesh<2>("rectangle.summit");
     std::cout << "Loaded mesh (with repeated entities) in " << clock() - t << std::endl;
 
     return 0;

@@ -74,27 +74,27 @@ namespace mito {
         std::vector<real> & volumes);
 
     template <>
-    void computeElementsVolume<triangle_t, DIM2>(
-        const std::vector<triangle_t *> & elements,
-        const VertexCoordinatesMap<DIM2> & coordinatesMap, std::vector<real> & volumes)
+    void computeElementsVolume<triangle_t, 2>(
+        const std::vector<triangle_t *> & elements, const VertexCoordinatesMap<2> & coordinatesMap,
+        std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<DIM2>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<2>(elements, coordinatesMap, volumes);
     }
 
     template <>
-    void computeElementsVolume<tetrahedron_t, DIM3>(
+    void computeElementsVolume<tetrahedron_t, 3>(
         const std::vector<tetrahedron_t *> & elements,
-        const VertexCoordinatesMap<DIM3> & coordinatesMap, std::vector<real> & volumes)
+        const VertexCoordinatesMap<3> & coordinatesMap, std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<DIM3>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<3>(elements, coordinatesMap, volumes);
     }
 
     template <>
-    void computeElementsVolume<segment_t, DIM1>(
-        const std::vector<segment_t *> & elements,
-        const VertexCoordinatesMap<DIM1> & coordinatesMap, std::vector<real> & volumes)
+    void computeElementsVolume<segment_t, 1>(
+        const std::vector<segment_t *> & elements, const VertexCoordinatesMap<1> & coordinatesMap,
+        std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<DIM1>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<1>(elements, coordinatesMap, volumes);
     }
 
     template <dim_t D>
@@ -103,7 +103,7 @@ namespace mito {
         std::vector<real> & length)
     {
         // number of vertices
-        constexpr int V = DIM2;
+        constexpr int V = 2;
 
         // assert memory allocation is consistent
         assert(length.size() == elements.size());
@@ -133,23 +133,23 @@ namespace mito {
     }
 
     template <>
-    void computeElementsVolume<segment_t, DIM2>(
-        const std::vector<segment_t *> & elements,
-        const VertexCoordinatesMap<DIM2> & coordinatesMap, std::vector<real> & volumes)
+    void computeElementsVolume<segment_t, 2>(
+        const std::vector<segment_t *> & elements, const VertexCoordinatesMap<2> & coordinatesMap,
+        std::vector<real> & volumes)
     {
-        return computeSegmentsLength<DIM2>(elements, coordinatesMap, volumes);
+        return computeSegmentsLength<2>(elements, coordinatesMap, volumes);
     }
 
     template <>
-    void computeElementsVolume<segment_t, DIM3>(
-        const std::vector<segment_t *> & elements,
-        const VertexCoordinatesMap<DIM3> & coordinatesMap, std::vector<real> & volumes)
+    void computeElementsVolume<segment_t, 3>(
+        const std::vector<segment_t *> & elements, const VertexCoordinatesMap<3> & coordinatesMap,
+        std::vector<real> & volumes)
     {
-        return computeSegmentsLength<DIM3>(elements, coordinatesMap, volumes);
+        return computeSegmentsLength<3>(elements, coordinatesMap, volumes);
     }
 
     // follows implementation by Kahan2014
-    template <dim_t D = DIM3>
+    template <dim_t D = 3>
     void computeTriangleArea(
         const std::vector<triangle_t *> & elements, const VertexCoordinatesMap<D> & coordinatesMap,
         std::vector<real> & areas)
@@ -195,9 +195,9 @@ namespace mito {
     }
 
     template <>
-    void computeElementsVolume<triangle_t, DIM3>(
-        const std::vector<triangle_t *> & elements,
-        const VertexCoordinatesMap<DIM3> & coordinatesMap, std::vector<real> & volumes)
+    void computeElementsVolume<triangle_t, 3>(
+        const std::vector<triangle_t *> & elements, const VertexCoordinatesMap<3> & coordinatesMap,
+        std::vector<real> & volumes)
     {
         return computeTriangleArea(elements, coordinatesMap, volumes);
     }

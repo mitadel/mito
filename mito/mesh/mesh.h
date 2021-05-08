@@ -116,9 +116,9 @@ namespace mito {
 #if 0
             // print summary
             std::cout << "Mesh composition: " << std::endl;
-            std::cout << "DIM0: " << std::get<DIM0>(_entities).size() << " entities " << std::endl;
-            std::cout << "DIM1: " << std::get<DIM1>(_entities).size() << " entities " << std::endl;
-            std::cout << "DIM2: " << std::get<DIM2>(_entities).size() << " entities " << std::endl;
+            std::cout << "0: " << std::get<0>(_entities).size() << " entities " << std::endl;
+            std::cout << "1: " << std::get<1>(_entities).size() << " entities " << std::endl;
+            std::cout << "2: " << std::get<2>(_entities).size() << " entities " << std::endl;
 #endif
 
             // sanity check: each element is self-consistent
@@ -161,7 +161,7 @@ namespace mito {
          * @brief Adds a new composed entity (i.e. edge, face, element) if it is not a repetition
          *         of an equivalent already registered composed entity
          *
-         * @tparam I dimension of the composed entity to add (DIM1, DIM2, ..., D)
+         * @tparam I dimension of the composed entity to add (1, 2, ..., D)
          * @param composition entity composition in terms of I + 1 entities of dimension (I - 1)
          * @return mito::Simplex<I>* a pointer either to the newly added entity or to the equivalent
          *                              already registered composed entity
@@ -235,14 +235,14 @@ namespace mito {
             fileStream >> index2;
             --index2;
 
-            mito::vertex_t * vertex0 = _getEntity<DIM0>(index0);
-            mito::vertex_t * vertex1 = _getEntity<DIM0>(index1);
-            mito::vertex_t * vertex2 = _getEntity<DIM0>(index2);
+            mito::vertex_t * vertex0 = _getEntity<0>(index0);
+            mito::vertex_t * vertex1 = _getEntity<0>(index1);
+            mito::vertex_t * vertex2 = _getEntity<0>(index2);
 
             // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
-            mito::segment_t * segment0 = _addUniqueEntity<DIM1>({ vertex0, vertex1 });
-            mito::segment_t * segment1 = _addUniqueEntity<DIM1>({ vertex1, vertex2 });
-            mito::segment_t * segment2 = _addUniqueEntity<DIM1>({ vertex2, vertex0 });
+            mito::segment_t * segment0 = _addUniqueEntity<1>({ vertex0, vertex1 });
+            mito::segment_t * segment1 = _addUniqueEntity<1>({ vertex1, vertex2 });
+            mito::segment_t * segment2 = _addUniqueEntity<1>({ vertex2, vertex0 });
 
             // QUESTION: Can the label be more than one?
             // read label for element
@@ -251,7 +251,7 @@ namespace mito {
             fileStream >> element_set_id;
 
             // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
-            _addUniqueEntity<DIM2>({ segment0, segment1, segment2 });
+            _addUniqueEntity<2>({ segment0, segment1, segment2 });
 
             // all done
             return;
@@ -312,7 +312,7 @@ namespace mito {
             int N_vertices = 0;
             fileStream >> N_vertices;
             // reserve space for vertices
-            std::get<DIM0>(_entities).reserve(N_vertices);
+            std::get<0>(_entities).reserve(N_vertices);
 
             // read number of elements
             int N_elements = 0;
@@ -334,7 +334,7 @@ namespace mito {
             _readElements(fileStream, N_elements);
 
             // sanity check: the number of vertices in the map is N_vertices
-            assert(nEntities<DIM0>() == N_vertices);
+            assert(nEntities<0>() == N_vertices);
 
             // sanity check: the number of elements of highest dimension in the map is N_elements
             assert(nEntities<D>() == N_elements);
