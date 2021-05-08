@@ -44,11 +44,12 @@ namespace mito {
         {
             constexpr auto sum_impl = [quadrature_rule]<int q>(auto & sum_ref) consteval->double
             {
-                if constexpr (q == -1)
+                if constexpr (q == -1) {
                     return 0.0;
-                else
+                } else {
                     return quadrature_rule.getWeight(q)
                          + sum_ref.template operator()<q - 1>(sum_ref);
+                }
             };
             return sum_impl.template operator()<Q - 1>(sum_impl);
         };
