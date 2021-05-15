@@ -2,6 +2,7 @@
 #define __MITO__FIELDS__
 
 #include "../mito.h"
+#include "../elements/quadrature_field.h"
 
 namespace mito {
 
@@ -42,6 +43,22 @@ namespace mito {
             return values;
         }
 
+        template <int Q>
+        inline auto operator()(const quadrature_field_t<Q, D> & X) const
+        {
+            quadrature_field_t<Q, D> values(X.n_elements());
+
+            // evaluate operator() at all elements of X
+            for (int e = 0; e < values.n_elements(); ++e) {
+                for (int q = 0; q < Q; ++q) {
+                    values(e, q)[0] = operator()(X(e, q));
+                }
+            }
+
+            // all done
+            return values;
+        }
+
       public:
         // accessor for function partial derivatives
         inline const auto & Df(int i) const
@@ -77,6 +94,16 @@ namespace mito {
         VectorField & operator=(const VectorField &) = delete;
 
         inline auto operator()(const vector<D> & X) const
+        {
+            vector<N> result;
+            for (int i = 0; i < N; ++i) {
+                result[i] = _components[i](X);
+            }
+            return result;
+        }
+
+        template <int Q>
+        inline auto operator()(const quadrature_field_t<Q, D> & X) const
         {
             vector<N> result;
             for (int i = 0; i < N; ++i) {
