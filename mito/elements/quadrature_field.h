@@ -1,5 +1,8 @@
 #include "../mito.h"
 
+#ifndef __MITO__QUADRATURE_FIELD__
+#define __MITO__QUADRATURE_FIELD__
+
 namespace mito {
 
     template <int Q, dim_t D, class T = real>
@@ -70,5 +73,7 @@ namespace mito {
     };
 
 }    // namespace mito
+
+#endif    //__MITO__QUADRATURE_FIELD__
 
 // end of file
