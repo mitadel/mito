@@ -59,7 +59,7 @@ namespace mito {
         inline int n_quad() const { return Q; }
 
         /**
-         * reset all entries to zero.
+         * reset all entries to zero
          */
         inline void reinit()
         {
@@ -67,9 +67,26 @@ namespace mito {
             return;
         }
 
+        /**
+         * accessor for name
+         */
+        inline std::string name() const { return _name; }
+
+        /**
+         * mutator for name
+         */
+        inline void name(std::string name)
+        {
+            _name = name;
+            return;
+        }
+
       private:
         // number of elements
         int _nElements;
+
+        // name of the field
+        std::string _name;
     };
 
 }    // namespace mito
