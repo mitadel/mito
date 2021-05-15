@@ -65,8 +65,7 @@ namespace mito {
         {
             std::cout << "integrating ... " << std::endl;
 
-            // TOFIX
-            std::vector<real> values = function[0](_coordinates);
+            auto values = function[0](_coordinates);
 
             real result = 0.0;
 
@@ -80,7 +79,7 @@ namespace mito {
             for (auto e = 0; e < _elementSet.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
                     result +=
-                        values[e * Q + q] * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
+                        values(e, q)[0] * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
                 }
             }
 
