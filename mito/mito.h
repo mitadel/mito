@@ -15,12 +15,6 @@
 
 namespace mito {
     using dim_t = int;
-
-    static constexpr auto x0 = std::integral_constant<int, 0> {};
-    static constexpr auto x1 = std::integral_constant<int, 1> {};
-    static constexpr auto x2 = std::integral_constant<int, 2> {};
-    static constexpr auto x3 = std::integral_constant<int, 3> {};
-
     // typedef for scalars
     using real = double;
     // typedef for vectors

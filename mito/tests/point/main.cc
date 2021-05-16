@@ -3,10 +3,6 @@
 #include "../../math/point.h"
 
 using mito::Point;
-using mito::x0;
-using mito::x1;
-using mito::x2;
-using mito::x3;
 
 template <int I>
 constexpr auto
