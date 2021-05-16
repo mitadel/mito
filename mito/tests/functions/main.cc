@@ -4,8 +4,6 @@ template <typename X, typename Y>
 class Function {
 
   public:
-    Function() : _function() {}
-
     Function(const mito::function<X, Y> & f) : _function(f) {}
 
     // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
@@ -18,7 +16,7 @@ class Function {
     inline const mito::function<X, Y> & get() const { return _function; }
 
   private:
-    mito::function<X, Y> _function;
+    const mito::function<X, Y> _function;
 };
 
 template <typename X, typename Y>
@@ -52,6 +50,9 @@ main()
     std::cout << function1(x) << std::endl;
     std::cout << function2(x) << std::endl;
     std::cout << function3(x) << std::endl;
+
+    auto function4 = function1 + function2 + function3;
+    std::cout << function4(x) << std::endl;
 
     return 0;
 }
