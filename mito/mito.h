@@ -99,7 +99,7 @@ operator<<(std::ostream & os, const std::array<X, N> & x)
 
     os << "[" << x[0];
 
-    for (auto i = 1; i < N; ++i) {
+    for (long unsigned int i = 1; i < N; ++i) {
         os << ", " << x[i];
     }
 
