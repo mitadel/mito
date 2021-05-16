@@ -31,6 +31,13 @@ namespace mito {
     // templatized typedef for functions
     template <typename X, typename Y = real>
     using function = std::function<Y(const X &)>;
+
+    // templated sum of indefinite arguments
+    template <typename... Args>
+    auto template_sum(Args... args)
+    {
+        return (args + ...);
+    }
 }
 
 // TOFIX: Something is wrong with the overloads of operator<<. Sometimes the compiler won't find
