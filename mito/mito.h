@@ -36,7 +36,7 @@ namespace mito {
     using field = Y (*)(const X &, real);
     // templatized typedef for functions
     template <typename X, typename Y = real>
-    using function = Y (*)(const X &);
+    using function = std::function<Y(const X &)>;
 }
 
 // TOFIX: Something is wrong with the overloads of operator<<. Sometimes the compiler won't find

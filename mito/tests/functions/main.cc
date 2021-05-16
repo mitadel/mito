@@ -1,15 +1,12 @@
 #include "../../mito.h"
 
-template <typename X, typename Y = mito::real>
-using myfunction_t = std::function<Y(const X &)>;
-
 template <typename X, typename Y>
 class Function {
 
   public:
     Function() : _function() {}
 
-    Function(const myfunction_t<X, Y> & f) : _function(f) {}
+    Function(const mito::function<X, Y> & f) : _function(f) {}
 
     // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
     inline auto operator()(const X & x) const
@@ -18,10 +15,10 @@ class Function {
         return _function(x);
     }
 
-    inline const myfunction_t<X, Y> & get() const { return _function; }
+    inline const mito::function<X, Y> & get() const { return _function; }
 
   private:
-    myfunction_t<X, Y> _function;
+    mito::function<X, Y> _function;
 };
 
 template <typename X, typename Y>
