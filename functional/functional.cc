@@ -1,4 +1,4 @@
-#include "../mito.h"
+#include "../mito/mito.h"
 
 mito::vector<3>
 myFunctionA(const mito::vector<3> & x, mito::real t)

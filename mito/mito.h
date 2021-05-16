@@ -192,7 +192,7 @@ namespace mito {
 
         auto y = myF(x, t);
 
-        std::cout << "\tmyF(x, t) = " << myF(x, t) << std::endl;
+        std::cout << "\tmyF(x, t) = " << y << std::endl;
 
         return 0;
     }
