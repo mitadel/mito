@@ -78,16 +78,17 @@ namespace mito {
         std::array<function_t, D> _Df;
     };
 
-    template <dim_t D>
-    inline auto _fSum(const function<vector<D>> & f1, const function<vector<D>> & f2)
+    // define operator+ for mito functions
+    template <typename X>
+    inline function<X> operator+(const function<X> & f1, const function<X> & f2)
     {
-        return ([f1, f2](const mito::vector<D> & x) { return f1(x) + f2(x); });
+        return ([f1, f2](const X & x) { return f1(x) + f2(x); });
     }
 
     template <dim_t D, std::size_t... I>
     inline auto _dSum(const Field<D> & fieldA, const Field<D> & fieldB, std::index_sequence<I...>)
     {
-        std::array<function<vector<D>>, D> Df = { (_fSum<D>(fieldA.Df(I), fieldB.Df(I)))... };
+        std::array<function<vector<D>>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
         return Df;
     }
 
@@ -97,7 +98,7 @@ namespace mito {
         auto fA = fieldA.getF();
         auto fB = fieldB.getF();
 
-        return Field<D>(_fSum<D>(fA, fB), _dSum(fieldA, fieldB, std::make_index_sequence<D> {}));
+        return Field<D>(fA + fB, _dSum(fieldA, fieldB, std::make_index_sequence<D> {}));
     }
 
     // template on vector dimension N, spatial dimension D
