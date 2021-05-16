@@ -171,6 +171,22 @@ namespace mito {
         return result;
     }
 
+    // helper function to compute the divergence of a vector field with respect to the reference
+    // configuration at point X (template with index sequence)
+    template <dim_t D, std::size_t... I>
+    inline ScalarField<D> _div(const VectorField<D, D> & function, std::index_sequence<I...>)
+    {
+        return ScalarField<D>({ template_sum(function[I].Df(I)...) });
+    }
+
+    // function to compute the divergence of a vector field with respect to the reference
+    // configuration at point X
+    template <dim_t D>
+    inline ScalarField<D> div(const VectorField<D, D> & function)
+    {
+        return _div(function, std::make_index_sequence<D> {});
+    }
+
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point X
     template <dim_t D>

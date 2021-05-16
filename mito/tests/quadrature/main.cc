@@ -59,8 +59,11 @@ main()
     mito::VectorField<2 /* D */, 2 /* N */> cosineVector({ f_cosine, f_cosine });
 
     // evaluate divergence
+    mito::ScalarField<2> divergence = mito::div(cosineVector);
     std::cout << "Evaluating divergence of cosine vector function at X = " << X << " : "
               << mito::divX<2>(cosineVector, X) << std::endl;
+    std::cout << "Evaluating divergence of cosine vector function at X = " << X << " : "
+              << divergence(X) << std::endl;
 
     // build vector field with gradient of cosine function
     mito::VectorField<2 /* D */, 2 /* N */> gradient = mito::grad(cosine);
