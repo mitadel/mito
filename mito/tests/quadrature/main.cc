@@ -39,6 +39,8 @@ main()
     // instantiate a scalar function object
     mito::Field<2> f_cosine(f, Df);
     mito::ScalarField<2> cosine({ f_cosine });
+    auto f_cosine_sum = f_cosine + f_cosine + f_cosine;
+    mito::ScalarField<2> cosine_sum({ f_cosine_sum });
 
     // a point in the reference configuration
     vector<2> X = { 0.0, 0.0 };
@@ -46,8 +48,12 @@ main()
     // evaluate f and its gradient
     std::cout << "Evaluating cosine function cos(x[0] * x[1]) at X = " << X << " : " << f_cosine(X)
               << std::endl;
+    std::cout << "Evaluating function 3 * cos(x[0] * x[1]) at X = " << X << " : " << f_cosine_sum(X)
+              << std::endl;
     std::cout << "Evaluating gradient of cosine function at X = " << X << " : "
               << mito::grad<2>(cosine, X) << std::endl;
+    std::cout << "Evaluating gradient of 3 * cosine function at X = " << X << " : "
+              << mito::grad<2>(cosine_sum, X) << std::endl;
 
     // instantiate a vector function object
     mito::VectorField<2 /* D */, 2 /* N */> cosineVector({ f_cosine, f_cosine });
