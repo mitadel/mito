@@ -46,6 +46,7 @@ with open(output_file, 'w') as f:
 
         # Commands to execute
         compile_cmd = 'g++ -g -std=c++2a -Wall -Wextra -pedantic -Werror ' + \
+            '-Wno-unused-variable -Wno-unused-parameter ' + \
             test_path + test_ext + ' -o ' + tmp_folder_path + \
             test_name
         run_cmd = tmp_folder_path + test_name
