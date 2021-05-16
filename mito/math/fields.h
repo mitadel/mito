@@ -148,7 +148,7 @@ namespace mito {
         inline auto & operator[](int i)
         {
             // assert there exists the i-th partial derivative
-            assert(i < _components.size());
+            assert(i < (int) _components.size());
             // return the i-th component
             return _components[i];
         }
