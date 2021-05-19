@@ -1,35 +1,6 @@
-#include "../../mito.h"
+#include "../../math/function.h"
 
-template <typename X, typename Y>
-class Function {
-
-  public:
-    Function(const mito::function<X, Y> & f) : _function(f) {}
-
-    // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
-    inline auto operator()(const X & x) const
-    {
-        // evaluate _f
-        return _function(x);
-    }
-
-    inline const mito::function<X, Y> & get() const { return _function; }
-
-  private:
-    const mito::function<X, Y> _function;
-};
-
-template <typename X, typename Y>
-Function<X, Y>
-operator+(const Function<X, Y> & functionA, const Function<X, Y> & functionB)
-{
-    auto fA = functionA.get();
-    auto fB = functionB.get();
-
-    Function<X, Y> result([fA, fB](const mito::vector<2> & x) { return fA(x) + fB(x); });
-
-    return result;
-}
+using mito::Function;
 
 int
 main()
