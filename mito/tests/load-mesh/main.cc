@@ -46,7 +46,7 @@ LoadMesh(std::string fileName)
         vertex = new mito::vertex_t();
         // instantiate new point
         mito::point_t<D> point;
-        for (dim_t d = 0; d < D; ++d) {
+        for (mito::dim_t d = 0; d < D; ++d) {
             // read point coordinates
             fileStream >> point[d];
         }
