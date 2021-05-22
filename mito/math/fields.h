@@ -10,12 +10,12 @@ namespace mito {
     // TODO: Add operator+ for scalar fields and reals
 
     // f(X,t) with (X \in R^D, t \in R) -> R
-    template <dim_t D>
+    template <dim_t D, typename Y = real>
     class Field {
 
         // typedef for a scalar valued function
-        using function_t = Function<vector<D>>;
-        using functor_t = functor<vector<D>>;
+        using function_t = Function<vector<D>, Y>;
+        using functor_t = functor<vector<D>, Y>;
 
       public:
         // constructors with function_t
