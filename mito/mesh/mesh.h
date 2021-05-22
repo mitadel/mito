@@ -263,7 +263,7 @@ namespace mito {
             for (int n = 0; n < N_vertices; ++n) {
                 // instantiate new point
                 mito::point_t<D> point;
-                for (int d = 0; d < D; ++d) {
+                for (dim_t d = 0; d < D; ++d) {
                     // read point coordinates
                     fileStream >> point[d];
                 }

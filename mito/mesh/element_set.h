@@ -11,7 +11,7 @@ namespace mito {
     {
         // return the distance between the two points
         real dist2 = 0.0;
-        for (auto d = 0; d < D; ++d) {
+        for (dim_t d = 0; d < D; ++d) {
             real dist_d = pointA[d] - pointB[d];
             dist2 += dist_d * dist_d;
         }
@@ -50,7 +50,7 @@ namespace mito {
             int v = 0;
             for (const auto & vertex : vertices) {
                 // fill up verticesTensor container
-                for (auto d = 0; d < D; ++d) {
+                for (dim_t d = 0; d < D; ++d) {
                     verticesTensor[v * V + d] = coordinatesMap[vertex][d];
                 }
                 verticesTensor[v * V + D] = 1.0;

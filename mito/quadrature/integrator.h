@@ -38,7 +38,7 @@ namespace mito {
                 for (const auto & vertex : vertices) {
                     // loop on quadrature point
                     for (int q = 0; q < Q; ++q) {
-                        for (int d = 0; d < D; ++d) {
+                        for (dim_t d = 0; d < D; ++d) {
                             const auto & vertexCoordinates = _elementSet.coordinatesVertex(vertex);
                             _coordinates(e, q)[d] +=
                                 _quadratureRule.getPoint(q)[v] * vertexCoordinates[d];
