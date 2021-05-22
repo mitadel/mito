@@ -42,11 +42,92 @@ namespace mito {
         const functor<X, Y> _functor;
     };
 
+    // Algebraic operations on Function
     // TODO: see if expression templates can be used to avoid copies with intermediate results
+
+    // fa + fb
     template <typename X, typename Y>
     mito::Function<X, Y> operator+(const mito::Function<X, Y> & fA, const mito::Function<X, Y> & fB)
     {
         return mito::Function<X, Y>([fA, fB](const X & x) { return fA(x) + fB(x); });
+    }
+
+    // fa * fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator*(const mito::Function<X, Y> & fA, const mito::Function<X, Y> & fB)
+    {
+        return mito::Function<X, Y>([fA, fB](const X & x) { return fA(x) * fB(x); });
+    }
+
+    // a * f
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator*(const real & a, const mito::Function<X, Y> & f)
+    {
+        return mito::Function<X, Y>([a, f](const X & x) { return a * f(x); });
+    }
+
+    // f * a
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator*(const mito::Function<X, Y> & f, const real & a)
+    {
+        return a * f;
+    }
+
+    // f / a
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator/(const mito::Function<X, Y> & f, const real & a)
+    {
+        return (1.0 / a) * f;
+    }
+
+    // -f
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator-(const mito::Function<X, Y> & f)
+    {
+        return -1.0 * f;
+    }
+
+    // fa - fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator-(const mito::Function<X, Y> & fA, const mito::Function<X, Y> & fB)
+    {
+        return fA + (-fB);
+    }
+
+    // Special algebraic functions for scalar functions
+    // a / f
+    template <typename X>
+    mito::Function<X, mito::real> operator/(const real & a, const mito::Function<X, mito::real> & f)
+    {
+        return mito::Function<X, mito::real>([a, f](const X & x) { return a / f(x); });
+    }
+
+    // a + f
+    template <typename X>
+    mito::Function<X, mito::real> operator+(const real & a, const mito::Function<X, mito::real> & f)
+    {
+        return mito::Function<X, mito::real>([a, f](const X & x) { return a + f(x); });
+    }
+
+    // f + a
+    template <typename X>
+    mito::Function<X, mito::real> operator+(const mito::Function<X, mito::real> & f, const real & a)
+    {
+        return a + f;
+    }
+
+    // a - f
+    template <typename X>
+    mito::Function<X, mito::real> operator-(const real & a, const mito::Function<X, mito::real> & f)
+    {
+        return a + (-f);
+    }
+
+    // f - a
+    template <typename X>
+    mito::Function<X, mito::real> operator-(const mito::Function<X, mito::real> & f, const real & a)
+    {
+        return f + (-a);
     }
 }
 
