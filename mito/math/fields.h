@@ -50,32 +50,31 @@ namespace mito {
         // destructor
         ~Field() {}
 
-        // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
-        inline auto operator()(const vector<D> & X) const
+        inline auto operator()(const vector<D> & x) const
         {
             // evaluate _f
-            return _f(X);
+            return _f(x);
         }
 
-        inline auto operator()(const std::vector<vector<D>> & X) const
+        inline auto operator()(const std::vector<vector<D>> & x) const
         {
-            std::vector<real> values(X.size(), 0.0);
+            std::vector<real> values(x.size(), 0.0);
             // evaluate operator() at all elements of X
-            for (int i = 0; i < (int) X.size(); ++i) {
-                values[i] = operator()(X[i]);
+            for (int i = 0; i < (int) x.size(); ++i) {
+                values[i] = operator()(x[i]);
             }
             return values;
         }
 
         template <int Q>
-        inline auto operator()(const quadrature_field_t<Q, D> & X) const
+        inline auto operator()(const quadrature_field_t<Q, D> & x) const
         {
-            quadrature_field_t<Q, D> values(X.n_elements());
+            quadrature_field_t<Q, D> values(x.n_elements());
 
-            // evaluate operator() at all elements of X
+            // evaluate operator() at all elements of x
             for (int e = 0; e < values.n_elements(); ++e) {
                 for (int q = 0; q < Q; ++q) {
-                    values(e, q)[0] = operator()(X(e, q));
+                    values(e, q)[0] = operator()(x(e, q));
                 }
             }
 
