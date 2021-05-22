@@ -1,9 +1,10 @@
 #include <cmath>
 #include "../../math/fields.h"
+#include "../../math/function.h"
 #include "../../mesh/element_set.h"
 #include "../../quadrature/integrator.h"
 
-using mito::function;
+using mito::Function;
 using mito::vector;
 using mito::real;
 using mito::GAUSS;
@@ -17,24 +18,17 @@ using mito::triangle_t;
 int
 main()
 {
-
     // a scalar function
-    function<vector<2>> f { [](const vector<2> & x) {
-        return cos(x[0] * x[1]);
-    } };
+    Function<vector<2>> f([](const mito::vector<2> & x) { return cos(x[0] * x[1]); });
 
     // df/dx[0]
-    function<vector<2>> Dx { [](const vector<2> & x) {
-        return -sin(x[0] * x[1]) * x[1];
-    } };
+    Function<vector<2>> Dx([](const vector<2> & x) { return -sin(x[0] * x[1]) * x[1]; });
 
     // df/dx[1]
-    function<vector<2>> Dy { [](const vector<2> & x) {
-        return -sin(x[0] * x[1]) * x[0];
-    } };
+    Function<vector<2>> Dy([](const vector<2> & x) { return -sin(x[0] * x[1]) * x[0]; });
 
     // its partial derivatives
-    std::array<function<vector<2>>, 2> Df = { Dx, Dy };
+    std::array<Function<vector<2>>, 2> Df = { Dx, Dy };
 
     // instantiate a scalar function object
     mito::Field<2> f_cosine(f, Df);

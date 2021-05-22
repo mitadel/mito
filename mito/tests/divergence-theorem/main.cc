@@ -1,9 +1,10 @@
 #include <cmath>
+#include "../../math/function.h"
 #include "../../math/fields.h"
 #include "../../mesh/element_set.h"
 #include "../../quadrature/integrator.h"
 
-using mito::function;
+using mito::Function;
 using mito::vector;
 using mito::real;
 using mito::GAUSS;
@@ -16,43 +17,31 @@ int
 main()
 {
     // a scalar function
-    function<vector<2>> f1 { [](const vector<2> & x) {
-        return x[0] * x[1];
-    } };
+    Function<vector<2>> f1([](const vector<2> & x) { return x[0] * x[1]; });
 
     // df/dx[0]
-    function<vector<2>> Dx_f1 { [](const vector<2> & x) {
-        return x[1];
-    } };
+    Function<vector<2>> Dx_f1([](const vector<2> & x) { return x[1]; });
 
     // df/dx[1]
-    function<vector<2>> Dy_f1 { [](const vector<2> & x) {
-        return x[0];
-    } };
+    Function<vector<2>> Dy_f1([](const vector<2> & x) { return x[0]; });
 
     // its partial derivatives
-    std::array<function<vector<2>>, 2> Df1 = { Dx_f1, Dy_f1 };
+    std::array<Function<vector<2>>, 2> Df1 = { Dx_f1, Dy_f1 };
 
     // instantiate a scalar function object
     mito::Field<2> field1(f1, Df1);
 
     // a scalar function
-    function<vector<2>> f2 { [](const vector<2> & x) {
-        return x[0] * x[0];
-    } };
+    Function<vector<2>> f2([](const vector<2> & x) { return x[0] * x[0]; });
 
     // df/dx[0]
-    function<vector<2>> Dx_f2 { [](const vector<2> & x) {
-        return 2.0 * x[0];
-    } };
+    Function<vector<2>> Dx_f2([](const vector<2> & x) { return 2.0 * x[0]; });
 
     // df/dx[1]
-    function<vector<2>> Dy_f2 { [](const vector<2> & x) {
-        return 0.0;
-    } };
+    Function<vector<2>> Dy_f2([](const vector<2> & x) { return 0.0; });
 
     // its partial derivatives
-    std::array<function<vector<2>>, 2> Df2 = { Dx_f2, Dy_f2 };
+    std::array<Function<vector<2>>, 2> Df2 = { Dx_f2, Dy_f2 };
 
     // instantiate a scalar function object
     mito::Field<2> field2(f2, Df2);

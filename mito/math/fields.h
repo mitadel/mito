@@ -1,29 +1,53 @@
 #ifndef __MITO__FIELDS__
 #define __MITO__FIELDS__
 
+#include "function.h"
 #include "../mito.h"
 #include "../elements/quadrature_field.h"
 
 namespace mito {
+
+    // TODO: Add operator+ for scalar fields and reals
 
     // f(X,t) with (X \in R^D, t \in R) -> R
     template <dim_t D>
     class Field {
 
         // typedef for a scalar valued function
-        using function_t = function<vector<D>>;
+        using function_t = Function<vector<D>>;
+        using functor_t = functor<vector<D>>;
 
       public:
-        // constructors
-        Field(function_t f) : _f(f), _Df() {}
-        Field(function_t f, std::array<function_t, D> Df) : _f(f), _Df(Df) {}
+        // constructors with function_t
+        Field(const function_t & f) : _f(f), _Df() {}
+        Field(function_t && f) : _f(f), _Df() {}
+        Field(const function_t & f, const std::array<function_t, D> & Df) : _f(f), _Df(Df) {}
+        Field(const function_t & f, std::array<function_t, D> && Df) : _f(f), _Df(Df) {}
+        Field(function_t && f, std::array<function_t, D> && Df) : _f(f), _Df(Df) {}
+
+        // constructors with functor_t
+        Field(const functor_t & f) : _f(f), _Df() {}
+        Field(functor_t && f) : _f(f), _Df() {}
+        Field(const functor_t & f, const std::array<functor_t, D> & Df) : _f(f), _Df(Df) {}
+        Field(const functor_t & f, std::array<functor_t, D> && Df) : _f(f), _Df(Df) {}
+        Field(functor_t && f, std::array<functor_t, D> && Df) : _f(f), _Df(Df) {}
+
+        // default move constructor
+        Field(Field &&) = default;
+
+        // default move operator=
+        Field & operator=(Field &&) = default;
+
+        // default copy constructor
+        Field(const Field &) = default;
+
+        // default assignment operator
+        Field & operator=(const Field &) = default;
 
         // delete default constructor
         Field() = delete;
 
-        // delete assignment operator
-        Field & operator=(const Field &) = delete;
-
+        // destructor
         ~Field() {}
 
         // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
@@ -79,17 +103,10 @@ namespace mito {
         std::array<function_t, D> _Df;
     };
 
-    // define operator+ for mito functions
-    template <typename X>
-    inline function<X> operator+(const function<X> & f1, const function<X> & f2)
-    {
-        return ([f1, f2](const X & x) { return f1(x) + f2(x); });
-    }
-
     template <dim_t D, std::size_t... I>
     inline auto _dSum(const Field<D> & fieldA, const Field<D> & fieldB, std::index_sequence<I...>)
     {
-        std::array<function<vector<D>>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
+        std::array<Function<vector<D>>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
         return Df;
     }
 
