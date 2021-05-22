@@ -28,11 +28,15 @@ namespace mito {
         // move operator=
         inline Function & operator=(Function &&) = default;
 
-        // inline real operator()(const vector<D> & X, const vector<D2> & x, real t) const {
         inline auto operator()(const X & x) const
         {
             // evaluate _f
             return _functor(x);
+        }
+
+        inline auto operator[](int i) const
+        {
+            return mito::Function<X, real>([this, i](const X & x) { return this->_functor(x)[i]; });
         }
 
         // cast operator from Function<X, Y> to functor<X, Y>
