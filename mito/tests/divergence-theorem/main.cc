@@ -17,40 +17,26 @@ int
 main()
 {
     // a scalar function
-    Function<vector<2>> f1([](const vector<2> & x) { return x[0] * x[1]; });
+    Function<vector<2>, vector<2>> f([](const vector<2> & x) {
+        return vector<2> { x[0] * x[1], x[0] * x[0] };
+    });
 
     // df/dx[0]
-    Function<vector<2>> Dx_f1([](const vector<2> & x) { return x[1]; });
+    Function<vector<2>, vector<2>> Dx([](const vector<2> & x) {
+        return vector<2> { x[1], 2.0 * x[0] };
+    });
 
     // df/dx[1]
-    Function<vector<2>> Dy_f1([](const vector<2> & x) { return x[0]; });
+    Function<vector<2>, vector<2>> Dy([](const vector<2> & x) { return vector<2> { x[0], 0.0 }; });
 
     // its partial derivatives
-    std::array<Function<vector<2>>, 2> Df1 = { Dx_f1, Dy_f1 };
+    std::array<Function<vector<2>, vector<2>>, 2> Df = { Dx, Dy };
 
-    // instantiate a scalar function object
-    mito::Field<2> field1(f1, Df1);
+    // instantiate a vector field
+    mito::VectorField<2 /* D */, 2 /* N */> field(f, Df);
 
-    // a scalar function
-    Function<vector<2>> f2([](const vector<2> & x) { return x[0] * x[0]; });
-
-    // df/dx[0]
-    Function<vector<2>> Dx_f2([](const vector<2> & x) { return 2.0 * x[0]; });
-
-    // df/dx[1]
-    Function<vector<2>> Dy_f2([](const vector<2> & x) { return 0.0; });
-
-    // its partial derivatives
-    std::array<Function<vector<2>>, 2> Df2 = { Dx_f2, Dy_f2 };
-
-    // instantiate a scalar function object
-    mito::Field<2> field2(f2, Df2);
-
-    // instantiate a vector function object
-    mito::VectorField<2 /* D */, 2 /* N */> vector_field({ field1, field2 });
-
-    // build a scalar field with divergence of cosineVector
-    mito::ScalarField<2> divergence = mito::div(vector_field);
+    // build a scalar field with divergence of field
+    mito::ScalarField<2> divergence = mito::div(field);
 
     /**
      * Mesh with four elements:
@@ -130,11 +116,12 @@ main()
     mito::Integrator<GAUSS, segment_t, 2 /* degree of exactness */, 2> boundaryLeftIntegrator(
         boundaryLeft);
 
+    mito::ScalarField<2> f0(f[0]);
+    mito::ScalarField<2> f1(f[1]);
+
     real resultBoundary =
-        -boundaryBotIntegrator.integrate(mito::ScalarField<2>({ vector_field[1] }))
-        + boundaryRightIntegrator.integrate(mito::ScalarField<2>({ vector_field[0] }))
-        + boundaryTopIntegrator.integrate(mito::ScalarField<2>({ vector_field[1] }))
-        - boundaryLeftIntegrator.integrate(mito::ScalarField<2>({ vector_field[0] }));
+        -boundaryBotIntegrator.integrate(f1) + boundaryRightIntegrator.integrate(f0)
+        + boundaryTopIntegrator.integrate(f1) - boundaryLeftIntegrator.integrate(f0);
 
     std::cout << "Result of boundary integration = " << resultBoundary << std::endl;
 

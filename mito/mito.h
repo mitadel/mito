@@ -14,7 +14,7 @@
 // TOFIX: Consider using tuples when possible as opposed to std::array and std::vector
 
 namespace mito {
-    using dim_t = int;
+    using dim_t = size_t;
     // typedef for scalars
     using real = double;
     // typedef for vectors
@@ -28,13 +28,6 @@ namespace mito {
     // templatized typedef for fields
     template <typename X, typename Y>
     using field = Y (*)(const X &, real);
-
-    // templated sum of indefinite arguments
-    template <typename... Args>
-    auto template_sum(Args... args)
-    {
-        return (args + ...);
-    }
 }
 
 // TOFIX: Something is wrong with the overloads of operator<<. Sometimes the compiler won't find

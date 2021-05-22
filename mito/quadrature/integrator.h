@@ -61,11 +61,12 @@ namespace mito {
             _computeQuadPointCoordinates();
         }
 
-        real integrate(const ScalarField<D> & function)
+        template <typename Y>
+        Y integrate(const Field<D, Y> & field)
         {
             std::cout << "integrating ... " << std::endl;
 
-            auto values = function[0](_coordinates);
+            auto values = field(_coordinates);
 
             real result = 0.0;
 
