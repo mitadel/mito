@@ -28,9 +28,6 @@ namespace mito {
     // templatized typedef for fields
     template <typename X, typename Y>
     using field = Y (*)(const X &, real);
-    // templatized typedef for functions
-    template <typename X, typename Y = real>
-    using function = std::function<Y(const X &)>;
 
     // templated sum of indefinite arguments
     template <typename... Args>

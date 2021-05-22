@@ -6,16 +6,17 @@
 
 namespace mito {
 
-    // templatized typedef for functions
+    // templatized typedef for functors
     template <typename X, typename Y = real>
-    using function_t = std::function<Y(const X &)>;
+    using functor = std::function<Y(const X &)>;
 
     // We need a class function to explicitly put the return value Y in the template
     template <typename X, typename Y = real>
     class Function {
 
       public:
-        inline Function(const function_t<X, Y> & f) : _function(f) {}
+        inline Function(const functor<X, Y> & f) : _functor(f) {}
+        inline Function(functor<X, Y> && f) : _functor(f) {}
         // default constructor
         inline Function() = default;
         // copy constructor
@@ -31,14 +32,14 @@ namespace mito {
         inline auto operator()(const X & x) const
         {
             // evaluate _f
-            return _function(x);
+            return _functor(x);
         }
 
-        // cast operator from Function<X, Y> to function_t<X, Y>
-        inline operator function_t<X, Y>() const { return _function; }
+        // cast operator from Function<X, Y> to functor<X, Y>
+        inline operator functor<X, Y>() const { return _functor; }
 
       private:
-        const function_t<X, Y> _function;
+        const functor<X, Y> _functor;
     };
 
     // TODO: see if expression templates can be used to avoid copies with intermediate results
