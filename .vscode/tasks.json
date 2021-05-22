@@ -55,7 +55,7 @@
         },
         {
             "type": "cppbuild",
-            "label": "C/C++: clang++ build active file",
+            "label": "C/C++: clang++ (GCC stdlib) build active file",
             "command": "clang++",
             "args": [
                 "-g",
