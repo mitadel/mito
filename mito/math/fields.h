@@ -60,7 +60,8 @@ namespace mito {
         }
 
       public:
-        inline const auto & getF() const { return _f; }
+        // accessor for function
+        inline const auto & f() const { return _f; }
 
         // accessor for function partial derivatives
         inline const auto & Df(int i) const
@@ -95,10 +96,8 @@ namespace mito {
     template <int D>
     Field<D> operator+(const Field<D> & fieldA, const Field<D> & fieldB)
     {
-        auto fA = fieldA.getF();
-        auto fB = fieldB.getF();
-
-        return Field<D>(fA + fB, _dSum(fieldA, fieldB, std::make_index_sequence<D> {}));
+        return Field<D>(
+            fieldA.f() + fieldB.f(), _dSum(fieldA, fieldB, std::make_index_sequence<D> {}));
     }
 
     // template on vector dimension N, spatial dimension D
