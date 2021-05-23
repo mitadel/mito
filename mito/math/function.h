@@ -141,6 +141,122 @@ namespace mito {
     {
         return f + (-a);
     }
+
+    // Binary operators for functor<X, Y> and mito::Function<X, Y>, such as:
+    // fa + fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator+(const mito::Function<X, Y> & fA, const functor<X, Y> & fB)
+    {
+        return fA + mito::Function<X, Y>(fB);
+    }
+
+    // fa + fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator+(const functor<X, Y> & fA, const mito::Function<X, Y> & fB)
+    {
+        return fB + fA;
+    }
+
+    // fa * fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator*(const mito::Function<X, Y> & fA, const functor<X, Y> & fB)
+    {
+        return fA * mito::Function<X, Y>(fB);
+    }
+
+    // fa * fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator*(const functor<X, Y> & fA, const mito::Function<X, Y> & fB)
+    {
+        return fB * fA;
+    }
+
+    // fa - fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator-(const mito::Function<X, Y> & fA, const functor<X, Y> & fB)
+    {
+        return fA - mito::Function<X, Y>(fB);
+    }
+
+    // fa - fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator-(const functor<X, Y> & fA, const mito::Function<X, Y> & fB)
+    {
+        return -(fB - fA);
+    }
+
+    // f1 / f2
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator/(
+        const mito::Function<X, Y> & f1, const functor<X, mito::real> & f2)
+    {
+        return mito::Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
+    }
+
+    // f1 / f2
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator/(
+        const functor<X, Y> & f1, const mito::Function<X, mito::real> & f2)
+    {
+        return mito::Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
+    }
+
+    // Binary operators for Y(const X &) and mito::Function<X, Y>, such as:
+    // fa + fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator+(const mito::Function<X, Y> & fA, Y fB(const X &))
+    {
+        return fA + mito::Function<X, Y>(fB);
+    }
+
+    // fa + fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator+(Y fA(const X &), const mito::Function<X, Y> & fB)
+    {
+        return fB + fA;
+    }
+
+    // fa * fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator*(const mito::Function<X, Y> & fA, Y fB(const X &))
+    {
+        return fA * mito::Function<X, Y>(fB);
+    }
+
+    // fa * fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator*(Y fA(const X &), const mito::Function<X, Y> & fB)
+    {
+        return fB * fA;
+    }
+
+    // fa - fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator-(const mito::Function<X, Y> & fA, Y fB(const X &))
+    {
+        return fA - mito::Function<X, Y>(fB);
+    }
+
+    // fa - fb
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator-(Y fA(const X &), const mito::Function<X, Y> & fB)
+    {
+        return -(fB - fA);
+    }
+
+    // f1 / f2
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator/(const mito::Function<X, Y> & f1, mito::real f2(const X &))
+    {
+        return mito::Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
+    }
+
+    // f1 / f2
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator/(Y f1(const X &), const mito::Function<X, mito::real> & f2)
+    {
+        return mito::Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
+    }
 }
 
 #endif    // __MITO__FUNCTION__
