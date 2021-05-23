@@ -1,15 +1,13 @@
-CXX = /usr/local/gcc11/bin/g++
-
 all:
 	mkdir -p build
 	ln -s ../lib/gcm.cache gcm.cache
 	make build/cat.o
 
 build/cat.o: cat.cpp build/cat-i.o
-	$(CXX) -fmodules-ts -std=c++20 -o build/cat.o -c cat.cpp
+	g++ -fmodules-ts -std=c++20 -o build/cat.o -c cat.cpp
 
 build/cat-i.o: cat-i.cpp
-	$(CXX) -fmodules-ts -std=c++20 -o build/cat-i.o -c cat-i.cpp
+	g++ -fmodules-ts -std=c++20 -o build/cat-i.o -c cat-i.cpp
 
 clean: 
 	rm -r build gcm.cache
