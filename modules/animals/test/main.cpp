@@ -1,4 +1,7 @@
 #include <iostream>
+// TOFIX: gcc requires this include while clang does not. It should not be necessary to include this
+// header file (compiler bug?)
+#include "../../../mito/mito.h"    // REMOVE THIS HEADER
 
 // get support from module
 import Cat;
