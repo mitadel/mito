@@ -106,6 +106,14 @@ namespace mito {
         return mito::Function<X, mito::real>([a, f](const X & x) { return a / f(x); });
     }
 
+    // f1 / f2
+    template <typename X, typename Y>
+    mito::Function<X, Y> operator/(
+        const mito::Function<X, Y> & f1, const mito::Function<X, mito::real> & f2)
+    {
+        return mito::Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
+    }
+
     // a + f
     template <typename X>
     mito::Function<X, mito::real> operator+(const real & a, const mito::Function<X, mito::real> & f)
