@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <ranges>
 #include "../../math/point.h"
 
 using mito::Point;
