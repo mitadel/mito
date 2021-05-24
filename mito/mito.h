@@ -107,6 +107,132 @@ operator<<(std::ostream & os, const std::array<X, N> & x)
 
 namespace mito {
 
+    // TODO: Check that this implementation makes sense
+    // Algebraic operations on vectors, tensors, ...
+
+    // mito::vector times scalar
+    template <dim_t D, typename T, std::size_t... I>
+    inline auto _vector_times_scalar(
+        const mito::real & a, mito::vector<D, T> & y, std::index_sequence<I...>)
+    {
+        ((y[I] *= a), ...);
+        return;
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator*(const mito::real & a, mito::vector<D, T> && y)
+    {
+        _vector_times_scalar(a, y, std::make_index_sequence<D> {});
+        return y;
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator*(const mito::real & a, mito::vector<D, T> & y)
+    {
+        _vector_times_scalar(a, y, std::make_index_sequence<D> {});
+        return y;
+    }
+
+    // mito::vector inner product
+    template <dim_t D, typename T, std::size_t... I>
+    inline T _vector_inner_product(
+        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2, std::index_sequence<I...>)
+    {
+        T result(0);
+        ((result += y1[I] * y2[I]), ...);
+        return result;
+    }
+    template <dim_t D, typename T>
+    inline T operator*(const mito::vector<D, T> & y1, const mito::vector<D, T> & y2)
+    {
+        return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
+    }
+    template <dim_t D, typename T>
+    inline T operator*(mito::vector<D, T> && y1, const mito::vector<D, T> & y2)
+    {
+        return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
+    }
+    template <dim_t D, typename T>
+    inline T operator*(const mito::vector<D, T> & y1, mito::vector<D, T> && y2)
+    {
+        return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
+    }
+
+    template <dim_t D, typename T>
+    inline T operator*(mito::vector<D, T> && y1, mito::vector<D, T> && y2)
+    {
+        return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
+    }
+
+    // sum of mito::vectors
+    template <dim_t D, typename T, std::size_t... I>
+    inline mito::vector<D, T> & _vector_sum(
+        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2, std::index_sequence<I...>)
+    {
+        mito::vector<D, T> result;
+        ((result[I] = y1[I] + y2[I]), ...);
+        return result;
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator+(
+        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2)
+    {
+        return _vector_sum(y1, y2, std::make_index_sequence<D> {});
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator+(mito::vector<D, T> && y1, const mito::vector<D, T> & y2)
+    {
+        return _vector_sum(y1, y2, std::make_index_sequence<D> {});
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator+(const mito::vector<D, T> & y1, mito::vector<D, T> && y2)
+    {
+        return _vector_sum(y1, y2, std::make_index_sequence<D> {});
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator+(mito::vector<D, T> && y1, mito::vector<D, T> && y2)
+    {
+        return _vector_sum(y1, y2, std::make_index_sequence<D> {});
+    }
+
+    // mito::vector operator-
+    template <dim_t D, typename T, std::size_t... I>
+    inline mito::vector<D, T> & _vector_minus(mito::vector<D, T> & y, std::index_sequence<I...>)
+    {
+        ((y[I] = -y[I]), ...);
+        return y;
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator-(const mito::vector<D, T> & y)
+    {
+        return _vector_minus(y, std::make_index_sequence<D> {});
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator-(const mito::vector<D, T> && y)
+    {
+        return _vector_minus(y, std::make_index_sequence<D> {});
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator-(
+        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2)
+    {
+        return y1 + (-y2);
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator-(mito::vector<D, T> && y1, const mito::vector<D, T> & y2)
+    {
+        return y1 + (-y2);
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator-(const mito::vector<D, T> & y1, mito::vector<D, T> && y2)
+    {
+        return y1 + (-y2);
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator-(mito::vector<D, T> && y1, mito::vector<D, T> && y2)
+    {
+        return y1 + (-y2);
+    }
+
+    // factorial
     template <dim_t D>
     int Factorial()
     {
