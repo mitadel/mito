@@ -6,19 +6,19 @@
 namespace mito {
 
     template <int Q, dim_t D, class T = real>
-    class quadrature_field_t : public std::vector<mito::vector<D, T>> {
+    class QuadratureField : public std::vector<mito::vector<D, T>> {
       public:
         /**
          * donstructor
          * @param[in] elements number of elements for which data are stored
          */
-        inline quadrature_field_t(int nElements) :
+        inline QuadratureField(int nElements) :
             std::vector<mito::vector<D, T>>(nElements * Q),
             _nElements(nElements)
         {}
 
         // destructor
-        ~quadrature_field_t() {}
+        ~QuadratureField() {}
 
       public:
         /**
@@ -88,6 +88,9 @@ namespace mito {
         // name of the field
         std::string _name;
     };
+
+    template <int Q, dim_t D, class T = real>
+    using quadrature_field_t = QuadratureField<Q, D, T>;
 
 }    // namespace mito
 
