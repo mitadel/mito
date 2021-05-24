@@ -130,6 +130,16 @@ namespace mito {
         _vector_times_scalar(a, y, std::make_index_sequence<D> {});
         return y;
     }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator*(mito::vector<D, T> && y, const mito::real & a)
+    {
+        return a * y;
+    }
+    template <dim_t D, typename T>
+    inline mito::vector<D, T> & operator*(mito::vector<D, T> & y, const mito::real & a)
+    {
+        return a * y;
+    }
 
     // mito::vector inner product
     template <dim_t D, typename T, std::size_t... I>
