@@ -174,6 +174,52 @@ namespace mito {
     }
 }
 
+// traits on mito types
+namespace mito {
+    template <typename T>
+    struct size;
+
+    template <typename T, int N>
+    struct size<mito::vector<N, T>> {
+        static constexpr int value = N;
+    };
+
+    template <>
+    struct size<int> {
+        static constexpr int value = 1;
+    };
+
+    template <>
+    struct size<bool> {
+        static constexpr int value = 1;
+    };
+
+    template <>
+    struct size<double> {
+        static constexpr int value = 1;
+    };
+
+    template <typename T>
+    struct type {
+        using value = typename T ::value_type;
+    };
+
+    template <>
+    struct type<int> {
+        using value = int;
+    };
+
+    template <>
+    struct type<bool> {
+        using value = bool;
+    };
+
+    template <>
+    struct type<double> {
+        using value = double;
+    };
+}
+
 namespace mito {
     template <typename X, typename Y>
     int AddDirichletBC(std::string boundaryLabel, const field<X, Y> & myF)
