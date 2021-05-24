@@ -63,6 +63,26 @@ namespace mito {
         return mito::Function<X, Y>([fA, fB](const X & x) { return fA(x) * fB(x); });
     }
 
+    // y * f (inner product)
+    template <
+        typename X, typename Y,
+        typename std::enable_if<!std::is_same<Y, mito::real>::value, int>::type = 0>
+    mito::Function<X, typename type<Y>::value> operator*(
+        const Y & y, const mito::Function<X, Y> & f)
+    {
+        return mito::Function<X, typename type<Y>::value>([y, f](const X & x) { return y * f(x); });
+    }
+
+    // f * y (inner product)
+    template <
+        typename X, typename Y,
+        typename std::enable_if<!std::is_same<Y, mito::real>::value, int>::type = 0>
+    mito::Function<X, typename type<Y>::value> operator*(
+        const mito::Function<X, Y> & f, const Y & y)
+    {
+        return y * f;
+    }
+
     // a * f
     template <typename X, typename Y>
     mito::Function<X, Y> operator*(const real & a, const mito::Function<X, Y> & f)

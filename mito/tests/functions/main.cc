@@ -55,14 +55,29 @@ main()
     // (cos(xy) + 5) / cos(xy)
     auto function12 = (function1 + function2) / function1;
     assert(std::fabs((function1(x) + function2(x)) / function1(x) - function12(x)) < TOL);
-    std::cout << "(function1(x) + function2(x)) / function1(x) = "
-              << (function1(x) + function2(x)) / function1(x) << "\t" << function12(x) << std::endl;
 
     Function<mito::vector<2>> function13(my_function);
     auto function14 = function13 + function1;
 
     std::function<mito::real(const mito::vector<2> &)> my_other_function(my_function);
     auto function15 = my_other_function + function1 + my_function;
+
+    // a vector function
+    Function<mito::vector<2>, mito::vector<3>> function16([](const mito::vector<2> & x) {
+        return mito::vector<3> { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
+    });
+
+    // vector times scalar multiplication
+    mito::real alpha = 10;
+    auto function17 = alpha * function16;
+    std::cout << "function16 = " << function16(x) << std::endl;
+    std::cout << "function17 = " << function17(x) << std::endl;
+
+    // inner product between vectors
+    mito::vector<3> my_vector = { 1, 2, 3 };
+    auto function18 = my_vector * function16;
+    std::cout << "function16 = " << function16(x) << std::endl;
+    std::cout << "function17 = " << function18(x) << std::endl;
 
     return 0;
 }
