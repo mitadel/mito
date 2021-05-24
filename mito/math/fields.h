@@ -58,7 +58,7 @@ namespace mito {
 
         inline auto operator()(const std::vector<vector<D>> & x) const
         {
-            std::vector<real> values(x.size(), 0.0);
+            std::vector<Y> values(x.size());
             // evaluate operator() at all elements of X
             for (int i = 0; i < (int) x.size(); ++i) {
                 values[i] = operator()(x[i]);
@@ -67,14 +67,14 @@ namespace mito {
         }
 
         template <int Q>
-        inline auto operator()(const quadrature_field_t<Q, D> & x) const
+        inline auto operator()(const quadrature_field_t<Q, vector<D>> & x) const
         {
-            quadrature_field_t<Q, D> values(x.n_elements());
+            quadrature_field_t<Q, Y> values(x.n_elements());
 
             // evaluate operator() at all elements of x
             for (int e = 0; e < values.n_elements(); ++e) {
                 for (int q = 0; q < Q; ++q) {
-                    values(e, q)[0] = operator()(x(e, q));
+                    values(e, q) = operator()(x(e, q));
                 }
             }
 

@@ -68,7 +68,7 @@ namespace mito {
 
             auto values = field(_coordinates);
 
-            real result = 0.0;
+            Y result;
 
             // TOFIX: Typedef elem_t, quad_t, dim_t so as to give a compilation error if
             // misused
@@ -77,10 +77,11 @@ namespace mito {
             //              index_t i {e, q, j};
             //              values[i];
             // for (auto & e : _elementSet) {
+            // TODO: define operator+=
             for (auto e = 0; e < _elementSet.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
-                    result +=
-                        values(e, q)[0] * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
+                    result = result
+                           + values(e, q) * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
                 }
             }
 
@@ -97,7 +98,7 @@ namespace mito {
         // the domain of integration
         const ElementSet<element_t, D> & _elementSet;
         // the coordinates of the quadrature points in the domain of integration
-        quadrature_field_t<Q, D> _coordinates;
+        quadrature_field_t<Q, mito::vector<D>> _coordinates;
     };
 
 }    // namespace  mito

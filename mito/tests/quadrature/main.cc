@@ -126,6 +126,7 @@ main()
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     // static mito::ElementSetTri elementSet;
     mito::ElementSet bodyElementSet(elements, vertexCoordinatesMap);
+    // QUESTION: Is it possible to remove the last 2 in the template parameters?
     mito::Integrator<GAUSS, triangle_t, 2 /* degree of exactness */, 2> bodyIntegrator(
         bodyElementSet);
 
@@ -139,6 +140,9 @@ main()
     std::cout << "Integration of cos(x*y): Result = " << result
               << ", Error = " << std::fabs(result - 0.946083) << std::endl;
     assert(std::fabs(result - 0.946083) < 1.e-3);
+
+    auto resultVector = bodyIntegrator.integrate(cosineVector);
+    assert(resultVector == mito::vector<2>({ result, result }));
 
     // instantiate a scalar function object
     mito::ScalarField<2> one([]([[maybe_unused]] const vector<2> & x) { return 1.0; });

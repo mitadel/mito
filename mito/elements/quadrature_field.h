@@ -5,16 +5,18 @@
 
 namespace mito {
 
-    template <int Q, dim_t D, class T = real>
-    class QuadratureField : public std::vector<mito::vector<D, T>> {
+    template <int Q, typename Y>
+    class QuadratureField : public std::vector<Y> {
+
+        using T = typename type<Y>::value;
+        static constexpr int D = size<Y>::value;
+
       public:
         /**
          * donstructor
          * @param[in] elements number of elements for which data are stored
          */
-        inline QuadratureField(int nElements) :
-            std::vector<mito::vector<D, T>>(nElements * Q),
-            _nElements(nElements)
+        inline QuadratureField(int nElements) : std::vector<Y>(nElements * Q), _nElements(nElements)
         {}
 
         // destructor
@@ -27,7 +29,7 @@ namespace mito {
          * @param[in] q local index of the quadrature point in the element
          * @return a pointer to the data
          */
-        inline mito::vector<D, T> & operator()(int e, int q) { return (*this)[e * Q + q]; }
+        inline Y & operator()(int e, int q) { return (*this)[e * Q + q]; }
 
         /**
          * accessor to an array of data stored at a quadrature point of an element
@@ -35,10 +37,7 @@ namespace mito {
          * @param[in] q local index of the quadrature point in the element
          * @return a const pointer to the first value of the array of data
          */
-        inline const mito::vector<D, T> & operator()(int e, int q) const
-        {
-            return (*this)[e * Q + q];
-        }
+        inline const Y & operator()(int e, int q) const { return (*this)[e * Q + q]; }
 
         /**
          * accessor for the size of array stored per quadrature point per element
@@ -89,8 +88,8 @@ namespace mito {
         std::string _name;
     };
 
-    template <int Q, dim_t D, class T = real>
-    using quadrature_field_t = QuadratureField<Q, D, T>;
+    template <int Q, typename Y>
+    using quadrature_field_t = QuadratureField<Q, Y>;
 
 }    // namespace mito
 
