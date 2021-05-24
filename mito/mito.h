@@ -177,11 +177,8 @@ namespace mito {
 // traits on mito types
 namespace mito {
     template <typename T>
-    struct size;
-
-    template <typename T, int N>
-    struct size<mito::vector<N, T>> {
-        static constexpr int value = N;
+    struct size {
+        static constexpr int value = std::tuple_size<T>::value;
     };
 
     template <>
