@@ -10,12 +10,15 @@ namespace mito {
     // TODO: Add operator+ for scalar fields and reals
 
     // f(X,t) with (X \in R^D, t \in R) -> R
-    template <dim_t D, typename Y = real>
+    template <typename X, typename Y = real>
     class Field {
 
+        // dimension of the X space
+        static constexpr int D = size<X>::value;
+
         // typedef for a scalar valued function
-        using function_t = Function<vector<D>, Y>;
-        using functor_t = functor<vector<D>, Y>;
+        using function_t = Function<X, Y>;
+        using functor_t = functor<X, Y>;
 
       public:
         // constructors with function_t
@@ -50,13 +53,15 @@ namespace mito {
         // destructor
         ~Field() {}
 
-        inline auto operator()(const vector<D> & x) const
+        inline auto operator()(const X & x) const
         {
             // evaluate _f
             return _f(x);
         }
 
-        inline auto operator()(const std::vector<vector<D>> & x) const
+        // TODO: Note that now this operator() is the same thing as the following but the only thing
+        // that changes is the container structure
+        inline auto operator()(const std::vector<X> & x) const
         {
             std::vector<Y> values(x.size());
             // evaluate operator() at all elements of X
@@ -67,7 +72,7 @@ namespace mito {
         }
 
         template <int Q>
-        inline auto operator()(const quadrature_field_t<Q, vector<D>> & x) const
+        inline auto operator()(const quadrature_field_t<Q, X> & x) const
         {
             quadrature_field_t<Q, Y> values(x.n_elements());
 
@@ -103,23 +108,29 @@ namespace mito {
     };
 
     template <dim_t D, int N>
-    using VectorField = Field<D, vector<N>>;
+    using VectorField = Field<vector<D>, vector<N>>;
 
     template <dim_t D>
-    using ScalarField = Field<D, real>;
+    using ScalarField = Field<vector<D>, real>;
 
-    template <dim_t D, typename Y, std::size_t... I>
+    template <typename X, typename Y, std::size_t... I>
     inline auto _dSum(
-        const Field<D, Y> & fieldA, const Field<D, Y> & fieldB, std::index_sequence<I...>)
+        const Field<X, Y> & fieldA, const Field<X, Y> & fieldB, std::index_sequence<I...>)
     {
-        std::array<Function<vector<D>, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
+        // dimension of the X space
+        static constexpr int D = size<X>::value;
+
+        std::array<Function<X, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
         return Df;
     }
 
-    template <dim_t D, typename Y>
-    auto operator+(const Field<D, Y> & fieldA, const Field<D, Y> & fieldB)
+    template <typename X, typename Y>
+    auto operator+(const Field<X, Y> & fieldA, const Field<X, Y> & fieldB)
     {
-        return Field<D, Y>(
+        // dimension of the X space
+        static constexpr int D = size<X>::value;
+
+        return Field<X, Y>(
             fieldA.f() + fieldB.f(), _dSum(fieldA, fieldB, std::make_index_sequence<D> {}));
     }
 

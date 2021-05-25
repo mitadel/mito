@@ -62,7 +62,7 @@ namespace mito {
         }
 
         template <typename Y>
-        Y integrate(const Field<D, Y> & field)
+        Y integrate(const Field<vector<D>, Y> & field)
         {
             std::cout << "integrating ... " << std::endl;
 
