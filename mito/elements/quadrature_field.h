@@ -13,7 +13,7 @@ namespace mito {
 
       public:
         /**
-         * donstructor
+         * constructor
          * @param[in] elements number of elements for which data are stored
          */
         inline QuadratureField(int nElements) : std::vector<Y>(nElements * Q), _nElements(nElements)
