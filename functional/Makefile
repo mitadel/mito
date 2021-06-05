@@ -1,13 +1,13 @@
-all: functional
+all: main
 
-functional: functional.o
+main: main.o
 	g++ -o $@ $^
 
-functional.o: functional.cc
-	g++ -c $<
+main.o: main.cc
+	g++ -c $< -std=c++17
 
 output:
-	./functional
+	./main
 
 clean:
-	rm -f *.o functional
+	rm -f *.o main
