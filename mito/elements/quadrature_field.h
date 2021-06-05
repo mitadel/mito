@@ -8,6 +8,7 @@ namespace mito {
     template <int Q, typename Y>
     class QuadratureField : public std::vector<Y> {
 
+      public:
         using T = typename type<Y>::value;
         static constexpr int D = size<Y>::value;
 
@@ -43,7 +44,7 @@ namespace mito {
          * accessor for the size of array stored per quadrature point per element
          * @return the size of array stored per quadrature point per element
          */
-        inline dim_t n_dim() const { return D; }
+        inline constexpr int n_dim() { return D; }
 
         /**
          * accessor for the number of elements
@@ -55,7 +56,7 @@ namespace mito {
          * accessor for the quadrature points per element
          * @return the number of quadrature point per element
          */
-        inline int n_quad() const { return Q; }
+        inline constexpr int n_quad() { return Q; }
 
         /**
          * reset all entries to zero
