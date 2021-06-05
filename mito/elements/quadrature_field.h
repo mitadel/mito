@@ -63,6 +63,7 @@ namespace mito {
          */
         inline void reinit()
         {
+            // TOFIX
             std::fill(this->begin(), this->end(), 0.0);
             return;
         }
@@ -71,15 +72,6 @@ namespace mito {
          * accessor for name
          */
         inline std::string name() const { return _name; }
-
-        /**
-         * mutator for name
-         */
-        inline void name(std::string name)
-        {
-            _name = name;
-            return;
-        }
 
       private:
         // number of elements
