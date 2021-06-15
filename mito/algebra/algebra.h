@@ -1,7 +1,9 @@
-#include "../mito.h"
 #include "SmallGrid.h"
 
 namespace mito {
+
+    // typedef for real values (TOFIX: move to common header)
+    using real = double;
 
     // helper function
     template <typename... Args>

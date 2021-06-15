@@ -8,6 +8,8 @@
 #include <cassert>
 #include <math.h>
 
+#include "algebra/algebra.h"
+
 // https://stackoverflow.com/questions/4295432/typedef-function-pointer
 // https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
 
@@ -15,10 +17,8 @@
 
 namespace mito {
     using dim_t = size_t;
-    // typedef for scalars
-    using real = double;
-    // template <dim_t D>
-    // using point_t = mito::vector_t<D>;    // Point<D>;
+    template <dim_t D>
+    using point_t = mito::vector_t<D>;    // Point<D>;
     // templatized typedef for fields
     template <typename X, typename Y>
     using field = Y (*)(const X &, real);

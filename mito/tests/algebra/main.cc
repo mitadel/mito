@@ -1,4 +1,4 @@
-#include "../../algebra/algebra.h"
+#include "../../mito.h"
 
 int
 main()
@@ -17,6 +17,8 @@ main()
     std::cout << a << std::endl;
 
     assert(vector1 == vector1);
+
+    // TODO: Add all test for algebraic operators
 
     // all done
     return 0;
