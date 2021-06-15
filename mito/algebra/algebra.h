@@ -5,6 +5,18 @@ namespace mito {
     // typedef for real values (TOFIX: move to common header)
     using real = double;
 
+    // typedef for scalars
+    template <typename T = real>
+    using scalar_t = mito::SmallGrid<T, 1>;
+
+    // typedef for vectors
+    template <int D, typename T = real>
+    using vector_t = mito::SmallGrid<T, D>;
+
+    // typedef for tensors
+    template <int D1, int D2 = D1, typename T = real>
+    using tensor_t = mito::SmallGrid<T, D1, D2>;
+
     // helper function
     template <typename... Args>
     bool all(Args... args)
@@ -231,18 +243,6 @@ namespace mito {
     {
         return (1.0 / a) * std::move(y);
     }
-
-    // typedef for scalars
-    template <typename T = real>
-    using scalar_t = mito::SmallGrid<T, 1>;
-
-    // typedef for vectors
-    template <int D, typename T = real>
-    using vector_t = mito::SmallGrid<T, D>;
-
-    // typedef for tensors
-    template <int D1, int D2 = D1, typename T = real>
-    using tensor_t = mito::SmallGrid<T, D1, D2>;
 
     // factorial
     template <int D>
