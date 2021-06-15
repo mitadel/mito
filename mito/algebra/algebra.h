@@ -189,7 +189,7 @@ namespace mito {
         const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2, SmallGrid<T, I...> & result,
         std::index_sequence<J...>)
     {
-        ((result[I] = y1[I] - y2[I]), ...);
+        ((result[J] = y1[J] - y2[J]), ...);
         return;
     }
     template <typename T, int... I>
