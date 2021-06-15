@@ -56,7 +56,7 @@ namespace mito {
         inline const T & operator[](int i) const { return _data[i]; }
         inline T & operator[](int i) { return _data[i]; }
 
-        inline void operator+=(const mito::SmallGrid<T, I...> & rhs)
+        inline void operator+=(const SmallGrid<T, I...> & rhs)
         {
             // component-wise operator+=
             _operatorPlusEqual(std::make_index_sequence<S> {}, rhs);
@@ -92,7 +92,7 @@ namespace mito {
         }
 
         template <size_t... J>
-        void _operatorPlusEqual(std::index_sequence<J...>, const mito::SmallGrid<T, I...> & rhs)
+        void _operatorPlusEqual(std::index_sequence<J...>, const SmallGrid<T, I...> & rhs)
         {
             ((_data[J] += rhs[J]), ...);
         }

@@ -159,7 +159,7 @@ namespace mito {
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
         // {field.Df(I)...} intead? Is it possible to do so?
-        return VectorField<D, D>(mito::Function<vector_t<D>, vector_t<D>>(
+        return VectorField<D, D>(Function<vector_t<D>, vector_t<D>>(
             [field](const vector_t<D> & x) { return vector_t<D> { field.Df(I)(x)... }; }));
     }
 
@@ -189,7 +189,7 @@ namespace mito {
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
         // {field.Df(I)...} intead? Is it possible to do so?
-        return ScalarField<D>(mito::Function<vector_t<D>>(
+        return ScalarField<D>(Function<vector_t<D>>(
             [field](const vector_t<D> & x) { return (field.Df(I)(x)[I] + ...); }));
     }
 

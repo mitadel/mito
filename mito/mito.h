@@ -17,7 +17,7 @@
 
 namespace mito {
     template <int D>
-    using point_t = mito::vector_t<D>;    // Point<D>;
+    using point_t = vector_t<D>;    // Point<D>;
     // templatized typedef for fields
     template <typename X, typename Y>
     using field = Y (*)(const X &, real);

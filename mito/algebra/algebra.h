@@ -7,15 +7,15 @@ namespace mito {
 
     // typedef for scalars
     template <typename T = real>
-    using scalar_t = mito::SmallGrid<T, 1>;
+    using scalar_t = SmallGrid<T, 1>;
 
     // typedef for vectors
     template <int D, typename T = real>
-    using vector_t = mito::SmallGrid<T, D>;
+    using vector_t = SmallGrid<T, D>;
 
     // typedef for tensors
     template <int D1, int D2 = D1, typename T = real>
-    using tensor_t = mito::SmallGrid<T, D1, D2>;
+    using tensor_t = SmallGrid<T, D1, D2>;
 
     // helper function
     template <typename... Args>

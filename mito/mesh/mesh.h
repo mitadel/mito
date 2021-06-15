@@ -163,14 +163,14 @@ namespace mito {
          *
          * @tparam I dimension of the composed entity to add (1, 2, ..., D)
          * @param composition entity composition in terms of I + 1 entities of dimension (I - 1)
-         * @return mito::Simplex<I>* a pointer either to the newly added entity or to the equivalent
+         * @return Simplex<I>* a pointer either to the newly added entity or to the equivalent
          *                              already registered composed entity
          */
         template <int I>
-        mito::Simplex<I> * _addUniqueEntity(std::array<Simplex<I - 1> *, I + 1> && composition)
+        Simplex<I> * _addUniqueEntity(std::array<Simplex<I - 1> *, I + 1> && composition)
         {
             // instantiate new entity with this composition
-            mito::Simplex<I> * entity = new mito::Simplex<I>(std::move(composition));
+            Simplex<I> * entity = new Simplex<I>(std::move(composition));
             // look up the new entity with its composition and register it if it does not exist yet
             auto ret = _registerEntityComposition(*entity);
             // if the entity did not exist
@@ -202,10 +202,10 @@ namespace mito {
             return;
         }
 
-        void _addVertex(mito::point_t<D> && point)
+        void _addVertex(point_t<D> && point)
         {
             // instantiate new vertex
-            mito::vertex_t * vertex = new mito::vertex_t();
+            vertex_t * vertex = new vertex_t();
             // associate the new vertex to the new point
             _vertexCoordinatesMap.insert(*vertex, std::move(point));
             // add the newly created vertex
@@ -235,14 +235,14 @@ namespace mito {
             fileStream >> index2;
             --index2;
 
-            mito::vertex_t * vertex0 = _getEntity<0>(index0);
-            mito::vertex_t * vertex1 = _getEntity<0>(index1);
-            mito::vertex_t * vertex2 = _getEntity<0>(index2);
+            vertex_t * vertex0 = _getEntity<0>(index0);
+            vertex_t * vertex1 = _getEntity<0>(index1);
+            vertex_t * vertex2 = _getEntity<0>(index2);
 
             // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
-            mito::segment_t * segment0 = _addUniqueEntity<1>({ vertex0, vertex1 });
-            mito::segment_t * segment1 = _addUniqueEntity<1>({ vertex1, vertex2 });
-            mito::segment_t * segment2 = _addUniqueEntity<1>({ vertex2, vertex0 });
+            segment_t * segment0 = _addUniqueEntity<1>({ vertex0, vertex1 });
+            segment_t * segment1 = _addUniqueEntity<1>({ vertex1, vertex2 });
+            segment_t * segment2 = _addUniqueEntity<1>({ vertex2, vertex0 });
 
             // QUESTION: Can the label be more than one?
             // read label for element
@@ -262,7 +262,7 @@ namespace mito {
             // fill in vertices
             for (int n = 0; n < N_vertices; ++n) {
                 // instantiate new point
-                mito::point_t<D> point;
+                point_t<D> point;
                 for (int d = 0; d < D; ++d) {
                     // read point coordinates
                     fileStream >> point[d];
@@ -356,7 +356,7 @@ namespace mito {
         // of arrays of (i-1)-dimensional entities
         composition_tuple_t _compositions;
         // a map between the vertices addresses and a physical point in D-dimensional space
-        mito::VertexCoordinatesMap<D> _vertexCoordinatesMap;
+        VertexCoordinatesMap<D> _vertexCoordinatesMap;
     };
 
 }

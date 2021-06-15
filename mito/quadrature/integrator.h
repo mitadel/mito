@@ -98,7 +98,7 @@ namespace mito {
         // the domain of integration
         const ElementSet<element_t, D> & _elementSet;
         // the coordinates of the quadrature points in the domain of integration
-        quadrature_field_t<Q, mito::vector_t<D>> _coordinates;
+        quadrature_field_t<Q, vector_t<D>> _coordinates;
     };
 
 }    // namespace  mito
