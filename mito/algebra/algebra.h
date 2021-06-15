@@ -44,26 +44,27 @@ namespace mito {
 
 
     // Algebraic operations on vectors, tensors, ...
+    // TOFIX: generalize with respect to scalar type (in this case real)
 
     // vector_t times scalar
-    template <typename TT, typename T, int... I, size_t... J>
+    template <typename T, int... I, size_t... J>
     inline void _vector_times_scalar(
-        const TT & a, const SmallGrid<T, I...> & y, SmallGrid<T, I...> & result,
+        const real & a, const SmallGrid<T, I...> & y, SmallGrid<T, I...> & result,
         std::index_sequence<J...>)
     {
         ((result[J] = y[J] * a), ...);
         return;
     }
-    template <typename TT, typename T, int... I>
-    inline SmallGrid<T, I...> && operator*(const TT & a, SmallGrid<T, I...> && y) requires(
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator*(const real & a, SmallGrid<T, I...> && y) requires(
         SmallGrid<T, I...>::S != 1)
     {
         constexpr int D = SmallGrid<T, I...>::S;
         _vector_times_scalar(a, y, y, std::make_index_sequence<D> {});
         return std::move(y);
     }
-    template <typename TT, typename T, int... I>
-    inline SmallGrid<T, I...> operator*(const TT & a, const SmallGrid<T, I...> & y) requires(
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator*(const real & a, const SmallGrid<T, I...> & y) requires(
         SmallGrid<T, I...>::S != 1)
     {
         SmallGrid<T, I...> result;
@@ -71,14 +72,14 @@ namespace mito {
         _vector_times_scalar(a, y, result, std::make_index_sequence<D> {});
         return result;
     }
-    template <typename TT, typename T, int... I>
-    inline SmallGrid<T, I...> && operator*(SmallGrid<T, I...> && y, const TT & a) requires(
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator*(SmallGrid<T, I...> && y, const real & a) requires(
         SmallGrid<T, I...>::S != 1)
     {
         return a * std::move(y);
     }
-    template <typename TT, typename T, int... I>
-    inline SmallGrid<T, I...> operator*(const SmallGrid<T, I...> & y, const TT & a) requires(
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator*(const SmallGrid<T, I...> & y, const real & a) requires(
         SmallGrid<T, I...>::S != 1)
     {
         return a * y;
@@ -230,15 +231,15 @@ namespace mito {
         // return std::move(y1) + (-std::move(y2));
     }
 
-    template <typename TT, typename T, int... I>
-    inline SmallGrid<T, I...> operator/(const SmallGrid<T, I...> & y, const TT & a) requires(
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator/(const SmallGrid<T, I...> & y, const real & a) requires(
         SmallGrid<T, I...>::S != 1)
     {
         return (1.0 / a) * y;
     }
 
-    template <typename TT, typename T, int... I>
-    inline SmallGrid<T, I...> && operator/(SmallGrid<T, I...> && y, const TT & a) requires(
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator/(SmallGrid<T, I...> && y, const real & a) requires(
         SmallGrid<T, I...>::S != 1)
     {
         return (1.0 / a) * std::move(y);
