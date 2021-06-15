@@ -7,11 +7,11 @@
 namespace mito {
 
     // templatized typedef for functors
-    template <typename X, typename Y = real>
+    template <typename X, typename Y = scalar_t<>>
     using functor = std::function<Y(const X &)>;
 
     // We need a class function to explicitly put the return value Y in the template
-    template <typename X, typename Y = real>
+    template <typename X, typename Y = scalar_t<>>
     class Function {
 
       public:
@@ -36,7 +36,8 @@ namespace mito {
 
         inline auto operator[](int i) const
         {
-            return Function<X, real>([this, i](const X & x) { return this->_functor(x)[i]; });
+            return Function<X, scalar_t<real>>(
+                [this, i](const X & x) { return this->_functor(x)[i]; });
         }
 
         // cast operator from Function<X, Y> to functor<X, Y>
@@ -117,42 +118,42 @@ namespace mito {
     // Special algebraic functions for scalar functions
     // a / f
     template <typename X>
-    Function<X, real> operator/(const real & a, const Function<X, real> & f)
+    Function<X, scalar_t<real>> operator/(const real & a, const Function<X, scalar_t<real>> & f)
     {
-        return Function<X, real>([a, f](const X & x) { return a / f(x); });
+        return Function<X, scalar_t<real>>([a, f](const X & x) { return a / f(x); });
     }
 
     // f1 / f2
     template <typename X, typename Y>
-    Function<X, Y> operator/(const Function<X, Y> & f1, const Function<X, real> & f2)
+    Function<X, Y> operator/(const Function<X, Y> & f1, const Function<X, scalar_t<real>> & f2)
     {
         return Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
 
     // a + f
     template <typename X>
-    Function<X, real> operator+(const real & a, const Function<X, real> & f)
+    Function<X, scalar_t<real>> operator+(const real & a, const Function<X, scalar_t<real>> & f)
     {
-        return Function<X, real>([a, f](const X & x) { return a + f(x); });
+        return Function<X, scalar_t<real>>([a, f](const X & x) { return a + f(x); });
     }
 
     // f + a
     template <typename X>
-    Function<X, real> operator+(const Function<X, real> & f, const real & a)
+    Function<X, scalar_t<real>> operator+(const Function<X, scalar_t<real>> & f, const real & a)
     {
         return a + f;
     }
 
     // a - f
     template <typename X>
-    Function<X, real> operator-(const real & a, const Function<X, real> & f)
+    Function<X, scalar_t<real>> operator-(const real & a, const Function<X, scalar_t<real>> & f)
     {
         return a + (-f);
     }
 
     // f - a
     template <typename X>
-    Function<X, real> operator-(const Function<X, real> & f, const real & a)
+    Function<X, scalar_t<real>> operator-(const Function<X, scalar_t<real>> & f, const real & a)
     {
         return f + (-a);
     }
@@ -202,14 +203,14 @@ namespace mito {
 
     // f1 / f2
     template <typename X, typename Y>
-    Function<X, Y> operator/(const Function<X, Y> & f1, const functor<X, real> & f2)
+    Function<X, Y> operator/(const Function<X, Y> & f1, const functor<X, scalar_t<real>> & f2)
     {
         return Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
 
     // f1 / f2
     template <typename X, typename Y>
-    Function<X, Y> operator/(const functor<X, Y> & f1, const Function<X, real> & f2)
+    Function<X, Y> operator/(const functor<X, Y> & f1, const Function<X, scalar_t<real>> & f2)
     {
         return Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
@@ -266,7 +267,7 @@ namespace mito {
 
     // f1 / f2
     template <typename X, typename Y>
-    Function<X, Y> operator/(Y f1(const X &), const Function<X, real> & f2)
+    Function<X, Y> operator/(Y f1(const X &), const Function<X, scalar_t<real>> & f2)
     {
         return Function<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }

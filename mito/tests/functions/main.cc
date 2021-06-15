@@ -6,7 +6,11 @@ using mito::Function;
 static const mito::real PI = 4.0 * atan(1.0);
 static const mito::real TOL = 1.e-16;
 
-mito::real
+// TOFIX: Should we also account for real(const X &) + Function<X,
+// scalar_t<real>> ?
+//
+// mito::real
+mito::scalar_t<mito::real>
 my_function(const mito::vector_t<2> & x)
 {
     return cos(x[0] * x[1]) + 1.0;
@@ -60,7 +64,12 @@ main()
     Function<mito::vector_t<2>> function13(my_function);
     auto function14 = function13 + function1;
 
-    std::function<mito::real(const mito::vector_t<2> &)> my_other_function(my_function);
+    // TOFIX: Should we also account for std::function<real(const X &)> + Function<X,
+    // scalar_t<real>> ?
+    //
+    // std::function<mito::real(const mito::vector_t<2> &)> my_other_function(my_function);
+    std::function<mito::scalar_t<mito::real>(const mito::vector_t<2> &)> my_other_function(
+        my_function);
     auto function15 = my_other_function + function1 + my_function;
 
     // a vector function
