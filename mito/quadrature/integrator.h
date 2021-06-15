@@ -70,13 +70,7 @@ namespace mito {
 
             Y result;
 
-            // TOFIX: Typedef elem_t, quad_t, int so as to give a compilation error if
-            // misused
-            //        Also: consider using p2::grid to decouple memory from indexing.
-            //        Syntax is as follows:
-            //              index_t i {e, q, j};
-            //              values[i];
-            // for (auto & e : _elementSet) {
+            // assemble elementary contributions
             for (auto e = 0; e < _elementSet.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
                     result +=
