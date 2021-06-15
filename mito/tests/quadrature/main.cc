@@ -126,14 +126,14 @@ main()
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     // static mito::ElementSetTri elementSet;
     mito::ElementSet bodyElementSet(elements, vertexCoordinatesMap);
-    // QUESTION: Is it possible to remove the last 2 in the template parameters?
-    mito::Integrator<GAUSS, triangle_t, 2 /* degree of exactness */, 2> bodyIntegrator(
-        bodyElementSet);
+    // TOFIX: Remove the last template parameter (it can be deduced by the input argument)
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 2>>
+        bodyIntegrator(bodyElementSet);
 
 #if 0
     mito::Elements<SEG, 2> boundaryElements(connectivityBoundary, coordinates);
-    mito::Integrator<GAUSS, SEG, 2 /* degree of exactness */, 2> boundaryIntegrator(
-        boundaryElements);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<SEG, 2>> 
+        boundaryIntegrator(boundaryElements);
 #endif
 
     real result = bodyIntegrator.integrate(f_cosine);    // exact 0.946083...
@@ -185,8 +185,8 @@ main()
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     // static mito::ElementSetTri elementSet;
-    mito::Integrator<GAUSS, triangle_t, 2 /* degree of exactness */, 3> bodyIntegrator3D(
-        bodyElementSet3D);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 3>>
+        bodyIntegrator3D(bodyElementSet3D);
 
     // instantiate a scalar function object
     mito::ScalarField<3> xy3D([](const vector_t<3> & x) { return x[0] * x[1]; });

@@ -89,8 +89,8 @@ main()
     mito::ElementSet bodyElementSet(
         std::vector<triangle_t *> { &element0, &element1, &element2, &element3 },
         vertexCoordinatesMap);
-    mito::Integrator<GAUSS, triangle_t, 2 /* degree of exactness */, 2> bodyIntegrator(
-        bodyElementSet);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 2>>
+        bodyIntegrator(bodyElementSet);
 
     real resultBody = bodyIntegrator.integrate(divergence);
     std::cout << "Result of body integration = " << resultBody << std::endl;
@@ -103,20 +103,20 @@ main()
         vertexCoordinatesMap);
     */
     mito::ElementSet boundaryBot(std::vector<segment_t *> { &segment0 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, segment_t, 2 /* degree of exactness */, 2> boundaryBotIntegrator(
-        boundaryBot);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+        boundaryBotIntegrator(boundaryBot);
 
     mito::ElementSet boundaryRight(std::vector<segment_t *> { &segment3 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, segment_t, 2 /* degree of exactness */, 2> boundaryRightIntegrator(
-        boundaryRight);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+        boundaryRightIntegrator(boundaryRight);
 
     mito::ElementSet boundaryTop(std::vector<segment_t *> { &segment6 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, segment_t, 2 /* degree of exactness */, 2> boundaryTopIntegrator(
-        boundaryTop);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+        boundaryTopIntegrator(boundaryTop);
 
     mito::ElementSet boundaryLeft(std::vector<segment_t *> { &segment7 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, segment_t, 2 /* degree of exactness */, 2> boundaryLeftIntegrator(
-        boundaryLeft);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+        boundaryLeftIntegrator(boundaryLeft);
 
     mito::ScalarField<2> f0(f[0]);
     mito::ScalarField<2> f1(f[1]);

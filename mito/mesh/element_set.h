@@ -212,6 +212,10 @@ namespace mito {
     class ElementSet {
 
       public:
+        using element = element_t;
+        static constexpr int dim = D;
+
+      public:
         ElementSet(
             const std::vector<element_t *> & elements,
             const VertexCoordinatesMap<D> & coordinatesMap) :

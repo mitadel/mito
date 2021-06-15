@@ -10,8 +10,11 @@ namespace mito {
     // integrals of contact forces down the road. Do we have enough machinery for that?
 
     // template with respect to element type T and to degree of exactness r of quadrature rule
-    template <class quadrature_t, class element_t, int r, int D>
+    template <class quadrature_t, int r, class element_set_t>
     class Integrator {
+        using element_t = typename element_set_t::element;
+        static constexpr int D = element_set_t::dim;
+
         // quadrature_t, element_t, and r identify a specific quadrature rule
         using QuadratureRule = QuadratureRulesFactory<quadrature_t, element_t, r>;
 
@@ -54,7 +57,7 @@ namespace mito {
         }
 
       public:
-        Integrator(const ElementSet<element_t, D> & elementSet) :
+        Integrator(const element_set_t & elementSet) :
             _elementSet(elementSet),
             _coordinates(elementSet.nElements())
         {
@@ -89,7 +92,7 @@ namespace mito {
         // the number of quadrature points
         static constexpr int Q = _quadratureRule.size();
         // the domain of integration
-        const ElementSet<element_t, D> & _elementSet;
+        const element_set_t & _elementSet;
         // the coordinates of the quadrature points in the domain of integration
         quadrature_field_t<Q, vector_t<D>> _coordinates;
     };
