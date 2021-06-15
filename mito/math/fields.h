@@ -9,7 +9,7 @@ namespace mito {
 
     // TODO: Add operator+ for scalar fields and reals
 
-    // f(X,t) with (X \in R^D, t \in R) -> R
+    // f(X,t) with (X \in R^D, t \in R) -> Y
     template <typename X, typename Y = scalar_t<>>
     class Field {
 
