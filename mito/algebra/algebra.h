@@ -73,9 +73,7 @@ namespace mito {
     inline T _vector_inner_product(
         const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2, std::index_sequence<J...>)
     {
-        T result(0);
-        ((result += y1[J] * y2[J]), ...);
-        return result;
+        return ((y1[J] * y2[J]) + ...);
     }
     template <typename T, int... I>
     inline T operator*(const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2)
