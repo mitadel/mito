@@ -64,21 +64,17 @@ namespace mito {
     }
 
     // y * f (inner product)
-    template <
-        typename X, typename Y,
-        typename std::enable_if<!std::is_same<Y, mito::real>::value, int>::type = 0>
+    template <typename X, typename Y>
     mito::Function<X, typename type<Y>::value> operator*(
-        const Y & y, const mito::Function<X, Y> & f)
+        const Y & y, const mito::Function<X, Y> & f) requires(Y::S != 1)
     {
         return mito::Function<X, typename type<Y>::value>([y, f](const X & x) { return y * f(x); });
     }
 
     // f * y (inner product)
-    template <
-        typename X, typename Y,
-        typename std::enable_if<!std::is_same<Y, mito::real>::value, int>::type = 0>
+    template <typename X, typename Y>
     mito::Function<X, typename type<Y>::value> operator*(
-        const mito::Function<X, Y> & f, const Y & y)
+        const mito::Function<X, Y> & f, const Y & y) requires(Y::S != 1)
     {
         return y * f;
     }
