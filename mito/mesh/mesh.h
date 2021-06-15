@@ -239,7 +239,6 @@ namespace mito {
             vertex_t * vertex1 = _getEntity<0>(index1);
             vertex_t * vertex2 = _getEntity<0>(index2);
 
-            // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
             segment_t * segment0 = _addUniqueEntity<1>({ vertex0, vertex1 });
             segment_t * segment1 = _addUniqueEntity<1>({ vertex1, vertex2 });
             segment_t * segment2 = _addUniqueEntity<1>({ vertex2, vertex0 });
@@ -250,7 +249,6 @@ namespace mito {
             std::string element_set_id;
             fileStream >> element_set_id;
 
-            // TOFIX: compiler cannot deduce template parameter, so specify it explicitly
             _addUniqueEntity<2>({ segment0, segment1, segment2 });
 
             // all done

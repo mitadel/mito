@@ -13,8 +13,6 @@
 // https://stackoverflow.com/questions/4295432/typedef-function-pointer
 // https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
 
-// TOFIX: Consider using tuples when possible as opposed to std::array and std::vector
-
 namespace mito {
     template <int D>
     using point_t = vector_t<D>;    // Point<D>;
@@ -22,9 +20,6 @@ namespace mito {
     template <typename X, typename Y>
     using field = Y (*)(const X &, real);
 }
-
-// TOFIX: Something is wrong with the overloads of operator<<. Sometimes the compiler won't find
-//        the proper one and give an error.
 
 template <typename X>
 std::ostream &

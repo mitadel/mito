@@ -2,7 +2,7 @@
 
 namespace mito {
 
-    // typedef for real values (TOFIX: move to common header)
+    // typedef for real values
     using real = double;
 
     // typedef for scalars

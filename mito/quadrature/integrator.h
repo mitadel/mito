@@ -77,11 +77,9 @@ namespace mito {
             //              index_t i {e, q, j};
             //              values[i];
             // for (auto & e : _elementSet) {
-            // TODO: define operator+=
             for (auto e = 0; e < _elementSet.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
-                    result = result
-                           + values(e, q) * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
+                    result += values(e, q) * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
                 }
             }
 

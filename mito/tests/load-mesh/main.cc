@@ -85,10 +85,10 @@ LoadMesh(std::string fileName)
             mito::segment_t * segment2 =
                 new mito::segment_t({ vertices[index2], vertices[index0] });
 
-            // QUESTION: With this implementation, edges have no dignity of their own but are
-            //           just 'edges of a triangle'. This will make us lose some information,
-            //           because we will see as different segments the same edge seen from two
-            //           different triangles, although of course they have the same vertices.
+            // NOTE: With this implementation, edges have no dignity of their own but are
+            //       just 'edges of a triangle'. This will make us lose some information,
+            //       because we will see as different segments the same edge seen from two
+            //       different triangles, although of course they have the same vertices.
             const mito::triangle_t * element =
                 new mito::triangle_t({ segment0, segment1, segment2 });
 
