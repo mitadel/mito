@@ -12,7 +12,7 @@ namespace mito {
             _mu(mu),
             _Jm(Jm) {};
 
-        template <dim_t D /*dim*/>
+        template <int D /*dim*/>
         void Constitutive(const vector_t<D> & u, const tensor_t<D> & Du, tensor_t<D> & P);
 
       private:
@@ -22,7 +22,7 @@ namespace mito {
         real _Jm;
     };
 
-    template <dim_t D /*dim*/>
+    template <int D /*dim*/>
     void Gent::Constitutive(const vector_t<D> & u, const tensor_t<D> & Du, tensor_t<D> & P)
     {
         // deformation gradient

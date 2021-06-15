@@ -16,8 +16,7 @@
 // TOFIX: Consider using tuples when possible as opposed to std::array and std::vector
 
 namespace mito {
-    using dim_t = size_t;
-    template <dim_t D>
+    template <int D>
     using point_t = mito::vector_t<D>;    // Point<D>;
     // templatized typedef for fields
     template <typename X, typename Y>

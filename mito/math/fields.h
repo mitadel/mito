@@ -107,10 +107,10 @@ namespace mito {
         std::array<function_t, D> _Df;
     };
 
-    template <dim_t D, int N>
+    template <int D, int N>
     using VectorField = Field<vector_t<D>, vector_t<N>>;
 
-    template <dim_t D>
+    template <int D>
     using ScalarField = Field<vector_t<D>, real>;
 
     template <typename X, typename Y, std::size_t... I>
@@ -136,11 +136,11 @@ namespace mito {
 
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point x
-    template <dim_t D>
+    template <int D>
     inline auto grad(const ScalarField<D> & field, const vector_t<D> & x)
     {
         vector_t<D> result;
-        for (dim_t i = 0; i < D; ++i) {
+        for (int i = 0; i < D; ++i) {
             result[i] = field.Df(i)(x);
         }
         return result;
@@ -148,7 +148,7 @@ namespace mito {
 
     // helper function to compute the gradient of a vector field with respect to the reference
     // configuration (template with index sequence)
-    template <dim_t D, std::size_t... I>
+    template <int D, std::size_t... I>
     inline VectorField<D, D> _grad(const ScalarField<D> & field, std::index_sequence<I...>)
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
@@ -159,18 +159,18 @@ namespace mito {
 
     // function to compute the gradient of a vector field with respect to the reference
     // configuration
-    template <dim_t D>
+    template <int D>
     inline VectorField<D, D> grad(const ScalarField<D> & field)
     {
         return _grad(field, std::make_index_sequence<D> {});
     }
 
     // function to compute the Divergence of a vector field at point X
-    template <dim_t D>
+    template <int D>
     inline real div(const VectorField<D, D> & field, const vector_t<D> & X)
     {
         real result = 0.0;
-        for (dim_t i = 0; i < D; ++i) {
+        for (int i = 0; i < D; ++i) {
             result += field.Df(i)(X)[i];
         }
         return result;
@@ -178,7 +178,7 @@ namespace mito {
 
     // helper function to compute the divergence of a vector field with respect to the reference
     // configuration at point X (template with index sequence)
-    template <dim_t D, std::size_t... I>
+    template <int D, std::size_t... I>
     inline ScalarField<D> _div(const VectorField<D, D> & field, std::index_sequence<I...>)
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
@@ -189,7 +189,7 @@ namespace mito {
 
     // function to compute the divergence of a vector field with respect to the reference
     // configuration at point X
-    template <dim_t D>
+    template <int D>
     inline ScalarField<D> div(const VectorField<D, D> & field)
     {
         return _div(field, std::make_index_sequence<D> {});
