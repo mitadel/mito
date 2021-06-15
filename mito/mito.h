@@ -73,7 +73,7 @@ operator<<(std::ostream & os, const std::array<X, N> & x)
 namespace mito {
     template <typename T>
     struct size {
-        static constexpr int value = std::tuple_size<T>::value;
+        static constexpr int value = T::S;
     };
 
     template <>
@@ -93,7 +93,7 @@ namespace mito {
 
     template <typename T>
     struct type {
-        using value = typename T ::value_type;
+        using value = typename T ::type;
     };
 
     template <>
