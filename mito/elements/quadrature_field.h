@@ -20,6 +20,8 @@ namespace mito {
         using storage_t = pyre::memory::heap_t<Y>;
         // putting it all together
         using grid_t = pyre::grid::grid_t<pack_t, storage_t>;
+        // index
+        using index_t = pack_t::index_type;
 
       public:
         /**
@@ -54,11 +56,8 @@ namespace mito {
          */
         inline Y & operator()(int e, int q)
         {
-            // slices at {e, q}
-            pack_t::index_type index { e, q };
-
             // all done
-            return _grid[index];
+            return operator[]({ e, q });
         }
 
         /**
@@ -69,9 +68,18 @@ namespace mito {
          */
         inline const Y & operator()(int e, int q) const
         {
-            // slices at {e, q}
-            pack_t::index_type index { e, q };
+            // all done
+            return operator[]({ e, q });
+        }
 
+        inline Y & operator[](const index_t & index)
+        {
+            // all done
+            return _grid[index];
+        }
+
+        inline const Y & operator[](const index_t & index) const
+        {
             // all done
             return _grid[index];
         }
