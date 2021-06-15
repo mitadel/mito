@@ -79,7 +79,7 @@ namespace mito {
             // evaluate operator() at all elements of x
             for (int e = 0; e < values.n_elements(); ++e) {
                 for (int q = 0; q < Q; ++q) {
-                    values(e, q) = operator()(x(e, q));
+                    values[{ e, q }] = operator()(x[{ e, q }]);
                 }
             }
 

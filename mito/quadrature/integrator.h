@@ -40,7 +40,7 @@ namespace mito {
                     for (int q = 0; q < Q; ++q) {
                         for (int d = 0; d < D; ++d) {
                             const auto & vertexCoordinates = _elementSet.coordinatesVertex(vertex);
-                            _coordinates(e, q)[d] +=
+                            _coordinates[{ e, q }][d] +=
                                 _quadratureRule.getPoint(q)[v] * vertexCoordinates[d];
                         }
                     }
@@ -79,7 +79,8 @@ namespace mito {
             // for (auto & e : _elementSet) {
             for (auto e = 0; e < _elementSet.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
-                    result += values(e, q) * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
+                    result +=
+                        values[{ e, q }] * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
                 }
             }
 
