@@ -3,18 +3,6 @@
 
 namespace mito {
 
-    // typedef for scalars
-    template <typename T = real>
-    using scalar_t = mito::SmallGrid<T, 1>;
-
-    // typedef for vectors
-    template <int D, typename T = real>
-    using vector_t = mito::SmallGrid<T, D>;
-
-    // typedef for tensors
-    template <int D1, int D2 = D1, typename T = real>
-    using tensor_t = mito::SmallGrid<T, D1, D2>;
-
     // helper function
     template <typename... Args>
     bool all(Args... args)
@@ -35,191 +23,220 @@ namespace mito {
     template <typename T, int... I>
     inline bool operator==(const SmallGrid<T, I...> & lhs, const SmallGrid<T, I...> & rhs)
     {
+        constexpr int D = SmallGrid<T, I...>::S;
         // all done
-        return operatorEqualEqual(std::make_index_sequence<SmallGrid<T, I...>::S> {}, lhs, rhs);
+        return operatorEqualEqual(std::make_index_sequence<D> {}, lhs, rhs);
     }
 
-    // TODO: Check that this implementation makes sense
+
     // Algebraic operations on vectors, tensors, ...
 
     // vector_t times scalar
-    template <int D, typename T, std::size_t... I>
+    template <typename T, int... I, size_t... J>
     inline void _vector_times_scalar(
-        const mito::real & a, const vector_t<D, T> & y, vector_t<D, T> & result,
-        std::index_sequence<I...>)
+        const real & a, const SmallGrid<T, I...> & y, SmallGrid<T, I...> & result,
+        std::index_sequence<J...>)
     {
-        ((result[I] = y[I] * a), ...);
+        ((result[J] = y[J] * a), ...);
         return;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator*(const mito::real & a, vector_t<D, T> && y)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator*(const real & a, SmallGrid<T, I...> && y)
     {
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_times_scalar(a, y, y, std::make_index_sequence<D> {});
         return std::move(y);
     }
-    template <int D, typename T>
-    inline vector_t<D, T> operator*(const mito::real & a, const vector_t<D, T> & y)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator*(const real & a, const SmallGrid<T, I...> & y)
     {
-        vector_t<D, T> result;
+        SmallGrid<T, I...> result;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_times_scalar(a, y, result, std::make_index_sequence<D> {});
         return result;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator*(vector_t<D, T> && y, const mito::real & a)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator*(SmallGrid<T, I...> && y, const real & a)
     {
         return a * std::move(y);
     }
-    template <int D, typename T>
-    inline vector_t<D, T> operator*(const vector_t<D, T> & y, const mito::real & a)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator*(const SmallGrid<T, I...> & y, const real & a)
     {
         return a * y;
     }
 
     // vector_t inner product
-    template <int D, typename T, std::size_t... I>
+    template <typename T, int... I, std::size_t... J>
     inline T _vector_inner_product(
-        const vector_t<D, T> & y1, const vector_t<D, T> & y2, std::index_sequence<I...>)
+        const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2, std::index_sequence<J...>)
     {
         T result(0);
-        ((result += y1[I] * y2[I]), ...);
+        ((result += y1[J] * y2[J]), ...);
         return result;
     }
-    template <int D, typename T>
-    inline T operator*(const vector_t<D, T> & y1, const vector_t<D, T> & y2)
+    template <typename T, int... I>
+    inline T operator*(const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2)
     {
+        constexpr int D = SmallGrid<T, I...>::S;
         return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
     }
-    template <int D, typename T>
-    inline T operator*(vector_t<D, T> && y1, const vector_t<D, T> & y2)
+    template <typename T, int... I>
+    inline T operator*(SmallGrid<T, I...> && y1, const SmallGrid<T, I...> & y2)
     {
+        constexpr int D = SmallGrid<T, I...>::S;
         return _vector_inner_product(std::move(y1), y2, std::make_index_sequence<D> {});
     }
-    template <int D, typename T>
-    inline T operator*(const vector_t<D, T> & y1, vector_t<D, T> && y2)
+    template <typename T, int... I>
+    inline T operator*(const SmallGrid<T, I...> & y1, SmallGrid<T, I...> && y2)
     {
+        constexpr int D = SmallGrid<T, I...>::S;
         return _vector_inner_product(y1, std::move(y2), std::make_index_sequence<D> {});
     }
-
-    template <int D, typename T>
-    inline T operator*(vector_t<D, T> && y1, vector_t<D, T> && y2)
+    template <typename T, int... I>
+    inline T operator*(SmallGrid<T, I...> && y1, SmallGrid<T, I...> && y2)
     {
+        constexpr int D = SmallGrid<T, I...>::S;
         return _vector_inner_product(std::move(y1), std::move(y2), std::make_index_sequence<D> {});
     }
 
     // sum of vector_ts
-    template <int D, typename T, std::size_t... I>
+    template <typename T, int... I, std::size_t... J>
     inline void _vector_sum(
-        const vector_t<D, T> & y1, const vector_t<D, T> & y2, vector_t<D, T> & result,
-        std::index_sequence<I...>)
+        const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2, SmallGrid<T, I...> & result,
+        std::index_sequence<J...>)
     {
-        ((result[I] = y1[I] + y2[I]), ...);
+        ((result[J] = y1[J] + y2[J]), ...);
         return;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> operator+(const vector_t<D, T> & y1, const vector_t<D, T> & y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator+(
+        const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2)
     {
         // std::cout << "operator+ new temp" << std::endl;
-        vector_t<D, T> result;
+        SmallGrid<T, I...> result;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_sum(y1, y2, result, std::make_index_sequence<D> {});
         return result;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator+(vector_t<D, T> && y1, const vector_t<D, T> & y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator+(SmallGrid<T, I...> && y1, const SmallGrid<T, I...> & y2)
     {
         // std::cout << "operator+ no temp && &" << std::endl;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_sum(y1, y2, y1, std::make_index_sequence<D> {});
         return std::move(y1);
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator+(const vector_t<D, T> & y1, vector_t<D, T> && y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator+(const SmallGrid<T, I...> & y1, SmallGrid<T, I...> && y2)
     {
         // std::cout << "operator+ no temp & &&" << std::endl;
         return std::move(y2) + y1;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator+(vector_t<D, T> && y1, vector_t<D, T> && y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator+(SmallGrid<T, I...> && y1, SmallGrid<T, I...> && y2)
     {
         // std::cout << "operator+ no temp && &&" << std::endl;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_sum(y1, y2, y1, std::make_index_sequence<D> {});
         return std::move(y1);
     }
 
     // vector_t operator-
-    template <int D, typename T, std::size_t... I>
+    template <typename T, int... I, std::size_t... J>
     inline void _vector_minus(
-        const vector_t<D, T> & y, vector_t<D, T> & result, std::index_sequence<I...>)
+        const SmallGrid<T, I...> & y, SmallGrid<T, I...> & result, std::index_sequence<J...>)
     {
-        ((result[I] = -y[I]), ...);
+        ((result[J] = -y[J]), ...);
         return;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> operator-(const vector_t<D, T> & y)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator-(const SmallGrid<T, I...> & y)
     {
         // std::cout << "unary operator- new temp" << std::endl;
-        vector_t<D, T> result;
+        SmallGrid<T, I...> result;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_minus(y, result, std::make_index_sequence<D> {});
         return result;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator-(vector_t<D, T> && y)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator-(SmallGrid<T, I...> && y)
     {
         // std::cout << "unary operator- no temp &&" << std::endl;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_minus(y, y, std::make_index_sequence<D> {});
         return std::move(y);
     }
-    template <int D, typename T, std::size_t... I>
+    template <typename T, int... I, std::size_t... J>
     inline void _vector_minus(
-        const vector_t<D, T> & y1, const vector_t<D, T> & y2, vector_t<D, T> & result,
-        std::index_sequence<I...>)
+        const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2, SmallGrid<T, I...> & result,
+        std::index_sequence<J...>)
     {
         ((result[I] = y1[I] - y2[I]), ...);
         return;
     }
-    template <int D, typename T>
-    inline vector_t<D, T> operator-(const vector_t<D, T> & y1, const vector_t<D, T> & y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator-(
+        const SmallGrid<T, I...> & y1, const SmallGrid<T, I...> & y2)
     {
         // std::cout << "binary operator- new temp" << std::endl;
-        vector_t<D, T> result;
+        SmallGrid<T, I...> result;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_minus(y1, y2, result, std::make_index_sequence<D> {});
         return result;
         // return y1 + (-y2);
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator-(vector_t<D, T> && y1, const vector_t<D, T> & y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator-(SmallGrid<T, I...> && y1, const SmallGrid<T, I...> & y2)
     {
         // std::cout << "binary operator- no temp && &" << std::endl;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_minus(y1, y2, y1, std::make_index_sequence<D> {});
         return std::move(y1);
         // return std::move(y1) + (-y2);
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator-(const vector_t<D, T> & y1, vector_t<D, T> && y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator-(const SmallGrid<T, I...> & y1, SmallGrid<T, I...> && y2)
     {
         // std::cout << "binary operator- no temp & &&" << std::endl;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_minus(y1, y2, y2, std::make_index_sequence<D> {});
         return std::move(y2);
         // return y1 + (-std::move(y2));
     }
-    template <int D, typename T>
-    inline vector_t<D, T> && operator-(vector_t<D, T> && y1, vector_t<D, T> && y2)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator-(SmallGrid<T, I...> && y1, SmallGrid<T, I...> && y2)
     {
         // std::cout << "binary operator- no temp && &&" << std::endl;
+        constexpr int D = SmallGrid<T, I...>::S;
         _vector_minus(y1, y2, y1, std::make_index_sequence<D> {});
         return std::move(y1);
         // return std::move(y1) + (-std::move(y2));
     }
 
-    template <int D, typename T, typename T2 = T>
-    inline vector_t<D, T> operator/(const vector_t<D, T> & y, const T2 & a)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> operator/(const SmallGrid<T, I...> & y, const real & a)
     {
         return (1.0 / a) * y;
     }
 
-    template <int D, typename T, typename T2 = T>
-    inline vector_t<D, T> && operator/(vector_t<D, T> && y, const T2 & a)
+    template <typename T, int... I>
+    inline SmallGrid<T, I...> && operator/(SmallGrid<T, I...> && y, const real & a)
     {
         return (1.0 / a) * std::move(y);
     }
+
+    // typedef for scalars
+    template <typename T = real>
+    using scalar_t = mito::SmallGrid<T, 1>;
+
+    // typedef for vectors
+    template <int D, typename T = real>
+    using vector_t = mito::SmallGrid<T, D>;
+
+    // typedef for tensors
+    template <int D1, int D2 = D1, typename T = real>
+    using tensor_t = mito::SmallGrid<T, D1, D2>;
 
     // factorial
     template <int D>
