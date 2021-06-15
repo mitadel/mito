@@ -28,7 +28,7 @@ namespace mito {
         constexpr int V = int(D) + 1;
 
         // a container to store the coordinates of each vertex in a tensor
-        static tensor<mito::dim_t(V)> verticesTensor;
+        static tensor_t<mito::dim_t(V)> verticesTensor;
 
         // assert memory allocation is consistent
         assert(volumes.size() == elements.size());

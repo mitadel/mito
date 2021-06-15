@@ -13,7 +13,7 @@ namespace mito {
             _Jm(Jm) {};
 
         template <dim_t D /*dim*/>
-        void Constitutive(const vector<D> & u, const tensor<D> & Du, tensor<D> & P);
+        void Constitutive(const vector_t<D> & u, const tensor_t<D> & Du, tensor_t<D> & P);
 
       private:
         real _rho;
@@ -23,13 +23,13 @@ namespace mito {
     };
 
     template <dim_t D /*dim*/>
-    void Gent::Constitutive(const vector<D> & u, const tensor<D> & Du, tensor<D> & P)
+    void Gent::Constitutive(const vector_t<D> & u, const tensor_t<D> & Du, tensor_t<D> & P)
     {
         // deformation gradient
-        tensor<D> F = Du;
+        tensor_t<D> F = Du;
 
         // inverse of deformation gradient
-        tensor<D> invF;
+        tensor_t<D> invF;
 
         // J = det F
         real detF = ComputeInverse(F, invF);
@@ -71,14 +71,14 @@ main(int argc, char ** argv)
 {
     mito::Gent material(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);
 
-    mito::vector<3> u = { 0.0, 0.0, 0.0 };
-    mito::tensor<3> Du = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
-    mito::tensor<3> P = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    mito::vector_t<3> u = { 0.0, 0.0, 0.0 };
+    mito::tensor_t<3> Du = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
+    mito::tensor_t<3> P = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
     material.Constitutive<3>(u, Du, P);
 
-    mito::vector<2> u2 = { 0.0, 0.0 };
-    mito::tensor<2> Du2 = { 1.0, 0.0, 0.0, 1.0 };
-    mito::tensor<2> P2 = { 0.0, 0.0, 0.0, 0.0 };
+    mito::vector_t<2> u2 = { 0.0, 0.0 };
+    mito::tensor_t<2> Du2 = { 1.0, 0.0, 0.0, 1.0 };
+    mito::tensor_t<2> P2 = { 0.0, 0.0, 0.0, 0.0 };
     material.Constitutive<2>(u2, Du2, P2);
 
     std::cout << "P = " << P << std::endl;

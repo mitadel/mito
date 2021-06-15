@@ -5,7 +5,7 @@
 #include "../../quadrature/integrator.h"
 
 using mito::Function;
-using mito::vector;
+using mito::vector_t;
 using mito::real;
 using mito::GAUSS;
 using mito::point_t;
@@ -17,20 +17,22 @@ int
 main()
 {
     // a scalar function
-    Function<vector<2>, vector<2>> f([](const vector<2> & x) {
-        return vector<2> { x[0] * x[1], x[0] * x[0] };
+    Function<vector_t<2>, vector_t<2>> f([](const vector_t<2> & x) {
+        return vector_t<2> { x[0] * x[1], x[0] * x[0] };
     });
 
     // df/dx[0]
-    Function<vector<2>, vector<2>> Dx([](const vector<2> & x) {
-        return vector<2> { x[1], 2.0 * x[0] };
+    Function<vector_t<2>, vector_t<2>> Dx([](const vector_t<2> & x) {
+        return vector_t<2> { x[1], 2.0 * x[0] };
     });
 
     // df/dx[1]
-    Function<vector<2>, vector<2>> Dy([](const vector<2> & x) { return vector<2> { x[0], 0.0 }; });
+    Function<vector_t<2>, vector_t<2>> Dy([](const vector_t<2> & x) {
+        return vector_t<2> { x[0], 0.0 };
+    });
 
     // its partial derivatives
-    std::array<Function<vector<2>, vector<2>>, 2> Df = { Dx, Dy };
+    std::array<Function<vector_t<2>, vector_t<2>>, 2> Df = { Dx, Dy };
 
     // instantiate a vector field
     mito::VectorField<2 /* D */, 2 /* N */> field(f, Df);

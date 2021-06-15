@@ -19,12 +19,12 @@ namespace mito {
     using real = double;
     // typedef for vectors
     template <dim_t D, class T = real>
-    using vector = std::array<T, D>;
+    using vector_t = std::array<T, D>;
     template <dim_t D>
-    using point_t = mito::vector<D>;    // Point<D>;
+    using point_t = mito::vector_t<D>;    // Point<D>;
     // typedef for tensors
     template <dim_t D1, dim_t D2 = D1>
-    using tensor = std::array<real, D1 * D2>;
+    using tensor_t = std::array<real, D1 * D2>;
     // templatized typedef for fields
     template <typename X, typename Y>
     using field = Y (*)(const X &, real);
@@ -35,21 +35,21 @@ namespace mito {
 
 // overload operator<< for vectors and tensors
 std::ostream &
-operator<<(std::ostream & os, const mito::vector<3> & x)
+operator<<(std::ostream & os, const mito::vector_t<3> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ", " << x[2] << ")";
     return os;
 }
 
 std::ostream &
-operator<<(std::ostream & os, const mito::vector<2> & x)
+operator<<(std::ostream & os, const mito::vector_t<2> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ")";
     return os;
 }
 
 std::ostream &
-operator<<(std::ostream & os, const mito::tensor<3> & x)
+operator<<(std::ostream & os, const mito::tensor_t<3> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ", " << x[2] << "; " << x[3] << ", " << x[4] << ", "
        << x[5] << "; " << x[6] << ", " << x[7] << ", " << x[8] << ")";
@@ -57,7 +57,7 @@ operator<<(std::ostream & os, const mito::tensor<3> & x)
 }
 
 std::ostream &
-operator<<(std::ostream & os, const mito::tensor<2> & x)
+operator<<(std::ostream & os, const mito::tensor_t<2> & x)
 {
     os << "(" << x[0] << ", " << x[1] << "; " << x[2] << ", " << x[3] << ")";
     return os;
@@ -110,134 +110,138 @@ namespace mito {
     // TODO: Check that this implementation makes sense
     // Algebraic operations on vectors, tensors, ...
 
-    // mito::vector times scalar
+    // mito::vector_t times scalar
     template <dim_t D, typename T, std::size_t... I>
     inline auto _vector_times_scalar(
-        const mito::real & a, mito::vector<D, T> & y, std::index_sequence<I...>)
+        const mito::real & a, mito::vector_t<D, T> & y, std::index_sequence<I...>)
     {
         ((y[I] *= a), ...);
         return;
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> & operator*(const mito::real & a, mito::vector<D, T> && y)
+    inline mito::vector_t<D, T> & operator*(const mito::real & a, mito::vector_t<D, T> && y)
     {
         _vector_times_scalar(a, y, std::make_index_sequence<D> {});
         return y;
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> & operator*(const mito::real & a, mito::vector<D, T> & y)
+    inline mito::vector_t<D, T> & operator*(const mito::real & a, mito::vector_t<D, T> & y)
     {
         _vector_times_scalar(a, y, std::make_index_sequence<D> {});
         return y;
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> & operator*(mito::vector<D, T> && y, const mito::real & a)
+    inline mito::vector_t<D, T> & operator*(mito::vector_t<D, T> && y, const mito::real & a)
     {
         return a * y;
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> & operator*(mito::vector<D, T> & y, const mito::real & a)
+    inline mito::vector_t<D, T> & operator*(mito::vector_t<D, T> & y, const mito::real & a)
     {
         return a * y;
     }
 
-    // mito::vector inner product
+    // mito::vector_t inner product
     template <dim_t D, typename T, std::size_t... I>
     inline T _vector_inner_product(
-        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2, std::index_sequence<I...>)
+        const mito::vector_t<D, T> & y1, const mito::vector_t<D, T> & y2, std::index_sequence<I...>)
     {
         T result(0);
         ((result += y1[I] * y2[I]), ...);
         return result;
     }
     template <dim_t D, typename T>
-    inline T operator*(const mito::vector<D, T> & y1, const mito::vector<D, T> & y2)
+    inline T operator*(const mito::vector_t<D, T> & y1, const mito::vector_t<D, T> & y2)
     {
         return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
     }
     template <dim_t D, typename T>
-    inline T operator*(mito::vector<D, T> && y1, const mito::vector<D, T> & y2)
+    inline T operator*(mito::vector_t<D, T> && y1, const mito::vector_t<D, T> & y2)
     {
         return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
     }
     template <dim_t D, typename T>
-    inline T operator*(const mito::vector<D, T> & y1, mito::vector<D, T> && y2)
+    inline T operator*(const mito::vector_t<D, T> & y1, mito::vector_t<D, T> && y2)
     {
         return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
     }
 
     template <dim_t D, typename T>
-    inline T operator*(mito::vector<D, T> && y1, mito::vector<D, T> && y2)
+    inline T operator*(mito::vector_t<D, T> && y1, mito::vector_t<D, T> && y2)
     {
         return _vector_inner_product(y1, y2, std::make_index_sequence<D> {});
     }
 
-    // sum of mito::vectors
+    // sum of mito::vector_ts
     template <dim_t D, typename T, std::size_t... I>
-    inline mito::vector<D, T> _vector_sum(
-        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2, std::index_sequence<I...>)
+    inline mito::vector_t<D, T> _vector_sum(
+        const mito::vector_t<D, T> & y1, const mito::vector_t<D, T> & y2, std::index_sequence<I...>)
     {
-        mito::vector<D, T> result;
+        mito::vector_t<D, T> result;
         ((result[I] = y1[I] + y2[I]), ...);
         return result;
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator+(
-        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2)
+    inline mito::vector_t<D, T> operator+(
+        const mito::vector_t<D, T> & y1, const mito::vector_t<D, T> & y2)
     {
         return _vector_sum(y1, y2, std::make_index_sequence<D> {});
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator+(mito::vector<D, T> && y1, const mito::vector<D, T> & y2)
+    inline mito::vector_t<D, T> operator+(
+        mito::vector_t<D, T> && y1, const mito::vector_t<D, T> & y2)
     {
         return _vector_sum(y1, y2, std::make_index_sequence<D> {});
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator+(const mito::vector<D, T> & y1, mito::vector<D, T> && y2)
+    inline mito::vector_t<D, T> operator+(
+        const mito::vector_t<D, T> & y1, mito::vector_t<D, T> && y2)
     {
         return _vector_sum(y1, y2, std::make_index_sequence<D> {});
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator+(mito::vector<D, T> && y1, mito::vector<D, T> && y2)
+    inline mito::vector_t<D, T> operator+(mito::vector_t<D, T> && y1, mito::vector_t<D, T> && y2)
     {
         return _vector_sum(y1, y2, std::make_index_sequence<D> {});
     }
 
-    // mito::vector operator-
+    // mito::vector_t operator-
     template <dim_t D, typename T, std::size_t... I>
-    inline mito::vector<D, T> _vector_minus(mito::vector<D, T> & y, std::index_sequence<I...>)
+    inline mito::vector_t<D, T> _vector_minus(mito::vector_t<D, T> & y, std::index_sequence<I...>)
     {
         ((y[I] = -y[I]), ...);
         return y;
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator-(const mito::vector<D, T> & y)
+    inline mito::vector_t<D, T> operator-(const mito::vector_t<D, T> & y)
     {
         return _vector_minus(y, std::make_index_sequence<D> {});
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator-(const mito::vector<D, T> && y)
+    inline mito::vector_t<D, T> operator-(const mito::vector_t<D, T> && y)
     {
         return _vector_minus(y, std::make_index_sequence<D> {});
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator-(
-        const mito::vector<D, T> & y1, const mito::vector<D, T> & y2)
+    inline mito::vector_t<D, T> operator-(
+        const mito::vector_t<D, T> & y1, const mito::vector_t<D, T> & y2)
     {
         return y1 + (-y2);
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator-(mito::vector<D, T> && y1, const mito::vector<D, T> & y2)
+    inline mito::vector_t<D, T> operator-(
+        mito::vector_t<D, T> && y1, const mito::vector_t<D, T> & y2)
     {
         return y1 + (-y2);
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator-(const mito::vector<D, T> & y1, mito::vector<D, T> && y2)
+    inline mito::vector_t<D, T> operator-(
+        const mito::vector_t<D, T> & y1, mito::vector_t<D, T> && y2)
     {
         return y1 + (-y2);
     }
     template <dim_t D, typename T>
-    inline mito::vector<D, T> operator-(mito::vector<D, T> && y1, mito::vector<D, T> && y2)
+    inline mito::vector_t<D, T> operator-(mito::vector_t<D, T> && y1, mito::vector_t<D, T> && y2)
     {
         return y1 + (-y2);
     }
@@ -254,7 +258,7 @@ namespace mito {
         return 1;
     }
 
-    real ComputeDeterminant(const tensor<4> & A)
+    real ComputeDeterminant(const tensor_t<4> & A)
     {
         return A[1] * A[11] * A[14] * A[4] - A[1] * A[10] * A[15] * A[4]
              - A[11] * A[13] * A[2] * A[4] + A[10] * A[13] * A[3] * A[4]
@@ -268,15 +272,15 @@ namespace mito {
              + A[12] * A[3] * A[6] * A[9] + A[0] * A[14] * A[7] * A[9] - A[12] * A[2] * A[7] * A[9];
     }
 
-    real ComputeDeterminant(const tensor<3> & A)
+    real ComputeDeterminant(const tensor_t<3> & A)
     {
         return A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6])
              + A[2] * (A[3] * A[7] - A[4] * A[6]);
     }
 
-    real ComputeDeterminant(const tensor<2> & A) { return A[0] * A[3] - A[1] * A[2]; }
+    real ComputeDeterminant(const tensor_t<2> & A) { return A[0] * A[3] - A[1] * A[2]; }
 
-    real ComputeInverse(const tensor<3> & A, tensor<3> & invA)
+    real ComputeInverse(const tensor_t<3> & A, tensor_t<3> & invA)
     {
         real det = ComputeDeterminant(A);
         assert(det != 0.0);
@@ -295,7 +299,7 @@ namespace mito {
         return det;
     }
 
-    real ComputeInverse(const tensor<2> & A, tensor<2> & invA)
+    real ComputeInverse(const tensor_t<2> & A, tensor_t<2> & invA)
     {
         real det = ComputeDeterminant(A);
         assert(det != 0.0);

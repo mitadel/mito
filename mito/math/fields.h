@@ -108,10 +108,10 @@ namespace mito {
     };
 
     template <dim_t D, int N>
-    using VectorField = Field<vector<D>, vector<N>>;
+    using VectorField = Field<vector_t<D>, vector_t<N>>;
 
     template <dim_t D>
-    using ScalarField = Field<vector<D>, real>;
+    using ScalarField = Field<vector_t<D>, real>;
 
     template <typename X, typename Y, std::size_t... I>
     inline auto _dSum(
@@ -137,9 +137,9 @@ namespace mito {
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point x
     template <dim_t D>
-    inline auto grad(const ScalarField<D> & field, const vector<D> & x)
+    inline auto grad(const ScalarField<D> & field, const vector_t<D> & x)
     {
-        vector<D> result;
+        vector_t<D> result;
         for (dim_t i = 0; i < D; ++i) {
             result[i] = field.Df(i)(x);
         }
@@ -153,8 +153,8 @@ namespace mito {
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
         // {field.Df(I)...} intead? Is it possible to do so?
-        return VectorField<D, D>(mito::Function<vector<D>, vector<D>>(
-            [field](const vector<D> & x) { return vector<D> { field.Df(I)(x)... }; }));
+        return VectorField<D, D>(mito::Function<vector_t<D>, vector_t<D>>(
+            [field](const vector_t<D> & x) { return vector_t<D> { field.Df(I)(x)... }; }));
     }
 
     // function to compute the gradient of a vector field with respect to the reference
@@ -167,7 +167,7 @@ namespace mito {
 
     // function to compute the Divergence of a vector field at point X
     template <dim_t D>
-    inline real div(const VectorField<D, D> & field, const vector<D> & X)
+    inline real div(const VectorField<D, D> & field, const vector_t<D> & X)
     {
         real result = 0.0;
         for (dim_t i = 0; i < D; ++i) {
@@ -183,8 +183,8 @@ namespace mito {
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
         // {field.Df(I)...} intead? Is it possible to do so?
-        return ScalarField<D>(mito::Function<vector<D>>(
-            [field](const vector<D> & x) { return (field.Df(I)(x)[I] + ...); }));
+        return ScalarField<D>(mito::Function<vector_t<D>>(
+            [field](const vector_t<D> & x) { return (field.Df(I)(x)[I] + ...); }));
     }
 
     // function to compute the divergence of a vector field with respect to the reference

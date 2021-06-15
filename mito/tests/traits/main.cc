@@ -29,15 +29,15 @@ int
 main()
 {
     // size = 2, type = real
-    Test<mito::vector<2>> test1;
+    Test<mito::vector_t<2>> test1;
     // size = 1, type = real
     Test<mito::real> test2;
     // size = 1, type = int
     Test<int> test3;
     // size = 4, type = int
-    Test<mito::vector<4, int>> test4;
+    Test<mito::vector_t<4, int>> test4;
     // size = 4, type = double
-    Test<mito::vector<4, double>> test5;
+    Test<mito::vector_t<4, double>> test5;
 
     // all done
     return 0;
