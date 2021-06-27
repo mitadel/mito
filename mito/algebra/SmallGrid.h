@@ -23,6 +23,9 @@ namespace mito {
         // default constructor
         inline SmallGrid() : _data(S) {}
 
+        // constructor with valarray
+        inline SmallGrid(const std::valarray<T> & data) : _data(data) {}
+
         // constructor from brace-enclosed initializer list
         template <class... T2, typename std::enable_if<sizeof...(T2) == S, int>::type = 0>
         SmallGrid(T2... args) : SmallGrid()
@@ -67,6 +70,9 @@ namespace mito {
 
         // enable cast to underlying type if S = 1 (scalar grid)
         operator T() const requires(S == 1) { return _data[0]; }
+
+        // enable cast to valarray
+        operator std::valarray<T>() const { return _data; }
 
         // reset to zero
         inline void reset()
