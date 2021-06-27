@@ -1,3 +1,7 @@
+// code guard
+#if !defined(mito_mesh_Point_h)
+#define mito_mesh_Point_h
+
 #include "../mito.h"
 
 namespace mito {
@@ -98,5 +102,7 @@ operator<<(std::ostream & os, const mito::Point<4> & x)
        << ")";
     return os;
 }
+
+#endif    // mito_mesh_Point_h
 
 // end of file
