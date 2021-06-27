@@ -11,7 +11,7 @@ int
 main()
 {
 
-    mito::VertexCoordinatesMap<2> vertexCoordinatesMap;
+    mito::VertexPointMap<2> vertexCoordinatesMap;
 
     /**
      * Mesh with four elements:

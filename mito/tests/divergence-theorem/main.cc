@@ -57,7 +57,7 @@ main()
         (0,0)           (1,0)
     */
 
-    mito::VertexCoordinatesMap<2> vertexCoordinatesMap;
+    mito::VertexPointMap<2> vertexCoordinatesMap;
 
     vertex_t vertex0;
     vertexCoordinatesMap.insert(vertex0, point_t<2> { 0.0, 0.0 });

@@ -94,7 +94,7 @@ main()
         (0,0)           (1,0)
     */
 
-    mito::VertexCoordinatesMap<2> vertexCoordinatesMap;
+    mito::VertexPointMap<2> vertexCoordinatesMap;
 
     vertex_t vertex0;
     point_t<2> point0 = { 0.0, 0.0 };
@@ -178,7 +178,7 @@ main()
     assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
     // attach different coordinates (3D coordinates to the same vertices as above)
-    mito::VertexCoordinatesMap<3> vertexCoordinatesMap3D;
+    mito::VertexPointMap<3> vertexCoordinatesMap3D;
     point_t<3> point03D = { 0.0, 0.0, 0.0 };
     vertexCoordinatesMap3D.insert(vertex0, point03D);
     point_t<3> point13D = { 1.0, 0.0, 1.0 };
