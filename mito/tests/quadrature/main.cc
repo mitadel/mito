@@ -147,7 +147,7 @@ main()
     assert(std::fabs(result - 0.946083) < 1.e-3);
 
     auto resultVector = bodyIntegrator.integrate(cosineVector);
-    assert(resultVector == mito::vector_t<2>({ result, result }));
+    assert((resultVector == mito::vector_t<2> { result, result }));
 
     // instantiate a scalar function object
     mito::ScalarField<2> one([]([[maybe_unused]] const vector_t<2> & x) { return 1.0; });

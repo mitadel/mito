@@ -26,8 +26,8 @@ namespace mito {
         // inline const Vector & operator=(const Vector &) = delete;
         // inline const Vector & operator=(const Vector &&) = delete;
 
-        Vector(const grid_t & grid) : _grid(grid), _packing(grid.layout()) {}
-        Vector(grid_t && grid) : _grid(grid), _packing(grid.layout()) {}
+        Vector(const grid_t & grid) : _packing(grid.layout()), _grid(grid) {}
+        Vector(grid_t && grid) : _packing(grid.layout()), _grid(grid) {}
         ~Vector() {}
 
         static constexpr int size() { return D; }

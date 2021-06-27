@@ -31,15 +31,15 @@ main()
     */
 
     vertex_t vertex0;
-    vertexCoordinatesMap.insert(vertex0, point_t<2>({ 0.0, 0.0 }));
+    vertexCoordinatesMap.insert(vertex0, point_t<2> { 0.0, 0.0 });
     vertex_t vertex1;
-    vertexCoordinatesMap.insert(vertex1, point_t<2>({ 1.0, 0.0 }));
+    vertexCoordinatesMap.insert(vertex1, point_t<2> { 1.0, 0.0 });
     vertex_t vertex2;
-    vertexCoordinatesMap.insert(vertex2, point_t<2>({ 1.0, 1.0 }));
+    vertexCoordinatesMap.insert(vertex2, point_t<2> { 1.0, 1.0 });
     vertex_t vertex3;
-    vertexCoordinatesMap.insert(vertex3, point_t<2>({ 0.5, 0.5 }));
+    vertexCoordinatesMap.insert(vertex3, point_t<2> { 0.5, 0.5 });
     vertex_t vertex4;
-    vertexCoordinatesMap.insert(vertex4, point_t<2>({ 0.0, 1.0 }));
+    vertexCoordinatesMap.insert(vertex4, point_t<2> { 0.0, 1.0 });
 
     segment_t segment0({ &vertex0, &vertex1 });
     segment_t segment1({ &vertex1, &vertex3 });
