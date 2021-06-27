@@ -2,7 +2,7 @@
 #if !defined(mito_math_Field_h)
 #define mito_math_Field_h
 
-#include "function.h"
+#include "Function.h"
 #include "../mito.h"
 #include "../elements/quadrature_field.h"
 

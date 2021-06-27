@@ -1,6 +1,7 @@
 
-#ifndef __MITO__FUNCTION__
-#define __MITO__FUNCTION__
+// code guard
+#if !defined(mito_math_Function_h)
+#define mito_math_Function_h
 
 #include "../mito.h"
 
@@ -273,6 +274,6 @@ namespace mito {
     }
 }
 
-#endif    // __MITO__FUNCTION__
+#endif    // mito_math_Function_h
 
 // end of file

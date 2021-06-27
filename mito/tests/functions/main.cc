@@ -1,4 +1,4 @@
-#include "../../math/function.h"
+#include "../../math/Function.h"
 #include <cmath>
 
 using mito::Function;

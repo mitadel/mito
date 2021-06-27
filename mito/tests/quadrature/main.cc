@@ -1,6 +1,6 @@
 #include <cmath>
 #include "../../math/Field.h"
-#include "../../math/function.h"
+#include "../../math/Function.h"
 #include "../../mesh/element_set.h"
 #include "../../quadrature/integrator.h"
 
