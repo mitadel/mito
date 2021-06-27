@@ -5,16 +5,16 @@ import sys
 
 
 def clean_up(folder):
-    shutil.rmtree(tmp_folder_path)
+    shutil.rmtree(folder)
 
 
 def print_result(folder, file, output, pair_error_reason=None):
     result = folder + ": " + output + "\n"
     print(result)
-    f.write(result)
+    file.write(result)
     if pair_error_reason:
-        f.write(pair_error_reason[1] + ": \n" + pair_error_reason[0] + "\n")
-    f.write("\n")
+        file.write(pair_error_reason[1] + ": \n" + pair_error_reason[0] + "\n")
+    file.write("\n")
 
 
 root = sys.path[0] + "/"
@@ -27,6 +27,9 @@ folders = [x for x in os.listdir(
     tests_folder) if os.path.isdir(tests_folder + x)]
 
 output_file = root + 'out.log'
+
+# Environment
+pyre_dir = os.environ['PYRE_DIR']
 
 with open(output_file, 'w') as f:
     for folder in folders:
@@ -45,14 +48,15 @@ with open(output_file, 'w') as f:
         os.mkdir(tmp_folder_path)
 
         # Commands to execute
-        compile_cmd = 'g++ -g -std=c++2a -Wall -Wextra -pedantic -Werror ' + \
+        compile_cmd = 'g++ -g -std=c++2a ' + \
+            '-I' + pyre_dir + '/include -lpyre -ljournal -L' + pyre_dir + '/lib ' + \
+            '-Wall -Wextra -pedantic -Werror ' + \
             '-Wno-unused-variable -Wno-unused-parameter ' + \
-            test_path + test_ext + ' -o ' + tmp_folder_path + \
-            test_name
+            test_path + test_ext + ' -o ' + tmp_folder_path + test_name
         run_cmd = tmp_folder_path + test_name
 
         compile_process = subprocess.run(
-            compile_cmd.split(' '), capture_output=True, text=True)
+            compile_cmd, capture_output=True, text=True, shell=True)
         if compile_process.returncode == 1:
             print_result(folder, f, "FAIL",
                          (compile_process.stderr, "Compilation error"))
@@ -60,7 +64,7 @@ with open(output_file, 'w') as f:
             continue
 
         run_process = subprocess.run(
-            run_cmd.split(' '), capture_output=True, text=True)
+            run_cmd, capture_output=True, text=True, shell=True)
         if run_process.returncode == 1:
             print_result(folder, f, "FAIL",
                          (run_process.stderr, "Runtime error"))
