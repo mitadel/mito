@@ -1,7 +1,7 @@
 #include <cmath>
 #include "../../math/Field.h"
 #include "../../math/Function.h"
-#include "../../mesh/element_set.h"
+#include "../../mesh/ElementSet.h"
 #include "../../quadrature/integrator.h"
 
 using mito::Function;

@@ -1,5 +1,6 @@
-#ifndef __MITO__ELEMENT_SET__
-#define __MITO__ELEMENT_SET__
+// code guard
+#if !defined(mito_mesh_ElementSet_h)
+#define mito_mesh_ElementSet_h
 
 #include "simplex.h"
 #include "vertex_coordinates_map.h"
@@ -295,6 +296,6 @@ namespace mito {
 
 }    // namespace mito
 
-#endif    //__MITO__ELEMENT_SET__
+#endif    // mito_mesh_ElementSet_h
 
 // end of file
