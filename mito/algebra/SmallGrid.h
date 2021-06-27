@@ -1,4 +1,4 @@
-#include <array>
+#include <valarray>
 
 namespace mito {
 
@@ -21,7 +21,7 @@ namespace mito {
 
       public:
         // default constructor
-        inline SmallGrid() : _data() {}
+        inline SmallGrid() : _data(S) {}
 
         // constructor from brace-enclosed initializer list
         template <class... T2, typename std::enable_if<sizeof...(T2) == S, int>::type = 0>
@@ -102,7 +102,7 @@ namespace mito {
 
       private:
         // data
-        std::array<T, S> _data;
+        std::valarray<T> _data;
     };
 
 }    // namespace mito
