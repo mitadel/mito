@@ -10,13 +10,8 @@ namespace mito {
     real computeDistance(const point_t<D> & pointA, const point_t<D> & pointB)
     {
         // return the distance between the two points
-        real dist2 = 0.0;
-        for (int d = 0; d < D; ++d) {
-            real dist_d = pointA[d] - pointB[d];
-            dist2 += dist_d * dist_d;
-        }
-
-        return sqrt(dist2);
+        auto dist = pointA - pointB;
+        return sqrt(dist * dist);
     }
 
     template <int D>
