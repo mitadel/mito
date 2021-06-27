@@ -28,6 +28,12 @@ main()
 
     // TODO: Add tests for all algebraic operators
 
+    // Matrix-vector product
+    mito::tensor_t<3, 3> A = { 0, 1, 2, 3, 4, 5, 6, 7, 8 };
+    mito::vector_t<3> x = { 1, 1, 1 };
+    mito::vector_t<3> y = a * A * x;
+    assert((y == a * mito::vector_t<3> { 3, 12, 21 }));
+
     // all done
     return 0;
 }

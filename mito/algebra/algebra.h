@@ -245,6 +245,30 @@ namespace mito {
         return (1.0 / a) * std::move(y);
     }
 
+    // matrix-vector multiplication
+    // row-vector product
+    template <int D1, int D2, typename T, size_t... J>
+    inline T _row_times_vector(
+        const tensor_t<D1, D2, T> & A, const vector_t<D2, T> & x, size_t row,
+        std::index_sequence<J...>)
+    {
+        return ((A[row * D2 + J] /*A[{ row, J }]*/ * x[J]) + ...);
+    }
+    // matrix-vector product
+    template <int D1, int D2, typename T, size_t... J>
+    inline vector_t<D1, T> _matrix_times_vector(
+        const tensor_t<D1, D2, T> & A, const vector_t<D2, T> & x, std::index_sequence<J...>)
+    {
+        vector_t<D1, T> result;
+        ((result[J] = _row_times_vector(A, x, J, std::make_index_sequence<D2> {})), ...);
+        return result;
+    }
+    template <int D1, int D2, typename T>
+    inline vector_t<D1, T> operator*(const tensor_t<D1, D2, T> & A, const vector_t<D2, T> & x)
+    {
+        return _matrix_times_vector(A, x, std::make_index_sequence<D1> {});
+    }
+
     // factorial
     template <int D>
     int Factorial()
