@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "../../math/Point.h"
+#include "../../mesh/Point.h"
 
 using mito::Point;
 
