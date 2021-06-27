@@ -97,15 +97,20 @@ main()
     mito::VertexCoordinatesMap<2> vertexCoordinatesMap;
 
     vertex_t vertex0;
-    vertexCoordinatesMap.insert(vertex0, point_t<2>({ 0.0, 0.0 }));
+    point_t<2> point0 = { 0.0, 0.0 };
+    vertexCoordinatesMap.insert(vertex0, point0);
     vertex_t vertex1;
-    vertexCoordinatesMap.insert(vertex1, point_t<2>({ 1.0, 0.0 }));
+    point_t<2> point1 = { 1.0, 0.0 };
+    vertexCoordinatesMap.insert(vertex1, point1);
     vertex_t vertex2;
-    vertexCoordinatesMap.insert(vertex2, point_t<2>({ 1.0, 1.0 }));
+    point_t<2> point2 = { 1.0, 1.0 };
+    vertexCoordinatesMap.insert(vertex2, point2);
     vertex_t vertex3;
-    vertexCoordinatesMap.insert(vertex3, point_t<2>({ 0.5, 0.5 }));
+    point_t<2> point3 = { 0.5, 0.5 };
+    vertexCoordinatesMap.insert(vertex3, point3);
     vertex_t vertex4;
-    vertexCoordinatesMap.insert(vertex4, point_t<2>({ 0.0, 1.0 }));
+    point_t<2> point4 = { 0.0, 1.0 };
+    vertexCoordinatesMap.insert(vertex4, point4);
 
     segment_t segment0({ &vertex0, &vertex1 });
     segment_t segment1({ &vertex1, &vertex3 });
@@ -174,11 +179,16 @@ main()
 
     // attach different coordinates (3D coordinates to the same vertices as above)
     mito::VertexCoordinatesMap<3> vertexCoordinatesMap3D;
-    vertexCoordinatesMap3D.insert(vertex0, point_t<3>({ 0.0, 0.0, 0.0 }));
-    vertexCoordinatesMap3D.insert(vertex1, point_t<3>({ 1.0, 0.0, 1.0 }));
-    vertexCoordinatesMap3D.insert(vertex2, point_t<3>({ 1.0, 1.0, 1.0 }));
-    vertexCoordinatesMap3D.insert(vertex3, point_t<3>({ 0.5, 0.5, 0.5 }));
-    vertexCoordinatesMap3D.insert(vertex4, point_t<3>({ 0.0, 1.0, 0.0 }));
+    point_t<3> point03D = { 0.0, 0.0, 0.0 };
+    vertexCoordinatesMap3D.insert(vertex0, point03D);
+    point_t<3> point13D = { 1.0, 0.0, 1.0 };
+    vertexCoordinatesMap3D.insert(vertex1, point13D);
+    point_t<3> point23D = { 1.0, 1.0, 1.0 };
+    vertexCoordinatesMap3D.insert(vertex2, point23D);
+    point_t<3> point33D = { 0.5, 0.5, 0.5 };
+    vertexCoordinatesMap3D.insert(vertex3, point33D);
+    point_t<3> point43D = { 0.0, 1.0, 0.0 };
+    vertexCoordinatesMap3D.insert(vertex4, point43D);
 
     // instantiate an element set with the same elements as above but the new coordinates map
     mito::ElementSet bodyElementSet3D(elements, vertexCoordinatesMap3D);

@@ -41,7 +41,7 @@ namespace mito {
 
         int size() { return _map.size(); }
 
-        auto insert(const vertex_t & vertex, const point_t<D> && point)
+        auto insert(const vertex_t & vertex, const point_t<D> & point)
         {
             return _map.insert(
                 // std::pair<std::reference_wrapper<vertex_t>, point_t<D>>(vertex, point)
