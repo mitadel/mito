@@ -1,5 +1,5 @@
 #include <map>
-#include "../../mesh/simplex.h"
+#include "../../mesh/Simplex.h"
 #include "../../mesh/ElementSet.h"
 
 using mito::point_t;

@@ -1,5 +1,5 @@
 #include "../../mito.h"
-#include "../../mesh/simplex.h"
+#include "../../mesh/Simplex.h"
 #include "../../mesh/Mesh.h"
 #include <fstream>
 #include <string>

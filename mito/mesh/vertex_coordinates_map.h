@@ -1,4 +1,4 @@
-#include "simplex.h"
+#include "Simplex.h"
 
 namespace mito {
 

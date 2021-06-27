@@ -2,7 +2,7 @@
 #define __MITO__QUADRATURE__
 
 #include "../mito.h"
-#include "../mesh/simplex.h"
+#include "../mesh/Simplex.h"
 
 namespace mito {
 

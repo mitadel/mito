@@ -2,7 +2,7 @@
 #if !defined(mito_mesh_ElementSet_h)
 #define mito_mesh_ElementSet_h
 
-#include "simplex.h"
+#include "Simplex.h"
 #include "vertex_coordinates_map.h"
 
 namespace mito {

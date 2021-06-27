@@ -1,5 +1,6 @@
-#ifndef __MITO_SIMPLEX__
-#define __MITO_SIMPLEX__
+// code guard
+#if !defined(mito_mesh_Simplex_h)
+#define mito_mesh_Simplex_h
 
 #include "../mito.h"
 #include <set>
@@ -192,4 +193,6 @@ operator<<(std::ostream & os, const mito::Simplex<0> & s)
     return os;
 }
 
-#endif    //__MITO_SIMPLEX__
+#endif    // mito_mesh_Simplex_h
+
+// end of file
