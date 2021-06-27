@@ -1,3 +1,7 @@
+// code guard
+#if !defined(mito_mesh_Mesh_h)
+#define mito_mesh_Mesh_h
+
 #include "simplex.h"
 #include "vertex_coordinates_map.h"
 #include <map>
@@ -357,6 +361,8 @@ namespace mito {
         VertexCoordinatesMap<D> _vertexCoordinatesMap;
     };
 
-}
+}    // namespace mito
+
+#endif    // mito_mesh_Mesh_h
 
 // end of file

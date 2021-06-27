@@ -1,6 +1,6 @@
 #include "../../mito.h"
 #include "../../mesh/simplex.h"
-#include "../../mesh/mesh.h"
+#include "../../mesh/Mesh.h"
 #include <fstream>
 #include <string>
 #include <map>

@@ -1,5 +1,5 @@
 #include <cmath>
-#include <mito/mesh/mesh.h>
+#include <mito/mesh/Mesh.h>
 #include <mito/materials/material_library.h>
 #include <mito/materials/elastic/elastic.h>
 #include <mito/fem/function_space.h>
