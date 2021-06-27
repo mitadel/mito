@@ -1,5 +1,6 @@
-#ifndef __MITO__FIELDS__
-#define __MITO__FIELDS__
+// code guard
+#if !defined(mito_math_Field_h)
+#define mito_math_Field_h
 
 #include "function.h"
 #include "../mito.h"
@@ -202,6 +203,6 @@ namespace mito {
     }
 }
 
-#endif    //__MITO__FIELDS__
+#endif    // mito_math_Field_h
 
 // end of file
