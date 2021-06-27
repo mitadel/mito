@@ -1,5 +1,7 @@
+#if !defined(mito_materials_Gent_h)
+#define mito_materials_Gent_h
+
 #include "../mito.h"
-#include <cmath>
 
 namespace mito {
 
@@ -66,23 +68,6 @@ namespace mito {
 
 }
 
-int
-main(int argc, char ** argv)
-{
-    mito::Gent material(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);
+#endif    // mito_materials_Gent_h
 
-    mito::vector_t<3> u = { 0.0, 0.0, 0.0 };
-    mito::tensor_t<3> Du = { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
-    mito::tensor_t<3> P = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-    material.Constitutive<3>(u, Du, P);
-
-    mito::vector_t<2> u2 = { 0.0, 0.0 };
-    mito::tensor_t<2> Du2 = { 1.0, 0.0, 0.0, 1.0 };
-    mito::tensor_t<2> P2 = { 0.0, 0.0, 0.0, 0.0 };
-    material.Constitutive<2>(u2, Du2, P2);
-
-    std::cout << "P = " << P << std::endl;
-    std::cout << "P2 = " << P2 << std::endl;
-
-    return 0;
-}
+// end of file
