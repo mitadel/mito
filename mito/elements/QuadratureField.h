@@ -1,8 +1,9 @@
+// code guard
+#if !defined(mito_elements_QuadratureField_h)
+#define mito_elements_QuadratureField_h
+
 #include "../mito.h"
 #include <pyre/grid.h>
-
-#ifndef __MITO__QUADRATURE_FIELD__
-#define __MITO__QUADRATURE_FIELD__
 
 namespace mito {
 
@@ -133,6 +134,6 @@ namespace mito {
 
 }    // namespace mito
 
-#endif    //__MITO__QUADRATURE_FIELD__
+#endif    // mito_elements_QuadratureField_h
 
 // end of file

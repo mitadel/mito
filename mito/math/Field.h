@@ -4,7 +4,7 @@
 
 #include "Function.h"
 #include "../mito.h"
-#include "../elements/quadrature_field.h"
+#include "../elements/QuadratureField.h"
 
 namespace mito {
 

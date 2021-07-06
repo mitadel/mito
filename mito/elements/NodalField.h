@@ -1,3 +1,7 @@
+// code guard
+#if !defined(mito_elements_NodalField_h)
+#define mito_elements_NodalField_h
+
 #include "../mito.h"
 
 namespace mito {
@@ -103,5 +107,7 @@ namespace mito {
     }
 
 }    // namespace mito
+
+#endif    // mito_elements_NodalField_h
 
 // end of file
