@@ -1,3 +1,7 @@
+// code guard
+#if !defined(mito_quadrature_Integrator_h)
+#define mito_quadrature_Integrator_h
+
 #include "../mito.h"
 #include "../mesh/ElementSet.h"
 #include "../math/Field.h"
@@ -98,5 +102,7 @@ namespace mito {
     };
 
 }    // namespace  mito
+
+#endif    // mito_quadrature_Integrator_h
 
 // end of file

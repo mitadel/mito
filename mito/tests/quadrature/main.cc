@@ -2,7 +2,7 @@
 #include "../../math/Field.h"
 #include "../../math/Function.h"
 #include "../../mesh/ElementSet.h"
-#include "../../quadrature/integrator.h"
+#include "../../quadrature/Integrator.h"
 
 using mito::Function;
 using mito::vector_t;
