@@ -58,8 +58,8 @@ namespace mito {
 
         inline Point() : _tuple() { _initialize(std::make_index_sequence<D> {}); }
 
-        template <class... real, typename std::enable_if<sizeof...(real) == D, int>::type = 0>
-        Point(real... args) : _tuple()
+        template <class... real>
+        Point(real... args) requires(sizeof...(real) == D) : _tuple()
         {
             _initialize(std::make_index_sequence<D> {}, args...);
         }

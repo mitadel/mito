@@ -27,8 +27,8 @@ namespace mito {
         inline SmallGrid(const std::valarray<T> & data) : _data(data) {}
 
         // constructor from brace-enclosed initializer list
-        template <class... T2, typename std::enable_if<sizeof...(T2) == S, int>::type = 0>
-        SmallGrid(T2... args) : SmallGrid()
+        template <class... T2>
+        SmallGrid(T2... args) requires(sizeof...(T2) == S) : SmallGrid()
         {
             // initialize with input arguments
             _initialize(std::make_index_sequence<S> {}, args...);
