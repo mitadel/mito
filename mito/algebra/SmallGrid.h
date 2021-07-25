@@ -28,6 +28,8 @@ namespace mito {
         // constructor with valarray
         inline SmallGrid(const memory_type & data) : _data(data) {}
 
+        // constructor with valarray (need this for return value optimization)
+        inline SmallGrid(const memory_type && data) : _data(std::forward(data)) {}
 
         // constructor from brace-enclosed initializer list
         template <class... T2>
