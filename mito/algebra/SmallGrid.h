@@ -18,13 +18,16 @@ namespace mito {
         static constexpr int S = multiply(I...);
         // store the underlying type
         using type = T;
+        // type for memory storage
+        using memory_type = std::valarray<T>;
 
       public:
         // default constructor
         inline SmallGrid() : _data(S) {}
 
         // constructor with valarray
-        inline SmallGrid(const std::valarray<T> & data) : _data(data) {}
+        inline SmallGrid(const memory_type & data) : _data(data) {}
+
 
         // constructor from brace-enclosed initializer list
         template <class... T2>
@@ -71,8 +74,8 @@ namespace mito {
         // enable cast to underlying type if S = 1 (scalar grid)
         operator T() const requires(S == 1) { return _data[0]; }
 
-        // enable cast to valarray
-        operator std::valarray<T>() const { return _data; }
+        // enable cast to underlying memory type
+        operator memory_type() const { return _data; }
 
         // reset to zero
         inline void reset()
@@ -108,7 +111,7 @@ namespace mito {
 
       private:
         // data
-        std::valarray<T> _data;
+        memory_type _data;
     };
 
 }    // namespace mito
