@@ -281,7 +281,8 @@ namespace mito {
         return 1;
     }
 
-    real ComputeDeterminant(const tensor_t<4> & A)
+    template <typename T>
+    T ComputeDeterminant(const tensor_t<4, 4, T> & A)
     {
         return A[1] * A[11] * A[14] * A[4] - A[1] * A[10] * A[15] * A[4]
              - A[11] * A[13] * A[2] * A[4] + A[10] * A[13] * A[3] * A[4]
@@ -295,20 +296,26 @@ namespace mito {
              + A[12] * A[3] * A[6] * A[9] + A[0] * A[14] * A[7] * A[9] - A[12] * A[2] * A[7] * A[9];
     }
 
-    real ComputeDeterminant(const tensor_t<3> & A)
+    template <typename T>
+    T ComputeDeterminant(const tensor_t<3, 3, T> & A)
     {
         return A[0] * (A[4] * A[8] - A[5] * A[7]) - A[1] * (A[3] * A[8] - A[5] * A[6])
              + A[2] * (A[3] * A[7] - A[4] * A[6]);
     }
 
-    real ComputeDeterminant(const tensor_t<2> & A) { return A[0] * A[3] - A[1] * A[2]; }
+    template <typename T>
+    T ComputeDeterminant(const tensor_t<2, 2, T> & A)
+    {
+        return A[0] * A[3] - A[1] * A[2];
+    }
 
-    real ComputeInverse(const tensor_t<3> & A, tensor_t<3> & invA)
+    template <typename T>
+    T ComputeInverse(const tensor_t<3, 3, T> & A, tensor_t<3, 3, T> & invA)
     {
         real det = ComputeDeterminant(A);
         assert(det != 0.0);
 
-        real detinv = 1.0 / det;
+        T detinv = 1.0 / det;
         invA[0] = detinv * (A[4] * A[8] - A[5] * A[7]);
         invA[1] = detinv * (-A[1] * A[8] + A[2] * A[7]);
         invA[2] = detinv * (A[1] * A[5] - A[2] * A[4]);
@@ -322,12 +329,13 @@ namespace mito {
         return det;
     }
 
-    real ComputeInverse(const tensor_t<2> & A, tensor_t<2> & invA)
+    template <typename T>
+    T ComputeInverse(const tensor_t<2, 2, T> & A, tensor_t<2, 2, T> & invA)
     {
-        real det = ComputeDeterminant(A);
+        T det = ComputeDeterminant(A);
         assert(det != 0.0);
 
-        real detinv = 1.0 / det;
+        T detinv = 1.0 / det;
         invA[0] = detinv * (A[3]);
         invA[1] = detinv * (-A[1]);
         invA[2] = detinv * (-A[2]);
@@ -338,30 +346,34 @@ namespace mito {
 }
 
 // overload operator<< for vectors and tensors
+template <typename T>
 std::ostream &
-operator<<(std::ostream & os, const mito::vector_t<3> & x)
+operator<<(std::ostream & os, const mito::vector_t<3, T> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ", " << x[2] << ")";
     return os;
 }
 
+template <typename T>
 std::ostream &
-operator<<(std::ostream & os, const mito::vector_t<2> & x)
+operator<<(std::ostream & os, const mito::vector_t<2, T> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ")";
     return os;
 }
 
+template <typename T>
 std::ostream &
-operator<<(std::ostream & os, const mito::tensor_t<3> & x)
+operator<<(std::ostream & os, const mito::tensor_t<3, 3, T> & x)
 {
     os << "(" << x[0] << ", " << x[1] << ", " << x[2] << "; " << x[3] << ", " << x[4] << ", "
        << x[5] << "; " << x[6] << ", " << x[7] << ", " << x[8] << ")";
     return os;
 }
 
+template <typename T>
 std::ostream &
-operator<<(std::ostream & os, const mito::tensor_t<2> & x)
+operator<<(std::ostream & os, const mito::tensor_t<2, 2, T> & x)
 {
     os << "(" << x[0] << ", " << x[1] << "; " << x[2] << ", " << x[3] << ")";
     return os;
