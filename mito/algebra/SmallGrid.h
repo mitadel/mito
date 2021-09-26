@@ -1,35 +1,62 @@
-#include <valarray>
+// code guard
+#if !defined(mito_algebra_SmallGrid_h)
+#define mito_algebra_SmallGrid_h
+
+#include <pyre/grid.h>
 
 namespace mito {
 
     template <typename... Args>
     constexpr auto multiply(Args &&... args)
     {
-        return (args * ...);
+        int one = 1;
+        return one * (args * ...);    // should return 1 for empty pack (scalar case)
     }
 
     template <typename T, int... I>
     class SmallGrid {
 
-      public:
+      public:    // TODO: make these private
         // compute the number of indices of the
-        static constexpr int N = sizeof...(I);
+        static constexpr int N = sizeof...(I);    // zero if empty parameter pack
         // compute the number of cells (size of the container)
-        static constexpr int S = multiply(I...);
+        static constexpr int S = multiply(I...);    // one if empty parameter pack
+
+      private:
+        // conventionally packed grid
+        using pack_t = pyre::grid::canonical_t<N>;
+        // of T on the heap
+        using storage_t = pyre::memory::stack_t<S, T>;
+        // putting it all together
+        using grid_t = pyre::grid::grid_t<pack_t, storage_t>;
+        // index
+        using index_t = pack_t::index_type;
+        // data_type
+        using data_t = grid_t;
+
+      public:
         // store the underlying type
         using type = T;
-        // type for memory storage
-        using memory_type = std::valarray<T>;
+        // store the container size TOFIX
+        // static constexpr int size = S;
 
       public:
         // default constructor
-        inline SmallGrid() : _data(S) {}
+        inline SmallGrid() : _data(pack_t { { I... } })
+        {
+            // initialize memory
+            reset();
 
-        // constructor with valarray
-        inline SmallGrid(const memory_type & data) : _data(data) {}
+            // all done
+            return;
+        }
 
-        // constructor with valarray (need this for return value optimization)
-        inline SmallGrid(const memory_type && data) : _data(std::forward(data)) {}
+      public:
+        // constructor with underlying data type
+        inline SmallGrid(const data_t & data) : _data(data) {}
+
+        // constructor with underlying data type (need this for return value optimization)
+        inline SmallGrid(const data_t && data) : _data(std::forward(data)) {}
 
         // constructor from brace-enclosed initializer list
         template <class... T2>
@@ -52,14 +79,18 @@ namespace mito {
         SmallGrid & operator=(const SmallGrid &) = default;
 
         // move assignment operator
-        SmallGrid & operator=(SmallGrid &&) = default;
+        SmallGrid & operator=(SmallGrid && rhs) = default;
 
         // destructor
-        inline ~SmallGrid() {}
+        inline ~SmallGrid()
+        {
+            std::cout << "~SmallGrid()" << std::endl;
+            return;
+        }
 
       public:
-        // inline const T & operator[](index_t i) const { return _grid[i]; }
-        // inline T & operator[](index_t i) { return _grid[i]; }
+        inline const T & operator[](index_t i) const { return _data[i]; }
+        inline T & operator[](index_t i) { return _data[i]; }
 
         inline const T & operator[](int i) const { return _data[i]; }
         inline T & operator[](int i) { return _data[i]; }
@@ -76,8 +107,8 @@ namespace mito {
         // enable cast to underlying type if S = 1 (scalar grid)
         operator T() const requires(S == 1) { return _data[0]; }
 
-        // enable cast to underlying memory type
-        operator memory_type() const { return _data; }
+        // enable cast to underlying data type
+        operator data_t() const { return _data; }
 
         // reset to zero
         inline void reset()
@@ -113,9 +144,11 @@ namespace mito {
 
       private:
         // data
-        memory_type _data;
+        data_t _data;
     };
 
 }    // namespace mito
+
+#endif    // mito_algebra_SmallGrid_h
 
 // end of file
