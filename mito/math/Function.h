@@ -24,6 +24,8 @@ namespace mito {
         inline Function(const Function &) = default;
         // move constructor
         inline Function(Function &&) = default;
+        // destructor
+        inline ~Function() {};
         // assignment operator
         inline Function & operator=(const Function &) = default;
         // move operator=
