@@ -95,6 +95,18 @@ int main() {
     static_assert(entries<2 /* N */>(3 /* D */) == 6);
     static_assert(entries<3 /* N */>(3 /* D */) == 10);
 
+    // assert that the N-dimensional index (D-1, ..., D-1) is mapped to the last entry
+    static_assert(offsetN<2 /* N */, 2 /* D */>(1 /*D - 1*/, 1 /*D - 1*/) 
+        == entries<2 /* N */>(2 /* D */) - 1);
+    static_assert(offsetN<3 /* N */, 2 /* D */>(1 /*D - 1*/, 1 /*D - 1*/, 1 /*D - 1*/) 
+        == entries<3 /* N */>(2 /* D */) - 1);
+    static_assert(offsetN<2 /* N */, 3 /* D */>(2 /*D - 1*/, 2 /*D - 1*/) 
+        == entries<2 /* N */>(3 /* D */) - 1);
+    static_assert(offsetN<3 /* N */, 3 /* D */>(2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/) 
+        == entries<3 /* N */>(3 /* D */) - 1);
+    static_assert(offsetN<4 /* N */, 3 /* D */>(2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/) 
+        == entries<4 /* N */>(3 /* D */) - 1);
+
 #if 0
     int offset = 0;
 
