@@ -41,7 +41,7 @@ constexpr int offset(int D, int i, T... j) requires (sizeof...(T) == N - 1 && N 
     return sum_entries + offset<N - 1>(D - i, j...);
 }
 
-template<int D, int N, class... T> 
+template<int N, int D, class... T> 
 constexpr int offsetN(T... index) requires (sizeof...(T) == N)
 {
     // copy the index sequence into an array
@@ -70,7 +70,7 @@ constexpr int offsetN(T... index) requires (sizeof...(T) == N)
     return _getOffset(shiftedIndex, std::make_index_sequence<N> {});
 }
 
-template<int D, int N> 
+template<int N, int D> 
 int offset2(int i, int j)
 {
     static_assert(N == 2);
@@ -79,7 +79,7 @@ int offset2(int i, int j)
     return offset<N>(D, i, j - i);
 }
 
-template<int D, int N> 
+template<int N, int D> 
 int offset3(int i, int j, int k)
 {
     static_assert(N==3);
@@ -99,32 +99,32 @@ int main() {
     int offset = 0;
 
     std::cout << "(0, 0) " << std::endl;
-    offset = offset2<3 /* D */, 2 /* N */>(0, 0);
+    offset = offset2<2 /* N */, 3 /* D */>(0, 0);
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 1) " << std::endl;
-    offset = offset2<3 /* D */, 2 /* N */>(0, 1);
+    offset = offset2<2 /* N */, 3 /* D */>(0, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 2) " << std::endl;
-    offset = offset2<3 /* D */, 2 /* N */>(0, 2);
+    offset = offset2<2 /* N */, 3 /* D */>(0, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 1) " << std::endl;
-    offset = offset2<3 /* D */, 2 /* N */>(1, 1);
+    offset = offset2<2 /* N */, 3 /* D */>(1, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 2) " << std::endl;
-    offset = offset2<3 /* D */, 2 /* N */>(1, 2);
+    offset = offset2<2 /* N */, 3 /* D */>(1, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(2, 2) " << std::endl;
-    offset = offset2<3 /* D */, 2 /* N */>(2, 2);
+    offset = offset2<2 /* N */, 3 /* D */>(2, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 #endif
@@ -133,22 +133,22 @@ int main() {
     int offset = 0;
 
     std::cout << "(0, 0, 0) " << std::endl;
-    offset = offset3<2 /* D */, 3 /* N */>(0, 0, 0);
+    offset = offset3<3 /* N */, 2 /* D */>(0, 0, 0);
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 0, 1) " << std::endl;
-    offset = offset3<2 /* D */, 3 /* N */>(0, 0, 1);
+    offset = offset3<3 /* N */, 2 /* D */>(0, 0, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 1, 1) " << std::endl;
-    offset = offset3<2 /* D */, 3 /* N */>(0, 1, 1);
+    offset = offset3<3 /* N */, 2 /* D */>(0, 1, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 1, 1) " << std::endl;
-    offset = offset3<2 /* D */, 3 /* N */>(1, 1, 1);
+    offset = offset3<3 /* N */, 2 /* D */>(1, 1, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 #endif
@@ -156,52 +156,52 @@ int main() {
     int offset = 0;
 
     std::cout << "(0, 0, 0) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */> (0, 0, 0);
+    offset = offset3<3 /* N */, 3 /* D */> (0, 0, 0);
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 0, 1) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(0, 0, 1);
+    offset = offset3<3 /* N */, 3 /* D */>(0, 0, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 0, 2) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(0, 0, 2);
+    offset = offset3<3 /* N */, 3 /* D */>(0, 0, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 1, 1) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(0, 1, 1);
+    offset = offset3<3 /* N */, 3 /* D */>(0, 1, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 1, 2) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(0, 1, 2);
+    offset = offset3<3 /* N */, 3 /* D */>(0, 1, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 2, 2) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(0, 2, 2);
+    offset = offset3<3 /* N */, 3 /* D */>(0, 2, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 1, 1) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(1, 1, 1);
+    offset = offset3<3 /* N */, 3 /* D */>(1, 1, 1);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 1, 2) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(1, 1, 2);
+    offset = offset3<3 /* N */, 3 /* D */>(1, 1, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 2, 2) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(1, 2, 2);
+    offset = offset3<3 /* N */, 3 /* D */>(1, 2, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(2, 2, 2) " << std::endl;
-    offset = offset3<3 /* D */, 3 /* N */>(2, 2, 2);
+    offset = offset3<3 /* N */, 3 /* D */>(2, 2, 2);
     std::cout <<  "offset " << offset << std::endl;
     std::cout << std::endl;
 #endif
