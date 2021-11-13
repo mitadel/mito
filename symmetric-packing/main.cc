@@ -3,14 +3,19 @@
 #include <array>
 #include <cassert>
 
-int entries(int N, int D)
+template<int N>
+int entries(int D) requires (N == 1)
 {
-    if (N == 1) return D;
+    return D;
+}
 
+template<int N>
+int entries(int D) requires (N > 1)
+{
     int sum_entries = 0;
     for (int i = 0; i < D; ++i)
     {
-        sum_entries += entries(N - 1, D - i);
+        sum_entries += entries<N - 1>(D - i);
     }
 
     return sum_entries;
@@ -29,7 +34,7 @@ int offset(int D, int i, T... j) requires (sizeof...(T) == N - 1 && N > 1)
     int sum_entries = 0;
     for (int a = 0; a < i; ++a)
     {
-        sum_entries += entries(N - 1, D - a);
+        sum_entries += entries<N - 1>(D - a);
     }
 
     return sum_entries + offset<N - 1>(D - i, j...);
@@ -55,10 +60,10 @@ int offset3(int i, int j, int k)
 
 int main() {
 
-    assert(entries(2 /* N */, 2 /* D */) == 3);
-    assert(entries(3 /* N */, 2 /* D */) == 4);
-    assert(entries(2 /* N */, 3 /* D */) == 6);
-    assert(entries(3 /* N */, 3 /* D */) == 10);
+    assert(entries<2 /* N */>(2 /* D */) == 3);
+    assert(entries<3 /* N */>(2 /* D */) == 4);
+    assert(entries<2 /* N */>(3 /* D */) == 6);
+    assert(entries<3 /* N */>(3 /* D */) == 10);
 
 #if 0
     int offset = 0;
