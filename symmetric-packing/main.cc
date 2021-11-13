@@ -2,15 +2,16 @@
 #include <utility>
 #include <array>
 #include <cassert>
+#include <tuple>
 
 template<int N>
-int entries(int D) requires (N == 1)
+constexpr int entries(int D) requires (N == 1)
 {
     return D;
 }
 
 template<int N>
-int entries(int D) requires (N > 1)
+constexpr int entries(int D) requires (N > 1)
 {
     int sum_entries = 0;
     for (int i = 0; i < D; ++i)
@@ -23,13 +24,13 @@ int entries(int D) requires (N > 1)
 }
 
 template<int N, class... T> 
-int offset(int D, int i) requires (sizeof...(T) == N - 1 && N == 1)
+constexpr int offset(int D, int i) requires (sizeof...(T) == N - 1 && N == 1)
 {
     return i;
 }
 
 template<int N, class... T> 
-int offset(int D, int i, T... j) requires (sizeof...(T) == N - 1 && N > 1)
+constexpr int offset(int D, int i, T... j) requires (sizeof...(T) == N - 1 && N > 1)
 {
     int sum_entries = 0;
     for (int a = 0; a < i; ++a)
@@ -41,7 +42,7 @@ int offset(int D, int i, T... j) requires (sizeof...(T) == N - 1 && N > 1)
 }
 
 template<int D, int N, class... T> 
-int offsetN(T... index) requires (sizeof...(T) == N)
+constexpr int offsetN(T... index) requires (sizeof...(T) == N)
 {
     // copy the index sequence into an array
     std::array<int, N> shiftedIndex {index...};    
@@ -89,10 +90,10 @@ int offset3(int i, int j, int k)
 
 int main() {
 
-    assert(entries<2 /* N */>(2 /* D */) == 3);
-    assert(entries<3 /* N */>(2 /* D */) == 4);
-    assert(entries<2 /* N */>(3 /* D */) == 6);
-    assert(entries<3 /* N */>(3 /* D */) == 10);
+    static_assert(entries<2 /* N */>(2 /* D */) == 3);
+    static_assert(entries<3 /* N */>(2 /* D */) == 4);
+    static_assert(entries<2 /* N */>(3 /* D */) == 6);
+    static_assert(entries<3 /* N */>(3 /* D */) == 10);
 
 #if 0
     int offset = 0;
