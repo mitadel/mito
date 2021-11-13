@@ -43,14 +43,15 @@ int offset(int D, int i, T... j) requires (sizeof...(T) == N - 1 && N > 1)
 template<int D, int N, class... T> 
 int offsetN(T... index) requires (sizeof...(T) == N)
 {
-    // copy the index sequence into a tuple
-    std::tuple<T...> shiftedIndex(std::forward_as_tuple(index...));    
+    // copy the index sequence into an array
+    std::array<int, N> shiftedIndex {index...};    
+    std::sort(shiftedIndex.begin(), shiftedIndex.end());
 
     // shift the indices (i, j, k, ...) into (i, j - i, k - j, ...)
-    auto _shiftIndices = []<size_t... I>(std::tuple<T...> & i, std::index_sequence<I...>)
+    auto _shiftIndices = []<size_t... I>(std::array<int, N> & i, std::index_sequence<I...>)
     {
         // iterate in reverse order to avoid overwriting entries before using them
-        ((std::get<(N - 2 - I) + 1>(i) -= std::get<(N - 2 - I)>(i)), ... );
+        ((i[(N - 2 - I) + 1] -= i[N - 2 - I]), ... );
         // all done
         return;
     };
@@ -59,9 +60,9 @@ int offsetN(T... index) requires (sizeof...(T) == N)
     _shiftIndices(shiftedIndex, std::make_index_sequence<N-1> {});
 
     // helper function needed to expand the tuple in a parameter pack
-    auto _getOffset = []<size_t... I>(std::tuple<T...> i, std::index_sequence<I...>)
+    auto _getOffset = []<size_t... I>(std::array<int, N> i, std::index_sequence<I...>)
     {
-        return offset<N>(D, std::get<I>(i)...);
+        return offset<N>(D, i[I]...);
     };
 
     // get the offset
