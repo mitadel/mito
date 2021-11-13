@@ -1,8 +1,6 @@
 #include <iostream>
-#include <utility>
 #include <array>
 #include <cassert>
-#include <tuple>
 
 template<int N>
 constexpr int entries(int D) requires (N == 1)
