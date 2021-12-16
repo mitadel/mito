@@ -19,7 +19,7 @@ myFunctionVector2DtoReal(const mito::vector_t<2> & x, mito::real t)
 }
 
 mito::real
-myFunctionTensor3DtoReal(const mito::tensor_t<3> & x, mito::real t)
+myFunctionTensor3DtoReal(const mito::matrix_t<3> & x, mito::real t)
 {
     return x[0] + x[4] + x[8];
 }

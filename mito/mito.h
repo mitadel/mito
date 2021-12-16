@@ -8,12 +8,28 @@
 #include <cassert>
 #include <math.h>
 
-#include "algebra/algebra.h"
+#include <pyre/algebra.h>
 
 // https://stackoverflow.com/questions/4295432/typedef-function-pointer
 // https://stackoverflow.com/questions/7787500/how-to-write-a-function-that-takes-a-functor-as-an-argument
 
 namespace mito {
+    // typedef for real values
+    using real = double;
+    // typedef for scalars
+    using scalar_t = real;
+    // typedef for vectors
+    template <int D, typename T = real>
+    using vector_t = pyre::algebra::vector_t<D, T>;
+    // typedef for matrices
+    template <int D1, int D2 = D1, typename T = real>
+    using matrix_t = pyre::algebra::matrix_t<D1, D2, T>;
+    // typedef for symmetric matrices
+    template <int D, typename T = real>
+    using symmetric_matrix_t = pyre::algebra::symmetric_matrix_t<D, T>;
+    // typedef for diagonal matrices
+    template <int D, typename T = real>
+    using diagonal_matrix_t = pyre::algebra::diagonal_matrix_t<D, T>;
     template <int D>
     using point_t = vector_t<D>;    // Point<D>;
     // templatized typedef for fields
@@ -67,7 +83,7 @@ operator<<(std::ostream & os, const std::array<X, N> & x)
 namespace mito {
     template <typename T>
     struct size {
-        static constexpr int value = T::S;
+        static constexpr int value = T::size;
     };
 
     template <>

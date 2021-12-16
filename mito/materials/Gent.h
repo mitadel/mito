@@ -15,7 +15,7 @@ namespace mito {
             _Jm(Jm) {};
 
         template <int D /*dim*/>
-        void Constitutive(const vector_t<D> & u, const tensor_t<D> & Du, tensor_t<D> & P);
+        void Constitutive(const vector_t<D> & u, const matrix_t<D> & Du, matrix_t<D> & P);
 
       private:
         real _rho;
@@ -25,16 +25,16 @@ namespace mito {
     };
 
     template <int D /*dim*/>
-    void Gent::Constitutive(const vector_t<D> & u, const tensor_t<D> & Du, tensor_t<D> & P)
+    void Gent::Constitutive(const vector_t<D> & u, const matrix_t<D> & Du, matrix_t<D> & P)
     {
         // deformation gradient
-        tensor_t<D> F = Du;
+        matrix_t<D> F = Du;
 
         // inverse of deformation gradient
-        tensor_t<D> invF;
+        matrix_t<D> invF = pyre::algebra::inverse(F);
 
         // J = det F
-        real detF = ComputeInverse(F, invF);
+        real detF = pyre::algebra::determinant(F);
 
         // precompute useful quantities
         // J^2 - 1

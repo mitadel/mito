@@ -24,7 +24,7 @@ namespace mito {
         constexpr int V = D + 1;
 
         // a container to store the coordinates of each vertex in a tensor
-        static tensor_t<V> verticesTensor;
+        static matrix_t<V> verticesTensor;
 
         // assert memory allocation is consistent
         assert(volumes.size() == elements.size());
@@ -55,7 +55,8 @@ namespace mito {
             }
 
             // compute the volume of the e-th element
-            volumes[e] = fabs(ComputeDeterminant(verticesTensor)) / Factorial<D>();
+            volumes[e] = fabs(pyre::algebra::determinant(verticesTensor)) 
+                / pyre::algebra::factorial<D>();
             // update elements counter
             ++e;
         }
