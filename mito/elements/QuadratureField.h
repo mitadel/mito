@@ -29,13 +29,13 @@ namespace mito {
          * constructor
          * @param[in] elements number of elements for which data are stored
          */
-        inline QuadratureField(int nElements) :
-            QuadratureField(nElements, pack_t { { nElements, Q } })
+        inline QuadratureField(int nElements, std::string name = "") :
+            QuadratureField(nElements, pack_t { { nElements, Q } }, name)
         {}
 
       private:
-        inline QuadratureField(int nElements, const pack_t & packing) :
-            _grid { packing, packing.cells() }
+        inline QuadratureField(int nElements, const pack_t & packing, std::string name = "") :
+            _grid { packing, packing.cells() }, _name(name)
         {
             // initialize memory
             reset();
@@ -117,9 +117,14 @@ namespace mito {
         }
 
         /**
-         * accessor for name
+         * const accessor for name
          */
         inline std::string name() const { return _name; }
+
+        /**
+         * non-const accessor for name
+         */
+        inline std::string& name() { return _name; }
 
       private:
         // instantiate the grid
