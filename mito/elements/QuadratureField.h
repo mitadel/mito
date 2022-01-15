@@ -126,6 +126,12 @@ namespace mito {
          */
         inline std::string& name() { return _name; }
 
+        // support for ranged for loops (wrapping grid)
+        inline const auto begin() const { return _grid.cbegin(); }
+        inline const auto end() const { return _grid.cend(); }
+        inline auto begin() { return _grid.begin(); }
+        inline auto end() { return _grid.end(); }
+
       private:
         // instantiate the grid
         grid_t _grid;
