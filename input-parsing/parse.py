@@ -2,11 +2,25 @@
 
 import yaml
 
-with open('simulation-data.yaml') as f:
-    data = yaml.load(f, Loader=yaml.FullLoader)
-    #print(data)
-    
-    filename = data['domain']['mesh']['filename']
-    initialConditions = data['solver']['initial conditions']
-    print("The filename is", filename)
-    print("Initial conditions are", initialConditions)
+
+class Reader:
+    def __init__(self, fileName):
+        with open(fileName) as f:
+            self.data = yaml.load(f, Loader=yaml.FullLoader)
+
+    def __str__(self):
+        meshFile = self.data['domain']['mesh']
+        output = "Mesh file: " + meshFile + "\n"
+
+        setting_mechanics = self.data['setting']['mechanics']
+
+        for item in setting_mechanics:
+            output += str(item['region']) + "\n"
+            output += str(item['type']) + "\n"
+
+        return output
+
+
+if __name__ == '__main__':
+    reader = Reader('simulation-data.yaml')
+    print(reader)
