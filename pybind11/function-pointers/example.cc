@@ -12,18 +12,21 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
 #include <functional>
+#include "../../mito/mito.h"
 
 namespace py = pybind11;
 
 class Integral {
   public:
     using real = double;
-    using function_t = std::function<real(real &)>;
+    // using X = double;
+    using X = mito::vector_t<3>;
+    using function_t = std::function<real(X &)>;
 
   public:
     Integral(function_t function) : _function(function) {};
     ~Integral() {};
-    real evaluate(real & x) { return _function(x); }
+    real evaluate(X & x) { return _function(x); }
 
   private:
     function_t _function;
@@ -41,13 +44,36 @@ PYBIND11_MODULE(example, m)
             // the implementation
             py::init<Integral::function_t>())
         // interface
-        // Load
+        // evaluate
         .def(
             "evaluate",
             // the method;
             &Integral::evaluate,
             // the docstring
             "integrate function")
+        // done
+        ;
+
+    // the mito vector interface
+    py::class_<mito::vector_t<3>>(m, "Vector3D")
+        // the default constructor
+        .def(
+            // the implementation
+            py::init<>())
+        // the brace-enclosed initializer list constructor
+        .def(
+            // the implementation
+            py::init([](std::tuple<mito::real, mito::real, mito::real> data) {
+                // unpack
+                auto [x0, x1, x2] = data;
+                // instantiate
+                return new mito::vector_t<3> { x0, x1, x2 };
+            }))
+        // operator[]
+        .def(
+            "__getitem__",
+            // the implementation
+            [](const mito::vector_t<3> & self, int i) { return self[i]; })
         // done
         ;
 }

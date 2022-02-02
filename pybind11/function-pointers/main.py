@@ -4,8 +4,9 @@ import example
 
 
 def square(x):
-    return eval('x * x')
+    return eval('x[0] * x[1]')
 
 
 integral = example.Integral(square)
-print(integral.evaluate(10.0))
+x = example.Vector3D([10., 20., 30.])
+print(integral.evaluate(x))
