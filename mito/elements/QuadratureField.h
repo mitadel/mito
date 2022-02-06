@@ -11,13 +11,12 @@ namespace mito {
     class QuadratureField {
 
       public:
-        using T = typename type<Y>::value;
         static constexpr int D = size<Y>::value;
 
       private:
         // conventionally packed grid for {e, q}
         using pack_t = pyre::grid::canonical_t<2>;
-        // of T on the heap
+        // of Y on the heap
         using storage_t = pyre::memory::heap_t<Y>;
         // putting it all together
         using grid_t = pyre::grid::grid_t<pack_t, storage_t>;
