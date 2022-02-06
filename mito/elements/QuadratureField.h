@@ -93,9 +93,9 @@ namespace mito {
         inline std::string name() const { return _name; }
 
         /**
-         * non-const accessor for name
+         * setter method for name
          */
-        inline std::string& name() { return _name; }
+        inline void name(std::string name) { _name = name; return; }
 
         // support for ranged for loops (wrapping grid)
         inline const auto begin() const { return _grid.cbegin(); }
