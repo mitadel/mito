@@ -32,13 +32,7 @@ namespace mito {
       private:
         inline QuadratureField(int nElements, const pack_t & packing, std::string name = "") :
             _grid { packing, packing.cells() }, _name(name)
-        {
-            // initialize memory
-            reset();
-
-            // all done
-            return;
-        }
+        {}
 
       public:
         // destructor
@@ -92,19 +86,6 @@ namespace mito {
          * @return the number of quadrature point per element
          */
         inline constexpr int n_quad() { return Q; }
-
-        /**
-         * reset to zero
-         */
-        inline void reset()
-        {
-            // reset all entries
-            for (const auto & idx : _grid.layout()) {
-                _grid[idx].reset();
-            }
-            // all done
-            return;
-        }
 
         /**
          * const accessor for name
