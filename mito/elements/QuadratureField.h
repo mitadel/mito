@@ -10,9 +10,6 @@ namespace mito {
     template <int Q, typename Y>
     class QuadratureField {
 
-      public:
-        static constexpr int D = size<Y>::value;
-
       private:
         // conventionally packed grid for {e, q}
         using pack_t = pyre::grid::canonical_t<2>;
@@ -83,12 +80,6 @@ namespace mito {
             // all done
             return _grid[index];
         }
-
-        /**
-         * accessor for the size of array stored per quadrature point per element
-         * @return the size of array stored per quadrature point per element
-         */
-        inline constexpr int n_dim() { return D; }
 
         /**
          * accessor for the number of elements
