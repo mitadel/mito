@@ -32,7 +32,7 @@ namespace mito {
         const VertexPointMap & operator=(const VertexPointMap &&) = delete;
 
       public:
-        void print()
+        void print() const
         {
             // iterate on map
             for (auto item : _map) {
