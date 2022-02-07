@@ -21,12 +21,12 @@ class Integral {
     using real = double;
     // using X = double;
     using X = mito::vector_t<3>;
-    using function_t = std::function<real(X &)>;
+    using function_t = std::function<real(X &, real &)>;
 
   public:
     Integral(function_t function) : _function(function) {};
     ~Integral() {};
-    real evaluate(X & x) { return _function(x); }
+    real evaluate(X & x, real & t) { return _function(x, t); }
 
   private:
     function_t _function;
