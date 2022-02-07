@@ -142,6 +142,19 @@ namespace mito {
             return std::get<I>(_entities).size();
         }
 
+        template <int I>
+        const auto & getEntities() const
+        {
+            // all done
+            return std::get<I>(_entities);
+        }
+
+        const auto & getVertexPointMap() const
+        {
+            // all done
+            return _vertexPointMap;
+        }
+
       private:
         /**
          * @brief Registers an entity in the composition map
