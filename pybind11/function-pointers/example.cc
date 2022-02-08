@@ -76,4 +76,28 @@ PYBIND11_MODULE(example, m)
             [](const mito::vector_t<3> & self, int i) { return self[i]; })
         // done
         ;
+
+
+    // the mito vector interface
+    py::class_<mito::vector_t<2>>(m, "Vector2D")
+        // the default constructor
+        .def(
+            // the implementation
+            py::init<>())
+        // the brace-enclosed initializer list constructor
+        .def(
+            // the implementation
+            py::init([](std::tuple<mito::real, mito::real> data) {
+                // unpack
+                auto [x0, x1] = data;
+                // instantiate
+                return new mito::vector_t<2> { x0, x1 };
+            }))
+        // operator[]
+        .def(
+            "__getitem__",
+            // the implementation
+            [](const mito::vector_t<2> & self, int i) { return self[i]; })
+        // done
+        ;
 }
