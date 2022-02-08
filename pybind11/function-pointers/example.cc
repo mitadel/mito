@@ -15,6 +15,7 @@
 #include "../../mito/mito.h"
 #include "../../mito/mesh/Simplex.h"
 #include "../../mito/mesh/Mesh.h"
+#include "../../mito/mesh/ElementSet.h"
 #include "../../mito/math/Function.h"
 #include "../../mito/math/Field.h"
 
@@ -162,5 +163,28 @@ PYBIND11_MODULE(example, m)
             "the positions of the vertices")
         // done
         ;
+
+
+    // the mito ElementSet interface
+    py::class_<mito::ElementSet<mito::triangle_t, 2>>(m, "ElementSetTriangle2D")
+        // the constructor
+        .def(
+            // the implementation
+            py::init<const std::vector<mito::triangle_t *> &, const mito::VertexPointMap<2> &>())
+        // the constructor
+        .def(
+            // the implementation
+            py::init([](std::string filename) {
+                // TOFIX: who is going to delete?
+                // read the mesh
+                mito::Mesh<2> * mesh = new mito::Mesh<2>(filename);
+                // instantiate
+                return new mito::ElementSet<mito::triangle_t, 2>(
+                    mesh->getEntities<2>(), 
+                    mesh->getVertexPointMap());
+            }))
+        // done
+        ;
+
 
 }
