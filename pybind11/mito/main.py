@@ -1,19 +1,19 @@
 #! /usr/bin/env python3
 
-import example
+import mito
 from numpy import cos
 
 def myfunction(x):
     return eval('cos(x[0] * x[1])')
 
 # TOFIX: hardcoded C++ cos(x[0] * x[1]) function
-field = example.ScalarField2D()
-#field = example.ScalarField2D(myfunction)
-#x = example.Vector2D([10., 20.])
+field = mito.ScalarField2D()
+#field = mito.ScalarField2D(myfunction)
+#x = mito.Vector2D([10., 20.])
 #print(field(x))
 
-elementset = example.ElementSetTriangle2D("square.summit")
-integrator = example.GaussIntegrator2Triangle2D(elementset)
+elementset = mito.ElementSetTriangle2D("square.summit")
+integrator = mito.GaussIntegrator2Triangle2D(elementset)
 
 N = 10000
 for i in range(0, N):

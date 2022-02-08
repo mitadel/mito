@@ -3,11 +3,11 @@
 
 // To compile on MacOS:
 // >  c++ -O3 -Wall -shared -std=c++11 -undefined dynamic_lookup `python3 -m pybind11 --includes`
-// example.cpp -o example`python3-config --extension-suffix`
+// mito.cpp -o mito`python3-config --extension-suffix`
 //
 // To compile on Linux:
-// > c++ -O3 -Wall -shared -std=c++11 -fPIC `python3 -m pybind11 --includes` example.cpp -o
-// example`python3-config --extension-suffix`
+// > c++ -O3 -Wall -shared -std=c++11 -fPIC `python3 -m pybind11 --includes` mito.cpp -o
+// mito`python3-config --extension-suffix`
 
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
@@ -22,43 +22,10 @@
 
 namespace py = pybind11;
 
-class Integral {
-  public:
-    using real = double;
-    // using X = double;
-    using X = mito::vector_t<3>;
-    using function_t = std::function<real(X &, real &)>;
-
-  public:
-    Integral(function_t function) : _function(function) {};
-    ~Integral() {};
-    real evaluate(X & x, real & t) { return _function(x, t); }
-
-  private:
-    function_t _function;
-};
-
-
-PYBIND11_MODULE(example, m)
+PYBIND11_MODULE(mito, m)
 {
-    m.doc() = "pybind11 example plugin";    // optional module docstring
+    m.doc() = "pybind11 mito plugin";    // optional module docstring
 
-    // the Integral interface
-    py::class_<Integral>(m, "Integral")
-        // the constructor
-        .def(
-            // the implementation
-            py::init<Integral::function_t>())
-        // interface
-        // evaluate
-        .def(
-            "evaluate",
-            // the method;
-            &Integral::evaluate,
-            // the docstring
-            "integrate function")
-        // done
-        ;
 
     // the mito vector interface
     py::class_<mito::vector_t<3>>(m, "Vector3D")
