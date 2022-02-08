@@ -100,4 +100,47 @@ PYBIND11_MODULE(example, m)
             [](const mito::vector_t<2> & self, int i) { return self[i]; })
         // done
         ;
+
+
+    // the mito scalar Field interface
+    py::class_<mito::Field<mito::vector_t<3>, mito::scalar_t>>(m, "ScalarField3D")
+        // the constructor
+        .def(
+            // the implementation
+            py::init<const mito::functor<mito::vector_t<3>, mito::scalar_t> &>())
+        // operator()
+        .def(
+            "__call__",
+            // the implementation
+            [](const mito::Field<mito::vector_t<3>, mito::scalar_t> & self, 
+                const mito::vector_t<3> & x) { return self(x); })
+        // done
+        ;
+
+
+    // the mito scalar Field interface
+    py::class_<mito::Field<mito::vector_t<2>, mito::scalar_t>>(m, "ScalarField2D")
+        // TOFIX:
+        // the default constructor
+        .def(
+            // the implementation
+            py::init([]() {
+                return new mito::Field<mito::vector_t<2>, mito::scalar_t>(
+                    mito::Function<mito::vector_t<2>>(
+                        [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); })
+                );
+            }))
+        // the constructor
+        .def(
+            // the implementation
+            py::init<const mito::functor<mito::vector_t<2>, mito::scalar_t> &>())
+        // operator()
+        .def(
+            "__call__",
+            // the implementation
+            [](const mito::Field<mito::vector_t<2>, mito::scalar_t> & self,
+               const mito::vector_t<2> & x) { return self(x); })
+        // done
+        ;
+
 }
