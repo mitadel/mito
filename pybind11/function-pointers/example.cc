@@ -13,6 +13,10 @@
 #include <pybind11/functional.h>
 #include <functional>
 #include "../../mito/mito.h"
+#include "../../mito/mesh/Simplex.h"
+#include "../../mito/mesh/Mesh.h"
+#include "../../mito/math/Function.h"
+#include "../../mito/math/Field.h"
 
 namespace py = pybind11;
 
@@ -140,6 +144,22 @@ PYBIND11_MODULE(example, m)
             // the implementation
             [](const mito::Field<mito::vector_t<2>, mito::scalar_t> & self,
                const mito::vector_t<2> & x) { return self(x); })
+        // done
+        ;
+
+
+    // the mito Mesh interface
+    py::class_<mito::Mesh<2>>(m, "Mesh2D")
+        // the constructor
+        .def(
+            // the implementation
+            py::init<std::string>())
+        // accessors
+        // the elements; read-only property
+        .def_property_readonly("elements", &mito::Mesh<2>::getEntities<2>, "the body elements")
+        // the vertex-point map; read-only property
+        .def_property_readonly("vertices", &mito::Mesh<2>::getVertexPointMap, 
+            "the positions of the vertices")
         // done
         ;
 
