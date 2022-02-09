@@ -16,11 +16,9 @@ main()
     const auto & vertexPointMap = mesh.getVertexPointMap();
     mito::ElementSet elementSet(mesh.getEntities<2>(), mesh.getVertexPointMap());
 
-    // a scalar function
-    mito::Function<mito::vector_t<2>> f(
-        [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
     // instantiate a scalar field
-    mito::ScalarField f_cosine(f);
+    mito::ScalarField<2> f_cosine(
+        [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
     mito::Integrator<
