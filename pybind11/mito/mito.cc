@@ -98,9 +98,8 @@ PYBIND11_MODULE(mito, m)
         .def(
             // the implementation
             py::init([]() {
-                return new mito::Field<mito::vector_t<2>, mito::scalar_t>(
-                    mito::Function<mito::vector_t<2>>(
-                        [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); })
+                return new mito::ScalarField<2>(
+                        [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); }
                 );
             }))
         // the constructor
