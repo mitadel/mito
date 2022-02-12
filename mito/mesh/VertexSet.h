@@ -1,35 +1,35 @@
 // code guard
-#if !defined(mito_mesh_VertexPointMap_h)
-#define mito_mesh_VertexPointMap_h
+#if !defined(mito_mesh_VertexSet_h)
+#define mito_mesh_VertexSet_h
 
 #include "Simplex.h"
 
 namespace mito {
 
     template <int D>
-    class VertexPointMap {
+    class VertexSet {
 
         // using map_t = std::unordered_map<std::reference_wrapper<vertex_t>, point_t<D>>;
         // TODO: test O for access
         using map_t = std::unordered_map<const vertex_t *, const point_t<D>>;
 
       public:
-        VertexPointMap() : _map() {};
+        VertexSet() : _map() {};
 
-        ~VertexPointMap() {}
+        ~VertexSet() {}
 
       private:
         // delete copy constructor
-        VertexPointMap(const VertexPointMap &) = delete;
+        VertexSet(const VertexSet &) = delete;
 
         // delete move constructor
-        VertexPointMap(const VertexPointMap &&) = delete;
+        VertexSet(const VertexSet &&) = delete;
 
         // delete assignment operator
-        const VertexPointMap & operator=(const VertexPointMap &) = delete;
+        const VertexSet & operator=(const VertexSet &) = delete;
 
         // delete move assignment operator
-        const VertexPointMap & operator=(const VertexPointMap &&) = delete;
+        const VertexSet & operator=(const VertexSet &&) = delete;
 
       public:
         void print() const
@@ -77,6 +77,6 @@ namespace mito {
 
 }    // namespace mito
 
-#endif    // mito_mesh_VertexPointMap_h
+#endif    // mito_mesh_VertexSet_h
 
 // end of file

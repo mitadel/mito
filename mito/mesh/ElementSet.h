@@ -3,7 +3,7 @@
 #define mito_mesh_ElementSet_h
 
 #include "Simplex.h"
-#include "VertexPointMap.h"
+#include "VertexSet.h"
 
 namespace mito {
 
@@ -17,7 +17,7 @@ namespace mito {
 
     template <int D>
     void computeSimplicesVolume(
-        const std::vector<Simplex<D> *> & elements, const VertexPointMap<D> & coordinatesMap,
+        const std::vector<Simplex<D> *> & elements, const VertexSet<D> & coordinatesMap,
         std::vector<real> & volumes)
     {
         // number of vertices
@@ -67,12 +67,12 @@ namespace mito {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const std::vector<element_t *> & elements, const VertexPointMap<D> & coordinatesMap,
+        const std::vector<element_t *> & elements, const VertexSet<D> & coordinatesMap,
         std::vector<real> & volumes);
 
     template <>
     void computeElementsVolume<triangle_t, 2>(
-        const std::vector<triangle_t *> & elements, const VertexPointMap<2> & coordinatesMap,
+        const std::vector<triangle_t *> & elements, const VertexSet<2> & coordinatesMap,
         std::vector<real> & volumes)
     {
         return computeSimplicesVolume<2>(elements, coordinatesMap, volumes);
@@ -80,7 +80,7 @@ namespace mito {
 
     template <>
     void computeElementsVolume<tetrahedron_t, 3>(
-        const std::vector<tetrahedron_t *> & elements, const VertexPointMap<3> & coordinatesMap,
+        const std::vector<tetrahedron_t *> & elements, const VertexSet<3> & coordinatesMap,
         std::vector<real> & volumes)
     {
         return computeSimplicesVolume<3>(elements, coordinatesMap, volumes);
@@ -88,7 +88,7 @@ namespace mito {
 
     template <>
     void computeElementsVolume<segment_t, 1>(
-        const std::vector<segment_t *> & elements, const VertexPointMap<1> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const VertexSet<1> & coordinatesMap,
         std::vector<real> & volumes)
     {
         return computeSimplicesVolume<1>(elements, coordinatesMap, volumes);
@@ -96,7 +96,7 @@ namespace mito {
 
     template <int D>
     void computeSegmentsLength(
-        const std::vector<segment_t *> & elements, const VertexPointMap<D> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const VertexSet<D> & coordinatesMap,
         std::vector<real> & length)
     {
         // number of vertices
@@ -131,7 +131,7 @@ namespace mito {
 
     template <>
     void computeElementsVolume<segment_t, 2>(
-        const std::vector<segment_t *> & elements, const VertexPointMap<2> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const VertexSet<2> & coordinatesMap,
         std::vector<real> & volumes)
     {
         return computeSegmentsLength<2>(elements, coordinatesMap, volumes);
@@ -139,7 +139,7 @@ namespace mito {
 
     template <>
     void computeElementsVolume<segment_t, 3>(
-        const std::vector<segment_t *> & elements, const VertexPointMap<3> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const VertexSet<3> & coordinatesMap,
         std::vector<real> & volumes)
     {
         return computeSegmentsLength<3>(elements, coordinatesMap, volumes);
@@ -148,7 +148,7 @@ namespace mito {
     // follows implementation by Kahan2014
     template <int D = 3>
     void computeTriangleArea(
-        const std::vector<triangle_t *> & elements, const VertexPointMap<D> & coordinatesMap,
+        const std::vector<triangle_t *> & elements, const VertexSet<D> & coordinatesMap,
         std::vector<real> & areas)
     {
         // loop on elements
@@ -193,7 +193,7 @@ namespace mito {
 
     template <>
     void computeElementsVolume<triangle_t, 3>(
-        const std::vector<triangle_t *> & elements, const VertexPointMap<3> & coordinatesMap,
+        const std::vector<triangle_t *> & elements, const VertexSet<3> & coordinatesMap,
         std::vector<real> & volumes)
     {
         return computeTriangleArea(elements, coordinatesMap, volumes);
@@ -214,7 +214,7 @@ namespace mito {
 
       public:
         ElementSet(
-            const std::vector<element_t *> & elements, const VertexPointMap<D> & coordinatesMap) :
+            const std::vector<element_t *> & elements, const VertexSet<D> & coordinatesMap) :
             _elements(elements),
             _coordinatesMap(coordinatesMap),
             _jacobians(elements.size(), 0.0)
@@ -223,7 +223,7 @@ namespace mito {
             _computeJacobians();
         }
 
-        ElementSet(std::vector<element_t *> && elements, const VertexPointMap<D> & coordinatesMap) :
+        ElementSet(std::vector<element_t *> && elements, const VertexSet<D> & coordinatesMap) :
             _elements(elements),
             _coordinatesMap(coordinatesMap),
             _jacobians(elements.size(), 0.0)
@@ -234,11 +234,11 @@ namespace mito {
 
         ElementSet(
             const std::vector<element_t *> & elements,
-            const VertexPointMap<D> && coordinatesMap) = delete;
+            const VertexSet<D> && coordinatesMap) = delete;
 
         ElementSet(
             std::vector<element_t *> && elements,
-            const VertexPointMap<D> && coordinatesMap) = delete;
+            const VertexSet<D> && coordinatesMap) = delete;
 
         ~ElementSet() {}
 
@@ -289,7 +289,7 @@ namespace mito {
 
       private:
         const std::vector<element_t *> _elements;
-        const VertexPointMap<D> & _coordinatesMap;
+        const VertexSet<D> & _coordinatesMap;
         std::vector<real> _jacobians;
     };
 

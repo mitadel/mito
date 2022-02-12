@@ -40,7 +40,7 @@ LoadMesh(std::string fileName)
 
     // fill in vertices
     std::vector<mito::vertex_t *> vertices(N_vertices, nullptr);
-    mito::VertexPointMap<D> vertexCoordinatesMap;
+    mito::VertexSet<D> vertexCoordinatesMap;
     for (auto & vertex : vertices) {
         // instantiate new vertex
         vertex = new mito::vertex_t();

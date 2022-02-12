@@ -137,7 +137,7 @@ PYBIND11_MODULE(mito, m)
         // the constructor
         .def(
             // the implementation
-            py::init<const std::vector<mito::triangle_t *> &, const mito::VertexPointMap<2> &>())
+            py::init<const std::vector<mito::triangle_t *> &, const mito::VertexSet<2> &>())
         // the constructor
         .def(
             // the implementation

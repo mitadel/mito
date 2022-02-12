@@ -3,7 +3,7 @@
 #define mito_mesh_Mesh_h
 
 #include "Simplex.h"
-#include "VertexPointMap.h"
+#include "VertexSet.h"
 #include <map>
 #include <fstream>
 
@@ -371,7 +371,7 @@ namespace mito {
         // of arrays of (i-1)-dimensional simplices
         composition_tuple_t _compositions;
         // a map between the vertices addresses and a physical point in D-dimensional space
-        VertexPointMap<D> _vertexPointMap;
+        VertexSet<D> _vertexPointMap;
     };
 
 }    // namespace mito
