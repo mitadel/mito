@@ -124,9 +124,9 @@ PYBIND11_MODULE(mito, m)
             py::init<std::string>())
         // accessors
         // the elements; read-only property
-        .def_property_readonly("elements", &mito::Mesh<2>::getEntities<2>, "the body elements")
+        .def_property_readonly("elements", &mito::Mesh<2>::elements<2>, "the body elements")
         // the vertex-point map; read-only property
-        .def_property_readonly("vertices", &mito::Mesh<2>::getVertexPointMap, 
+        .def_property_readonly("vertices", &mito::Mesh<2>::vertices, 
             "the positions of the vertices")
         // done
         ;
@@ -147,8 +147,8 @@ PYBIND11_MODULE(mito, m)
                 mito::Mesh<2> * mesh = new mito::Mesh<2>(filename);
                 // instantiate
                 return new mito::ElementSet<mito::triangle_t, 2>(
-                    mesh->getEntities<2>(), 
-                    mesh->getVertexPointMap());
+                    mesh->elements<2>(), 
+                    mesh->vertices());
             }))
         // done
         ;
