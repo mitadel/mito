@@ -71,8 +71,6 @@ namespace mito {
         template <class Y>
         Y integrate(const Field<vector_t<D>, Y> & field)
         {
-            std::cout << "integrating ... " << std::endl;
-
             auto values = field(_coordinates);
 
             Y result;
