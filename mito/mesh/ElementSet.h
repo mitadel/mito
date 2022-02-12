@@ -38,7 +38,7 @@ namespace mito {
 
             // use a set to collect vertices without repeated entries
             std::set<const vertex_t *> vertices;
-            element->getVertices(vertices);
+            element->vertices(vertices);
             // assert you found D+1 vertices
             assert(V == vertices.size());
 
@@ -111,7 +111,7 @@ namespace mito {
 
             // collect vertices
             std::set<const vertex_t *> vertices_set;
-            element->getVertices(vertices_set);
+            element->vertices(vertices_set);
             std::vector<const vertex_t *> vertices(vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of vertices
@@ -157,7 +157,7 @@ namespace mito {
 
             // collect vertices
             std::set<const vertex_t *> vertices_set;
-            element->getVertices(vertices_set);
+            element->vertices(vertices_set);
             std::vector<const vertex_t *> vertices(vertices_set.begin(), vertices_set.end());
 
             // compute lengths of three edges

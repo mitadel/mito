@@ -39,7 +39,7 @@ namespace mito {
             for (const auto & element : _elementSet.elements()) {
                 // use a set to collect vertices without repeated entries
                 std::set<const vertex_t *> vertices;
-                element->getVertices(vertices);
+                element->vertices(vertices);
                 // loop on vertices
                 int v = 0;
                 for (const auto & vertex : vertices) {

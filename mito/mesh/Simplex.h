@@ -62,10 +62,10 @@ namespace mito {
       public:
         const auto & simplices() const { return _simplices; }
 
-        void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
+        void vertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
         {
             for (const auto & simplex : simplices()) {
-                simplex->getVertices(vertices);
+                simplex->vertices(vertices);
             }
         }
 
@@ -84,7 +84,7 @@ namespace mito {
             std::set<const Simplex<0> * /* vertex_t* */> vertices;
             // collect vertices of every subsimplex of this simplex
             for (const auto & simplex : simplices()) {
-                simplex->getVertices(vertices);
+                simplex->vertices(vertices);
             }
             // if this simplex does not have D+1 vertices, something went wrong
             if (vertices.size() != int(D) + 1) {
@@ -124,7 +124,7 @@ namespace mito {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
-        void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
+        void vertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
         {
             // insert this vertex
             vertices.insert(this);
