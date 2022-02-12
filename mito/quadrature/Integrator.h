@@ -5,7 +5,7 @@
 #include "../mito.h"
 #include "../mesh/ElementSet.h"
 #include "../math/Field.h"
-#include "../elements/QuadratureField.h"
+#include "../fem/QuadratureField.h"
 #include "QuadratureRule.h"
 
 namespace mito {
