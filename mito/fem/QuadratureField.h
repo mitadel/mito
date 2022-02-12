@@ -2,10 +2,8 @@
 #if !defined(mito_fem_QuadratureField_h)
 #define mito_fem_QuadratureField_h
 
-#include "../mito.h"
-#include <pyre/grid.h>
 
-namespace mito {
+namespace mito::fem {
 
     template <int Q, class Y>
     class QuadratureField {
@@ -116,11 +114,8 @@ namespace mito {
         std::string _name;
     };
 
-    template <int Q, class Y>
-    using quadrature_field_t = QuadratureField<Q, Y>;
-
 }    // namespace mito
 
-#endif    // mito_elements_QuadratureField_h
+#endif    // mito_fem_QuadratureField_h
 
 // end of file

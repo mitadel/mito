@@ -2,10 +2,10 @@
 #if !defined(mito_elements_NodalField_h)
 #define mito_elements_NodalField_h
 
-#include "../mito.h"
 
-namespace mito {
+namespace mito::fem {
 
+    // TOFIX: order of template parameters
     template <typename T, int D>
     class NodalField {
       public:

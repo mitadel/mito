@@ -4,7 +4,7 @@
 
 #include "Function.h"
 #include "../mito.h"
-#include "../fem/QuadratureField.h"
+#include "../fem.h" // TOFIX
 
 namespace mito {
 
@@ -73,9 +73,9 @@ namespace mito {
         }
 
         template <int Q>
-        inline auto operator()(const quadrature_field_t<Q, X> & x) const
+        inline auto operator()(const fem::quadrature_field_t<Q, X> & x) const
         {
-            quadrature_field_t<Q, Y> values(x.n_elements());
+            fem::quadrature_field_t<Q, Y> values(x.n_elements());
 
             // evaluate operator() at all elements of x
             for (int e = 0; e < values.n_elements(); ++e) {

@@ -5,7 +5,7 @@
 #include "../mito.h"
 #include "../mesh/ElementSet.h"
 #include "../math/Field.h"
-#include "../fem/QuadratureField.h"
+#include "../fem.h"
 #include "QuadratureRule.h"
 
 namespace mito {
@@ -96,7 +96,7 @@ namespace mito {
         // the domain of integration
         const element_set_t & _elementSet;
         // the coordinates of the quadrature points in the domain of integration
-        quadrature_field_t<Q, vector_t<D>> _coordinates;
+        fem::quadrature_field_t<Q, vector_t<D>> _coordinates;
     };
 
 }    // namespace  mito
