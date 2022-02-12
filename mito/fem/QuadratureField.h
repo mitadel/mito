@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_elements_QuadratureField_h)
-#define mito_elements_QuadratureField_h
+#if !defined(mito_fem_QuadratureField_h)
+#define mito_fem_QuadratureField_h
 
 #include "../mito.h"
 #include <pyre/grid.h>
