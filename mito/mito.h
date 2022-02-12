@@ -33,7 +33,7 @@ namespace mito {
     template <int D>
     using point_t = vector_t<D>;    // Point<D>;
     // templatized typedef for fields
-    template <typename X, typename Y>
+    template <class X, class Y>
     using field = Y (*)(const X &, real);
 }
 
@@ -81,7 +81,7 @@ operator<<(std::ostream & os, const std::array<X, N> & x)
 
 // traits on mito types
 namespace mito {
-    template <typename T>
+    template <class T>
     struct size {
         static constexpr int value = T::size;
     };
@@ -101,7 +101,7 @@ namespace mito {
         static constexpr int value = 1;
     };
 
-    template <typename T>
+    template <class T>
     struct type {
         using value = typename T ::type;
     };
@@ -123,7 +123,7 @@ namespace mito {
 }
 
 namespace mito {
-    template <typename X, typename Y>
+    template <class X, class Y>
     int AddDirichletBC(std::string boundaryLabel, const field<X, Y> & myF)
     {
         std::cout << "Setting Dirichlet BC on " << boundaryLabel << std::endl;

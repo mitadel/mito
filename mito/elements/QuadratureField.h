@@ -7,7 +7,7 @@
 
 namespace mito {
 
-    template <int Q, typename Y>
+    template <int Q, class Y>
     class QuadratureField {
 
       private:
@@ -31,7 +31,8 @@ namespace mito {
 
       private:
         inline QuadratureField(int nElements, const pack_t & packing, std::string name = "") :
-            _grid { packing, packing.cells() }, _name(name)
+            _grid { packing, packing.cells() },
+            _name(name)
         {}
 
       public:
@@ -95,7 +96,11 @@ namespace mito {
         /**
          * setter method for name
          */
-        inline void name(std::string name) { _name = name; return; }
+        inline void name(std::string name)
+        {
+            _name = name;
+            return;
+        }
 
         // support for ranged for loops (wrapping grid)
         inline const auto begin() const { return _grid.cbegin(); }
@@ -111,7 +116,7 @@ namespace mito {
         std::string _name;
     };
 
-    template <int Q, typename Y>
+    template <int Q, class Y>
     using quadrature_field_t = QuadratureField<Q, Y>;
 
 }    // namespace mito

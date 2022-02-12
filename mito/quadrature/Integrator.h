@@ -68,7 +68,7 @@ namespace mito {
             _computeQuadPointCoordinates();
         }
 
-        template <typename Y>
+        template <class Y>
         Y integrate(const Field<vector_t<D>, Y> & field)
         {
             std::cout << "integrating ... " << std::endl;

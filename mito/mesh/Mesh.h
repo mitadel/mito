@@ -14,7 +14,7 @@ namespace mito {
 
       private:
         // typedef for a collection of mesh entities
-        template <typename T>
+        template <class T>
         using entity_collection = std::vector<T>;
 
         // typedef for a collection of simplices of dimension I-1

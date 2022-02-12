@@ -11,7 +11,7 @@ namespace mito {
     // TODO: Add operator+ for scalar fields and reals
 
     // f(X,t) with (X \in R^D, t \in R) -> Y
-    template <typename X, typename Y = scalar_t>
+    template <class X, class Y = scalar_t>
     class Field {
 
         // dimension of the X space
@@ -114,7 +114,7 @@ namespace mito {
     template <int D>
     using ScalarField = Field<vector_t<D>, scalar_t>;
 
-    template <typename X, typename Y, std::size_t... I>
+    template <class X, class Y, std::size_t... I>
     inline auto _dSum(
         const Field<X, Y> & fieldA, const Field<X, Y> & fieldB, std::index_sequence<I...>)
     {
@@ -125,7 +125,7 @@ namespace mito {
         return Df;
     }
 
-    template <typename X, typename Y>
+    template <class X, class Y>
     auto operator+(const Field<X, Y> & fieldA, const Field<X, Y> & fieldB)
     {
         // dimension of the X space

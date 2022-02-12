@@ -43,7 +43,7 @@ namespace mito {
         grid_t _grid;
     };
 
-    template <int Q, typename Y>
+    template <int Q, class Y>
     class QuadratureFieldGrid {
 
         static constexpr int D = Y::size();
@@ -144,7 +144,7 @@ namespace mito {
     };
 }
 
-template <int Q, typename Y>
+template <int Q, class Y>
 void
 myConstFunction(const mito::QuadratureFieldGrid<Q, Y> & quadF)
 {
