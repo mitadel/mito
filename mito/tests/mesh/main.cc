@@ -12,9 +12,9 @@ main()
     // load mesh
     mito::Mesh<2> mesh("square.summit");
     // instantiate an ElementSet as a collection of simplices and a vertex-coordinates mapping.
-    const auto & elements = mesh.getEntities<2>(); //TODO: region label to fetch elements
-    const auto & vertexPointMap = mesh.getVertexPointMap();
-    mito::ElementSet elementSet(mesh.getEntities<2>(), mesh.getVertexPointMap());
+    const auto & elements = mesh.elements<2>(); //TODO: region label to fetch elements
+    const auto & vertices = mesh.vertices();
+    mito::ElementSet elementSet(elements, vertices);
 
     // instantiate a scalar field
     mito::ScalarField<2> f_cosine(

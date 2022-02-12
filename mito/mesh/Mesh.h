@@ -13,32 +13,32 @@ namespace mito {
     class Mesh {
 
       private:
-        // typedef for a collection of mesh entities
+        // typedef for a container of mesh simplices
         template <class T>
-        using entity_collection = std::vector<T>;
+        using simplex_container = std::vector<T>;
 
         // typedef for a collection of simplices of dimension I-1
         template <size_t I>
-        using simplex_entity_collection = entity_collection<Simplex<int(I)> *>;
+        using simplex_collection = simplex_container<Simplex<int(I)> *>;
 
-        // simplex_entity_collection<I>... expands to:
-        // entity_collection<Simplex<0>*>, entity_collection<Simplex<1>*>, ...,
-        //      entity_collection<Simplex<D>*>
+        // simplex_collection<I>... expands to:
+        // simplex_container<Simplex<0>*>, simplex_container<Simplex<1>*>, ...,
+        //      simplex_container<Simplex<D>*>
         template <typename = std::make_index_sequence<D + 1>>
-        struct entities_tuple;
+        struct simplices_tuple;
 
         template <size_t... I>
-        struct entities_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<simplex_entity_collection<I>...>;
+        struct simplices_tuple<std::index_sequence<I...>> {
+            using type = std::tuple<simplex_collection<I>...>;
         };
 
         // this expands to:
-        // tuple<entity_collection<Simplex<0>*>, entity_collection<Simplex<1>*>, ...,
-        //      entity_collection<Simplex<D>*>
-        using entities_tuple_t = typename entities_tuple<>::type;
+        // tuple<simplex_container<Simplex<0>*>, simplex_container<Simplex<1>*>, ...,
+        //      simplex_container<Simplex<D>*>
+        using simplices_tuple_t = typename simplices_tuple<>::type;
 
       private:
-        // typedef for a composition map of mesh entities:
+        // typedef for a composition map of mesh simplices:
         // these maps map:
         //      2 pointers to nodes into a pointer to edge,
         //      3 pointers to edges into a pointer to face, ...
@@ -62,17 +62,17 @@ namespace mito {
         using composition_tuple_t = typename composition_tuple<>::type;
 
       public:
-        Mesh(std::string meshFileName) : _entities(), _compositions(), _vertexPointMap()
+        Mesh(std::string meshFileName) : _simplices(), _compositions(), _vertexPointMap()
         {
             _loadMesh(meshFileName);
         }
 
         template <size_t I>
-        void _deleteEntities()
+        void _deleteSimplices()
         {
-            // delete entities of dimension I
-            for (auto element : std::get<I>(_entities)) {
-                delete element;
+            // delete simplices of dimension I
+            for (auto simplex : std::get<I>(_simplices)) {
+                delete simplex;
             }
 
             // all done
@@ -80,10 +80,10 @@ namespace mito {
         }
 
         template <size_t... I>
-        void _deleteAllEntities(std::index_sequence<I...>)
+        void _deleteAllSimplices(std::index_sequence<I...>)
         {
-            // delete entities of dimension I for all I's in the index sequence
-            ((_deleteEntities<I>()), ...);
+            // delete simplices of dimension I for all I's in the index sequence
+            ((_deleteSimplices<I>()), ...);
 
             // all done
             return;
@@ -91,8 +91,8 @@ namespace mito {
 
         ~Mesh()
         {
-            // delete all entities from dimension 0 (included) to D (included)
-            _deleteAllEntities(std::make_index_sequence<D + 1> {});
+            // delete all simplices from dimension 0 (included) to D (included)
+            _deleteAllSimplices(std::make_index_sequence<D + 1> {});
 
             // all done
             return;
@@ -120,14 +120,14 @@ namespace mito {
 #if 0
             // print summary
             std::cout << "Mesh composition: " << std::endl;
-            std::cout << "0: " << std::get<0>(_entities).size() << " entities " << std::endl;
-            std::cout << "1: " << std::get<1>(_entities).size() << " entities " << std::endl;
-            std::cout << "2: " << std::get<2>(_entities).size() << " entities " << std::endl;
+            std::cout << "0: " << std::get<0>(_simplices).size() << " simplices " << std::endl;
+            std::cout << "1: " << std::get<1>(_simplices).size() << " simplices " << std::endl;
+            std::cout << "2: " << std::get<2>(_simplices).size() << " simplices " << std::endl;
 #endif
 
-            // sanity check: each element is self-consistent
-            for (const auto & element : std::get<D>(_entities)) {
-                if (!element->sanityCheck()) {
+            // sanity check: each simplex is self-consistent
+            for (const auto & simplex : std::get<D>(_simplices)) {
+                if (!simplex->sanityCheck()) {
                     return false;
                 }
             }
@@ -136,20 +136,20 @@ namespace mito {
         }
 
         template <int I>
-        int nEntities() const
+        int nElements() const
         {
             // all done
-            return std::get<I>(_entities).size();
+            return std::get<I>(_simplices).size();
         }
 
         template <int I>
-        const auto & getEntities() const
+        const auto & elements() const
         {
             // all done
-            return std::get<I>(_entities);
+            return std::get<I>(_simplices);
         }
 
-        const auto & getVertexPointMap() const
+        const auto & vertices() const
         {
             // all done
             return _vertexPointMap;
@@ -157,63 +157,63 @@ namespace mito {
 
       private:
         /**
-         * @brief Registers an entity in the composition map
+         * @brief Registers a simplex in the composition map
          *
-         * @tparam I dimension of the entity to insert
-         * @param entity mesh entity to be inserted
+         * @tparam I dimension of the simplex to insert
+         * @param simplex mesh simplex to be inserted
          * @return the pair returned by the map insertion:
-         *          pair::first is an iterator pointing to either the newly inserted element or
-         * to the element with an equivalent key pair::second is true (false) if the entity was
+         *          pair::first is an iterator pointing to either the newly inserted simplex or
+         * to the simplex with an equivalent key pair::second is true (false) if the simplex was
          * inserted (was already in the map)
          */
         template <int I>
-        auto _registerEntityComposition(Simplex<I> & entity)
+        auto _registerSimplexComposition(Simplex<I> & simplex)
         {
             return std::get<I - 1>(_compositions)
                 .insert(std::pair<std::array<Simplex<I - 1> *, I + 1>, Simplex<I> *>(
-                    entity.entities(), &entity));
+                    simplex.simplices(), &simplex));
         }
 
         /**
-         * @brief Adds a new composed entity (i.e. edge, face, element) if it is not a repetition
-         *         of an equivalent already registered composed entity
+         * @brief Adds a new composed simplex (i.e. edge, face, element) if it is not a repetition
+         *         of an equivalent already registered composed simplex
          *
-         * @tparam I dimension of the composed entity to add (1, 2, ..., D)
-         * @param composition entity composition in terms of I + 1 entities of dimension (I - 1)
-         * @return Simplex<I>* a pointer either to the newly added entity or to the equivalent
-         *                              already registered composed entity
+         * @tparam I dimension of the composed simplex to add (1, 2, ..., D)
+         * @param composition simplex composition in terms of I + 1 simplices of dimension (I - 1)
+         * @return Simplex<I>* a pointer either to the newly added simplex or to the equivalent
+         *                              already registered composed simplex
          */
         template <int I>
-        Simplex<I> * _addUniqueEntity(std::array<Simplex<I - 1> *, I + 1> && composition)
+        Simplex<I> * _addUniqueSimplex(std::array<Simplex<I - 1> *, I + 1> && composition)
         {
-            // instantiate new entity with this composition
-            Simplex<I> * entity = new Simplex<I>(std::move(composition));
-            // look up the new entity with its composition and register it if it does not exist yet
-            auto ret = _registerEntityComposition(*entity);
-            // if the entity did not exist
+            // instantiate new simplex with this composition
+            Simplex<I> * simplex = new Simplex<I>(std::move(composition));
+            // look up the new simplex with its composition and register it if it does not exist yet
+            auto ret = _registerSimplexComposition(*simplex);
+            // if the simplex did not exist
             if (ret.second == true) {
-                // add the entity as a new one
-                _addEntity(entity);
+                // add the simplex as a new one
+                _addSimplex(simplex);
             } else {
-                // delete the new entity (it was just a repeated entry)
-                delete entity;
+                // delete the new simplex (it was just a repeated entry)
+                delete simplex;
             }
 
             // if I == D then ret.second == true, that is there shall be no repetitions of the
             // elements of highest dimension
             assert((I != D) || ret.second);
 
-            // return a pointer to the newly added entity
+            // return a pointer to the newly added simplex
             return ret.first->second;
         }
 
         template <int I>
-        void _addEntity(Simplex<I> * entity)
+        void _addSimplex(Simplex<I> * simplex)
         {
             // TOFIX: is push_back expensive even when we reserve the space? No, but we only
             // know in advance how many nodes and elements are in the mesh, not how many edges
             // or faces, so we cannot reserve memory for edges and faces in advance...
-            std::get<I>(_entities).push_back(entity);
+            std::get<I>(_simplices).push_back(simplex);
 
             // all done
             return;
@@ -226,16 +226,16 @@ namespace mito {
             // associate the new vertex to the new point
             _vertexPointMap.insert(*vertex, point);
             // add the newly created vertex
-            _addEntity(vertex);
+            _addSimplex(vertex);
 
             // all done
             return;
         }
 
         template <int I>
-        auto _getEntity(int n)
+        auto _getSimplex(int n)
         {
-            return std::get<I>(_entities)[n];
+            return std::get<I>(_simplices)[n];
         }
 
         void _readTriangle(std::ifstream & fileStream)
@@ -252,13 +252,13 @@ namespace mito {
             fileStream >> index2;
             --index2;
 
-            vertex_t * vertex0 = _getEntity<0>(index0);
-            vertex_t * vertex1 = _getEntity<0>(index1);
-            vertex_t * vertex2 = _getEntity<0>(index2);
+            vertex_t * vertex0 = _getSimplex<0>(index0);
+            vertex_t * vertex1 = _getSimplex<0>(index1);
+            vertex_t * vertex2 = _getSimplex<0>(index2);
 
-            segment_t * segment0 = _addUniqueEntity<1>({ vertex0, vertex1 });
-            segment_t * segment1 = _addUniqueEntity<1>({ vertex1, vertex2 });
-            segment_t * segment2 = _addUniqueEntity<1>({ vertex2, vertex0 });
+            segment_t * segment0 = _addUniqueSimplex<1>({ vertex0, vertex1 });
+            segment_t * segment1 = _addUniqueSimplex<1>({ vertex1, vertex2 });
+            segment_t * segment2 = _addUniqueSimplex<1>({ vertex2, vertex0 });
 
             // QUESTION: Can the label be more than one?
             // read label for element
@@ -266,7 +266,7 @@ namespace mito {
             std::string element_set_id;
             fileStream >> element_set_id;
 
-            _addUniqueEntity<2>({ segment0, segment1, segment2 });
+            _addUniqueSimplex<2>({ segment0, segment1, segment2 });
 
             // all done
             return;
@@ -327,13 +327,13 @@ namespace mito {
             int N_vertices = 0;
             fileStream >> N_vertices;
             // reserve space for vertices
-            std::get<0>(_entities).reserve(N_vertices);
+            std::get<0>(_simplices).reserve(N_vertices);
 
             // read number of elements
             int N_elements = 0;
             fileStream >> N_elements;
             // reserve space for elements
-            std::get<D>(_entities).reserve(N_elements);
+            std::get<D>(_simplices).reserve(N_elements);
 
             // read number of element sets
             int N_element_sets = 0;
@@ -349,12 +349,12 @@ namespace mito {
             _readElements(fileStream, N_elements);
 
             // sanity check: the number of vertices in the map is N_vertices
-            assert(nEntities<0>() == N_vertices);
+            assert(nElements<0>() == N_vertices);
 
             // sanity check: the number of elements of highest dimension in the map is N_elements
-            assert(nEntities<D>() == N_elements);
+            assert(nElements<D>() == N_elements);
 
-            // sanity check: run sanity check for all mesh entities in cascade
+            // sanity check: run sanity check for all mesh simplices in cascade
             assert(sanityCheck());
 
             // finalize file stream
@@ -365,10 +365,10 @@ namespace mito {
         }
 
       private:
-        // container to store D+1 containers of d dimensional entities with d = 0, ..., D
-        entities_tuple_t _entities;
-        // container to store D maps with the composition of i-dimensional entities in terms
-        // of arrays of (i-1)-dimensional entities
+        // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
+        simplices_tuple_t _simplices;
+        // container to store D maps with the composition of i-dimensional simplices in terms
+        // of arrays of (i-1)-dimensional simplices
         composition_tuple_t _compositions;
         // a map between the vertices addresses and a physical point in D-dimensional space
         VertexPointMap<D> _vertexPointMap;

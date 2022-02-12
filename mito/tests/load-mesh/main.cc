@@ -127,8 +127,8 @@ LoadMesh(std::string fileName)
     // free memory
     for (const auto & element_set : element_sets) {
         for (const auto & element : element_set.second) {
-            for (const auto * entity : element->entities()) {
-                delete entity;
+            for (const auto * simplex : element->simplices()) {
+                delete simplex;
             }
             delete element;
         }
@@ -146,12 +146,12 @@ main()
     //
     t = clock();
     mito::Mesh<2> mesh("rectangle.summit");
-    std::cout << "Loaded mesh (without repeated entities) in " << clock() - t << std::endl;
+    std::cout << "Loaded mesh (without repeated elements) in " << clock() - t << std::endl;
 
     //
     t = clock();
     LoadMesh<2>("rectangle.summit");
-    std::cout << "Loaded mesh (with repeated entities) in " << clock() - t << std::endl;
+    std::cout << "Loaded mesh (with repeated elements) in " << clock() - t << std::endl;
 
     return 0;
 }

@@ -12,7 +12,7 @@ namespace mito {
     class Simplex {
 
       public:
-        Simplex(const std::array<Simplex<D - 1> *, D + 1> & entities) : _entities(entities)
+        Simplex(const std::array<Simplex<D - 1> *, D + 1> & simplices) : _simplices(simplices)
         {
             // initialize object
             _initialize();
@@ -21,7 +21,7 @@ namespace mito {
             return;
         }
 
-        Simplex(std::array<Simplex<D - 1> *, D + 1> && entities) : _entities(entities)
+        Simplex(std::array<Simplex<D - 1> *, D + 1> && simplices) : _simplices(simplices)
         {
             // initialize object
             _initialize();
@@ -51,30 +51,30 @@ namespace mito {
       private:
         void _initialize()
         {
-            // sort the entities (using the address of the entities) so that two simplices
-            // having the same entities will result in two identical instances of class Simplex
-            std::sort(_entities.begin(), _entities.end());
+            // sort the simplices (using the address of the simplices) so that two simplices
+            // having the same simplices will result in two identical instances of class Simplex
+            std::sort(_simplices.begin(), _simplices.end());
 
             // all done
             return;
         }
 
       public:
-        const auto & entities() const { return _entities; }
+        const auto & simplices() const { return _simplices; }
 
         void getVertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
         {
-            for (const auto & entity : entities()) {
-                entity->getVertices(vertices);
+            for (const auto & simplex : simplices()) {
+                simplex->getVertices(vertices);
             }
         }
 
         bool sanityCheck() const
         {
-            // check the subentities
-            for (const auto & entity : entities()) {
-                // if a subentity is broken, the sanity check fails
-                if (!entity->sanityCheck()) {
+            // check the subsimplices
+            for (const auto & simplex : simplices()) {
+                // if a subsimplex is broken, the sanity check fails
+                if (!simplex->sanityCheck()) {
                     // all done
                     return false;
                 }
@@ -82,9 +82,9 @@ namespace mito {
 
             // use a set to cleanup duplicates
             std::set<const Simplex<0> * /* vertex_t* */> vertices;
-            // collect vertices of every subentity of this simplex
-            for (const auto & entity : entities()) {
-                entity->getVertices(vertices);
+            // collect vertices of every subsimplex of this simplex
+            for (const auto & simplex : simplices()) {
+                simplex->getVertices(vertices);
             }
             // if this simplex does not have D+1 vertices, something went wrong
             if (vertices.size() != int(D) + 1) {
@@ -101,7 +101,7 @@ namespace mito {
         static constexpr int nVertices = D;
 
       private:
-        std::array<Simplex<D - 1> *, D + 1> _entities;
+        std::array<Simplex<D - 1> *, D + 1> _simplices;
     };
 
     template <>
@@ -138,8 +138,8 @@ namespace mito {
     template <int D>
     class OrientedSimplex : public Simplex<D> {
       public:
-        OrientedSimplex(std::array<Simplex<D - 1> *, D + 1> && entities, bool orientation) :
-            Simplex<D>(entities),
+        OrientedSimplex(std::array<Simplex<D - 1> *, D + 1> && simplices, bool orientation) :
+            Simplex<D>(simplices),
             _orientation(orientation)
         {}
 
@@ -178,8 +178,8 @@ std::ostream &
 operator<<(std::ostream & os, const mito::Simplex<D> & s)
 {
     os << &s << " composed of:" << std::endl;
-    for (const auto & entity : s.entities()) {
-        std::cout << "\t" << *entity << std::endl;
+    for (const auto & simplex : s.simplices()) {
+        std::cout << "\t" << *simplex << std::endl;
     }
     return os;
 }
