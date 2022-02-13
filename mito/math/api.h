@@ -13,10 +13,19 @@ namespace mito::math {
     template <class X, class Y = scalar_t>
     using function_t = Function<X, Y>;
 
-    template <class X, class Y, class... Args>
-    constexpr auto function(Args &&... args)
+    template <class X, class Y, template <class, class> class FUNCTION>
+    constexpr auto function(FUNCTION<X, Y> && f)
     {
-        return function_t<X, Y>(std::forward<Args>(args)...);
+        return function_t<X, Y>(std::forward<FUNCTION<X, Y>>(f));
+    }
+    template <class F>
+    constexpr auto function(F && f)
+    {
+        using lambda_type = typename std::remove_reference<decltype(f)>::type;
+        typedef lambda_traits<lambda_type> traits;
+        using X = typename std::remove_reference<typename traits::argument_type>::type;
+        using Y = typename std::remove_reference<typename traits::result_type>::type;
+        return function_t<X, Y>(f);
     }
 
     // field
@@ -27,6 +36,15 @@ namespace mito::math {
     constexpr auto field(FUNCTION<X, Y> && f, Args &&... args)
     {
         return field_t<X, Y>(std::forward<FUNCTION<X, Y>>(f), std::forward<Args>(args)...);
+    }
+    template <class F, class... Args>
+    constexpr auto field(F && f, Args &&... args)
+    {
+        using lambda_type = typename std::remove_reference<decltype(f)>::type;
+        typedef lambda_traits<lambda_type> traits;
+        using X = typename std::remove_reference<typename traits::argument_type>::type;
+        using Y = typename std::remove_reference<typename traits::result_type>::type;
+        return field_t<X, Y>(std::forward<F>(f), std::forward<Args>(args)...);
     }
 
     // vector field
@@ -41,6 +59,17 @@ namespace mito::math {
     {
         return vector_field_t<D, N>(
             std::forward<FUNCTION<vector_t<D>, vector_t<N>>>(f), std::forward<Args>(args)...);
+    }
+    template <class F, class... Args>
+    constexpr auto vector_field(F && f, Args &&... args)
+    {
+        using lambda_type = typename std::remove_reference<decltype(f)>::type;
+        typedef lambda_traits<lambda_type> traits;
+        using X = typename std::remove_reference<typename traits::argument_type>::type;
+        constexpr int D = X::size;
+        using Y = typename std::remove_reference<typename traits::result_type>::type;
+        constexpr int N = Y::size;
+        return vector_field_t<D, N>(std::forward<F>(f), std::forward<Args>(args)...);
     }
 
     // scalar field
@@ -57,6 +86,16 @@ namespace mito::math {
             std::forward<FUNCTION<vector_t<D>, scalar_t>>(f), 
             std::forward<Args>(args)...);
     }
+    template <class F, class... Args>
+    constexpr auto scalar_field(F && f, Args &&... args)
+    {
+        using lambda_type = typename std::remove_reference<decltype(f)>::type;
+        typedef lambda_traits<lambda_type> traits;
+        using X = typename std::remove_reference<typename traits::argument_type>::type;
+        constexpr int D = X::size;
+        return scalar_field_t<D>(std::forward<F>(f), std::forward<Args>(args)...);
+    }
+
 }
 
 
