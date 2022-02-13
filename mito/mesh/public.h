@@ -19,6 +19,10 @@
 #include "VertexSet.h"
 #include "Mesh.h"
 
+// published type factories
+#include "factories.h"
+
+
 #endif
 
 // end of file
