@@ -15,7 +15,7 @@
 #include "../../mito/mito.h"
 #include "../../mito/mesh.h"
 #include "../../mito/math.h"
-#include "../../mito/quadrature/Integrator.h"
+#include "../../mito/quadrature.h"
 
 namespace py = pybind11;
 
@@ -154,8 +154,8 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Integrator interface
-    py::class_<mito::Integrator<
-        mito::GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>>(
+    py::class_<mito::quadrature::integrator_t<
+        mito::quadrature::GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>>(
         m, "GaussIntegrator2Triangle2D")
         // the constructor
         .def(
@@ -167,8 +167,8 @@ PYBIND11_MODULE(mito, m)
         .def(
             "integrate",
             // the method;
-            &mito::Integrator<
-                mito::GAUSS, 2 /* degree of exactness */,
+            &mito::quadrature::integrator_t<
+                mito::quadrature::GAUSS, 2 /* degree of exactness */,
                 mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>::integrate<mito::real>,
             // the docstring
             "integrate a field")

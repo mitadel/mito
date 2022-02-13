@@ -2,20 +2,17 @@
 #if !defined(mito_quadrature_Integrator_h)
 #define mito_quadrature_Integrator_h
 
-#include "../mito.h"
-#include "../mesh.h"
-#include "../math.h"
-#include "../fem.h"
-#include "QuadratureRule.h"
 
-namespace mito {
+namespace mito::quadrature {
 
     // TODO: Keep in mind that we will need integrator and the above defined fields to compute
     // integrals of contact forces down the road. Do we have enough machinery for that?
 
     // template with respect to element type T and to degree of exactness r of quadrature rule
-    template <class quadrature_t, int r, class element_set_t>
+    template <class quadratureT, int r, class elementSetT>
     class Integrator {
+        using quadrature_t = quadratureT;
+        using element_set_t = elementSetT;
         using element_t = typename element_set_t::element_t;
         static constexpr int D = element_set_t::dim;
 

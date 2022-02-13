@@ -2,10 +2,8 @@
 #if !defined(mito_quadrature_QuadratureRule_h)
 #define mito_quadrature_QuadratureRule_h
 
-#include "../mito.h"
-#include "../mesh/Simplex.h"
 
-namespace mito {
+namespace mito::quadrature {
 
     template <int D>
     using quadrature_point_t = std::array<double, D>;

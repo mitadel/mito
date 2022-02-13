@@ -1,7 +1,7 @@
 #include "../../mito.h"
 #include "../../mesh.h"
 #include "../../math.h"
-#include "../../quadrature/Integrator.h"
+#include "../../quadrature.h"
 
 int
 main()
@@ -18,8 +18,8 @@ main()
         [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
-    mito::Integrator<
-        mito::GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
+    mito::quadrature::integrator_t<
+        mito::quadrature::GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
         integrator(elementSet);
 
     mito::real result = integrator.integrate(f_cosine);

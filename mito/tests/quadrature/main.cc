@@ -2,12 +2,12 @@
 #include "../../mito.h"
 #include "../../math.h"
 #include "../../mesh.h"
-#include "../../quadrature/Integrator.h"
+#include "../../quadrature.h"
 
 using mito::math::function_t;
 using mito::vector_t;
 using mito::real;
-using mito::GAUSS;
+using mito::quadrature::GAUSS;
 using mito::mesh::point_t;
 using mito::mesh::vertex_t;
 using mito::mesh::segment_t;
@@ -132,12 +132,12 @@ main()
     // static mito::mesh::ElementSetTri elementSet;
     mito::mesh::ElementSet bodyElementSet(elements, vertexCoordinatesMap);
     // TOFIX: Remove the last template parameter (it can be deduced by the input argument)
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
+    mito::quadrature::integrator_t<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
         bodyIntegrator(bodyElementSet);
 
 #if 0
     mito::Elements<SEG, 2> boundaryElements(connectivityBoundary, coordinates);
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<SEG, 2>> 
+    mito::quadrature::integrator_t<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<SEG, 2>> 
         boundaryIntegrator(boundaryElements);
 #endif
 
@@ -195,7 +195,7 @@ main()
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     // static mito::mesh::ElementSetTri elementSet;
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 3>>
+    mito::quadrature::integrator_t<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 3>>
         bodyIntegrator3D(bodyElementSet3D);
 
     // instantiate a scalar function object
