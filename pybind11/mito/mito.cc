@@ -16,8 +16,7 @@
 #include "../../mito/mesh/Simplex.h"
 #include "../../mito/mesh/Mesh.h"
 #include "../../mito/mesh/ElementSet.h"
-#include "../../mito/math/Function.h"
-#include "../../mito/math/Field.h"
+#include "../../mito/math.h"
 #include "../../mito/quadrature/Integrator.h"
 
 namespace py = pybind11;
@@ -76,7 +75,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar Field interface
-    py::class_<mito::Field<mito::vector_t<3>, mito::scalar_t>>(m, "ScalarField3D")
+    py::class_<mito::math::scalar_field_t<3>>(m, "ScalarField3D")
         // the constructor
         .def(
             // the implementation
@@ -85,20 +84,21 @@ PYBIND11_MODULE(mito, m)
         .def(
             "__call__",
             // the implementation
-            [](const mito::Field<mito::vector_t<3>, mito::scalar_t> & self, 
-                const mito::vector_t<3> & x) { return self(x); })
+            [](const mito::math::scalar_field_t<3> & self, const mito::vector_t<3> & x) {
+                return self(x);
+            })
         // done
         ;
 
 
     // the mito scalar Field interface
-    py::class_<mito::Field<mito::vector_t<2>, mito::scalar_t>>(m, "ScalarField2D")
+    py::class_<mito::math::scalar_field_t<2>>(m, "ScalarField2D")
         // TOFIX:
         // the default constructor
         .def(
             // the implementation
             py::init([]() {
-                return new mito::ScalarField<2>(
+                return new mito::math::scalar_field_t<2>(
                         [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); }
                 );
             }))
@@ -110,8 +110,9 @@ PYBIND11_MODULE(mito, m)
         .def(
             "__call__",
             // the implementation
-            [](const mito::Field<mito::vector_t<2>, mito::scalar_t> & self,
-               const mito::vector_t<2> & x) { return self(x); })
+            [](const mito::math::scalar_field_t<2> & self, const mito::vector_t<2> & x) {
+                return self(x);
+            })
         // done
         ;
 

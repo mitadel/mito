@@ -1,10 +1,10 @@
 #include <cmath>
-#include "../../math/Function.h"
-#include "../../math/Field.h"
+#include "../../mito.h"
+#include "../../math.h"
 #include "../../mesh/ElementSet.h"
 #include "../../quadrature/Integrator.h"
 
-using mito::Function;
+using mito::math::Function;
 using mito::vector_t;
 using mito::real;
 using mito::GAUSS;
@@ -35,10 +35,10 @@ main()
     std::array<Function<vector_t<2>, vector_t<2>>, 2> Df = { Dx, Dy };
 
     // instantiate a vector field
-    mito::VectorField<2 /* D */, 2 /* N */> field(f, Df);
+    mito::math::VectorField<2 /* D */, 2 /* N */> field(f, Df);
 
     // build a scalar field with divergence of field
-    mito::ScalarField<2> divergence = mito::div(field);
+    mito::math::ScalarField<2> divergence = mito::math::div(field);
 
     /**
      * Mesh with four elements:
@@ -118,8 +118,8 @@ main()
     mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
         boundaryLeftIntegrator(boundaryLeft);
 
-    mito::ScalarField<2> f0(f[0]);
-    mito::ScalarField<2> f1(f[1]);
+    mito::math::ScalarField<2> f0(f[0]);
+    mito::math::ScalarField<2> f1(f[1]);
 
     real resultBoundary =
         -boundaryBotIntegrator.integrate(f1) + boundaryRightIntegrator.integrate(f0)

@@ -4,7 +4,7 @@
 
 #include "../mito.h"
 #include "../mesh/ElementSet.h"
-#include "../math/Field.h"
+#include "../math.h"
 #include "../fem.h"
 #include "QuadratureRule.h"
 
@@ -69,7 +69,7 @@ namespace mito {
         }
 
         template <class Y>
-        Y integrate(const Field<vector_t<D>, Y> & field)
+        Y integrate(const math::field_t<vector_t<D>, Y> & field)
         {
             auto values = field(_coordinates);
 

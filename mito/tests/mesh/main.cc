@@ -2,8 +2,7 @@
 #include "../../mesh/Simplex.h"
 #include "../../mesh/Mesh.h"
 #include "../../mesh/ElementSet.h"
-#include "../../math/Function.h"
-#include "../../math/Field.h"
+#include "../../math.h"
 #include "../../quadrature/Integrator.h"
 
 int
@@ -17,7 +16,7 @@ main()
     mito::ElementSet elementSet(elements, vertices);
 
     // instantiate a scalar field
-    mito::ScalarField<2> f_cosine(
+    mito::math::ScalarField<2> f_cosine(
         [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2

@@ -2,39 +2,34 @@
 #if !defined(mito_math_Field_h)
 #define mito_math_Field_h
 
-#include "Function.h"
-#include "../mito.h"
-#include "../fem.h" // TOFIX
 
-namespace mito {
+namespace mito::math {
 
     // TODO: Add operator+ for scalar fields and reals
 
     // f(X,t) with (X \in R^D, t \in R) -> Y
-    template <class X, class Y = scalar_t>
+    template <class X, class Y>
     class Field {
 
         // dimension of the X space
         static constexpr int D = size<X>::value;
 
-        // typedef for a scalar valued function
-        using function_t = Function<X, Y>;
-        using functor_t = functor<X, Y>;
-
       public:
-        // constructors with function_t
-        Field(const function_t & f) : _f(f), _Df() {}
-        Field(function_t && f) : _f(f), _Df() {}
-        Field(const function_t & f, const std::array<function_t, D> & Df) : _f(f), _Df(Df) {}
-        Field(const function_t & f, std::array<function_t, D> && Df) : _f(f), _Df(Df) {}
-        Field(function_t && f, std::array<function_t, D> && Df) : _f(f), _Df(Df) {}
+        // constructors with function_t<X, Y>
+        Field(const function_t<X, Y> & f) : _f(f), _Df() {}
+        Field(function_t<X, Y> && f) : _f(f), _Df() {}
+        Field(const function_t<X, Y> & f, const std::array<function_t<X, Y>, D> & Df) : _f(f), 
+            _Df(Df) {}
+        Field(const function_t<X, Y> & f, std::array<function_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
+        Field(function_t<X, Y> && f, std::array<function_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
 
-        // constructors with functor_t
-        Field(const functor_t & f) : _f(f), _Df() {}
-        Field(functor_t && f) : _f(f), _Df() {}
-        Field(const functor_t & f, const std::array<functor_t, D> & Df) : _f(f), _Df(Df) {}
-        Field(const functor_t & f, std::array<functor_t, D> && Df) : _f(f), _Df(Df) {}
-        Field(functor_t && f, std::array<functor_t, D> && Df) : _f(f), _Df(Df) {}
+        // constructors with functor_t<X, Y>
+        Field(const functor_t<X, Y> & f) : _f(f), _Df() {}
+        Field(functor_t<X, Y> && f) : _f(f), _Df() {}
+        Field(const functor_t<X, Y> & f, const std::array<functor_t<X, Y>, D> & Df) : _f(f), 
+            _Df(Df) {}
+        Field(const functor_t<X, Y> & f, std::array<functor_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
+        Field(functor_t<X, Y> && f, std::array<functor_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
 
         // default move constructor
         Field(Field &&) = default;
@@ -103,35 +98,29 @@ namespace mito {
 
       private:
         // the function
-        function_t _f;
+        function_t<X, Y> _f;
         // the derivatives of f with respect to X (position in the reference configuration)
-        std::array<function_t, D> _Df;
+        std::array<function_t<X, Y>, D> _Df;
     };
-
-    template <int D, int N>
-    using VectorField = Field<vector_t<D>, vector_t<N>>;
-
-    template <int D>
-    using ScalarField = Field<vector_t<D>, scalar_t>;
 
     template <class X, class Y, std::size_t... I>
     inline auto _dSum(
-        const Field<X, Y> & fieldA, const Field<X, Y> & fieldB, std::index_sequence<I...>)
+        const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB, std::index_sequence<I...>)
     {
         // dimension of the X space
         static constexpr int D = size<X>::value;
 
-        std::array<Function<X, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
+        std::array<function_t<X, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
         return Df;
     }
 
     template <class X, class Y>
-    auto operator+(const Field<X, Y> & fieldA, const Field<X, Y> & fieldB)
+    auto operator+(const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB)
     {
         // dimension of the X space
         static constexpr int D = size<X>::value;
 
-        return Field<X, Y>(
+        return field_t<X, Y>(
             fieldA.f() + fieldB.f(), _dSum(fieldA, fieldB, std::make_index_sequence<D> {}));
     }
 
@@ -139,7 +128,7 @@ namespace mito {
     // configuration (template with index sequence)
     template <int D, std::size_t... I>
     inline auto _grad(
-        const ScalarField<D> & field, const vector_t<D> & x, std::index_sequence<I...>)
+        const scalar_field_t<D> & field, const vector_t<D> & x, std::index_sequence<I...>)
     {
         // all done
         return vector_t<D> { field.Df(I)(x)... };
@@ -148,7 +137,7 @@ namespace mito {
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point x
     template <int D>
-    inline auto grad(const ScalarField<D> & field, const vector_t<D> & x)
+    inline auto grad(const scalar_field_t<D> & field, const vector_t<D> & x)
     {
         return _grad(field, x, std::make_index_sequence<D> {});
     }
@@ -156,25 +145,25 @@ namespace mito {
     // helper function to compute the gradient of a vector field with respect to the reference
     // configuration (template with index sequence)
     template <int D, std::size_t... I>
-    inline VectorField<D, D> _grad(const ScalarField<D> & field, std::index_sequence<I...>)
+    inline vector_field_t<D, D> _grad(const scalar_field_t<D> & field, std::index_sequence<I...>)
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
         // {field.Df(I)...} intead? Is it possible to do so?
-        return VectorField<D, D>(Function<vector_t<D>, vector_t<D>>(
+        return vector_field_t<D, D>(function_t<vector_t<D>, vector_t<D>>(
             [field](const vector_t<D> & x) { return vector_t<D> { field.Df(I)(x)... }; }));
     }
 
     // function to compute the gradient of a vector field with respect to the reference
     // configuration
     template <int D>
-    inline VectorField<D, D> grad(const ScalarField<D> & field)
+    inline vector_field_t<D, D> grad(const scalar_field_t<D> & field)
     {
         return _grad(field, std::make_index_sequence<D> {});
     }
 
     // function to compute the Divergence of a vector field at point X
     template <int D>
-    inline real div(const VectorField<D, D> & field, const vector_t<D> & X)
+    inline real div(const vector_field_t<D, D> & field, const vector_t<D> & X)
     {
         real result = 0.0;
         for (int i = 0; i < D; ++i) {
@@ -186,22 +175,23 @@ namespace mito {
     // helper function to compute the divergence of a vector field with respect to the reference
     // configuration at point X (template with index sequence)
     template <int D, std::size_t... I>
-    inline ScalarField<D> _div(const VectorField<D, D> & field, std::index_sequence<I...>)
+    inline scalar_field_t<D> _div(const vector_field_t<D, D> & field, std::index_sequence<I...>)
     {
         // TOFIX: capturing field by copy or by reference? Is it better to capture
         // {field.Df(I)...} intead? Is it possible to do so?
-        return ScalarField<D>(Function<vector_t<D>>(
+        return scalar_field_t<D>(function_t<vector_t<D>>(
             [field](const vector_t<D> & x) { return (field.Df(I)(x)[I] + ...); }));
     }
 
     // function to compute the divergence of a vector field with respect to the reference
     // configuration at point X
     template <int D>
-    inline ScalarField<D> div(const VectorField<D, D> & field)
+    inline scalar_field_t<D> div(const vector_field_t<D, D> & field)
     {
         return _div(field, std::make_index_sequence<D> {});
     }
 }
+
 
 #endif    // mito_math_Field_h
 

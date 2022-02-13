@@ -1,7 +1,8 @@
-#include "../../math/Function.h"
+#include "../../mito.h"
+#include "../../math.h"
 #include <cmath>
 
-using mito::Function;
+using mito::math::Function;
 
 static const mito::real PI = 4.0 * atan(1.0);
 static const mito::real TOL = 1.e-16;
