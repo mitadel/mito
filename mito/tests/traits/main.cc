@@ -1,4 +1,4 @@
-#include "../../mito.h"
+#include "../../base.h"
 
 template <typename Y>
 class Test {

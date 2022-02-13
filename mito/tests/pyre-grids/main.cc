@@ -1,10 +1,7 @@
-#include <iostream>
-// support
-#include <cassert>
 // get the grid
 #include <pyre/grid.h>
 
-#include "../../mito.h"
+#include "../../base.h"
 
 namespace mito {
 

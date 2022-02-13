@@ -11,8 +11,7 @@
 
 #include <pybind11/pybind11.h>
 #include <pybind11/functional.h>
-#include <functional>
-#include "../../mito/mito.h"
+#include "../../mito/base.h"
 #include "../../mito/mesh.h"
 #include "../../mito/math.h"
 #include "../../mito/quadrature.h"

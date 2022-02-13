@@ -1,6 +1,5 @@
-#include "../../mito.h"
+#include "../../base.h"
 #include "../../math.h"
-#include <cmath>
 
 using mito::math::function_t;
 
