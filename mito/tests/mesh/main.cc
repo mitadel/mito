@@ -16,7 +16,7 @@ main()
     mito::ElementSet elementSet(elements, vertices);
 
     // instantiate a scalar field
-    mito::math::ScalarField<2> f_cosine(
+    mito::math::scalar_field_t<2> f_cosine(
         [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2

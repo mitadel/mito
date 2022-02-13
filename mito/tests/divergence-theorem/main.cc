@@ -4,7 +4,7 @@
 #include "../../mesh/ElementSet.h"
 #include "../../quadrature/Integrator.h"
 
-using mito::math::Function;
+using mito::math::function_t;
 using mito::vector_t;
 using mito::real;
 using mito::GAUSS;
@@ -17,28 +17,28 @@ int
 main()
 {
     // a scalar function
-    Function<vector_t<2>, vector_t<2>> f([](const vector_t<2> & x) {
+    function_t<vector_t<2>, vector_t<2>> f([](const vector_t<2> & x) {
         return vector_t<2> { x[0] * x[1], x[0] * x[0] };
     });
 
     // df/dx[0]
-    Function<vector_t<2>, vector_t<2>> Dx([](const vector_t<2> & x) {
+    function_t<vector_t<2>, vector_t<2>> Dx([](const vector_t<2> & x) {
         return vector_t<2> { x[1], 2.0 * x[0] };
     });
 
     // df/dx[1]
-    Function<vector_t<2>, vector_t<2>> Dy([](const vector_t<2> & x) {
+    function_t<vector_t<2>, vector_t<2>> Dy([](const vector_t<2> & x) {
         return vector_t<2> { x[0], 0.0 };
     });
 
     // its partial derivatives
-    std::array<Function<vector_t<2>, vector_t<2>>, 2> Df = { Dx, Dy };
+    std::array<function_t<vector_t<2>, vector_t<2>>, 2> Df = { Dx, Dy };
 
     // instantiate a vector field
-    mito::math::VectorField<2 /* D */, 2 /* N */> field(f, Df);
+    mito::math::vector_field_t<2 /* D */, 2 /* N */> field(f, Df);
 
     // build a scalar field with divergence of field
-    mito::math::ScalarField<2> divergence = mito::math::div(field);
+    mito::math::scalar_field_t<2> divergence = mito::math::div(field);
 
     /**
      * Mesh with four elements:
@@ -118,8 +118,8 @@ main()
     mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
         boundaryLeftIntegrator(boundaryLeft);
 
-    mito::math::ScalarField<2> f0(f[0]);
-    mito::math::ScalarField<2> f1(f[1]);
+    mito::math::scalar_field_t<2> f0(f[0]);
+    mito::math::scalar_field_t<2> f1(f[1]);
 
     real resultBoundary =
         -boundaryBotIntegrator.integrate(f1) + boundaryRightIntegrator.integrate(f0)

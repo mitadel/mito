@@ -4,7 +4,7 @@
 #include "../../mesh/ElementSet.h"
 #include "../../quadrature/Integrator.h"
 
-using mito::math::Function;
+using mito::math::function_t;
 using mito::vector_t;
 using mito::real;
 using mito::GAUSS;
@@ -19,43 +19,43 @@ int
 main()
 {
     // a scalar function
-    Function<vector_t<2>> f([](const vector_t<2> & x) { return cos(x[0] * x[1]); });
+    function_t<vector_t<2>> f([](const vector_t<2> & x) { return cos(x[0] * x[1]); });
 
     // df/dx[0]
-    Function<vector_t<2>> Dfx([](const vector_t<2> & x) { return -sin(x[0] * x[1]) * x[1]; });
+    function_t<vector_t<2>> Dfx([](const vector_t<2> & x) { return -sin(x[0] * x[1]) * x[1]; });
 
     // df/dx[1]
-    Function<vector_t<2>> Dfy([](const vector_t<2> & x) { return -sin(x[0] * x[1]) * x[0]; });
+    function_t<vector_t<2>> Dfy([](const vector_t<2> & x) { return -sin(x[0] * x[1]) * x[0]; });
 
     // its partial derivatives
-    std::array<Function<vector_t<2>>, 2> Df = { Dfx, Dfy };
+    std::array<function_t<vector_t<2>>, 2> Df = { Dfx, Dfy };
 
     // instantiate a scalar field
-    mito::math::ScalarField<2> f_cosine(f, Df);
+    mito::math::scalar_field_t<2> f_cosine(f, Df);
 
-    mito::math::ScalarField<2> cosine_sum1(f + f);
-    mito::math::ScalarField<2> cosine_sum2(f_cosine + f_cosine);
+    mito::math::scalar_field_t<2> cosine_sum1(f + f);
+    mito::math::scalar_field_t<2> cosine_sum2(f_cosine + f_cosine);
 
     // a vector function
-    Function<vector_t<2>, vector_t<2>> g([](const mito::vector_t<2> & x) {
+    function_t<vector_t<2>, vector_t<2>> g([](const mito::vector_t<2> & x) {
         return vector_t<2> { cos(x[0] * x[1]), cos(x[0] * x[1]) };
     });
 
     // df/dx[0]
-    Function<vector_t<2>, vector_t<2>> Dgx([](const vector_t<2> & x) {
+    function_t<vector_t<2>, vector_t<2>> Dgx([](const vector_t<2> & x) {
         return vector_t<2> { -sin(x[0] * x[1]) * x[1], -sin(x[0] * x[1]) * x[1] };
     });
 
     // df/dx[1]
-    Function<vector_t<2>, vector_t<2>> Dgy([](const vector_t<2> & x) {
+    function_t<vector_t<2>, vector_t<2>> Dgy([](const vector_t<2> & x) {
         return vector_t<2> { -sin(x[0] * x[1]) * x[0], -sin(x[0] * x[1]) * x[0] };
     });
 
     // its partial derivatives
-    std::array<Function<vector_t<2>, vector_t<2>>, 2> Dg = { Dgx, Dgy };
+    std::array<function_t<vector_t<2>, vector_t<2>>, 2> Dg = { Dgx, Dgy };
 
     // instantiate a vector field
-    mito::math::VectorField<2 /* D */, 2 /* N */> cosineVector(g, Dg);
+    mito::math::vector_field_t<2 /* D */, 2 /* N */> cosineVector(g, Dg);
 
     // a point in the reference configuration
     vector_t<2> x = { 0.0, 0.0 };
@@ -150,28 +150,28 @@ main()
     assert((resultVector == mito::vector_t<2> { result, result }));
 
     // instantiate a scalar function object
-    mito::math::ScalarField<2> one([]([[maybe_unused]] const vector_t<2> & x) { return 1.0; });
+    mito::math::scalar_field_t<2> one([]([[maybe_unused]] const vector_t<2> & x) { return 1.0; });
     result = bodyIntegrator.integrate(one);    // exact 1.0
     std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
               << std::endl;
     assert(std::fabs(result - 1.0) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::math::ScalarField<2> linear([](const vector_t<2> & x) { return x[0]; });
+    mito::math::scalar_field_t<2> linear([](const vector_t<2> & x) { return x[0]; });
     result = bodyIntegrator.integrate(linear);    // exact 0.5
     std::cout << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
               << std::endl;
     assert(std::fabs(result - 0.5) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::math::ScalarField<2> xy([](const vector_t<2> & x) { return x[0] * x[1]; });
+    mito::math::scalar_field_t<2> xy([](const vector_t<2> & x) { return x[0] * x[1]; });
     result = bodyIntegrator.integrate(xy);    // exact 0.25
     std::cout << "Integration of x*y: Result = " << result
               << ", Error = " << std::fabs(result - 0.25) << std::endl;
     assert(std::fabs(result - 0.25) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::math::ScalarField<2> xx([](const vector_t<2> & x) { return x[0] * x[0]; });
+    mito::math::scalar_field_t<2> xx([](const vector_t<2> & x) { return x[0] * x[0]; });
     result = bodyIntegrator.integrate(xx);    // exact 1.0/3.0
     std::cout << "Integration of x*x: Result = " << result
               << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
@@ -199,7 +199,7 @@ main()
         bodyIntegrator3D(bodyElementSet3D);
 
     // instantiate a scalar function object
-    mito::math::ScalarField<3> xy3D([](const vector_t<3> & x) { return x[0] * x[1]; });
+    mito::math::scalar_field_t<3> xy3D([](const vector_t<3> & x) { return x[0] * x[1]; });
     result = bodyIntegrator3D.integrate(xy3D);    // exact 0.35355339059327384
     std::cout << "Integration of x*y in 3D: Result = " << result
               << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;

@@ -2,13 +2,12 @@
 #include "../../math.h"
 #include <cmath>
 
-using mito::math::Function;
+using mito::math::function_t;
 
 static const mito::real PI = 4.0 * atan(1.0);
 static const mito::real TOL = 1.e-16;
 
-// TOFIX: Should we also account for real(const X &) + Function<X,
-// scalar_t> ?
+// TOFIX: Should we also account for real(const X &) + function_t<X, scalar_t> ?
 //
 // mito::real
 mito::scalar_t
@@ -21,14 +20,14 @@ int
 main()
 {
     // a scalar function
-    Function<mito::vector_t<2>> function1(
+    function_t<mito::vector_t<2>> function1(
         [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
 
     // a scalar function
-    Function<mito::vector_t<2>> function2([](const mito::vector_t<2> & x) { return 5; });
+    function_t<mito::vector_t<2>> function2([](const mito::vector_t<2> & x) { return 5; });
 
     // the sum of the two scalar functions
-    Function<mito::vector_t<2>> function3 = function1 + function2;
+    function_t<mito::vector_t<2>> function3 = function1 + function2;
 
     // a point in the reference configuration
     mito::vector_t<2> x = { 1.0, PI };
@@ -62,11 +61,10 @@ main()
     auto function12 = (function1 + function2) / function1;
     assert(std::fabs((function1(x) + function2(x)) / function1(x) - function12(x)) < TOL);
 
-    Function<mito::vector_t<2>> function13(my_function);
+    function_t<mito::vector_t<2>> function13(my_function);
     auto function14 = function13 + function1;
 
-    // TOFIX: Should we also account for std::function<real(const X &)> + Function<X,
-    // scalar_t> ?
+    // TOFIX: Should we also account for std::function<real(const X &)> + function_t<X, scalar_t> ?
     //
     // std::function<mito::real(const mito::vector_t<2> &)> my_other_function(my_function);
     std::function<mito::scalar_t(const mito::vector_t<2> &)> my_other_function(
@@ -74,7 +72,7 @@ main()
     auto function15 = my_other_function + function1 + my_function;
 
     // a vector function
-    Function<mito::vector_t<2>, mito::vector_t<3>> function16([](const mito::vector_t<2> & x) {
+    function_t<mito::vector_t<2>, mito::vector_t<3>> function16([](const mito::vector_t<2> & x) {
         return mito::vector_t<3> { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
     });
 
