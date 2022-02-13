@@ -30,41 +30,39 @@ namespace mito::mesh {
     using segment_t = Simplex<1>;
 
     // segment factory
-    template <class... Args>
-    constexpr auto segment(Args &&... args)
+    constexpr auto segment(const std::array<vertex_t *, 2> & simplices)
     {
-        return segment_t(std::forward<Args>(args)...);
+        return segment_t(simplices);
+    }
+    constexpr auto segment(const std::array<vertex_t *, 2> && simplices)
+    {
+        return segment_t(std::move(simplices));
     }
 
     // triangle alias
     using triangle_t = Simplex<2>;
 
     // triangle factory
-    template <class... Args>
-    constexpr auto triangle(Args &&... args)
+    constexpr auto triangle(const std::array<segment_t *, 3> & simplices)
     {
-        return triangle_t(std::forward<Args>(args)...);
+        return triangle_t(simplices);
+    }
+    constexpr auto triangle(const std::array<segment_t *, 3> && simplices)
+    {
+        return triangle_t(std::move(simplices));
     }
 
     // tetrahedron alias
     using tetrahedron_t = Simplex<3>;
 
     // tetrahedron factory
-    template <class... Args>
-    constexpr auto tetrahedron(Args &&... args)
+    constexpr auto tetrahedron(const std::array<triangle_t *, 4> & simplices)
     {
-        return tetrahedron_t(std::forward<Args>(args)...);
+        return tetrahedron_t(simplices);
     }
-
-    // element set alias
-    template <class elementT, int D>
-    using element_set_t = ElementSet<elementT, D>;
-
-    // element set factory
-    template <class elementT, int D, class... Args>
-    constexpr auto element_set(Args &&... args)
+    constexpr auto tetrahedron(const std::array<triangle_t *, 4> && simplices)
     {
-        return element_set_t<elementT, D>(std::forward<Args>(args)...);
+        return tetrahedron_t(std::move(simplices));
     }
 
     // vertex set alias
@@ -72,10 +70,21 @@ namespace mito::mesh {
     using vertex_set_t = VertexSet<D>;
 
     // vertex set factory
-    template <int D, class... Args>
-    constexpr auto vertex_set(Args &&... args)
+    template <int D>
+    constexpr auto vertex_set()
     {
-        return vertex_set_t<D>(std::forward<Args>(args)...);
+        return vertex_set_t<D>();
+    }
+
+    // element set alias
+    template <class elementT, int D>
+    using element_set_t = ElementSet<elementT, D>;
+
+    // element set factory
+    template <class elementT, int D, template <class> class CONTAINER>
+    constexpr auto element_set(CONTAINER<elementT *> && elements, const vertex_set_t<D> & vertices)
+    {
+        return element_set_t<elementT, D>(std::forward<CONTAINER<elementT *>>(elements), vertices);
     }
 
     // mesh alias
@@ -83,10 +92,10 @@ namespace mito::mesh {
     using mesh_t = Mesh<D>;
 
     // vertex set factory
-    template <int D, class... Args>
-    constexpr auto mesh(Args &&... args)
+    template <int D>
+    constexpr auto mesh(std::string meshFileName)
     {
-        return mesh_t<D>(std::forward<Args>(args)...);
+        return mesh_t<D>(meshFileName);
     }
 }
 

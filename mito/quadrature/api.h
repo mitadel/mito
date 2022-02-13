@@ -10,10 +10,10 @@ namespace mito::quadrature {
     using integrator_t = Integrator<quadratureT, r, elementSetT>;
 
     // integrator factory
-    template <class quadratureT, int r, class elementSetT, class... Args>
-    constexpr auto integrator(Args &&... args)
+    template <class quadratureT, int r, class elementSetT>
+    constexpr auto integrator(const elementSetT & elementSet)
     {
-        return integrator_t<quadratureT, r, elementSetT>(std::forward<Args>(args)...);
+        return integrator_t<quadratureT, r, elementSetT>(elementSet);
     }
 }
 
