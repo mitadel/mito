@@ -72,7 +72,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, triangle_t, 1>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, mesh::triangle_t, 1>::GetQuadratureRule()
     {
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
@@ -81,7 +81,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, triangle_t, 2>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, mesh::triangle_t, 2>::GetQuadratureRule()
     {
         return quadrature_array_t<parametricDim, 3 /* nPoints */>(
             { /*{point}, weight*/
@@ -97,7 +97,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, segment_t, 1>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, mesh::segment_t, 1>::GetQuadratureRule()
     {
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
@@ -105,7 +105,7 @@ namespace mito {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, segment_t, 2>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, mesh::segment_t, 2>::GetQuadratureRule()
     {
         // clang does not allow a constexpr with sqrt(3.0)...
         // constexpr double sqrt3 = sqrt(3.0)

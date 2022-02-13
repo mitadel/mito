@@ -2,9 +2,8 @@
 #if !defined(mito_mesh_VertexSet_h)
 #define mito_mesh_VertexSet_h
 
-#include "Simplex.h"
 
-namespace mito {
+namespace mito::mesh {
 
     template <int D>
     class VertexSet {

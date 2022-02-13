@@ -2,10 +2,8 @@
 #if !defined(mito_mesh_ElementSet_h)
 #define mito_mesh_ElementSet_h
 
-#include "Simplex.h"
-#include "VertexSet.h"
 
-namespace mito {
+namespace mito::mesh {
 
     template <int D>
     real computeDistance(const point_t<D> & pointA, const point_t<D> & pointB)
@@ -205,11 +203,11 @@ namespace mito {
     // derivative of the parametrization, the normal times the area differential, as the returned
     // value by a method called, say, differential?
 
-    template <class element_t, int D>
+    template <class elementT, int D>
     class ElementSet {
 
       public:
-        using element = element_t;
+        using element_t = elementT;
         static constexpr int dim = D;
 
       public:
@@ -294,6 +292,7 @@ namespace mito {
     };
 
 }    // namespace mito
+
 
 #endif    // mito_mesh_ElementSet_h
 

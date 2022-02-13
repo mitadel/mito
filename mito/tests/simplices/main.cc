@@ -1,17 +1,17 @@
 #include <map>
-#include "../../mesh/Simplex.h"
-#include "../../mesh/ElementSet.h"
+#include "../../mito.h"
+#include "../../mesh.h"
 
-using mito::point_t;
-using mito::vertex_t;
-using mito::segment_t;
-using mito::triangle_t;
+using mito::mesh::point_t;
+using mito::mesh::vertex_t;
+using mito::mesh::segment_t;
+using mito::mesh::triangle_t;
 
 int
 main()
 {
 
-    mito::VertexSet<2> vertexCoordinatesMap;
+    mito::mesh::VertexSet<2> vertexCoordinatesMap;
 
     /**
      * Mesh with four elements:
@@ -65,7 +65,7 @@ main()
     }
 
     // instantiate an ElementSet as a collection of simplices and a vertex-coordinates mapping.
-    mito::ElementSet elementSet(elements, vertexCoordinatesMap);
+    mito::mesh::ElementSet elementSet(elements, vertexCoordinatesMap);
 
     // all done
     return 0;

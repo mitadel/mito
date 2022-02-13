@@ -2,11 +2,8 @@
 #if !defined(mito_mesh_Simplex_h)
 #define mito_mesh_Simplex_h
 
-#include "../mito.h"
-#include <set>
-#include <unordered_map>
 
-namespace mito {
+namespace mito::mesh {
 
     template <int D>
     class Simplex {
@@ -165,17 +162,12 @@ namespace mito {
         bool _orientation;
     };
 
-    using vertex_t = Simplex<0>;
-    using segment_t = Simplex<1>;
-    using triangle_t = Simplex<2>;
-    using tetrahedron_t = Simplex<3>;
-
 }    // namespace mito
 
 // overload operator<< for simplices
 template <int D>
 std::ostream &
-operator<<(std::ostream & os, const mito::Simplex<D> & s)
+operator<<(std::ostream & os, const mito::mesh::Simplex<D> & s)
 {
     os << &s << " composed of:" << std::endl;
     for (const auto & simplex : s.simplices()) {
@@ -187,7 +179,7 @@ operator<<(std::ostream & os, const mito::Simplex<D> & s)
 // overload operator<< specialization for simplices with D = 0 (vertices)
 template <>
 std::ostream &
-operator<<(std::ostream & os, const mito::Simplex<0> & s)
+operator<<(std::ostream & os, const mito::mesh::Simplex<0> & s)
 {
     os << &s;
     return os;

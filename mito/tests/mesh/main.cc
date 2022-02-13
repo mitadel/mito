@@ -1,7 +1,5 @@
 #include "../../mito.h"
-#include "../../mesh/Simplex.h"
-#include "../../mesh/Mesh.h"
-#include "../../mesh/ElementSet.h"
+#include "../../mesh.h"
 #include "../../math.h"
 #include "../../quadrature/Integrator.h"
 
@@ -9,11 +7,11 @@ int
 main()
 {
     // load mesh
-    mito::Mesh<2> mesh("square.summit");
+    mito::mesh::Mesh<2> mesh("square.summit");
     // instantiate an ElementSet as a collection of simplices and a vertex-coordinates mapping.
     const auto & elements = mesh.elements<2>(); //TODO: region label to fetch elements
     const auto & vertices = mesh.vertices();
-    mito::ElementSet elementSet(elements, vertices);
+    mito::mesh::ElementSet elementSet(elements, vertices);
 
     // instantiate a scalar field
     mito::math::scalar_field_t<2> f_cosine(
@@ -21,7 +19,7 @@ main()
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
     mito::Integrator<
-        mito::GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 2>>
+        mito::GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
         integrator(elementSet);
 
     mito::real result = integrator.integrate(f_cosine);

@@ -30,9 +30,7 @@ namespace mito {
     // typedef for diagonal matrices
     template <int D, typename T = real>
     using diagonal_matrix_t = pyre::algebra::diagonal_matrix_t<D, T>;
-    template <int D>
-    using point_t = vector_t<D>;    // Point<D>;
-    // templatized typedef for fields
+    // template typedef for fields
     template <class X, class Y>
     using field = Y (*)(const X &, real);
 }

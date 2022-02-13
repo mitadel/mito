@@ -2,12 +2,8 @@
 #if !defined(mito_mesh_Mesh_h)
 #define mito_mesh_Mesh_h
 
-#include "Simplex.h"
-#include "VertexSet.h"
-#include <map>
-#include <fstream>
 
-namespace mito {
+namespace mito::mesh {
 
     template <int D>
     class Mesh {
@@ -62,7 +58,7 @@ namespace mito {
         using composition_tuple_t = typename composition_tuple<>::type;
 
       public:
-        Mesh(std::string meshFileName) : _simplices(), _compositions(), _vertexPointMap()
+        Mesh(std::string meshFileName) : _simplices(), _compositions(), _vertices()
         {
             _loadMesh(meshFileName);
         }
@@ -152,7 +148,7 @@ namespace mito {
         const auto & vertices() const
         {
             // all done
-            return _vertexPointMap;
+            return _vertices;
         }
 
       private:
@@ -224,7 +220,7 @@ namespace mito {
             // instantiate new vertex
             vertex_t * vertex = new vertex_t();
             // associate the new vertex to the new point
-            _vertexPointMap.insert(*vertex, point);
+            _vertices.insert(*vertex, point);
             // add the newly created vertex
             _addSimplex(vertex);
 
@@ -284,7 +280,7 @@ namespace mito {
                 }
                 _addVertex(std::move(point));
             }
-            // _vertexPointMap.print();
+            // _vertices.print();
 
             // all done
             return;
@@ -370,11 +366,12 @@ namespace mito {
         // container to store D maps with the composition of i-dimensional simplices in terms
         // of arrays of (i-1)-dimensional simplices
         composition_tuple_t _compositions;
-        // a map between the vertices addresses and a physical point in D-dimensional space
-        VertexSet<D> _vertexPointMap;
+        // the mesh vertices
+        VertexSet<D> _vertices;
     };
 
 }    // namespace mito
+
 
 #endif    // mito_mesh_Mesh_h
 

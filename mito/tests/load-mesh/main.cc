@@ -1,6 +1,5 @@
 #include "../../mito.h"
-#include "../../mesh/Simplex.h"
-#include "../../mesh/Mesh.h"
+#include "../../mesh.h"
 #include <fstream>
 #include <string>
 #include <map>
@@ -39,13 +38,13 @@ LoadMesh(std::string fileName)
     assert(N_element_sets == 1);
 
     // fill in vertices
-    std::vector<mito::vertex_t *> vertices(N_vertices, nullptr);
-    mito::VertexSet<D> vertexCoordinatesMap;
+    std::vector<mito::mesh::vertex_t *> vertices(N_vertices, nullptr);
+    mito::mesh::VertexSet<D> vertexCoordinatesMap;
     for (auto & vertex : vertices) {
         // instantiate new vertex
-        vertex = new mito::vertex_t();
+        vertex = new mito::mesh::vertex_t();
         // instantiate new point
-        mito::point_t<D> point;
+        mito::mesh::point_t<D> point;
         for (int d = 0; d < D; ++d) {
             // read point coordinates
             fileStream >> point[d];
@@ -59,7 +58,7 @@ LoadMesh(std::string fileName)
     // vertexCoordinatesMap.print();
 
     // fill in elements
-    std::map<std::string, std::vector<const mito::triangle_t *>> element_sets;
+    std::map<std::string, std::vector<const mito::mesh::triangle_t *>> element_sets;
     for (int i = 0; i < N_elements; ++i) {
         int element_type = 0;
         fileStream >> element_type;
@@ -78,19 +77,19 @@ LoadMesh(std::string fileName)
             fileStream >> index2;
             --index2;
 
-            mito::segment_t * segment0 =
-                new mito::segment_t({ vertices[index0], vertices[index1] });
-            mito::segment_t * segment1 =
-                new mito::segment_t({ vertices[index1], vertices[index2] });
-            mito::segment_t * segment2 =
-                new mito::segment_t({ vertices[index2], vertices[index0] });
+            mito::mesh::segment_t * segment0 =
+                new mito::mesh::segment_t({ vertices[index0], vertices[index1] });
+            mito::mesh::segment_t * segment1 =
+                new mito::mesh::segment_t({ vertices[index1], vertices[index2] });
+            mito::mesh::segment_t * segment2 =
+                new mito::mesh::segment_t({ vertices[index2], vertices[index0] });
 
             // NOTE: With this implementation, edges have no dignity of their own but are
             //       just 'edges of a triangle'. This will make us lose some information,
             //       because we will see as different segments the same edge seen from two
             //       different triangles, although of course they have the same vertices.
-            const mito::triangle_t * element =
-                new mito::triangle_t({ segment0, segment1, segment2 });
+            const mito::mesh::triangle_t * element =
+                new mito::mesh::triangle_t({ segment0, segment1, segment2 });
 
             // QUESTION: Can the label be more than one?
             // read label for element
@@ -145,7 +144,7 @@ main()
 
     //
     t = clock();
-    mito::Mesh<2> mesh("rectangle.summit");
+    mito::mesh::Mesh<2> mesh("rectangle.summit");
     std::cout << "Loaded mesh (without repeated elements) in " << clock() - t << std::endl;
 
     //

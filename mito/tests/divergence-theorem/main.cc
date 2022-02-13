@@ -1,17 +1,17 @@
 #include <cmath>
 #include "../../mito.h"
 #include "../../math.h"
-#include "../../mesh/ElementSet.h"
+#include "../../mesh.h"
 #include "../../quadrature/Integrator.h"
 
 using mito::math::function_t;
 using mito::vector_t;
 using mito::real;
 using mito::GAUSS;
-using mito::point_t;
-using mito::vertex_t;
-using mito::segment_t;
-using mito::triangle_t;
+using mito::mesh::point_t;
+using mito::mesh::vertex_t;
+using mito::mesh::segment_t;
+using mito::mesh::triangle_t;
 
 int
 main()
@@ -57,7 +57,7 @@ main()
         (0,0)           (1,0)
     */
 
-    mito::VertexSet<2> vertexCoordinatesMap;
+    mito::mesh::VertexSet<2> vertexCoordinatesMap;
 
     vertex_t vertex0;
     vertexCoordinatesMap.insert(vertex0, point_t<2> { 0.0, 0.0 });
@@ -85,11 +85,11 @@ main()
     triangle_t element3({ &segment7, &segment2, &segment5 });
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::ElementSetTri elementSet;
-    mito::ElementSet bodyElementSet(
+    // static mito::mesh::ElementSetTri elementSet;
+    mito::mesh::ElementSet bodyElementSet(
         std::vector<triangle_t *> { &element0, &element1, &element2, &element3 },
         vertexCoordinatesMap);
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 2>>
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
         bodyIntegrator(bodyElementSet);
 
     real resultBody = bodyIntegrator.integrate(divergence);
@@ -98,24 +98,24 @@ main()
     // TOFIX: Include normal notion on the boundary element set, so that we can avoid hardcoding
     // the normals calculations (we might need std::inner_product to do the inner product)
     /*
-    mito::ElementSet boundaryElementSet(
+    mito::mesh::ElementSet boundaryElementSet(
         std::vector<segment_t *> { &segment0, &segment3, &segment6, &segment7 },
         vertexCoordinatesMap);
     */
-    mito::ElementSet boundaryBot(std::vector<segment_t *> { &segment0 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+    mito::mesh::ElementSet boundaryBot(std::vector<segment_t *> { &segment0 }, vertexCoordinatesMap);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::segment_t, 2>>
         boundaryBotIntegrator(boundaryBot);
 
-    mito::ElementSet boundaryRight(std::vector<segment_t *> { &segment3 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+    mito::mesh::ElementSet boundaryRight(std::vector<segment_t *> { &segment3 }, vertexCoordinatesMap);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::segment_t, 2>>
         boundaryRightIntegrator(boundaryRight);
 
-    mito::ElementSet boundaryTop(std::vector<segment_t *> { &segment6 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+    mito::mesh::ElementSet boundaryTop(std::vector<segment_t *> { &segment6 }, vertexCoordinatesMap);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::segment_t, 2>>
         boundaryTopIntegrator(boundaryTop);
 
-    mito::ElementSet boundaryLeft(std::vector<segment_t *> { &segment7 }, vertexCoordinatesMap);
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::segment_t, 2>>
+    mito::mesh::ElementSet boundaryLeft(std::vector<segment_t *> { &segment7 }, vertexCoordinatesMap);
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::segment_t, 2>>
         boundaryLeftIntegrator(boundaryLeft);
 
     mito::math::scalar_field_t<2> f0(f[0]);

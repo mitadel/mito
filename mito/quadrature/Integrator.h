@@ -3,7 +3,7 @@
 #define mito_quadrature_Integrator_h
 
 #include "../mito.h"
-#include "../mesh/ElementSet.h"
+#include "../mesh.h"
 #include "../math.h"
 #include "../fem.h"
 #include "QuadratureRule.h"
@@ -16,7 +16,7 @@ namespace mito {
     // template with respect to element type T and to degree of exactness r of quadrature rule
     template <class quadrature_t, int r, class element_set_t>
     class Integrator {
-        using element_t = typename element_set_t::element;
+        using element_t = typename element_set_t::element_t;
         static constexpr int D = element_set_t::dim;
 
         // quadrature_t, element_t, and r identify a specific quadrature rule
@@ -38,7 +38,7 @@ namespace mito {
             int e = 0;
             for (const auto & element : _elementSet.elements()) {
                 // use a set to collect vertices without repeated entries
-                std::set<const vertex_t *> vertices;
+                std::set<const mesh::vertex_t *> vertices;
                 element->vertices(vertices);
                 // loop on vertices
                 int v = 0;

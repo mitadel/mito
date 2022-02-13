@@ -13,9 +13,7 @@
 #include <pybind11/functional.h>
 #include <functional>
 #include "../../mito/mito.h"
-#include "../../mito/mesh/Simplex.h"
-#include "../../mito/mesh/Mesh.h"
-#include "../../mito/mesh/ElementSet.h"
+#include "../../mito/mesh.h"
 #include "../../mito/math.h"
 #include "../../mito/quadrature/Integrator.h"
 
@@ -118,36 +116,36 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Mesh interface
-    py::class_<mito::Mesh<2>>(m, "Mesh2D")
+    py::class_<mito::mesh::Mesh<2>>(m, "Mesh2D")
         // the constructor
         .def(
             // the implementation
             py::init<std::string>())
         // accessors
         // the elements; read-only property
-        .def_property_readonly("elements", &mito::Mesh<2>::elements<2>, "the body elements")
+        .def_property_readonly("elements", &mito::mesh::Mesh<2>::elements<2>, "the body elements")
         // the vertex-point map; read-only property
-        .def_property_readonly("vertices", &mito::Mesh<2>::vertices, 
+        .def_property_readonly("vertices", &mito::mesh::Mesh<2>::vertices, 
             "the positions of the vertices")
         // done
         ;
 
 
     // the mito ElementSet interface
-    py::class_<mito::ElementSet<mito::triangle_t, 2>>(m, "ElementSetTriangle2D")
+    py::class_<mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>(m, "ElementSetTriangle2D")
         // the constructor
         .def(
             // the implementation
-            py::init<const std::vector<mito::triangle_t *> &, const mito::VertexSet<2> &>())
+            py::init<const std::vector<mito::mesh::triangle_t *> &, const mito::mesh::VertexSet<2> &>())
         // the constructor
         .def(
             // the implementation
             py::init([](std::string filename) {
                 // TOFIX: who is going to delete?
                 // read the mesh
-                mito::Mesh<2> * mesh = new mito::Mesh<2>(filename);
+                mito::mesh::Mesh<2> * mesh = new mito::mesh::Mesh<2>(filename);
                 // instantiate
-                return new mito::ElementSet<mito::triangle_t, 2>(
+                return new mito::mesh::ElementSet<mito::mesh::triangle_t, 2>(
                     mesh->elements<2>(), 
                     mesh->vertices());
             }))
@@ -157,12 +155,12 @@ PYBIND11_MODULE(mito, m)
 
     // the mito Integrator interface
     py::class_<mito::Integrator<
-        mito::GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 2>>>(
+        mito::GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>>(
         m, "GaussIntegrator2Triangle2D")
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::ElementSet<mito::triangle_t, 2> &>())
+            py::init<const mito::mesh::ElementSet<mito::mesh::triangle_t, 2> &>())
         // interface
         // QUESTION: should this be called integrateScalarfield?
         // integrate a scalar field
@@ -171,7 +169,7 @@ PYBIND11_MODULE(mito, m)
             // the method;
             &mito::Integrator<
                 mito::GAUSS, 2 /* degree of exactness */,
-                mito::ElementSet<mito::triangle_t, 2>>::integrate<mito::real>,
+                mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>::integrate<mito::real>,
             // the docstring
             "integrate a field")
         // done

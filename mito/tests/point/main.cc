@@ -1,7 +1,8 @@
 #include <algorithm>
-#include "../../mesh/Point.h"
+#include "../../mito.h"
+#include "../../mesh.h"
 
-using mito::Point;
+using mito::mesh::Point;
 
 template <int I>
 constexpr auto

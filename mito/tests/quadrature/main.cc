@@ -1,17 +1,17 @@
 #include <cmath>
 #include "../../mito.h"
 #include "../../math.h"
-#include "../../mesh/ElementSet.h"
+#include "../../mesh.h"
 #include "../../quadrature/Integrator.h"
 
 using mito::math::function_t;
 using mito::vector_t;
 using mito::real;
 using mito::GAUSS;
-using mito::point_t;
-using mito::vertex_t;
-using mito::segment_t;
-using mito::triangle_t;
+using mito::mesh::point_t;
+using mito::mesh::vertex_t;
+using mito::mesh::segment_t;
+using mito::mesh::triangle_t;
 
 // TODO: When everything is in place to compute integrals, add Stokes' theorem as a test.
 
@@ -94,7 +94,7 @@ main()
         (0,0)           (1,0)
     */
 
-    mito::VertexSet<2> vertexCoordinatesMap;
+    mito::mesh::VertexSet<2> vertexCoordinatesMap;
 
     vertex_t vertex0;
     point_t<2> point0 = { 0.0, 0.0 };
@@ -129,15 +129,15 @@ main()
     std::vector<triangle_t *> elements = { &element0, &element1, &element2, &element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::ElementSetTri elementSet;
-    mito::ElementSet bodyElementSet(elements, vertexCoordinatesMap);
+    // static mito::mesh::ElementSetTri elementSet;
+    mito::mesh::ElementSet bodyElementSet(elements, vertexCoordinatesMap);
     // TOFIX: Remove the last template parameter (it can be deduced by the input argument)
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 2>>
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
         bodyIntegrator(bodyElementSet);
 
 #if 0
     mito::Elements<SEG, 2> boundaryElements(connectivityBoundary, coordinates);
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<SEG, 2>> 
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<SEG, 2>> 
         boundaryIntegrator(boundaryElements);
 #endif
 
@@ -178,7 +178,7 @@ main()
     assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
     // attach different coordinates (3D coordinates to the same vertices as above)
-    mito::VertexSet<3> vertexCoordinatesMap3D;
+    mito::mesh::VertexSet<3> vertexCoordinatesMap3D;
     point_t<3> point03D = { 0.0, 0.0, 0.0 };
     vertexCoordinatesMap3D.insert(vertex0, point03D);
     point_t<3> point13D = { 1.0, 0.0, 1.0 };
@@ -191,11 +191,11 @@ main()
     vertexCoordinatesMap3D.insert(vertex4, point43D);
 
     // instantiate an element set with the same elements as above but the new coordinates map
-    mito::ElementSet bodyElementSet3D(elements, vertexCoordinatesMap3D);
+    mito::mesh::ElementSet bodyElementSet3D(elements, vertexCoordinatesMap3D);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::ElementSetTri elementSet;
-    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::ElementSet<mito::triangle_t, 3>>
+    // static mito::mesh::ElementSetTri elementSet;
+    mito::Integrator<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 3>>
         bodyIntegrator3D(bodyElementSet3D);
 
     // instantiate a scalar function object

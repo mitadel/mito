@@ -2,9 +2,8 @@
 #if !defined(mito_mesh_Point_h)
 #define mito_mesh_Point_h
 
-#include "../mito.h"
 
-namespace mito {
+namespace mito::mesh {
 
     static constexpr auto x0 = std::integral_constant<int, 0> {};
     static constexpr auto x1 = std::integral_constant<int, 1> {};
@@ -72,33 +71,33 @@ namespace mito {
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<1> & x)
+operator<<(std::ostream & os, const mito::mesh::Point<1> & x)
 {
-    os << "(" << x[mito::x0] << ")";
+    os << "(" << x[mito::mesh::x0] << ")";
     return os;
 }
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<2> & x)
+operator<<(std::ostream & os, const mito::mesh::Point<2> & x)
 {
-    os << "(" << x[mito::x0] << ", " << x[mito::x1] << ")";
+    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ")";
     return os;
 }
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<3> & x)
+operator<<(std::ostream & os, const mito::mesh::Point<3> & x)
 {
-    os << "(" << x[mito::x0] << ", " << x[mito::x1] << ", " << x[mito::x2] << ")";
+    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ", " << x[mito::mesh::x2] << ")";
     return os;
 }
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::Point<4> & x)
+operator<<(std::ostream & os, const mito::mesh::Point<4> & x)
 {
-    os << "(" << x[mito::x0] << ", " << x[mito::x1] << ", " << x[mito::x2] << "," << x[mito::x3]
+    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ", " << x[mito::mesh::x2] << "," << x[mito::mesh::x3]
        << ")";
     return os;
 }
