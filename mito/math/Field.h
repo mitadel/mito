@@ -23,14 +23,6 @@ namespace mito::math {
         Field(const function_t<X, Y> & f, std::array<function_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
         Field(function_t<X, Y> && f, std::array<function_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
 
-        // constructors with functor_t<X, Y>
-        Field(const functor_t<X, Y> & f) : _f(f), _Df() {}
-        Field(functor_t<X, Y> && f) : _f(f), _Df() {}
-        Field(const functor_t<X, Y> & f, const std::array<functor_t<X, Y>, D> & Df) : _f(f), 
-            _Df(Df) {}
-        Field(const functor_t<X, Y> & f, std::array<functor_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
-        Field(functor_t<X, Y> && f, std::array<functor_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
-
         // default move constructor
         Field(Field &&) = default;
 
