@@ -23,10 +23,10 @@ namespace mito::math {
     template <class X, class Y>
     using field_t = Field<X, Y>;
 
-    template <class X, class Y, class... Args>
-    constexpr auto field(Args &&... args)
+    template <class X, class Y, template <class, class> class FUNCTION, class... Args>
+    constexpr auto field(FUNCTION<X, Y> && f, Args &&... args)
     {
-        return field_t<X, Y>(std::forward<Args>(args)...);
+        return field_t<X, Y>(std::forward<FUNCTION<X, Y>>(f), std::forward<Args>(args)...);
     }
 
     // vector field
@@ -36,10 +36,11 @@ namespace mito::math {
     template <int D, int N>
     using vector_field_t = VectorField<D, N>;
 
-    template <int D, int N, class... Args>
-    constexpr auto vector_field(Args &&... args)
+    template <int D, int N, template <class, class> class FUNCTION, class... Args>
+    constexpr auto vector_field(FUNCTION<vector_t<D>, vector_t<N>> && f, Args &&... args)
     {
-        return vector_field_t<D, N>(std::forward<Args>(args)...);
+        return vector_field_t<D, N>(
+            std::forward<FUNCTION<vector_t<D>, vector_t<N>>>(f), std::forward<Args>(args)...);
     }
 
     // scalar field
@@ -49,10 +50,12 @@ namespace mito::math {
     template <int D>
     using scalar_field_t = ScalarField<D>;
 
-    template <int D, class... Args>
-    constexpr auto scalar_field(Args &&... args)
+    template <int D, template <class, class> class FUNCTION, class... Args>
+    constexpr auto scalar_field(FUNCTION<vector_t<D>, scalar_t> && f, Args &&... args)
     {
-        return scalar_field_t<D>(std::forward<Args>(args)...);
+        return scalar_field_t<D>(
+            std::forward<FUNCTION<vector_t<D>, scalar_t>>(f), 
+            std::forward<Args>(args)...);
     }
 }
 
