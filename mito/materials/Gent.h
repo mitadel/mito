@@ -1,21 +1,20 @@
 #if !defined(mito_materials_Gent_h)
 #define mito_materials_Gent_h
 
-#include "../mito.h"
 
-namespace mito {
+namespace mito::materials {
 
     class Gent {
 
       public:
-        Gent(real rho, real kappa, real mu, real Jm) :
+        constexpr Gent(real rho, real kappa, real mu, real Jm) :
             _rho(rho),
             _kappa(kappa),
             _mu(mu),
             _Jm(Jm) {};
 
         template <int D /*dim*/>
-        void Constitutive(const vector_t<D> & u, const matrix_t<D> & Du, matrix_t<D> & P);
+        constexpr void Constitutive(const vector_t<D> & u, const matrix_t<D> & Du, matrix_t<D> & P);
 
       private:
         real _rho;
@@ -25,7 +24,8 @@ namespace mito {
     };
 
     template <int D /*dim*/>
-    void Gent::Constitutive(const vector_t<D> & u, const matrix_t<D> & Du, matrix_t<D> & P)
+    constexpr void Gent::Constitutive(const vector_t<D> & u, const matrix_t<D> & Du, 
+        matrix_t<D> & P)
     {
         // deformation gradient
         matrix_t<D> F = Du;
@@ -67,6 +67,7 @@ namespace mito {
     }
 
 }
+
 
 #endif    // mito_materials_Gent_h
 
