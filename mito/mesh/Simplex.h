@@ -9,7 +9,8 @@ namespace mito::mesh {
     class Simplex {
 
       public:
-        Simplex(const std::array<Simplex<D - 1> *, D + 1> & simplices) : _simplices(simplices)
+        constexpr Simplex(const std::array<simplex_t<D - 1> *, D + 1> & simplices) :
+            _simplices(simplices)
         {
             // initialize object
             _initialize();
@@ -18,7 +19,7 @@ namespace mito::mesh {
             return;
         }
 
-        Simplex(std::array<Simplex<D - 1> *, D + 1> && simplices) : _simplices(simplices)
+        constexpr Simplex(std::array<simplex_t<D - 1> *, D + 1> && simplices) : _simplices(simplices)
         {
             // initialize object
             _initialize();
@@ -27,7 +28,7 @@ namespace mito::mesh {
             return;
         }
 
-        ~Simplex() {}
+        constexpr ~Simplex() {}
 
       private:
         // delete default constructor
@@ -59,7 +60,7 @@ namespace mito::mesh {
       public:
         const auto & simplices() const { return _simplices; }
 
-        void vertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
+        void vertices(std::set<const vertex_t *> & vertices) const
         {
             for (const auto & simplex : simplices()) {
                 simplex->vertices(vertices);
@@ -78,7 +79,7 @@ namespace mito::mesh {
             }
 
             // use a set to cleanup duplicates
-            std::set<const Simplex<0> * /* vertex_t* */> vertices;
+            std::set<const vertex_t *> vertices;
             // collect vertices of every subsimplex of this simplex
             for (const auto & simplex : simplices()) {
                 simplex->vertices(vertices);
@@ -98,14 +99,14 @@ namespace mito::mesh {
         static constexpr int nVertices = D;
 
       private:
-        std::array<Simplex<D - 1> *, D + 1> _simplices;
+        std::array<simplex_t<D - 1> *, D + 1> _simplices;
     };
 
     template <>
     class Simplex<0> {
       public:
-        Simplex() {}
-        ~Simplex() {}
+        constexpr Simplex() {}
+        constexpr ~Simplex() {}
 
       private:
         // delete copy constructor
@@ -121,7 +122,7 @@ namespace mito::mesh {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
-        void vertices(std::set<const Simplex<0> * /* vertex_t* */> & vertices) const
+        void vertices(std::set<const vertex_t *> & vertices) const
         {
             // insert this vertex
             vertices.insert(this);
@@ -135,7 +136,7 @@ namespace mito::mesh {
     template <int D>
     class OrientedSimplex : public Simplex<D> {
       public:
-        OrientedSimplex(std::array<Simplex<D - 1> *, D + 1> && simplices, bool orientation) :
+        OrientedSimplex(std::array<simplex_t<D - 1> *, D + 1> && simplices, bool orientation) :
             Simplex<D>(simplices),
             _orientation(orientation)
         {}
@@ -167,7 +168,7 @@ namespace mito::mesh {
 // overload operator<< for simplices
 template <int D>
 std::ostream &
-operator<<(std::ostream & os, const mito::mesh::Simplex<D> & s)
+operator<<(std::ostream & os, const mito::mesh::simplex_t<D> & s)
 {
     os << &s << " composed of:" << std::endl;
     for (const auto & simplex : s.simplices()) {
@@ -179,7 +180,7 @@ operator<<(std::ostream & os, const mito::mesh::Simplex<D> & s)
 // overload operator<< specialization for simplices with D = 0 (vertices)
 template <>
 std::ostream &
-operator<<(std::ostream & os, const mito::mesh::Simplex<0> & s)
+operator<<(std::ostream & os, const mito::mesh::simplex_t<0> & s)
 {
     os << &s;
     return os;

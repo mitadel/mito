@@ -15,11 +15,11 @@ namespace mito::mesh {
 
         // typedef for a collection of simplices of dimension I-1
         template <size_t I>
-        using simplex_collection = simplex_container<Simplex<int(I)> *>;
+        using simplex_collection = simplex_container<simplex_t<int(I)> *>;
 
         // simplex_collection<I>... expands to:
-        // simplex_container<Simplex<0>*>, simplex_container<Simplex<1>*>, ...,
-        //      simplex_container<Simplex<D>*>
+        // simplex_container<simplex_t<0>*>, simplex_container<simplex_t<1>*>, ...,
+        //      simplex_container<simplex_t<D>*>
         template <typename = std::make_index_sequence<D + 1>>
         struct simplices_tuple;
 
@@ -29,8 +29,8 @@ namespace mito::mesh {
         };
 
         // this expands to:
-        // tuple<simplex_container<Simplex<0>*>, simplex_container<Simplex<1>*>, ...,
-        //      simplex_container<Simplex<D>*>
+        // tuple<simplex_container<simplex_t<0>*>, simplex_container<simplex_t<1>*>, ...,
+        //      simplex_container<simplex_t<D>*>
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
       private:
@@ -38,12 +38,12 @@ namespace mito::mesh {
         // these maps map:
         //      2 pointers to nodes into a pointer to edge,
         //      3 pointers to edges into a pointer to face, ...
-        // std::map<std::array<Simplex<0> *, 2>, Simplex<1> *>  edges composition
-        // std::map<std::array<Simplex<1> *, 3>, Simplex<2> *>  faces compositions
-        // std::map<std::array<Simplex<2> *, 4>, Simplex<3> *>  volumes compositions
+        // std::map<std::array<simplex_t<0> *, 2>, simplex_t<1> *>  edges composition
+        // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
+        // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
         template <size_t I>
         using composition_map =
-            std::map<std::array<Simplex<int(I - 1)> *, I + 1>, Simplex<int(I)> *>;
+            std::map<std::array<simplex_t<int(I - 1)> *, I + 1>, simplex_t<int(I)> *>;
 
         template <typename = std::make_index_sequence<D>>
         struct composition_tuple;
@@ -163,10 +163,10 @@ namespace mito::mesh {
          * inserted (was already in the map)
          */
         template <int I>
-        auto _registerSimplexComposition(Simplex<I> & simplex)
+        auto _registerSimplexComposition(simplex_t<I> & simplex)
         {
             return std::get<I - 1>(_compositions)
-                .insert(std::pair<std::array<Simplex<I - 1> *, I + 1>, Simplex<I> *>(
+                .insert(std::pair<std::array<simplex_t<I - 1> *, I + 1>, simplex_t<I> *>(
                     simplex.simplices(), &simplex));
         }
 
@@ -176,14 +176,14 @@ namespace mito::mesh {
          *
          * @tparam I dimension of the composed simplex to add (1, 2, ..., D)
          * @param composition simplex composition in terms of I + 1 simplices of dimension (I - 1)
-         * @return Simplex<I>* a pointer either to the newly added simplex or to the equivalent
+         * @return simplex_t<I>* a pointer either to the newly added simplex or to the equivalent
          *                              already registered composed simplex
          */
         template <int I>
-        Simplex<I> * _addUniqueSimplex(std::array<Simplex<I - 1> *, I + 1> && composition)
+        simplex_t<I> * _addUniqueSimplex(std::array<simplex_t<I - 1> *, I + 1> && composition)
         {
             // instantiate new simplex with this composition
-            Simplex<I> * simplex = new Simplex<I>(std::move(composition));
+            simplex_t<I> * simplex = new simplex_t<I>(std::move(composition));
             // look up the new simplex with its composition and register it if it does not exist yet
             auto ret = _registerSimplexComposition(*simplex);
             // if the simplex did not exist
@@ -204,7 +204,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void _addSimplex(Simplex<I> * simplex)
+        void _addSimplex(simplex_t<I> * simplex)
         {
             // TOFIX: is push_back expensive even when we reserve the space? No, but we only
             // know in advance how many nodes and elements are in the mesh, not how many edges
