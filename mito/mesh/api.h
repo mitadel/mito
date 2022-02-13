@@ -16,6 +16,10 @@ namespace mito::mesh {
         return point_t<D>(std::forward<Args>(args)...);
     }
 
+    // simplex alias
+    template <int D>
+    using simplex_t = Simplex<D>;
+
     // vertex alias
     using vertex_t = Simplex<0>;
 
