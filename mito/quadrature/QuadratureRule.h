@@ -118,6 +118,39 @@ namespace mito::quadrature {
                   quadrature_point_t<parametricDim>({ 1.0 - sqrt3 / 3.0, sqrt3 / 3.0 }), 0.5) });
     }
 
+    template <>
+    constexpr auto QuadratureRulesFactory<GAUSS, mesh::tetrahedron_t, 1>::GetQuadratureRule()
+    { /*Hammer rule*/
+        return quadrature_array_t<parametricDim, 1 /* nPoints */>(
+            { /*{point}, weight*/
+              std::make_tuple(
+                  quadrature_point_t<parametricDim>({ 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0 }),
+                  1.0 / 6.0) });
+    }
+
+    template <>
+    constexpr auto QuadratureRulesFactory<GAUSS, mesh::tetrahedron_t, 2>::GetQuadratureRule()
+    { /*Hammer rule*/
+        return quadrature_array_t<parametricDim, 4 /* nPoints */>(
+            { /*{point}, weight*/
+              std::make_tuple(
+                  quadrature_point_t<parametricDim>({ 0.5854101966249685e0, 0.1381966011250105e0,
+                                                      0.1381966011250105e0, 0.1381966011250105e0 }),
+                  1.0 / 24.0),
+              std::make_tuple(
+                  quadrature_point_t<parametricDim>({ 0.1381966011250105e0, 0.5854101966249685e0,
+                                                      0.1381966011250105e0, 0.1381966011250105e0 }),
+                  1.0 / 24.0),
+              std::make_tuple(
+                  quadrature_point_t<parametricDim>({ 0.1381966011250105e0, 0.1381966011250105e0,
+                                                      0.5854101966249685e0, 0.1381966011250105e0 }),
+                  1.0 / 24.0),
+              std::make_tuple(
+                  quadrature_point_t<parametricDim>({ 0.1381966011250105e0, 0.1381966011250105e0,
+                                                      0.1381966011250105e0, 0.5854101966249685e0 }),
+                  1.0 / 24.0) });
+    }
+
 }    // namespace mito
 
 #endif    // mito_quadrature_QuadratureRule_h
