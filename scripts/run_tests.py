@@ -39,7 +39,8 @@ with open(output_file, 'w') as f:
         test_path = folder_path + test_name
         test_ext = ".cc"
         if not os.path.isfile(test_path + test_ext):
-            raise NameError("Please name the test as main.cc")
+            print_result(folder_path, f,
+                         "FAIL: Please name the test as main.cc")
 
         # Temporary folder for compile and run the test
         tmp_folder_path = folder_path + "build_temp/"
