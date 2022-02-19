@@ -9,17 +9,17 @@
 // get the forward declarations
 #include "forward.h"
 
-// published type aliases; this is the file you are looking for...
+// published type factories; this is the file you are looking for...
 #include "api.h"
 
-// implementation
+// classes implementation
 #include "Point.h"
 #include "Simplex.h"
 #include "ElementSet.h"
 #include "VertexSet.h"
 #include "Mesh.h"
 
-// published type factories
+// factories implementation
 #include "factories.h"
 
 

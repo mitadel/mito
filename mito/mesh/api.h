@@ -5,37 +5,38 @@
 
 namespace mito::mesh {
 
-    // point alias
+    // point factory
+    template <int D, class... Args>
+    constexpr auto point(Args &&... args);
+
+    // vertex factory
+    template <class... Args>
+    constexpr auto vertex(Args &&... args);
+
+    // segment factory
+    constexpr auto segment(const std::array<vertex_t *, 2> & simplices);
+    constexpr auto segment(std::array<vertex_t *, 2> && simplices);
+
+    // triangle factory
+    constexpr auto triangle(const std::array<segment_t *, 3> & simplices);
+    constexpr auto triangle(std::array<segment_t *, 3> && simplices);
+
+    // tetrahedron factory
+    constexpr auto tetrahedron(const std::array<triangle_t *, 4> & simplices);
+    constexpr auto tetrahedron(std::array<triangle_t *, 4> && simplices);
+
+    // vertex set factory
     template <int D>
-    using point_t = vector_t<D>;    // Point<D>;
+    constexpr auto vertex_set();
 
-    // simplex alias
+    // element set factory
+    template <class elementT, int D, template <class> class CONTAINER>
+    constexpr auto element_set(CONTAINER<elementT *> && elements, const vertex_set_t<D> & vertices);
+
+    // vertex set factory
     template <int D>
-    using simplex_t = Simplex<D>;
+    constexpr auto mesh(std::string meshFileName);
 
-    // vertex alias
-    using vertex_t = Simplex<0>;
-
-    // segment alias
-    using segment_t = Simplex<1>;
-
-    // triangle alias
-    using triangle_t = Simplex<2>;
-
-    // tetrahedron alias
-    using tetrahedron_t = Simplex<3>;
-
-    // vertex set alias
-    template <int D>
-    using vertex_set_t = VertexSet<D>;
-
-    // element set alias
-    template <class elementT, int D>
-    using element_set_t = ElementSet<elementT, D>;
-
-    // mesh alias
-    template <int D>
-    using mesh_t = Mesh<D>;
 }
 
 
