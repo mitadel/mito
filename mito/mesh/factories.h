@@ -24,7 +24,7 @@ namespace mito::mesh {
     {
         return segment_t(simplices);
     }
-    constexpr auto segment(const std::array<vertex_t *, 2> && simplices)
+    constexpr auto segment(std::array<vertex_t *, 2> && simplices)
     {
         return segment_t(std::move(simplices));
     }
@@ -34,7 +34,7 @@ namespace mito::mesh {
     {
         return triangle_t(simplices);
     }
-    constexpr auto triangle(const std::array<segment_t *, 3> && simplices)
+    constexpr auto triangle(std::array<segment_t *, 3> && simplices)
     {
         return triangle_t(std::move(simplices));
     }
@@ -44,7 +44,7 @@ namespace mito::mesh {
     {
         return tetrahedron_t(simplices);
     }
-    constexpr auto tetrahedron(const std::array<triangle_t *, 4> && simplices)
+    constexpr auto tetrahedron(std::array<triangle_t *, 4> && simplices)
     {
         return tetrahedron_t(std::move(simplices));
     }
