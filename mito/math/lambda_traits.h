@@ -13,6 +13,10 @@ namespace mito::math {
         typedef ReturnT result_type;
         typedef ArgumentT argument_type;
     };
+
+    // helper typedef to remove the reference to F&&
+    template <class F>
+    using remove_reference_lambda = typename std::remove_reference<F>::type;
 }
 
 

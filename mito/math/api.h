@@ -21,8 +21,7 @@ namespace mito::math {
     template <class F>
     constexpr auto function(F && f)
     {
-        using lambda_type = typename std::remove_reference<decltype(f)>::type;
-        typedef lambda_traits<lambda_type> traits;
+        typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
         using X = typename std::remove_reference<typename traits::argument_type>::type;
         using Y = typename std::remove_reference<typename traits::result_type>::type;
         return function_t<X, Y>(f);
@@ -40,8 +39,7 @@ namespace mito::math {
     template <class F, class... Args>
     constexpr auto field(F && f, Args &&... args)
     {
-        using lambda_type = typename std::remove_reference<decltype(f)>::type;
-        typedef lambda_traits<lambda_type> traits;
+        typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
         using X = typename std::remove_reference<typename traits::argument_type>::type;
         using Y = typename std::remove_reference<typename traits::result_type>::type;
         return field_t<X, Y>(std::forward<F>(f), std::forward<Args>(args)...);
@@ -63,8 +61,7 @@ namespace mito::math {
     template <class F, class... Args>
     constexpr auto vector_field(F && f, Args &&... args)
     {
-        using lambda_type = typename std::remove_reference<decltype(f)>::type;
-        typedef lambda_traits<lambda_type> traits;
+        typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
         using X = typename std::remove_reference<typename traits::argument_type>::type;
         constexpr int D = X::size;
         using Y = typename std::remove_reference<typename traits::result_type>::type;
@@ -89,8 +86,7 @@ namespace mito::math {
     template <class F, class... Args>
     constexpr auto scalar_field(F && f, Args &&... args)
     {
-        using lambda_type = typename std::remove_reference<decltype(f)>::type;
-        typedef lambda_traits<lambda_type> traits;
+        typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
         using X = typename std::remove_reference<typename traits::argument_type>::type;
         constexpr int D = X::size;
         return scalar_field_t<D>(std::forward<F>(f), std::forward<Args>(args)...);
