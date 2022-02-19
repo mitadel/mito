@@ -16,17 +16,17 @@ int
 main()
 {
     // a scalar function
-    auto f = mito::math::function<vector_t<2>, vector_t<2>>([](const vector_t<2> & x) {
+    auto f = mito::math::function([](const vector_t<2> & x) {
         return vector_t<2> { x[0] * x[1], x[0] * x[0] };
     });
 
     // df/dx[0]
-    auto Dx = mito::math::function<vector_t<2>, vector_t<2>>([](const vector_t<2> & x) {
+    auto Dx = mito::math::function([](const vector_t<2> & x) {
         return vector_t<2> { x[1], 2.0 * x[0] };
     });
 
     // df/dx[1]
-    auto Dy = mito::math::function<vector_t<2>, vector_t<2>>([](const vector_t<2> & x) {
+    auto Dy = mito::math::function([](const vector_t<2> & x) {
         return vector_t<2> { x[0], 0.0 };
     });
 
