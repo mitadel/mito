@@ -9,12 +9,16 @@
 // get the forward declarations
 #include "forward.h"
 
-// published type aliases; this is the file you are looking for...
+// published type factories; this is the file you are looking for...
 #include "api.h"
 
-// implementation
+// classes implementation
 #include "QuadratureRule.h"
 #include "Integrator.h"
+
+// factories implementation
+#include "factories.h"
+
 
 #endif
 
