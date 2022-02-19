@@ -6,12 +6,18 @@
 // external packages
 #include "externals.h"
 
-// implementation
+// get the forward declarations
+#include "forward.h"
+
+// published types factories; this is the file you are looking for...
+#include "api.h"
+
+// classes implementation
 #include "NodalField.h"
 #include "QuadratureField.h"
 
-// published type aliases; this is the file you are looking for...
-#include "api.h"
+// factories implementation
+#include "factories.h"
 
 
 #endif
