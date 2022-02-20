@@ -7,7 +7,7 @@ build/main: build/main.o
 	g++ -o build/main build/main.o ../extension/build/cat-i.o ../extension/build/cat.o ../lib/build/animal-i.o ../lib/build/animal.o
 
 build/main.o: main.cpp
-	g++ -fmodules-ts -std=c++20 -o build/main.o -c main.cpp
+	g++ -fmodules-ts -std=c++20 -o build/main.o -I/usr/local/pyre/include -c main.cpp
 
 clean: 
 	rm -r build gcm.cache
