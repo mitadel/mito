@@ -39,6 +39,14 @@ main()
     // build a scalar field with divergence of field
     auto divergence = mito::math::div(field);
 
+    // analytic solution
+    // int_{int} (div f) = int_0^1 int_0^1 y dx dy = 0.5
+    // int_{boundary} (f.n) = int_{right} (f.n) + int_{top} + int_{left} + int_{bot}
+    // int_{right} (f.n) = int_{right} (f0) = int_0^1 xy|(x=1) dy = int_0^1 y dy = 0.5
+    // int_{top} (f.n) = int_{top} (f1) = int_1^0 x^2 dx = int_0^1 x^2 dx = 1/3
+    // int_{left} (f.n) = - int_{left} (f0) = int_0^1 xy|(x=0) dy = 0
+    // int_{bot} (f.n) = - int_{bot} (f1) = - int_0^1 x^2 dx = - 1/3
+
     /**
      * Mesh with four elements:
         (0,1)           (1,1)
@@ -100,18 +108,22 @@ main()
         std::vector<segment_t *> { &segment0, &segment3, &segment6, &segment7 },
         vertices);
     */
+    // integrator on the bottom boundary
     auto boundaryBot = mito::mesh::element_set(std::vector<segment_t *> { &segment0 }, vertices);
     auto boundaryBotIntegrator = 
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryBot);
 
+    // integrator on the right boundary
     auto boundaryRight = mito::mesh::element_set(std::vector<segment_t *> { &segment3 }, vertices);
     auto boundaryRightIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryRight);
 
+    // integrator on the top boundary
     auto boundaryTop = mito::mesh::element_set(std::vector<segment_t *> { &segment6 }, vertices);
     auto boundaryTopIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryTop);
 
+    // integrator on the left boundary
     auto boundaryLeft = mito::mesh::element_set(std::vector<segment_t *> { &segment7 }, vertices);
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
