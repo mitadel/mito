@@ -19,14 +19,15 @@ int
 main()
 {
     // a scalar function
-    function_t<mito::vector_t<2>> function1(
-        [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
+    auto function1 = mito::math::function(
+        [](const mito::vector_t<2> & x) -> mito::scalar_t { return cos(x[0] * x[1]); });
 
     // a scalar function
-    function_t<mito::vector_t<2>> function2([](const mito::vector_t<2> & x) { return 5; });
+    auto function2 =
+        mito::math::function([](const mito::vector_t<2> & x) -> mito::scalar_t { return 5; });
 
     // the sum of the two scalar functions
-    function_t<mito::vector_t<2>> function3 = function1 + function2;
+    auto function3 = function1 + function2;
 
     // a point in the reference configuration
     mito::vector_t<2> x = { 1.0, PI };
@@ -53,26 +54,24 @@ main()
     auto function10 = (PI + function7) - function7;
     assert(std::fabs(function10(x) - PI) < TOL);
 
-    auto function11 = (PI + function7) - (2.0 * PI);
+    auto function11 = PI + function7 - 2.0 * PI;
     assert(std::fabs(function11(x) - function7(x) + PI) < TOL);
 
     // (cos(xy) + 5) / cos(xy)
     auto function12 = (function1 + function2) / function1;
     assert(std::fabs((function1(x) + function2(x)) / function1(x) - function12(x)) < TOL);
 
-    function_t<mito::vector_t<2>> function13(my_function);
+    auto function13 = mito::math::function(my_function);
     auto function14 = function13 + function1;
 
-    // TOFIX: Should we also account for std::function<real(const X &)> + function_t<X, scalar_t> ?
-    //
-    // std::function<mito::real(const mito::vector_t<2> &)> my_other_function(my_function);
-    std::function<mito::scalar_t(const mito::vector_t<2> &)> my_other_function(
+    std::function<mito::real(const mito::vector_t<2> &)> my_other_f(
         my_function);
-    auto function15 = my_other_function + function1 + my_function;
+    auto my_other_function = mito::math::function(my_other_f);
+    auto function15 = my_other_function + function1;
 
     // a vector function
-    function_t<mito::vector_t<2>, mito::vector_t<3>> function16([](const mito::vector_t<2> & x) {
-        return mito::vector_t<3> { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
+    auto function16 = mito::math::function([](const mito::vector_t<2> & x) -> mito::vector_t<3> {
+        return { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
     });
 
     // vector times scalar multiplication
@@ -85,7 +84,7 @@ main()
     mito::vector_t<3> my_vector = { 1, 2, 3 };
     auto function18 = my_vector * function16;
     std::cout << "function16 = " << function16(x) << std::endl;
-    std::cout << "function17 = " << function18(x) << std::endl;
+    std::cout << "function18 = " << function18(x) << std::endl;
 
     return 0;
 }
