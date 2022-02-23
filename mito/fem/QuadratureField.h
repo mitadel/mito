@@ -81,10 +81,10 @@ namespace mito::fem {
         inline int n_elements() const { return _grid.layout().shape()[0]; }
 
         /*
-         * accessor for the quadrature points per element
+         * accessor for the number of quadrature points per element
          * @return the number of quadrature point per element
          */
-        inline constexpr int n_quad() const { return Q; }
+        inline constexpr int n_quad_points() const { return Q; }
 
         /**
          * const accessor for name
@@ -121,7 +121,7 @@ namespace mito::fem {
 
         for (int e = 0; e < quadratureField.n_elements(); ++e) {
             os << "Element e = " << e << std::endl;
-            for (int q = 0; q < quadratureField.n_quad(); ++q) {
+            for (int q = 0; q < quadratureField.n_quad_points(); ++q) {
                 os << "\tQuadrature point q = " << q << std::endl;
                 os << "\t\t" << quadratureField[{e, q}] << std::endl;
             }

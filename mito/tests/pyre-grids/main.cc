@@ -121,7 +121,7 @@ namespace mito {
          * accessor for the quadrature points per element
          * @return the number of quadrature point per element
          */
-        static constexpr int n_quad() { return Q; }
+        static constexpr int n_quad_points() { return Q; }
 
       private:
         // number of elements
