@@ -114,6 +114,22 @@ namespace mito::fem {
         std::string _name;
     };
 
+    template <int Q, class Y>
+    std::ostream & operator<<(std::ostream & os, const quadrature_field_t<Q, Y> & quadratureField)
+    {
+        os << "Quadrature field \"" << quadratureField.name() << "\" : ";
+
+        for (int e = 0; e < quadratureField.n_elements(); ++e) {
+            os << "Element e = " << e << std::endl;
+            for (int q = 0; q < quadratureField.n_quad(); ++q) {
+                os << "\tQuadrature point q = " << q << std::endl;
+                os << "\t\t" << quadratureField[{e, q}] << std::endl;
+            }
+        }
+
+        return os;
+    }
+
 }    // namespace mito
 
 #endif    // mito_fem_QuadratureField_h
