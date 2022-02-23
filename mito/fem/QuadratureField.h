@@ -84,7 +84,7 @@ namespace mito::fem {
          * accessor for the quadrature points per element
          * @return the number of quadrature point per element
          */
-        inline constexpr int n_quad() { return Q; }
+        inline constexpr int n_quad() const { return Q; }
 
         /**
          * const accessor for name

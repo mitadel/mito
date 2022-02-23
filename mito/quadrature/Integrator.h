@@ -66,7 +66,7 @@ namespace mito::quadrature {
         }
 
         template <class Y>
-        Y integrate(const math::field_t<vector_t<D>, Y> & field)
+        Y integrate(const math::field_t<vector_t<D>, Y> & field) const
         {
             auto values = field(_coordinates);
 
