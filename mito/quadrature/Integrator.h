@@ -70,7 +70,7 @@ namespace mito::quadrature {
         {
             auto values = field(_coordinates);
 
-            Y result;
+            auto result = Y();
 
             // assemble elementary contributions
             for (auto e = 0; e < _elementSet.nElements(); ++e) {
