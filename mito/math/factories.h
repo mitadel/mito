@@ -5,6 +5,12 @@
 
 namespace mito::math {
 
+    template <class X, class Y>
+    constexpr auto function(Y(f)(X &))
+    {
+        return function_t<X, Y>(f);
+    }
+
     // factories for function
     template <class X, class Y, template <class, class> class FUNCTION>
     constexpr auto function(FUNCTION<X, Y> && f)

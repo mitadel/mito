@@ -5,6 +5,9 @@
 
 namespace mito::math {
 
+    template <class X, class Y>
+    constexpr auto function(Y(f)(X &));
+
     template <class X, class Y, template <class, class> class FUNCTION>
     constexpr auto function(FUNCTION<X, Y> && f);
 
