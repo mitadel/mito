@@ -92,35 +92,23 @@ namespace mito::math {
         std::array<function_t<X, Y>, D> _Df;
     };
 
-    template <class X, class Y, std::size_t... I>
-    inline auto _dSum(
-        const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB, std::index_sequence<I...>)
-    {
-        // dimension of the X space
-        static constexpr int D = size<X>::value;
-
-        std::array<function_t<X, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
-        return Df;
-    }
-
     template <class X, class Y>
     auto operator+(const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB)
     {
         // dimension of the X space
         static constexpr int D = size<X>::value;
 
+        // helper function to sum the derivatives of fieldA and fieldB
+        constexpr auto _dSum = []<size_t... I>(
+                                   const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB,
+                                   std::index_sequence<I...>)
+        {
+            std::array<function_t<X, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
+            return Df;
+        };
+
         return field_t<X, Y>(
             fieldA.f() + fieldB.f(), _dSum(fieldA, fieldB, std::make_index_sequence<D> {}));
-    }
-
-    // helper function to compute the gradient of a vector field with respect to the reference
-    // configuration (template with index sequence)
-    template <int D, std::size_t... I>
-    inline auto _grad(
-        const scalar_field_t<D> & field, const vector_t<D> & x, std::index_sequence<I...>)
-    {
-        // all done
-        return vector_t<D> { field.Df(I)(x)... };
     }
 
     // function to compute the gradient of a scalar field with respect to the reference
@@ -128,18 +116,17 @@ namespace mito::math {
     template <int D>
     inline auto grad(const scalar_field_t<D> & field, const vector_t<D> & x)
     {
-        return _grad(field, x, std::make_index_sequence<D> {});
-    }
+        // helper function to compute the gradient of a vector field with respect to the reference
+        // configuration (template with index sequence)
+        constexpr auto _grad =
+            []<size_t... I>(
+                const scalar_field_t<D> & field, const vector_t<D> & x, std::index_sequence<I...>)
+                ->vector_t<D>
+        {
+            return vector_t<D> { field.Df(I)(x)... };
+        };
 
-    // helper function to compute the gradient of a vector field with respect to the reference
-    // configuration (template with index sequence)
-    template <int D, std::size_t... I>
-    inline vector_field_t<D, D> _grad(const scalar_field_t<D> & field, std::index_sequence<I...>)
-    {
-        // TOFIX: capturing field by copy or by reference? Is it better to capture
-        // {field.Df(I)...} intead? Is it possible to do so?
-        return vector_field_t<D, D>(function_t<vector_t<D>, vector_t<D>>(
-            [field](const vector_t<D> & x) { return vector_t<D> { field.Df(I)(x)... }; }));
+        return _grad(field, x, std::make_index_sequence<D> {});
     }
 
     // function to compute the gradient of a vector field with respect to the reference
@@ -147,6 +134,16 @@ namespace mito::math {
     template <int D>
     inline vector_field_t<D, D> grad(const scalar_field_t<D> & field)
     {
+        // helper function to compute the gradient of a vector field with respect to the reference
+        // configuration (template with index sequence)
+        constexpr auto _grad =
+            []<size_t... I>(const scalar_field_t<D> & field, std::index_sequence<I...>)
+                ->vector_field_t<D, D>
+        {
+            return vector_field_t<D, D>(function_t<vector_t<D>, vector_t<D>>(
+                [field](const vector_t<D> & x) { return vector_t<D> { field.Df(I)(x)... }; }));
+        };
+
         return _grad(field, std::make_index_sequence<D> {});
     }
 
@@ -161,22 +158,21 @@ namespace mito::math {
         return result;
     }
 
-    // helper function to compute the divergence of a vector field with respect to the reference
-    // configuration at point X (template with index sequence)
-    template <int D, std::size_t... I>
-    inline scalar_field_t<D> _div(const vector_field_t<D, D> & field, std::index_sequence<I...>)
-    {
-        // TOFIX: capturing field by copy or by reference? Is it better to capture
-        // {field.Df(I)...} intead? Is it possible to do so?
-        return scalar_field_t<D>(function_t<vector_t<D>>(
-            [field](const vector_t<D> & x) { return (field.Df(I)(x)[I] + ...); }));
-    }
-
     // function to compute the divergence of a vector field with respect to the reference
     // configuration at point X
     template <int D>
     inline scalar_field_t<D> div(const vector_field_t<D, D> & field)
     {
+        // helper function to compute the divergence of a vector field with respect to the reference
+        // configuration at point X (template with index sequence)
+        constexpr auto _div =
+            []<size_t... I>(const vector_field_t<D, D> & field, std::index_sequence<I...>)
+                ->scalar_field_t<D>
+        {
+            return scalar_field_t<D>(function_t<vector_t<D>>(
+                [field](const vector_t<D> & x) { return (field.Df(I)(x)[I] + ...); }));
+        };
+
         return _div(field, std::make_index_sequence<D> {});
     }
 }
