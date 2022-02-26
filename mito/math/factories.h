@@ -23,7 +23,7 @@ namespace mito::math {
         typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
         using X = typename std::remove_reference<typename traits::argument_type>::type;
         using Y = typename std::remove_reference<typename traits::result_type>::type;
-        return function_t<X, Y>(f);
+        return function_t<std::remove_const_t<X>, Y>(f);
     }
 
     // factories for field
@@ -38,7 +38,7 @@ namespace mito::math {
         typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
         using X = typename std::remove_reference<typename traits::argument_type>::type;
         using Y = typename std::remove_reference<typename traits::result_type>::type;
-        return field_t<X, Y>(std::forward<F>(f), std::forward<Args>(args)...);
+        return field_t<std::remove_const_t<X>, Y>(std::forward<F>(f), std::forward<Args>(args)...);
     }
 
     // factories for scalar field
