@@ -11,11 +11,11 @@ namespace mito::math {
     class Function {
 
       public:
+        // constructor
+        inline Function(const functor_t<X, Y> & f) : _functor(f) {}
         // constructor for lambdas
         template <class F> 
         inline Function(F f) : _functor(f) {}
-        inline Function(const functor_t<X, Y> & f) : _functor(f) {}
-        inline Function(functor_t<X, Y> && f) : _functor(f) {}
         // default constructor
         inline Function() = default;
         // copy constructor
