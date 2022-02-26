@@ -12,49 +12,50 @@ using mito::mesh::vertex_t;
 using mito::mesh::segment_t;
 using mito::mesh::triangle_t;
 
-// TODO: When everything is in place to compute integrals, add Stokes' theorem as a test.
-
 int
 main()
 {
     // a scalar function
-    function_t<vector_t<2>> f([](const vector_t<2> & x) { return cos(x[0] * x[1]); });
+    auto f = mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
 
     // df/dx[0]
-    function_t<vector_t<2>> Dfx([](const vector_t<2> & x) { return -sin(x[0] * x[1]) * x[1]; });
+    auto Dfx = mito::math::function(
+        [](const vector_t<2> & x) -> real { return -sin(x[0] * x[1]) * x[1]; });
 
     // df/dx[1]
-    function_t<vector_t<2>> Dfy([](const vector_t<2> & x) { return -sin(x[0] * x[1]) * x[0]; });
-
-    // its partial derivatives
-    std::array<function_t<vector_t<2>>, 2> Df = { Dfx, Dfy };
+    auto Dfy = mito::math::function(
+        [](const vector_t<2> & x) -> real { return -sin(x[0] * x[1]) * x[0]; });
 
     // instantiate a scalar field
-    mito::math::scalar_field_t<2> f_cosine(f, Df);
+    // TOFIX: make this compile
+    // auto f_cosine = mito::math::scalar_field(f, { Dfx, Dfy });
+    auto f_cosine = mito::math::scalar_field_t<2>(f, { Dfx, Dfy });
 
-    mito::math::scalar_field_t<2> cosine_sum1(f + f);
-    mito::math::scalar_field_t<2> cosine_sum2(f_cosine + f_cosine);
+    auto cosine_sum1 = mito::math::scalar_field(f + f);
+    auto cosine_sum2 = mito::math::scalar_field(f_cosine + f_cosine);
 
     // a vector function
-    function_t<vector_t<2>, vector_t<2>> g([](const mito::vector_t<2> & x) {
-        return vector_t<2> { cos(x[0] * x[1]), cos(x[0] * x[1]) };
+    auto g = mito::math::function([](const mito::vector_t<2> & x) -> vector_t<2> {
+        return { cos(x[0] * x[1]), cos(x[0] * x[1]) };
     });
 
-    // df/dx[0]
-    function_t<vector_t<2>, vector_t<2>> Dgx([](const vector_t<2> & x) {
-        return vector_t<2> { -sin(x[0] * x[1]) * x[1], -sin(x[0] * x[1]) * x[1] };
+    // dg/dx[0]
+    auto Dgx = mito::math::function([](const mito::vector_t<2> & x) -> vector_t<2> {
+        return { -sin(x[0] * x[1]) * x[1], -sin(x[0] * x[1]) * x[1] };
     });
 
-    // df/dx[1]
-    function_t<vector_t<2>, vector_t<2>> Dgy([](const vector_t<2> & x) {
-        return vector_t<2> { -sin(x[0] * x[1]) * x[0], -sin(x[0] * x[1]) * x[0] };
+    // dg/dx[1]
+    auto Dgy = mito::math::function([](const mito::vector_t<2> & x) -> vector_t<2> {
+        return { -sin(x[0] * x[1]) * x[0], -sin(x[0] * x[1]) * x[0] };
     });
 
     // its partial derivatives
-    std::array<function_t<vector_t<2>, vector_t<2>>, 2> Dg = { Dgx, Dgy };
-
+    // std::array<function_t<vector_t<2>, vector_t<2>>, 2> Dg = { Dgx, Dgy };
     // instantiate a vector field
-    mito::math::vector_field_t<2 /* D */, 2 /* N */> cosineVector(g, Dg);
+    // mito::math::vector_field_t<2 /* D */, 2 /* N */> cosineVector(g, Dg);
+    // TOFIX: make this compile
+    // auto cosineVector = mito::math::vector_field(f, { Dfx, Dfy });
+    auto cosineVector = mito::math::vector_field_t<2 /* D */, 2 /* N */>(g, { Dgx, Dgy });
 
     // a point in the reference configuration
     vector_t<2> x = { 0.0, 0.0 };
@@ -93,52 +94,38 @@ main()
         (0,0)           (1,0)
     */
 
-    mito::mesh::VertexSet<2> vertexCoordinatesMap;
+    auto vertices = mito::mesh::vertex_set<2>();
 
     vertex_t vertex0;
-    point_t<2> point0 = { 0.0, 0.0 };
-    vertexCoordinatesMap.insert(vertex0, point0);
+    vertices.insert(vertex0, point_t<2> { 0.0, 0.0 });
     vertex_t vertex1;
-    point_t<2> point1 = { 1.0, 0.0 };
-    vertexCoordinatesMap.insert(vertex1, point1);
+    vertices.insert(vertex1, point_t<2> { 1.0, 0.0 });
     vertex_t vertex2;
-    point_t<2> point2 = { 1.0, 1.0 };
-    vertexCoordinatesMap.insert(vertex2, point2);
+    vertices.insert(vertex2, point_t<2> { 1.0, 1.0 });
     vertex_t vertex3;
-    point_t<2> point3 = { 0.5, 0.5 };
-    vertexCoordinatesMap.insert(vertex3, point3);
+    vertices.insert(vertex3, point_t<2> { 0.5, 0.5 });
     vertex_t vertex4;
-    point_t<2> point4 = { 0.0, 1.0 };
-    vertexCoordinatesMap.insert(vertex4, point4);
+    vertices.insert(vertex4, point_t<2> { 0.0, 1.0 });
 
-    segment_t segment0({ &vertex0, &vertex1 });
-    segment_t segment1({ &vertex1, &vertex3 });
-    segment_t segment2({ &vertex3, &vertex0 });
-    segment_t segment3({ &vertex1, &vertex2 });
-    segment_t segment4({ &vertex2, &vertex3 });
-    segment_t segment5({ &vertex4, &vertex3 });
-    segment_t segment6({ &vertex2, &vertex4 });
-    segment_t segment7({ &vertex4, &vertex0 });
+    auto segment0 = mito::mesh::segment({ &vertex0, &vertex1 });
+    auto segment1 = mito::mesh::segment({ &vertex1, &vertex3 });
+    auto segment2 = mito::mesh::segment({ &vertex3, &vertex0 });
+    auto segment3 = mito::mesh::segment({ &vertex1, &vertex2 });
+    auto segment4 = mito::mesh::segment({ &vertex2, &vertex3 });
+    auto segment5 = mito::mesh::segment({ &vertex4, &vertex3 });
+    auto segment6 = mito::mesh::segment({ &vertex2, &vertex4 });
+    auto segment7 = mito::mesh::segment({ &vertex4, &vertex0 });
 
-    triangle_t element0({ &segment0, &segment1, &segment2 });
-    triangle_t element1({ &segment3, &segment4, &segment1 });
-    triangle_t element2({ &segment6, &segment5, &segment4 });
-    triangle_t element3({ &segment7, &segment2, &segment5 });
-
+    auto element0 = mito::mesh::triangle({ &segment0, &segment1, &segment2 });
+    auto element1 = mito::mesh::triangle({ &segment3, &segment4, &segment1 });
+    auto element2 = mito::mesh::triangle({ &segment6, &segment5, &segment4 });
+    auto element3 = mito::mesh::triangle({ &segment7, &segment2, &segment5 });
     std::vector<triangle_t *> elements = { &element0, &element1, &element2, &element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::mesh::ElementSetTri elementSet;
-    mito::mesh::ElementSet bodyElementSet(elements, vertexCoordinatesMap);
-    // TOFIX: Remove the last template parameter (it can be deduced by the input argument)
-    mito::quadrature::integrator_t<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>
-        bodyIntegrator(bodyElementSet);
-
-#if 0
-    mito::Elements<SEG, 2> boundaryElements(connectivityBoundary, coordinates);
-    mito::quadrature::integrator_t<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<SEG, 2>> 
-        boundaryIntegrator(boundaryElements);
-#endif
+    auto bodyElementSet = mito::mesh::element_set(elements, vertices);
+    auto bodyIntegrator =
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet);
 
     real result = bodyIntegrator.integrate(f_cosine);    // exact 0.946083...
     std::cout << "Integration of cos(x*y): Result = " << result
@@ -149,56 +136,50 @@ main()
     assert((resultVector == mito::vector_t<2> { result, result }));
 
     // instantiate a scalar function object
-    mito::math::scalar_field_t<2> one([]([[maybe_unused]] const vector_t<2> & x) { return 1.0; });
+    auto one = mito::math::scalar_field([]([[maybe_unused]] const vector_t<2> & x) { return 1.0; });
     result = bodyIntegrator.integrate(one);    // exact 1.0
     std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
               << std::endl;
     assert(std::fabs(result - 1.0) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::math::scalar_field_t<2> linear([](const vector_t<2> & x) { return x[0]; });
+    auto linear = mito::math::scalar_field([](const vector_t<2> & x) { return x[0]; });
     result = bodyIntegrator.integrate(linear);    // exact 0.5
     std::cout << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
               << std::endl;
     assert(std::fabs(result - 0.5) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::math::scalar_field_t<2> xy([](const vector_t<2> & x) { return x[0] * x[1]; });
+    auto xy = mito::math::scalar_field([](const vector_t<2> & x) { return x[0] * x[1]; });
     result = bodyIntegrator.integrate(xy);    // exact 0.25
     std::cout << "Integration of x*y: Result = " << result
               << ", Error = " << std::fabs(result - 0.25) << std::endl;
     assert(std::fabs(result - 0.25) < 1.e-16);
 
     // instantiate a scalar function object
-    mito::math::scalar_field_t<2> xx([](const vector_t<2> & x) { return x[0] * x[0]; });
+    auto xx = mito::math::scalar_field([](const vector_t<2> & x) { return x[0] * x[0]; });
     result = bodyIntegrator.integrate(xx);    // exact 1.0/3.0
     std::cout << "Integration of x*x: Result = " << result
               << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
     assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
     // attach different coordinates (3D coordinates to the same vertices as above)
-    mito::mesh::VertexSet<3> vertexCoordinatesMap3D;
-    point_t<3> point03D = { 0.0, 0.0, 0.0 };
-    vertexCoordinatesMap3D.insert(vertex0, point03D);
-    point_t<3> point13D = { 1.0, 0.0, 1.0 };
-    vertexCoordinatesMap3D.insert(vertex1, point13D);
-    point_t<3> point23D = { 1.0, 1.0, 1.0 };
-    vertexCoordinatesMap3D.insert(vertex2, point23D);
-    point_t<3> point33D = { 0.5, 0.5, 0.5 };
-    vertexCoordinatesMap3D.insert(vertex3, point33D);
-    point_t<3> point43D = { 0.0, 1.0, 0.0 };
-    vertexCoordinatesMap3D.insert(vertex4, point43D);
+    auto vertices3D = mito::mesh::vertex_set<3>();
+    vertices3D.insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
+    vertices3D.insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
+    vertices3D.insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
+    vertices3D.insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
+    vertices3D.insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
 
     // instantiate an element set with the same elements as above but the new coordinates map
-    mito::mesh::ElementSet bodyElementSet3D(elements, vertexCoordinatesMap3D);
+    auto bodyElementSet3D = mito::mesh::element_set(elements, vertices3D);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::mesh::ElementSetTri elementSet;
-    mito::quadrature::integrator_t<GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 3>>
-        bodyIntegrator3D(bodyElementSet3D);
+    auto bodyIntegrator3D =
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet3D);
 
     // instantiate a scalar function object
-    mito::math::scalar_field_t<3> xy3D([](const vector_t<3> & x) { return x[0] * x[1]; });
+    auto xy3D = mito::math::scalar_field([](const vector_t<3> & x) -> real { return x[0] * x[1]; });
     result = bodyIntegrator3D.integrate(xy3D);    // exact 0.35355339059327384
     std::cout << "Integration of x*y in 3D: Result = " << result
               << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;
