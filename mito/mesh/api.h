@@ -30,8 +30,12 @@ namespace mito::mesh {
     constexpr auto vertex_set();
 
     // element set factory
-    template <class elementT, int D, template <class> class CONTAINER>
-    constexpr auto element_set(CONTAINER<elementT *> && elements, const vertex_set_t<D> & vertices);
+    template <class elementT, int D>
+    constexpr auto element_set(
+        const std::vector<elementT *> & elements, const vertex_set_t<D> & vertices);
+    template <class elementT, int D>
+    constexpr auto element_set(
+        std::vector<elementT *> && elements, const vertex_set_t<D> & vertices);
 
     // vertex set factory
     template <int D>

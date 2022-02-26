@@ -57,10 +57,17 @@ namespace mito::mesh {
     }
 
     // element set factory
-    template <class elementT, int D, template <class> class CONTAINER>
-    constexpr auto element_set(CONTAINER<elementT *> && elements, const vertex_set_t<D> & vertices)
+    template <class elementT, int D>
+    constexpr auto element_set(
+        const std::vector<elementT *> & elements, const vertex_set_t<D> & vertices)
     {
-        return element_set_t<elementT, D>(std::forward<CONTAINER<elementT *>>(elements), vertices);
+        return element_set_t<elementT, D>(elements, vertices);
+    }
+    template <class elementT, int D>
+    constexpr auto element_set(
+        std::vector<elementT *> && elements, const vertex_set_t<D> & vertices)
+    {
+        return element_set_t<elementT, D>(std::move(elements), vertices);
     }
 
     // vertex set factory
