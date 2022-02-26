@@ -17,11 +17,8 @@ namespace mito::math {
       public:
         // constructors with function_t<X, Y>
         Field(const function_t<X, Y> & f) : _f(f), _Df() {}
-        Field(function_t<X, Y> && f) : _f(f), _Df() {}
         Field(const function_t<X, Y> & f, const std::array<function_t<X, Y>, D> & Df) : _f(f), 
             _Df(Df) {}
-        Field(const function_t<X, Y> & f, std::array<function_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
-        Field(function_t<X, Y> && f, std::array<function_t<X, Y>, D> && Df) : _f(f), _Df(Df) {}
 
         // default move constructor
         Field(Field &&) = default;
