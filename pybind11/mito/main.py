@@ -6,9 +6,7 @@ from numpy import cos
 def myfunction(x):
     return eval('cos(x[0] * x[1])')
 
-# TOFIX: hardcoded C++ cos(x[0] * x[1]) function
-field = mito.ScalarField2D()
-#field = mito.ScalarField2D(myfunction)
+field = mito.ScalarField2D(myfunction)
 #x = mito.Vector2D([10., 20.])
 #print(field(x))
 

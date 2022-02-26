@@ -90,15 +90,6 @@ PYBIND11_MODULE(mito, m)
 
     // the mito scalar Field interface
     py::class_<mito::math::scalar_field_t<2>>(m, "ScalarField2D")
-        // TOFIX:
-        // the default constructor
-        .def(
-            // the implementation
-            py::init([]() {
-                return new mito::math::scalar_field_t<2>(
-                        [](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); }
-                );
-            }))
         // the constructor
         .def(
             // the implementation
