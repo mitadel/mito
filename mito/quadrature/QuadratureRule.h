@@ -105,17 +105,14 @@ namespace mito::quadrature {
     template <>
     constexpr auto QuadratureRulesFactory<GAUSS, mesh::segment_t, 2>::GetQuadratureRule()
     {
-        // clang does not allow a constexpr with sqrt(3.0)...
-        // constexpr double sqrt3 = sqrt(3.0)
-        // ... give the explicit value for sqrt(3) until they come around:
-        constexpr double sqrt3 = 1.7320508075688772;
 
         return quadrature_array_t<parametricDim, 2 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
-                  quadrature_point_t<parametricDim>({ sqrt3 / 3.0, 1.0 - sqrt3 / 3.0 }), 0.5),
+                  quadrature_point_t<parametricDim>({ 0.788675134594813, 0.211324865405187 }), 0.5),
               std::make_tuple(
-                  quadrature_point_t<parametricDim>({ 1.0 - sqrt3 / 3.0, sqrt3 / 3.0 }), 0.5) });
+                  quadrature_point_t<parametricDim>({ 0.211324865405187, 0.788675134594813 }),
+                  0.5) });
     }
 
     template <>
