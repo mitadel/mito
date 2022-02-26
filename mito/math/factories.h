@@ -12,12 +12,6 @@ namespace mito::math {
     {
         return function_t<X, Y>(f);
     }
-    // make function from another function object
-    template <class X, class Y, template <class, class> class FUNCTION>
-    constexpr auto function(FUNCTION<X, Y> && f)
-    {
-        return function_t<X, Y>(std::forward<FUNCTION<X, Y>>(f));
-    }
     // make function from lambda function
     template <class F>
     constexpr auto function(F && f)
