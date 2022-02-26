@@ -5,18 +5,20 @@
 
 namespace mito::math {
 
+    // factories for function
+    // make function from pointer to function
     template <class X, class Y>
     constexpr auto function(Y(f)(const X &))
     {
         return function_t<X, Y>(f);
     }
-
-    // factories for function
+    // make function from another function object
     template <class X, class Y, template <class, class> class FUNCTION>
     constexpr auto function(FUNCTION<X, Y> && f)
     {
         return function_t<X, Y>(std::forward<FUNCTION<X, Y>>(f));
     }
+    // make function from lambda function
     template <class F>
     constexpr auto function(F && f)
     {
