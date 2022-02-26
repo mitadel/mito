@@ -6,7 +6,6 @@ using mito::math::function_t;
 static const mito::real PI = 4.0 * atan(1.0);
 static const mito::real TOL = 1.e-16;
 
-// TOFIX: Should we also account for real(const X &) + function_t<X, scalar_t> ?
 //
 // mito::real
 mito::scalar_t

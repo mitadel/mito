@@ -88,7 +88,7 @@ namespace mito {
             return Y(sliced_grid);
         }
 
-        // TOFIX: This method promises to be const but is not really const, as the returned object
+        // NOTE: This method promises to be const but is not really const, as the returned object
         //        is able to change the memory content of this quadrature field
         inline const Y operator()(int e, int q) const
         {
