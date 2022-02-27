@@ -65,6 +65,17 @@ namespace mito::math {
         // cast operator from Function<X, Y> to functor_t<X, Y>
         inline operator functor_t<X, Y>() const { return _functor; }
 
+        // cast vector-valued function to an array of scalar-valued functions
+        template <size_t N>
+        constexpr operator std::array<function_t<X, scalar_t>, N>() const requires(Y::size == N) 
+        {
+            auto _components = [this]<size_t... I>(std::index_sequence<I...>)
+            {
+                return std::array<function_t<X, scalar_t>, N>({operator[](I)...});
+            };
+            return _components(std::make_index_sequence<N> {});
+        }
+
       private:
         const functor_t<X, Y> _functor;
     };
