@@ -30,11 +30,8 @@ main()
         return { x[0], 0.0 };
     });
 
-    // its partial derivatives
-    auto Df = std::array<function_t<vector_t<2>, vector_t<2>>, 2> { Dx, Dy };
-
     // instantiate a vector field
-    auto field = mito::math::vector_field(f, Df);
+    auto field = mito::math::field(f, { Dx, Dy });
 
     // build a scalar field with divergence of field
     auto divergence = mito::math::div(field);
@@ -128,8 +125,8 @@ main()
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
 
-    auto f0 = mito::math::scalar_field(f[0]);
-    auto f1 = mito::math::scalar_field(f[1]);
+    auto f0 = mito::math::field(f[0]);
+    auto f1 = mito::math::field(f[1]);
 
     real resultBoundary =
         -boundaryBotIntegrator.integrate(f1) + boundaryRightIntegrator.integrate(f0)

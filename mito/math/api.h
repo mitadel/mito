@@ -17,23 +17,33 @@ namespace mito::math {
     template <class X, int N>
     constexpr auto function(const function_t<X, scalar_t> (&f_list)[N]);
 
-    template <class X, class Y, template <class, class> class FUNCTION, class... Args>
-    constexpr auto field(FUNCTION<X, Y> && f, Args &&... args);
+    // factories for field from either a field_t or a function_t
+    template <class X, class Y, template <class, class> class FUNCTION>
+    constexpr auto field(FUNCTION<X, Y> f);
 
-    template <class F, class... Args>
-    constexpr auto field(F && f, Args &&... args);
+    template <int D, class Y, template <class, class> class FUNCTION>
+    constexpr auto field(
+        FUNCTION<vector_t<D>, Y> f, std::array<FUNCTION<vector_t<D>, Y>, D> df);
 
-    template <int D, template <class, class> class FUNCTION, class... Args>
-    constexpr auto scalar_field(FUNCTION<vector_t<D>, scalar_t> && f, Args &&... args);
+    // factory for scalar field from either a scalar_field_t or a function_t
+    template <int D, template <class, class> class FUNCTION>
+    constexpr auto scalar_field(FUNCTION<vector_t<D>, scalar_t> f);
 
-    template <class F, class... Args>
-    constexpr auto scalar_field(F && f, Args &&... args);
+    template <int D, template <class, class> class FUNCTION>
+    constexpr auto scalar_field(
+        FUNCTION<vector_t<D>, scalar_t> f, std::array<FUNCTION<vector_t<D>, scalar_t>, D> df);
 
-    template <int D, int N, template <class, class> class FUNCTION, class... Args>
-    constexpr auto vector_field(FUNCTION<vector_t<D>, vector_t<N>> && f, Args &&... args);
+    template <int D, template <class, class> class FUNCTION>
+    constexpr auto scalar_field(
+        FUNCTION<vector_t<D>, scalar_t> f, FUNCTION<vector_t<D>, vector_t<D>> df);
 
-    template <class F, class... Args>
-    constexpr auto vector_field(F && f, Args &&... args);
+    // factory for vector field from either a vector_field_t or a function_t
+    template <int D, int N, template <class, class> class FUNCTION>
+    constexpr auto vector_field(FUNCTION<vector_t<D>, vector_t<N>> f);
+
+    template <int D, int N, template <class, class> class FUNCTION>
+    constexpr auto vector_field(
+        FUNCTION<vector_t<D>, vector_t<N>> f, std::array<FUNCTION<vector_t<D>, vector_t<N>>, D> df);
 
 }
 

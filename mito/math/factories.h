@@ -28,53 +28,53 @@ namespace mito::math {
         return function_t<X, vector_t<N>>(f_list);
     }
 
-    // factories for field
-    template <class X, class Y, template <class, class> class FUNCTION, class... Args>
-    constexpr auto field(FUNCTION<X, Y> && f, Args &&... args)
+    // factories for field from either a field_t or a function_t
+    template <class X, class Y, template <class, class> class FUNCTION>
+    constexpr auto field(FUNCTION<X, Y> f)
     {
-        return field_t<X, Y>(std::forward<FUNCTION<X, Y>>(f), std::forward<Args>(args)...);
-    }
-    template <class F, class... Args>
-    constexpr auto field(F && f, Args &&... args)
-    {
-        typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
-        using X = typename std::remove_reference<typename traits::argument_type>::type;
-        using Y = typename std::remove_reference<typename traits::result_type>::type;
-        return field_t<std::remove_const_t<X>, Y>(std::forward<F>(f), std::forward<Args>(args)...);
+        return field_t<X, Y>(f);
     }
 
-    // factories for scalar field
-    template <int D, template <class, class> class FUNCTION, class... Args>
-    constexpr auto scalar_field(FUNCTION<vector_t<D>, scalar_t> && f, Args &&... args)
+    template <int D, class Y, template <class, class> class FUNCTION>
+    constexpr auto field(
+        FUNCTION<vector_t<D>, Y> f, std::array<FUNCTION<vector_t<D>, Y>, D> df)
     {
-        return scalar_field_t<D>(
-            std::forward<FUNCTION<vector_t<D>, scalar_t>>(f), std::forward<Args>(args)...);
-    }
-    template <class F, class... Args>
-    constexpr auto scalar_field(F && f, Args &&... args)
-    {
-        typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
-        using X = typename std::remove_reference<typename traits::argument_type>::type;
-        constexpr int D = X::size;
-        return scalar_field_t<D>(std::forward<F>(f), std::forward<Args>(args)...);
+        return field_t<vector_t<D>, Y>(f, df);
     }
 
-    // factories for vector field
-    template <int D, int N, template <class, class> class FUNCTION, class... Args>
-    constexpr auto vector_field(FUNCTION<vector_t<D>, vector_t<N>> && f, Args &&... args)
+    // factory for scalar field from either a scalar_field_t or a function_t
+    template <int D, template <class, class> class FUNCTION>
+    constexpr auto scalar_field(FUNCTION<vector_t<D>, scalar_t> f)
     {
-        return vector_field_t<D, N>(
-            std::forward<FUNCTION<vector_t<D>, vector_t<N>>>(f), std::forward<Args>(args)...);
+        return scalar_field_t<D>(f);
     }
-    template <class F, class... Args>
-    constexpr auto vector_field(F && f, Args &&... args)
+
+    template <int D, template <class, class> class FUNCTION>
+    constexpr auto scalar_field(
+        FUNCTION<vector_t<D>, scalar_t> f, std::array<FUNCTION<vector_t<D>, scalar_t>, D> df)
     {
-        typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
-        using X = typename std::remove_reference<typename traits::argument_type>::type;
-        constexpr int D = X::size;
-        using Y = typename std::remove_reference<typename traits::result_type>::type;
-        constexpr int N = Y::size;
-        return vector_field_t<D, N>(std::forward<F>(f), std::forward<Args>(args)...);
+        return scalar_field_t<D>(f, df);
+    }
+
+    template <int D, template <class, class> class FUNCTION>
+    constexpr auto scalar_field(
+        FUNCTION<vector_t<D>, scalar_t> f, FUNCTION<vector_t<D>, vector_t<D>> df)
+    {
+        return scalar_field_t<D>(f, df);
+    }
+
+    // factory for vector field from either a vector_field_t or a function_t
+    template <int D, int N, template <class, class> class FUNCTION>
+    constexpr auto vector_field(FUNCTION<vector_t<D>, vector_t<N>> f)
+    {
+        return vector_field_t<D, N>(f);
+    }
+
+    template <int D, int N, template <class, class> class FUNCTION>
+    constexpr auto vector_field(
+        FUNCTION<vector_t<D>, vector_t<N>> f, std::array<FUNCTION<vector_t<D>, vector_t<N>>, D> df)
+    {
+        return vector_field_t<D, N>(f, df);
     }
 
 }

@@ -14,8 +14,8 @@ main()
     auto elementSet = mito::mesh::element_set(elements, vertices);
 
     // instantiate a scalar field
-    auto f_cosine = 
-        mito::math::scalar_field([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
+    auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
+    auto f_cosine = mito::math::field(f);
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(elementSet);

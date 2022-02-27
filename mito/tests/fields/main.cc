@@ -19,7 +19,6 @@ main()
     auto Dfy = mito::math::function(
         [](const mito::vector_t<2> & x) -> mito::real { return -sin(x[0] * x[1]) * x[0]; });
 
-    // TOFIX
     auto Df_b = mito::math::function_t<mito::vector_t<2>, mito::vector_t<2>>({ Dfx, Dfy });
     auto Df_c = mito::math::function({ Dfx, Dfy });
     std::cout << Dfx({ 0.5, 0.5 }) << std::endl;
@@ -28,10 +27,10 @@ main()
     std::cout << Df_b({ 0.5, 0.5 }) << std::endl;
     std::cout << Df_c({ 0.5, 0.5 }) << std::endl;
 
-    // nice to have: derivatives come from a vector-valued function
-    //      possibility to convert an array of scalar-valued functions to a vector-valued function
-    // so we can either write
-    // auto f_cosine = mito::math::scalar_field(f, { Dfx, Dfy });
+    auto field_a = mito::math::scalar_field(f, Df_a);
+    auto field_b = mito::math::scalar_field(f, Df_b);
+    auto field_c = mito::math::scalar_field(f, Df_c);
+    auto field   = mito::math::scalar_field(f, { Dfx, Dfy });
     // or
     // auto f_cosine = mito::math::scalar_field(f, Df);
 
