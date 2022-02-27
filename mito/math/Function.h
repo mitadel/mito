@@ -45,24 +45,22 @@ namespace mito::math {
         }
 
       private:
-        // helper function
-        template <class... scalar_function>
-        constexpr auto _vectorize(scalar_function... f_list)
+
+        // helper function to vectorize an array of scalar-valued functions
+        template <size_t N, size_t... I>
+        constexpr auto _vectorize(const function_t<X, scalar_t> (&f_list)[N], 
+            std::index_sequence<I...>)
         {
-            constexpr int N = Y::size;
             return function_t<X, vector_t<N>>(
-                [f_list...](const X & x) { return vector_t<N> { f_list(x)... }; });
+                [f_list](const X & x) { return vector_t<N> { f_list[I](x)... }; });
         };
 
       public:
-        template <class... scalar_function>
-        inline Function(scalar_function... f_list) requires(
-            // all elements in the variadic template are scalar-valued functions
-            (std::is_same_v<typename scalar_function::output_type, mito::real> &&...)
-            // the number of input arguments matches the dimension of the output
-            && sizeof...(scalar_function) == Y::size) :
-            // create a vector-valued function from a list of scalar-valued functions
-            _functor(_vectorize(f_list...)) {}
+        // constructor for a vector-valued function from an array of scalar-valued functions
+        template <size_t N>
+        constexpr Function(const function_t<X, scalar_t> (&f_list)[N]) requires(Y::size == N) :
+            _functor(_vectorize(f_list, std::make_index_sequence<N> {}))
+        {}
 
         // cast operator from Function<X, Y> to functor_t<X, Y>
         inline operator functor_t<X, Y>() const { return _functor; }

@@ -21,6 +21,12 @@ namespace mito::math {
         using Y = typename std::remove_reference<typename traits::result_type>::type;
         return function_t<std::remove_const_t<X>, Y>(f);
     }
+    // make a vector-valued function from N scalar-valued functions
+    template <class X, int N>
+    constexpr auto function(const function_t<X, scalar_t> (&f_list)[N])
+    {
+        return function_t<X, vector_t<N>>(f_list);
+    }
 
     // factories for field
     template <class X, class Y, template <class, class> class FUNCTION, class... Args>
