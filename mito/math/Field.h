@@ -16,29 +16,29 @@ namespace mito::math {
 
       public:
         // constructors with function_t<X, Y>
-        Field(const function_t<X, Y> & f) : _f(f), _Df() {}
-        Field(const function_t<X, Y> & f, const std::array<function_t<X, Y>, D> & Df) : _f(f), 
-            _Df(Df) {}
+        constexpr Field(const function_t<X, Y> & f) : _f(f), _Df() {}
+        constexpr Field(const function_t<X, Y> & f, const std::array<function_t<X, Y>, D> & Df) : 
+            _f(f), _Df(Df) {}
 
         // default move constructor
-        Field(Field &&) = default;
+        constexpr Field(Field &&) = default;
 
         // default move operator=
-        Field & operator=(Field &&) = default;
+        constexpr Field & operator=(Field &&) = default;
 
         // default copy constructor
-        Field(const Field &) = default;
+        constexpr Field(const Field &) = default;
 
         // default assignment operator
-        Field & operator=(const Field &) = default;
+        constexpr Field & operator=(const Field &) = default;
 
         // delete default constructor
-        Field() = delete;
+        constexpr Field() = delete;
 
         // destructor
-        ~Field() {}
+        constexpr  ~Field() {}
 
-        inline auto operator()(const X & x) const
+        constexpr auto operator()(const X & x) const
         {
             // evaluate _f
             return _f(x);
@@ -46,7 +46,7 @@ namespace mito::math {
 
         // TODO: Note that now this operator() is the same thing as the following but the only thing
         // that changes is the container structure
-        inline auto operator()(const std::vector<X> & x) const
+        constexpr auto operator()(const std::vector<X> & x) const
         {
             std::vector<Y> values(x.size());
             // evaluate operator() at all elements of X
@@ -57,7 +57,7 @@ namespace mito::math {
         }
 
         template <int Q>
-        inline auto operator()(const fem::quadrature_field_t<Q, X> & x) const
+        constexpr auto operator()(const fem::quadrature_field_t<Q, X> & x) const
         {
             fem::quadrature_field_t<Q, Y> values(x.n_elements());
 
@@ -74,10 +74,10 @@ namespace mito::math {
 
       public:
         // accessor for function
-        inline const auto & f() const { return _f; }
+        constexpr const auto & f() const { return _f; }
 
         // accessor for function partial derivatives
-        inline const auto & Df(int i) const
+        constexpr const auto & Df(int i) const
         {
             // assert there exists the i-th partial derivative
             assert(i < (int) _Df.size());
@@ -93,10 +93,10 @@ namespace mito::math {
     };
 
     template <class X, class Y>
-    auto operator+(const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB)
+    constexpr auto operator+(const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB)
     {
         // dimension of the X space
-        static constexpr int D = size<X>::value;
+        constexpr int D = size<X>::value;
 
         // helper function to sum the derivatives of fieldA and fieldB
         constexpr auto _dSum = []<size_t... I>(
@@ -114,7 +114,7 @@ namespace mito::math {
     // function to compute the gradient of a scalar field with respect to the reference
     // configuration at point x
     template <int D>
-    inline auto grad(const scalar_field_t<D> & field, const vector_t<D> & x)
+    constexpr auto grad(const scalar_field_t<D> & field, const vector_t<D> & x)
     {
         // helper function to compute the gradient of a vector field with respect to the reference
         // configuration (template with index sequence)
@@ -132,7 +132,7 @@ namespace mito::math {
     // function to compute the gradient of a vector field with respect to the reference
     // configuration
     template <int D>
-    inline vector_field_t<D, D> grad(const scalar_field_t<D> & field)
+    constexpr vector_field_t<D, D> grad(const scalar_field_t<D> & field)
     {
         // helper function to compute the gradient of a vector field with respect to the reference
         // configuration (template with index sequence)
@@ -149,7 +149,7 @@ namespace mito::math {
 
     // function to compute the Divergence of a vector field at point X
     template <int D>
-    inline real div(const vector_field_t<D, D> & field, const vector_t<D> & X)
+    constexpr real div(const vector_field_t<D, D> & field, const vector_t<D> & X)
     {
         real result = 0.0;
         for (int i = 0; i < D; ++i) {
@@ -161,7 +161,7 @@ namespace mito::math {
     // function to compute the divergence of a vector field with respect to the reference
     // configuration at point X
     template <int D>
-    inline scalar_field_t<D> div(const vector_field_t<D, D> & field)
+    constexpr scalar_field_t<D> div(const vector_field_t<D, D> & field)
     {
         // helper function to compute the divergence of a vector field with respect to the reference
         // configuration at point X (template with index sequence)
