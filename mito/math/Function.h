@@ -12,30 +12,30 @@ namespace mito::math {
 
       public:
         // constructor
-        inline Function(const functor_t<X, Y> & f) : _functor(f) {}
+        constexpr Function(const functor_t<X, Y> & f) : _functor(f) {}
         // constructor for lambdas
         template <class F> 
-        inline Function(F f) : _functor(f) {}
+        constexpr Function(F f) : _functor(f) {}
         // default constructor
-        inline Function() = default;
+        constexpr Function() = default;
         // copy constructor
-        inline Function(const Function &) = default;
+        constexpr Function(const Function &) = default;
         // move constructor
-        inline Function(Function &&) = default;
+        constexpr Function(Function &&) = default;
         // destructor
-        inline ~Function() {};
+        constexpr ~Function() {};
         // assignment operator
-        inline Function & operator=(const Function &) = default;
+        constexpr Function & operator=(const Function &) = default;
         // move operator=
-        inline Function & operator=(Function &&) = default;
+        constexpr Function & operator=(Function &&) = default;
 
-        inline auto operator()(const X & x) const
+        constexpr auto operator()(const X & x) const
         {
             // evaluate _f
             return _functor(x);
         }
 
-        inline auto operator[](int i) const
+        constexpr auto operator[](int i) const
         {
             return function_t<X, scalar_t>([this, i](const X & x) { return this->_functor(x)[i]; });
         }
@@ -59,7 +59,7 @@ namespace mito::math {
         {}
 
         // cast operator from Function<X, Y> to functor_t<X, Y>
-        inline operator functor_t<X, Y>() const { return _functor; }
+        constexpr operator functor_t<X, Y>() const { return _functor; }
 
         // cast vector-valued function to an array of scalar-valued functions
         template <size_t N>
@@ -81,65 +81,65 @@ namespace mito::math {
 
     // fa + fb
     template <class X, class Y>
-    function_t<X, Y> operator+(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator+(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
     {
         return function_t<X, Y>([fA, fB](const X & x) { return fA(x) + fB(x); });
     }
 
     // fa * fb
     template <class X, class Y>
-    function_t<X, Y> operator*(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator*(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
     {
         return function_t<X, Y>([fA, fB](const X & x) { return fA(x) * fB(x); });
     }
 
     // y * f (inner product)
     template <class X, class Y>
-    function_t<X, typename type<Y>::value> operator*(const Y & y, const function_t<X, Y> & f) requires(
-        Y::size != 1)
+    constexpr function_t<X, typename type<Y>::value> operator*(
+        const Y & y, const function_t<X, Y> & f) requires(Y::size != 1)
     {
         return function_t<X, typename type<Y>::value>([y, f](const X & x) { return y * f(x); });
     }
 
     // f * y (inner product)
     template <class X, class Y>
-    function_t<X, typename type<Y>::value> operator*(const function_t<X, Y> & f, const Y & y) requires(
-        Y::size != 1)
+    constexpr function_t<X, typename type<Y>::value> operator*(
+        const function_t<X, Y> & f, const Y & y) requires(Y::size != 1)
     {
         return y * f;
     }
 
     // a * f
     template <class X, class Y>
-    function_t<X, Y> operator*(const real & a, const function_t<X, Y> & f)
+    constexpr function_t<X, Y> operator*(const real & a, const function_t<X, Y> & f)
     {
         return function_t<X, Y>([a, f](const X & x) { return a * f(x); });
     }
 
     // f * a
     template <class X, class Y>
-    function_t<X, Y> operator*(const function_t<X, Y> & f, const real & a)
+    constexpr function_t<X, Y> operator*(const function_t<X, Y> & f, const real & a)
     {
         return a * f;
     }
 
     // f / a
     template <class X, class Y>
-    function_t<X, Y> operator/(const function_t<X, Y> & f, const real & a)
+    constexpr function_t<X, Y> operator/(const function_t<X, Y> & f, const real & a)
     {
         return (1.0 / a) * f;
     }
 
     // -f
     template <class X, class Y>
-    function_t<X, Y> operator-(const function_t<X, Y> & f)
+    constexpr function_t<X, Y> operator-(const function_t<X, Y> & f)
     {
         return -1.0 * f;
     }
 
     // fa - fb
     template <class X, class Y>
-    function_t<X, Y> operator-(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator-(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
     {
         return fA + (-fB);
     }
@@ -147,42 +147,43 @@ namespace mito::math {
     // Special algebraic functions for scalar functions
     // a / f
     template <class X>
-    function_t<X, scalar_t> operator/(const real & a, const function_t<X, scalar_t> & f)
+    constexpr function_t<X, scalar_t> operator/(const real & a, const function_t<X, scalar_t> & f)
     {
         return function_t<X, scalar_t>([a, f](const X & x) { return a / f(x); });
     }
 
     // f1 / f2
     template <class X, class Y>
-    function_t<X, Y> operator/(const function_t<X, Y> & f1, const function_t<X, scalar_t> & f2)
+    constexpr function_t<X, Y> operator/(
+        const function_t<X, Y> & f1, const function_t<X, scalar_t> & f2)
     {
         return function_t<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
 
     // a + f
     template <class X>
-    function_t<X, scalar_t> operator+(const real & a, const function_t<X, scalar_t> & f)
+    constexpr function_t<X, scalar_t> operator+(const real & a, const function_t<X, scalar_t> & f)
     {
         return function_t<X, scalar_t>([a, f](const X & x) { return a + f(x); });
     }
 
     // f + a
     template <class X>
-    function_t<X, scalar_t> operator+(const function_t<X, scalar_t> & f, const real & a)
+    constexpr function_t<X, scalar_t> operator+(const function_t<X, scalar_t> & f, const real & a)
     {
         return a + f;
     }
 
     // a - f
     template <class X>
-    function_t<X, scalar_t> operator-(const real & a, const function_t<X, scalar_t> & f)
+    constexpr function_t<X, scalar_t> operator-(const real & a, const function_t<X, scalar_t> & f)
     {
         return a + (-f);
     }
 
     // f - a
     template <class X>
-    function_t<X, scalar_t> operator-(const function_t<X, scalar_t> & f, const real & a)
+    constexpr function_t<X, scalar_t> operator-(const function_t<X, scalar_t> & f, const real & a)
     {
         return f + (-a);
     }
@@ -190,56 +191,58 @@ namespace mito::math {
     // Binary operators for functor_t<X, Y> and function_t<X, Y>, such as:
     // fa + fb
     template <class X, class Y>
-    function_t<X, Y> operator+(const function_t<X, Y> & fA, const functor_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator+(const function_t<X, Y> & fA, const functor_t<X, Y> & fB)
     {
         return fA + function_t<X, Y>(fB);
     }
 
     // fa + fb
     template <class X, class Y>
-    function_t<X, Y> operator+(const functor_t<X, Y> & fA, const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator+(const functor_t<X, Y> & fA, const function_t<X, Y> & fB)
     {
         return fB + fA;
     }
 
     // fa * fb
     template <class X, class Y>
-    function_t<X, Y> operator*(const function_t<X, Y> & fA, const functor_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator*(const function_t<X, Y> & fA, const functor_t<X, Y> & fB)
     {
         return fA * function_t<X, Y>(fB);
     }
 
     // fa * fb
     template <class X, class Y>
-    function_t<X, Y> operator*(const functor_t<X, Y> & fA, const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator*(const functor_t<X, Y> & fA, const function_t<X, Y> & fB)
     {
         return fB * fA;
     }
 
     // fa - fb
     template <class X, class Y>
-    function_t<X, Y> operator-(const function_t<X, Y> & fA, const functor_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator-(const function_t<X, Y> & fA, const functor_t<X, Y> & fB)
     {
         return fA - function_t<X, Y>(fB);
     }
 
     // fa - fb
     template <class X, class Y>
-    function_t<X, Y> operator-(const functor_t<X, Y> & fA, const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator-(const functor_t<X, Y> & fA, const function_t<X, Y> & fB)
     {
         return -(fB - fA);
     }
 
     // f1 / f2
     template <class X, class Y>
-    function_t<X, Y> operator/(const function_t<X, Y> & f1, const functor_t<X, scalar_t> & f2)
+    constexpr function_t<X, Y> operator/(
+        const function_t<X, Y> & f1, const functor_t<X, scalar_t> & f2)
     {
         return function_t<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
 
     // f1 / f2
     template <class X, class Y>
-    function_t<X, Y> operator/(const functor_t<X, Y> & f1, const function_t<X, scalar_t> & f2)
+    constexpr function_t<X, Y> operator/(
+        const functor_t<X, Y> & f1, const function_t<X, scalar_t> & f2)
     {
         return function_t<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
@@ -247,56 +250,56 @@ namespace mito::math {
     // Binary operators for Y(const X &) and function_t<X, Y>, such as:
     // fa + fb
     template <class X, class Y>
-    function_t<X, Y> operator+(const function_t<X, Y> & fA, Y fB(const X &))
+    constexpr function_t<X, Y> operator+(const function_t<X, Y> & fA, Y fB(const X &))
     {
         return fA + function_t<X, Y>(fB);
     }
 
     // fa + fb
     template <class X, class Y>
-    function_t<X, Y> operator+(Y fA(const X &), const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator+(Y fA(const X &), const function_t<X, Y> & fB)
     {
         return fB + fA;
     }
 
     // fa * fb
     template <class X, class Y>
-    function_t<X, Y> operator*(const function_t<X, Y> & fA, Y fB(const X &))
+    constexpr function_t<X, Y> operator*(const function_t<X, Y> & fA, Y fB(const X &))
     {
         return fA * function_t<X, Y>(fB);
     }
 
     // fa * fb
     template <class X, class Y>
-    function_t<X, Y> operator*(Y fA(const X &), const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator*(Y fA(const X &), const function_t<X, Y> & fB)
     {
         return fB * fA;
     }
 
     // fa - fb
     template <class X, class Y>
-    function_t<X, Y> operator-(const function_t<X, Y> & fA, Y fB(const X &))
+    constexpr function_t<X, Y> operator-(const function_t<X, Y> & fA, Y fB(const X &))
     {
         return fA - function_t<X, Y>(fB);
     }
 
     // fa - fb
     template <class X, class Y>
-    function_t<X, Y> operator-(Y fA(const X &), const function_t<X, Y> & fB)
+    constexpr function_t<X, Y> operator-(Y fA(const X &), const function_t<X, Y> & fB)
     {
         return -(fB - fA);
     }
 
     // f1 / f2
     template <class X, class Y>
-    function_t<X, Y> operator/(const function_t<X, Y> & f1, real f2(const X &))
+    constexpr function_t<X, Y> operator/(const function_t<X, Y> & f1, real f2(const X &))
     {
         return function_t<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
 
     // f1 / f2
     template <class X, class Y>
-    function_t<X, Y> operator/(Y f1(const X &), const function_t<X, scalar_t> & f2)
+    constexpr function_t<X, Y> operator/(Y f1(const X &), const function_t<X, scalar_t> & f2)
     {
         return function_t<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
     }
