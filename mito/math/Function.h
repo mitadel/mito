@@ -11,6 +11,10 @@ namespace mito::math {
     class Function {
 
       public:
+        using input_type = X;
+        using output_type = Y; 
+
+      public:
         // constructor
         inline Function(const functor_t<X, Y> & f) : _functor(f) {}
         // constructor for lambdas
@@ -39,6 +43,26 @@ namespace mito::math {
         {
             return function_t<X, scalar_t>([this, i](const X & x) { return this->_functor(x)[i]; });
         }
+
+      private:
+        // helper function
+        template <class... scalar_function>
+        constexpr auto _vectorize(scalar_function... f_list)
+        {
+            constexpr int N = Y::size;
+            return function_t<X, vector_t<N>>(
+                [f_list...](const X & x) { return vector_t<N> { f_list(x)... }; });
+        };
+
+      public:
+        template <class... scalar_function>
+        inline Function(scalar_function... f_list) requires(
+            // all elements in the variadic template are scalar-valued functions
+            (std::is_same_v<typename scalar_function::output_type, mito::real> &&...)
+            // the number of input arguments matches the dimension of the output
+            && sizeof...(scalar_function) == Y::size) :
+            // create a vector-valued function from a list of scalar-valued functions
+            _functor(_vectorize(f_list...)) {}
 
         // cast operator from Function<X, Y> to functor_t<X, Y>
         inline operator functor_t<X, Y>() const { return _functor; }
