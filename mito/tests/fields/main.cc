@@ -27,12 +27,12 @@ main()
     std::cout << Df_b({ 0.5, 0.5 }) << std::endl;
     std::cout << Df_c({ 0.5, 0.5 }) << std::endl;
 
-    auto field_a = mito::math::scalar_field(f, Df_a);
-    auto field_b = mito::math::scalar_field(f, Df_b);
-    auto field_c = mito::math::scalar_field(f, Df_c);
-    auto field   = mito::math::scalar_field(f, { Dfx, Dfy });
+    auto field_a = mito::math::field(f, Df_a);
+    auto field_b = mito::math::field(f, Df_b);
+    auto field_c = mito::math::field(f, Df_c);
+    auto field   = mito::math::field(f, { Dfx, Dfy });
     // or
-    // auto f_cosine = mito::math::scalar_field(f, Df);
+    // auto f_cosine = mito::math::field(f, Df);
 
     return 0;
 }

@@ -28,13 +28,14 @@ namespace mito::math {
         return function_t<X, vector_t<N>>(f_list);
     }
 
-    // factories for field from either a field_t or a function_t
+    // factories for field from either a field_t or a function_t (without derivatives)
     template <class X, class Y, template <class, class> class FUNCTION>
     constexpr auto field(FUNCTION<X, Y> f)
     {
         return field_t<X, Y>(f);
     }
 
+    // factories for field from either a field_t or a function_t (with derivatives in an array)
     template <int D, class Y, template <class, class> class FUNCTION>
     constexpr auto field(
         FUNCTION<vector_t<D>, Y> f, std::array<FUNCTION<vector_t<D>, Y>, D> df)
@@ -42,39 +43,13 @@ namespace mito::math {
         return field_t<vector_t<D>, Y>(f, df);
     }
 
-    // factory for scalar field from either a scalar_field_t or a function_t
+    // factories for field from either a field_t or a function_t (with derivatives in a vector)
+    // only for scalar fields (gradient is a vector)
     template <int D, template <class, class> class FUNCTION>
-    constexpr auto scalar_field(FUNCTION<vector_t<D>, scalar_t> f)
-    {
-        return scalar_field_t<D>(f);
-    }
-
-    template <int D, template <class, class> class FUNCTION>
-    constexpr auto scalar_field(
-        FUNCTION<vector_t<D>, scalar_t> f, std::array<FUNCTION<vector_t<D>, scalar_t>, D> df)
-    {
-        return scalar_field_t<D>(f, df);
-    }
-
-    template <int D, template <class, class> class FUNCTION>
-    constexpr auto scalar_field(
+    constexpr auto field(
         FUNCTION<vector_t<D>, scalar_t> f, FUNCTION<vector_t<D>, vector_t<D>> df)
     {
         return scalar_field_t<D>(f, df);
-    }
-
-    // factory for vector field from either a vector_field_t or a function_t
-    template <int D, int N, template <class, class> class FUNCTION>
-    constexpr auto vector_field(FUNCTION<vector_t<D>, vector_t<N>> f)
-    {
-        return vector_field_t<D, N>(f);
-    }
-
-    template <int D, int N, template <class, class> class FUNCTION>
-    constexpr auto vector_field(
-        FUNCTION<vector_t<D>, vector_t<N>> f, std::array<FUNCTION<vector_t<D>, vector_t<N>>, D> df)
-    {
-        return vector_field_t<D, N>(f, df);
     }
 
 }
