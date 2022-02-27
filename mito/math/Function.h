@@ -11,10 +11,6 @@ namespace mito::math {
     class Function {
 
       public:
-        using input_type = X;
-        using output_type = Y; 
-
-      public:
         // constructor
         inline Function(const functor_t<X, Y> & f) : _functor(f) {}
         // constructor for lambdas
