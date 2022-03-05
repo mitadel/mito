@@ -44,18 +44,6 @@ namespace mito::math {
             return _f(x);
         }
 
-        // TODO: Note that now this operator() is the same thing as the following but the only thing
-        // that changes is the container structure
-        constexpr auto operator()(const std::vector<X> & x) const
-        {
-            std::vector<Y> values(x.size());
-            // evaluate operator() at all elements of X
-            for (int i = 0; i < (int) x.size(); ++i) {
-                values[i] = operator()(x[i]);
-            }
-            return values;
-        }
-
         template <int Q>
         constexpr auto operator()(const fem::quadrature_field_t<Q, X> & x) const
         {
