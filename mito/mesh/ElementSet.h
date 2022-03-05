@@ -18,7 +18,7 @@ namespace mito::mesh {
         const std::vector<simplex_t<D> *> & elements, const vertex_set_t<D> & coordinatesMap,
         std::vector<real> & volumes)
     {
-        // number of vertices
+        // number of element vertices
         constexpr int V = D + 1;
 
         // a container to store the coordinates of each vertex in a tensor
@@ -35,20 +35,20 @@ namespace mito::mesh {
             verticesTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            std::set<const vertex_t *> vertices;
-            element->vertices(vertices);
-            // assert you found D+1 vertices
-            assert(V == vertices.size());
+            std::set<const vertex_t *> element_vertices;
+            element->vertices(element_vertices);
+            // assert you found V element vertices
+            assert(V == element_vertices.size());
 
-            // loop on vertices
+            // loop on element vertices
             int v = 0;
-            for (const auto & vertex : vertices) {
+            for (const auto & vertex : element_vertices) {
                 // fill up verticesTensor container
                 for (int d = 0; d < D; ++d) {
                     verticesTensor[v * V + d] = coordinatesMap[vertex][d];
                 }
                 verticesTensor[v * V + D] = 1.0;
-                // update vertices counter
+                // update element vertices counter
                 ++v;
             }
 
@@ -97,7 +97,7 @@ namespace mito::mesh {
         const std::vector<segment_t *> & elements, const vertex_set_t<D> & coordinatesMap,
         std::vector<real> & length)
     {
-        // number of vertices
+        // number of element vertices
         constexpr int V = 2;
 
         // assert memory allocation is consistent
@@ -110,14 +110,15 @@ namespace mito::mesh {
             // collect vertices
             std::set<const vertex_t *> vertices_set;
             element->vertices(vertices_set);
-            std::vector<const vertex_t *> vertices(vertices_set.begin(), vertices_set.end());
+            std::vector<const vertex_t *> element_vertices(
+                vertices_set.begin(), vertices_set.end());
 
-            // assert the size of vertices container is equal to the number of vertices
-            assert(vertices.size() == V);
+            // assert the size of vertices container is equal to the number of element vertices
+            assert(element_vertices.size() == V);
 
-            // store the distance between the two vertices as the element length
-            length[e] =
-                computeDistance<D>(coordinatesMap[vertices[0]], coordinatesMap[vertices[1]]);
+            // store the distance between the two element vertices as the element length
+            length[e] = computeDistance<D>(
+                coordinatesMap[element_vertices[0]], coordinatesMap[element_vertices[1]]);
 
             // update elements counter
             ++e;
@@ -156,16 +157,17 @@ namespace mito::mesh {
             // collect vertices
             std::set<const vertex_t *> vertices_set;
             element->vertices(vertices_set);
-            std::vector<const vertex_t *> vertices(vertices_set.begin(), vertices_set.end());
+            std::vector<const vertex_t *> element_vertices(
+                vertices_set.begin(), vertices_set.end());
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
-            edges_lengths[0] =
-                computeDistance<D>(coordinatesMap[vertices[0]], coordinatesMap[vertices[1]]);
-            edges_lengths[1] =
-                computeDistance<D>(coordinatesMap[vertices[0]], coordinatesMap[vertices[2]]);
-            edges_lengths[2] =
-                computeDistance<D>(coordinatesMap[vertices[1]], coordinatesMap[vertices[2]]);
+            edges_lengths[0] = computeDistance<D>(
+                coordinatesMap[element_vertices[0]], coordinatesMap[element_vertices[1]]);
+            edges_lengths[1] = computeDistance<D>(
+                coordinatesMap[element_vertices[0]], coordinatesMap[element_vertices[2]]);
+            edges_lengths[2] = computeDistance<D>(
+                coordinatesMap[element_vertices[1]], coordinatesMap[element_vertices[2]]);
 
             // sort edges lengths in ascending order
             std::sort(edges_lengths.begin(), edges_lengths.end());
