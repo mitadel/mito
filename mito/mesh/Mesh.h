@@ -132,14 +132,14 @@ namespace mito::mesh {
         }
 
         template <int I>
-        int nElements() const
+        int nElements() const requires(I <= D)
         {
             // all done
             return std::get<I>(_simplices).size();
         }
 
         template <int I>
-        const auto & elements() const
+        const auto & elements() const requires (I <= D)
         {
             // all done
             return std::get<I>(_simplices);
@@ -155,7 +155,7 @@ namespace mito::mesh {
          * @brief Returns an element set with all simplices of dimension I 
          */
         template <int I>
-        constexpr auto element_set() const
+        constexpr auto element_set() const requires(I <= D)
         {
             return mito::mesh::element_set(elements<I>(), vertices());
         }
@@ -172,7 +172,7 @@ namespace mito::mesh {
          * inserted (was already in the map)
          */
         template <int I>
-        auto _registerSimplexComposition(simplex_t<I> & simplex)
+        auto _registerSimplexComposition(simplex_t<I> & simplex) requires (I <= D)
         {
             return std::get<I - 1>(_compositions)
                 .insert(std::pair<std::array<simplex_t<I - 1> *, I + 1>, simplex_t<I> *>(
@@ -189,7 +189,8 @@ namespace mito::mesh {
          *                              already registered composed simplex
          */
         template <int I>
-        simplex_t<I> * _addUniqueSimplex(std::array<simplex_t<I - 1> *, I + 1> && composition)
+        simplex_t<I> * _addUniqueSimplex(
+            std::array<simplex_t<I - 1> *, I + 1> && composition) requires(I <= D)
         {
             // instantiate new simplex with this composition
             simplex_t<I> * simplex = new simplex_t<I>(std::move(composition));
@@ -213,7 +214,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void _addSimplex(simplex_t<I> * simplex)
+        void _addSimplex(simplex_t<I> * simplex) requires(I <= D)
         {
             // TOFIX: is push_back expensive even when we reserve the space? No, but we only
             // know in advance how many nodes and elements are in the mesh, not how many edges
@@ -238,7 +239,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        auto _getSimplex(int n)
+        auto _getSimplex(int n) requires(I <= D)
         {
             return std::get<I>(_simplices)[n];
         }
