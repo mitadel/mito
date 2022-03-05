@@ -151,6 +151,15 @@ namespace mito::mesh {
             return _vertices;
         }
 
+        /**
+         * @brief Returns an element set with all simplices of dimension I 
+         */
+        template <int I>
+        constexpr auto element_set() const
+        {
+            return mito::mesh::element_set(elements<I>(), vertices());
+        }
+
       private:
         /**
          * @brief Registers a simplex in the composition map
