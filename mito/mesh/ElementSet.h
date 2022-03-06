@@ -293,6 +293,26 @@ namespace mito::mesh {
         std::vector<real> _jacobians;
     };
 
+    template <class elementT, int D>
+    std::ostream & operator<<(std::ostream & os, const element_set_t<elementT, D> & element_set)
+    {
+        os << "Element set: " << std::endl;
+
+        for (const auto e : element_set.elements()) {
+            os << "Composition: " << std::endl;
+            os << *e;
+            os << "Vertices: " << std::endl;
+            std::set<const vertex_t *> vertices;
+            e->vertices(vertices);
+            for (const auto v : vertices) {
+                os << element_set.coordinatesVertex(v) << std::endl;
+            }
+            os << std::endl;
+        }
+
+        return os;
+    }
+
 }    // namespace mito
 
 
