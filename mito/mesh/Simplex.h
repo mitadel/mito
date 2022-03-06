@@ -163,28 +163,27 @@ namespace mito::mesh {
         bool _orientation;
     };
 
+    // overload operator<< for simplices
+    template <int D>
+    std::ostream & operator<<(std::ostream & os, const mito::mesh::simplex_t<D> & s)
+    {
+        os << &s << " composed of:" << std::endl;
+        for (const auto & simplex : s.simplices()) {
+            std::cout << "\t" << *simplex << std::endl;
+        }
+        return os;
+    }
+
+    // overload operator<< specialization for simplices with D = 0 (vertices)
+    template <>
+    std::ostream & operator<<(std::ostream & os, const mito::mesh::simplex_t<0> & s)
+    {
+        os << &s;
+        return os;
+    }
+
 }    // namespace mito
 
-// overload operator<< for simplices
-template <int D>
-std::ostream &
-operator<<(std::ostream & os, const mito::mesh::simplex_t<D> & s)
-{
-    os << &s << " composed of:" << std::endl;
-    for (const auto & simplex : s.simplices()) {
-        std::cout << "\t" << *simplex << std::endl;
-    }
-    return os;
-}
-
-// overload operator<< specialization for simplices with D = 0 (vertices)
-template <>
-std::ostream &
-operator<<(std::ostream & os, const mito::mesh::simplex_t<0> & s)
-{
-    os << &s;
-    return os;
-}
 
 #endif    // mito_mesh_Simplex_h
 
