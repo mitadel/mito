@@ -25,8 +25,6 @@ namespace mito {
     template <int D, typename T = real>
     using diagonal_matrix_t = pyre::algebra::diagonal_matrix_t<D, T>;
 
-}
-
 template <typename X>
 std::ostream &
 operator<<(std::ostream & os, const std::vector<X> & x)
@@ -69,6 +67,7 @@ operator<<(std::ostream & os, const std::array<X, N> & x)
     return os;
 }
 
+}
 
 #endif
 
