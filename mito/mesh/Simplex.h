@@ -143,36 +143,6 @@ namespace mito::mesh {
         bool sanityCheck() const { return true; }
     };
 
-    template <int D>
-    class OrientedSimplex : public Simplex<D> {
-      public:
-        OrientedSimplex(std::array<simplex_t<D - 1> *, D + 1> && simplices, bool orientation) :
-            Simplex<D>(simplices),
-            _orientation(orientation)
-        {}
-
-        ~OrientedSimplex() {}
-
-      private:
-        // delete default constructor
-        OrientedSimplex() = delete;
-
-        // delete copy constructor
-        OrientedSimplex(const OrientedSimplex &) = delete;
-
-        // delete move constructor
-        OrientedSimplex(const OrientedSimplex &&) = delete;
-
-        // delete assignment operator
-        const OrientedSimplex & operator=(const OrientedSimplex &) = delete;
-
-        // delete move assignment operator
-        const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
-
-      private:
-        bool _orientation;
-    };
-
     // overload operator<< for simplices
     template <int D>
     std::ostream & operator<<(std::ostream & os, const mito::mesh::simplex_t<D> & s)
