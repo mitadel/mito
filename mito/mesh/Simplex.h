@@ -77,37 +77,6 @@ namespace mito::mesh {
             }
         }
 
-        bool sanityCheck() const
-        {
-            // check the subsimplices
-            for (const auto & simplex : simplices()) {
-                // if a subsimplex is broken, the sanity check fails
-                if (!simplex->sanityCheck()) {
-                    // all done
-                    return false;
-                }
-            }
-
-            // use a set to cleanup duplicates
-            std::set<const vertex_t *> vertices;
-            // collect vertices of every subsimplex of this simplex
-            for (const auto & simplex : simplices()) {
-                simplex->vertices(vertices);
-            }
-            // if this simplex does not have D+1 vertices, something went wrong
-            if (vertices.size() != int(D) + 1) {
-                // all done
-                return false;
-            }
-
-            // all done
-            return true;
-        }
-
-      public:
-        static constexpr int parametricDim = D + 1;
-        static constexpr int nVertices = D;
-
       private:
         std::array<simplex_t<D - 1> *, D + 1> _simplices;
     };
@@ -139,8 +108,6 @@ namespace mito::mesh {
             // all done
             return;
         }
-
-        bool sanityCheck() const { return true; }
     };
 
     // overload operator<< for simplices
