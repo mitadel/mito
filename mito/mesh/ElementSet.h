@@ -15,7 +15,7 @@ namespace mito::mesh {
 
     template <int D>
     void computeSimplicesVolume(
-        const std::vector<simplex_t<D> *> & elements, const vertex_set_t<D> & coordinatesMap,
+        const std::vector<oriented_simplex_t<D> *> & elements, const vertex_set_t<D> & coordinatesMap,
         std::vector<real> & volumes)
     {
         // number of element vertices

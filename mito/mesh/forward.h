@@ -44,18 +44,18 @@ namespace mito::mesh {
     // vertex alias
     using vertex_t = Simplex<0>;
 
-    // segment alias
-    using segment_t = Simplex<1>;
-
-    // triangle alias
-    using triangle_t = Simplex<2>;
-
-    // tetrahedron alias
-    using tetrahedron_t = Simplex<3>;
-
     // oriented simplex alias
     template <int D>
     using oriented_simplex_t = OrientedSimplex<D>;
+
+    // segment alias
+    using segment_t = OrientedSimplex<1>;
+
+    // triangle alias
+    using triangle_t = OrientedSimplex<2>;
+
+    // tetrahedron alias
+    using tetrahedron_t = OrientedSimplex<3>;
 
     // class vertex set
     template <int D>

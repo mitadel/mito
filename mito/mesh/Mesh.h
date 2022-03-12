@@ -9,28 +9,28 @@ namespace mito::mesh {
     class Mesh {
 
       private:
-        // typedef for a container of mesh simplices
+        // typedef for a container of oriented mesh simplices
         template <class T>
         using simplex_container = std::vector<T>;
 
-        // typedef for a collection of simplices of dimension I-1
+        // typedef for a collection of oriented simplices of dimension I-1
         template <size_t I>
-        using simplex_collection = simplex_container<simplex_t<int(I)> *>;
+        using simplex_collection = simplex_container<oriented_simplex_t<int(I)> *>;
 
         // simplex_collection<I>... expands to:
-        // simplex_container<simplex_t<0>*>, simplex_container<simplex_t<1>*>, ...,
-        //      simplex_container<simplex_t<D>*>
-        template <typename = std::make_index_sequence<D + 1>>
+        // simplex_container<oriented_simplex_t<0>*>, ..., simplex_container<oriented_simplex_t<D>*>
+        template <typename = std::make_index_sequence<D>>
         struct simplices_tuple;
 
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<simplex_collection<I>...>;
+            using type = std::tuple<simplex_container<simplex_t<0> *>, simplex_collection<I+1>...>;
         };
 
         // this expands to:
-        // tuple<simplex_container<simplex_t<0>*>, simplex_container<simplex_t<1>*>, ...,
-        //      simplex_container<simplex_t<D>*>
+        // tuple<simplex_container<simplex_t<0>*>,
+        //      simplex_container<oriented_simplex_t<1>*>, ...,
+        //      simplex_container<oriented_simplex_t<D>*>
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
       private:
@@ -214,7 +214,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void _addSimplex(simplex_t<I> * simplex) requires(I <= D)
+        void _addSimplex(oriented_simplex_t<I> * simplex) requires(I <= D)
         {
             // TOFIX: is push_back expensive even when we reserve the space? No, but we only
             // know in advance how many nodes and elements are in the mesh, not how many edges
@@ -231,8 +231,8 @@ namespace mito::mesh {
             vertex_t * vertex = new vertex_t();
             // associate the new vertex to the new point
             _vertices.insert(*vertex, point);
-            // add the newly created vertex
-            _addSimplex(vertex);
+            // add to the simplices the newly created vertex
+            std::get<0>(_simplices).push_back(vertex);
 
             // all done
             return;
