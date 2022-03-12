@@ -54,14 +54,12 @@ namespace mito::mesh {
         bool _orientation;
     };
 
-#if 1
     template <>
-    class OrientedSimplex<0> {
+    class OrientedSimplex<0> : Simplex<0> {
       public:
-        OrientedSimplex(const std::shared_ptr<simplex_t<0>> footprint) : 
-            _footprint(footprint) {}
+        OrientedSimplex() : Simplex<0>() {}
         
-        ~OrientedSimplex() {}
+        virtual ~OrientedSimplex() {}
 
       private:
         // delete copy constructor
@@ -76,13 +74,7 @@ namespace mito::mesh {
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
-      public:
-        const auto footprint() const { return _footprint; }
-
-      private:
-        const std::shared_ptr<simplex_t<0>> _footprint;
     };
-#endif
 }
 #endif    // mito_mesh_OrientedSimplex_h
 
