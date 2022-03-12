@@ -2,6 +2,16 @@
 #if !defined(mito_mesh_Simplex_h)
 #define mito_mesh_Simplex_h
 
+/*
+ * This class represents a class of equivalence for a Simplex of dimension D. 
+ *
+ * Simplex<D> is represented recursively as a collection of D+1 Simplex<D-1>. An instance of 
+ * Simplex<D> represents therefore (D+1)! simplices, depending on the (D+1)! possible orderings of 
+ * the subsimplices.
+ *
+ * The representative in this class of equivalence is chosen by sorting in increasing order the 
+ * addresses pointing to the subsimplices.  
+ */
 
 namespace mito::mesh {
 
