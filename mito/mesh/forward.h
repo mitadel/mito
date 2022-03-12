@@ -33,6 +33,10 @@ namespace mito::mesh {
     template <int D>
     class Simplex;
 
+    // class oriented simplex
+    template <int D>
+    class OrientedSimplex;
+
     // simplex alias
     template <int D>
     using simplex_t = Simplex<D>;
@@ -48,6 +52,10 @@ namespace mito::mesh {
 
     // tetrahedron alias
     using tetrahedron_t = Simplex<3>;
+
+    // oriented simplex alias
+    template <int D>
+    using oriented_simplex_t = OrientedSimplex<D>;
 
     // class vertex set
     template <int D>
