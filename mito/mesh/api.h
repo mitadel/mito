@@ -10,8 +10,8 @@ namespace mito::mesh {
     constexpr auto point(Args &&... args);
 
     // vertex factory
-    template <class... Args>
-    constexpr auto vertex(Args &&... args);
+    constexpr auto vertex();
+
 
     // segment factory
     constexpr auto segment(const std::array<vertex_t *, 2> & simplices);
