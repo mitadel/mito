@@ -10,8 +10,8 @@ namespace mito::mesh {
     constexpr auto point(Args &&... args);
 
     // vertex factory
-    template <class... Args>
-    constexpr auto vertex(Args &&... args);
+    constexpr auto vertex();
+
 
     // oriented simplex factory
     template <int I>

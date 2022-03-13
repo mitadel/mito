@@ -13,10 +13,9 @@ namespace mito::mesh {
     }
 
     // vertex factory
-    template <class... Args>
-    constexpr auto vertex(Args &&... args)
+    constexpr auto vertex()
     {
-        return vertex_t(std::forward<Args>(args)...);
+        return vertex_t();
     }
 
     // oriented simplex factory
