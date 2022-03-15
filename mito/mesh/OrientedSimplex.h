@@ -91,7 +91,7 @@ namespace mito::mesh {
     };
 
     template <>
-    class OrientedSimplex<0> : Simplex<0> {
+    class OrientedSimplex<0> : public Simplex<0> {
       public:
         OrientedSimplex() : Simplex<0>() {}
         
