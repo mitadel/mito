@@ -43,18 +43,18 @@ namespace mito::mesh {
         // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
         template <size_t I>
         using composition_map = std::map<
-            std::array<simplex_t<int(I - 1)> *, I + 1>, std::shared_ptr<simplex_t<int(I)>>>;
+            std::array<simplex_t<int(I)> *, I + 2>, std::shared_ptr<simplex_t<int(I + 1)>>>;
 
         template <typename = std::make_index_sequence<D>>
         struct composition_tuple;
 
         template <size_t... I>
         struct composition_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<composition_map<I + 1>...>;
+            using type = std::tuple<composition_map<I>...>;
         };
 
         // this expands to:
-        // tuple<composition_map<1>, ..., composition_map<D>
+        // tuple<composition_map<0>, ..., composition_map<D-1>
         using composition_tuple_t = typename composition_tuple<>::type;
 
       public:
