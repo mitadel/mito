@@ -59,9 +59,13 @@ namespace mito::mesh {
       private:
         void _initialize()
         {
-            // sort the simplices (using the address of the simplices) so that two simplices
+            // TOFIX
+            // get the simplex with smallest address
+            // auto first_simplex = std::min_element(_simplices.begin(), _simplices.end());
+
+            // put the simplex with smaller address in the front, so that two simplices
             // having the same simplices will result in two identical instances of class Simplex
-            std::sort(_simplices.begin(), _simplices.end());
+            // std::rotate(_simplices.begin(), first_simplex, _simplices.end());
 
             // all done
             return;

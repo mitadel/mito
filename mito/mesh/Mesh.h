@@ -42,8 +42,8 @@ namespace mito::mesh {
         // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
         // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
         template <size_t I>
-        using composition_map =
-            std::map<std::array<simplex_t<int(I - 1)> *, I + 1>, simplex_t<int(I)> *>;
+        using composition_map = std::map<
+            std::array<simplex_t<int(I - 1)> *, I + 1>, std::shared_ptr<simplex_t<int(I)>>>;
 
         template <typename = std::make_index_sequence<D>>
         struct composition_tuple;
@@ -172,11 +172,28 @@ namespace mito::mesh {
          * inserted (was already in the map)
          */
         template <int I>
-        auto _registerSimplexComposition(simplex_t<I> & simplex) requires (I <= D)
+        auto _registerSimplexComposition(std::shared_ptr<simplex_t<I>> & simplex_p) requires (I <= D)
         {
+            auto sorted_simplices = simplex_p.get()->simplices();
+            std::sort(sorted_simplices.begin(), sorted_simplices.end());
+
             return std::get<I - 1>(_compositions)
-                .insert(std::pair<std::array<simplex_t<I - 1> *, I + 1>, simplex_t<I> *>(
-                    simplex.simplices(), &simplex));
+                .insert(
+                    std::pair<std::array<simplex_t<I - 1> *, I + 1>, std::shared_ptr<simplex_t<I>>>(
+                        sorted_simplices, simplex_p));
+        }
+
+        template <int I>
+        bool _computeSimplexOrientation(
+            std::array<simplex_t<I - 1> *, I + 1> composition,
+            const std::shared_ptr<simplex_t<I>>& simplex)
+        {
+            // auto first_simplex = std::min_element(composition.begin(), composition.end());
+            // std::rotate(composition.begin(), first_simplex, composition.end());
+            if (composition == simplex.get()->simplices()) {
+                return true;
+            }
+            return false;
         }
 
         /**
@@ -189,20 +206,17 @@ namespace mito::mesh {
          *                              already registered composed simplex
          */
         template <int I>
-        simplex_t<I> * _addUniqueSimplex(
-            std::array<simplex_t<I - 1> *, I + 1> && composition) requires(I <= D)
+        auto _addUniqueSimplex(
+            const std::array<simplex_t<I - 1> *, I + 1> & composition) requires(I <= D)
         {
             // instantiate new simplex with this composition
-            simplex_t<I> * simplex = new simplex_t<I>(std::move(composition));
+            auto simplex = std::make_shared<simplex_t<I>>(composition);
             // look up the new simplex with its composition and register it if it does not exist yet
-            auto ret = _registerSimplexComposition(*simplex);
-            // if the simplex did not exist
-            if (ret.second == true) {
-                // add the simplex as a new one
-                _addSimplex(simplex);
-            } else {
+            auto ret = _registerSimplexComposition(simplex);
+            // if the simplex already existed
+            if (ret.second == false) {
                 // delete the new simplex (it was just a repeated entry)
-                delete simplex;
+                simplex.reset();
             }
 
             // if I == D then ret.second == true, that is there shall be no repetitions of the
@@ -262,9 +276,32 @@ namespace mito::mesh {
             vertex_t * vertex1 = _getSimplex<0>(index1);
             vertex_t * vertex2 = _getSimplex<0>(index2);
 
-            segment_t * segment0 = _addUniqueSimplex<1>({ vertex0, vertex1 });
-            segment_t * segment1 = _addUniqueSimplex<1>({ vertex1, vertex2 });
-            segment_t * segment2 = _addUniqueSimplex<1>({ vertex2, vertex0 });
+            std::array<vertex_t *, 2> composition0 { vertex0, vertex1 };
+            auto segment0 = _addUniqueSimplex<1>(composition0);
+            bool orientation0 = _computeSimplexOrientation(composition0, segment0);
+            // instantiate a new oriented simplex and give it shared ownership on its footprint
+            oriented_simplex_t<1> * oriented_segment0 = new oriented_simplex_t<1>(segment0, 
+                orientation0);
+            // add the oriented simplex as a new one
+            _addSimplex(oriented_segment0);
+
+            std::array<vertex_t *, 2> composition1 { vertex1, vertex2 };
+            auto segment1 = _addUniqueSimplex<1>(composition1);
+            bool orientation1 = _computeSimplexOrientation(composition1, segment1);
+            // instantiate a new oriented simplex and give it shared ownership on its footprint
+            oriented_simplex_t<1> * oriented_segment1 =
+                new oriented_simplex_t<1>(segment1, orientation1);
+            // add the oriented simplex as a new one
+            _addSimplex(oriented_segment1);
+
+            std::array<vertex_t *, 2> composition2 { vertex2, vertex0 };
+            auto segment2 = _addUniqueSimplex<1>(composition2);
+            bool orientation2 = _computeSimplexOrientation(composition2, segment2);
+            // instantiate a new oriented simplex and give it shared ownership on its footprint
+            oriented_simplex_t<1> * oriented_segment2 =
+                new oriented_simplex_t<1>(segment2, orientation2);
+            // add the oriented simplex as a new one
+            _addSimplex(oriented_segment2);
 
             // QUESTION: Can the label be more than one?
             // read label for element
@@ -272,7 +309,14 @@ namespace mito::mesh {
             std::string element_set_id;
             fileStream >> element_set_id;
 
-            _addUniqueSimplex<2>({ segment0, segment1, segment2 });
+            std::array<simplex_t<1> *, 3> composition { segment0.get(), segment1.get(), 
+                segment2.get() };
+            auto simplex = _addUniqueSimplex<2>(composition);
+            // instantiate a new oriented simplex and give it shared ownership on its footprint
+            oriented_simplex_t<2> * oriented_simplex =
+                new oriented_simplex_t<2>(simplex, true);
+            // add the oriented simplex as a new one
+            _addSimplex(oriented_simplex);
 
             // all done
             return;
