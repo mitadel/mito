@@ -89,8 +89,7 @@ namespace mito::mesh {
 
       private:
         // compute the orientation of the {composition} with respect to the orientation of {simplex}
-        static bool _orientation(
-            const simplex_composition_t<1> & composition, const simplex_t<1> & simplex)
+        static bool _orientation(simplex_composition_t<1> composition, const simplex_t<1> & simplex)
         {
             if (composition == simplex.simplices()) {
                 return true;
@@ -99,8 +98,7 @@ namespace mito::mesh {
         }
 
         // compute the orientation of the {composition} with respect to the orientation of {simplex}
-        static bool _orientation(
-            const simplex_composition_t<2> & composition, const simplex_t<2> & simplex)
+        static bool _orientation(simplex_composition_t<2> composition, const simplex_t<2> & simplex)
         {
             auto first_simplex = std::min_element(composition.begin(), composition.end());
             std::rotate(composition.begin(), first_simplex, composition.end());
