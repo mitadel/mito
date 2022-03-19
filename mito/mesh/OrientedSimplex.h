@@ -46,7 +46,7 @@ namespace mito::mesh {
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
       
       public:
-        const auto footprint() const {return _footprint;}
+        const auto & footprint() const { return _footprint; }
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
         void vertices(std::set<const vertex_t *> & vertices) const {
