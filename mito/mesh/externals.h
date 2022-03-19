@@ -9,6 +9,9 @@
 #include <set>
 #include <unordered_map>
 #include <memory>
+#include <vector>
+#include <iostream>
+#include <array>
 
 // support
 
