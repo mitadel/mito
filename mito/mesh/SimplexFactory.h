@@ -7,7 +7,7 @@ namespace mito::mesh {
     class SimplexFactory {
       public:
         // typedef for simplex composition
-        using simplex_composition_t = Simplex<D>::simplex_composition_t;
+        using simplex_composition_t = typename Simplex<D>::simplex_composition_t;
 
       private:
         // typedef for a composition map of simplices:
@@ -68,7 +68,7 @@ namespace mito::mesh {
 
     // initialize static attribute
     template <int D>
-    SimplexFactory<D>::composition_map_t SimplexFactory<D>::_compositions =
+    typename SimplexFactory<D>::composition_map_t SimplexFactory<D>::_compositions =
         SimplexFactory<D>::composition_map_t();
 }
 

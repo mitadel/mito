@@ -7,7 +7,7 @@ namespace mito::mesh {
     class OrientedSimplexFactory {
       private:
         // typedef for simplex composition
-        using simplex_composition_t = Simplex<D>::simplex_composition_t;
+        using simplex_composition_t = typename Simplex<D>::simplex_composition_t;
 
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
@@ -100,7 +100,7 @@ namespace mito::mesh {
 
     // initialize static attribute
     template <int D>
-    OrientedSimplexFactory<D>::orientation_map_t OrientedSimplexFactory<D>::_orientations =
+    typename OrientedSimplexFactory<D>::orientation_map_t OrientedSimplexFactory<D>::_orientations =
         OrientedSimplexFactory<D>::orientation_map_t();
 }
 

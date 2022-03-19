@@ -72,7 +72,7 @@ namespace mito::mesh {
 
     // vertex set factory
     template <int D>
-    constexpr auto mesh(std::string meshFileName)
+    auto mesh(std::string meshFileName)
     {
         return mesh_t<D>(meshFileName);
     }
