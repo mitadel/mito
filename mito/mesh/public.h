@@ -16,6 +16,8 @@
 #include "Point.h"
 #include "Simplex.h"
 #include "OrientedSimplex.h"
+#include "SimplexFactory.h"
+#include "OrientedSimplexFactory.h"
 #include "ElementSet.h"
 #include "VertexSet.h"
 #include "Mesh.h"

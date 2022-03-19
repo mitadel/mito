@@ -37,6 +37,14 @@ namespace mito::mesh {
     template <int D>
     class OrientedSimplex;
 
+    // class simplex factory
+    template <int D>
+    class SimplexFactory;
+
+    // class oriented simplex factory
+    template <int D>
+    class OrientedSimplexFactory;
+
     // simplex alias
     template <int D>
     using simplex_t = Simplex<D>;
