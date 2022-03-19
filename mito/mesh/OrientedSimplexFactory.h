@@ -37,7 +37,7 @@ namespace mito::mesh {
         static oriented_simplex_t<I> * OrientedSimplex(const simplex_composition_t<I> & composition)
         {
             // get from the factory the representative of simplices with this composition
-            auto * simplex = mito::mesh::SimplexFactory<D>::template Simplex<I>(composition);
+            auto * simplex = SimplexFactory<D>::template Simplex<I>(composition);
 
             // compute the orientation of the current composition with respect to the representative
             bool orientation = _orientation(composition, *simplex);
@@ -117,9 +117,8 @@ namespace mito::mesh {
 
     // initialize static attribute
     template <int D>
-    mito::mesh::OrientedSimplexFactory<D>::orientation_map_t
-        mito::mesh::OrientedSimplexFactory<D>::_orientations =
-            mito::mesh::OrientedSimplexFactory<D>::orientation_map_t();
+    OrientedSimplexFactory<D>::orientation_map_t OrientedSimplexFactory<D>::_orientations =
+        OrientedSimplexFactory<D>::orientation_map_t();
 }
 
 #endif    // mito_mesh_OrientedSimplexFactory_h

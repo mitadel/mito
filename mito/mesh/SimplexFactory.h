@@ -81,9 +81,8 @@ namespace mito::mesh {
 
     // initialize static attribute
     template <int D>
-    mito::mesh::SimplexFactory<D>::composition_tuple_t
-        mito::mesh::SimplexFactory<D>::_compositions =
-            mito::mesh::SimplexFactory<D>::composition_tuple_t();
+    SimplexFactory<D>::composition_tuple_t SimplexFactory<D>::_compositions =
+        SimplexFactory<D>::composition_tuple_t();
 }
 
 #endif    // mito_mesh_SimplexFactory_h
