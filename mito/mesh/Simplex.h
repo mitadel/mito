@@ -18,11 +18,12 @@ namespace mito::mesh {
     template <int D>
     class Simplex {
 
-      public:
+      private:
         constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
 
         constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
 
+      public:
         constexpr ~Simplex() {}
 
       private:
@@ -80,6 +81,8 @@ namespace mito::mesh {
 
       private:
         simplex_composition_t<D> _simplices;
+
+        friend class mito::mesh::SimplexFactory<D>;
     };
 
     template <>

@@ -18,12 +18,11 @@
  * orientation.
  */
 
-// TODO: forbid user to create simplices without passing through the factory
 namespace mito::mesh {
 
     template <int D>
     class OrientedSimplex {
-      public:
+      private:
         // constructor with an existing shared pointer as footprint
         OrientedSimplex(const std::shared_ptr<simplex_t<D>> & footprint, bool orientation) :
             _footprint(footprint),
@@ -36,6 +35,7 @@ namespace mito::mesh {
             _orientation(orientation)
         {}
 
+      public:
         ~OrientedSimplex() {}
 
       private:
@@ -71,6 +71,8 @@ namespace mito::mesh {
       private:
         const std::shared_ptr<simplex_t<D>> _footprint;
         bool _orientation;
+
+        friend class mito::mesh::OrientedSimplexFactory<D>;
     };
 
     template <int D>
