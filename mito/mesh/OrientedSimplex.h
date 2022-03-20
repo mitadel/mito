@@ -24,9 +24,6 @@ namespace mito::mesh {
     template <int D>
     class OrientedSimplex {
       public:
-        using oriented_simplex_composition_t = OrientedSimplexComposition<D>;
-
-      public:
         // constructor with an existing shared pointer as footprint
         OrientedSimplex(const std::shared_ptr<simplex_t<D>> & footprint, bool orientation) :
             _footprint(footprint),
