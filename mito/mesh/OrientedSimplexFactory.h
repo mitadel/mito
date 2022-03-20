@@ -69,7 +69,8 @@ namespace mito::mesh {
 
       private:
         // compute the orientation of the {composition} with respect to the orientation of {simplex}
-        static bool _orientation(simplex_composition_t<D> composition, const simplex_t<D> & simplex);
+        static bool _orientation(
+            oriented_simplex_composition_t composition, const simplex_t<D> & simplex);
 
       private:
         // container to store the relation (simplex, orientation) -> oriented simplex
@@ -78,7 +79,9 @@ namespace mito::mesh {
 
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
-    bool OrientedSimplexFactory<1>::_orientation(simplex_composition_t<1> composition, const simplex_t<1> & simplex)
+    bool OrientedSimplexFactory<1>::_orientation(
+        OrientedSimplexFactory<1>::oriented_simplex_composition_t composition,
+        const simplex_t<1> & simplex)
     {
         if (composition == simplex.simplices()) {
             return true;
@@ -89,7 +92,8 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<2>::_orientation(
-        simplex_composition_t<2> composition, const simplex_t<2> & simplex)
+        OrientedSimplexFactory<2>::oriented_simplex_composition_t composition,
+        const simplex_t<2> & simplex)
     {
         auto first_simplex = std::min_element(composition.begin(), composition.end());
         std::rotate(composition.begin(), first_simplex, composition.end());
