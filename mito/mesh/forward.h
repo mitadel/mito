@@ -49,6 +49,17 @@ namespace mito::mesh {
     template <int D>
     using simplex_t = Simplex<D>;
 
+    // alias for simplex composition
+    template <int D>
+    using simplex_composition_t = std::array<simplex_t<D - 1> *, D + 1>;
+
+    template <int D>
+    class OrientedSimplexComposition;
+
+    // alias for oriented simplex composition
+    template <int D>
+    using oriented_simplex_composition_t = OrientedSimplexComposition<D>;
+
     // vertex alias
     using vertex_t = Simplex<0>;
 

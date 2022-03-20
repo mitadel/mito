@@ -14,17 +14,17 @@ namespace mito::mesh {
     constexpr auto vertex(Args &&... args);
 
     // segment factory
-    oriented_simplex_t<1> * segment(const std::array<vertex_t *, 2> & simplices);
-    oriented_simplex_t<1> * segment(std::array<vertex_t *, 2> && simplices);
+    oriented_simplex_t<1> * segment(const oriented_simplex_composition_t<1> & simplices);
+    oriented_simplex_t<1> * segment(oriented_simplex_composition_t<1> && simplices);
+
+    // triangle factory
+    oriented_simplex_t<2> * triangle(const oriented_simplex_composition_t<2> & simplices);
+    oriented_simplex_t<2> * triangle(oriented_simplex_composition_t<2> && simplices);
 
 #if 0
-    // triangle factory
-    constexpr auto triangle(const std::array<segment_t *, 3> & simplices);
-    constexpr auto triangle(std::array<segment_t *, 3> && simplices);
-
     // tetrahedron factory
-    constexpr auto tetrahedron(const std::array<triangle_t *, 4> & simplices);
-    constexpr auto tetrahedron(std::array<triangle_t *, 4> && simplices);
+    oriented_simplex_t<3> * tetrahedron(const oriented_simplex_composition_t<3> & simplices);
+    oriented_simplex_t<3> * tetrahedron(oriented_simplex_composition_t<3> && simplices);
 #endif
 
     // vertex set factory

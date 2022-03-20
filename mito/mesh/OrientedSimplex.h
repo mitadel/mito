@@ -18,10 +18,14 @@
  * orientation.
  */
 
+// TODO: forbid user to create simplices without passing through the factory
 namespace mito::mesh {
 
     template <int D>
     class OrientedSimplex {
+      public:
+        using oriented_simplex_composition_t = OrientedSimplexComposition<D>;
+
       public:
         // constructor with an existing shared pointer as footprint
         OrientedSimplex(const std::shared_ptr<simplex_t<D>> & footprint, bool orientation) :
@@ -75,6 +79,25 @@ namespace mito::mesh {
         bool _orientation;
     };
 
+    template <int D>
+    class OrientedSimplexComposition : public std::array<oriented_simplex_t<D - 1> *, D + 1> {
+      public:
+        // cast to simplex_composition_t<D>
+        constexpr operator simplex_composition_t<D>() const
+        {
+            constexpr auto _cast_simplex_composition =
+                []<size_t... I>(
+                    std::index_sequence<I...>,
+                    oriented_simplex_composition_t<D> oriented_composition)
+                    ->simplex_composition_t<D>
+            {
+                return simplex_composition_t<D> { (
+                    simplex_t<D - 1> *) oriented_composition[I]... };
+            };
+
+            return _cast_simplex_composition(std::make_index_sequence<D> {}, *this);
+        }
+    };
 }
 #endif    // mito_mesh_OrientedSimplex_h
 

@@ -19,10 +19,7 @@ namespace mito::mesh {
     class Simplex {
 
       public:
-        using simplex_composition_t = std::array<simplex_t<D - 1> *, D + 1>;
-
-      public:
-        constexpr Simplex(const simplex_composition_t & simplices) :
+        constexpr Simplex(const simplex_composition_t<D> & simplices) :
             _simplices(simplices)
         {
             // initialize object
@@ -32,7 +29,7 @@ namespace mito::mesh {
             return;
         }
 
-        constexpr Simplex(simplex_composition_t && simplices) : _simplices(simplices)
+        constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices)
         {
             // initialize object
             _initialize();
@@ -112,7 +109,7 @@ namespace mito::mesh {
         }
 
       private:
-        simplex_composition_t _simplices;
+        simplex_composition_t<D> _simplices;
     };
 
     template <>

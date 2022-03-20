@@ -7,7 +7,8 @@ namespace mito::mesh {
     class OrientedSimplexFactory {
       private:
         // typedef for simplex composition
-        using simplex_composition_t = typename Simplex<D>::simplex_composition_t;
+        using oriented_simplex_composition_t =
+            typename OrientedSimplex<D>::oriented_simplex_composition_t;
 
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
@@ -17,7 +18,8 @@ namespace mito::mesh {
       public:
         OrientedSimplexFactory() = delete;
 
-        static oriented_simplex_t<D> * OrientedSimplex(const simplex_composition_t & composition)
+        static oriented_simplex_t<D> * OrientedSimplex(
+            const oriented_simplex_composition_t & composition)
         {
             // get from the factory the representative of simplices with this composition
             auto * simplex = SimplexFactory<D>::Simplex(composition);
@@ -67,7 +69,7 @@ namespace mito::mesh {
 
       private:
         // compute the orientation of the {composition} with respect to the orientation of {simplex}
-        static bool _orientation(simplex_composition_t composition, const simplex_t<D> & simplex);
+        static bool _orientation(simplex_composition_t<D> composition, const simplex_t<D> & simplex);
 
       private:
         // container to store the relation (simplex, orientation) -> oriented simplex
@@ -76,8 +78,7 @@ namespace mito::mesh {
 
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
-    bool OrientedSimplexFactory<1>::_orientation(
-        OrientedSimplexFactory<1>::simplex_composition_t composition, const simplex_t<1> & simplex)
+    bool OrientedSimplexFactory<1>::_orientation(simplex_composition_t<1> composition, const simplex_t<1> & simplex)
     {
         if (composition == simplex.simplices()) {
             return true;
@@ -88,7 +89,7 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<2>::_orientation(
-        OrientedSimplexFactory<2>::simplex_composition_t composition, const simplex_t<2> & simplex)
+        simplex_composition_t<2> composition, const simplex_t<2> & simplex)
     {
         auto first_simplex = std::min_element(composition.begin(), composition.end());
         std::rotate(composition.begin(), first_simplex, composition.end());
