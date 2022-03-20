@@ -19,24 +19,9 @@ namespace mito::mesh {
     class Simplex {
 
       public:
-        constexpr Simplex(const simplex_composition_t<D> & simplices) :
-            _simplices(simplices)
-        {
-            // initialize object
-            _initialize();
+        constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
 
-            // all done
-            return;
-        }
-
-        constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices)
-        {
-            // initialize object
-            _initialize();
-
-            // all done
-            return;
-        }
+        constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
 
         constexpr ~Simplex() {}
 
@@ -55,21 +40,6 @@ namespace mito::mesh {
 
         // delete move assignment operator
         const Simplex & operator=(const Simplex &&) = delete;
-
-      private:
-        void _initialize()
-        {
-            // TOFIX
-            // get the simplex with smallest address
-            // auto first_simplex = std::min_element(_simplices.begin(), _simplices.end());
-
-            // put the simplex with smaller address in the front, so that two simplices
-            // having the same simplices will result in two identical instances of class Simplex
-            // std::rotate(_simplices.begin(), first_simplex, _simplices.end());
-
-            // all done
-            return;
-        }
 
       public:
         const auto & simplices() const { return _simplices; }
