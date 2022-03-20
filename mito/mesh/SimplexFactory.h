@@ -63,6 +63,12 @@ namespace mito::mesh {
         return;
     }
 
+    template <>    // TODO: implement
+    void SimplexFactory<3>::_representative(simplex_composition_t<3> & composition)
+    {
+        return;
+    }
+
     // initialize static attribute
     template <int D>
     typename SimplexFactory<D>::composition_map_t SimplexFactory<D>::_compositions =

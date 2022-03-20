@@ -103,6 +103,14 @@ namespace mito::mesh {
         return false;
     }
 
+    template <>    // TODO: implement
+    bool OrientedSimplexFactory<3>::_orientation(
+        OrientedSimplexFactory<3>::oriented_simplex_composition_t composition,
+        const simplex_t<3> & simplex)
+    {
+        return true;
+    }
+
     // initialize static attribute
     template <int D>
     typename OrientedSimplexFactory<D>::orientation_map_t OrientedSimplexFactory<D>::_orientations =
