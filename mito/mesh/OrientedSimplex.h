@@ -72,27 +72,6 @@ namespace mito::mesh {
         bool _orientation;
     };
 
-    template <>
-    class OrientedSimplex<0> : public Simplex<0> {
-      public:
-        OrientedSimplex() : Simplex<0>() {}
-        
-        virtual ~OrientedSimplex() {}
-
-      private:
-        // delete copy constructor
-        OrientedSimplex(const OrientedSimplex &) = delete;
-
-        // delete move constructor
-        OrientedSimplex(const OrientedSimplex &&) = delete;
-
-        // delete assignment operator
-        const OrientedSimplex & operator=(const OrientedSimplex &) = delete;
-
-        // delete move assignment operator
-        const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
-
-    };
 }
 #endif    // mito_mesh_OrientedSimplex_h
 

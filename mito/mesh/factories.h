@@ -20,15 +20,15 @@ namespace mito::mesh {
     }
 
     // segment factory
-    constexpr auto segment(const std::array<vertex_t *, 2> & simplices)
+    oriented_simplex_t<1> * segment(const std::array<vertex_t *, 2> & simplices)
     {
-        return segment_t(simplices);
+        return mito::mesh::OrientedSimplexFactory<1>::OrientedSimplex(simplices);
     }
-    constexpr auto segment(std::array<vertex_t *, 2> && simplices)
+    oriented_simplex_t<1> * segment(std::array<vertex_t *, 2> && simplices)
     {
-        return segment_t(std::move(simplices));
+        return mito::mesh::OrientedSimplexFactory<1>::OrientedSimplex(std::move(simplices));
     }
-
+#if 0
     // triangle factory
     constexpr auto triangle(const std::array<segment_t *, 3> & simplices)
     {
@@ -48,7 +48,7 @@ namespace mito::mesh {
     {
         return tetrahedron_t(std::move(simplices));
     }
-
+#endif
     // vertex set factory
     template <int D>
     constexpr auto vertex_set()

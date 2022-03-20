@@ -52,9 +52,23 @@ namespace mito::mesh {
     // vertex alias
     using vertex_t = Simplex<0>;
 
+    // helper class to allow template specialization of oriented simplex alias
+    template <int D>
+    class helperOrientedSimplexClass {
+      public:
+        using simplex_type = OrientedSimplex<D>;
+    };
+
+    // helper class to allow template specialization of oriented simplex alias
+    template <>
+    class helperOrientedSimplexClass<0> {
+      public:
+        using simplex_type = Simplex<0>;
+    };
+
     // oriented simplex alias
     template <int D>
-    using oriented_simplex_t = OrientedSimplex<D>;
+    using oriented_simplex_t = typename helperOrientedSimplexClass<D>::simplex_type;
 
     // QUESTION: in the API should segment be an alias for Simplex<1> or OrientedSimplex<1>?
     // segment alias
