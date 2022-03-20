@@ -214,6 +214,27 @@ namespace mito::mesh {
 
       public:
         ElementSet(
+            const std::unordered_set<element_t *> & elements,
+            const vertex_set_t<D> & coordinatesMap) :
+            _elements(elements.begin(), elements.end()),
+            _coordinatesMap(coordinatesMap),
+            _jacobians(elements.size(), 0.0)
+        {
+            // compute the jacobians of the map from reference to current element for each element
+            _computeJacobians();
+        }
+
+        ElementSet(
+            std::unordered_set<element_t *> && elements, const vertex_set_t<D> & coordinatesMap) :
+            _elements(elements.begin(), elements.end()),
+            _coordinatesMap(coordinatesMap),
+            _jacobians(elements.size(), 0.0)
+        {
+            // compute the jacobians of the map from reference to current element for each element
+            _computeJacobians();
+        }
+
+        ElementSet(
             const std::vector<element_t *> & elements, const vertex_set_t<D> & coordinatesMap) :
             _elements(elements),
             _coordinatesMap(coordinatesMap),
