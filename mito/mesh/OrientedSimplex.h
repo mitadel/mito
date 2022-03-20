@@ -67,9 +67,6 @@ namespace mito::mesh {
         }
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-        // cast to simplex_t<D>
-        operator simplex_t<D>() const { return *(_footprint.get()); }
-
       public:
         static constexpr int parametricDim = D + 1;
         static constexpr int nVertices = D;
@@ -87,15 +84,24 @@ namespace mito::mesh {
         {
             constexpr auto _cast_simplex_composition =
                 []<size_t... I>(
-                    std::index_sequence<I...>,
-                    oriented_simplex_composition_t<D> oriented_composition)
+                    const oriented_simplex_composition_t<D> & oriented_composition,
+                    std::index_sequence<I...>)
                     ->simplex_composition_t<D>
             {
-                return simplex_composition_t<D> { (
-                    simplex_t<D - 1> *) oriented_composition[I]... };
+                return simplex_composition_t<D> {
+                    oriented_composition[I]->footprint().get() ... };
             };
 
-            return _cast_simplex_composition(std::make_index_sequence<D> {}, *this);
+            return _cast_simplex_composition(*this, std::make_index_sequence<D + 1> {});
+        }
+
+        constexpr bool operator==(const simplex_composition_t<D> & rhs) const requires (D > 1)
+        {
+            for (int i = 0; i < D; ++i)
+            {
+                if (this->operator[](i)->footprint().get() != rhs[i]) return false;
+            }
+            return true;
         }
     };
 }
