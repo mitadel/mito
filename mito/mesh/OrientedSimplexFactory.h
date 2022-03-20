@@ -33,16 +33,16 @@ namespace mito::mesh {
             // if there was already a simplex with opposite orientation...
             if (ret_find != _orientations.end()) {
                 // report
-                std::cout << "Found opposite orientation..." << std::endl;
+                // std::cout << "Found opposite orientation..." << std::endl;
                 // ... then insert a new oriented simplex with same footprint but different
                 // orientation
                 auto mytuple = std::make_tuple(&simplex, orientation);
                 auto ret_emplace = _orientations.emplace(
                     mytuple, new oriented_simplex_t<D>(ret_find->second->footprint(), orientation));
                 // report
-                if (ret_emplace.second == false) {
-                    std::cout << "Duplicate orientation: Not inserted..." << std::endl;
-                }
+                // if (ret_emplace.second == false) {
+                //     std::cout << "Duplicate orientation: Not inserted..." << std::endl;
+                // }
 
                 // return the oriented simplex
                 return *ret_emplace.first->second;
@@ -50,7 +50,7 @@ namespace mito::mesh {
                 // if there was not a simplex with opposite orientation...
             } else {
                 // report
-                std::cout << "Opposite orientation not found..." << std::endl;
+                // std::cout << "Opposite orientation not found..." << std::endl;
                 // ... then insert a new oriented simplex with same footprint but different
                 // orientation
                 auto mytuple = std::make_tuple(&simplex, orientation);
@@ -58,9 +58,9 @@ namespace mito::mesh {
                     mytuple, new oriented_simplex_t<D>(&simplex, orientation));
 
                 // report
-                if (ret_emplace.second == false) {
-                    std::cout << "Duplicate orientation: Not inserted..." << std::endl;
-                }
+                // if (ret_emplace.second == false) {
+                //     std::cout << "Duplicate orientation: Not inserted..." << std::endl;
+                // }
 
                 // return the oriented simplex
                 return *ret_emplace.first->second;
