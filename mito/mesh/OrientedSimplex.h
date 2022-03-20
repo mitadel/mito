@@ -14,7 +14,7 @@
  * When the orientation is positive, the representative in this class of equivalence is chosen by
  * taking the first subsimplex of the underlying (nonoriented) Simplex with its natural orientation.
  * When the orientation is negative, the representative in this class of equivalence is chosen by
- * taking the first subsimplex of the underlying (nonoriented) Simplex against its natural 
+ * taking the first subsimplex of the underlying (nonoriented) Simplex against its natural
  * orientation.
  */
 
@@ -25,12 +25,14 @@ namespace mito::mesh {
       public:
         // constructor with an existing shared pointer as footprint
         OrientedSimplex(const std::shared_ptr<simplex_t<D>> & footprint, bool orientation) :
-            _footprint(footprint), _orientation(orientation)
+            _footprint(footprint),
+            _orientation(orientation)
         {}
 
         // constructor with a raw pointer as footprint (builds shared pointer around raw pointer)
         OrientedSimplex(simplex_t<D> * footprint, bool orientation) :
-            _footprint(footprint), _orientation(orientation)
+            _footprint(footprint),
+            _orientation(orientation)
         {}
 
         ~OrientedSimplex() {}
@@ -50,18 +52,19 @@ namespace mito::mesh {
 
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
-      
+
       public:
         const auto & footprint() const { return _footprint; }
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
-        void vertices(std::set<const vertex_t *> & vertices) const {
+        void vertices(std::set<const vertex_t *> & vertices) const
+        {
             return _footprint.get()->vertices(vertices);
         }
-        bool sanityCheck() const
-        {
-            return _footprint.get()->sanityCheck();
-        }
+        bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
+
+        // cast to simplex_t<D>
+        operator simplex_t<D>() const { return *(_footprint.get()); }
 
       public:
         static constexpr int parametricDim = D + 1;
