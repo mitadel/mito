@@ -19,18 +19,18 @@ namespace mito::mesh {
       public:
         SimplexFactory() = delete;
 
-        static simplex_t<D> * Simplex(const simplex_composition_t<D> & composition)
+        static simplex_t<D> & Simplex(const simplex_composition_t<D> & composition)
         {
             // pick a representative (factor out equivalence relation)
             auto representative = composition;
             _representative(representative);
 
-            // if there is no representative registered in the map, then create a new simplex 
+            // if there is no representative registered in the map, then create a new simplex
             // with this composition
             auto ret = _compositions.emplace(representative, new simplex_t<D>(composition));
 
-            // return representative of simplex with composition {composition} 
-            return ret.first->second;
+            // return representative of simplex with composition {composition}
+            return *ret.first->second;
         }
 
       private:

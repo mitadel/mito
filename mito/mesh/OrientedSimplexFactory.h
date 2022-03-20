@@ -18,25 +18,25 @@ namespace mito::mesh {
       public:
         OrientedSimplexFactory() = delete;
 
-        static oriented_simplex_t<D> * OrientedSimplex(
+        static oriented_simplex_t<D> & OrientedSimplex(
             const oriented_simplex_composition_t & composition)
         {
             // get from the factory the representative of simplices with this composition
-            auto * simplex = SimplexFactory<D>::Simplex(composition);
+            auto & simplex = SimplexFactory<D>::Simplex(composition);
 
             // compute the orientation of the current composition with respect to the representative
-            bool orientation = _orientation(composition, *simplex);
+            bool orientation = _orientation(composition, simplex);
 
             // look up for an oriented simplex with opposite orientation
-            auto ret_find = _orientations.find(std::make_tuple(simplex, !orientation));
+            auto ret_find = _orientations.find(std::make_tuple(&simplex, !orientation));
 
-            // if there was already a simplex with opposite orientation... 
+            // if there was already a simplex with opposite orientation...
             if (ret_find != _orientations.end()) {
                 // report
                 std::cout << "Found opposite orientation..." << std::endl;
                 // ... then insert a new oriented simplex with same footprint but different
                 // orientation
-                auto mytuple = std::make_tuple(simplex, orientation);
+                auto mytuple = std::make_tuple(&simplex, orientation);
                 auto ret_emplace = _orientations.emplace(
                     mytuple, new oriented_simplex_t<D>(ret_find->second->footprint(), orientation));
                 // report
@@ -45,17 +45,17 @@ namespace mito::mesh {
                 }
 
                 // return the oriented simplex
-                return ret_emplace.first->second;
+                return *ret_emplace.first->second;
 
-            // if there was not a simplex with opposite orientation...
+                // if there was not a simplex with opposite orientation...
             } else {
                 // report
                 std::cout << "Opposite orientation not found..." << std::endl;
                 // ... then insert a new oriented simplex with same footprint but different
                 // orientation
-                auto mytuple = std::make_tuple(simplex, orientation);
-                auto ret_emplace =
-                    _orientations.emplace(mytuple, new oriented_simplex_t<D>(simplex, orientation));
+                auto mytuple = std::make_tuple(&simplex, orientation);
+                auto ret_emplace = _orientations.emplace(
+                    mytuple, new oriented_simplex_t<D>(&simplex, orientation));
 
                 // report
                 if (ret_emplace.second == false) {
@@ -63,7 +63,7 @@ namespace mito::mesh {
                 }
 
                 // return the oriented simplex
-                return ret_emplace.first->second;
+                return *ret_emplace.first->second;
             }
         }
 
