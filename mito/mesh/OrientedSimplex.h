@@ -104,6 +104,18 @@ namespace mito::mesh {
             return true;
         }
     };
+
+    // overload operator<< for oriented simplices
+    template <int D>
+    std::ostream & operator<<(std::ostream & os, const OrientedSimplex<D> & s)
+    {
+        // print orientation
+        os << "orientation: " << s.orientation() << std::endl;
+        // print footprint
+        os << "footprint: " << *(s.footprint().get()) << std::endl;
+        // all done
+        return os;
+    }
 }
 #endif    // mito_mesh_OrientedSimplex_h
 
