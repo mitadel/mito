@@ -33,23 +33,23 @@ namespace mito::mesh {
 
     // vertex set factory
     template <int D>
-    constexpr auto vertex_set();
+    constexpr auto point_cloud();
 
     // element set factory (from vectors)
     template <class elementT, int D>
     constexpr auto element_set(
-        const std::vector<elementT *> & elements, const vertex_set_t<D> & vertices);
+        const std::vector<elementT *> & elements, const point_cloud_t<D> & points);
     template <class elementT, int D>
     constexpr auto element_set(
-        std::vector<elementT *> && elements, const vertex_set_t<D> & vertices);
+        std::vector<elementT *> && elements, const point_cloud_t<D> & points);
 
     // element set factory (from sets)
     template <class elementT, int D>
     constexpr auto element_set(
-        const std::unordered_set<elementT *> & elements, const vertex_set_t<D> & vertices);
+        const std::unordered_set<elementT *> & elements, const point_cloud_t<D> & points);
     template <class elementT, int D>
     constexpr auto element_set(
-        std::unordered_set<elementT *> && elements, const vertex_set_t<D> & vertices);
+        std::unordered_set<elementT *> && elements, const point_cloud_t<D> & points);
 
     // vertex set factory
     template <int D>

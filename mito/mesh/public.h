@@ -19,7 +19,7 @@
 #include "SimplexFactory.h"
 #include "OrientedSimplexFactory.h"
 #include "ElementSet.h"
-#include "VertexSet.h"
+#include "PointCloud.h"
 #include "Mesh.h"
 
 // factories implementation

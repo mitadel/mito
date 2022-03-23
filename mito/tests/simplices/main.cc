@@ -10,7 +10,7 @@ int
 main()
 {
 
-    mito::mesh::VertexSet<2> vertexCoordinatesMap;
+    auto points = mito::mesh::PointCloud<2>();
 
     /**
      * Mesh with four elements:
@@ -30,15 +30,15 @@ main()
     */
 
     vertex_t vertex0;
-    vertexCoordinatesMap.insert(vertex0, point_t<2> { 0.0, 0.0 });
+    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
     vertex_t vertex1;
-    vertexCoordinatesMap.insert(vertex1, point_t<2> { 1.0, 0.0 });
+    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
     vertex_t vertex2;
-    vertexCoordinatesMap.insert(vertex2, point_t<2> { 1.0, 1.0 });
+    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
     vertex_t vertex3;
-    vertexCoordinatesMap.insert(vertex3, point_t<2> { 0.5, 0.5 });
+    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
     vertex_t vertex4;
-    vertexCoordinatesMap.insert(vertex4, point_t<2> { 0.0, 1.0 });
+    points.insert(vertex4, point_t<2> { 0.0, 1.0 });
 
     auto & segment0 = mito::mesh::segment({ &vertex0, &vertex1 });
     auto & segment1 = mito::mesh::segment({ &vertex1, &vertex3 });
@@ -68,8 +68,8 @@ main()
     }
 
     // instantiate an ElementSet as a collection of simplices and a vertex-coordinates mapping.
-    mito::mesh::ElementSet elementSet(elements, vertexCoordinatesMap);
-    
+    mito::mesh::ElementSet elementSet(elements, points);
+
     // all done
     return 0;
 }

@@ -15,14 +15,14 @@ namespace mito::mesh {
 
     template <int D>
     void computeSimplicesVolume(
-        const std::vector<oriented_simplex_t<D> *> & elements, const vertex_set_t<D> & coordinatesMap,
+        const std::vector<oriented_simplex_t<D> *> & elements, const point_cloud_t<D> & points,
         std::vector<real> & volumes)
     {
         // number of element vertices
         constexpr int V = D + 1;
 
         // a container to store the coordinates of each vertex in a tensor
-        static matrix_t<V> verticesTensor;
+        static matrix_t<V> pointsTensor;
 
         // assert memory allocation is consistent
         assert(volumes.size() == elements.size());
@@ -31,8 +31,8 @@ namespace mito::mesh {
         int e = 0;
         for (const auto & element : elements) {
 
-            // reinitialize verticesTensor for a new element
-            verticesTensor.reset();
+            // reinitialize pointsTensor for a new element
+            pointsTensor.reset();
 
             // use a set to collect vertices without repeated entries
             std::unordered_set<vertex_t *> element_vertices;
@@ -43,17 +43,17 @@ namespace mito::mesh {
             // loop on element vertices
             int v = 0;
             for (const auto & vertex : element_vertices) {
-                // fill up verticesTensor container
+                // fill up pointsTensor container
                 for (int d = 0; d < D; ++d) {
-                    verticesTensor[v * V + d] = coordinatesMap[vertex][d];
+                    pointsTensor[v * V + d] = points[vertex][d];
                 }
-                verticesTensor[v * V + D] = 1.0;
+                pointsTensor[v * V + D] = 1.0;
                 // update element vertices counter
                 ++v;
             }
 
             // compute the volume of the e-th element
-            volumes[e] = fabs(pyre::algebra::determinant(verticesTensor)) 
+            volumes[e] = fabs(pyre::algebra::determinant(pointsTensor)) 
                 / pyre::algebra::factorial<D>();
             // update elements counter
             ++e;
@@ -65,36 +65,36 @@ namespace mito::mesh {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const std::vector<element_t *> & elements, const vertex_set_t<D> & coordinatesMap,
+        const std::vector<element_t *> & elements, const point_cloud_t<D> & points,
         std::vector<real> & volumes);
 
     template <>
     void computeElementsVolume<triangle_t, 2>(
-        const std::vector<triangle_t *> & elements, const vertex_set_t<2> & coordinatesMap,
+        const std::vector<triangle_t *> & elements, const point_cloud_t<2> & points,
         std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<2>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<2>(elements, points, volumes);
     }
 
     template <>
     void computeElementsVolume<tetrahedron_t, 3>(
-        const std::vector<tetrahedron_t *> & elements, const vertex_set_t<3> & coordinatesMap,
+        const std::vector<tetrahedron_t *> & elements, const point_cloud_t<3> & points,
         std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<3>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<3>(elements, points, volumes);
     }
 
     template <>
     void computeElementsVolume<segment_t, 1>(
-        const std::vector<segment_t *> & elements, const vertex_set_t<1> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const point_cloud_t<1> & points,
         std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<1>(elements, coordinatesMap, volumes);
+        return computeSimplicesVolume<1>(elements, points, volumes);
     }
 
     template <int D>
     void computeSegmentsLength(
-        const std::vector<segment_t *> & elements, const vertex_set_t<D> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const point_cloud_t<D> & points,
         std::vector<real> & length)
     {
         // number of element vertices
@@ -118,7 +118,7 @@ namespace mito::mesh {
 
             // store the distance between the two element vertices as the element length
             length[e] = computeDistance<D>(
-                coordinatesMap[element_vertices[0]], coordinatesMap[element_vertices[1]]);
+                points[element_vertices[0]], points[element_vertices[1]]);
 
             // update elements counter
             ++e;
@@ -130,24 +130,24 @@ namespace mito::mesh {
 
     template <>
     void computeElementsVolume<segment_t, 2>(
-        const std::vector<segment_t *> & elements, const vertex_set_t<2> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const point_cloud_t<2> & points,
         std::vector<real> & volumes)
     {
-        return computeSegmentsLength<2>(elements, coordinatesMap, volumes);
+        return computeSegmentsLength<2>(elements, points, volumes);
     }
 
     template <>
     void computeElementsVolume<segment_t, 3>(
-        const std::vector<segment_t *> & elements, const vertex_set_t<3> & coordinatesMap,
+        const std::vector<segment_t *> & elements, const point_cloud_t<3> & points,
         std::vector<real> & volumes)
     {
-        return computeSegmentsLength<3>(elements, coordinatesMap, volumes);
+        return computeSegmentsLength<3>(elements, points, volumes);
     }
 
     // follows implementation by Kahan2014
     template <int D = 3>
     void computeTriangleArea(
-        const std::vector<triangle_t *> & elements, const vertex_set_t<D> & coordinatesMap,
+        const std::vector<triangle_t *> & elements, const point_cloud_t<D> & points,
         std::vector<real> & areas)
     {
         // loop on elements
@@ -163,11 +163,11 @@ namespace mito::mesh {
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
             edges_lengths[0] = computeDistance<D>(
-                coordinatesMap[element_vertices[0]], coordinatesMap[element_vertices[1]]);
+                points[element_vertices[0]], points[element_vertices[1]]);
             edges_lengths[1] = computeDistance<D>(
-                coordinatesMap[element_vertices[0]], coordinatesMap[element_vertices[2]]);
+                points[element_vertices[0]], points[element_vertices[2]]);
             edges_lengths[2] = computeDistance<D>(
-                coordinatesMap[element_vertices[1]], coordinatesMap[element_vertices[2]]);
+                points[element_vertices[1]], points[element_vertices[2]]);
 
             // sort edges lengths in ascending order
             std::sort(edges_lengths.begin(), edges_lengths.end());
@@ -193,10 +193,10 @@ namespace mito::mesh {
 
     template <>
     void computeElementsVolume<triangle_t, 3>(
-        const std::vector<triangle_t *> & elements, const vertex_set_t<3> & coordinatesMap,
+        const std::vector<triangle_t *> & elements, const point_cloud_t<3> & points,
         std::vector<real> & volumes)
     {
-        return computeTriangleArea(elements, coordinatesMap, volumes);
+        return computeTriangleArea(elements, points, volumes);
     }
 
     // QUESTION:
@@ -215,9 +215,9 @@ namespace mito::mesh {
       public:
         ElementSet(
             const std::unordered_set<element_t *> & elements,
-            const vertex_set_t<D> & coordinatesMap) :
+            const point_cloud_t<D> & points) :
             _elements(elements.begin(), elements.end()),
-            _coordinatesMap(coordinatesMap),
+            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
@@ -225,9 +225,9 @@ namespace mito::mesh {
         }
 
         ElementSet(
-            std::unordered_set<element_t *> && elements, const vertex_set_t<D> & coordinatesMap) :
+            std::unordered_set<element_t *> && elements, const point_cloud_t<D> & points) :
             _elements(elements.begin(), elements.end()),
-            _coordinatesMap(coordinatesMap),
+            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
@@ -235,18 +235,18 @@ namespace mito::mesh {
         }
 
         ElementSet(
-            const std::vector<element_t *> & elements, const vertex_set_t<D> & coordinatesMap) :
+            const std::vector<element_t *> & elements, const point_cloud_t<D> & points) :
             _elements(elements),
-            _coordinatesMap(coordinatesMap),
+            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
             _computeJacobians();
         }
 
-        ElementSet(std::vector<element_t *> && elements, const vertex_set_t<D> & coordinatesMap) :
+        ElementSet(std::vector<element_t *> && elements, const point_cloud_t<D> & points) :
             _elements(elements),
-            _coordinatesMap(coordinatesMap),
+            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
@@ -255,11 +255,11 @@ namespace mito::mesh {
 
         ElementSet(
             const std::vector<element_t *> & elements,
-            const vertex_set_t<D> && coordinatesMap) = delete;
+            const point_cloud_t<D> && points) = delete;
 
         ElementSet(
             std::vector<element_t *> && elements,
-            const vertex_set_t<D> && coordinatesMap) = delete;
+            const point_cloud_t<D> && points) = delete;
 
         ~ElementSet() {}
 
@@ -298,19 +298,19 @@ namespace mito::mesh {
         inline real jacobian(int e) const { return _jacobians[e]; }
         inline const auto & coordinatesVertex(const vertex_t * v) const
         {
-            return _coordinatesMap[v];
+            return _points[v];
         }
 
       private:
         void _computeJacobians()
         {
             return computeElementsVolume<element_t /* element type */, D /* spatial dim*/>(
-                _elements, _coordinatesMap, _jacobians);
+                _elements, _points, _jacobians);
         }
 
       private:
         const std::vector<element_t *> _elements;
-        const vertex_set_t<D> & _coordinatesMap;
+        const point_cloud_t<D> & _points;
         std::vector<real> _jacobians;
     };
 

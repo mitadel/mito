@@ -93,11 +93,11 @@ namespace mito::mesh {
 
     // class vertex set
     template <int D>
-    class VertexSet;
+    class PointCloud;
 
     // vertex set alias
     template <int D>
-    using vertex_set_t = VertexSet<D>;
+    using point_cloud_t = PointCloud<D>;
 
 }
 
