@@ -42,14 +42,14 @@ main()
 
     auto & segment0 = mito::mesh::segment({ &vertex0, &vertex1 });
     auto & segment1 = mito::mesh::segment({ &vertex1, &vertex3 });
-    auto & segment1m = mito::mesh::segment({ &vertex3, &vertex1 });
+    auto & segment1m = segment1.flip();
     auto & segment2 = mito::mesh::segment({ &vertex3, &vertex0 });
-    auto & segment2m = mito::mesh::segment({ &vertex0, &vertex3 });
+    auto & segment2m = segment2.flip();
     auto & segment3 = mito::mesh::segment({ &vertex1, &vertex2 });
     auto & segment4 = mito::mesh::segment({ &vertex2, &vertex3 });
-    auto & segment4m = mito::mesh::segment({ &vertex3, &vertex2 });
+    auto & segment4m = segment4.flip();
     auto & segment5 = mito::mesh::segment({ &vertex4, &vertex3 });
-    auto & segment5m = mito::mesh::segment({ &vertex3, &vertex4 });
+    auto & segment5m = segment5.flip();
     auto & segment6 = mito::mesh::segment({ &vertex2, &vertex4 });
     auto & segment7 = mito::mesh::segment({ &vertex4, &vertex0 });
 

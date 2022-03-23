@@ -64,6 +64,11 @@ namespace mito::mesh {
         }
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
+        OrientedSimplex<D> & flip() const
+        {
+            return OrientedSimplexFactory<D>::OrientedSimplex(*_footprint.get(), !_orientation);
+        }
+
         template <int I>
         void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
             I < D - 1 && I != 0)
