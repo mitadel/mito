@@ -58,11 +58,45 @@ namespace mito::mesh {
         const auto & footprint() const { return _footprint; }
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
-        void vertices(std::set<const vertex_t *> & vertices) const
+        void vertices(std::unordered_set<vertex_t *> & vertices)
         {
             return _footprint.get()->vertices(vertices);
         }
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
+
+        template <int I>
+        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+            I < D - 1 && I != 0)
+        {
+            for (auto & simplex : simplices()) {
+                simplex->simplices<I - 1>(sub_simplices);
+            }
+            return;
+        }
+
+        template <int I>
+        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+            I == 0)
+        {
+            return vertices(sub_simplices);
+        }
+        template <int I>
+        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+            I == D)
+        {
+            sub_simplices.insert(this);
+            return;
+        }
+        template <int I>
+        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+            I == D - 1 && I != 0)
+        {
+            for (auto & simplex : simplices()) {
+                auto & sub_simplex = mito::mesh::oriented_simplex(simplex.simplices());
+                sub_simplices.insert(sub_simplex);
+            }
+            return;
+        }
 
       public:
         static constexpr int parametricDim = D + 1;

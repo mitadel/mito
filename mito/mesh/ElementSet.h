@@ -35,7 +35,7 @@ namespace mito::mesh {
             verticesTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            std::set<const vertex_t *> element_vertices;
+            std::unordered_set<vertex_t *> element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
             assert(V == element_vertices.size());
@@ -108,7 +108,7 @@ namespace mito::mesh {
         for (const auto & element : elements) {
 
             // collect vertices
-            std::set<const vertex_t *> vertices_set;
+            std::unordered_set<vertex_t *> vertices_set;
             element->vertices(vertices_set);
             std::vector<const vertex_t *> element_vertices(
                 vertices_set.begin(), vertices_set.end());
@@ -155,7 +155,7 @@ namespace mito::mesh {
         for (const auto & element : elements) {
 
             // collect vertices
-            std::set<const vertex_t *> vertices_set;
+            std::unordered_set<vertex_t *> vertices_set;
             element->vertices(vertices_set);
             std::vector<const vertex_t *> element_vertices(
                 vertices_set.begin(), vertices_set.end());
@@ -323,7 +323,7 @@ namespace mito::mesh {
             os << "Composition: " << std::endl;
             os << *e;
             os << "Vertices: " << std::endl;
-            std::set<const vertex_t *> vertices;
+            std::unordered_set<vertex_t *> vertices;
             e->vertices(vertices);
             for (const auto v : vertices) {
                 os << element_set.coordinatesVertex(v) << std::endl;

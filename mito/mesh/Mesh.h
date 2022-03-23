@@ -139,6 +139,28 @@ namespace mito::mesh {
             return mito::mesh::element_set(elements<I>(), vertices());
         }
 
+        /**
+         * @brief Returns an element set with all boundary simplices of dimension I
+         */
+        template <int I>
+        constexpr auto boundary_element_set() const requires(I < D && I > 0)
+        {
+            // instantiate a simplex collection
+            simplex_collection<I> boundary_elements;
+
+            // loop on simplices (D-1) dimensional simplices
+            for (auto & simplex : std::get<D-1>(_simplices)) {
+                // if the simplex footprint has only one occurrence then it is on the boundary
+                if (simplex->footprint().use_count() == 1) {
+                    // add the subsimplices of dimension I to the set of boundary elements
+                    simplex->template getSimplices<I>(boundary_elements);
+                }
+            }
+
+            // return the element set
+            return mito::mesh::element_set(boundary_elements, vertices());
+        }
+
       private:
         template <int I>
         void _addSimplex(OrientedSimplex<I> * simplex) requires(I > 0 && I <= D)
