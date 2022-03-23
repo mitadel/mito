@@ -13,6 +13,12 @@ namespace mito::mesh {
     template <class... Args>
     constexpr auto vertex(Args &&... args);
 
+    // oriented simplex factory
+    template <int I>
+    oriented_simplex_t<I> & oriented_simplex(const oriented_simplex_composition_t<I> & simplices);
+    template <int I>
+    oriented_simplex_t<I> & oriented_simplex(oriented_simplex_composition_t<I> && simplices);
+
     // segment factory
     oriented_simplex_t<1> & segment(const oriented_simplex_composition_t<1> & simplices);
     oriented_simplex_t<1> & segment(oriented_simplex_composition_t<1> && simplices);

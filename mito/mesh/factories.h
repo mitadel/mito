@@ -19,6 +19,18 @@ namespace mito::mesh {
         return vertex_t(std::forward<Args>(args)...);
     }
 
+    // oriented simplex factory
+    template<int I>
+    oriented_simplex_t<I> & oriented_simplex(const oriented_simplex_composition_t<I> & simplices)
+    {
+        return mito::mesh::OrientedSimplexFactory<I>::OrientedSimplex(simplices);
+    }
+    template <int I>
+    oriented_simplex_t<I> & oriented_simplex(oriented_simplex_composition_t<I> && simplices)
+    {
+        return mito::mesh::OrientedSimplexFactory<I>::OrientedSimplex(std::move(simplices));
+    }
+
     // segment factory
     oriented_simplex_t<1> & segment(const oriented_simplex_composition_t<1> & simplices)
     {
