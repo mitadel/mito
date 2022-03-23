@@ -35,7 +35,7 @@ namespace mito::quadrature {
             int e = 0;
             for (const auto & element : _elementSet.elements()) {
                 // use a set to collect vertices without repeated entries
-                std::set<const mesh::vertex_t *> vertices;
+                std::unordered_set<mesh::vertex_t *> vertices;
                 element->vertices(vertices);
                 // loop on vertices
                 int v = 0;
