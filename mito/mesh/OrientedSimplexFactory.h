@@ -14,15 +14,8 @@ namespace mito::mesh {
       public:
         OrientedSimplexFactory() = delete;
 
-        static oriented_simplex_t<D> & OrientedSimplex(
-            const oriented_simplex_composition_t<D> & composition)
+        static oriented_simplex_t<D> & OrientedSimplex(simplex_t<D> & simplex, bool orientation)
         {
-            // get from the factory the representative of simplices with this composition
-            auto & simplex = SimplexFactory<D>::Simplex(composition);
-
-            // compute the orientation of the current composition with respect to the representative
-            bool orientation = _orientation(composition, simplex);
-
             // look up for an oriented simplex with opposite orientation
             auto ret_find = _orientations.find(std::make_tuple(&simplex, !orientation));
 
@@ -61,6 +54,19 @@ namespace mito::mesh {
                 // return the oriented simplex
                 return *ret_emplace.first->second;
             }
+        }
+
+        static oriented_simplex_t<D> & OrientedSimplex(
+            const oriented_simplex_composition_t<D> & composition)
+        {
+            // get from the factory the representative of simplices with this composition
+            auto & simplex = SimplexFactory<D>::Simplex(composition);
+
+            // compute the orientation of the current composition with respect to the representative
+            bool orientation = _orientation(composition, simplex);
+
+            // return an oriented simplex riding on {simplex} with {orientation}
+            return OrientedSimplex(simplex, orientation);
         }
 
       private:
