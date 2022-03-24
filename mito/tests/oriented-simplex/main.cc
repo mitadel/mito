@@ -22,6 +22,7 @@ main()
     // assert there is still only one pointer to the simplex footprint
     assert(oriented_segment0.use_count() == 1);
     // assert that flipping the flipped simplex gives the original simplex
+    assert(&oriented_segment1.flip().flip() == &oriented_segment1); // QUESTION: flip-flip creates the opposite simplex
 
     // instantiate an oriented segment with opposite orientation
     auto & oriented_segment2 =
@@ -29,6 +30,7 @@ main()
     // assert there are now two pointers to the simplex footprint
     assert(oriented_segment0.use_count() == 2);
     // assert that flipping the opposite segment gives the original segment
+    assert(&oriented_segment2.flip() == &oriented_segment1);
 
     // all done
     return 0;
