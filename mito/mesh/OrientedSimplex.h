@@ -54,8 +54,12 @@ namespace mito::mesh {
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
-      public:
+      private:
         const auto & footprint() const { return _footprint; }
+
+      public:
+        const auto & simplex() const { return *_footprint.get(); }
+        auto use_count() const {return _footprint.use_count(); } // TOFIX: improve name
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
         void vertices(std::unordered_set<vertex_t *> & vertices)
@@ -112,6 +116,7 @@ namespace mito::mesh {
         bool _orientation;
 
         friend class mito::mesh::OrientedSimplexFactory<D>;
+        friend class mito::mesh::OrientedSimplexComposition<D+1>;
     };
 
     template <int D>
@@ -137,7 +142,7 @@ namespace mito::mesh {
         {
             for (int i = 0; i < D; ++i)
             {
-                if (this->operator[](i)->footprint().get() != rhs[i]) return false;
+                if (&this->operator[](i)->simplex() != rhs[i]) return false;
             }
             return true;
         }
