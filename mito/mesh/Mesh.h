@@ -16,6 +16,7 @@ namespace mito::mesh {
         template <class T>
         using vertex_container = std::vector<T>;
 
+        // QUESTION: would it be better to use reference wrappers here?
         // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
         using simplex_collection = simplex_container<oriented_simplex_t<int(I)> *>;
@@ -186,9 +187,9 @@ namespace mito::mesh {
         }
 
         template <int I>
-        auto _getSimplex(int n) requires(I <= D)
+        auto & _getSimplex(int n) requires(I <= D)
         {
-            return std::get<I>(_simplices)[n];
+            return *std::get<I>(_simplices)[n];
         }
 
         void _readTriangle(std::ifstream & fileStream)
@@ -205,15 +206,15 @@ namespace mito::mesh {
             fileStream >> index2;
             --index2;
 
-            vertex_t * vertex0 = _getSimplex<0>(index0);
-            vertex_t * vertex1 = _getSimplex<0>(index1);
-            vertex_t * vertex2 = _getSimplex<0>(index2);
+            vertex_t & vertex0 = _getSimplex<0>(index0);
+            vertex_t & vertex1 = _getSimplex<0>(index1);
+            vertex_t & vertex2 = _getSimplex<0>(index2);
 
-            auto & segment0 = mito::mesh::segment({ *vertex0, *vertex1 });
+            auto & segment0 = mito::mesh::segment({ vertex0, vertex1 });
             _addSimplex(&segment0); 
-            auto & segment1 = mito::mesh::segment({ *vertex1, *vertex2 });
+            auto & segment1 = mito::mesh::segment({ vertex1, vertex2 });
             _addSimplex(&segment1);
-            auto & segment2 = mito::mesh::segment({ *vertex2, *vertex0 });
+            auto & segment2 = mito::mesh::segment({ vertex2, vertex0 });
             _addSimplex(&segment2);
 
             auto & element = mito::mesh::triangle({ segment0, segment1, segment2 });
