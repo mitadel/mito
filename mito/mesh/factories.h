@@ -27,7 +27,7 @@ namespace mito::mesh {
         // helper function
         constexpr oriented_simplex_t<I> & _oriented_simplex = []<size_t... K>(
             const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> & simplices,
-            std::index_sequence<K...>)    // TOFIX: consteval?
+            std::index_sequence<K...>) consteval
         {
             return mito::mesh::OrientedSimplexFactory<I>::OrientedSimplex(
                 oriented_simplex_composition_t<I> { (&simplices[K].get())... });
