@@ -151,7 +151,7 @@ namespace mito::mesh {
             // loop on simplices (D-1) dimensional simplices
             for (auto & simplex : std::get<D-1>(_simplices)) {
                 // if the simplex footprint has only one occurrence then it is on the boundary
-                if (simplex->footprint().use_count() == 1) {
+                if (simplex->use_count() == 1) {
                     // add the subsimplices of dimension I to the set of boundary elements
                     simplex->template getSimplices<I>(boundary_elements);
                 }

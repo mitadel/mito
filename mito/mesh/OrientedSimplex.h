@@ -155,7 +155,7 @@ namespace mito::mesh {
         // print orientation
         os << "orientation: " << s.orientation() << std::endl;
         // print footprint
-        os << "footprint: " << *(s.footprint().get()) << std::endl;
+        os << "footprint: " << s.simplex() << std::endl;
         // all done
         return os;
     }
