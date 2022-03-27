@@ -20,45 +20,46 @@ namespace mito::mesh {
     }
 
     // oriented simplex factory
-    template<int I>
-    oriented_simplex_t<I> & oriented_simplex(const oriented_simplex_composition_t<I> & simplices)
-    {
-        return mito::mesh::OrientedSimplexFactory<I>::OrientedSimplex(simplices);
-    }
     template <int I>
-    oriented_simplex_t<I> & oriented_simplex(oriented_simplex_composition_t<I> && simplices)
+    oriented_simplex_t<I> & oriented_simplex(
+        const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> & simplices)
     {
-        return mito::mesh::OrientedSimplexFactory<I>::OrientedSimplex(std::move(simplices));
+        // helper function
+        constexpr oriented_simplex_t<I> & _oriented_simplex = []<size_t... K>(
+            const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> & simplices,
+            std::index_sequence<K...>)    // TOFIX: consteval?
+        {
+            return mito::mesh::OrientedSimplexFactory<I>::OrientedSimplex(
+                oriented_simplex_composition_t<I> { (&simplices[K].get())... });
+        };
+
+        return _oriented_simplex(simplices, std::make_index_sequence<I + 1> {});
     }
 
     // segment factory
-    oriented_simplex_t<1> & segment(const oriented_simplex_composition_t<1> & simplices)
+    oriented_simplex_t<1> & segment(
+        const std::array<std::reference_wrapper<oriented_simplex_t<0>>, 2> & simplices)
     {
-        return mito::mesh::OrientedSimplexFactory<1>::OrientedSimplex(simplices);
-    }
-    oriented_simplex_t<1> & segment(oriented_simplex_composition_t<1> && simplices)
-    {
-        return mito::mesh::OrientedSimplexFactory<1>::OrientedSimplex(std::move(simplices));
+        return mito::mesh::OrientedSimplexFactory<1>::OrientedSimplex(
+            oriented_simplex_composition_t<1> { &simplices[0].get(), &simplices[1].get() });
     }
 
     // triangle factory
-    oriented_simplex_t<2> & triangle(const oriented_simplex_composition_t<2> & simplices)
+    oriented_simplex_t<2> & triangle(
+        const std::array<std::reference_wrapper<oriented_simplex_t<1>>, 3> & simplices)
     {
-        return mito::mesh::OrientedSimplexFactory<2>::OrientedSimplex(simplices);
-    }
-    oriented_simplex_t<2> & triangle(oriented_simplex_composition_t<2> && simplices)
-    {
-        return mito::mesh::OrientedSimplexFactory<2>::OrientedSimplex(std::move(simplices));
+        return mito::mesh::OrientedSimplexFactory<2>::OrientedSimplex(
+            oriented_simplex_composition_t<2> { &simplices[0].get(), &simplices[1].get(),
+                                                &simplices[2].get() });
     }
 
     // tetrahedron factory
-    oriented_simplex_t<3> & tetrahedron(const oriented_simplex_composition_t<3> & simplices)
+    oriented_simplex_t<3> & tetrahedron(
+        const std::array<std::reference_wrapper<oriented_simplex_t<2>>, 4> & simplices)
     {
-        return mito::mesh::OrientedSimplexFactory<3>::OrientedSimplex(simplices);
-    }
-    oriented_simplex_t<3> & tetrahedron(oriented_simplex_composition_t<3> && simplices)
-    {
-        return mito::mesh::OrientedSimplexFactory<3>::OrientedSimplex(std::move(simplices));
+        return mito::mesh::OrientedSimplexFactory<3>::OrientedSimplex(
+            oriented_simplex_composition_t<3> { &simplices[0].get(), &simplices[1].get(),
+                                                &simplices[2].get(), &simplices[3].get() });
     }
 
     // vertex set factory

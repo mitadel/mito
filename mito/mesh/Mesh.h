@@ -209,14 +209,14 @@ namespace mito::mesh {
             vertex_t * vertex1 = _getSimplex<0>(index1);
             vertex_t * vertex2 = _getSimplex<0>(index2);
 
-            auto & segment0 = mito::mesh::segment({ vertex0, vertex1 });
+            auto & segment0 = mito::mesh::segment({ *vertex0, *vertex1 });
             _addSimplex(&segment0); 
-            auto & segment1 = mito::mesh::segment({ vertex1, vertex2 });
+            auto & segment1 = mito::mesh::segment({ *vertex1, *vertex2 });
             _addSimplex(&segment1);
-            auto & segment2 = mito::mesh::segment({ vertex2, vertex0 });
+            auto & segment2 = mito::mesh::segment({ *vertex2, *vertex0 });
             _addSimplex(&segment2);
 
-            auto & element = mito::mesh::triangle({ &segment0, &segment1, &segment2 });
+            auto & element = mito::mesh::triangle({ segment0, segment1, segment2 });
             _addSimplex(&element);
 
             // QUESTION: Can the label be more than one?
