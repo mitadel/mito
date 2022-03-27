@@ -186,10 +186,9 @@ namespace mito::mesh {
             return;
         }
 
-        template <int I>
-        auto & _getSimplex(int n) requires(I <= D)
+        auto & _getVertex(int n)
         {
-            return *std::get<I>(_simplices)[n];
+            return *std::get<0>(_simplices)[n];
         }
 
         void _readTriangle(std::ifstream & fileStream)
@@ -206,9 +205,9 @@ namespace mito::mesh {
             fileStream >> index2;
             --index2;
 
-            vertex_t & vertex0 = _getSimplex<0>(index0);
-            vertex_t & vertex1 = _getSimplex<0>(index1);
-            vertex_t & vertex2 = _getSimplex<0>(index2);
+            vertex_t & vertex0 = _getVertex(index0);
+            vertex_t & vertex1 = _getVertex(index1);
+            vertex_t & vertex2 = _getVertex(index2);
 
             auto & segment0 = mito::mesh::segment({ vertex0, vertex1 });
             _addSimplex(&segment0); 
