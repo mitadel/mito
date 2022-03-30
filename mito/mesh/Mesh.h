@@ -223,8 +223,8 @@ namespace mito::mesh {
             // QUESTION: Can the label be more than one?
             // read label for element
             // TOFIX: Ignored for now
-            std::string element_set_id;
-            fileStream >> element_set_id;
+            std::string element_label;
+            fileStream >> element_label;
 
             // all done
             return;
@@ -295,12 +295,12 @@ namespace mito::mesh {
             // reserve space for elements
             std::get<D>(_simplices).reserve(N_elements);
 
-            // read number of element sets
-            int N_element_sets = 0;
-            fileStream >> N_element_sets;
+            // read number of element types
+            int N_element_types = 0;
+            fileStream >> N_element_types;
 
             // QUESTION: Not sure that we need this...
-            assert(N_element_sets == 1);
+            assert(N_element_types == 1);
 
             // read the vertices
             _readVertices(fileStream, N_vertices);
