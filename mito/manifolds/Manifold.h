@@ -209,6 +209,9 @@ namespace mito::manifolds {
     template <class elementT, int D>
     class Manifold {
 
+      private:
+        using point_cloud_t = mito::mesh::point_cloud_t<D>;
+
       public:
         using element_t = elementT;
         static constexpr int dim = D;
@@ -216,7 +219,7 @@ namespace mito::manifolds {
       public:
         Manifold(
             const std::unordered_set<element_t *> & elements,
-            const mito::mesh::point_cloud_t<D> & points) :
+            const point_cloud_t & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -227,7 +230,7 @@ namespace mito::manifolds {
 
         Manifold(
             std::unordered_set<element_t *> && elements,
-            const mito::mesh::point_cloud_t<D> & points) :
+            const point_cloud_t & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -238,7 +241,7 @@ namespace mito::manifolds {
 
         Manifold(
             const std::vector<element_t *> & elements,
-            const mito::mesh::point_cloud_t<D> & points) :
+            const point_cloud_t & points) :
             _elements(elements),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -248,7 +251,7 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            std::vector<element_t *> && elements, const mito::mesh::point_cloud_t<D> & points) :
+            std::vector<element_t *> && elements, const point_cloud_t & points) :
             _elements(elements),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -259,11 +262,11 @@ namespace mito::manifolds {
 
         Manifold(
             const std::vector<element_t *> & elements,
-            const mito::mesh::point_cloud_t<D> && points) = delete;
+            const point_cloud_t && points) = delete;
 
         Manifold(
             std::vector<element_t *> && elements,
-            const mito::mesh::point_cloud_t<D> && points) = delete;
+            const point_cloud_t && points) = delete;
 
         ~Manifold() {}
 
@@ -314,7 +317,7 @@ namespace mito::manifolds {
 
       private:
         const std::vector<element_t *> _elements;
-        const mito::mesh::point_cloud_t<D> & _points;
+        const point_cloud_t & _points;
         std::vector<real> _jacobians;
     };
 
