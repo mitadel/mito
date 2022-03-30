@@ -5,14 +5,6 @@
 
 namespace mito::mesh {
 
-    // class element set
-    template <class element_t, int D>
-    class ElementSet;
-
-    // element set alias
-    template <class elementT, int D>
-    using element_set_t = ElementSet<elementT, D>;
-
     // class mesh
     template <int D>
     class Mesh;

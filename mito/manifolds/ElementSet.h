@@ -1,12 +1,13 @@
 // code guard
-#if !defined(mito_mesh_ElementSet_h)
-#define mito_mesh_ElementSet_h
+#if !defined(mito_manifolds_ElementSet_h)
+#define mito_manifolds_ElementSet_h
 
 
-namespace mito::mesh {
+namespace mito::manifolds {
 
     template <int D>
-    real computeDistance(const point_t<D> & pointA, const point_t<D> & pointB)
+    real computeDistance(
+        const mito::mesh::point_t<D> & pointA, const mito::mesh::point_t<D> & pointB)
     {
         // return the distance between the two points
         auto dist = pointA - pointB;
@@ -15,8 +16,8 @@ namespace mito::mesh {
 
     template <int D>
     void computeSimplicesVolume(
-        const std::vector<oriented_simplex_t<D> *> & elements, const point_cloud_t<D> & points,
-        std::vector<real> & volumes)
+        const std::vector<mito::mesh::oriented_simplex_t<D> *> & elements,
+        const mito::mesh::point_cloud_t<D> & points, std::vector<real> & volumes)
     {
         // number of element vertices
         constexpr int V = D + 1;
@@ -35,7 +36,7 @@ namespace mito::mesh {
             pointsTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            std::unordered_set<vertex_t *> element_vertices;
+            std::unordered_set<mito::mesh::vertex_t *> element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
             assert(V == element_vertices.size());
@@ -65,37 +66,37 @@ namespace mito::mesh {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const std::vector<element_t *> & elements, const point_cloud_t<D> & points,
+        const std::vector<element_t *> & elements, const mito::mesh::point_cloud_t<D> & points,
         std::vector<real> & volumes);
 
     template <>
-    void computeElementsVolume<triangle_t, 2>(
-        const std::vector<triangle_t *> & elements, const point_cloud_t<2> & points,
-        std::vector<real> & volumes)
+    void computeElementsVolume<mito::mesh::triangle_t, 2>(
+        const std::vector<mito::mesh::triangle_t *> & elements,
+        const mito::mesh::point_cloud_t<2> & points, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<2>(elements, points, volumes);
     }
 
     template <>
-    void computeElementsVolume<tetrahedron_t, 3>(
-        const std::vector<tetrahedron_t *> & elements, const point_cloud_t<3> & points,
-        std::vector<real> & volumes)
+    void computeElementsVolume<mito::mesh::tetrahedron_t, 3>(
+        const std::vector<mito::mesh::tetrahedron_t *> & elements,
+        const mito::mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<3>(elements, points, volumes);
     }
 
     template <>
-    void computeElementsVolume<segment_t, 1>(
-        const std::vector<segment_t *> & elements, const point_cloud_t<1> & points,
-        std::vector<real> & volumes)
+    void computeElementsVolume<mito::mesh::segment_t, 1>(
+        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::point_cloud_t<1> & points, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<1>(elements, points, volumes);
     }
 
     template <int D>
     void computeSegmentsLength(
-        const std::vector<segment_t *> & elements, const point_cloud_t<D> & points,
-        std::vector<real> & length)
+        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::point_cloud_t<D> & points, std::vector<real> & length)
     {
         // number of element vertices
         constexpr int V = 2;
@@ -108,9 +109,9 @@ namespace mito::mesh {
         for (const auto & element : elements) {
 
             // collect vertices
-            std::unordered_set<vertex_t *> vertices_set;
+            std::unordered_set<mito::mesh::vertex_t *> vertices_set;
             element->vertices(vertices_set);
-            std::vector<const vertex_t *> element_vertices(
+            std::vector<const mito::mesh::vertex_t *> element_vertices(
                 vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of element vertices
@@ -129,17 +130,17 @@ namespace mito::mesh {
     }
 
     template <>
-    void computeElementsVolume<segment_t, 2>(
-        const std::vector<segment_t *> & elements, const point_cloud_t<2> & points,
-        std::vector<real> & volumes)
+    void computeElementsVolume<mito::mesh::segment_t, 2>(
+        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::point_cloud_t<2> & points, std::vector<real> & volumes)
     {
         return computeSegmentsLength<2>(elements, points, volumes);
     }
 
     template <>
-    void computeElementsVolume<segment_t, 3>(
-        const std::vector<segment_t *> & elements, const point_cloud_t<3> & points,
-        std::vector<real> & volumes)
+    void computeElementsVolume<mito::mesh::segment_t, 3>(
+        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
     {
         return computeSegmentsLength<3>(elements, points, volumes);
     }
@@ -147,17 +148,17 @@ namespace mito::mesh {
     // follows implementation by Kahan2014
     template <int D = 3>
     void computeTriangleArea(
-        const std::vector<triangle_t *> & elements, const point_cloud_t<D> & points,
-        std::vector<real> & areas)
+        const std::vector<mito::mesh::triangle_t *> & elements,
+        const mito::mesh::point_cloud_t<D> & points, std::vector<real> & areas)
     {
         // loop on elements
         int e = 0;
         for (const auto & element : elements) {
 
             // collect vertices
-            std::unordered_set<vertex_t *> vertices_set;
+            std::unordered_set<mito::mesh::vertex_t *> vertices_set;
             element->vertices(vertices_set);
-            std::vector<const vertex_t *> element_vertices(
+            std::vector<const mito::mesh::vertex_t *> element_vertices(
                 vertices_set.begin(), vertices_set.end());
 
             // compute lengths of three edges
@@ -192,9 +193,9 @@ namespace mito::mesh {
     }
 
     template <>
-    void computeElementsVolume<triangle_t, 3>(
-        const std::vector<triangle_t *> & elements, const point_cloud_t<3> & points,
-        std::vector<real> & volumes)
+    void computeElementsVolume<mito::mesh::triangle_t, 3>(
+        const std::vector<mito::mesh::triangle_t *> & elements,
+        const mito::mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
     {
         return computeTriangleArea(elements, points, volumes);
     }
@@ -215,7 +216,7 @@ namespace mito::mesh {
       public:
         ElementSet(
             const std::unordered_set<element_t *> & elements,
-            const point_cloud_t<D> & points) :
+            const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -225,7 +226,8 @@ namespace mito::mesh {
         }
 
         ElementSet(
-            std::unordered_set<element_t *> && elements, const point_cloud_t<D> & points) :
+            std::unordered_set<element_t *> && elements,
+            const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -235,7 +237,8 @@ namespace mito::mesh {
         }
 
         ElementSet(
-            const std::vector<element_t *> & elements, const point_cloud_t<D> & points) :
+            const std::vector<element_t *> & elements,
+            const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -244,7 +247,8 @@ namespace mito::mesh {
             _computeJacobians();
         }
 
-        ElementSet(std::vector<element_t *> && elements, const point_cloud_t<D> & points) :
+        ElementSet(
+            std::vector<element_t *> && elements, const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -255,11 +259,11 @@ namespace mito::mesh {
 
         ElementSet(
             const std::vector<element_t *> & elements,
-            const point_cloud_t<D> && points) = delete;
+            const mito::mesh::point_cloud_t<D> && points) = delete;
 
         ElementSet(
             std::vector<element_t *> && elements,
-            const point_cloud_t<D> && points) = delete;
+            const mito::mesh::point_cloud_t<D> && points) = delete;
 
         ~ElementSet() {}
 
@@ -296,7 +300,7 @@ namespace mito::mesh {
         inline int nElements() const { return _elements.size(); }
         inline int nVertices() const { return element_t::nVertices(); }
         inline real jacobian(int e) const { return _jacobians[e]; }
-        inline const auto & coordinatesVertex(const vertex_t * v) const
+        inline const auto & coordinatesVertex(const mito::mesh::vertex_t * v) const
         {
             return _points[v];
         }
@@ -310,7 +314,7 @@ namespace mito::mesh {
 
       private:
         const std::vector<element_t *> _elements;
-        const point_cloud_t<D> & _points;
+        const mito::mesh::point_cloud_t<D> & _points;
         std::vector<real> _jacobians;
     };
 
@@ -323,7 +327,7 @@ namespace mito::mesh {
             os << "Composition: " << std::endl;
             os << *e;
             os << "Vertices: " << std::endl;
-            std::unordered_set<vertex_t *> vertices;
+            std::unordered_set<mito::mesh::vertex_t *> vertices;
             e->vertices(vertices);
             for (const auto v : vertices) {
                 os << element_set.coordinatesVertex(v) << std::endl;
@@ -337,6 +341,6 @@ namespace mito::mesh {
 }    // namespace mito
 
 
-#endif    // mito_mesh_ElementSet_h
+#endif
 
 // end of file

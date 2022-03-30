@@ -1,5 +1,6 @@
 #include "../../base.h"
 #include "../../mesh.h"
+#include "../../manifolds.h"
 
 using mito::mesh::point_t;
 using mito::mesh::vertex_t;
@@ -68,7 +69,7 @@ main()
     }
 
     // instantiate an ElementSet as a collection of simplices and a vertex-coordinates mapping.
-    mito::mesh::ElementSet elementSet(elements, points);
+    mito::manifolds::ElementSet elementSet(elements, points);
 
     // all done
     return 0;

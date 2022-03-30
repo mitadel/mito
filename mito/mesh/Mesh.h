@@ -131,13 +131,14 @@ namespace mito::mesh {
             return _vertices;
         }
 
+#if 0 // TOFIX
         /**
          * @brief Returns an element set with all simplices of dimension I
          */
         template <int I>
         constexpr auto element_set() const requires(I <= D)
         {
-            return mito::mesh::element_set(elements<I>(), vertices());
+            return mito::manifolds::element_set(elements<I>(), vertices());
         }
 
         /**
@@ -159,9 +160,9 @@ namespace mito::mesh {
             }
 
             // return the element set
-            return mito::mesh::element_set(boundary_elements, vertices());
+            return mito::manifolds::element_set(boundary_elements, vertices());
         }
-
+#endif
       private:
         template <int I>
         void _addSimplex(OrientedSimplex<I> * simplex) requires(I > 0 && I <= D)

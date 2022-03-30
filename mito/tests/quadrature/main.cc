@@ -1,6 +1,7 @@
 #include "../../base.h"
 #include "../../math.h"
 #include "../../mesh.h"
+#include "../../manifolds.h"
 #include "../../quadrature.h"
 
 using mito::vector_t;
@@ -59,7 +60,7 @@ main()
     std::vector<triangle_t *> elements = { &element0, &element1, &element2, &element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    auto bodyElementSet = mito::mesh::element_set(elements, points);
+    auto bodyElementSet = mito::manifolds::element_set(elements, points);
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet);
 
@@ -144,7 +145,7 @@ main()
     points3D.insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
 
     // instantiate an element set with the same elements as above but the new coordinates map
-    auto bodyElementSet3D = mito::mesh::element_set(elements, points3D);
+    auto bodyElementSet3D = mito::manifolds::element_set(elements, points3D);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyIntegrator3D =
