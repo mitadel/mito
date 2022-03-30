@@ -10,7 +10,7 @@ field = mito.ScalarField2D(myfunction)
 #x = mito.Vector2D([10., 20.])
 #print(field(x))
 
-elementset = mito.ElementSetTriangle2D("square.summit")
+elementset = mito.ManifoldTriangle2D("square.summit")
 integrator = mito.GaussIntegrator2Triangle2D(elementset)
 
 N = 10000

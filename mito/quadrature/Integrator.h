@@ -12,9 +12,9 @@ namespace mito::quadrature {
     template <class quadratureT, int r, class elementSetT>
     class Integrator {
         using quadrature_t = quadratureT;
-        using element_set_t = elementSetT;
-        using element_t = typename element_set_t::element_t;
-        static constexpr int D = element_set_t::dim;
+        using manifold_t = elementSetT;
+        using element_t = typename manifold_t::element_t;
+        static constexpr int D = manifold_t::dim;
 
         // quadrature_t, element_t, and r identify a specific quadrature rule
         using QuadratureRule = QuadratureRulesFactory<quadrature_t, element_t, r>;
@@ -58,7 +58,7 @@ namespace mito::quadrature {
         }
 
       public:
-        Integrator(const element_set_t & elementSet) :
+        Integrator(const manifold_t & elementSet) :
             _elementSet(elementSet),
             _coordinates(elementSet.nElements())
         {
@@ -91,7 +91,7 @@ namespace mito::quadrature {
         // the number of quadrature points
         static constexpr int Q = _quadratureRule.size();
         // the domain of integration
-        const element_set_t & _elementSet;
+        const manifold_t & _elementSet;
         // the coordinates of the quadrature points in the domain of integration
         fem::quadrature_field_t<Q, vector_t<D>> _coordinates;
     };

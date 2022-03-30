@@ -12,7 +12,7 @@ main()
     // instantiate a element set as a collection of simplices and vertices.
     const auto & elements = mesh.elements<2>(); //TODO: region label to fetch elements
     const auto & vertices = mesh.vertices();
-    auto elementSet = mito::manifolds::element_set(elements, vertices);
+    auto elementSet = mito::manifolds::manifold(elements, vertices);
 
     // instantiate a scalar field
     auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });

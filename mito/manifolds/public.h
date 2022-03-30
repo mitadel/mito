@@ -13,7 +13,7 @@
 #include "api.h"
 
 // classes implementation
-#include "ElementSet.h"
+#include "Manifold.h"
 
 // factories implementation
 #include "factories.h"

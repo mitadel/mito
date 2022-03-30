@@ -60,9 +60,9 @@ main()
     std::vector<triangle_t *> elements = { &element0, &element1, &element2, &element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    auto bodyElementSet = mito::manifolds::element_set(elements, points);
+    auto bodyManifold = mito::manifolds::manifold(elements, points);
     auto bodyIntegrator =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet);
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     // a scalar function
     auto f = mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
@@ -145,11 +145,11 @@ main()
     points3D.insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
 
     // instantiate an element set with the same elements as above but the new coordinates map
-    auto bodyElementSet3D = mito::manifolds::element_set(elements, points3D);
+    auto bodyManifold3D = mito::manifolds::manifold(elements, points3D);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyIntegrator3D =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet3D);
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold3D);
 
     // a scalar function
     auto f_xy3D = mito::math::function([](const vector_t<3> & x) -> real { return x[0] * x[1]; });

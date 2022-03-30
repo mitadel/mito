@@ -121,8 +121,8 @@ PYBIND11_MODULE(mito, m)
         ;
 
 
-    // the mito ElementSet interface
-    py::class_<mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>(m, "ElementSetTriangle2D")
+    // the mito Manifold interface
+    py::class_<mito::manifolds::Manifold<mito::mesh::triangle_t, 2>>(m, "ManifoldTriangle2D")
         // the constructor
         .def(
             // the implementation
@@ -135,7 +135,7 @@ PYBIND11_MODULE(mito, m)
                 // read the mesh
                 mito::mesh::Mesh<2> * mesh = new mito::mesh::Mesh<2>(filename);
                 // instantiate
-                return new mito::mesh::ElementSet<mito::mesh::triangle_t, 2>(
+                return new mito::manifolds::Manifold<mito::mesh::triangle_t, 2>(
                     mesh->elements<2>(), 
                     mesh->vertices());
             }))
@@ -145,12 +145,12 @@ PYBIND11_MODULE(mito, m)
 
     // the mito Integrator interface
     py::class_<mito::quadrature::integrator_t<
-        mito::quadrature::GAUSS, 2 /* degree of exactness */, mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>>(
+        mito::quadrature::GAUSS, 2 /* degree of exactness */, mito::manifolds::Manifold<mito::mesh::triangle_t, 2>>>(
         m, "GaussIntegrator2Triangle2D")
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::mesh::ElementSet<mito::mesh::triangle_t, 2> &>())
+            py::init<const mito::manifolds::Manifold<mito::mesh::triangle_t, 2> &>())
         // interface
         // QUESTION: should this be called integrateScalarfield?
         // integrate a scalar field
@@ -159,7 +159,7 @@ PYBIND11_MODULE(mito, m)
             // the method;
             &mito::quadrature::integrator_t<
                 mito::quadrature::GAUSS, 2 /* degree of exactness */,
-                mito::mesh::ElementSet<mito::mesh::triangle_t, 2>>::integrate<mito::real>,
+                mito::manifolds::Manifold<mito::mesh::triangle_t, 2>>::integrate<mito::real>,
             // the docstring
             "integrate a field")
         // done

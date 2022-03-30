@@ -5,14 +5,13 @@
 
 namespace mito::manifolds {
 
-    // class element set
+    // class manifold
     template <class element_t, int D>
-    class ElementSet;
+    class Manifold;
 
-    // element set alias
+    // manifold alias
     template <class elementT, int D>
-    using element_set_t = ElementSet<elementT, D>;
-
+    using manifold_t = Manifold<elementT, D>;
 }
 
 

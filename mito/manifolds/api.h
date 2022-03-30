@@ -7,18 +7,18 @@ namespace mito::mesh {
 
     // element set factory (from vectors)
     template <class elementT, int D>
-    constexpr auto element_set(
+    constexpr auto manifold(
         const std::vector<elementT *> & elements, const point_cloud_t<D> & points);
     template <class elementT, int D>
-    constexpr auto element_set(
+    constexpr auto manifold(
         std::vector<elementT *> && elements, const point_cloud_t<D> & points);
 
     // element set factory (from sets)
     template <class elementT, int D>
-    constexpr auto element_set(
+    constexpr auto manifold(
         const std::unordered_set<elementT *> & elements, const point_cloud_t<D> & points);
     template <class elementT, int D>
-    constexpr auto element_set(
+    constexpr auto manifold(
         std::unordered_set<elementT *> && elements, const point_cloud_t<D> & points);
 
 }

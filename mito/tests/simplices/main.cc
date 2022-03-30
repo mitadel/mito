@@ -68,8 +68,8 @@ main()
         }
     }
 
-    // instantiate an ElementSet as a collection of simplices and a vertex-coordinates mapping.
-    mito::manifolds::ElementSet elementSet(elements, points);
+    // instantiate a Manifold as a collection of simplices and a point cloud.
+    mito::manifolds::Manifold elementSet(elements, points);
 
     // all done
     return 0;

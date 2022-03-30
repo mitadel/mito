@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_manifolds_ElementSet_h)
-#define mito_manifolds_ElementSet_h
+#if !defined(mito_manifolds_Manifold_h)
+#define mito_manifolds_Manifold_h
 
 
 namespace mito::manifolds {
@@ -207,14 +207,14 @@ namespace mito::manifolds {
     // value by a method called, say, differential?
 
     template <class elementT, int D>
-    class ElementSet {
+    class Manifold {
 
       public:
         using element_t = elementT;
         static constexpr int dim = D;
 
       public:
-        ElementSet(
+        Manifold(
             const std::unordered_set<element_t *> & elements,
             const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements.begin(), elements.end()),
@@ -225,7 +225,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        ElementSet(
+        Manifold(
             std::unordered_set<element_t *> && elements,
             const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements.begin(), elements.end()),
@@ -236,7 +236,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        ElementSet(
+        Manifold(
             const std::vector<element_t *> & elements,
             const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements),
@@ -247,7 +247,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        ElementSet(
+        Manifold(
             std::vector<element_t *> && elements, const mito::mesh::point_cloud_t<D> & points) :
             _elements(elements),
             _points(points),
@@ -257,31 +257,31 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        ElementSet(
+        Manifold(
             const std::vector<element_t *> & elements,
             const mito::mesh::point_cloud_t<D> && points) = delete;
 
-        ElementSet(
+        Manifold(
             std::vector<element_t *> && elements,
             const mito::mesh::point_cloud_t<D> && points) = delete;
 
-        ~ElementSet() {}
+        ~Manifold() {}
 
       private:
         // delete default constructor
-        ElementSet() = delete;
+        Manifold() = delete;
 
         // delete copy constructor
-        ElementSet(const ElementSet &) = delete;
+        Manifold(const Manifold &) = delete;
 
         // delete move constructor
-        ElementSet(const ElementSet &&) = delete;
+        Manifold(const Manifold &&) = delete;
 
         // delete assignment operator
-        const ElementSet & operator=(const ElementSet &) = delete;
+        const Manifold & operator=(const Manifold &) = delete;
 
         // delete move assignment operator
-        const ElementSet & operator=(const ElementSet &&) = delete;
+        const Manifold & operator=(const Manifold &&) = delete;
 
       public:
         bool sanityCheck()
@@ -319,18 +319,18 @@ namespace mito::manifolds {
     };
 
     template <class elementT, int D>
-    std::ostream & operator<<(std::ostream & os, const element_set_t<elementT, D> & element_set)
+    std::ostream & operator<<(std::ostream & os, const manifold_t<elementT, D> & manifold)
     {
         os << "Element set: " << std::endl;
 
-        for (const auto e : element_set.elements()) {
+        for (const auto e : manifold.elements()) {
             os << "Composition: " << std::endl;
             os << *e;
             os << "Vertices: " << std::endl;
             std::unordered_set<mito::mesh::vertex_t *> vertices;
             e->vertices(vertices);
             for (const auto v : vertices) {
-                os << element_set.coordinatesVertex(v) << std::endl;
+                os << manifold.coordinatesVertex(v) << std::endl;
             }
             os << std::endl;
         }

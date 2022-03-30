@@ -89,11 +89,11 @@ main()
     auto & element3 = mito::mesh::triangle({ segment7, segment2, segment5 });
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::mesh::ElementSetTri elementSet;
-    auto bodyElementSet = mito::manifolds::element_set(
+    // static mito::manifolds::ManifoldTri elementSet;
+    auto bodyManifold = mito::manifolds::manifold(
         std::vector<triangle_t *> { &element0, &element1, &element2, &element3 }, points);
     auto bodyIntegrator = 
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet);
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     real resultBody = bodyIntegrator.integrate(divergence);
     std::cout << "Result of body integration = " << resultBody << std::endl;
@@ -101,27 +101,27 @@ main()
     // TOFIX: Include normal notion on the boundary element set, so that we can avoid hardcoding
     // the normals calculations (we might need std::inner_product to do the inner product)
     /*
-    mito::mesh::ElementSet boundaryElementSet(
+    mito::manifolds::Manifold boundaryManifold(
         std::vector<segment_t *> { &segment0, &segment3, &segment6, &segment7 },
         points);
     */
     // integrator on the bottom boundary
-    auto boundaryBot = mito::manifolds::element_set(std::vector<segment_t *> { &segment0 }, points);
+    auto boundaryBot = mito::manifolds::manifold(std::vector<segment_t *> { &segment0 }, points);
     auto boundaryBotIntegrator = 
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryBot);
 
     // integrator on the right boundary
-    auto boundaryRight = mito::manifolds::element_set(std::vector<segment_t *> { &segment3 }, points);
+    auto boundaryRight = mito::manifolds::manifold(std::vector<segment_t *> { &segment3 }, points);
     auto boundaryRightIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryRight);
 
     // integrator on the top boundary
-    auto boundaryTop = mito::manifolds::element_set(std::vector<segment_t *> { &segment6 }, points);
+    auto boundaryTop = mito::manifolds::manifold(std::vector<segment_t *> { &segment6 }, points);
     auto boundaryTopIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryTop);
 
     // integrator on the left boundary
-    auto boundaryLeft = mito::manifolds::element_set(std::vector<segment_t *> { &segment7 }, points);
+    auto boundaryLeft = mito::manifolds::manifold(std::vector<segment_t *> { &segment7 }, points);
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
 
