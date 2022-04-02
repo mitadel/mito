@@ -15,7 +15,7 @@ namespace mito::manifolds {
     class Manifold {
 
       private:
-        using point_cloud_t = mito::mesh::point_cloud_t<D>;
+        using point_cloud_t = mesh::point_cloud_t<D>;
 
       public:
         using element_t = elementT;
@@ -23,7 +23,7 @@ namespace mito::manifolds {
 
       public:
         Manifold(
-            const mito::mesh::simplex_set_t<element_t> & elements,
+            const mesh::simplex_set_t<element_t> & elements,
             const point_cloud_t & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
@@ -34,7 +34,7 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            mito::mesh::simplex_set_t<element_t> && elements,
+            mesh::simplex_set_t<element_t> && elements,
             const point_cloud_t & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
@@ -45,7 +45,7 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            const mito::mesh::simplex_vector_t<element_t> & elements,
+            const mesh::simplex_vector_t<element_t> & elements,
             const point_cloud_t & points) :
             _elements(elements),
             _points(points),
@@ -56,7 +56,7 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            mito::mesh::simplex_vector_t<element_t> && elements, const point_cloud_t & points) :
+            mesh::simplex_vector_t<element_t> && elements, const point_cloud_t & points) :
             _elements(elements),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -66,11 +66,11 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            const mito::mesh::simplex_vector_t<element_t> & elements,
+            const mesh::simplex_vector_t<element_t> & elements,
             const point_cloud_t && points) = delete;
 
         Manifold(
-            mito::mesh::simplex_vector_t<element_t> && elements,
+            mesh::simplex_vector_t<element_t> && elements,
             const point_cloud_t && points) = delete;
 
         ~Manifold() {}
@@ -104,11 +104,11 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline const mito::mesh::simplex_vector_t<element_t> & elements() const { return _elements; }
+        inline const mesh::simplex_vector_t<element_t> & elements() const { return _elements; }
         inline int nElements() const { return _elements.size(); }
         inline int nVertices() const { return element_t::nVertices(); }
         inline real jacobian(int e) const { return _jacobians[e]; }
-        inline const auto & coordinatesVertex(const mito::mesh::vertex_t * v) const
+        inline const auto & coordinatesVertex(const mesh::vertex_t * v) const
         {
             return _points[v];
         }
@@ -121,7 +121,7 @@ namespace mito::manifolds {
         }
 
       private:
-        const mito::mesh::simplex_vector_t<element_t> _elements;
+        const mesh::simplex_vector_t<element_t> _elements;
         const point_cloud_t & _points;
         std::vector<real> _jacobians;
     };
@@ -135,7 +135,7 @@ namespace mito::manifolds {
             os << "Composition: " << std::endl;
             os << *e;
             os << "Vertices: " << std::endl;
-            mito::mesh::simplex_set_t<mito::mesh::vertex_t> vertices;
+            mesh::simplex_set_t<mesh::vertex_t> vertices;
             e->vertices(vertices);
             for (const auto v : vertices) {
                 os << manifold.coordinatesVertex(v) << std::endl;

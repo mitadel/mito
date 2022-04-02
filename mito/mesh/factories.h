@@ -28,7 +28,7 @@ namespace mito::mesh {
             const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> & simplices,
             std::index_sequence<K...>) consteval
         {
-            return mito::mesh::OrientedSimplexFactory<I>::OrientedSimplex(
+            return OrientedSimplexFactory<I>::OrientedSimplex(
                 oriented_simplex_composition_t<I> { (&simplices[K].get())... });
         };
 
@@ -39,7 +39,7 @@ namespace mito::mesh {
     oriented_simplex_t<1> & segment(
         const std::array<std::reference_wrapper<oriented_simplex_t<0>>, 2> & simplices)
     {
-        return mito::mesh::OrientedSimplexFactory<1>::OrientedSimplex(
+        return OrientedSimplexFactory<1>::OrientedSimplex(
             oriented_simplex_composition_t<1> { &simplices[0].get(), &simplices[1].get() });
     }
 
@@ -47,7 +47,7 @@ namespace mito::mesh {
     oriented_simplex_t<2> & triangle(
         const std::array<std::reference_wrapper<oriented_simplex_t<1>>, 3> & simplices)
     {
-        return mito::mesh::OrientedSimplexFactory<2>::OrientedSimplex(
+        return OrientedSimplexFactory<2>::OrientedSimplex(
             oriented_simplex_composition_t<2> { &simplices[0].get(), &simplices[1].get(),
                                                 &simplices[2].get() });
     }
@@ -56,7 +56,7 @@ namespace mito::mesh {
     oriented_simplex_t<3> & tetrahedron(
         const std::array<std::reference_wrapper<oriented_simplex_t<2>>, 4> & simplices)
     {
-        return mito::mesh::OrientedSimplexFactory<3>::OrientedSimplex(
+        return OrientedSimplexFactory<3>::OrientedSimplex(
             oriented_simplex_composition_t<3> { &simplices[0].get(), &simplices[1].get(),
                                                 &simplices[2].get(), &simplices[3].get() });
     }

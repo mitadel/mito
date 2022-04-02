@@ -10,15 +10,13 @@ namespace mito::manifolds {
     // element set factory (from vectors)
     template <class elementT, int D>
     constexpr auto manifold(
-        const mito::mesh::simplex_vector_t<elementT> & elements,
-        const mito::mesh::point_cloud_t<D> & vertices)
+        const mesh::simplex_vector_t<elementT> & elements, const mesh::point_cloud_t<D> & vertices)
     {
         return manifold_t<elementT, D>(elements, vertices);
     }
     template <class elementT, int D>
     constexpr auto manifold(
-        mito::mesh::simplex_vector_t<elementT> && elements,
-        const mito::mesh::point_cloud_t<D> & vertices)
+        mesh::simplex_vector_t<elementT> && elements, const mesh::point_cloud_t<D> & vertices)
     {
         return manifold_t<elementT, D>(std::move(elements), vertices);
     }
@@ -26,14 +24,13 @@ namespace mito::manifolds {
     // element set factory (from sets)
     template <class elementT, int D>
     constexpr auto manifold(
-        const mito::mesh::simplex_set_t<elementT> & elements,
-        const mito::mesh::point_cloud_t<D> & vertices)
+        const mesh::simplex_set_t<elementT> & elements, const mesh::point_cloud_t<D> & vertices)
     {
         return manifold_t<elementT, D>(elements, vertices);
     }
     template <class elementT, int D>
     constexpr auto manifold(
-        mito::mesh::simplex_set_t<elementT> && elements, const mito::mesh::point_cloud_t<D> & vertices)
+        mesh::simplex_set_t<elementT> && elements, const mesh::point_cloud_t<D> & vertices)
     {
         return manifold_t<elementT, D>(std::move(elements), vertices);
     }

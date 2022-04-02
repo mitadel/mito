@@ -82,7 +82,7 @@ namespace mito::mesh {
       private:
         simplex_composition_t<D> _simplices;
 
-        friend class mito::mesh::SimplexFactory<D>;
+        friend class SimplexFactory<D>;
     };
 
     template <>
@@ -119,7 +119,7 @@ namespace mito::mesh {
 
     // overload operator<< for simplices
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const mito::mesh::simplex_t<D> & s)
+    std::ostream & operator<<(std::ostream & os, const simplex_t<D> & s)
     {
         os << &s << " composed of:" << std::endl;
         for (const auto & simplex : s.simplices()) {
@@ -130,7 +130,7 @@ namespace mito::mesh {
 
     // overload operator<< specialization for simplices with D = 0 (vertices)
     template <>
-    std::ostream & operator<<(std::ostream & os, const mito::mesh::simplex_t<0> & s)
+    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
     {
         os << &s;
         return os;

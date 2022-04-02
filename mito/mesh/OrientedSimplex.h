@@ -101,7 +101,7 @@ namespace mito::mesh {
             I == D - 1 && I != 0)
         {
             for (auto & simplex : simplices()) {
-                auto & sub_simplex = mito::mesh::oriented_simplex(simplex.simplices());
+                auto & sub_simplex = oriented_simplex(simplex.simplices());
                 sub_simplices.insert(sub_simplex);
             }
             return;
@@ -115,8 +115,8 @@ namespace mito::mesh {
         const std::shared_ptr<simplex_t<D>> _footprint;
         bool _orientation;
 
-        friend class mito::mesh::OrientedSimplexFactory<D>;
-        friend class mito::mesh::OrientedSimplexComposition<D+1>;
+        friend class OrientedSimplexFactory<D>;
+        friend class OrientedSimplexComposition<D+1>;
     };
 
     template <int D>
