@@ -59,7 +59,7 @@ main()
     auto & element2 = mito::mesh::triangle({ segment6, segment5, segment4m });
     auto & element3 = mito::mesh::triangle({ segment7, segment2m, segment5 });
 
-    std::vector<triangle_t *> elements = { &element0, &element1, &element2, &element3 };
+    mito::mesh::simplex_vector_t<triangle_t> elements = { &element0, &element1, &element2, &element3 };
 
     // sanity check
     for (const auto & e : elements) {

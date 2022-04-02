@@ -16,7 +16,7 @@ namespace mito::manifolds {
 
     template <int D>
     void computeSimplicesVolume(
-        const std::vector<mito::mesh::oriented_simplex_t<D> *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::oriented_simplex_t<D>> & elements,
         const mito::mesh::point_cloud_t<D> & points, std::vector<real> & volumes)
     {
         // number of element vertices
@@ -66,12 +66,12 @@ namespace mito::manifolds {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const std::vector<element_t *> & elements, const mito::mesh::point_cloud_t<D> & points,
+        const mito::mesh::simplex_vector_t<element_t> & elements, const mito::mesh::point_cloud_t<D> & points,
         std::vector<real> & volumes);
 
     template <>
     void computeElementsVolume<mito::mesh::triangle_t, 2>(
-        const std::vector<mito::mesh::triangle_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::triangle_t> & elements,
         const mito::mesh::point_cloud_t<2> & points, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<2>(elements, points, volumes);
@@ -79,7 +79,7 @@ namespace mito::manifolds {
 
     template <>
     void computeElementsVolume<mito::mesh::tetrahedron_t, 3>(
-        const std::vector<mito::mesh::tetrahedron_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::tetrahedron_t> & elements,
         const mito::mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<3>(elements, points, volumes);
@@ -87,7 +87,7 @@ namespace mito::manifolds {
 
     template <>
     void computeElementsVolume<mito::mesh::segment_t, 1>(
-        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::segment_t> & elements,
         const mito::mesh::point_cloud_t<1> & points, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<1>(elements, points, volumes);
@@ -95,7 +95,7 @@ namespace mito::manifolds {
 
     template <int D>
     void computeSegmentsLength(
-        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::segment_t> & elements,
         const mito::mesh::point_cloud_t<D> & points, std::vector<real> & length)
     {
         // number of element vertices
@@ -111,7 +111,7 @@ namespace mito::manifolds {
             // collect vertices
             mito::mesh::simplex_set_t<mito::mesh::vertex_t> vertices_set;
             element->vertices(vertices_set);
-            std::vector<const mito::mesh::vertex_t *> element_vertices(
+            mito::mesh::simplex_vector_t<const mito::mesh::vertex_t> element_vertices(
                 vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of element vertices
@@ -131,7 +131,7 @@ namespace mito::manifolds {
 
     template <>
     void computeElementsVolume<mito::mesh::segment_t, 2>(
-        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::segment_t> & elements,
         const mito::mesh::point_cloud_t<2> & points, std::vector<real> & volumes)
     {
         return computeSegmentsLength<2>(elements, points, volumes);
@@ -139,7 +139,7 @@ namespace mito::manifolds {
 
     template <>
     void computeElementsVolume<mito::mesh::segment_t, 3>(
-        const std::vector<mito::mesh::segment_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::segment_t> & elements,
         const mito::mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
     {
         return computeSegmentsLength<3>(elements, points, volumes);
@@ -148,7 +148,7 @@ namespace mito::manifolds {
     // follows implementation by Kahan2014
     template <int D = 3>
     void computeTriangleArea(
-        const std::vector<mito::mesh::triangle_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::triangle_t> & elements,
         const mito::mesh::point_cloud_t<D> & points, std::vector<real> & areas)
     {
         // loop on elements
@@ -158,7 +158,7 @@ namespace mito::manifolds {
             // collect vertices
             mito::mesh::simplex_set_t<mito::mesh::vertex_t> vertices_set;
             element->vertices(vertices_set);
-            std::vector<const mito::mesh::vertex_t *> element_vertices(
+            mito::mesh::simplex_vector_t<const mito::mesh::vertex_t> element_vertices(
                 vertices_set.begin(), vertices_set.end());
 
             // compute lengths of three edges
@@ -194,7 +194,7 @@ namespace mito::manifolds {
 
     template <>
     void computeElementsVolume<mito::mesh::triangle_t, 3>(
-        const std::vector<mito::mesh::triangle_t *> & elements,
+        const mito::mesh::simplex_vector_t<mito::mesh::triangle_t> & elements,
         const mito::mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
     {
         return computeTriangleArea(elements, points, volumes);

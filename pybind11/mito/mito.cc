@@ -126,7 +126,7 @@ PYBIND11_MODULE(mito, m)
         // the constructor
         .def(
             // the implementation
-            py::init<const std::vector<mito::mesh::triangle_t *> &, 
+            py::init<const mito::mesh::simplex_vector_t<mito::mesh::triangle_t> &, 
                 const mito::mesh::point_cloud_t<2> &>())
         // the constructor
         .def(

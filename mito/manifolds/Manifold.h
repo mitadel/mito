@@ -45,7 +45,7 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            const std::vector<element_t *> & elements,
+            const mito::mesh::simplex_vector_t<element_t> & elements,
             const point_cloud_t & points) :
             _elements(elements),
             _points(points),
@@ -56,7 +56,7 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            std::vector<element_t *> && elements, const point_cloud_t & points) :
+            mito::mesh::simplex_vector_t<element_t> && elements, const point_cloud_t & points) :
             _elements(elements),
             _points(points),
             _jacobians(elements.size(), 0.0)
@@ -66,11 +66,11 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            const std::vector<element_t *> & elements,
+            const mito::mesh::simplex_vector_t<element_t> & elements,
             const point_cloud_t && points) = delete;
 
         Manifold(
-            std::vector<element_t *> && elements,
+            mito::mesh::simplex_vector_t<element_t> && elements,
             const point_cloud_t && points) = delete;
 
         ~Manifold() {}
@@ -104,7 +104,7 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline const std::vector<element_t *> & elements() const { return _elements; }
+        inline const mito::mesh::simplex_vector_t<element_t> & elements() const { return _elements; }
         inline int nElements() const { return _elements.size(); }
         inline int nVertices() const { return element_t::nVertices(); }
         inline real jacobian(int e) const { return _jacobians[e]; }
@@ -121,7 +121,7 @@ namespace mito::manifolds {
         }
 
       private:
-        const std::vector<element_t *> _elements;
+        const mito::mesh::simplex_vector_t<element_t> _elements;
         const point_cloud_t & _points;
         std::vector<real> _jacobians;
     };

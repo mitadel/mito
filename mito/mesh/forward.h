@@ -33,6 +33,10 @@ namespace mito::mesh {
     template <class elementT>
     using simplex_set_t = std::unordered_set<elementT *>;
 
+    // element vector alias
+    template <class elementT>
+    using simplex_vector_t = std::vector<elementT *>;
+
     // class simplex
     template <int D>
     class Simplex;
