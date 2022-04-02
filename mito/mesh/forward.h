@@ -29,6 +29,10 @@ namespace mito::mesh {
     template <int D>
     using point_cloud_t = PointCloud<D>;
 
+    // element set alias
+    template <class elementT>
+    using simplex_set_t = std::unordered_set<elementT *>;
+
     // class simplex
     template <int D>
     class Simplex;

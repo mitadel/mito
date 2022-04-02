@@ -62,7 +62,7 @@ namespace mito::mesh {
         auto use_count() const {return _footprint.use_count(); } // TOFIX: improve name
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
-        void vertices(std::unordered_set<vertex_t *> & vertices)
+        void vertices(simplex_set_t<vertex_t> & vertices)
         {
             return _footprint.get()->vertices(vertices);
         }
@@ -74,7 +74,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
             I < D - 1 && I != 0)
         {
             for (auto & simplex : simplices()) {
@@ -84,20 +84,20 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
             I == 0)
         {
             return vertices(sub_simplices);
         }
         template <int I>
-        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
             I == D)
         {
             sub_simplices.insert(this);
             return;
         }
         template <int I>
-        void getSimplices(std::unordered_set<oriented_simplex_t<I> *> & sub_simplices) requires(
+        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
             I == D - 1 && I != 0)
         {
             for (auto & simplex : simplices()) {

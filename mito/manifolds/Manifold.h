@@ -23,7 +23,7 @@ namespace mito::manifolds {
 
       public:
         Manifold(
-            const std::unordered_set<element_t *> & elements,
+            const mito::mesh::simplex_set_t<element_t> & elements,
             const point_cloud_t & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
@@ -34,7 +34,7 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            std::unordered_set<element_t *> && elements,
+            mito::mesh::simplex_set_t<element_t> && elements,
             const point_cloud_t & points) :
             _elements(elements.begin(), elements.end()),
             _points(points),
@@ -135,7 +135,7 @@ namespace mito::manifolds {
             os << "Composition: " << std::endl;
             os << *e;
             os << "Vertices: " << std::endl;
-            std::unordered_set<mito::mesh::vertex_t *> vertices;
+            mito::mesh::simplex_set_t<mito::mesh::vertex_t> vertices;
             e->vertices(vertices);
             for (const auto v : vertices) {
                 os << manifold.coordinatesVertex(v) << std::endl;

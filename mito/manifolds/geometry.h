@@ -36,7 +36,7 @@ namespace mito::manifolds {
             pointsTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            std::unordered_set<mito::mesh::vertex_t *> element_vertices;
+            mito::mesh::simplex_set_t<mito::mesh::vertex_t> element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
             assert(V == element_vertices.size());
@@ -109,7 +109,7 @@ namespace mito::manifolds {
         for (const auto & element : elements) {
 
             // collect vertices
-            std::unordered_set<mito::mesh::vertex_t *> vertices_set;
+            mito::mesh::simplex_set_t<mito::mesh::vertex_t> vertices_set;
             element->vertices(vertices_set);
             std::vector<const mito::mesh::vertex_t *> element_vertices(
                 vertices_set.begin(), vertices_set.end());
@@ -156,7 +156,7 @@ namespace mito::manifolds {
         for (const auto & element : elements) {
 
             // collect vertices
-            std::unordered_set<mito::mesh::vertex_t *> vertices_set;
+            mito::mesh::simplex_set_t<mito::mesh::vertex_t> vertices_set;
             element->vertices(vertices_set);
             std::vector<const mito::mesh::vertex_t *> element_vertices(
                 vertices_set.begin(), vertices_set.end());

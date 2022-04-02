@@ -45,7 +45,7 @@ namespace mito::mesh {
       public:
         const auto & simplices() const { return _simplices; }
 
-        void vertices(std::unordered_set<vertex_t *> & vertices) const
+        void vertices(simplex_set_t<vertex_t> & vertices) const
         {
             for (const auto & simplex : simplices()) {
                 simplex->vertices(vertices);
@@ -64,7 +64,7 @@ namespace mito::mesh {
             }
 
             // use a set to cleanup duplicates
-            std::unordered_set<vertex_t *> vertices;
+            simplex_set_t<vertex_t> vertices;
             // collect vertices of every subsimplex of this simplex
             for (const auto & simplex : simplices()) {
                 simplex->vertices(vertices);
@@ -105,7 +105,7 @@ namespace mito::mesh {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
-        void vertices(std::unordered_set<vertex_t *> & vertices)
+        void vertices(simplex_set_t<vertex_t> & vertices)
         {
             // insert this vertex
             vertices.insert(this);

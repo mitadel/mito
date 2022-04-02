@@ -9,9 +9,6 @@ namespace mito::mesh {
     class Mesh {
 
       private:
-        // typedef for a container of oriented mesh simplices
-        template <class T>
-        using simplex_container = std::unordered_set<T>;
 
         template <class T>
         using vertex_container = std::vector<T>;
@@ -19,10 +16,10 @@ namespace mito::mesh {
         // QUESTION: would it be better to use reference wrappers here?
         // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
-        using simplex_collection = simplex_container<oriented_simplex_t<int(I)> *>;
+        using simplex_collection = simplex_set_t<oriented_simplex_t<int(I)>>;
 
         // simplex_collection<I>... expands to:
-        // simplex_container<oriented_simplex_t<1>*>, ..., simplex_container<oriented_simplex_t<D>*>
+        // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
         template <typename = std::make_index_sequence<D>>
         struct simplices_tuple;
 
@@ -32,9 +29,9 @@ namespace mito::mesh {
         };
 
         // this expands to:
-        // tuple<simplex_container<simplex_t<0>*>,
-        //      simplex_container<oriented_simplex_t<1>*>, ...,
-        //      simplex_container<oriented_simplex_t<D>*>
+        // tuple<simplex_set_t<simplex_t<0>>,
+        //      simplex_set_t<oriented_simplex_t<1>>, ...,
+        //      simplex_set_t<oriented_simplex_t<D>>
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
       public:
