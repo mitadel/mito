@@ -131,38 +131,33 @@ namespace mito::mesh {
             return _vertices;
         }
 
-#if 0 // TOFIX
-        /**
-         * @brief Returns an element set with all simplices of dimension I
-         */
-        template <int I>
-        constexpr auto element_set() const requires(I <= D)
-        {
-            return mito::manifolds::element_set(elements<I>(), vertices());
-        }
-
         /**
          * @brief Returns an element set with all boundary simplices of dimension I
          */
+        // QUESTION: I don't like the asymmetry of elements returning a const reference and boundary
+        //  elements returning an instance. Either:
+        //  1) say that these methods will make copies of the elements for the client to use, or
+        //  2) say that boundary_elements will create a new data structure at run time and return a 
+        //      (const) reference for the client to use. 
         template <int I>
-        constexpr auto boundary_element_set() const requires(I < D && I > 0)
+        constexpr auto boundary_elements() const requires(I<D && I> 0)
         {
             // instantiate a simplex collection
-            simplex_collection<I> boundary_elements;
+            simplex_collection<I> boundary_simplices;
 
             // loop on simplices (D-1) dimensional simplices
             for (auto & simplex : std::get<D-1>(_simplices)) {
                 // if the simplex footprint has only one occurrence then it is on the boundary
                 if (simplex->use_count() == 1) {
-                    // add the subsimplices of dimension I to the set of boundary elements
-                    simplex->template getSimplices<I>(boundary_elements);
+                    // add the subsimplices of dimension I to the set of boundary simplices
+                    simplex->template getSimplices<I>(boundary_simplices);
                 }
             }
 
-            // return the element set
-            return mito::manifolds::element_set(boundary_elements, vertices());
+            // return the boundary simplices
+            return boundary_simplices;
         }
-#endif
+
       private:
         template <int I>
         void _addSimplex(OrientedSimplex<I> * simplex) requires(I > 0 && I <= D)

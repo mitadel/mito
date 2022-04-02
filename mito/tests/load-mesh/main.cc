@@ -12,7 +12,7 @@ main()
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
-    auto element_set_boundary = mesh.boundary_element_set<1>();
+    auto boundary_elements = mesh.boundary_elements<1>();
     std::cout << "Fetched boundary in " << clock() - t << std::endl;
 
     return 0;
