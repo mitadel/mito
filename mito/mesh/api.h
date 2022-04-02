@@ -12,7 +12,6 @@ namespace mito::mesh {
     // vertex factory
     constexpr auto vertex();
 
-
     // oriented simplex factory
     template <int I>
     oriented_simplex_t<I> & oriented_simplex(
@@ -30,11 +29,11 @@ namespace mito::mesh {
     oriented_simplex_t<3> & tetrahedron(
         const std::array<std::reference_wrapper<oriented_simplex_t<2>>, 4> & simplices);
 
-    // vertex set factory
+    // point cloud factory
     template <int D>
     constexpr auto point_cloud();
 
-    // vertex set factory
+    // mesh factory
     template <int D>
     auto mesh(std::string meshFileName);
 

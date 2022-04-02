@@ -323,7 +323,7 @@ namespace mito::mesh {
         // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
         simplices_tuple_t _simplices;
         // the mesh vertices
-        PointCloud<D> _vertices;
+        point_cloud_t<D> _vertices;
     };
 
 }    // namespace mito

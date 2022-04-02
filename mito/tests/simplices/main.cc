@@ -11,7 +11,7 @@ int
 main()
 {
 
-    auto points = mito::mesh::PointCloud<2>();
+    auto points = mito::mesh::point_cloud<2>();
 
     /**
      * Mesh with four elements:

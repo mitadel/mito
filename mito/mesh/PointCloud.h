@@ -2,7 +2,7 @@
 #if !defined(mito_mesh_PointCloud_h)
 #define mito_mesh_PointCloud_h
 
-
+// QUESTION: should Point and PointCloud live in the mesh namespace?
 namespace mito::mesh {
 
     template <int D>

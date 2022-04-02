@@ -21,6 +21,14 @@ namespace mito::mesh {
     template <int D>
     using point_t = vector_t<D>;    // Point<D>;
 
+    // class point cloud
+    template <int D>
+    class PointCloud;
+
+    // point cloud alias
+    template <int D>
+    using point_cloud_t = PointCloud<D>;
+
     // class simplex
     template <int D>
     class Simplex;
