@@ -1,4 +1,5 @@
 #include "../../base.h"
+#include "../../manifolds.h"
 #include "../../math.h"
 #include "../../mesh.h"
 #include "../../quadrature.h"
