@@ -41,6 +41,12 @@ namespace mito::mesh {
             return;
         }
 
+        // support for ranged for loops (wrapping grid)
+        inline const auto begin() const { return _cloud.cbegin(); }
+        inline const auto end() const { return _cloud.cend(); }
+        inline auto begin() { return _cloud.begin(); }
+        inline auto end() { return _cloud.end(); }
+
         int size() { return _cloud.size(); }
 
         auto insert(const vertex_t & vertex, const point_t<D> & point)
@@ -72,6 +78,16 @@ namespace mito::mesh {
       private:
         cloud_t _cloud;
     };
+
+    // overload operator<< for point clouds
+    template <int D>
+    std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
+    {
+        for (const auto & point : cloud) {
+            std::cout << "vertex: " << point.first << ",\t coordinates: " << point.second << std::endl;
+        }
+        return os;
+    }
 
 }    // namespace mito
 
