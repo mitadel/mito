@@ -13,8 +13,8 @@ field = mito.ScalarField2D(myfunction)
 elementset = mito.ManifoldTriangle2D("square.summit")
 integrator = mito.GaussIntegrator2Triangle2D(elementset)
 
-N = 10000
+N = 1
 for i in range(0, N):
     result = integrator.integrate(field)
 
-#print(result)
+print(result)
