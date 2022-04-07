@@ -105,7 +105,6 @@ namespace mito::mesh {
     template <int D>
     using oriented_simplex_t = typename helperOrientedSimplexClass<D>::simplex_type;
 
-    // QUESTION: in the API should segment be an alias for Simplex<1> or OrientedSimplex<1>?
     // segment alias
     using segment_t = OrientedSimplex<1>;
 
