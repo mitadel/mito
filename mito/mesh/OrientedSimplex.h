@@ -58,7 +58,7 @@ namespace mito::mesh {
         const auto & footprint() const { return _footprint; }
 
       public:
-        const auto & simplex() const { return *_footprint.get(); }
+        auto & simplex() const { return *_footprint.get(); } // TOFIX: should this be const?
         auto use_count() const {return _footprint.use_count(); } // TOFIX: improve name
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
@@ -132,7 +132,7 @@ namespace mito::mesh {
                     ->simplex_composition_t<D>
             {
                 return simplex_composition_t<D> {
-                    oriented_composition[I]->footprint().get() ... };
+                    oriented_composition[I]->footprint() ... };
             };
 
             return _cast_simplex_composition(*this, std::make_index_sequence<D + 1> {});
@@ -142,7 +142,17 @@ namespace mito::mesh {
         {
             for (int i = 0; i < D; ++i)
             {
-                if (&this->operator[](i)->simplex() != rhs[i]) return false;
+                if (&this->operator[](i)->simplex() != rhs[i].get())
+                    return false;
+            }
+            return true;
+        }
+
+        constexpr bool operator==(const simplex_composition_t<D> & rhs) const requires(D == 1)
+        {
+            for (int i = 0; i < D; ++i) {
+                if (&this->operator[](i)->simplex() != rhs[i])
+                    return false;
             }
             return true;
         }

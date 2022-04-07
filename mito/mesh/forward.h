@@ -57,9 +57,25 @@ namespace mito::mesh {
     template <int D>
     using simplex_t = Simplex<D>;
 
-    // alias for simplex composition
+    // helper class to allow template specialization of oriented simplex composition alias
     template <int D>
-    using simplex_composition_t = std::array<simplex_t<D - 1> *, D + 1>;
+    class helperSimplexCompositionClass {
+      public:
+        using simplex_composition_type = std::array<std::shared_ptr<simplex_t<D - 1>>, D + 1>;
+    };
+
+    // helper class to allow template specialization of oriented simplex composition alias
+    template <>
+    class helperSimplexCompositionClass<1> {
+      public:
+        using simplex_composition_type = std::array<simplex_t<0> *, 2>;
+    };
+
+    // oriented simplex alias
+    template <int D>
+    using simplex_composition_t =
+        typename helperSimplexCompositionClass<D>::simplex_composition_type;
+
 
     template <int D>
     class OrientedSimplexComposition;

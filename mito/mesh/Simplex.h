@@ -105,6 +105,8 @@ namespace mito::mesh {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
+        const auto & simplex() const { return *this; }
+
         void vertices(simplex_set_t<vertex_t> & vertices)
         {
             // insert this vertex

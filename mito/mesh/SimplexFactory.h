@@ -14,7 +14,8 @@ namespace mito::mesh {
         // std::map<std::array<simplex_t<0> *, 2>, simplex_t<1> *>  edges composition
         // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
         // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
-        using composition_map_t = std::map<simplex_composition_t<D>, simplex_t<D> *>;
+        using composition_t = std::array<simplex_t<D - 1> *, D + 1>;
+        using composition_map_t = std::map<composition_t, simplex_t<D>*>;
 
       public:
         SimplexFactory() = delete;
@@ -22,8 +23,7 @@ namespace mito::mesh {
         static simplex_t<D> & Simplex(const simplex_composition_t<D> & composition)
         {
             // pick a representative (factor out equivalence relation)
-            auto representative = composition;
-            _representative(representative);
+            auto representative = _representative(composition);
 
             // if there is no representative registered in the map, then create a new simplex
             // with this composition
@@ -35,7 +35,7 @@ namespace mito::mesh {
 
       private:
         // equivalence class relation for a simplex in 1D
-        static void _representative(simplex_composition_t<D> & composition);
+        static composition_t _representative(const simplex_composition_t<D> & composition);
 
       private:
         // container to map simplex composition to simplices
@@ -44,29 +44,44 @@ namespace mito::mesh {
 
     // equivalence class relation for a simplex in 1D
     template <>
-    void SimplexFactory<1>::_representative(simplex_composition_t<1> & composition)
+    SimplexFactory<1>::composition_t SimplexFactory<1>::_representative(
+        const simplex_composition_t<1> & composition)
     {
+        composition_t representative { composition[0], composition[1] };
         // pick a representative (factor out equivalence relation)
-        std::sort(composition.begin(), composition.end());
+        std::sort(representative.begin(), representative.end());
         // all done
-        return;
+        return representative;
     }
 
     // equivalence class relation for a simplex in 2D
     template <>
-    void SimplexFactory<2>::_representative(simplex_composition_t<2> & composition)
+    SimplexFactory<2>::composition_t SimplexFactory<2>::_representative(
+        const simplex_composition_t<2> & composition)
     {
+        composition_t representative { composition[0].get(), composition[1].get(),
+                                       composition[2].get() };
+
+        // TOFIX: fixes element with 0 orientation
         // pick a representative (factor out equivalence relation)
-        auto first_simplex = std::min_element(composition.begin(), composition.end());
-        std::rotate(composition.begin(), first_simplex, composition.end());
+        std::sort(representative.begin(), representative.end());
+
+        // // pick a representative (factor out equivalence relation)
+        // auto first_simplex = std::min_element(composition.begin(), composition.end());
+        // std::rotate(composition.begin(), first_simplex, composition.end());
         // all done
-        return;
+        return representative;
     }
 
     template <>    // TODO: implement
-    void SimplexFactory<3>::_representative(simplex_composition_t<3> & composition)
+    SimplexFactory<3>::composition_t SimplexFactory<3>::_representative(
+        const simplex_composition_t<3> & composition)
     {
-        return;
+        composition_t representative {
+            composition[0].get(), composition[1].get(), composition[2].get(), composition[3].get()
+        };
+
+        return representative;
     }
 
     // initialize static attribute
