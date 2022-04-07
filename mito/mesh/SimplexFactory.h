@@ -33,6 +33,24 @@ namespace mito::mesh {
             return *ret.first->second;
         }
 
+        static void Erase(simplex_t<D> & simplex)
+        {
+            // delete the subsimplices
+            for (auto & sub_simplex : simplex.simplices()) {
+                SimplexFactory<D - 1>::Erase(*sub_simplex);
+            }
+
+            // pick a representative (factor out equivalence relation)
+            auto representative = _representative(simplex.simplices());
+
+            // erase this simplex from the compositions map
+            _compositions.erase(representative);
+
+            // all done
+            // (no need to delete simplex because this will be done by shared pointer)
+            return;
+        }
+
       private:
         // equivalence class relation for a simplex in 1D
         static composition_t _representative(const simplex_composition_t<D> & composition);
@@ -40,6 +58,12 @@ namespace mito::mesh {
       private:
         // container to map simplex composition to simplices
         static composition_map_t _compositions;
+    };
+
+    template <>
+    void SimplexFactory<0>::Erase(simplex_t<0> & simplex) {
+        // all done
+        return;
     };
 
     // equivalence class relation for a simplex in 1D

@@ -81,6 +81,35 @@ namespace mito::mesh {
             return OrientedSimplex(simplex, orientation);
         }
 
+        static void Erase(oriented_simplex_t<D> & oriented_simplex)
+        {
+            // get footprint of the oriented simplex
+            auto & simplex = oriented_simplex.simplex();
+
+            // show me the footprint
+            // for (auto & sub_simplex : simplex.simplices()) {
+            //     std::cout << sub_simplex << std::endl;
+            //     std::cout << sub_simplex.use_count() << std::endl;
+            // }
+
+            // get the key to this oriented simplex
+            auto mytuple = std::make_tuple(&simplex, oriented_simplex.orientation());
+
+            // erase this oriented simplex from the factory
+            _orientations.erase(mytuple);
+
+            // if the footprint is not shared 
+            if (oriented_simplex.use_count() == 1) {
+                SimplexFactory<D>::Erase(simplex);
+            }
+
+            // delete oriented simplex
+            delete &oriented_simplex;
+
+            // all done
+            return;
+        }
+
       private:
         // compute the orientation of the {composition} with respect to the orientation of {simplex}
         static bool _orientation(
