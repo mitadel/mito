@@ -19,9 +19,11 @@ namespace mito::mesh {
     class Simplex {
 
       private:
-        constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
+        constexpr Simplex(const oriented_simplex_composition_t<D> & simplices) :
+            _simplices(simplices)
+        {}
 
-        constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
+        constexpr Simplex(oriented_simplex_composition_t<D> && simplices) : _simplices(simplices) {}
 
       public:
         constexpr ~Simplex() {}
@@ -43,7 +45,7 @@ namespace mito::mesh {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
-        const auto & simplices() const { return _simplices; }
+        auto & simplices() const { return _simplices; } // TOFIX: should be const
 
         void vertices(simplex_set_t<vertex_t> & vertices) const
         {
@@ -80,7 +82,7 @@ namespace mito::mesh {
         }
 
       private:
-        simplex_composition_t<D> _simplices;
+        oriented_simplex_composition_t<D> _simplices;
 
         friend class SimplexFactory<D>;
     };

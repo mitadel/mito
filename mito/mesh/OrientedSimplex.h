@@ -68,9 +68,14 @@ namespace mito::mesh {
         }
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-        OrientedSimplex<D> & flip() const
+        auto & flip() const
         {
             return OrientedSimplexFactory<D>::OrientedSimplex(*_footprint.get(), !_orientation);
+        }
+
+        operator std::shared_ptr<OrientedSimplex<D>>() 
+        { 
+            return OrientedSimplexFactory<D>::Find(*this); 
         }
 
         template <int I>
@@ -117,46 +122,6 @@ namespace mito::mesh {
         bool _orientation;
 
         friend class OrientedSimplexFactory<D>;
-        friend class OrientedSimplexComposition<D+1>;
-    };
-
-    template <int D>
-    class OrientedSimplexComposition : public std::array<oriented_simplex_t<D - 1> *, D + 1> {
-      public:
-        // cast to simplex_composition_t<D>
-        constexpr operator simplex_composition_t<D>() const
-        {
-            constexpr auto _cast_simplex_composition =
-                []<size_t... I>(
-                    const oriented_simplex_composition_t<D> & oriented_composition,
-                    std::index_sequence<I...>)
-                    ->simplex_composition_t<D>
-            {
-                return simplex_composition_t<D> {
-                    oriented_composition[I]->footprint() ... };
-            };
-
-            return _cast_simplex_composition(*this, std::make_index_sequence<D + 1> {});
-        }
-
-        constexpr bool operator==(const simplex_composition_t<D> & rhs) const requires (D > 1)
-        {
-            for (int i = 0; i < D; ++i)
-            {
-                if (&this->operator[](i)->simplex() != rhs[i].get())
-                    return false;
-            }
-            return true;
-        }
-
-        constexpr bool operator==(const simplex_composition_t<D> & rhs) const requires(D == 1)
-        {
-            for (int i = 0; i < D; ++i) {
-                if (&this->operator[](i)->simplex() != rhs[i])
-                    return false;
-            }
-            return true;
-        }
     };
 
     // overload operator<< for oriented simplices

@@ -9,10 +9,27 @@ namespace mito::mesh {
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
         using orientation_map_t =
-            std::map<std::tuple<simplex_t<D> *, bool>, oriented_simplex_t<D> *>;
+            std::map<std::tuple<simplex_t<D> *, bool>, std::shared_ptr<oriented_simplex_t<D>>>;
 
       public:
         OrientedSimplexFactory() = delete;
+
+        static std::shared_ptr<oriented_simplex_t<D>> & Find(
+            const oriented_simplex_t<D> & oriented_simplex)
+        {
+            // get from the factory the representative of simplices with this composition
+            auto & simplex = oriented_simplex.simplex();
+
+            // look up for an oriented simplex with this orientation
+            auto ret_find =
+                _orientations.find(std::make_tuple(&simplex, oriented_simplex.orientation()));
+
+            // assert the simplex could be found
+            assert (ret_find != _orientations.end());
+
+            // return shared pointer to simplex
+            return ret_find->second;
+        }
 
         static oriented_simplex_t<D> & OrientedSimplex(simplex_t<D> & simplex, bool orientation)
         {
@@ -81,10 +98,13 @@ namespace mito::mesh {
             return OrientedSimplex(simplex, orientation);
         }
 
-        static void Erase(oriented_simplex_t<D> & oriented_simplex)
+        static void Erase(const oriented_simplex_t<D> & oriented_simplex) requires(D > 0)
         {
+#if 0
+            if (oriented_simplex->use_count() > 1) return;
+
             // get footprint of the oriented simplex
-            auto & simplex = oriented_simplex.simplex();
+            auto & simplex = oriented_simplex->simplex();
 
             // show me the footprint
             // for (auto & sub_simplex : simplex.simplices()) {
@@ -93,27 +113,32 @@ namespace mito::mesh {
             // }
 
             // get the key to this oriented simplex
-            auto mytuple = std::make_tuple(&simplex, oriented_simplex.orientation());
+            auto mytuple = std::make_tuple(&simplex, oriented_simplex->orientation());
 
             // erase this oriented simplex from the factory
             _orientations.erase(mytuple);
 
             // if the footprint is not shared 
-            if (oriented_simplex.use_count() == 1) {
-                SimplexFactory<D>::Erase(simplex);
+            if (oriented_simplex->use_count() == 1) {
+                SimplexFactory<D>::Erase(oriented_simplex->footprint());
             }
 
             // delete oriented simplex
-            delete &oriented_simplex;
-
+            // TOFIX delete oriented_simplex;
+#endif
             // all done
+            return;
+        }
+
+        static void Erase(oriented_simplex_t<0> * oriented_simplex) //TOFIX: this should be a specialization of the one above
+        {
             return;
         }
 
       private:
         // compute the orientation of the {composition} with respect to the orientation of {simplex}
         static bool _orientation(
-            simplex_composition_t<D> composition, const simplex_t<D> & simplex);
+            oriented_simplex_composition_t<D> composition, const simplex_t<D> & simplex);
 
       private:
         // container to store the relation (simplex, orientation) -> oriented simplex
@@ -123,7 +148,7 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<1>::_orientation(
-        simplex_composition_t<1> composition, const simplex_t<1> & simplex)
+        oriented_simplex_composition_t<1> composition, const simplex_t<1> & simplex)
     {
         if (composition == simplex.simplices()) {
             return true;
@@ -134,7 +159,7 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<2>::_orientation(
-        simplex_composition_t<2> composition, const simplex_t<2> & simplex)
+        oriented_simplex_composition_t<2> composition, const simplex_t<2> & simplex)
     {
         auto first_simplex = std::min_element(composition.begin(), composition.end());
         std::rotate(composition.begin(), first_simplex, composition.end());
@@ -151,7 +176,7 @@ namespace mito::mesh {
 
     template <>    // TODO: implement
     bool OrientedSimplexFactory<3>::_orientation(
-        simplex_composition_t<3> composition, const simplex_t<3> & simplex)
+        oriented_simplex_composition_t<3> composition, const simplex_t<3> & simplex)
     {
         return true;
     }
