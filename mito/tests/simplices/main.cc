@@ -43,48 +43,53 @@ main()
     // show me
     std::cout << points << std::endl;
 
+    // QUESTION: How about we return the simplices from the factories as reference wrappers? 
     // build a segment connecting {vertex0} and {vertex1}
     auto & segment0 = mito::mesh::segment({ vertex0, vertex1 });
-    // assert there is one segment connecting {vertex0} and {vertex1}
+    // assert there is only one segment connecting {vertex0} and {vertex1}
     assert(!segment0.exists_flipped());
-    // assert no simplex rides on this segment
+    // assert no simplex rides on this segment yet
     assert(segment0.incidence() == 0);
 
     // build a segment connecting {vertex1} and {vertex3}
     auto & segment1 = mito::mesh::segment({ vertex1, vertex3 });
-    // assert there is one segment connecting {vertex1} and {vertex3}
+    // assert there is only one segment connecting {vertex1} and {vertex3}
     assert(!segment1.exists_flipped());
-    // assert no simplex rides on this segment
+    // assert no simplex rides on this segment yet
     assert(segment1.incidence() == 0);
 
-    // flip the segment connecting {vertex1} and {vertex3}
+    // QUESTION: segment1.flip() might give the impression that the segment is flipped in place, but 
+    //  this is not what happens here. Should we implement a method that flips a segment in place?
+    //  This is risky as it would ruin the connectivity of the simplices riding on the flipped 
+    //  simplex.
+    // build the flipped segment connecting {vertex1} and {vertex3}
     auto & segment1m = segment1.flip();
-    // assert there are two segments connecting {vertex1} and {vertex3}
+    // assert there are now two segments connecting {vertex1} and {vertex3}
     assert(segment1.exists_flipped() && segment1m.exists_flipped());
-    // assert no simplex rides on this segment
+    // assert no simplex rides on this segment yet
     assert(segment1.incidence() == 0);
-    // assert no simplex rides on this segment
+    // assert no simplex rides on this segment yet
     assert(segment1m.incidence() == 0);
 
     // build a segment connecting {vertex3} and {vertex0}
     auto & segment2 = mito::mesh::segment({ vertex3, vertex0 });
-    // assert there is one segment connecting {vertex3} and {vertex0}
+    // assert there is only one segment connecting {vertex3} and {vertex0}
     assert(!segment2.exists_flipped());
-    // assert no simplex rides on this segment
+    // assert no simplex rides on this segment yet
     assert(segment2.incidence() == 0);
 
     // build a segment connecting {vertex1} and {vertex2}
     auto & segment3 = mito::mesh::segment({ vertex1, vertex2 });
-    // assert there is one segment connecting {vertex1} and {vertex2}
+    // assert there is only one segment connecting {vertex1} and {vertex2}
     assert(!segment3.exists_flipped());
-    // assert no simplex rides on this segment
+    // assert no simplex rides on this segment yet
     assert(segment3.incidence() == 0);
 
     // build a segment connecting {vertex2} and {vertex3}
     auto & segment4 = mito::mesh::segment({ vertex2, vertex3 });
-    // assert there is one segment connecting {vertex2} and {vertex3}
+    // assert there is only one segment connecting {vertex2} and {vertex3}
     assert(!segment4.exists_flipped());
-    // assert no simplex rides on this segment
+    // assert no simplex rides on this segment yet
     assert(segment4.incidence() == 0);
 
     // build a triangle connecting {segment0}, {segment1}, and {segment2}
@@ -92,69 +97,38 @@ main()
     // show me
     std::cout << element0 << std::endl;
 
-    // assert there are two {segment0} (one standalone and one as part of {element0})
-    assert(!segment0.exists_flipped());
     // assert there is one simplex riding on this segment (element0) 
     assert(segment0.incidence() == 1);
-    // assert there are three {segment1} (two standalone and one as part of {element0})
-    assert(segment1.exists_flipped() && segment1m.exists_flipped());
+    // assert there is one simplex riding on this segment (element0)
     assert(segment1.incidence() == 1);
+    // assert no simplex rides on this segment yet
     assert(segment1m.incidence() == 0);
-    // assert there are two {segment2} (one standalone and one as part of {element0})
-    assert(!segment2.exists_flipped());
+    // assert there is one simplex riding on this segment (element0)
     assert(segment2.incidence() == 1);
 
     // assert there is one triangle connecting {segment0}, {segment1}, and {segment2}
     assert(!element0.exists_flipped());
+    // assert no simplex rides on this segment
     assert(element0.incidence() == 0);
-
-    // erase standalone {segment0}
-    mito::mesh::OrientedSimplexFactory<1>::Erase(segment0);
-    // assert there is one {segment0} (only as part of {element0})
-    //assert(!segment0.exists_flipped());
-
-    // erase standalone {segment1}
-    mito::mesh::OrientedSimplexFactory<1>::Erase(segment1);
-    // assert there are two {segment1} (one standalone and one as part of {element0})
-    //assert(segment1.exists_flipped());
-
-    // erase standalone {segment2}
-    mito::mesh::OrientedSimplexFactory<1>::Erase(segment2);
-    // assert there is one {segment2} (only as part of {element0})
-    //assert(!segment2.exists_flipped());
-
-    // erase {element0}
-    // mito::mesh::OrientedSimplexFactory<2>::Erase(element0);
-    // assert there is one {segment1m} (one standalone)
-    // assert(!segment1m.exists_flipped());
 
     // build a triangle connecting {segment3}, {segment4}, and {segment1m}
     auto & element1 = mito::mesh::triangle({ segment3, segment4, segment1m });
     // show me
     std::cout << element1 << std::endl;
 
-    // assert there are two {segment3} (one standalone and one as part of {element1})
-    //assert(segment3.exists_flipped());
-    // assert there are two {segment4} (one standalone and one as part of {element1})
-    //assert(segment4.exists_flipped());
-    // assert there are two {segment1m} (one standalone and one as part of {element1})
-    //assert(segment1m.exists_flipped());
+    // assert there is one simplex riding on this segment (element1)
+    assert(segment3.incidence() == 1);
+    // assert there is one simplex riding on this segment (element1)
+    assert(segment4.incidence() == 1);
+    // assert there is one simplex riding on this segment (element1)
+    assert(segment1m.incidence() == 1);
 
-    // assert there is one triangle connecting {segment0}, {segment1}, and {segment2}
-    //assert(!element1.exists_flipped());
+    // assert there is one triangle connecting {segment3}, {segment4}, and {segment1m}
+    assert(!element1.exists_flipped());
+    // assert no simplex rides on this segment
+    assert(element1.incidence() == 0);
 
-    // erase standalone {segment3}
-    mito::mesh::OrientedSimplexFactory<1>::Erase(segment3);
-    // erase standalone {segment4}
-    mito::mesh::OrientedSimplexFactory<1>::Erase(segment4);
-    // erase standalone {segment1m}
-    mito::mesh::OrientedSimplexFactory<1>::Erase(segment1m);
-
-    // erase {element0}
-    //mito::mesh::OrientedSimplexFactory<2>::Erase(element1);
-
-#if 0
-    mito::mesh::simplex_vector_t<triangle_t> elements = { &element0, &element1, &element2, &element3 };
+    mito::mesh::simplex_vector_t<triangle_t> elements = { &element0, &element1 };
 
     // sanity check
     for (const auto & e : elements) {
@@ -163,9 +137,6 @@ main()
         }
     }
 
-    // instantiate a manifold as a collection of simplices and a point cloud
-    auto manifold = mito::manifolds::manifold(elements, points);
-#endif
     // all done
     return 0;
 }
