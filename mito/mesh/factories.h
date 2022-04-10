@@ -27,7 +27,7 @@ namespace mito::mesh {
                 const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> &
                     simplices,
                 std::index_sequence<K...>)
-                ->oriented_simplex_composition_t<I>
+                ->simplex_composition_t<I>
         {
             return { (simplices[K].get())... };
         };
@@ -41,7 +41,7 @@ namespace mito::mesh {
         const std::array<std::reference_wrapper<oriented_simplex_t<0>>, 2> & simplices)
     {
         return OrientedSimplexFactory<1>::OrientedSimplex(
-            oriented_simplex_composition_t<1> { &simplices[0].get(), &simplices[1].get() });
+            simplex_composition_t<1> { &simplices[0].get(), &simplices[1].get() });
     }
 
     // triangle factory

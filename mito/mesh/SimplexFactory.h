@@ -20,7 +20,7 @@ namespace mito::mesh {
       public:
         SimplexFactory() = delete;
 
-        static simplex_t<D> & Simplex(const oriented_simplex_composition_t<D> & composition)
+        static simplex_t<D> & Simplex(const simplex_composition_t<D> & composition)
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
@@ -53,7 +53,7 @@ namespace mito::mesh {
 
       private:
         // equivalence class relation for a simplex in 1D
-        static composition_t _representative(const oriented_simplex_composition_t<D> & composition);
+        static composition_t _representative(const simplex_composition_t<D> & composition);
 
       private:
         // container to map simplex composition to simplices
@@ -63,7 +63,7 @@ namespace mito::mesh {
     // equivalence class relation for a simplex in 1D
     template <>
     SimplexFactory<1>::composition_t SimplexFactory<1>::_representative(
-        const oriented_simplex_composition_t<1> & composition)
+        const simplex_composition_t<1> & composition)
     {
         composition_t representative { composition[0], composition[1] };
         // pick a representative (factor out equivalence relation)
@@ -75,7 +75,7 @@ namespace mito::mesh {
     // equivalence class relation for a simplex in 2D
     template <>
     SimplexFactory<2>::composition_t SimplexFactory<2>::_representative(
-        const oriented_simplex_composition_t<2> & composition)
+        const simplex_composition_t<2> & composition)
     {
         composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
                                        &composition[2]->simplex() };
@@ -93,7 +93,7 @@ namespace mito::mesh {
 
     template <>    // TODO: implement
     SimplexFactory<3>::composition_t SimplexFactory<3>::_representative(
-        const oriented_simplex_composition_t<3> & composition)
+        const simplex_composition_t<3> & composition)
     {
         composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
                                        &composition[2]->simplex(), &composition[3]->simplex() };

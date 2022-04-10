@@ -86,7 +86,7 @@ namespace mito::mesh {
         }
 
         static oriented_simplex_t<D> & OrientedSimplex(
-            const oriented_simplex_composition_t<D> & composition)
+            const simplex_composition_t<D> & composition)
         {
             // get from the factory the representative of simplices with this composition
             auto & simplex = SimplexFactory<D>::Simplex(composition);
@@ -138,7 +138,7 @@ namespace mito::mesh {
       private:
         // compute the orientation of the {composition} with respect to the orientation of {simplex}
         static bool _orientation(
-            oriented_simplex_composition_t<D> composition, const simplex_t<D> & simplex);
+            simplex_composition_t<D> composition, const simplex_t<D> & simplex);
 
       private:
         // container to store the relation (simplex, orientation) -> oriented simplex
@@ -148,7 +148,7 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<1>::_orientation(
-        oriented_simplex_composition_t<1> composition, const simplex_t<1> & simplex)
+        simplex_composition_t<1> composition, const simplex_t<1> & simplex)
     {
         if (composition == simplex.simplices()) {
             return true;
@@ -159,7 +159,7 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<2>::_orientation(
-        oriented_simplex_composition_t<2> composition, const simplex_t<2> & simplex)
+        simplex_composition_t<2> composition, const simplex_t<2> & simplex)
     {
         auto first_simplex = std::min_element(composition.begin(), composition.end());
         std::rotate(composition.begin(), first_simplex, composition.end());
@@ -176,7 +176,7 @@ namespace mito::mesh {
 
     template <>    // TODO: implement
     bool OrientedSimplexFactory<3>::_orientation(
-        oriented_simplex_composition_t<3> composition, const simplex_t<3> & simplex)
+        simplex_composition_t<3> composition, const simplex_t<3> & simplex)
     {
         return true;
     }

@@ -19,11 +19,11 @@ namespace mito::mesh {
     class Simplex {
 
       private:
-        constexpr Simplex(const oriented_simplex_composition_t<D> & simplices) :
+        constexpr Simplex(const simplex_composition_t<D> & simplices) :
             _simplices(simplices)
         {}
 
-        constexpr Simplex(oriented_simplex_composition_t<D> && simplices) : _simplices(simplices) {}
+        constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
 
       public:
         constexpr ~Simplex() {}
@@ -82,7 +82,7 @@ namespace mito::mesh {
         }
 
       private:
-        oriented_simplex_composition_t<D> _simplices;
+        simplex_composition_t<D> _simplices;
 
         friend class SimplexFactory<D>;
     };
