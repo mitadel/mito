@@ -15,7 +15,8 @@ namespace mito::mesh {
     // oriented simplex factory
     template <int I>
     oriented_simplex_t<I> & oriented_simplex(
-        const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> & simplices);
+        const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> & simplices) 
+            requires(I > 1);
 
     // segment factory
     oriented_simplex_t<1> & segment(

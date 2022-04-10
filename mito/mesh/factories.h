@@ -22,15 +22,18 @@ namespace mito::mesh {
         requires (I > 1)
     {
         // helper function
-        constexpr oriented_simplex_t<I> & _oriented_simplex = []<size_t... K>(
-            const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> & simplices,
-            std::index_sequence<K...>) consteval
+        constexpr auto _composition =
+            []<size_t... K>(
+                const std::array<std::reference_wrapper<oriented_simplex_t<I - 1>>, I + 1> &
+                    simplices,
+                std::index_sequence<K...>)
+                ->oriented_simplex_composition_t<I>
         {
-            return OrientedSimplexFactory<I>::OrientedSimplex(
-                oriented_simplex_composition_t<I> { (simplices[K].get())... });
+            return { (simplices[K].get())... };
         };
 
-        return _oriented_simplex(simplices, std::make_index_sequence<I + 1> {});
+        return OrientedSimplexFactory<I>::OrientedSimplex(
+            _composition(simplices, std::make_index_sequence<I + 1> {}));
     }
 
     // segment factory
@@ -45,16 +48,14 @@ namespace mito::mesh {
     oriented_simplex_t<2> & triangle(
         const std::array<std::reference_wrapper<oriented_simplex_t<1>>, 3> & simplices)
     {
-        return OrientedSimplexFactory<2>::OrientedSimplex(oriented_simplex_composition_t<2> {
-            simplices[0].get(), simplices[1].get(), simplices[2].get() });
+        return oriented_simplex<2>(simplices);
     }
 
     // tetrahedron factory
     oriented_simplex_t<3> & tetrahedron(
         const std::array<std::reference_wrapper<oriented_simplex_t<2>>, 4> & simplices)
     {
-        return OrientedSimplexFactory<3>::OrientedSimplex(oriented_simplex_composition_t<3> {
-            simplices[0].get(), simplices[1].get(), simplices[2].get(), simplices[3].get() });
+        return oriented_simplex<3>(simplices);
     }
 
     // vertex set factory
