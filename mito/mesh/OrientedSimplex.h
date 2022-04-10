@@ -32,6 +32,7 @@ namespace mito::mesh {
         // constructor with a raw pointer as footprint (builds shared pointer around raw pointer)
         OrientedSimplex(simplex_t<D> * footprint, bool orientation) :
             _footprint(footprint),
+            //_footprint(footprint, SimplexFactory<D>::Erase),
             _orientation(orientation)
         {}
 
@@ -59,7 +60,19 @@ namespace mito::mesh {
 
       public:
         auto & simplex() const { return *_footprint.get(); } // TOFIX: should this be const?
-        auto use_count() const {return _footprint.use_count(); } // TOFIX: improve name
+        // returns whether there exists the flipped simplex in the factory
+        bool exists_flipped() const 
+        {
+            // assert the footprint cannot be used by more than two oriented simplices
+            assert(_footprint.use_count() == 1 || _footprint.use_count() == 2);
+            // return true if the footprint is in used by two oriented simpilces 
+            return _footprint.use_count() == 2 ? true : false;
+        }
+        // returns the number of simplices riding on this oriented simplex
+        int incidence() const 
+        {
+            return OrientedSimplexFactory<D>::Find(*this).use_count() - 1;
+        }
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
         void vertices(simplex_set_t<vertex_t> & vertices)
