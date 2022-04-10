@@ -118,7 +118,6 @@ namespace mito::mesh {
         void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
             I == D - 1 && I != 0)
         {
-            // TOFIX: random conversion from unoriented to oriented sub simplex
             for (auto & simplex : simplices()) {
                 auto & sub_simplex = oriented_simplex(simplex.simplices());
                 sub_simplices.insert(sub_simplex);
