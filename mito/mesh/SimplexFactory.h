@@ -77,27 +77,29 @@ namespace mito::mesh {
     SimplexFactory<2>::composition_t SimplexFactory<2>::_representative(
         const simplex_composition_t<2> & composition)
     {
+        // initialize representative with footprints of simplices in current composition
         composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
                                        &composition[2]->simplex() };
 
-        // TOFIX: fixes element with 0 orientation
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
 
-        // // pick a representative (factor out equivalence relation)
-        // auto first_simplex = std::min_element(composition.begin(), composition.end());
-        // std::rotate(composition.begin(), first_simplex, composition.end());
         // all done
         return representative;
     }
 
-    template <>    // TODO: implement
+    template <>
     SimplexFactory<3>::composition_t SimplexFactory<3>::_representative(
         const simplex_composition_t<3> & composition)
     {
+        // initialize representative with footprints of simplices in current composition
         composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
                                        &composition[2]->simplex(), &composition[3]->simplex() };
 
+        // pick a representative (factor out equivalence relation)
+        std::sort(representative.begin(), representative.end());
+
+        // all done
         return representative;
     }
 
