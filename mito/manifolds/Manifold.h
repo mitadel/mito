@@ -135,7 +135,7 @@ namespace mito::manifolds {
             os << "Composition: " << std::endl;
             os << *e;
             os << "Vertices: " << std::endl;
-            mesh::simplex_set_t<mesh::vertex_t> vertices;
+            mesh::vertex_set_t vertices;
             e->vertices(vertices);
             for (const auto v : vertices) {
                 os << manifold.coordinatesVertex(v) << std::endl;

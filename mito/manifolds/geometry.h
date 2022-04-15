@@ -35,7 +35,7 @@ namespace mito::manifolds {
             pointsTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            mesh::simplex_set_t<mesh::vertex_t> element_vertices;
+            mesh::vertex_set_t element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
             assert(V == element_vertices.size());
@@ -108,10 +108,9 @@ namespace mito::manifolds {
         for (const auto & element : elements) {
 
             // collect vertices
-            mesh::simplex_set_t<mesh::vertex_t> vertices_set;
+            mesh::vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            mesh::simplex_vector_t<const mesh::vertex_t> element_vertices(
-                vertices_set.begin(), vertices_set.end());
+            mesh::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of element vertices
             assert(element_vertices.size() == V);
@@ -155,10 +154,9 @@ namespace mito::manifolds {
         for (const auto & element : elements) {
 
             // collect vertices
-            mesh::simplex_set_t<mesh::vertex_t> vertices_set;
+            mesh::vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            mesh::simplex_vector_t<const mesh::vertex_t> element_vertices(
-                vertices_set.begin(), vertices_set.end());
+            mesh::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;

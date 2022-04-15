@@ -75,10 +75,7 @@ namespace mito::mesh {
         }
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
-        void vertices(simplex_set_t<vertex_t> & vertices)
-        {
-            return _footprint.get()->vertices(vertices);
-        }
+        void vertices(vertex_set_t & vertices) { return _footprint.get()->vertices(vertices); }
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
         auto & flip() const
@@ -101,9 +98,7 @@ namespace mito::mesh {
             return;
         }
 
-        template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
-            I == 0)
+        void getSimplices(vertex_set_t & sub_simplices)
         {
             return vertices(sub_simplices);
         }

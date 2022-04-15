@@ -31,11 +31,11 @@ namespace mito::mesh {
 
     // element set alias
     template <class elementT>
-    using simplex_set_t = std::unordered_set<elementT *>;
+    using simplex_set_t = std::unordered_set<std::shared_ptr<elementT>>;
 
     // element vector alias
     template <class elementT>
-    using simplex_vector_t = std::vector<elementT *>;
+    using simplex_vector_t = std::vector<std::shared_ptr<elementT>>;
 
     // class simplex
     template <int D>
@@ -59,6 +59,12 @@ namespace mito::mesh {
 
     // vertex alias
     using vertex_t = Simplex<0>;
+
+    // vertex set alias
+    using vertex_set_t = std::unordered_set<const vertex_t *>;
+
+    // vertex vector alias
+    using vertex_vector_t = std::vector<const vertex_t *>;
 
     // helper class to allow template specialization of oriented simplex alias
     template <int D>
