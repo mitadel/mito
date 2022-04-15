@@ -59,7 +59,7 @@ namespace mito::mesh {
         const auto & footprint() const { return _footprint; }
 
       public:
-        auto & simplex() const { return *_footprint.get(); } // TOFIX: should this be const?
+        const auto & simplex() const { return *_footprint.get(); }
         // returns whether there exists the flipped simplex in the factory
         bool exists_flipped() const 
         {

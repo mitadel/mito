@@ -14,7 +14,7 @@ namespace mito::mesh {
         // std::map<std::array<simplex_t<0> *, 2>, simplex_t<1> *>  edges composition
         // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
         // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
-        using composition_t = std::array<simplex_t<D - 1> *, D + 1>;
+        using composition_t = std::array<const simplex_t<D - 1> *, D + 1>;
         using composition_map_t = std::map<composition_t, simplex_t<D>*>;
 
       public:
@@ -27,6 +27,7 @@ namespace mito::mesh {
 
             // if there is no representative registered in the map, then create a new simplex
             // with this composition
+            // TODO: placement new here
             auto ret = _compositions.emplace(representative, new simplex_t<D>(composition));
 
             // return representative of simplex with composition {composition}

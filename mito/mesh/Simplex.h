@@ -45,7 +45,7 @@ namespace mito::mesh {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
-        auto & simplices() const { return _simplices; } // TOFIX: should be const
+        const auto & simplices() const { return _simplices; }
 
         void vertices(simplex_set_t<vertex_t> & vertices) const
         {

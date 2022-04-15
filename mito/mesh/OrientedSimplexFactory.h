@@ -9,7 +9,7 @@ namespace mito::mesh {
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
         using orientation_map_t =
-            std::map<std::tuple<simplex_t<D> *, bool>, std::shared_ptr<oriented_simplex_t<D>>>;
+            std::map<std::tuple<const simplex_t<D> *, bool>, std::shared_ptr<oriented_simplex_t<D>>>;
 
       public:
         OrientedSimplexFactory() = delete;
@@ -18,7 +18,7 @@ namespace mito::mesh {
             const oriented_simplex_t<D> & oriented_simplex)
         {
             // get from the factory the representative of simplices with this composition
-            auto & simplex = oriented_simplex.simplex();
+            const auto & simplex = oriented_simplex.simplex();
 
             // look up for an oriented simplex with this orientation
             auto ret_find =
@@ -31,6 +31,7 @@ namespace mito::mesh {
             return ret_find->second;
         }
 
+        // TOFIX: this should return a shared ptr by value
         static oriented_simplex_t<D> & OrientedSimplex(simplex_t<D> & simplex, bool orientation)
         {
             // look up for an oriented simplex with this orientation
