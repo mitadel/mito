@@ -108,10 +108,10 @@ namespace mito::mesh {
             return vertices(sub_simplices);
         }
         template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
-            I == D)
+        void getSimplices(std::unordered_set<std::shared_ptr<oriented_simplex_t<I>>> &
+                              sub_simplices) requires(I == D)
         {
-            sub_simplices.insert(this);
+            sub_simplices.insert(*this);
             return;
         }
         template <int I>

@@ -16,7 +16,7 @@ namespace mito::mesh {
         // QUESTION: would it be better to use reference wrappers here?
         // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
-        using simplex_collection = simplex_set_t<oriented_simplex_t<int(I)>>;
+        using simplex_collection = std::unordered_set<std::shared_ptr<oriented_simplex_t<int(I)>>>;
 
         // simplex_collection<I>... expands to:
         // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
@@ -40,36 +40,7 @@ namespace mito::mesh {
             _loadMesh(meshFileName);
         }
 
-        template <size_t I>
-        void _deleteSimplices()
-        {
-            // delete simplices of dimension I
-            for (auto simplex : std::get<I>(_simplices)) {
-                delete simplex;
-            }
-
-            // all done
-            return;
-        }
-
-        template <size_t... I>
-        void _deleteAllSimplices(std::index_sequence<I...>)
-        {
-            // delete simplices of dimension I for all I's in the index sequence
-            ((_deleteSimplices<I>()), ...);
-
-            // all done
-            return;
-        }
-
-        ~Mesh()
-        {
-            // delete all simplices from dimension 0 (included) to D (included)
-            _deleteAllSimplices(std::make_index_sequence<D + 1> {});
-
-            // all done
-            return;
-        }
+        ~Mesh() {}
 
       private:
         // delete default constructor
@@ -160,7 +131,7 @@ namespace mito::mesh {
         void _addSimplex(OrientedSimplex<I> * simplex) requires(I > 0 && I <= D)
         {
             // add the oriented simplex to the set of simplices with same dimension
-            std::get<I>(_simplices).insert(simplex);
+            std::get<I>(_simplices).insert(*simplex);
 
             // all done
             return;
