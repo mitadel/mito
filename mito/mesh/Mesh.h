@@ -126,6 +126,48 @@ namespace mito::mesh {
             return boundary_simplices;
         }
 
+        template <int I>
+        void _erase(const std::shared_ptr<OrientedSimplex<I>> & simplex) requires(I > 0 && I <= D)
+        {
+            // erase the subsimplices from the mesh (erase bottom -> up)
+            for (const std::shared_ptr<oriented_simplex_t<I - 1>> & subsimplex :
+                 simplex->simplices()) {
+                std::get<I - 1>(_simplices).erase(subsimplex);
+            }
+
+            // erase the simplex from the mesh
+            std::get<I>(_simplices).erase(simplex);
+
+            // all done
+            return;
+        }
+
+        template <int I>
+        void _erase(const std::shared_ptr<OrientedSimplex<I>> & simplex) requires(I == 0)
+        {   
+            // all done
+            return;
+        }
+
+        template <int I>
+        void erase(const std::shared_ptr<OrientedSimplex<I>> & simplex) requires(I > 0 && I <= D)
+        {
+
+            // QUESTION: can we wrap simplices in a way that the reference count can be called 
+            //  incidence?
+            
+            // erase recursively until D = 0
+            _erase(simplex);
+
+            // TODO: lowercase static methods
+
+            // cleanup oriented simplex factory around this simplex
+            OrientedSimplexFactory<I>::cleanup(simplex);
+
+            // all done
+            return;
+        }
+
       private:
         template <int I>
         void _addSimplex(OrientedSimplex<I> * simplex) requires(I > 0 && I <= D)

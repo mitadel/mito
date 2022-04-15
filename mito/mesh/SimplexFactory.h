@@ -34,21 +34,19 @@ namespace mito::mesh {
             return *ret.first->second;
         }
 
-        static void Erase(const std::shared_ptr<simplex_t<D>> & simplex)
+        static void cleanup(const std::shared_ptr<oriented_simplex_t<D>> & oriented_simplex)
         {
-            // delete the subsimplices
-            for (auto & sub_simplex : simplex->simplices()) {
-                OrientedSimplexFactory<D - 1>::Erase(sub_simplex);
+            // if the footprint is not shared
+            if (!oriented_simplex->exists_flipped()) {
+
+                // pick a representative (factor out equivalence relation)
+                auto representative = _representative(oriented_simplex->simplex().simplices());
+
+                // erase this simplex from the compositions map
+                _compositions.erase(representative);
             }
 
-            // pick a representative (factor out equivalence relation)
-            auto representative = _representative(simplex->simplices());
-
-            // erase this simplex from the compositions map
-            _compositions.erase(representative);
-
             // all done
-            // (no need to delete simplex because this will be done by shared pointer)
             return;
         }
 

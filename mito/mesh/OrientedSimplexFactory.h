@@ -99,40 +99,49 @@ namespace mito::mesh {
             return OrientedSimplex(simplex, orientation);
         }
 
-        static void Erase(const oriented_simplex_t<D> & oriented_simplex) requires(D > 0)
+        static void _cleanup(const std::shared_ptr<oriented_simplex_t<D>> & oriented_simplex) 
+            requires(D > 0)
         {
-#if 0
-            if (oriented_simplex->use_count() > 1) return;
+            // fetch subsimplices
+            const auto & subsimplices = oriented_simplex->simplices();
 
-            // get footprint of the oriented simplex
-            auto & simplex = oriented_simplex->simplex();
+            if (oriented_simplex->incidence() == 0) {
+                // get footprint of the oriented simplex
+                const auto & simplex = oriented_simplex->simplex();
 
-            // show me the footprint
-            // for (auto & sub_simplex : simplex.simplices()) {
-            //     std::cout << sub_simplex << std::endl;
-            //     std::cout << sub_simplex.use_count() << std::endl;
-            // }
+                // get the key to this oriented simplex
+                auto mytuple = std::make_tuple(&simplex, oriented_simplex->orientation());
 
-            // get the key to this oriented simplex
-            auto mytuple = std::make_tuple(&simplex, oriented_simplex->orientation());
+                // cleanup simplex factory around this oriented simplex
+                SimplexFactory<D>::cleanup(oriented_simplex);
 
-            // erase this oriented simplex from the factory
-            _orientations.erase(mytuple);
+                // erase this oriented simplex from the factory
+                _orientations.erase(mytuple);
 
-            // if the footprint is not shared 
-            if (oriented_simplex->use_count() == 1) {
-                SimplexFactory<D>::Erase(oriented_simplex->footprint());
+                // erase the subsimplices
+                for (const auto & subsimplex : subsimplices) {
+                    OrientedSimplexFactory<D - 1>::_cleanup(subsimplex);
+                }
             }
 
-            // delete oriented simplex
-            // TOFIX delete oriented_simplex;
-#endif
             // all done
             return;
         }
 
-        static void Erase(oriented_simplex_t<0> * oriented_simplex) //TOFIX: this should be a specialization of the one above
+        // TOFIX: this should be a specialization of the one above
+        static void _cleanup(const oriented_simplex_t<D> * oriented_simplex) requires(D == 0)
         {
+            // all done
+            return;
+        }
+
+        static void cleanup(const std::shared_ptr<oriented_simplex_t<D>> & oriented_simplex) 
+            requires(D > 0)
+        {
+            // cleanup recursively until D = 0
+            _cleanup(oriented_simplex);
+
+            // all done
             return;
         }
 
