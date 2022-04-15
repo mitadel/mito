@@ -57,7 +57,7 @@ main()
     auto & element1 = mito::mesh::triangle({ segment3, segment4, segment1 });
     auto & element2 = mito::mesh::triangle({ segment6, segment5, segment4 });
     auto & element3 = mito::mesh::triangle({ segment7, segment2, segment5 });
-    mito::mesh::simplex_vector_t<triangle_t> elements = { &element0, &element1, &element2, &element3 };
+    mito::mesh::simplex_vector_t<triangle_t> elements = { element0, element1, element2, element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyManifold = mito::manifolds::manifold(elements, points);
