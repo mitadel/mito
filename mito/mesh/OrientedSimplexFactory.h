@@ -170,7 +170,7 @@ namespace mito::mesh {
             std::rotate(composition_copy.begin(), first_simplex, composition_copy.end());
 
             // return rotated composition
-            return std::move(composition_copy);
+            return composition_copy;
         }
     }
 
