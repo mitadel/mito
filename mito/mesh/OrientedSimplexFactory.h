@@ -31,8 +31,8 @@ namespace mito::mesh {
             return ret_find->second;
         }
 
-        // TOFIX: this should return a shared ptr by value
-        static oriented_simplex_t<D> & OrientedSimplex(simplex_t<D> & simplex, bool orientation)
+        static std::shared_ptr<oriented_simplex_t<D>> OrientedSimplex(
+            simplex_t<D> & simplex, bool orientation)
         {
             // look up for an oriented simplex with this orientation
             auto ret_find = _orientations.find(std::make_tuple(&simplex, orientation));
@@ -42,7 +42,7 @@ namespace mito::mesh {
                 // report
                 // std::cout << "Orientation already present, not adding..." << std::endl;
                 // ...return it
-                return *ret_find->second;
+                return ret_find->second;
             }
 
             // look up for an oriented simplex with opposite orientation
@@ -64,7 +64,7 @@ namespace mito::mesh {
                 // }
 
                 // return the oriented simplex
-                return *ret_emplace.first->second;
+                return ret_emplace.first->second;
 
                 // if there was not a simplex with opposite orientation...
             } else {
@@ -82,11 +82,11 @@ namespace mito::mesh {
                 // }
 
                 // return the oriented simplex
-                return *ret_emplace.first->second;
+                return ret_emplace.first->second;
             }
         }
 
-        static oriented_simplex_t<D> & OrientedSimplex(
+        static std::shared_ptr<oriented_simplex_t<D>> OrientedSimplex(
             const simplex_composition_t<D> & composition)
         {
             // get from the factory the representative of simplices with this composition

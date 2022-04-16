@@ -168,12 +168,13 @@ namespace mito::mesh {
             return;
         }
 
-      private:
-        template <int I>
-        void _addSimplex(OrientedSimplex<I> * simplex) requires(I > 0 && I <= D)
+      private :
+          template <int I>
+          void
+          _addSimplex(const std::shared_ptr<OrientedSimplex<I>> & simplex) requires(I > 0 && I <= D)
         {
             // add the oriented simplex to the set of simplices with same dimension
-            std::get<I>(_simplices).insert(*simplex);
+            std::get<I>(_simplices).insert(simplex);
 
             // all done
             return;
@@ -215,15 +216,15 @@ namespace mito::mesh {
             vertex_t & vertex1 = _getVertex(index1);
             vertex_t & vertex2 = _getVertex(index2);
 
-            auto & segment0 = segment({ vertex0, vertex1 });
-            _addSimplex(&segment0); 
-            auto & segment1 = segment({ vertex1, vertex2 });
-            _addSimplex(&segment1);
-            auto & segment2 = segment({ vertex2, vertex0 });
-            _addSimplex(&segment2);
+            auto segment0 = segment({ vertex0, vertex1 });
+            _addSimplex(segment0);
+            auto segment1 = segment({ vertex1, vertex2 });
+            _addSimplex(segment1);
+            auto segment2 = segment({ vertex2, vertex0 });
+            _addSimplex(segment2);
 
-            auto & element = triangle({ segment0, segment1, segment2 });
-            _addSimplex(&element);
+            auto element = triangle({ segment0, segment1, segment2 });
+            _addSimplex(element);
 
             // QUESTION: Can the label be more than one?
             // read label for element

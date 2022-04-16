@@ -78,7 +78,7 @@ namespace mito::mesh {
         void vertices(vertex_set_t & vertices) { return _footprint.get()->vertices(vertices); }
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-        auto & flip() const
+        auto flip() const
         {
             return OrientedSimplexFactory<D>::OrientedSimplex(*_footprint.get(), !_orientation);
         }

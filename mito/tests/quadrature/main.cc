@@ -44,19 +44,19 @@ main()
     vertex_t vertex4;
     points.insert(vertex4, point_t<2> { 0.0, 1.0 });
 
-    auto & segment0 = mito::mesh::segment({ vertex0, vertex1 });
-    auto & segment1 = mito::mesh::segment({ vertex1, vertex3 });
-    auto & segment2 = mito::mesh::segment({ vertex3, vertex0 });
-    auto & segment3 = mito::mesh::segment({ vertex1, vertex2 });
-    auto & segment4 = mito::mesh::segment({ vertex2, vertex3 });
-    auto & segment5 = mito::mesh::segment({ vertex4, vertex3 });
-    auto & segment6 = mito::mesh::segment({ vertex2, vertex4 });
-    auto & segment7 = mito::mesh::segment({ vertex4, vertex0 });
+    auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
+    auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
+    auto segment2 = mito::mesh::segment({ vertex3, vertex0 });
+    auto segment3 = mito::mesh::segment({ vertex1, vertex2 });
+    auto segment4 = mito::mesh::segment({ vertex2, vertex3 });
+    auto segment5 = mito::mesh::segment({ vertex4, vertex3 });
+    auto segment6 = mito::mesh::segment({ vertex2, vertex4 });
+    auto segment7 = mito::mesh::segment({ vertex4, vertex0 });
 
-    auto & element0 = mito::mesh::triangle({ segment0, segment1, segment2 });
-    auto & element1 = mito::mesh::triangle({ segment3, segment4, segment1 });
-    auto & element2 = mito::mesh::triangle({ segment6, segment5, segment4 });
-    auto & element3 = mito::mesh::triangle({ segment7, segment2, segment5 });
+    auto element0 = mito::mesh::triangle({ segment0, segment1, segment2 });
+    auto element1 = mito::mesh::triangle({ segment3, segment4, segment1 });
+    auto element2 = mito::mesh::triangle({ segment6, segment5, segment4 });
+    auto element3 = mito::mesh::triangle({ segment7, segment2, segment5 });
     mito::mesh::simplex_vector_t<triangle_t> elements = { element0, element1, element2, element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
