@@ -83,11 +83,6 @@ namespace mito::mesh {
             return OrientedSimplexFactory<D>::OrientedSimplex(*_footprint.get(), !_orientation);
         }
 
-        operator std::shared_ptr<OrientedSimplex<D>>() 
-        { 
-            return OrientedSimplexFactory<D>::Find(*this); 
-        }
-
         template <int I>
         void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
             I < D - 1 && I != 0)
@@ -106,7 +101,7 @@ namespace mito::mesh {
         void getSimplices(std::unordered_set<std::shared_ptr<oriented_simplex_t<I>>> &
                               sub_simplices) requires(I == D)
         {
-            sub_simplices.insert(*this);
+            sub_simplices.insert(OrientedSimplexFactory<D>::Find(*this));
             return;
         }
         template <int I>
