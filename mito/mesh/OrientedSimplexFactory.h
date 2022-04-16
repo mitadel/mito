@@ -8,13 +8,13 @@ namespace mito::mesh {
       private:
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
-        using orientation_map_t =
-            std::map<std::tuple<const simplex_t<D> *, bool>, std::shared_ptr<oriented_simplex_t<D>>>;
+        using orientation_map_t = std::map<
+            std::tuple<const simplex_t<D> *, bool>, std::shared_ptr<const oriented_simplex_t<D>>>;
 
       public:
         OrientedSimplexFactory() = delete;
 
-        static std::shared_ptr<oriented_simplex_t<D>> & Find(
+        static std::shared_ptr<const oriented_simplex_t<D>> & Find(
             const oriented_simplex_t<D> & oriented_simplex)
         {
             // get from the factory the representative of simplices with this composition
@@ -31,8 +31,8 @@ namespace mito::mesh {
             return ret_find->second;
         }
 
-        static std::shared_ptr<oriented_simplex_t<D>> OrientedSimplex(
-            simplex_t<D> & simplex, bool orientation)
+        static std::shared_ptr<const oriented_simplex_t<D>> OrientedSimplex(
+            const simplex_t<D> & simplex, bool orientation)
         {
             // look up for an oriented simplex with this orientation
             auto ret_find = _orientations.find(std::make_tuple(&simplex, orientation));
@@ -86,11 +86,11 @@ namespace mito::mesh {
             }
         }
 
-        static std::shared_ptr<oriented_simplex_t<D>> OrientedSimplex(
+        static std::shared_ptr<const oriented_simplex_t<D>> OrientedSimplex(
             const simplex_composition_t<D> & composition)
         {
             // get from the factory the representative of simplices with this composition
-            auto & simplex = SimplexFactory<D>::Simplex(composition);
+            const auto & simplex = SimplexFactory<D>::Simplex(composition);
 
             // compute the orientation of the current composition with respect to the representative
             bool orientation = _orientation(composition, simplex);
@@ -99,7 +99,7 @@ namespace mito::mesh {
             return OrientedSimplex(simplex, orientation);
         }
 
-        static void _cleanup(const std::shared_ptr<oriented_simplex_t<D>> & oriented_simplex) 
+        static void _cleanup(const std::shared_ptr<const oriented_simplex_t<D>> & oriented_simplex) 
             requires(D > 0)
         {
             // fetch subsimplices
@@ -135,7 +135,7 @@ namespace mito::mesh {
             return;
         }
 
-        static void cleanup(const std::shared_ptr<oriented_simplex_t<D>> & oriented_simplex) 
+        static void cleanup(const std::shared_ptr<const oriented_simplex_t<D>> & oriented_simplex) 
             requires(D > 0)
         {
             // cleanup recursively until D = 0
@@ -170,7 +170,7 @@ namespace mito::mesh {
         auto _rotate(const simplex_composition_t<2> & composition)
         {
             // an array of pointers to oriented simplices
-            using oriented_simplex_array_t = std::array<oriented_simplex_t<1> *, 3>;
+            using oriented_simplex_array_t = std::array<const oriented_simplex_t<1> *, 3>;
 
             // get the oriented simplices from the shared pointers
             auto composition_copy =

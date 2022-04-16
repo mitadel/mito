@@ -17,14 +17,14 @@ namespace mito::mesh {
 
     // oriented simplex factory
     template <int I>
-    std::shared_ptr<oriented_simplex_t<I>> oriented_simplex(
+    std::shared_ptr<const oriented_simplex_t<I>> oriented_simplex(
         const simplex_composition_t<I> & simplices) requires(I > 1)
     {
         return OrientedSimplexFactory<I>::OrientedSimplex(simplices);
     }
 
     // segment factory
-    std::shared_ptr<oriented_simplex_t<1>> segment(
+    std::shared_ptr<const oriented_simplex_t<1>> segment(
         const std::array<std::reference_wrapper<oriented_simplex_t<0>>, 2> & simplices)
     {
         return OrientedSimplexFactory<1>::OrientedSimplex(
@@ -32,13 +32,13 @@ namespace mito::mesh {
     }
 
     // triangle factory
-    std::shared_ptr<oriented_simplex_t<2>> triangle(const simplex_composition_t<2> & simplices)
+    std::shared_ptr<const oriented_simplex_t<2>> triangle(const simplex_composition_t<2> & simplices)
     {
         return oriented_simplex<2>(simplices);
     }
 
     // tetrahedron factory
-    std::shared_ptr<oriented_simplex_t<3>> tetrahedron(const simplex_composition_t<3> & simplices)
+    std::shared_ptr<const oriented_simplex_t<3>> tetrahedron(const simplex_composition_t<3> & simplices)
     {
         return oriented_simplex<3>(simplices);
     }

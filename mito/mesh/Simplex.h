@@ -109,7 +109,7 @@ namespace mito::mesh {
       public:
         const auto & simplex() const { return *this; }
 
-        void vertices(vertex_set_t & vertices)
+        void vertices(vertex_set_t & vertices) const
         {
             // insert this vertex
             vertices.insert(this);

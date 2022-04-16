@@ -34,7 +34,7 @@ namespace mito::mesh {
             return *ret.first->second;
         }
 
-        static void cleanup(const std::shared_ptr<oriented_simplex_t<D>> & oriented_simplex)
+        static void cleanup(const std::shared_ptr<const oriented_simplex_t<D>> & oriented_simplex)
         {
             // if the footprint is not shared
             if (!oriented_simplex->exists_flipped()) {

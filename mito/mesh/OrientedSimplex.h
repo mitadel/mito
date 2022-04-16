@@ -24,15 +24,14 @@ namespace mito::mesh {
     class OrientedSimplex {
       private:
         // constructor with an existing shared pointer as footprint
-        OrientedSimplex(const std::shared_ptr<simplex_t<D>> & footprint, bool orientation) :
+        OrientedSimplex(const std::shared_ptr<const simplex_t<D>> & footprint, bool orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
 
         // constructor with a raw pointer as footprint (builds shared pointer around raw pointer)
-        OrientedSimplex(simplex_t<D> * footprint, bool orientation) :
+        OrientedSimplex(const simplex_t<D> * footprint, bool orientation) :
             _footprint(footprint),
-            //_footprint(footprint, SimplexFactory<D>::Erase),
             _orientation(orientation)
         {}
 
@@ -75,7 +74,7 @@ namespace mito::mesh {
         }
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
-        void vertices(vertex_set_t & vertices) { return _footprint.get()->vertices(vertices); }
+        void vertices(vertex_set_t & vertices) const { return _footprint.get()->vertices(vertices); }
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
         auto flip() const
@@ -84,7 +83,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
+        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const requires(
             I < D - 1 && I != 0)
         {
             for (auto & simplex : simplices()) {
@@ -93,19 +92,20 @@ namespace mito::mesh {
             return;
         }
 
-        void getSimplices(vertex_set_t & sub_simplices)
+        void getSimplices(vertex_set_t & sub_simplices) const
         {
             return vertices(sub_simplices);
         }
         template <int I>
-        void getSimplices(std::unordered_set<std::shared_ptr<oriented_simplex_t<I>>> &
-                              sub_simplices) requires(I == D)
+        void getSimplices(
+            std::unordered_set<std::shared_ptr<const oriented_simplex_t<I>>> & sub_simplices)
+            const requires(I == D)
         {
             sub_simplices.insert(OrientedSimplexFactory<D>::Find(*this));
             return;
         }
         template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) requires(
+        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const requires(
             I == D - 1 && I != 0)
         {
             for (auto & simplex : simplices()) {
@@ -120,7 +120,7 @@ namespace mito::mesh {
         static constexpr int nVertices = D;
 
       private:
-        const std::shared_ptr<simplex_t<D>> _footprint;
+        const std::shared_ptr<const simplex_t<D>> _footprint;
         bool _orientation;
 
         friend class OrientedSimplexFactory<D>;
