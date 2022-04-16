@@ -31,11 +31,11 @@ namespace mito::mesh {
 
     // element set alias
     template <class elementT>
-    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>;
+    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>; //TOFIX
 
     // element vector alias
     template <class elementT>
-    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>;
+    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>; //TOFIX
 
     // class simplex
     template <int D>
@@ -84,12 +84,15 @@ namespace mito::mesh {
     template <int D>
     using oriented_simplex_t = typename helperOrientedSimplexClass<D>::simplex_type;
 
+    // oriented simplex pointer alias
+    template <int D>
+    using oriented_simplex_ptr = std::shared_ptr<const OrientedSimplex<D>>;
+
     // helper class to allow template specialization of oriented simplex composition alias
     template <int D>
     class helperOrientedSimplexCompositionClass {
       public:
-        using simplex_composition_type =
-            std::array<std::shared_ptr<const oriented_simplex_t<D - 1>>, D + 1>;
+        using simplex_composition_type = std::array<oriented_simplex_ptr<D - 1>, D + 1>;
     };
 
     // helper class to allow template specialization of oriented simplex composition alias

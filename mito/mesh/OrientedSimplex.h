@@ -97,9 +97,8 @@ namespace mito::mesh {
             return vertices(sub_simplices);
         }
         template <int I>
-        void getSimplices(
-            std::unordered_set<std::shared_ptr<const oriented_simplex_t<I>>> & sub_simplices)
-            const requires(I == D)
+        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const
+            requires(I == D)
         {
             sub_simplices.insert(OrientedSimplexFactory<D>::Find(*this));
             return;

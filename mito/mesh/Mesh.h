@@ -16,8 +16,7 @@ namespace mito::mesh {
         // QUESTION: would it be better to use reference wrappers here?
         // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
-        using simplex_collection =
-            std::unordered_set<std::shared_ptr<const oriented_simplex_t<int(I)>>>;
+        using simplex_collection = simplex_set_t<oriented_simplex_t<int(I)>>;
 
         // simplex_collection<I>... expands to:
         // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
@@ -128,11 +127,10 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void _erase(const std::shared_ptr<const OrientedSimplex<I>> & simplex) requires(
-            I > 0 && I <= D)
+        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // erase the subsimplices from the mesh (erase bottom -> up)
-            for (const std::shared_ptr<const oriented_simplex_t<I - 1>> & subsimplex :
+            for (const auto & subsimplex :
                  simplex->simplices()) {
                 std::get<I - 1>(_simplices).erase(subsimplex);
             }
@@ -145,17 +143,15 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void _erase(const std::shared_ptr<const OrientedSimplex<I>> & simplex) requires(I == 0)
+        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I == 0)
         {   
             // all done
             return;
         }
 
         template <int I>
-        void erase(const std::shared_ptr<const OrientedSimplex<I>> & simplex) requires(
-            I > 0 && I <= D)
+        void erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
-
             // QUESTION: can we wrap simplices in a way that the reference count can be called 
             //  incidence?
             
@@ -174,8 +170,7 @@ namespace mito::mesh {
       private :
           template <int I>
           void
-          _addSimplex(const std::shared_ptr<const OrientedSimplex<I>> & simplex) requires(
-              I > 0 && I <= D)
+          _addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // add the oriented simplex to the set of simplices with same dimension
             std::get<I>(_simplices).insert(simplex);

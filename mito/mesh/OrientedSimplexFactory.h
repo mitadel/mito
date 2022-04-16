@@ -8,14 +8,13 @@ namespace mito::mesh {
       private:
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
-        using orientation_map_t = std::map<
-            std::tuple<const simplex_t<D> *, bool>, std::shared_ptr<const oriented_simplex_t<D>>>;
+        using orientation_map_t =
+            std::map<std::tuple<const simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
 
       public:
         OrientedSimplexFactory() = delete;
 
-        static std::shared_ptr<const oriented_simplex_t<D>> & Find(
-            const oriented_simplex_t<D> & oriented_simplex)
+        static oriented_simplex_ptr<D> & Find(const oriented_simplex_t<D> & oriented_simplex)
         {
             // get from the factory the representative of simplices with this composition
             const auto & simplex = oriented_simplex.simplex();
@@ -31,7 +30,7 @@ namespace mito::mesh {
             return ret_find->second;
         }
 
-        static std::shared_ptr<const oriented_simplex_t<D>> OrientedSimplex(
+        static oriented_simplex_ptr<D> OrientedSimplex(
             const simplex_t<D> & simplex, bool orientation)
         {
             // look up for an oriented simplex with this orientation
@@ -86,8 +85,7 @@ namespace mito::mesh {
             }
         }
 
-        static std::shared_ptr<const oriented_simplex_t<D>> OrientedSimplex(
-            const simplex_composition_t<D> & composition)
+        static oriented_simplex_ptr<D> OrientedSimplex(const simplex_composition_t<D> & composition)
         {
             // get from the factory the representative of simplices with this composition
             const auto & simplex = SimplexFactory<D>::Simplex(composition);
@@ -99,8 +97,7 @@ namespace mito::mesh {
             return OrientedSimplex(simplex, orientation);
         }
 
-        static void _cleanup(const std::shared_ptr<const oriented_simplex_t<D>> & oriented_simplex) 
-            requires(D > 0)
+        static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
         {
             // fetch subsimplices
             const auto & subsimplices = oriented_simplex->simplices();
@@ -135,8 +132,7 @@ namespace mito::mesh {
             return;
         }
 
-        static void cleanup(const std::shared_ptr<const oriented_simplex_t<D>> & oriented_simplex) 
-            requires(D > 0)
+        static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
         {
             // cleanup recursively until D = 0
             _cleanup(oriented_simplex);
