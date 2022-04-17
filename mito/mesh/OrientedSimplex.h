@@ -86,7 +86,7 @@ namespace mito::mesh {
         void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const requires(
             I < D - 1 && I != 0)
         {
-            for (auto & simplex : simplices()) {
+            for (const auto & simplex : simplices()) {
                 simplex->simplices<I - 1>(sub_simplices);
             }
             return;
@@ -107,7 +107,7 @@ namespace mito::mesh {
         void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const requires(
             I == D - 1 && I != 0)
         {
-            for (auto & simplex : simplices()) {
+            for (const auto & simplex : simplices()) {
                 auto & sub_simplex = oriented_simplex(simplex.simplices());
                 sub_simplices.insert(sub_simplex);
             }
