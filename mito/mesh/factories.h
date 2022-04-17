@@ -20,14 +20,14 @@ namespace mito::mesh {
     oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
         I > 1)
     {
-        return OrientedSimplexFactory<I>::OrientedSimplex(simplices);
+        return OrientedSimplexFactory<I>::orientedSimplex(simplices);
     }
 
     // segment factory
     oriented_simplex_ptr<1> segment(
         const std::array<std::reference_wrapper<oriented_simplex_t<0>>, 2> & simplices)
     {
-        return OrientedSimplexFactory<1>::OrientedSimplex(
+        return OrientedSimplexFactory<1>::orientedSimplex(
             simplex_composition_t<1> { &simplices[0].get(), &simplices[1].get() });
     }
 

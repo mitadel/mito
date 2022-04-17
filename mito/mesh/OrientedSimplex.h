@@ -70,7 +70,7 @@ namespace mito::mesh {
         // returns the number of simplices riding on this oriented simplex
         int incidence() const 
         {
-            return OrientedSimplexFactory<D>::Find(*this).use_count() - 1;
+            return OrientedSimplexFactory<D>::find(*this).use_count() - 1;
         }
         bool orientation() const { return _orientation; }
         const auto & simplices() const { return _footprint.get()->simplices(); }
@@ -79,7 +79,7 @@ namespace mito::mesh {
 
         auto flip() const
         {
-            return OrientedSimplexFactory<D>::OrientedSimplex(*_footprint.get(), !_orientation);
+            return OrientedSimplexFactory<D>::orientedSimplex(*_footprint.get(), !_orientation);
         }
 
         template <int I>
@@ -100,7 +100,7 @@ namespace mito::mesh {
         void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const
             requires(I == D)
         {
-            sub_simplices.insert(OrientedSimplexFactory<D>::Find(*this));
+            sub_simplices.insert(OrientedSimplexFactory<D>::find(*this));
             return;
         }
         template <int I>

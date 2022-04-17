@@ -20,7 +20,7 @@ namespace mito::mesh {
       public:
         SimplexFactory() = delete;
 
-        static simplex_t<D> & Simplex(const simplex_composition_t<D> & composition)
+        static simplex_t<D> & simplex(const simplex_composition_t<D> & composition)
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
