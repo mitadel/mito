@@ -16,7 +16,7 @@ namespace mito::mesh {
 
         static oriented_simplex_ptr<D> & find(const oriented_simplex_t<D> & oriented_simplex)
         {
-            // get from the factory the representative of simplices with this composition
+            // get from the footprint of this simplex 
             const auto & simplex = oriented_simplex.simplex();
 
             // look up for an oriented simplex with this orientation
@@ -99,10 +99,12 @@ namespace mito::mesh {
 
         static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
         {
-            // fetch subsimplices
-            const auto & subsimplices = oriented_simplex->simplices();
-
+            // if the oriented simplex is unused 
             if (oriented_simplex->incidence() == 0) {
+
+                // fetch subsimplices before doing any harm to the oriented simplex
+                const auto & subsimplices = oriented_simplex->simplices();
+
                 // get footprint of the oriented simplex
                 const auto & simplex = oriented_simplex->simplex();
 
@@ -112,10 +114,10 @@ namespace mito::mesh {
                 // cleanup simplex factory around this oriented simplex
                 SimplexFactory<D>::cleanup(oriented_simplex);
 
-                // erase this oriented simplex from the factory
+                // erase this oriented simplex from the oriented simplex factory
                 _orientations.erase(mytuple);
 
-                // erase the subsimplices
+                // erase the subsimplices from the oriented simplex factory
                 for (const auto & subsimplex : subsimplices) {
                     OrientedSimplexFactory<D - 1>::_cleanup(subsimplex);
                 }
@@ -125,10 +127,9 @@ namespace mito::mesh {
             return;
         }
 
-        // TOFIX: this should be a specialization of the one above
         static void _cleanup(const oriented_simplex_t<D> * oriented_simplex) requires(D == 0)
         {
-            // all done
+            // all done (nothing to be done for vertices)
             return;
         }
 
