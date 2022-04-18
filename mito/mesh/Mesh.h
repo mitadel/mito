@@ -158,8 +158,6 @@ namespace mito::mesh {
             // erase recursively until D = 0
             _erase(simplex);
 
-            // TODO: lowercase static methods
-
             // cleanup oriented simplex factory around this simplex
             OrientedSimplexFactory<I>::cleanup(simplex);
 
