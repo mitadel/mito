@@ -24,19 +24,21 @@ namespace mito::mesh {
     class OrientedSimplex {
       private:
         // constructor with an existing shared pointer as footprint
-        OrientedSimplex(const std::shared_ptr<const simplex_t<D>> & footprint, bool orientation) :
+        constexpr OrientedSimplex(
+            const std::shared_ptr<const simplex_t<D>> & footprint, bool orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
 
         // constructor with a raw pointer as footprint (builds shared pointer around raw pointer)
-        OrientedSimplex(const simplex_t<D> * footprint, bool orientation) :
+        constexpr OrientedSimplex(const simplex_t<D> * footprint, bool orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
 
       public:
-        ~OrientedSimplex() {}
+        // destructor
+        constexpr ~OrientedSimplex() {}
 
       private:
         // delete default constructor
