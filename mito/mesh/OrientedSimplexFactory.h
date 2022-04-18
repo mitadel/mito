@@ -3,6 +3,20 @@
 #define mito_mesh_OrientedSimplexFactory_h
 
 namespace mito::mesh {
+
+    /**
+     *
+     * This static class represents a factory for oriented simplices of order D.
+     *
+     * The factory class is aware of the class of equivalence for an OrientedSimplex of order D. In
+     * fact, being an instance of OrientedSimplex<D> identified by its D+1 subsimplices (through its
+     * footprint), there are (D+1)!/2 possible representations of the same oriented simplex. The
+     * factory makes sure that at any given time there is at most one OrientedSimplex for an
+     * equivalence class, i.e. the representative of the class. The representative of the class of
+     * equivalence is chosen by starting the composition with the subsimplex of smallest address and
+     * by circularly rotating the other simplices in the composition array around the first simplex.
+     */
+
     template <int D>
     class OrientedSimplexFactory {
       private:
@@ -12,8 +26,11 @@ namespace mito::mesh {
             std::map<std::tuple<const simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
 
       public:
+        // delete default constructor
         OrientedSimplexFactory() = delete;
 
+        // find this oriented simplex in the factory and hand a shared pointer to it (allowing the
+        // caller to share its ownership)
         static oriented_simplex_ptr<D> & find(const oriented_simplex_t<D> & oriented_simplex)
         {
             // get from the footprint of this simplex 
@@ -30,9 +47,16 @@ namespace mito::mesh {
             return ret_find->second;
         }
 
+        // return an oriented simplex riding on footprint {simplex} and with orientation
+        // {orientation} (either create a new oriented simplex if such oriented simplex does not
+        // exist in the factory or return the existing representative of the class of equivalence of
+        // oriented simplices with footprint {simplex} orientation {orientation}
         static oriented_simplex_ptr<D> orientedSimplex(
             const simplex_t<D> & simplex, bool orientation)
         {
+            // TOFIX: this can be greatly simplified if we store the shared_ptr to Simplex in the 
+            // SimplexFactory, like we do for OrientedSimplexFactory
+
             // look up for an oriented simplex with this orientation
             auto ret_find = _orientations.find(std::make_tuple(&simplex, orientation));
 
@@ -85,6 +109,9 @@ namespace mito::mesh {
             }
         }
 
+        // return a simplex with composition {composition} (either create a new simplex if such
+        // simplex does not exist in the factory or return the existing representative of the class
+        // of equivalence of simplices with this composition)
         static oriented_simplex_ptr<D> orientedSimplex(const simplex_composition_t<D> & composition)
         {
             // get from the factory the representative of simplices with this composition
@@ -133,6 +160,8 @@ namespace mito::mesh {
             return;
         }
 
+        // cleanup the factory around an oriented simplex (i.e. remove from the factory unused
+        // oriented simplices related to this oriented simplex)
         static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
         {
             // cleanup recursively until D = 0

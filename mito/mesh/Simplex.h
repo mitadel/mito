@@ -2,30 +2,30 @@
 #if !defined(mito_mesh_Simplex_h)
 #define mito_mesh_Simplex_h
 
-/*
- * This class represents a class of equivalence for a Simplex of dimension D. 
- *
- * Simplex<D> is represented recursively as a collection of D+1 Simplex<D-1>. An instance of 
- * Simplex<D> represents therefore (D+1)! simplices, depending on the (D+1)! possible orderings of 
- * the subsimplices.
- *
- * The representative in this class of equivalence is chosen by sorting in increasing order the 
- * addresses pointing to the subsimplices.  
- */
-
 namespace mito::mesh {
+
+    /*
+     * This class represents a Simplex of order D > 0.
+     *
+     * Simplex<D> is represented recursively as a collection of D+1 subsimplices of type
+     * OrientedSimplex<D-1>.
+     */
 
     template <int D>
     class Simplex {
 
+        // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
+        // constructor for a simplex based on its composition in terms of subsimplices   
         constexpr Simplex(const simplex_composition_t<D> & simplices) :
             _simplices(simplices)
         {}
 
+        // constructor for a simplex based on its composition in terms of subsimplices 
         constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
 
       public:
+        // destructor
         constexpr ~Simplex() {}
 
       private:
@@ -45,8 +45,10 @@ namespace mito::mesh {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
+        // accessor for the subsimplices
         const auto & simplices() const { return _simplices; }
 
+        // add the vertices of this simplex to a set of vertices  
         void vertices(vertex_set_t & vertices) const
         {
             for (const auto & simplex : simplices()) {
@@ -54,6 +56,7 @@ namespace mito::mesh {
             }
         }
 
+        // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
         bool sanityCheck() const
         {
             // check the subsimplices
@@ -82,15 +85,26 @@ namespace mito::mesh {
         }
 
       private:
+        // the simplex composition in terms of subsimplices
         simplex_composition_t<D> _simplices;
 
+        // private frienship with the factory of simplices
         friend class SimplexFactory<D>;
     };
+
+    /*
+     * This class collapses Simplex<D> for D = 0.
+     *
+     * A Simplex<0>, like a vertex, is an empty object.
+     */
 
     template <>
     class Simplex<0> {
       public:
+        // default constructor
         constexpr Simplex() {}
+
+        // empty destructor
         constexpr ~Simplex() {}
 
       private:
@@ -107,8 +121,10 @@ namespace mito::mesh {
         const Simplex & operator=(const Simplex &&) = delete;
 
       public:
+        // get the current simplex 
         const auto & simplex() const { return *this; }
 
+        // add the vertices of this simplex to a set of vertices
         void vertices(vertex_set_t & vertices) const
         {
             // insert this vertex
@@ -118,7 +134,12 @@ namespace mito::mesh {
         }
 
       public:
-        bool sanityCheck() const { return true; }
+        // perform a sanity check
+        bool sanityCheck() const 
+        {
+            // a simplex of order 0 has only 1 vertex (this one!)
+            return true; 
+        }
     };
 
     // overload operator<< for simplices

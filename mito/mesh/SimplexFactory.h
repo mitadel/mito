@@ -3,6 +3,19 @@
 #define mito_mesh_SimplexFactory_h
 
 namespace mito::mesh {
+
+    /**
+     *
+     * This static class represents a factory for simplices of order D.
+     *
+     * The factory class is aware of the class of equivalence for a Simplex of order D. In fact,
+     * being an instance of Simplex<D> identified by its D+1 subsimplices, there are (D+1)! possible
+     * representations of the same simplex. The factory makes sure that at any given time
+     * there is at most one simplex for an equivalence class, i.e. the representative of the class.
+     * The representative of the class of equivalence is chosen by sorting in increasing order the
+     * addresses of the instances of the subsimplices.
+     */
+
     template <int D>
     class SimplexFactory {
 
@@ -20,6 +33,9 @@ namespace mito::mesh {
       public:
         SimplexFactory() = delete;
 
+        // return a simplex with composition {composition} (either create a new simplex if such
+        // simplex does not exist in the factory or return the existing representative of the class
+        // of equivalence of simplices with this composition)
         static simplex_t<D> & simplex(const simplex_composition_t<D> & composition)
         {
             // pick a representative (factor out equivalence relation)
@@ -34,6 +50,8 @@ namespace mito::mesh {
             return *ret.first->second;
         }
 
+        // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from 
+        // the factory if this oriented simplex is the only owner of its footprint)
         static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {
             // if the footprint is not shared
@@ -51,8 +69,8 @@ namespace mito::mesh {
         }
 
       private:
-        // equivalence class relation for a simplex in 1D
-        static composition_t _representative(const simplex_composition_t<D> & composition);
+        // equivalence class relation for a simplex
+        static auto _representative(const simplex_composition_t<D> & composition);
 
       private:
         // container to map simplex composition to simplices
@@ -61,9 +79,9 @@ namespace mito::mesh {
 
     // equivalence class relation for a simplex in 1D
     template <>
-    SimplexFactory<1>::composition_t SimplexFactory<1>::_representative(
-        const simplex_composition_t<1> & composition)
+    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition)
     {
+        // initialize representative with footprints of simplices in current composition
         composition_t representative { composition[0], composition[1] };
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
@@ -73,8 +91,7 @@ namespace mito::mesh {
 
     // equivalence class relation for a simplex in 2D
     template <>
-    SimplexFactory<2>::composition_t SimplexFactory<2>::_representative(
-        const simplex_composition_t<2> & composition)
+    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition)
     {
         // initialize representative with footprints of simplices in current composition
         composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
@@ -87,9 +104,9 @@ namespace mito::mesh {
         return representative;
     }
 
+    // equivalence class relation for a simplex in 3D
     template <>
-    SimplexFactory<3>::composition_t SimplexFactory<3>::_representative(
-        const simplex_composition_t<3> & composition)
+    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition)
     {
         // initialize representative with footprints of simplices in current composition
         composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
