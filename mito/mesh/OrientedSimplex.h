@@ -116,7 +116,6 @@ namespace mito::mesh {
 
       public:
         static constexpr int parametricDim = D + 1;
-        static constexpr int nVertices = D;
 
       private:
         const std::shared_ptr<const simplex_t<D>> _footprint;

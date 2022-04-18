@@ -26,9 +26,8 @@ namespace mito::quadrature {
         //           vertices.
         void _computeQuadPointCoordinates()
         {
-
             // TOFIX: We should avoid the 4 nested for loops
-            // QUESTION: 3 out 4 of these loops can be unrolled as Q, D, V are template parameters
+            // QUESTION: 3 out 4 of these loops can be unrolled as Q and D are template parameters
             //           Is there anything we can do about it?
 
             // loop on elements
@@ -86,8 +85,6 @@ namespace mito::quadrature {
       private:
         // the quadrature rule
         static constexpr auto _quadratureRule = QuadratureRule::Get();
-        // the number of element vertices
-        static constexpr int V = element_t::nVertices;
         // the number of quadrature points
         static constexpr int Q = _quadratureRule.size();
         // the domain of integration
