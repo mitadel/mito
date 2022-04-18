@@ -28,7 +28,7 @@ namespace mito::mesh {
         // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
         // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
         using composition_t = std::array<const simplex_t<D - 1> *, D + 1>;
-        using composition_map_t = std::map<composition_t, simplex_t<D>*>;
+        using composition_map_t = std::map<composition_t, const simplex_t<D>*>;
 
       public:
         SimplexFactory() = delete;
@@ -36,7 +36,7 @@ namespace mito::mesh {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static simplex_t<D> & simplex(const simplex_composition_t<D> & composition)
+        static const simplex_t<D> & simplex(const simplex_composition_t<D> & composition)
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
