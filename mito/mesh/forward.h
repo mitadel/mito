@@ -88,6 +88,10 @@ namespace mito::mesh {
     template <int D>
     using oriented_simplex_ptr = std::shared_ptr<const OrientedSimplex<D>>;
 
+    // simplex pointer alias
+    template <int D>
+    using simplex_ptr = std::shared_ptr<const Simplex<D>>;
+
     // helper class to allow template specialization of oriented simplex composition alias
     template <int D>
     class helperOrientedSimplexCompositionClass {

@@ -68,10 +68,11 @@ namespace mito::mesh {
         // returns whether there exists the flipped simplex in the factory
         bool exists_flipped() const
         {
-            // assert the footprint cannot be used by more than two oriented simplices
-            assert(_footprint.use_count() == 1 || _footprint.use_count() == 2);
+            // assert the footprint cannot be used by more than two oriented simplices (on top of
+            // the the SimplexFactory)
+            assert(_footprint.use_count() == 2 || _footprint.use_count() == 3);
             // return true if the footprint is in used by two oriented simplices
-            return _footprint.use_count() == 2 ? true : false;
+            return _footprint.use_count() == 3 ? true : false;
         }
 
         // TOFIX: change name, this is not actually the incidence
@@ -101,7 +102,7 @@ namespace mito::mesh {
         // returns the simplex with opposite orientation
         auto flip() const
         {
-            return OrientedSimplexFactory<D>::orientedSimplex(*_footprint.get(), !_orientation);
+            return OrientedSimplexFactory<D>::orientedSimplex(_footprint, !_orientation);
         }
 
         // TOFIX: these should be helper methods in mesh, not sure it makes sense to have them as 
