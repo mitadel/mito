@@ -73,7 +73,8 @@ namespace mito::mesh {
         const auto & simplices() const { return _footprint.get()->simplices(); }
 
         // returns the set of vertices
-        void vertices(vertex_set_t & vertices) const
+        template <class VERTEX_COLLECTION_T>
+        void vertices(VERTEX_COLLECTION_T & vertices) const
         {
             return _footprint.get()->vertices(vertices);
         }

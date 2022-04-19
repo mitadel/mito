@@ -48,8 +48,9 @@ namespace mito::mesh {
         // accessor for the subsimplices
         const auto & simplices() const { return _simplices; }
 
-        // add the vertices of this simplex to a set of vertices  
-        void vertices(vertex_set_t & vertices) const
+        // add the vertices of this simplex to a collection of vertices
+        template <class VERTEX_COLLECTION_T>
+        void vertices(VERTEX_COLLECTION_T & vertices) const
         {
             for (const auto & simplex : simplices()) {
                 simplex->vertices(vertices);
@@ -125,7 +126,8 @@ namespace mito::mesh {
         const auto & simplex() const { return *this; }
 
         // add the vertices of this simplex to a set of vertices
-        void vertices(vertex_set_t & vertices) const
+        template <class VERTEX_COLLECTION_T>
+        void vertices(VERTEX_COLLECTION_T & vertices) const
         {
             // insert this vertex
             vertices.insert(this);
