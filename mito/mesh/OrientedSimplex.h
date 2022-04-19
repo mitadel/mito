@@ -64,12 +64,6 @@ namespace mito::mesh {
         // accessor for the footprint simplex
         const auto & simplex() const { return *_footprint.get(); }
 
-        // TOFIX: change name, this is not actually the incidence
-        // returns the number of owners of the shared pointer to this oriented simplex
-        // TOFIX: Also this should probably not be a method of OrientedSimplex, but rather of the 
-        // factory 
-        int incidence() const { return OrientedSimplexFactory<D>::find(*this).use_count() - 1; }
-
         // returns the orientation of this simplex
         // (true: oriented simplex is oriented as the footprint,
         //  false: oriented simplex is oriented opposite to the footprint)

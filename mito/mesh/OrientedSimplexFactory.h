@@ -83,10 +83,35 @@ namespace mito::mesh {
             return orientedSimplex(simplex, orientation);
         }
 
+        // returns whether there exists the flipped oriented simplex in the factory
+        static bool exists_flipped(const oriented_simplex_ptr<D> & oriented_simplex)
+        {
+            // get the use count of the simplex footprint
+            auto use_count = oriented_simplex->footprint().use_count();
+            // assert the footprint cannot be used by more than two oriented simplices (on top of
+            // the the SimplexFactory)
+            assert(use_count == 2 || use_count == 3);
+            // return true if the footprint is in used by two oriented simplices
+            return use_count == 3 ? true : false;
+        }
+
+        // returns the simplex with opposite orientation
+        static auto flip(const oriented_simplex_ptr<D> & oriented_simplex)
+        {
+            return orientedSimplex(oriented_simplex->footprint(), !oriented_simplex->orientation());
+        }
+
+        // TOFIX: change name, this is not actually the incidence
+        // returns the number of owners of the shared pointer to this oriented simplex
+        static int incidence(const oriented_simplex_ptr<D> & oriented_simplex)
+        {
+            return oriented_simplex.use_count() - 1;
+        }
+
         static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
         {
-            // if the oriented simplex is unused 
-            if (oriented_simplex->incidence() == 0) {
+            // if the oriented simplex is unused
+            if (incidence(oriented_simplex) == 0) {
 
                 // fetch subsimplices before doing any harm to the oriented simplex
                 const auto & subsimplices = oriented_simplex->simplices();
@@ -128,24 +153,6 @@ namespace mito::mesh {
 
             // all done
             return;
-        }
-
-        // returns whether there exists the flipped oriented simplex in the factory
-        static bool exists_flipped(const oriented_simplex_ptr<D> & oriented_simplex)
-        {
-            // get the use count of the simplex footprint
-            auto use_count = oriented_simplex->footprint().use_count();
-            // assert the footprint cannot be used by more than two oriented simplices (on top of
-            // the the SimplexFactory)
-            assert(use_count == 2 || use_count == 3);
-            // return true if the footprint is in used by two oriented simplices
-            return use_count == 3 ? true : false;
-        }
-
-        // returns the simplex with opposite orientation
-        static auto flip(const oriented_simplex_ptr<D> & oriented_simplex)
-        {
-            return orientedSimplex(oriented_simplex->footprint(), !oriented_simplex->orientation());
         }
 
       private:

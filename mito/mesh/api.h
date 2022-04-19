@@ -35,6 +35,7 @@ namespace mito::mesh {
     template <int D>
     auto mesh(std::string meshFileName);
 
+    // TOFIX: where should the implementation of these methods go?
     template <int D>
     auto exists_flipped(const oriented_simplex_ptr<D> & oriented_simplex)
     {
@@ -47,6 +48,11 @@ namespace mito::mesh {
         return OrientedSimplexFactory<D>::flip(oriented_simplex);
     }
 
+    template <int D>
+    auto incidence(const oriented_simplex_ptr<D> & oriented_simplex) 
+    {
+        return OrientedSimplexFactory<D>::incidence(oriented_simplex);
+    }
 }
 
 
