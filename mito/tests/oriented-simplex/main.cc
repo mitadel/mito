@@ -12,21 +12,21 @@ main()
         // instantiate an oriented segment
         auto oriented_segment0 = mito::mesh::segment({ vertex0, vertex1 });
         // assert there is only one pointer to the simplex footprint
-        assert(!oriented_segment0->exists_flipped());
+        assert(!mito::mesh::exists_flipped(oriented_segment0));
 
         // instantiate an identical oriented segment
         auto oriented_segment1 = mito::mesh::segment({ vertex0, vertex1 });
         // assert the factory returned the same oriented segment
         assert(oriented_segment0.get() == oriented_segment1.get());
         // assert there is still only one pointer to the simplex footprint
-        assert(!oriented_segment0->exists_flipped());
+        assert(!mito::mesh::exists_flipped(oriented_segment0));
         // assert that flipping the flipped simplex gives the original simplex
         assert(oriented_segment1->flip()->flip().get() == oriented_segment1.get());
 
         // instantiate an oriented segment with opposite orientation
         auto oriented_segment2 = mito::mesh::segment({ vertex1, vertex0 });
         // assert there are now two pointers to the simplex footprint
-        assert(oriented_segment0->exists_flipped());
+        assert(mito::mesh::exists_flipped(oriented_segment0));
         // assert that flipping the opposite segment gives the original segment
         assert(oriented_segment2->flip().get() == oriented_segment1.get());
     }

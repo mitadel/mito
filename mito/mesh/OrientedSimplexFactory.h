@@ -130,6 +130,18 @@ namespace mito::mesh {
             return;
         }
 
+        // returns whether there exists the flipped oriented simplex in the factory
+        static bool exists_flipped(const oriented_simplex_ptr<D> & oriented_simplex)
+        {
+            // get the use count of the simplex footprint
+            auto use_count = oriented_simplex->footprint().use_count();
+            // assert the footprint cannot be used by more than two oriented simplices (on top of
+            // the the SimplexFactory)
+            assert(use_count == 2 || use_count == 3);
+            // return true if the footprint is in used by two oriented simplices
+            return use_count == 3 ? true : false;
+        }
+
       private:
           // compute the orientation of the {composition} with respect to the orientation of
           // {simplex}

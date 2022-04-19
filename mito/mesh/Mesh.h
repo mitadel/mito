@@ -114,9 +114,9 @@ namespace mito::mesh {
             simplex_collection<I> boundary_simplices;
 
             // loop on simplices (D-1) dimensional simplices
-            for (auto & simplex : std::get<D-1>(_simplices)) {
+            for (const auto & simplex : std::get<D-1>(_simplices)) {
                 // if the simplex footprint has only one occurrence then it is on the boundary
-                if (!simplex->exists_flipped()) {
+                if (!exists_flipped(simplex)) {
                     // add the subsimplices of dimension I to the set of boundary simplices
                     simplex->template getSimplices<I>(boundary_simplices);
                 }

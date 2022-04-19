@@ -64,17 +64,6 @@ namespace mito::mesh {
         // accessor for the footprint simplex
         const auto & simplex() const { return *_footprint.get(); }
 
-        // TOFIX: change name, see below
-        // returns whether there exists the flipped simplex in the factory
-        bool exists_flipped() const
-        {
-            // assert the footprint cannot be used by more than two oriented simplices (on top of
-            // the the SimplexFactory)
-            assert(_footprint.use_count() == 2 || _footprint.use_count() == 3);
-            // return true if the footprint is in used by two oriented simplices
-            return _footprint.use_count() == 3 ? true : false;
-        }
-
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
         // TOFIX: Also this should probably not be a method of OrientedSimplex, but rather of the 

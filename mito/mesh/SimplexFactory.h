@@ -55,7 +55,7 @@ namespace mito::mesh {
         static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {
             // if the footprint is not shared
-            if (!oriented_simplex->exists_flipped()) {
+            if (!exists_flipped(oriented_simplex)) {
 
                 // pick a representative (factor out equivalence relation)
                 auto representative = _representative(oriented_simplex->simplices());
