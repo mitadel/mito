@@ -40,6 +40,13 @@ namespace mito::mesh {
     {
         return OrientedSimplexFactory<D>::exists_flipped(oriented_simplex);
     }
+
+    template <int D>
+    auto flip(const oriented_simplex_ptr<D> & oriented_simplex)
+    {
+        return OrientedSimplexFactory<D>::flip(oriented_simplex);
+    }
+
 }
 
 

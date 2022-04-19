@@ -58,12 +58,8 @@ main()
     // assert no simplex rides on this segment yet
     assert(segment1->incidence() == 1);
 
-    // QUESTION: segment1.flip() might give the impression that the segment is flipped in place, but 
-    //  this is not what happens here. Should we implement a method that flips a segment in place?
-    //  This is risky as it would ruin the connectivity of the simplices riding on the flipped 
-    //  simplex.
     // build the flipped segment connecting {vertex1} and {vertex3}
-    auto segment1m = segment1->flip();
+    auto segment1m = mito::mesh::flip(segment1);
     // assert there are now two segments connecting {vertex1} and {vertex3}
     assert(mito::mesh::exists_flipped(segment1) && mito::mesh::exists_flipped(segment1m));
     // assert no simplex rides on this segment yet

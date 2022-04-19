@@ -142,6 +142,12 @@ namespace mito::mesh {
             return use_count == 3 ? true : false;
         }
 
+        // returns the simplex with opposite orientation
+        static auto flip(const oriented_simplex_ptr<D> & oriented_simplex)
+        {
+            return orientedSimplex(oriented_simplex->footprint(), !oriented_simplex->orientation());
+        }
+
       private:
           // compute the orientation of the {composition} with respect to the orientation of
           // {simplex}

@@ -87,13 +87,6 @@ namespace mito::mesh {
         // returns whether the simplex passes the sanity check
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-        // TOFIX: this should not be a method of OrientedSimplex, but of the factory 
-        // returns the simplex with opposite orientation
-        auto flip() const
-        {
-            return OrientedSimplexFactory<D>::orientedSimplex(_footprint, !_orientation);
-        }
-
         // TOFIX: these should be helper methods in mesh, not sure it makes sense to have them as 
         // part of the OrientedSimplex interface
         // get the set of subsimplices of order I
