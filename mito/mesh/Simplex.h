@@ -89,7 +89,7 @@ namespace mito::mesh {
         // the simplex composition in terms of subsimplices
         simplex_composition_t<D> _simplices;
 
-        // private frienship with the factory of simplices
+        // private friendship with the factory of simplices
         friend class SimplexFactory<D>;
     };
 
