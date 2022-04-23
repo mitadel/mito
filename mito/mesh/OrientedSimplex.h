@@ -30,12 +30,6 @@ namespace mito::mesh {
             _orientation(orientation)
         {}
 
-        // constructor with a raw pointer as footprint (builds shared pointer around raw pointer)
-        constexpr OrientedSimplex(const simplex_t<D> * footprint, bool orientation) :
-            _footprint(footprint),
-            _orientation(orientation)
-        {}
-
       public:
         // destructor
         constexpr ~OrientedSimplex() {}
