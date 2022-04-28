@@ -25,7 +25,7 @@ namespace mito::mesh {
 
     // segment factory
     oriented_simplex_ptr<1> segment(
-        const std::array<std::reference_wrapper<oriented_simplex_t<0>>, 2> & simplices)
+        const std::array<std::reference_wrapper<const oriented_simplex_t<0>>, 2> & simplices)
     {
         return OrientedSimplexFactory<1>::orientedSimplex(
             simplex_composition_t<1> { &simplices[0].get(), &simplices[1].get() });
