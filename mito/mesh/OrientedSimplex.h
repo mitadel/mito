@@ -131,6 +131,24 @@ namespace mito::mesh {
         // all done
         return os;
     }
+
+    auto tail(const oriented_simplex_ptr<1> & oriented_simplex)
+    {
+        if (oriented_simplex->orientation()) {
+            return oriented_simplex->simplices()[0];
+        } else {
+            return oriented_simplex->simplices()[1];
+        }
+    }
+
+    auto head(const oriented_simplex_ptr<1> & oriented_simplex)
+    {
+        if (oriented_simplex->orientation()) {
+            return oriented_simplex->simplices()[1];
+        } else {
+            return oriented_simplex->simplices()[0];
+        }
+    }
 }
 #endif    // mito_mesh_OrientedSimplex_h
 
