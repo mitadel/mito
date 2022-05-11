@@ -11,17 +11,15 @@ namespace mito::mesh {
      * OrientedSimplex<D-1>.
      */
 
-    template <int D>
+    template <int D> requires (D > 0)
     class Simplex {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
-        // constructor for a simplex based on its composition in terms of subsimplices   
-        constexpr Simplex(const simplex_composition_t<D> & simplices) :
-            _simplices(simplices)
-        {}
+        // constructor for a simplex based on its composition in terms of subsimplices
+        constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
 
-        // constructor for a simplex based on its composition in terms of subsimplices 
+        // constructor for a simplex based on its composition in terms of subsimplices
         constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
 
       public:
@@ -93,60 +91,9 @@ namespace mito::mesh {
         friend class SimplexFactory<D>;
     };
 
-    /*
-     * This class collapses Simplex<D> for D = 0.
-     *
-     * A Simplex<0>, like a vertex, is an empty object.
-     */
-
-    template <>
-    class Simplex<0> {
-      public:
-        // default constructor
-        constexpr Simplex() {}
-
-        // empty destructor
-        constexpr ~Simplex() {}
-
-      private:
-        // delete copy constructor
-        Simplex(const Simplex &) = delete;
-
-        // delete move constructor
-        Simplex(const Simplex &&) = delete;
-
-        // delete assignment operator
-        const Simplex & operator=(const Simplex &) = delete;
-
-        // delete move assignment operator
-        const Simplex & operator=(const Simplex &&) = delete;
-
-      public:
-        // get the current simplex 
-        const auto & simplex() const { return *this; }
-
-        // add the vertices of this simplex to a set of vertices
-        template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
-        {
-            // insert this vertex
-            vertices.insert(this);
-            // all done
-            return;
-        }
-
-      public:
-        // perform a sanity check
-        bool sanityCheck() const 
-        {
-            // a simplex of order 0 has only 1 vertex (this one!)
-            return true; 
-        }
-    };
-
     // overload operator<< for simplices
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<D> & s)
+    std::ostream & operator<<(std::ostream & os, const Simplex<D> & s) requires(D > 0)
     {
         os << &s << " composed of:" << std::endl;
         for (const auto & simplex : s.simplices()) {
@@ -155,13 +102,6 @@ namespace mito::mesh {
         return os;
     }
 
-    // overload operator<< specialization for simplices with D = 0 (vertices)
-    template <>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
-    {
-        os << &s;
-        return os;
-    }
 
 }    // namespace mito
 

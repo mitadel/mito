@@ -25,7 +25,8 @@ namespace mito::mesh {
 
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<vertex_container<simplex_t<0> *>, simplex_collection<I + 1>...>;
+            using type = std::tuple<
+                vertex_container<const oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
         };
 
         // this expands to:
@@ -209,9 +210,9 @@ namespace mito::mesh {
             fileStream >> index2;
             --index2;
 
-            vertex_t & vertex0 = _getVertex(index0);
-            vertex_t & vertex1 = _getVertex(index1);
-            vertex_t & vertex2 = _getVertex(index2);
+            auto vertex0 = _getVertex(index0);
+            auto vertex1 = _getVertex(index1);
+            auto vertex2 = _getVertex(index2);
 
             auto segment0 = segment({ vertex0, vertex1 });
             _addSimplex(segment0);

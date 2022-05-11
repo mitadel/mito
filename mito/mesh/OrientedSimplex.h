@@ -120,6 +120,57 @@ namespace mito::mesh {
         friend class OrientedSimplexFactory<D>;
     };
 
+    /*
+     * This class collapses OrientedSimplex<D> for D = 0.
+     *
+     * A simplex of order 0, like a vertex, is an empty object.
+     */
+
+    template <>
+    class OrientedSimplex<0> {
+      public:
+        // default constructor
+        constexpr OrientedSimplex() {}
+
+        // empty destructor
+        constexpr ~OrientedSimplex() {}
+
+      private:
+        // delete copy constructor
+        OrientedSimplex(const OrientedSimplex &) = delete;
+
+        // delete move constructor
+        OrientedSimplex(const OrientedSimplex &&) = delete;
+
+        // delete assignment operator
+        const OrientedSimplex & operator=(const OrientedSimplex &) = delete;
+
+        // delete move assignment operator
+        const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
+
+      public:
+        // accessor for the subsimplices
+        auto simplices() const { return simplex_composition_t<0>(); }    // TOFIX
+
+        // add the vertices of this simplex to a set of vertices
+        template <class VERTEX_COLLECTION_T>
+        void vertices(VERTEX_COLLECTION_T & vertices) const
+        {
+            // insert this vertex
+            vertices.insert(this);
+            // all done
+            return;
+        }
+
+      public:
+        // perform a sanity check
+        bool sanityCheck() const
+        {
+            // a simplex of order 0 has only 1 vertex (this one!)
+            return true;
+        }
+    };
+
     // overload operator<< for oriented simplices
     template <int D>
     std::ostream & operator<<(std::ostream & os, const OrientedSimplex<D> & s)
@@ -129,6 +180,14 @@ namespace mito::mesh {
         // print footprint
         os << "footprint: " << s.simplex() << std::endl;
         // all done
+        return os;
+    }
+
+    // overload operator<< specialization for simplices with D = 0 (vertices)
+    template <>
+    std::ostream & operator<<(std::ostream & os, const OrientedSimplex<0> & s)
+    {
+        os << &s;
         return os;
     }
 

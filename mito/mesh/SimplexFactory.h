@@ -82,7 +82,7 @@ namespace mito::mesh {
     auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition)
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { composition[0], composition[1] };
+        composition_t representative { composition[0].get(), composition[1].get() };
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
         // all done

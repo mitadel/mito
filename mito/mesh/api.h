@@ -9,17 +9,16 @@ namespace mito::mesh {
     template <int D, class... Args>
     constexpr auto point(Args &&... args);
 
-    // vertex factory
-    constexpr auto vertex();
-
     // oriented simplex factory
     template <int I>
     oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
         I > 1);
 
+    // vertex factory
+    oriented_simplex_ptr<0> vertex();
+
     // segment factory
-    oriented_simplex_ptr<1> segment(
-        const std::array<std::reference_wrapper<const oriented_simplex_t<0>>, 2> & simplices);
+    oriented_simplex_ptr<1> segment(const simplex_composition_t<1> & simplices);
 
     // triangle factory
     oriented_simplex_ptr<2> triangle(const simplex_composition_t<2> & simplices);
@@ -49,7 +48,7 @@ namespace mito::mesh {
     }
 
     template <int D>
-    auto incidence(const oriented_simplex_ptr<D> & oriented_simplex) 
+    auto incidence(const oriented_simplex_ptr<D> & oriented_simplex)
     {
         return OrientedSimplexFactory<D>::incidence(oriented_simplex);
     }

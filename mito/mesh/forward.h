@@ -38,7 +38,7 @@ namespace mito::mesh {
     using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>; //TOFIX
 
     // class simplex
-    template <int D>
+    template <int D> requires (D > 0)
     class Simplex;
 
     // class oriented simplex
@@ -53,12 +53,26 @@ namespace mito::mesh {
     template <int D>
     class OrientedSimplexFactory;
 
+    // vertex alias
+    using vertex_t = OrientedSimplex<0>;
+
+    // helper class to allow template specialization of simplex alias
+    template <int D>
+    class helperSimplexClass {
+      public:
+        using simplex_type = Simplex<D>;
+    };
+
+    // helper class to allow template specialization of simplex alias
+    template <>
+    class helperSimplexClass<0> {
+      public:
+        using simplex_type = vertex_t;
+    };
+
     // simplex alias
     template <int D>
-    using simplex_t = Simplex<D>;
-
-    // vertex alias
-    using vertex_t = Simplex<0>;
+    using simplex_t = typename helperSimplexClass<D>::simplex_type;
 
     // vertex set alias
     using vertex_set_t = std::unordered_set<const vertex_t *>;
@@ -66,23 +80,9 @@ namespace mito::mesh {
     // vertex vector alias
     using vertex_vector_t = std::vector<const vertex_t *>;
 
-    // helper class to allow template specialization of oriented simplex alias
-    template <int D>
-    class helperOrientedSimplexClass {
-      public:
-        using simplex_type = OrientedSimplex<D>;
-    };
-
-    // helper class to allow template specialization of oriented simplex alias
-    template <>
-    class helperOrientedSimplexClass<0> {
-      public:
-        using simplex_type = Simplex<0>;
-    };
-
     // oriented simplex alias
     template <int D>
-    using oriented_simplex_t = typename helperOrientedSimplexClass<D>::simplex_type;
+    using oriented_simplex_t = OrientedSimplex<D>;
 
     // oriented simplex pointer alias
     template <int D>
@@ -92,24 +92,9 @@ namespace mito::mesh {
     template <int D>
     using simplex_ptr = std::shared_ptr<const Simplex<D>>;
 
-    // helper class to allow template specialization of oriented simplex composition alias
-    template <int D>
-    class helperOrientedSimplexCompositionClass {
-      public:
-        using simplex_composition_type = std::array<oriented_simplex_ptr<D - 1>, D + 1>;
-    };
-
-    // helper class to allow template specialization of oriented simplex composition alias
-    template <>
-    class helperOrientedSimplexCompositionClass<1> {
-      public:
-        using simplex_composition_type = std::array<const simplex_t<0> *, 2>;
-    };
-
     // oriented simplex composition alias
     template <int D>
-    using simplex_composition_t =
-        typename helperOrientedSimplexCompositionClass<D>::simplex_composition_type;
+    using simplex_composition_t = std::array<oriented_simplex_ptr<D - 1>, D + 1>;
 
     // segment alias
     using segment_t = OrientedSimplex<1>;

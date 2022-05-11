@@ -12,9 +12,6 @@ namespace mito::mesh {
         return point_t<D>(std::forward<Args>(args)...);
     }
 
-    // vertex factory
-    constexpr auto vertex() { return vertex_t(); }
-
     // oriented simplex factory
     template <int I>
     oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
@@ -23,12 +20,13 @@ namespace mito::mesh {
         return OrientedSimplexFactory<I>::orientedSimplex(simplices);
     }
 
+    // vertex factory
+    oriented_simplex_ptr<0> vertex() { return std::make_shared<oriented_simplex_t<0>>(); }
+
     // segment factory
-    oriented_simplex_ptr<1> segment(
-        const std::array<std::reference_wrapper<const oriented_simplex_t<0>>, 2> & simplices)
+    oriented_simplex_ptr<1> segment(const simplex_composition_t<1> & simplices)
     {
-        return OrientedSimplexFactory<1>::orientedSimplex(
-            simplex_composition_t<1> { &simplices[0].get(), &simplices[1].get() });
+        return OrientedSimplexFactory<1>::orientedSimplex(simplices);
     }
 
     // triangle factory
