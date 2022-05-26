@@ -62,7 +62,7 @@ class SegmentedContainer {
 
   public:
     template <class... Args>
-    void add(Args &&... args)
+    T * add(Args &&... args)
     {
         // fetch the next available location where to write the new element
         auto location = _next_available_location();
@@ -83,7 +83,7 @@ class SegmentedContainer {
         ++_end;
 
         // all done
-        return;
+        return location;
     }
 
   private:
