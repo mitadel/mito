@@ -10,7 +10,12 @@ class SegmentedContainer {
   public:
     SegmentedContainer() : _data() {}
 
-    // TODO: implement destructor
+    ~SegmentedContainer()
+    {
+        for (const auto & segment : _data) {
+            delete[] segment;
+        }
+    }
 
     int capacity()
     {
