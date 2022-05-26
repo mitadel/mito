@@ -82,10 +82,15 @@ class SegmentedContainer {
 
 class Simplex {
   public:
-    Simplex(int foo) : _foo(foo) {}
+    Simplex(int foo) : _foo(foo), _is_valid(true) {}
+
+    void invalidate() { _is_valid = false; }
+
+    bool is_valid() { return _is_valid; }
 
   private:
     int _foo;
+    bool _is_valid;
 };
 
 int
