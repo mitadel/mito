@@ -17,16 +17,16 @@ class SegmentedContainer {
         }
     }
 
-    int capacity()
+    int capacity() const
     {
         // the number of segments times the size of each segment
         return _data.size() * N;
     }
 
-    int size() { return _n_elements; }
+    int size() const { return _n_elements; }
 
   private:
-    T * _next_available_location()
+    T * _next_available_location() const
     {
         // get the offset of the furthest element with respect to a multiple of N
         int offset = _n_max % N;
