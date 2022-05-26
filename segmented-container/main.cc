@@ -8,7 +8,7 @@ template <class T, int N = 10 /* segment size */>
 class SegmentedContainer {
 
   public:
-    SegmentedContainer() : _data() {}
+    SegmentedContainer() : _data(), _end(nullptr), _n_elements(0) {}
 
     ~SegmentedContainer()
     {
@@ -23,22 +23,27 @@ class SegmentedContainer {
         return _data.size() * N;
     }
 
+    T * end() const { return _end; }
+
     int size() const { return _n_elements; }
 
   private:
     T * _next_available_location() const
     {
-        // get the offset of the furthest element with respect to a multiple of N
-        int offset = _n_max % N;
-
-        // if the size of the container is a multiple of N
-        if (offset == 0) {
-            // the container is all filled up, there is no available location
+        // if the container is empty
+        if (_data.size() == 0) {
+            // there is no available location
             return nullptr;
         }
 
-        // the next available location is the offset applied to the beginning of the last segment
-        return _data[_data.size() - 1] + offset;
+        // if the container is all filled up
+        if (_end == _data[_data.size() - 1] + N) {
+            // there is no available location
+            return nullptr;
+        }
+
+        // otherwise the next available location is given by {_end}
+        return _end;
     }
 
   public:
@@ -56,6 +61,8 @@ class SegmentedContainer {
             _data.push_back(segment);
             // store the address of the new segment of memory in {location}
             location = segment;
+            // update the end of the container
+            _end = _data[_data.size() - 1];
         }
 
         // create a new instance of T at {location} with placement new
@@ -65,7 +72,7 @@ class SegmentedContainer {
         ++_n_elements;
 
         // increment the index of the furthest element
-        ++_n_max;
+        ++_end;
 
         // all done
         return;
@@ -74,8 +81,8 @@ class SegmentedContainer {
   private:
     // the underlying data
     std::vector<T *> _data;
-    // the index of the furthest element in the container
-    int _n_max;
+    // the end of the container
+    T * _end;
     // the number of elements stored in the container
     int _n_elements;
 };
