@@ -23,13 +23,13 @@ class SegmentedContainer {
         return _data.size() * N;
     }
 
-    int size() { return _size; }
+    int size() { return _n_elements; }
 
   private:
     T * _next_available_location()
     {
-        // get the offset of the container size with respect to a multiple of N
-        int offset = size() % N;
+        // get the offset of the furthest element with respect to a multiple of N
+        int offset = _n_max % N;
 
         // if the size of the container is a multiple of N
         if (offset == 0) {
@@ -62,7 +62,10 @@ class SegmentedContainer {
         new (&location) T(args...);
 
         // increment the size of the container
-        ++_size;
+        ++_n_elements;
+
+        // increment the index of the furthest element
+        ++_n_max;
 
         // all done
         return;
@@ -71,8 +74,10 @@ class SegmentedContainer {
   private:
     // the underlying data
     std::vector<T *> _data;
+    // the index of the furthest element in the container
+    int _n_max;
     // the number of elements stored in the container
-    int _size;
+    int _n_elements;
 };
 
 class Simplex {
