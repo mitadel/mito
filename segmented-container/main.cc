@@ -28,6 +28,18 @@ class SegmentedContainer {
     int size() const { return _n_elements; }
 
   private:
+    T * _allocate_new_segment()
+    {
+        // allocate a new segment of memory
+        T * segment = static_cast<T *>(::operator new(N * sizeof(T)));
+        // add the new segment to the pile
+        _data.push_back(segment);
+        // update the end of the container
+        _end = _data[_data.size() - 1];
+        // return the address of the new segment of memory
+        return segment;
+    }
+
     T * _next_available_location() const
     {
         // if the container is empty
@@ -56,13 +68,7 @@ class SegmentedContainer {
         // if I do not have room for the new element
         if (location == nullptr) {
             // allocate a new segment of memory
-            T * segment = static_cast<T *>(::operator new(N * sizeof(T)));
-            // add the new segment to the pile
-            _data.push_back(segment);
-            // store the address of the new segment of memory in {location}
-            location = segment;
-            // update the end of the container
-            _end = _data[_data.size() - 1];
+            location = _allocate_new_segment();
         }
 
         // create a new instance of T at {location} with placement new
