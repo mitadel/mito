@@ -4,6 +4,7 @@
 #include <numeric>
 #include <cmath>
 #include <queue>
+#include <cassert>
 
 template <class T, int N = 10 /* segment size */>
 class SegmentedContainer {
@@ -145,14 +146,54 @@ class Simplex {
 int
 main()
 {
+    // instantiate a segmented container
+    SegmentedContainer<Simplex, 3> vector;
 
-    SegmentedContainer<Simplex> vector;
-    std::cout << "vector.capacity(): " << vector.capacity() << std::endl;
-    std::cout << "vector.size(): " << vector.size() << std::endl;
-    vector.add(5);
+    // assert that the container is empty and with no capacity
+    assert(vector.capacity() == 0);
+    assert(vector.size() == 0);
 
-    std::cout << "vector.capacity(): " << vector.capacity() << std::endl;
-    std::cout << "vector.size(): " << vector.size() << std::endl;
+    // add three simplices to the container
+    Simplex * simplex0 = vector.add(0);
+    Simplex * simplex1 = vector.add(1);
+    Simplex * simplex2 = vector.add(2);
 
+    // assert that the container has 3 elements and its capacity is also 3
+    assert(vector.capacity() == 3);
+    assert(vector.size() == 3);
+
+    // erase one simplex
+    vector.erase(simplex1);
+
+    // assert that the container has 2 elements and its capacity is still 3
+    assert(vector.capacity() == 3);
+    assert(vector.size() == 2);
+
+    // add one simplex
+    Simplex * simplex3 = vector.add(3);
+
+    // assert that the container has again 3 elements and its capacity is 3
+    assert(vector.capacity() == 3);
+    assert(vector.size() == 3);
+
+    // add another simplex (trigger allocation of new segment)
+    Simplex * simplex4 = vector.add(4);
+
+    // assert that the container has now 4 elements and its capacity is 6
+    // (new memory allocation was in fact triggered)
+    assert(vector.capacity() == 6);
+    assert(vector.size() == 4);
+
+    // erase all the simplices
+    vector.erase(simplex0);
+    vector.erase(simplex2);
+    vector.erase(simplex3);
+    vector.erase(simplex4);
+
+    // assert that the container is empty and but has still capacity of 6
+    assert(vector.capacity() == 6);
+    assert(vector.size() == 0);
+
+    // all done
     return 0;
 }
