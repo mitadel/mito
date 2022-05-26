@@ -74,7 +74,7 @@ class SegmentedContainer {
         }
 
         // create a new instance of T at {location} with placement new
-        new (&location) T(args...);
+        new (location) T(args...);
 
         // increment the size of the container
         ++_n_elements;
