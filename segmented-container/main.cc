@@ -8,8 +8,10 @@ template <class T, int N = 10 /* segment size */>
 class SegmentedContainer {
 
   public:
+    // default constructor (empty data structure)
     SegmentedContainer() : _data(), _end(nullptr), _n_elements(0) {}
 
+    // destructor
     ~SegmentedContainer()
     {
         for (const auto & segment : _data) {
