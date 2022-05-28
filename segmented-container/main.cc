@@ -5,6 +5,7 @@
 #include <cmath>
 #include <queue>
 #include <cassert>
+#include <memory>
 
 template <class T, int N = 10 /* segment size */>
 class SegmentedContainer {
@@ -77,7 +78,7 @@ class SegmentedContainer {
 
   public:
     template <class... Args>
-    T * add(Args &&... args)
+    auto add(Args &&... args)
     {
         // fetch the next available location where to write the new element
         auto location = _next_available_location();
@@ -89,7 +90,8 @@ class SegmentedContainer {
         }
 
         // create a new instance of T at {location} with placement new
-        new (location) T(args...);
+        // and assign it to a new pointer
+        std::shared_ptr<T> pointer(new (location) T(args...));
 
         // increment the size of the container
         ++_n_elements;
@@ -101,10 +103,10 @@ class SegmentedContainer {
         }
 
         // all done
-        return location;
+        return pointer;
     }
 
-    void erase(T * element)
+    void erase(const std::shared_ptr<T> & element)
     {
         // mark element as invalid
         element->invalidate();
@@ -113,7 +115,7 @@ class SegmentedContainer {
         --_n_elements;
 
         // add the address of the element to the queue of the available locations for write
-        _available_locations.push(element);
+        _available_locations.push(element.get());
 
         // all done
         return;
@@ -154,9 +156,9 @@ main()
     assert(vector.size() == 0);
 
     // add three simplices to the container
-    Simplex * simplex0 = vector.add(0);
-    Simplex * simplex1 = vector.add(1);
-    Simplex * simplex2 = vector.add(2);
+    const auto & simplex0 = vector.add(0);
+    const auto & simplex1 = vector.add(1);
+    const auto & simplex2 = vector.add(2);
 
     // assert that the container has 3 elements and its capacity is also 3
     assert(vector.capacity() == 3);
@@ -170,14 +172,14 @@ main()
     assert(vector.size() == 2);
 
     // add one simplex
-    Simplex * simplex3 = vector.add(3);
+    const auto & simplex3 = vector.add(3);
 
     // assert that the container has again 3 elements and its capacity is 3
     assert(vector.capacity() == 3);
     assert(vector.size() == 3);
 
     // add another simplex (trigger allocation of new segment)
-    Simplex * simplex4 = vector.add(4);
+    const auto & simplex4 = vector.add(4);
 
     // assert that the container has now 4 elements and its capacity is 6
     // (new memory allocation was in fact triggered)
