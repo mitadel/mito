@@ -5,14 +5,14 @@
 // (c) 1998-2022 all rights reserved
 //
 
-#if !defined(pyre_mpi_Handle_icc)
-#error This header file contains implementation details of class pyre::mpi::Handle
+#if !defined(mito_utilities_Handle_icc)
+#error This header file contains implementation details of class mito::utilities::Handle
 #else
 
 // interface
 template <class Resource>
-pyre::mpi::Handle<Resource>::
-operator pyre::mpi::Handle<Resource>::handle_t () const
+mito::utilities::Handle<Resource>::
+operator mito::utilities::Handle<Resource>::handle_t () const
 {
     // get and return the mpi handle
     return _shared->handle();
@@ -21,7 +21,7 @@ operator pyre::mpi::Handle<Resource>::handle_t () const
 
 // destructor
 template <class Resource>
-pyre::mpi::Handle<Resource>::
+mito::utilities::Handle<Resource>::
 ~Handle()
 {
     // notify the shareable that I am done with it
@@ -35,7 +35,7 @@ pyre::mpi::Handle<Resource>::
 
 // the default constructor
 template <class Resource>
-pyre::mpi::Handle<Resource>::
+mito::utilities::Handle<Resource>::
 Handle(handle_t handle, bool immortal) :
     _shared(new shared_t(handle, immortal))
 {
@@ -45,8 +45,8 @@ Handle(handle_t handle, bool immortal) :
 
 // the copy constructor
 template <class Resource>
-pyre::mpi::Handle<Resource>::
-Handle(const pyre::mpi::Handle<Resource> & other) :
+mito::utilities::Handle<Resource>::
+Handle(const mito::utilities::Handle<Resource> & other) :
     _shared(other._shared)
 {
     // grab a reference to the shared handle
@@ -55,9 +55,9 @@ Handle(const pyre::mpi::Handle<Resource> & other) :
 
 // operator =
 template <class Resource>
-pyre::mpi::Handle<Resource> &
-pyre::mpi::Handle<Resource>::
-operator = (const pyre::mpi::Handle<Resource> & other)
+mito::utilities::Handle<Resource> &
+mito::utilities::Handle<Resource>::
+operator = (const mito::utilities::Handle<Resource> & other)
 {
     // if {other} and I point to different shared handles
     if (other._shared != _shared) {

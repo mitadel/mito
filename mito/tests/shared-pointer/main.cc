@@ -6,7 +6,7 @@ class Resource {
   public:
 
     using handle_t = Resource *;
-    using shared_t = pyre::mpi::Shareable<Resource>;
+    using shared_t = mito::utilities::Shareable<Resource>;
 
     Resource(int a): _a(a) {
         std::cout << "Built resource " << _a << std::endl;   
@@ -28,7 +28,7 @@ int main() {
 
     Resource resource(1);
 
-    pyre::mpi::Handle<Resource> handle(&resource, false);
+    mito::utilities::Handle<Resource> handle(&resource, false);
 
     // all done 
     return 0;

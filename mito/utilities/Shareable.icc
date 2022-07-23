@@ -5,14 +5,14 @@
 // (c) 1998-2022 all rights reserved
 //
 
-#if !defined(pyre_mpi_Shareable_icc)
-#error This header file contains implementation details of class pyre::mpi::Shareable
+#if !defined(mito_utilities_Shareable_icc)
+#error This header file contains implementation details of class mito::utilities::Shareable
 #else
 
 // interface
 template <class Resource>
 int
-pyre::mpi::Shareable<Resource>::acquire()
+mito::utilities::Shareable<Resource>::acquire()
 {
     // increment the reference count and return it
     return ++_count;
@@ -20,7 +20,7 @@ pyre::mpi::Shareable<Resource>::acquire()
 
 template <class Resource>
 int
-pyre::mpi::Shareable<Resource>::release()
+mito::utilities::Shareable<Resource>::release()
 {
     // decrement the reference count
     if (--_count == 0 && !_immortal) {
@@ -33,7 +33,7 @@ pyre::mpi::Shareable<Resource>::release()
 
 template <class Resource>
 int
-pyre::mpi::Shareable<Resource>::references() const
+mito::utilities::Shareable<Resource>::references() const
 {
     // return the count of outstanding references
     return _count;
@@ -41,8 +41,8 @@ pyre::mpi::Shareable<Resource>::references() const
 
 
 template <class Resource>
-typename pyre::mpi::Shareable<Resource>::handle_t
-pyre::mpi::Shareable<Resource>::handle() const
+typename mito::utilities::Shareable<Resource>::handle_t
+mito::utilities::Shareable<Resource>::handle() const
 {
     // return the MPI handle
     return _handle;
@@ -51,12 +51,12 @@ pyre::mpi::Shareable<Resource>::handle() const
 
 // destructor
 template <class Resource>
-pyre::mpi::Shareable<Resource>::~Shareable()
+mito::utilities::Shareable<Resource>::~Shareable()
 {}
 
 // constructor
 template <class Resource>
-pyre::mpi::Shareable<Resource>::Shareable(handle_t handle, bool immortal) :
+mito::utilities::Shareable<Resource>::Shareable(handle_t handle, bool immortal) :
     _count(0),
     _immortal(immortal),
     _handle(handle)

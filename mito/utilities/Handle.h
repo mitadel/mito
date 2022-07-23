@@ -6,12 +6,12 @@
 //
 
 // code guard
-#if !defined(pyre_mpi_Handle_h)
-#define pyre_mpi_Handle_h
+#if !defined(mito_utilities_Handle_h)
+#define mito_utilities_Handle_h
 
-// place Handle in namespace pyre::mpi
-namespace pyre {
-    namespace mpi {
+// place Handle in namespace mito::utilities
+namespace mito {
+    namespace utilities {
         template <class Resource> class Handle;
     }
 }
@@ -19,7 +19,7 @@ namespace pyre {
 
 // declaration
 template <class Resource>
-class pyre::mpi::Handle {
+class mito::utilities::Handle {
     // types
 public:
     using resource_t = Resource;
@@ -44,9 +44,9 @@ private:
 
 
 // get the inline definitions
-#define pyre_mpi_Handle_icc
+#define mito_utilities_Handle_icc
 #include "Handle.icc"
-#undef pyre_mpi_Handle_icc
+#undef mito_utilities_Handle_icc
 
 
 # endif

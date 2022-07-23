@@ -6,12 +6,12 @@
 //
 
 // code guard
-#if !defined(pyre_mpi_Shareable_h)
-#define pyre_mpi_Shareable_h
+#if !defined(mito_utilities_Shareable_h)
+#define mito_utilities_Shareable_h
 
-// place Shareable in namespace pyre::mpi
-namespace pyre {
-    namespace mpi {
+// place Shareable in namespace mito::utilities
+namespace mito {
+    namespace utilities {
         template <class Resource> class Shareable;
     }
 }
@@ -19,7 +19,7 @@ namespace pyre {
 
 // declaration
 template <class Resource>
-class pyre::mpi::Shareable {
+class mito::utilities::Shareable {
     // types
 public:
     using resource_t = Resource;
@@ -52,9 +52,9 @@ private:
 
 
 // get the inline definitions
-#define pyre_mpi_Shareable_icc
+#define mito_utilities_Shareable_icc
 #include "Shareable.icc"
-#undef pyre_mpi_Shareable_icc
+#undef mito_utilities_Shareable_icc
 
 
 # endif
