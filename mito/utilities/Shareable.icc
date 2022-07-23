@@ -24,8 +24,8 @@ mito::utilities::Shareable<Resource>::release()
 {
     // decrement the reference count
     if (--_count == 0 && !_immortal) {
-        // if the count reached zero, free the handle
-        Resource::free(&_handle);
+        // if the count reached zero, delete the resource
+        delete _handle;
     }
     // and return the count
     return _count;

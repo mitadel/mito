@@ -11,8 +11,6 @@ class Resource {
 
     ~Resource() { std::cout << "Destroying resource " << _a << std::endl; }
 
-    static inline void free(handle_t *) { return; }
-
   private:
     int _a;
 };
@@ -21,9 +19,9 @@ int
 main()
 {
 
-    Resource resource(1);
+    auto resource = new Resource(1);
 
-    mito::utilities::Handle<Resource> handle(&resource, false);
+    mito::utilities::Handle<Resource> handle(resource, false);
 
     // all done
     return 0;
