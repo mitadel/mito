@@ -11,8 +11,7 @@
 
 // interface
 template <class Resource>
-mito::utilities::Handle<Resource>::
-operator mito::utilities::Handle<Resource>::handle_t () const
+mito::utilities::Handle<Resource>::operator mito::utilities::Handle<Resource>::handle_t() const
 {
     // get and return the mpi handle
     return _shared->handle();
@@ -21,8 +20,7 @@ operator mito::utilities::Handle<Resource>::handle_t () const
 
 // destructor
 template <class Resource>
-mito::utilities::Handle<Resource>::
-~Handle()
+mito::utilities::Handle<Resource>::~Handle()
 {
     // notify the shareable that I am done with it
     if (_shared->release() == 0) {
@@ -35,8 +33,7 @@ mito::utilities::Handle<Resource>::
 
 // the default constructor
 template <class Resource>
-mito::utilities::Handle<Resource>::
-Handle(handle_t handle, bool immortal) :
+mito::utilities::Handle<Resource>::Handle(handle_t handle, bool immortal) :
     _shared(new shared_t(handle, immortal))
 {
     // grab a reference to the shared handle
@@ -45,8 +42,7 @@ Handle(handle_t handle, bool immortal) :
 
 // the copy constructor
 template <class Resource>
-mito::utilities::Handle<Resource>::
-Handle(const mito::utilities::Handle<Resource> & other) :
+mito::utilities::Handle<Resource>::Handle(const mito::utilities::Handle<Resource> & other) :
     _shared(other._shared)
 {
     // grab a reference to the shared handle
@@ -56,8 +52,7 @@ Handle(const mito::utilities::Handle<Resource> & other) :
 // operator =
 template <class Resource>
 mito::utilities::Handle<Resource> &
-mito::utilities::Handle<Resource>::
-operator = (const mito::utilities::Handle<Resource> & other)
+mito::utilities::Handle<Resource>::operator=(const mito::utilities::Handle<Resource> & other)
 {
     // if {other} and I point to different shared handles
     if (other._shared != _shared) {
@@ -76,5 +71,5 @@ operator = (const mito::utilities::Handle<Resource> & other)
     return *this;
 }
 
-# endif
+#endif
 // end of file

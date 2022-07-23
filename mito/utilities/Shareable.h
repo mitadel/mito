@@ -10,41 +10,40 @@
 #define mito_utilities_Shareable_h
 
 // place Shareable in namespace mito::utilities
-namespace mito {
-    namespace utilities {
-        template <class Resource> class Shareable;
-    }
-}
+namespace mito { namespace utilities {
+    template <class Resource>
+    class Shareable;
+}}
 
 
 // declaration
 template <class Resource>
 class mito::utilities::Shareable {
     // types
-public:
+  public:
     using resource_t = Resource;
     using handle_t = Resource::handle_t;
 
     // interface
-public:
-    inline int acquire(); // increment the reference count
-    inline int release(); // decrement the reference count
-    inline int references() const; // return the number of outstanding references
+  public:
+    inline int acquire();             // increment the reference count
+    inline int release();             // decrement the reference count
+    inline int references() const;    // return the number of outstanding references
 
-    inline handle_t handle() const; // return the low level handle
+    inline handle_t handle() const;    // return the low level handle
 
     // meta methods
-public:
+  public:
     inline ~Shareable();
     inline Shareable(handle_t, bool);
 
     // disallow the copy constructors
-private:
+  private:
     inline Shareable(const Shareable &);
     inline const Shareable & operator=(const Shareable &);
 
     // data members
-private:
+  private:
     int _count;
     bool _immortal;
     handle_t _handle;
@@ -57,5 +56,5 @@ private:
 #undef mito_utilities_Shareable_icc
 
 
-# endif
+#endif
 // end of file

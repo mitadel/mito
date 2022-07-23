@@ -10,35 +10,34 @@
 #define mito_utilities_Handle_h
 
 // place Handle in namespace mito::utilities
-namespace mito {
-    namespace utilities {
-        template <class Resource> class Handle;
-    }
-}
+namespace mito { namespace utilities {
+    template <class Resource>
+    class Handle;
+}}
 
 
 // declaration
 template <class Resource>
 class mito::utilities::Handle {
     // types
-public:
+  public:
     using resource_t = Resource;
     using handle_t = Resource::handle_t;
     using shared_t = Resource::shared_t;
 
     // interface
-public:
+  public:
     inline operator handle_t() const;
 
     // meta methods
-public:
+  public:
     inline ~Handle();
     inline Handle(handle_t, bool);
     inline Handle(const Handle &);
     inline Handle & operator=(const Handle &);
 
     // data members
-private:
+  private:
     shared_t * _shared;
 };
 
@@ -49,5 +48,5 @@ private:
 #undef mito_utilities_Handle_icc
 
 
-# endif
+#endif
 // end of file
