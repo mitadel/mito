@@ -19,9 +19,13 @@ int
 main()
 {
 
-    auto resource = new Resource(1);
+    // allocate a new segment of memory
+    Resource * segment = static_cast<Resource *>(::operator new(10 * sizeof(Resource)));
 
-    mito::utilities::Handle<Resource> handle(resource, false);
+    Resource * location = (segment + 1);
+    mito::utilities::Handle<Resource> handle(new (location) Resource(1), true);
+
+    ::operator delete(segment);
 
     // all done
     return 0;
