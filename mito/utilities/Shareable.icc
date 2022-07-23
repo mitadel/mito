@@ -44,7 +44,7 @@ template <class Resource>
 typename mito::utilities::Shareable<Resource>::handle_t
 mito::utilities::Shareable<Resource>::handle() const
 {
-    // return the MPI handle
+    // return the handle
     return _handle;
 }
 

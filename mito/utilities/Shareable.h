@@ -31,7 +31,7 @@ public:
     inline int release(); // decrement the reference count
     inline int references() const; // return the number of outstanding references
 
-    inline handle_t handle() const; // return the low level MPI handle
+    inline handle_t handle() const; // return the low level handle
 
     // meta methods
 public:
