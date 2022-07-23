@@ -12,13 +12,13 @@
 // place Shareable in namespace pyre::mpi
 namespace pyre {
     namespace mpi {
-        template <typename Resource> class Shareable;
+        template <class Resource> class Shareable;
     }
 }
 
 
 // declaration
-template <typename Resource>
+template <class Resource>
 class pyre::mpi::Shareable {
     // types
 public:

@@ -12,13 +12,13 @@
 // place Handle in namespace pyre::mpi
 namespace pyre {
     namespace mpi {
-        template <typename Resource> class Handle;
+        template <class Resource> class Handle;
     }
 }
 
 
 // declaration
-template <typename Resource>
+template <class Resource>
 class pyre::mpi::Handle {
     // types
 public:

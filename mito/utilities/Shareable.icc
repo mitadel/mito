@@ -10,7 +10,7 @@
 #else
 
 // interface
-template <typename Resource>
+template <class Resource>
 int
 pyre::mpi::Shareable<Resource>::acquire()
 {
@@ -18,7 +18,7 @@ pyre::mpi::Shareable<Resource>::acquire()
     return ++_count;
 }
 
-template <typename Resource>
+template <class Resource>
 int
 pyre::mpi::Shareable<Resource>::release()
 {
@@ -31,7 +31,7 @@ pyre::mpi::Shareable<Resource>::release()
     return _count;
 }
 
-template <typename Resource>
+template <class Resource>
 int
 pyre::mpi::Shareable<Resource>::references() const
 {
@@ -40,7 +40,7 @@ pyre::mpi::Shareable<Resource>::references() const
 }
 
 
-template <typename Resource>
+template <class Resource>
 typename pyre::mpi::Shareable<Resource>::handle_t
 pyre::mpi::Shareable<Resource>::handle() const
 {
@@ -50,12 +50,12 @@ pyre::mpi::Shareable<Resource>::handle() const
 
 
 // destructor
-template <typename Resource>
+template <class Resource>
 pyre::mpi::Shareable<Resource>::~Shareable()
 {}
 
 // constructor
-template <typename Resource>
+template <class Resource>
 pyre::mpi::Shareable<Resource>::Shareable(handle_t handle, bool immortal) :
     _count(0),
     _immortal(immortal),
