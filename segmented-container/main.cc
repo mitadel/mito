@@ -18,7 +18,7 @@ class SegmentedContainer {
     ~SegmentedContainer()
     {
         for (const auto & segment : _data) {
-            delete[] segment;
+            ::operator delete(segment);
         }
     }
 
