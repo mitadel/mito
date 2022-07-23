@@ -22,9 +22,9 @@ template <typename Resource>
 class pyre::mpi::Handle {
     // types
 public:
-    typedef Resource resource_t;
-    typedef typename Resource::handle_t handle_t;
-    typedef typename Resource::shared_t shared_t;
+    using resource_t = Resource;
+    using handle_t = Resource::handle_t;
+    using shared_t = Resource::shared_t;
 
     // interface
 public:

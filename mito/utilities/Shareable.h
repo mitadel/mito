@@ -22,8 +22,8 @@ template <typename Resource>
 class pyre::mpi::Shareable {
     // types
 public:
-    typedef Resource resource_t;
-    typedef typename Resource::handle_t handle_t;
+    using resource_t = Resource;
+    using handle_t = Resource::handle_t;
 
     // interface
 public:
