@@ -6,19 +6,19 @@
 //
 
 // code guard
-#if !defined(mito_utilities_Handle_h)
-#define mito_utilities_Handle_h
+#if !defined(mito_utilities_SharedPointer_h)
+#define mito_utilities_SharedPointer_h
 
-// place Handle in namespace mito::utilities
+// place SharedPointer in namespace mito::utilities
 namespace mito { namespace utilities {
     template <class Resource, bool immortal>
-    class Handle;
+    class SharedPointer;
 }}
 
 
 // declaration
 template <class Resource, bool immortal = false>
-class mito::utilities::Handle {
+class mito::utilities::SharedPointer {
     // types
   public:
     using resource_t = Resource;
@@ -31,10 +31,10 @@ class mito::utilities::Handle {
 
     // meta methods
   public:
-    inline ~Handle();
-    inline Handle(handle_t);
-    inline Handle(const Handle &);
-    inline Handle & operator=(const Handle &);
+    inline ~SharedPointer();
+    inline SharedPointer(handle_t);
+    inline SharedPointer(const SharedPointer &);
+    inline SharedPointer & operator=(const SharedPointer &);
 
     // data members
   private:
@@ -43,9 +43,9 @@ class mito::utilities::Handle {
 
 
 // get the inline definitions
-#define mito_utilities_Handle_icc
-#include "Handle.icc"
-#undef mito_utilities_Handle_icc
+#define mito_utilities_SharedPointer_icc
+#include "SharedPointer.icc"
+#undef mito_utilities_SharedPointer_icc
 
 
 #endif

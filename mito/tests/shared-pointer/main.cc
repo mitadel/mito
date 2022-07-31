@@ -1,5 +1,5 @@
 #include "../../base.h"
-#include "../../utilities/Handle.h"
+#include "../../utilities/SharedPointer.h"
 #include "../../utilities/Shareable.h"
 
 class Resource {

@@ -5,13 +5,13 @@
 // (c) 1998-2022 all rights reserved
 //
 
-#if !defined(mito_utilities_Handle_icc)
-#error This header file contains implementation details of class mito::utilities::Handle
+#if !defined(mito_utilities_SharedPointer_icc)
+#error This header file contains implementation details of class mito::utilities::SharedPointer
 #else
 
 // interface
 template <class Resource, bool immortal>
-mito::utilities::Handle<Resource, immortal>::operator mito::utilities::Handle<
+mito::utilities::SharedPointer<Resource, immortal>::operator mito::utilities::SharedPointer<
     Resource, immortal>::handle_t() const
 {
     // get and return the mpi handle
@@ -21,7 +21,7 @@ mito::utilities::Handle<Resource, immortal>::operator mito::utilities::Handle<
 
 // destructor
 template <class Resource, bool immortal>
-mito::utilities::Handle<Resource, immortal>::~Handle()
+mito::utilities::SharedPointer<Resource, immortal>::~SharedPointer()
 {
     // notify the shareable that I am done with it
     if (_shared->release() == 0) {
@@ -34,7 +34,8 @@ mito::utilities::Handle<Resource, immortal>::~Handle()
 
 // the default constructor
 template <class Resource, bool immortal>
-mito::utilities::Handle<Resource, immortal>::Handle(handle_t handle) : _shared(new shared_t(handle))
+mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(handle_t handle) :
+    _shared(new shared_t(handle))
 {
     // grab a reference to the shared handle
     _shared->acquire();
@@ -42,8 +43,8 @@ mito::utilities::Handle<Resource, immortal>::Handle(handle_t handle) : _shared(n
 
 // the copy constructor
 template <class Resource, bool immortal>
-mito::utilities::Handle<Resource, immortal>::Handle(
-    const mito::utilities::Handle<Resource, immortal> & other) :
+mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(
+    const mito::utilities::SharedPointer<Resource, immortal> & other) :
     _shared(other._shared)
 {
     // grab a reference to the shared handle
@@ -52,9 +53,9 @@ mito::utilities::Handle<Resource, immortal>::Handle(
 
 // operator =
 template <class Resource, bool immortal>
-mito::utilities::Handle<Resource, immortal> &
-mito::utilities::Handle<Resource, immortal>::operator=(
-    const mito::utilities::Handle<Resource, immortal> & other)
+mito::utilities::SharedPointer<Resource, immortal> &
+mito::utilities::SharedPointer<Resource, immortal>::operator=(
+    const mito::utilities::SharedPointer<Resource, immortal> & other)
 {
     // if {other} and I point to different shared handles
     if (other._shared != _shared) {
