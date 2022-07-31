@@ -11,13 +11,13 @@
 
 // place Shareable in namespace mito::utilities
 namespace mito { namespace utilities {
-    template <class Resource>
+    template <class Resource, bool immortal>
     class Shareable;
 }}
 
 
 // declaration
-template <class Resource>
+template <class Resource, bool immortal>
 class mito::utilities::Shareable {
     // types
   public:
@@ -35,7 +35,7 @@ class mito::utilities::Shareable {
     // meta methods
   public:
     inline ~Shareable();
-    inline Shareable(handle_t, bool);
+    inline Shareable(handle_t);
 
     // disallow the copy constructors
   private:
@@ -45,7 +45,6 @@ class mito::utilities::Shareable {
     // data members
   private:
     int _count;
-    bool _immortal;
     handle_t _handle;
 };
 

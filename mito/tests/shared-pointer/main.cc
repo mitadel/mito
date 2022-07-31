@@ -5,7 +5,7 @@
 class Resource {
   public:
     using handle_t = Resource *;
-    using shared_t = mito::utilities::Shareable<Resource>;
+    using shared_t = mito::utilities::Shareable<Resource, true /* TOFIX */>;
 
     Resource(int a) : _a(a) { std::cout << "Built resource " << _a << std::endl; }
 
@@ -23,7 +23,7 @@ main()
     Resource * segment = static_cast<Resource *>(::operator new(10 * sizeof(Resource)));
 
     Resource * location = (segment + 1);
-    mito::utilities::Handle<Resource> handle(new (location) Resource(1), true);
+    mito::utilities::Handle<Resource, true> handle(new (location) Resource(1));
 
     ::operator delete(segment);
 

@@ -10,20 +10,20 @@
 #else
 
 // interface
-template <class Resource>
+template <class Resource, bool immortal>
 int
-mito::utilities::Shareable<Resource>::acquire()
+mito::utilities::Shareable<Resource, immortal>::acquire()
 {
     // increment the reference count and return it
     return ++_count;
 }
 
-template <class Resource>
+template <class Resource, bool immortal>
 int
-mito::utilities::Shareable<Resource>::release()
+mito::utilities::Shareable<Resource, immortal>::release()
 {
     // decrement the reference count
-    if (--_count == 0 && !_immortal) {
+    if (--_count == 0 && !immortal) {
         // if the count reached zero, delete the resource
         delete _handle;
     }
@@ -31,18 +31,18 @@ mito::utilities::Shareable<Resource>::release()
     return _count;
 }
 
-template <class Resource>
+template <class Resource, bool immortal>
 int
-mito::utilities::Shareable<Resource>::references() const
+mito::utilities::Shareable<Resource, immortal>::references() const
 {
     // return the count of outstanding references
     return _count;
 }
 
 
-template <class Resource>
-typename mito::utilities::Shareable<Resource>::handle_t
-mito::utilities::Shareable<Resource>::handle() const
+template <class Resource, bool immortal>
+typename mito::utilities::Shareable<Resource, immortal>::handle_t
+mito::utilities::Shareable<Resource, immortal>::handle() const
 {
     // return the handle
     return _handle;
@@ -50,15 +50,14 @@ mito::utilities::Shareable<Resource>::handle() const
 
 
 // destructor
-template <class Resource>
-mito::utilities::Shareable<Resource>::~Shareable()
+template <class Resource, bool immortal>
+mito::utilities::Shareable<Resource, immortal>::~Shareable()
 {}
 
 // constructor
-template <class Resource>
-mito::utilities::Shareable<Resource>::Shareable(handle_t handle, bool immortal) :
+template <class Resource, bool immortal>
+mito::utilities::Shareable<Resource, immortal>::Shareable(handle_t handle) :
     _count(0),
-    _immortal(immortal),
     _handle(handle)
 {}
 

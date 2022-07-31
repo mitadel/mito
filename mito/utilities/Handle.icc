@@ -10,8 +10,9 @@
 #else
 
 // interface
-template <class Resource>
-mito::utilities::Handle<Resource>::operator mito::utilities::Handle<Resource>::handle_t() const
+template <class Resource, bool immortal>
+mito::utilities::Handle<Resource, immortal>::operator mito::utilities::Handle<
+    Resource, immortal>::handle_t() const
 {
     // get and return the mpi handle
     return _shared->handle();
@@ -19,8 +20,8 @@ mito::utilities::Handle<Resource>::operator mito::utilities::Handle<Resource>::h
 
 
 // destructor
-template <class Resource>
-mito::utilities::Handle<Resource>::~Handle()
+template <class Resource, bool immortal>
+mito::utilities::Handle<Resource, immortal>::~Handle()
 {
     // notify the shareable that I am done with it
     if (_shared->release() == 0) {
@@ -32,17 +33,17 @@ mito::utilities::Handle<Resource>::~Handle()
 }
 
 // the default constructor
-template <class Resource>
-mito::utilities::Handle<Resource>::Handle(handle_t handle, bool immortal) :
-    _shared(new shared_t(handle, immortal))
+template <class Resource, bool immortal>
+mito::utilities::Handle<Resource, immortal>::Handle(handle_t handle) : _shared(new shared_t(handle))
 {
     // grab a reference to the shared handle
     _shared->acquire();
 }
 
 // the copy constructor
-template <class Resource>
-mito::utilities::Handle<Resource>::Handle(const mito::utilities::Handle<Resource> & other) :
+template <class Resource, bool immortal>
+mito::utilities::Handle<Resource, immortal>::Handle(
+    const mito::utilities::Handle<Resource, immortal> & other) :
     _shared(other._shared)
 {
     // grab a reference to the shared handle
@@ -50,9 +51,10 @@ mito::utilities::Handle<Resource>::Handle(const mito::utilities::Handle<Resource
 }
 
 // operator =
-template <class Resource>
-mito::utilities::Handle<Resource> &
-mito::utilities::Handle<Resource>::operator=(const mito::utilities::Handle<Resource> & other)
+template <class Resource, bool immortal>
+mito::utilities::Handle<Resource, immortal> &
+mito::utilities::Handle<Resource, immortal>::operator=(
+    const mito::utilities::Handle<Resource, immortal> & other)
 {
     // if {other} and I point to different shared handles
     if (other._shared != _shared) {

@@ -11,13 +11,13 @@
 
 // place Handle in namespace mito::utilities
 namespace mito { namespace utilities {
-    template <class Resource>
+    template <class Resource, bool immortal>
     class Handle;
 }}
 
 
 // declaration
-template <class Resource>
+template <class Resource, bool immortal = false>
 class mito::utilities::Handle {
     // types
   public:
@@ -32,7 +32,7 @@ class mito::utilities::Handle {
     // meta methods
   public:
     inline ~Handle();
-    inline Handle(handle_t, bool);
+    inline Handle(handle_t);
     inline Handle(const Handle &);
     inline Handle & operator=(const Handle &);
 
