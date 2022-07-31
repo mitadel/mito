@@ -15,11 +15,13 @@ int
 main()
 {
 
-    // allocate a new segment of memory
-    Resource * segment = static_cast<Resource *>(::operator new(10 * sizeof(Resource)));
+    using resource_t = Resource;
 
-    Resource * location = (segment + 1);
-    mito::utilities::SharedPointer<Resource, true> handle(new (location) Resource(1));
+    // allocate a new segment of memory
+    resource_t * segment = static_cast<resource_t *>(::operator new(10 * sizeof(resource_t)));
+
+    resource_t * location = (segment + 1);
+    mito::utilities::SharedPointer<resource_t, true> handle(new (location) resource_t(1));
     // mito::utilities::SharedPointer<Resource, true> handle(10, location);
 
     ::operator delete(segment);
