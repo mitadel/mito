@@ -24,7 +24,7 @@ main()
     resource_t * segment = static_cast<resource_t *>(::operator new(10 * sizeof(resource_t)));
 
     resource_t * location = (segment + 1);
-    mito::utilities::SharedPointer<Resource, true> handle(10, 12, nullptr, location);
+    mito::utilities::SharedPointer<resource_t, true> handle(10, 12, nullptr, location);
 
     ::operator delete(segment);
 
