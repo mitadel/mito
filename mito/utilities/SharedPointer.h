@@ -18,7 +18,7 @@ class mito::utilities::SharedPointer {
     // types
   public:
     using resource_t = Resource;
-    using handle_t = Resource::handle_t;
+    using handle_t = Resource *;
 
     // interface
   public:
