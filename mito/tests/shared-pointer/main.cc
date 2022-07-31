@@ -1,11 +1,9 @@
 #include "../../base.h"
 #include "../../utilities/SharedPointer.h"
-#include "../../utilities/Shareable.h"
 
 class Resource {
   public:
     using handle_t = Resource *;
-    using shared_t = mito::utilities::Shareable<Resource, true /* TOFIX */>;
 
     Resource(int a) : _a(a) { std::cout << "Built resource " << _a << std::endl; }
 

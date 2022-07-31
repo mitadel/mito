@@ -1,9 +1,5 @@
 // -*- C++ -*-
 //
-// michael a.g. aïvázis
-// orthologue
-// (c) 1998-2022 all rights reserved
-//
 
 // code guard
 #if !defined(mito_utilities_SharedPointer_h)
@@ -23,22 +19,35 @@ class mito::utilities::SharedPointer {
   public:
     using resource_t = Resource;
     using handle_t = Resource::handle_t;
-    using shared_t = Resource::shared_t;
 
     // interface
   public:
+    // cast to handle_t
     inline operator handle_t() const;
+    // accessor for the number of outstanding references
+    inline int references() const;
 
     // meta methods
   public:
+    // destructor
     inline ~SharedPointer();
+    // constructor
     inline SharedPointer(handle_t);
+    // copy constructor
     inline SharedPointer(const SharedPointer &);
+    // operator=
     inline SharedPointer & operator=(const SharedPointer &);
+
+  private:
+    // increment the reference count
+    inline int _acquire();
+    // decrement the reference count
+    inline int _release();
 
     // data members
   private:
-    shared_t * _shared;
+    int _count;
+    handle_t _handle;
 };
 
 

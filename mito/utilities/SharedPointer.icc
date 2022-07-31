@@ -1,9 +1,5 @@
 // -*- C++ -*-
 //
-// michael a.g. aïvázis
-// orthologue
-// (c) 1998-2022 all rights reserved
-//
 
 #if !defined(mito_utilities_SharedPointer_icc)
 #error This header file contains implementation details of class mito::utilities::SharedPointer
@@ -14,41 +10,45 @@ template <class Resource, bool immortal>
 mito::utilities::SharedPointer<Resource, immortal>::operator mito::utilities::SharedPointer<
     Resource, immortal>::handle_t() const
 {
-    // get and return the mpi handle
-    return _shared->handle();
+    // return the handle
+    return _handle;
 }
 
+template <class Resource, bool immortal>
+int
+mito::utilities::SharedPointer<Resource, immortal>::references() const
+{
+    // return the count of outstanding references
+    return _count;
+}
 
 // destructor
 template <class Resource, bool immortal>
 mito::utilities::SharedPointer<Resource, immortal>::~SharedPointer()
 {
-    // notify the shareable that I am done with it
-    if (_shared->release() == 0) {
-        // if its reference count has reached zero, deallocate it
-        delete _shared;
-    }
+    // release my current handle
+    _release();
+
     // and return
     return;
 }
 
 // the default constructor
 template <class Resource, bool immortal>
-mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(handle_t handle) :
-    _shared(new shared_t(handle))
+mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(handle_t handle) : _handle(handle)
 {
     // grab a reference to the shared handle
-    _shared->acquire();
+    _acquire();
 }
 
 // the copy constructor
 template <class Resource, bool immortal>
 mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(
     const mito::utilities::SharedPointer<Resource, immortal> & other) :
-    _shared(other._shared)
+    _handle(other._handle)
 {
     // grab a reference to the shared handle
-    _shared->acquire();
+    _acquire();
 }
 
 // operator =
@@ -57,21 +57,40 @@ mito::utilities::SharedPointer<Resource, immortal> &
 mito::utilities::SharedPointer<Resource, immortal>::operator=(
     const mito::utilities::SharedPointer<Resource, immortal> & other)
 {
-    // if {other} and I point to different shared handles
-    if (other._shared != _shared) {
-        // notify my shareable that I am done with it
-        if (_shared->release() == 0) {
-            // and deallocate it if its reference count reached zero
-            delete _shared;
-        }
+    // if {other} and I point to different handles
+    if (other._handle != _handle) {
+        // release my current handle
+        _release();
         // adopt the new shareable
-        _shared = other._shared;
+        _handle = other._handle;
         // and grab a reference to it
-        _shared->acquire();
+        _acquire();
     }
 
     // all done
     return *this;
+}
+
+// interface
+template <class Resource, bool immortal>
+int
+mito::utilities::SharedPointer<Resource, immortal>::_acquire()
+{
+    // increment the reference count and return it
+    return ++_count;
+}
+
+template <class Resource, bool immortal>
+int
+mito::utilities::SharedPointer<Resource, immortal>::_release()
+{
+    // decrement the reference count
+    if (--_count == 0 && !immortal) {
+        // if the count reached zero, delete the resource
+        delete _handle;
+    }
+    // and return the count
+    return _count;
 }
 
 #endif
