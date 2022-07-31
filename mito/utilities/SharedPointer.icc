@@ -33,9 +33,48 @@ mito::utilities::SharedPointer<Resource, immortal>::~SharedPointer()
     return;
 }
 
+template <class Resource, class... Args, size_t... I>
+auto
+_place_instantiate_object(Resource * location, std::tuple<Args...> args, std::index_sequence<I...>)
+{
+    return new (location) Resource(std::get<I>(args)...);
+}
+
+template <class... Args>
+auto
+_last_argument(std::tuple<Args...> args)
+{
+    auto constexpr Last = sizeof...(Args) - 1;
+    return std::get<Last>(args);
+}
+
 // the default constructor
 template <class Resource, bool immortal>
-mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(handle_t handle) : _handle(handle)
+template <class... Args>
+mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(Args &&... args) requires(
+    // require that the {Resource} is constructible from the full parameter pack
+    std::is_constructible_v<Resource, Args &&...>) :
+    _handle(new Resource(args...))
+{
+    // grab a reference to the shared handle
+    _acquire();
+}
+
+// the placement-new constructor
+template <class Resource, bool immortal>
+template <class... Args>
+mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(Args &&... args) requires(
+    // require that the Resource is not constructible from the parameter pack
+    !(std::is_constructible_v<Resource, Args &&...>) &&
+    // and that the trailing parameter is a pointer to {Resource}
+    std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>) :
+    _handle(_place_instantiate_object(
+        // extract the location for the placement new
+        _last_argument(std::forward_as_tuple(args...)),
+        // forward the arguments for the constructor
+        std::forward_as_tuple(args...),
+        // to extract all arguments except the last one
+        std::make_index_sequence<sizeof...(Args) - 1> {}))
 {
     // grab a reference to the shared handle
     _acquire();

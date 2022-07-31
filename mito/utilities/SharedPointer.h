@@ -31,8 +31,17 @@ class mito::utilities::SharedPointer {
   public:
     // destructor
     inline ~SharedPointer();
-    // constructor
-    inline SharedPointer(handle_t);
+    // regular constructor (all arguments are forwarded to the constructor of {Resource})
+    template <class... Args>
+    inline SharedPointer(Args &&... args) requires(std::is_constructible_v<Resource, Args &&...>);
+    // placement-new constructor: the last argument is the memory location to be used in the
+    // placement new, all other arguments are forwarded to the constructor of {Resource}
+    template <class... Args>
+    inline SharedPointer(Args &&... args) requires(
+        // require that the Resource is not constructible from the parameter pack
+        !(std::is_constructible_v<Resource, Args &&...>) &&
+        // and that the trailing parameter is a pointer to {Resource}
+        std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>);
     // copy constructor
     inline SharedPointer(const SharedPointer &);
     // operator=

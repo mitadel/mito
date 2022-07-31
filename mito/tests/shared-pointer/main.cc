@@ -3,7 +3,10 @@
 
 class Resource {
   public:
-    Resource(int a) : _a(a) { std::cout << "Built resource " << _a << std::endl; }
+    Resource(int a, int b, Resource * c) : _a(a)
+    {
+        std::cout << "Built resource " << _a << " " << b << " " << c << std::endl;
+    }
 
     ~Resource() { std::cout << "Destroying resource " << _a << std::endl; }
 
@@ -21,8 +24,7 @@ main()
     resource_t * segment = static_cast<resource_t *>(::operator new(10 * sizeof(resource_t)));
 
     resource_t * location = (segment + 1);
-    mito::utilities::SharedPointer<resource_t, true> handle(new (location) resource_t(1));
-    // mito::utilities::SharedPointer<Resource, true> handle(10, location);
+    mito::utilities::SharedPointer<Resource, true> handle(10, 12, nullptr, location);
 
     ::operator delete(segment);
 
