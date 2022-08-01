@@ -28,8 +28,11 @@ main()
 
     // select a location within the segment of memory
     resource_t * location = (segment + 3);
+
     // instantiate new resource at {location}
-    mito::utilities::SharedPointer<resource_t, true> handle(a, nullptr, location);
+    mito::utilities::SharedPointer<resource_t, false /*isConst*/, true /*immortal*/> handle(
+        a, nullptr, location);
+
 
     // assert that the resource is accessible correctly
     assert(location->_a == a);

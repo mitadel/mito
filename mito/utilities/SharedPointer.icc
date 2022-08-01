@@ -6,25 +6,25 @@
 #else
 
 // interface
-template <class Resource, bool immortal>
-mito::utilities::SharedPointer<Resource, immortal>::operator mito::utilities::SharedPointer<
-    Resource, immortal>::handle_t() const
+template <class Resource, bool isConst, bool immortal>
+mito::utilities::SharedPointer<Resource, isConst, immortal>::operator mito::utilities::
+    SharedPointer<Resource, isConst, immortal>::handle_t() const
 {
     // return the handle
     return _handle;
 }
 
-template <class Resource, bool immortal>
+template <class Resource, bool isConst, bool immortal>
 int
-mito::utilities::SharedPointer<Resource, immortal>::references() const
+mito::utilities::SharedPointer<Resource, isConst, immortal>::references() const
 {
     // return the count of outstanding references
     return _count;
 }
 
 // destructor
-template <class Resource, bool immortal>
-mito::utilities::SharedPointer<Resource, immortal>::~SharedPointer()
+template <class Resource, bool isConst, bool immortal>
+mito::utilities::SharedPointer<Resource, isConst, immortal>::~SharedPointer()
 {
     // release my current handle
     _release();
@@ -34,11 +34,12 @@ mito::utilities::SharedPointer<Resource, immortal>::~SharedPointer()
 }
 
 // the default constructor
-template <class Resource, bool immortal>
+template <class Resource, bool isConst, bool immortal>
 template <class... Args>
-mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(Args &&... args) requires(
-    // require that the {Resource} is constructible from the full parameter pack
-    std::is_constructible_v<Resource, Args &&...>) :
+mito::utilities::SharedPointer<Resource, isConst, immortal>::
+    SharedPointer(Args &&... args) requires(
+        // require that the {Resource} is constructible from the full parameter pack
+        std::is_constructible_v<Resource, Args &&...>) :
     _handle(new Resource(args...))
 {
     // grab a reference to the shared handle
@@ -46,13 +47,14 @@ mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(Args &&... arg
 }
 
 // the placement-new constructor
-template <class Resource, bool immortal>
+template <class Resource, bool isConst, bool immortal>
 template <class... Args>
-mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(Args &&... args) requires(
-    // require that the Resource is not constructible from the parameter pack
-    !(std::is_constructible_v<Resource, Args &&...>) &&
-    // and that the trailing parameter is a pointer to {Resource}
-    std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>) :
+mito::utilities::SharedPointer<Resource, isConst, immortal>::
+    SharedPointer(Args &&... args) requires(
+        // require that the Resource is not constructible from the parameter pack
+        !(std::is_constructible_v<Resource, Args &&...>) &&
+        // and that the trailing parameter is a pointer to {Resource}
+        std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>) :
     _handle(_place_instantiate_object(
         // extract the location for the placement new
         _last_argument(std::forward_as_tuple(args...)),
@@ -66,9 +68,9 @@ mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(Args &&... arg
 }
 
 // the copy constructor
-template <class Resource, bool immortal>
-mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(
-    const mito::utilities::SharedPointer<Resource, immortal> & other) :
+template <class Resource, bool isConst, bool immortal>
+mito::utilities::SharedPointer<Resource, isConst, immortal>::SharedPointer(
+    const mito::utilities::SharedPointer<Resource, isConst, immortal> & other) :
     _handle(other._handle)
 {
     // grab a reference to the shared handle
@@ -76,10 +78,10 @@ mito::utilities::SharedPointer<Resource, immortal>::SharedPointer(
 }
 
 // operator =
-template <class Resource, bool immortal>
-mito::utilities::SharedPointer<Resource, immortal> &
-mito::utilities::SharedPointer<Resource, immortal>::operator=(
-    const mito::utilities::SharedPointer<Resource, immortal> & other)
+template <class Resource, bool isConst, bool immortal>
+mito::utilities::SharedPointer<Resource, isConst, immortal> &
+mito::utilities::SharedPointer<Resource, isConst, immortal>::operator=(
+    const mito::utilities::SharedPointer<Resource, isConst, immortal> & other)
 {
     // if {other} and I point to different handles
     if (other._handle != _handle) {
@@ -96,17 +98,17 @@ mito::utilities::SharedPointer<Resource, immortal>::operator=(
 }
 
 // interface
-template <class Resource, bool immortal>
+template <class Resource, bool isConst, bool immortal>
 int
-mito::utilities::SharedPointer<Resource, immortal>::_acquire()
+mito::utilities::SharedPointer<Resource, isConst, immortal>::_acquire()
 {
     // increment the reference count and return it
     return ++_count;
 }
 
-template <class Resource, bool immortal>
+template <class Resource, bool isConst, bool immortal>
 int
-mito::utilities::SharedPointer<Resource, immortal>::_release()
+mito::utilities::SharedPointer<Resource, isConst, immortal>::_release()
 {
     // decrement the reference count
     if (--_count == 0 && !immortal) {

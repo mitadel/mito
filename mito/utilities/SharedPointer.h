@@ -7,7 +7,7 @@
 
 // place SharedPointer in namespace mito::utilities
 namespace mito { namespace utilities {
-    template <class Resource, bool immortal>
+    template <class Resource, bool isConst, bool immortal>
     class SharedPointer;
 }}
 
@@ -29,12 +29,12 @@ namespace {
 }
 
 // declaration
-template <class Resource, bool immortal = false>
+template <class Resource, bool isConst = false, bool immortal = false>
 class mito::utilities::SharedPointer {
     // types
   public:
     using resource_t = Resource;
-    using handle_t = Resource *;
+    using handle_t = std::conditional_t<isConst, const Resource *, Resource *>;
 
     // interface
   public:
