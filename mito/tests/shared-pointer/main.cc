@@ -33,9 +33,11 @@ main()
     mito::utilities::SharedPointer<resource_t, false /*isConst*/, true /*immortal*/> handle(
         a, nullptr, location);
 
+    // modify the resource
+    handle->_a += 1;
 
-    // assert that the resource is accessible correctly
-    assert(location->_a == a);
+    // assert that the resource was modified correctly
+    assert(handle->_a == a + 1);
 
     // free the segment of memory
     ::operator delete(segment);

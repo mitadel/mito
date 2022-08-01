@@ -42,6 +42,8 @@ class mito::utilities::SharedPointer {
     inline operator handle_t() const;
     // accessor for the number of outstanding references
     inline int references() const;
+    // operator->
+    handle_t operator->() const;
 
     // meta methods
   public:

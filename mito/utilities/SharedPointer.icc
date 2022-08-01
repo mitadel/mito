@@ -22,6 +22,15 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::references() const
     return _count;
 }
 
+// operator->
+template <class Resource, bool isConst, bool immortal>
+mito::utilities::SharedPointer<Resource, isConst, immortal>::handle_t
+mito::utilities::SharedPointer<Resource, isConst, immortal>::operator->() const
+{
+    // return the handle
+    return _handle;
+}
+
 // destructor
 template <class Resource, bool isConst, bool immortal>
 mito::utilities::SharedPointer<Resource, isConst, immortal>::~SharedPointer()
