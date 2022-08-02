@@ -1,5 +1,6 @@
-#include "../../base.h"
-#include "../../utilities/SharedPointer.h"
+#include "../../utilities.h"
+#include <cassert>
+#include <iostream>
 
 class Resource {
   public:
@@ -30,14 +31,22 @@ main()
     resource_t * location = (segment + 3);
 
     // instantiate new resource at {location}
-    mito::utilities::SharedPointer<resource_t, false /*isConst*/, true /*immortal*/> handle(
-        a, nullptr, location);
+    mito::utilities::shared_ptr<resource_t, true /*immortal*/> handle(a, nullptr, location);
+
+    // instantiate new const shared pointer pointing to the nonconst one
+    mito::utilities::const_shared_ptr<resource_t, true /*immortal*/> const_handle(handle);
 
     // modify the resource
     handle->_a += 1;
 
     // assert that the resource was modified correctly
     assert(handle->_a == a + 1);
+
+    // assert that the const handle has the same value as the nonconst
+    assert(handle->_a == const_handle->_a);
+
+    // assert that the pointed resource is the same
+    assert((Resource *) handle == (const Resource *) const_handle);
 
     // free the segment of memory
     ::operator delete(segment);

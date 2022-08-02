@@ -61,6 +61,10 @@ namespace mito::utilities {
             std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>);
         // copy constructor
         inline SharedPointer(const SharedPointer &);
+        // copy constructor (const from nonconst)
+        template <class OtherResource, bool OtherImmortal>
+        inline SharedPointer(const SharedPointer<OtherResource, false, OtherImmortal> &) requires(
+            std::is_same_v<Resource, OtherResource> && isConst == true);
         // operator=
         inline SharedPointer & operator=(const SharedPointer &);
 
