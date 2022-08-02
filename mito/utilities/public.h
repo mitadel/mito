@@ -13,6 +13,7 @@
 #include "api.h"
 
 // classes implementation
+#include "SharedPointer.h"
 #include "SegmentedContainer.h"
 
 // factories implementation
