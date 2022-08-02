@@ -80,7 +80,7 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::
 template <class Resource, bool isConst, bool immortal>
 mito::utilities::SharedPointer<Resource, isConst, immortal>::SharedPointer(
     const mito::utilities::SharedPointer<Resource, isConst, immortal> & other) :
-    _handle(other._handle)
+    _handle(other)
 {
     // grab a reference to the shared handle
     _acquire();
