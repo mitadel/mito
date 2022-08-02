@@ -94,7 +94,7 @@ namespace mito::utilities {
 
             // create a new instance of T at {location} with placement new
             // and assign it to a new pointer
-            std::shared_ptr<T> pointer(new (location) T(args...));
+            mito::utilities::shared_ptr<T, true> pointer(args..., location);
 
             // increment the size of the container
             ++_n_elements;
@@ -109,7 +109,7 @@ namespace mito::utilities {
             return pointer;
         }
 
-        void erase(const std::shared_ptr<T> & element)
+        void erase(const mito::utilities::shared_ptr<T, true> & element)
         {
             // mark element as invalid
             element->invalidate();
@@ -118,7 +118,7 @@ namespace mito::utilities {
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
-            _available_locations.push(element.get());
+            _available_locations.push(element);
 
             // all done
             return;
