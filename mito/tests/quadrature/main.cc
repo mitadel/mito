@@ -33,16 +33,16 @@ main()
 
     auto points = mito::mesh::point_cloud<2>();
 
-    vertex_t vertex0;
-    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
-    vertex_t vertex1;
-    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
-    vertex_t vertex2;
-    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
-    vertex_t vertex3;
-    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
-    vertex_t vertex4;
-    points.insert(vertex4, point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::mesh::vertex();
+    points.insert(*vertex0, point_t<2> { 0.0, 0.0 });
+    auto vertex1 = mito::mesh::vertex();
+    points.insert(*vertex1, point_t<2> { 1.0, 0.0 });
+    auto vertex2 = mito::mesh::vertex();
+    points.insert(*vertex2, point_t<2> { 1.0, 1.0 });
+    auto vertex3 = mito::mesh::vertex();
+    points.insert(*vertex3, point_t<2> { 0.5, 0.5 });
+    auto vertex4 = mito::mesh::vertex();
+    points.insert(*vertex4, point_t<2> { 0.0, 1.0 });
 
     auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
     auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
@@ -138,11 +138,11 @@ main()
 
     // attach different coordinates (3D coordinates to the same points as above)
     auto points3D = mito::mesh::point_cloud<3>();
-    points3D.insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
-    points3D.insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
-    points3D.insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
-    points3D.insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
-    points3D.insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
+    points3D.insert(*vertex0, point_t<3> { 0.0, 0.0, 0.0 });
+    points3D.insert(*vertex1, point_t<3> { 1.0, 0.0, 1.0 });
+    points3D.insert(*vertex2, point_t<3> { 1.0, 1.0, 1.0 });
+    points3D.insert(*vertex3, point_t<3> { 0.5, 0.5, 0.5 });
+    points3D.insert(*vertex4, point_t<3> { 0.0, 1.0, 0.0 });
 
     // instantiate an element set with the same elements as above but the new coordinates map
     auto bodyManifold3D = mito::manifolds::manifold(elements, points3D);
