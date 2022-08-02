@@ -64,16 +64,16 @@ main()
 
     auto points = mito::mesh::point_cloud<2>();
 
-    vertex_t vertex0;
-    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
-    vertex_t vertex1;
-    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
-    vertex_t vertex2;
-    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
-    vertex_t vertex3;
-    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
-    vertex_t vertex4;
-    points.insert(vertex4, point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::mesh::vertex();
+    points.insert(*vertex0, point_t<2> { 0.0, 0.0 });
+    auto vertex1 = mito::mesh::vertex();
+    points.insert(*vertex1, point_t<2> { 1.0, 0.0 });
+    auto vertex2 = mito::mesh::vertex();
+    points.insert(*vertex2, point_t<2> { 1.0, 1.0 });
+    auto vertex3 = mito::mesh::vertex();
+    points.insert(*vertex3, point_t<2> { 0.5, 0.5 });
+    auto vertex4 = mito::mesh::vertex();
+    points.insert(*vertex4, point_t<2> { 0.0, 1.0 });
 
     auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
     auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
@@ -92,8 +92,9 @@ main()
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     // static mito::manifolds::ManifoldTri elementSet;
     auto bodyManifold = mito::manifolds::manifold(
-        mito::mesh::simplex_vector_t<triangle_t> { element0, element1, element2, element3 }, points);
-    auto bodyIntegrator = 
+        mito::mesh::simplex_vector_t<triangle_t> { element0, element1, element2, element3 },
+        points);
+    auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     real resultBody = bodyIntegrator.integrate(divergence);
@@ -107,22 +108,26 @@ main()
         points);
     */
     // integrator on the bottom boundary
-    auto boundaryBot = mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment0 }, points);
-    auto boundaryBotIntegrator = 
+    auto boundaryBot =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment0 }, points);
+    auto boundaryBotIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryBot);
 
     // integrator on the right boundary
-    auto boundaryRight = mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment3 }, points);
+    auto boundaryRight =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment3 }, points);
     auto boundaryRightIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryRight);
 
     // integrator on the top boundary
-    auto boundaryTop = mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment6 }, points);
+    auto boundaryTop =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment6 }, points);
     auto boundaryTopIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryTop);
 
     // integrator on the left boundary
-    auto boundaryLeft = mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment7 }, points);
+    auto boundaryLeft =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment7 }, points);
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
 
