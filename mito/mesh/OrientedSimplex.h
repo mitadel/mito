@@ -116,7 +116,7 @@ namespace mito::mesh {
         const std::shared_ptr<const simplex_t<D>> _footprint;
         // the orientation
         bool _orientation;
-        // private frienship with the factory of oriented simplices
+        // private friendship with the factory of oriented simplices
         friend class OrientedSimplexFactory<D>;
     };
 
