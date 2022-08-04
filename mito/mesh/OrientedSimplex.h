@@ -24,8 +24,7 @@ namespace mito::mesh {
         // oriented simplices
       private:
         // constructor with an existing shared pointer as footprint
-        constexpr OrientedSimplex(
-            const std::shared_ptr<const simplex_t<D>> & footprint, bool orientation) :
+        constexpr OrientedSimplex(const simplex_ptr<D> & footprint, bool orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
@@ -113,7 +112,7 @@ namespace mito::mesh {
 
       private:
         // the shared pointer to the footprint
-        const std::shared_ptr<const simplex_t<D>> _footprint;
+        const simplex_ptr<D> _footprint;
         // the orientation
         bool _orientation;
         // private friendship with the factory of oriented simplices
