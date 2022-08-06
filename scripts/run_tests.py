@@ -58,7 +58,7 @@ with open(output_file, 'w') as f:
 
         compile_process = subprocess.run(
             compile_cmd, capture_output=True, text=True, shell=True)
-        if compile_process.returncode == 1:
+        if compile_process.returncode != 0:
             print_result(folder, f, "FAIL",
                          (compile_process.stderr, "Compilation error"))
             clean_up(tmp_folder_path)
@@ -66,7 +66,7 @@ with open(output_file, 'w') as f:
 
         run_process = subprocess.run(
             run_cmd, capture_output=True, text=True, shell=True)
-        if run_process.returncode == 1:
+        if run_process.returncode != 0:
             print_result(folder, f, "FAIL",
                          (run_process.stderr, "Runtime error"))
             clean_up(tmp_folder_path)
