@@ -41,14 +41,14 @@ namespace mito::mesh {
         return oriented_simplex<3>(simplices);
     }
 
-    // vertex set factory
+    // points cloud factory
     template <int D>
     constexpr auto point_cloud()
     {
         return point_cloud_t<D>();
     }
 
-    // vertex set factory
+    // mesh factory
     template <int D>
     auto mesh(std::string meshFileName)
     {

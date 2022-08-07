@@ -8,7 +8,6 @@ namespace mito::mesh {
     template <int D>
     class PointCloud {
 
-        // using cloud_t = std::unordered_map<std::reference_wrapper<vertex_t>, point_t<D>>;
         using cloud_t = std::unordered_map<oriented_simplex_ptr<0>, const point_t<D>>;
 
       public:
