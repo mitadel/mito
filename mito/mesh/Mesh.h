@@ -9,90 +9,39 @@ namespace mito::mesh {
     class Mesh {
 
       private:
-        // typedef for a container of mesh simplices
-        template <class T>
-        using simplex_container = std::vector<T>;
 
-        // typedef for a collection of simplices of dimension I-1
+        template <class T>
+        using vertex_container = std::vector<T>;
+
+        // QUESTION: would it be better to use reference wrappers here?
+        // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
-        using simplex_collection = simplex_container<simplex_t<int(I)> *>;
+        using simplex_collection = simplex_set_t<oriented_simplex_t<int(I)>>;
 
         // simplex_collection<I>... expands to:
-        // simplex_container<simplex_t<0>*>, simplex_container<simplex_t<1>*>, ...,
-        //      simplex_container<simplex_t<D>*>
-        template <typename = std::make_index_sequence<D + 1>>
+        // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
+        template <typename = std::make_index_sequence<D>>
         struct simplices_tuple;
 
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<simplex_collection<I>...>;
+            using type = std::tuple<
+                vertex_container<oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
         };
 
         // this expands to:
-        // tuple<simplex_container<simplex_t<0>*>, simplex_container<simplex_t<1>*>, ...,
-        //      simplex_container<simplex_t<D>*>
+        // tuple<simplex_set_t<simplex_t<0>>,
+        //      simplex_set_t<oriented_simplex_t<1>>, ...,
+        //      simplex_set_t<oriented_simplex_t<D>>
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
-      private:
-        // typedef for a composition map of mesh simplices:
-        // these maps map:
-        //      2 pointers to nodes into a pointer to edge,
-        //      3 pointers to edges into a pointer to face, ...
-        // std::map<std::array<simplex_t<0> *, 2>, simplex_t<1> *>  edges composition
-        // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
-        // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
-        template <size_t I>
-        using composition_map =
-            std::map<std::array<simplex_t<int(I - 1)> *, I + 1>, simplex_t<int(I)> *>;
-
-        template <typename = std::make_index_sequence<D>>
-        struct composition_tuple;
-
-        template <size_t... I>
-        struct composition_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<composition_map<I + 1>...>;
-        };
-
-        // this expands to:
-        // tuple<composition_map<1>, ..., composition_map<D>
-        using composition_tuple_t = typename composition_tuple<>::type;
-
       public:
-        Mesh(std::string meshFileName) : _simplices(), _compositions(), _vertices()
+        Mesh(std::string meshFileName) : _simplices(), _vertices()
         {
             _loadMesh(meshFileName);
         }
 
-        template <size_t I>
-        void _deleteSimplices()
-        {
-            // delete simplices of dimension I
-            for (auto simplex : std::get<I>(_simplices)) {
-                delete simplex;
-            }
-
-            // all done
-            return;
-        }
-
-        template <size_t... I>
-        void _deleteAllSimplices(std::index_sequence<I...>)
-        {
-            // delete simplices of dimension I for all I's in the index sequence
-            ((_deleteSimplices<I>()), ...);
-
-            // all done
-            return;
-        }
-
-        ~Mesh()
-        {
-            // delete all simplices from dimension 0 (included) to D (included)
-            _deleteAllSimplices(std::make_index_sequence<D + 1> {});
-
-            // all done
-            return;
-        }
+        ~Mesh() {}
 
       private:
         // delete default constructor
@@ -152,74 +101,78 @@ namespace mito::mesh {
         }
 
         /**
-         * @brief Returns an element set with all simplices of dimension I 
+         * @brief Returns an element set with all boundary simplices of dimension I
          */
+        // QUESTION: I don't like the asymmetry of elements returning a const reference and boundary
+        //  elements returning an instance. Either:
+        //  1) say that these methods will make copies of the elements for the client to use, or
+        //  2) say that boundary_elements will create a new data structure at run time and return a 
+        //      (const) reference for the client to use. 
         template <int I>
-        constexpr auto element_set() const requires(I <= D)
+        constexpr auto boundary_elements() const requires(I<D && I> 0)
         {
-            return mito::mesh::element_set(elements<I>(), vertices());
-        }
+            // instantiate a simplex collection
+            simplex_collection<I> boundary_simplices;
 
-      private:
-        /**
-         * @brief Registers a simplex in the composition map
-         *
-         * @tparam I dimension of the simplex to insert
-         * @param simplex mesh simplex to be inserted
-         * @return the pair returned by the map insertion:
-         *          pair::first is an iterator pointing to either the newly inserted simplex or
-         * to the simplex with an equivalent key pair::second is true (false) if the simplex was
-         * inserted (was already in the map)
-         */
-        template <int I>
-        auto _registerSimplexComposition(simplex_t<I> & simplex) requires (I <= D)
-        {
-            return std::get<I - 1>(_compositions)
-                .insert(std::pair<std::array<simplex_t<I - 1> *, I + 1>, simplex_t<I> *>(
-                    simplex.simplices(), &simplex));
-        }
-
-        /**
-         * @brief Adds a new composed simplex (i.e. edge, face, element) if it is not a repetition
-         *         of an equivalent already registered composed simplex
-         *
-         * @tparam I dimension of the composed simplex to add (1, 2, ..., D)
-         * @param composition simplex composition in terms of I + 1 simplices of dimension (I - 1)
-         * @return simplex_t<I>* a pointer either to the newly added simplex or to the equivalent
-         *                              already registered composed simplex
-         */
-        template <int I>
-        simplex_t<I> * _addUniqueSimplex(
-            std::array<simplex_t<I - 1> *, I + 1> && composition) requires(I <= D)
-        {
-            // instantiate new simplex with this composition
-            simplex_t<I> * simplex = new simplex_t<I>(std::move(composition));
-            // look up the new simplex with its composition and register it if it does not exist yet
-            auto ret = _registerSimplexComposition(*simplex);
-            // if the simplex did not exist
-            if (ret.second == true) {
-                // add the simplex as a new one
-                _addSimplex(simplex);
-            } else {
-                // delete the new simplex (it was just a repeated entry)
-                delete simplex;
+            // loop on simplices (D-1) dimensional simplices
+            for (const auto & simplex : std::get<D-1>(_simplices)) {
+                // if the simplex footprint has only one occurrence then it is on the boundary
+                if (!exists_flipped(simplex)) {
+                    // add the subsimplices of dimension I to the set of boundary simplices
+                    simplex->template getSimplices<I>(boundary_simplices);
+                }
             }
 
-            // if I == D then ret.second == true, that is there shall be no repetitions of the
-            // elements of highest dimension
-            assert((I != D) || ret.second);
-
-            // return a pointer to the newly added simplex
-            return ret.first->second;
+            // return the boundary simplices
+            return boundary_simplices;
         }
 
         template <int I>
-        void _addSimplex(simplex_t<I> * simplex) requires(I <= D)
+        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
-            // TOFIX: is push_back expensive even when we reserve the space? No, but we only
-            // know in advance how many nodes and elements are in the mesh, not how many edges
-            // or faces, so we cannot reserve memory for edges and faces in advance...
-            std::get<I>(_simplices).push_back(simplex);
+            // erase the subsimplices from the mesh (erase bottom -> up)
+            for (const auto & subsimplex :
+                 simplex->simplices()) {
+                std::get<I - 1>(_simplices).erase(subsimplex);
+            }
+
+            // erase the simplex from the mesh
+            std::get<I>(_simplices).erase(simplex);
+
+            // all done
+            return;
+        }
+
+        template <int I>
+        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I == 0)
+        {   
+            // all done
+            return;
+        }
+
+        template <int I>
+        void erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
+        {
+            // QUESTION: can we wrap simplices in a way that the reference count can be called 
+            //  incidence?
+            
+            // erase recursively until D = 0
+            _erase(simplex);
+
+            // cleanup oriented simplex factory around this simplex
+            OrientedSimplexFactory<I>::cleanup(simplex);
+
+            // all done
+            return;
+        }
+
+      private :
+          template <int I>
+          void
+          _addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
+        {
+            // add the oriented simplex to the set of simplices with same dimension
+            std::get<I>(_simplices).insert(simplex);
 
             // all done
             return;
@@ -228,20 +181,19 @@ namespace mito::mesh {
         void _addVertex(point_t<D> && point)
         {
             // instantiate new vertex
-            vertex_t * vertex = new vertex_t();
+            auto vertex = mito::mesh::vertex();
             // associate the new vertex to the new point
-            _vertices.insert(*vertex, point);
-            // add the newly created vertex
-            _addSimplex(vertex);
+            _vertices.insert(vertex, point);
+            // add to the simplices the newly created vertex
+            std::get<0>(_simplices).push_back(vertex);
 
             // all done
             return;
         }
 
-        template <int I>
-        auto _getSimplex(int n) requires(I <= D)
+        auto & _getVertex(int n)
         {
-            return std::get<I>(_simplices)[n];
+            return std::get<0>(_simplices)[n];
         }
 
         void _readTriangle(std::ifstream & fileStream)
@@ -258,21 +210,25 @@ namespace mito::mesh {
             fileStream >> index2;
             --index2;
 
-            vertex_t * vertex0 = _getSimplex<0>(index0);
-            vertex_t * vertex1 = _getSimplex<0>(index1);
-            vertex_t * vertex2 = _getSimplex<0>(index2);
+            auto vertex0 = _getVertex(index0);
+            auto vertex1 = _getVertex(index1);
+            auto vertex2 = _getVertex(index2);
 
-            segment_t * segment0 = _addUniqueSimplex<1>({ vertex0, vertex1 });
-            segment_t * segment1 = _addUniqueSimplex<1>({ vertex1, vertex2 });
-            segment_t * segment2 = _addUniqueSimplex<1>({ vertex2, vertex0 });
+            auto segment0 = segment({ vertex0, vertex1 });
+            _addSimplex(segment0);
+            auto segment1 = segment({ vertex1, vertex2 });
+            _addSimplex(segment1);
+            auto segment2 = segment({ vertex2, vertex0 });
+            _addSimplex(segment2);
+
+            auto element = triangle({ segment0, segment1, segment2 });
+            _addSimplex(element);
 
             // QUESTION: Can the label be more than one?
             // read label for element
             // TOFIX: Ignored for now
-            std::string element_set_id;
-            fileStream >> element_set_id;
-
-            _addUniqueSimplex<2>({ segment0, segment1, segment2 });
+            std::string element_label;
+            fileStream >> element_label;
 
             // all done
             return;
@@ -280,6 +236,8 @@ namespace mito::mesh {
 
         void _readVertices(std::ifstream & fileStream, int N_vertices)
         {
+            // reserve space to read new vertices
+            std::get<0>(_simplices).reserve(std::get<0>(_simplices).size() + N_vertices);
             // fill in vertices
             for (int n = 0; n < N_vertices; ++n) {
                 // instantiate new point
@@ -341,12 +299,12 @@ namespace mito::mesh {
             // reserve space for elements
             std::get<D>(_simplices).reserve(N_elements);
 
-            // read number of element sets
-            int N_element_sets = 0;
-            fileStream >> N_element_sets;
+            // read number of element types
+            int N_element_types = 0;
+            fileStream >> N_element_types;
 
             // QUESTION: Not sure that we need this...
-            assert(N_element_sets == 1);
+            assert(N_element_types == 1);
 
             // read the vertices
             _readVertices(fileStream, N_vertices);
@@ -373,11 +331,8 @@ namespace mito::mesh {
       private:
         // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
         simplices_tuple_t _simplices;
-        // container to store D maps with the composition of i-dimensional simplices in terms
-        // of arrays of (i-1)-dimensional simplices
-        composition_tuple_t _compositions;
         // the mesh vertices
-        VertexSet<D> _vertices;
+        point_cloud_t<D> _vertices;
     };
 
 }    // namespace mito

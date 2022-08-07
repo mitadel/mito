@@ -1,4 +1,5 @@
 #include "../../base.h"
+#include "../../manifolds.h"
 #include "../../math.h"
 #include "../../mesh.h"
 #include "../../quadrature.h"
@@ -61,39 +62,40 @@ main()
         (0,0)           (1,0)
     */
 
-    auto vertices = mito::mesh::vertex_set<2>();
+    auto points = mito::mesh::point_cloud<2>();
 
-    vertex_t vertex0;
-    vertices.insert(vertex0, point_t<2> { 0.0, 0.0 });
-    vertex_t vertex1;
-    vertices.insert(vertex1, point_t<2> { 1.0, 0.0 });
-    vertex_t vertex2;
-    vertices.insert(vertex2, point_t<2> { 1.0, 1.0 });
-    vertex_t vertex3;
-    vertices.insert(vertex3, point_t<2> { 0.5, 0.5 });
-    vertex_t vertex4;
-    vertices.insert(vertex4, point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::mesh::vertex();
+    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
+    auto vertex1 = mito::mesh::vertex();
+    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
+    auto vertex2 = mito::mesh::vertex();
+    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
+    auto vertex3 = mito::mesh::vertex();
+    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
+    auto vertex4 = mito::mesh::vertex();
+    points.insert(vertex4, point_t<2> { 0.0, 1.0 });
 
-    auto segment0 = mito::mesh::segment({ &vertex0, &vertex1 });
-    auto segment1 = mito::mesh::segment({ &vertex1, &vertex3 });
-    auto segment2 = mito::mesh::segment({ &vertex3, &vertex0 });
-    auto segment3 = mito::mesh::segment({ &vertex1, &vertex2 });
-    auto segment4 = mito::mesh::segment({ &vertex2, &vertex3 });
-    auto segment5 = mito::mesh::segment({ &vertex4, &vertex3 });
-    auto segment6 = mito::mesh::segment({ &vertex2, &vertex4 });
-    auto segment7 = mito::mesh::segment({ &vertex4, &vertex0 });
+    auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
+    auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
+    auto segment2 = mito::mesh::segment({ vertex3, vertex0 });
+    auto segment3 = mito::mesh::segment({ vertex1, vertex2 });
+    auto segment4 = mito::mesh::segment({ vertex2, vertex3 });
+    auto segment5 = mito::mesh::segment({ vertex4, vertex3 });
+    auto segment6 = mito::mesh::segment({ vertex2, vertex4 });
+    auto segment7 = mito::mesh::segment({ vertex4, vertex0 });
 
-    auto element0 = mito::mesh::triangle({ &segment0, &segment1, &segment2 });
-    auto element1 = mito::mesh::triangle({ &segment3, &segment4, &segment1 });
-    auto element2 = mito::mesh::triangle({ &segment6, &segment5, &segment4 });
-    auto element3 = mito::mesh::triangle({ &segment7, &segment2, &segment5 });
+    auto element0 = mito::mesh::triangle({ segment0, segment1, segment2 });
+    auto element1 = mito::mesh::triangle({ segment3, segment4, segment1 });
+    auto element2 = mito::mesh::triangle({ segment6, segment5, segment4 });
+    auto element3 = mito::mesh::triangle({ segment7, segment2, segment5 });
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::mesh::ElementSetTri elementSet;
-    auto bodyElementSet = mito::mesh::element_set(
-        std::vector<triangle_t *> { &element0, &element1, &element2, &element3 }, vertices);
-    auto bodyIntegrator = 
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet);
+    // static mito::manifolds::ManifoldTri elementSet;
+    auto bodyManifold = mito::manifolds::manifold(
+        mito::mesh::simplex_vector_t<triangle_t> { element0, element1, element2, element3 },
+        points);
+    auto bodyIntegrator =
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     real resultBody = bodyIntegrator.integrate(divergence);
     std::cout << "Result of body integration = " << resultBody << std::endl;
@@ -101,27 +103,31 @@ main()
     // TOFIX: Include normal notion on the boundary element set, so that we can avoid hardcoding
     // the normals calculations (we might need std::inner_product to do the inner product)
     /*
-    mito::mesh::ElementSet boundaryElementSet(
-        std::vector<segment_t *> { &segment0, &segment3, &segment6, &segment7 },
-        vertices);
+    mito::manifolds::Manifold boundaryManifold(
+        mito::mesh::simplex_vector_t<segment_t> { &segment0, &segment3, &segment6, &segment7 },
+        points);
     */
     // integrator on the bottom boundary
-    auto boundaryBot = mito::mesh::element_set(std::vector<segment_t *> { &segment0 }, vertices);
-    auto boundaryBotIntegrator = 
+    auto boundaryBot =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment0 }, points);
+    auto boundaryBotIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryBot);
 
     // integrator on the right boundary
-    auto boundaryRight = mito::mesh::element_set(std::vector<segment_t *> { &segment3 }, vertices);
+    auto boundaryRight =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment3 }, points);
     auto boundaryRightIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryRight);
 
     // integrator on the top boundary
-    auto boundaryTop = mito::mesh::element_set(std::vector<segment_t *> { &segment6 }, vertices);
+    auto boundaryTop =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment6 }, points);
     auto boundaryTopIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryTop);
 
     // integrator on the left boundary
-    auto boundaryLeft = mito::mesh::element_set(std::vector<segment_t *> { &segment7 }, vertices);
+    auto boundaryLeft =
+        mito::manifolds::manifold(mito::mesh::simplex_vector_t<segment_t> { segment7 }, points);
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
 

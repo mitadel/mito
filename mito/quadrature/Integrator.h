@@ -9,12 +9,12 @@ namespace mito::quadrature {
     // integrals of contact forces down the road. Do we have enough machinery for that?
 
     // template with respect to element type T and to degree of exactness r of quadrature rule
-    template <class quadratureT, int r, class elementSetT>
+    template <class quadratureT, int r, class manifoldT>
     class Integrator {
         using quadrature_t = quadratureT;
-        using element_set_t = elementSetT;
-        using element_t = typename element_set_t::element_t;
-        static constexpr int D = element_set_t::dim;
+        using manifold_t = manifoldT;
+        using element_t = typename manifold_t::element_t;
+        static constexpr int D = manifold_t::dim;
 
         // quadrature_t, element_t, and r identify a specific quadrature rule
         using QuadratureRule = QuadratureRulesFactory<quadrature_t, element_t, r>;
@@ -26,16 +26,15 @@ namespace mito::quadrature {
         //           vertices.
         void _computeQuadPointCoordinates()
         {
-
             // TOFIX: We should avoid the 4 nested for loops
-            // QUESTION: 3 out 4 of these loops can be unrolled as Q, D, V are template parameters
+            // QUESTION: 3 out 4 of these loops can be unrolled as Q and D are template parameters
             //           Is there anything we can do about it?
 
             // loop on elements
             int e = 0;
-            for (const auto & element : _elementSet.elements()) {
+            for (const auto & element : _manifold.elements()) {
                 // use a set to collect vertices without repeated entries
-                std::set<const mesh::vertex_t *> vertices;
+                mesh::vertex_set_t vertices;
                 element->vertices(vertices);
                 // loop on vertices
                 int v = 0;
@@ -43,7 +42,7 @@ namespace mito::quadrature {
                     // loop on quadrature point
                     for (int q = 0; q < Q; ++q) {
                         for (int d = 0; d < D; ++d) {
-                            const auto & vertexCoordinates = _elementSet.coordinatesVertex(vertex);
+                            const auto & vertexCoordinates = _manifold.coordinatesVertex(vertex);
                             _coordinates[{ e, q }][d] +=
                                 _quadratureRule.getPoint(q)[v] * vertexCoordinates[d];
                         }
@@ -58,9 +57,9 @@ namespace mito::quadrature {
         }
 
       public:
-        Integrator(const element_set_t & elementSet) :
-            _elementSet(elementSet),
-            _coordinates(elementSet.nElements())
+        Integrator(const manifold_t & manifold) :
+            _manifold(manifold),
+            _coordinates(manifold.nElements())
         {
             _computeQuadPointCoordinates();
         }
@@ -73,10 +72,10 @@ namespace mito::quadrature {
             auto result = Y();
 
             // assemble elementary contributions
-            for (auto e = 0; e < _elementSet.nElements(); ++e) {
+            for (auto e = 0; e < _manifold.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
                     result +=
-                        values[{ e, q }] * _quadratureRule.getWeight(q) * _elementSet.jacobian(e);
+                        values[{ e, q }] * _quadratureRule.getWeight(q) * _manifold.jacobian(e);
                 }
             }
 
@@ -86,12 +85,10 @@ namespace mito::quadrature {
       private:
         // the quadrature rule
         static constexpr auto _quadratureRule = QuadratureRule::Get();
-        // the number of element vertices
-        static constexpr int V = element_t::nVertices;
         // the number of quadrature points
         static constexpr int Q = _quadratureRule.size();
         // the domain of integration
-        const element_set_t & _elementSet;
+        const manifold_t & _manifold;
         // the coordinates of the quadrature points in the domain of integration
         fem::quadrature_field_t<Q, vector_t<D>> _coordinates;
     };

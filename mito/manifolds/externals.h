@@ -4,17 +4,12 @@
 
 
 // externals
-#include <fstream>
-#include <map>
 #include <set>
-#include <unordered_map>
 #include <unordered_set>
-#include <memory>
 #include <vector>
-#include <iostream>
-#include <array>
 
 // support
+#include "../mesh.h" // TOFIX
 
 #endif
 

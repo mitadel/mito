@@ -12,67 +12,45 @@ namespace mito::mesh {
         return point_t<D>(std::forward<Args>(args)...);
     }
 
-    // vertex factory
-    constexpr auto vertex()
+    // oriented simplex factory
+    template <int I>
+    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
+        I > 1)
     {
-        return vertex_t();
-    }
+        return OrientedSimplexFactory<I>::orientedSimplex(simplices);
     }
 
+    // vertex factory
+    oriented_simplex_ptr<0> vertex() { return std::make_shared<oriented_simplex_t<0>>(); }
+
     // segment factory
-    constexpr auto segment(const std::array<vertex_t *, 2> & simplices)
+    oriented_simplex_ptr<1> segment(const simplex_composition_t<1> & simplices)
     {
-        return segment_t(simplices);
-    }
-    constexpr auto segment(std::array<vertex_t *, 2> && simplices)
-    {
-        return segment_t(std::move(simplices));
+        return OrientedSimplexFactory<1>::orientedSimplex(simplices);
     }
 
     // triangle factory
-    constexpr auto triangle(const std::array<segment_t *, 3> & simplices)
+    oriented_simplex_ptr<2> triangle(const simplex_composition_t<2> & simplices)
     {
-        return triangle_t(simplices);
-    }
-    constexpr auto triangle(std::array<segment_t *, 3> && simplices)
-    {
-        return triangle_t(std::move(simplices));
+        return oriented_simplex<2>(simplices);
     }
 
     // tetrahedron factory
-    constexpr auto tetrahedron(const std::array<triangle_t *, 4> & simplices)
+    oriented_simplex_ptr<3> tetrahedron(const simplex_composition_t<3> & simplices)
     {
-        return tetrahedron_t(simplices);
-    }
-    constexpr auto tetrahedron(std::array<triangle_t *, 4> && simplices)
-    {
-        return tetrahedron_t(std::move(simplices));
+        return oriented_simplex<3>(simplices);
     }
 
-    // vertex set factory
+    // points cloud factory
     template <int D>
-    constexpr auto vertex_set()
+    constexpr auto point_cloud()
     {
-        return vertex_set_t<D>();
+        return point_cloud_t<D>();
     }
 
-    // element set factory
-    template <class elementT, int D>
-    constexpr auto element_set(
-        const std::vector<elementT *> & elements, const vertex_set_t<D> & vertices)
-    {
-        return element_set_t<elementT, D>(elements, vertices);
-    }
-    template <class elementT, int D>
-    constexpr auto element_set(
-        std::vector<elementT *> && elements, const vertex_set_t<D> & vertices)
-    {
-        return element_set_t<elementT, D>(std::move(elements), vertices);
-    }
-
-    // vertex set factory
+    // mesh factory
     template <int D>
-    constexpr auto mesh(std::string meshFileName)
+    auto mesh(std::string meshFileName)
     {
         return mesh_t<D>(meshFileName);
     }

@@ -1,6 +1,6 @@
 #include <algorithm>
 #include "../../base.h"
-#include "../../mesh.h"
+#include "../../mesh/Point.h"
 
 using mito::mesh::Point;
 
@@ -66,7 +66,7 @@ main()
     std::cout << c << std::endl;
 
     std::vector<int> nums { 1 };
-    std::as_const(nums);
+    [[maybe_unused]] auto result = std::as_const(nums);
 
     // constexpr auto a = std::integral_constant<int, index>{};
 

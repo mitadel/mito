@@ -49,7 +49,7 @@ namespace mito::math {
         {
             return function_t<X, vector_t<N>>(
                 [f_list](const X & x) { return vector_t<N> { f_list[I](x)... }; });
-        };
+        }
 
       public:
         // constructor for a vector-valued function from an array of scalar-valued functions

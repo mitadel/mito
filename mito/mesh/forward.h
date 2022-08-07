@@ -5,14 +5,6 @@
 
 namespace mito::mesh {
 
-    // class element set
-    template <class element_t, int D>
-    class ElementSet;
-
-    // element set alias
-    template <class elementT, int D>
-    using element_set_t = ElementSet<elementT, D>;
-
     // class mesh
     template <int D>
     class Mesh;
@@ -29,33 +21,98 @@ namespace mito::mesh {
     template <int D>
     using point_t = vector_t<D>;    // Point<D>;
 
-    // class simplex
+    // class point cloud
     template <int D>
+    class PointCloud;
+
+    // point cloud alias
+    template <int D>
+    using point_cloud_t = PointCloud<D>;
+
+    // element set alias
+    template <class elementT>
+    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>; //TOFIX
+
+    // element vector alias
+    template <class elementT>
+    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>; //TOFIX
+
+    // class simplex
+    template <int D> requires (D > 0)
     class Simplex;
 
-    // simplex alias
+    // class oriented simplex
     template <int D>
-    using simplex_t = Simplex<D>;
+    class OrientedSimplex;
+
+    // class simplex factory
+    template <int D>
+    class SimplexFactory;
+
+    // class oriented simplex factory
+    template <int D>
+    class OrientedSimplexFactory;
 
     // vertex alias
-    using vertex_t = Simplex<0>;
+    using vertex_t = OrientedSimplex<0>;
+
+    // helper class to allow template specialization of simplex alias
+    template <int D>
+    class helperSimplexClass {
+      public:
+        using simplex_type = Simplex<D>;
+    };
+
+    // helper class to allow template specialization of simplex alias
+    template <>
+    class helperSimplexClass<0> {
+      public:
+        using simplex_type = vertex_t;
+    };
+
+    // TOFIX: not sure that we need a Simplex<0> 
+    // simplex alias
+    template <int D>
+    using simplex_t = typename helperSimplexClass<D>::simplex_type;
+
+    // vertex set alias
+    using vertex_set_t = simplex_set_t<vertex_t>;
+
+    // vertex vector alias
+    using vertex_vector_t = simplex_vector_t<vertex_t>;
+
+    // oriented simplex alias
+    template <int D>
+    using oriented_simplex_t = OrientedSimplex<D>;
+
+    // oriented simplex pointer alias
+    template <int D>
+    using oriented_simplex_ptr = std::shared_ptr<const OrientedSimplex<D>>;
+
+    // simplex pointer alias
+    template <int D>
+    using simplex_ptr = std::shared_ptr<simplex_t<D>>;
+
+    // oriented simplex composition alias
+    template <int D>
+    using simplex_composition_t = std::array<oriented_simplex_ptr<D - 1>, D + 1>;
 
     // segment alias
-    using segment_t = Simplex<1>;
+    using segment_t = OrientedSimplex<1>;
 
     // triangle alias
-    using triangle_t = Simplex<2>;
+    using triangle_t = OrientedSimplex<2>;
 
     // tetrahedron alias
-    using tetrahedron_t = Simplex<3>;
+    using tetrahedron_t = OrientedSimplex<3>;
 
     // class vertex set
     template <int D>
-    class VertexSet;
+    class PointCloud;
 
     // vertex set alias
     template <int D>
-    using vertex_set_t = VertexSet<D>;
+    using point_cloud_t = PointCloud<D>;
 
 }
 

@@ -9,38 +9,49 @@ namespace mito::mesh {
     template <int D, class... Args>
     constexpr auto point(Args &&... args);
 
-    // vertex factory
-    constexpr auto vertex();
+    // oriented simplex factory
+    template <int I>
+    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
+        I > 1);
 
+    // vertex factory
+    oriented_simplex_ptr<0> vertex();
 
     // segment factory
-    constexpr auto segment(const std::array<vertex_t *, 2> & simplices);
-    constexpr auto segment(std::array<vertex_t *, 2> && simplices);
+    oriented_simplex_ptr<1> segment(const simplex_composition_t<1> & simplices);
 
     // triangle factory
-    constexpr auto triangle(const std::array<segment_t *, 3> & simplices);
-    constexpr auto triangle(std::array<segment_t *, 3> && simplices);
+    oriented_simplex_ptr<2> triangle(const simplex_composition_t<2> & simplices);
 
     // tetrahedron factory
-    constexpr auto tetrahedron(const std::array<triangle_t *, 4> & simplices);
-    constexpr auto tetrahedron(std::array<triangle_t *, 4> && simplices);
+    oriented_simplex_ptr<3> tetrahedron(const simplex_composition_t<3> & simplices);
 
-    // vertex set factory
+    // point cloud factory
     template <int D>
-    constexpr auto vertex_set();
+    constexpr auto point_cloud();
 
-    // element set factory
-    template <class elementT, int D>
-    constexpr auto element_set(
-        const std::vector<elementT *> & elements, const vertex_set_t<D> & vertices);
-    template <class elementT, int D>
-    constexpr auto element_set(
-        std::vector<elementT *> && elements, const vertex_set_t<D> & vertices);
-
-    // vertex set factory
+    // mesh factory
     template <int D>
-    constexpr auto mesh(std::string meshFileName);
+    auto mesh(std::string meshFileName);
 
+    // TOFIX: where should the implementation of these methods go?
+    template <int D>
+    auto exists_flipped(const oriented_simplex_ptr<D> & oriented_simplex)
+    {
+        return OrientedSimplexFactory<D>::exists_flipped(oriented_simplex);
+    }
+
+    template <int D>
+    auto flip(const oriented_simplex_ptr<D> & oriented_simplex)
+    {
+        return OrientedSimplexFactory<D>::flip(oriented_simplex);
+    }
+
+    template <int D>
+    auto incidence(const oriented_simplex_ptr<D> & oriented_simplex)
+    {
+        return OrientedSimplexFactory<D>::incidence(oriented_simplex);
+    }
 }
 
 

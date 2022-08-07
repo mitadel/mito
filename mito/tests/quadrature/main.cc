@@ -1,6 +1,7 @@
 #include "../../base.h"
 #include "../../math.h"
 #include "../../mesh.h"
+#include "../../manifolds.h"
 #include "../../quadrature.h"
 
 using mito::vector_t;
@@ -30,38 +31,38 @@ main()
         (0,0)           (1,0)
     */
 
-    auto vertices = mito::mesh::vertex_set<2>();
+    auto points = mito::mesh::point_cloud<2>();
 
-    vertex_t vertex0;
-    vertices.insert(vertex0, point_t<2> { 0.0, 0.0 });
-    vertex_t vertex1;
-    vertices.insert(vertex1, point_t<2> { 1.0, 0.0 });
-    vertex_t vertex2;
-    vertices.insert(vertex2, point_t<2> { 1.0, 1.0 });
-    vertex_t vertex3;
-    vertices.insert(vertex3, point_t<2> { 0.5, 0.5 });
-    vertex_t vertex4;
-    vertices.insert(vertex4, point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::mesh::vertex();
+    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
+    auto vertex1 = mito::mesh::vertex();
+    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
+    auto vertex2 = mito::mesh::vertex();
+    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
+    auto vertex3 = mito::mesh::vertex();
+    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
+    auto vertex4 = mito::mesh::vertex();
+    points.insert(vertex4, point_t<2> { 0.0, 1.0 });
 
-    auto segment0 = mito::mesh::segment({ &vertex0, &vertex1 });
-    auto segment1 = mito::mesh::segment({ &vertex1, &vertex3 });
-    auto segment2 = mito::mesh::segment({ &vertex3, &vertex0 });
-    auto segment3 = mito::mesh::segment({ &vertex1, &vertex2 });
-    auto segment4 = mito::mesh::segment({ &vertex2, &vertex3 });
-    auto segment5 = mito::mesh::segment({ &vertex4, &vertex3 });
-    auto segment6 = mito::mesh::segment({ &vertex2, &vertex4 });
-    auto segment7 = mito::mesh::segment({ &vertex4, &vertex0 });
+    auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
+    auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
+    auto segment2 = mito::mesh::segment({ vertex3, vertex0 });
+    auto segment3 = mito::mesh::segment({ vertex1, vertex2 });
+    auto segment4 = mito::mesh::segment({ vertex2, vertex3 });
+    auto segment5 = mito::mesh::segment({ vertex4, vertex3 });
+    auto segment6 = mito::mesh::segment({ vertex2, vertex4 });
+    auto segment7 = mito::mesh::segment({ vertex4, vertex0 });
 
-    auto element0 = mito::mesh::triangle({ &segment0, &segment1, &segment2 });
-    auto element1 = mito::mesh::triangle({ &segment3, &segment4, &segment1 });
-    auto element2 = mito::mesh::triangle({ &segment6, &segment5, &segment4 });
-    auto element3 = mito::mesh::triangle({ &segment7, &segment2, &segment5 });
-    std::vector<triangle_t *> elements = { &element0, &element1, &element2, &element3 };
+    auto element0 = mito::mesh::triangle({ segment0, segment1, segment2 });
+    auto element1 = mito::mesh::triangle({ segment3, segment4, segment1 });
+    auto element2 = mito::mesh::triangle({ segment6, segment5, segment4 });
+    auto element3 = mito::mesh::triangle({ segment7, segment2, segment5 });
+    mito::mesh::simplex_vector_t<triangle_t> elements = { element0, element1, element2, element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    auto bodyElementSet = mito::mesh::element_set(elements, vertices);
+    auto bodyManifold = mito::manifolds::manifold(elements, points);
     auto bodyIntegrator =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet);
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     // a scalar function
     auto f = mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
@@ -135,20 +136,20 @@ main()
     // check the result
     assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
-    // attach different coordinates (3D coordinates to the same vertices as above)
-    auto vertices3D = mito::mesh::vertex_set<3>();
-    vertices3D.insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
-    vertices3D.insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
-    vertices3D.insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
-    vertices3D.insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
-    vertices3D.insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
+    // attach different coordinates (3D coordinates to the same points as above)
+    auto points3D = mito::mesh::point_cloud<3>();
+    points3D.insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
+    points3D.insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
+    points3D.insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
+    points3D.insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
+    points3D.insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
 
     // instantiate an element set with the same elements as above but the new coordinates map
-    auto bodyElementSet3D = mito::mesh::element_set(elements, vertices3D);
+    auto bodyManifold3D = mito::manifolds::manifold(elements, points3D);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyIntegrator3D =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyElementSet3D);
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold3D);
 
     // a scalar function
     auto f_xy3D = mito::math::function([](const vector_t<3> & x) -> real { return x[0] * x[1]; });
