@@ -70,15 +70,16 @@ namespace mito::mesh {
         using simplex_type = vertex_t;
     };
 
+    // TOFIX: not sure that we need a Simplex<0> 
     // simplex alias
     template <int D>
     using simplex_t = typename helperSimplexClass<D>::simplex_type;
 
     // vertex set alias
-    using vertex_set_t = std::unordered_set<const vertex_t *>;
+    using vertex_set_t = simplex_set_t<vertex_t>;
 
     // vertex vector alias
-    using vertex_vector_t = std::vector<const vertex_t *>;
+    using vertex_vector_t = simplex_vector_t<vertex_t>;
 
     // oriented simplex alias
     template <int D>
@@ -90,7 +91,7 @@ namespace mito::mesh {
 
     // simplex pointer alias
     template <int D>
-    using simplex_ptr = std::shared_ptr<const Simplex<D>>;
+    using simplex_ptr = std::shared_ptr<simplex_t<D>>;
 
     // oriented simplex composition alias
     template <int D>

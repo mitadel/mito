@@ -48,11 +48,18 @@ namespace mito::mesh {
 
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
+        void vertices(VERTEX_COLLECTION_T & vertices) const requires (D > 1) 
         {
             for (const auto & simplex : simplices()) {
                 simplex->vertices(vertices);
             }
+        }
+
+        template <class VERTEX_COLLECTION_T>
+        void vertices(VERTEX_COLLECTION_T & vertices) const requires(D == 1)
+        {
+            vertices.insert(_simplices[0]);
+            vertices.insert(_simplices[1]);
         }
 
         // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
@@ -69,10 +76,9 @@ namespace mito::mesh {
 
             // use a set to cleanup duplicates
             vertex_set_t vertices;
-            // collect vertices of every subsimplex of this simplex
-            for (const auto & simplex : simplices()) {
-                simplex->vertices(vertices);
-            }
+            // collect vertices of this simplex
+            this->vertices(vertices);
+            
             // if this simplex does not have D+1 vertices, something went wrong
             if (vertices.size() != int(D) + 1) {
                 // all done

@@ -6,8 +6,8 @@ main()
 {
     {
         // two vertices
-        mito::mesh::vertex_t vertex0;
-        mito::mesh::vertex_t vertex1;
+        auto vertex0 = mito::mesh::vertex();
+        auto vertex1 = mito::mesh::vertex();
 
         // instantiate an oriented segment
         auto oriented_segment0 = mito::mesh::segment({ vertex0, vertex1 });
@@ -33,9 +33,9 @@ main()
     }
     {
         // build vertices
-        mito::mesh::vertex_t vertex0;
-        mito::mesh::vertex_t vertex1;
-        mito::mesh::vertex_t vertex2;
+        auto vertex0 = mito::mesh::vertex();
+        auto vertex1 = mito::mesh::vertex();
+        auto vertex2 = mito::mesh::vertex();
 
         // build segments
         auto segment_a = mito::mesh::segment({ vertex0, vertex1 });

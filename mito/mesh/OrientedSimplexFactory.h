@@ -138,7 +138,7 @@ namespace mito::mesh {
             return;
         }
 
-        static void _cleanup(const oriented_simplex_t<D> * oriented_simplex) requires(D == 0)
+        static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D == 0)
         {
             // all done (nothing to be done for vertices)
             return;

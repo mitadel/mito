@@ -107,7 +107,7 @@ namespace mito::manifolds {
         inline const mesh::simplex_vector_t<element_t> & elements() const { return _elements; }
         inline int nElements() const { return _elements.size(); }
         inline real jacobian(int e) const { return _jacobians[e]; }
-        inline const auto & coordinatesVertex(const mesh::vertex_t * v) const
+        inline const auto & coordinatesVertex(const mesh::oriented_simplex_ptr<0> & v) const
         {
             return _points[v];
         }

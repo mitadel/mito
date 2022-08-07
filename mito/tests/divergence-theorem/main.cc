@@ -65,15 +65,15 @@ main()
     auto points = mito::mesh::point_cloud<2>();
 
     auto vertex0 = mito::mesh::vertex();
-    points.insert(*vertex0, point_t<2> { 0.0, 0.0 });
+    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
     auto vertex1 = mito::mesh::vertex();
-    points.insert(*vertex1, point_t<2> { 1.0, 0.0 });
+    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
     auto vertex2 = mito::mesh::vertex();
-    points.insert(*vertex2, point_t<2> { 1.0, 1.0 });
+    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
     auto vertex3 = mito::mesh::vertex();
-    points.insert(*vertex3, point_t<2> { 0.5, 0.5 });
+    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
     auto vertex4 = mito::mesh::vertex();
-    points.insert(*vertex4, point_t<2> { 0.0, 1.0 });
+    points.insert(vertex4, point_t<2> { 0.0, 1.0 });
 
     auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
     auto segment1 = mito::mesh::segment({ vertex1, vertex3 });

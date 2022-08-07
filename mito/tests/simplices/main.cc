@@ -32,13 +32,13 @@ main()
 
     // QUESTION: should we define a point as a pairing between a vertex and its coordinates?
     auto vertex0 = mito::mesh::vertex();
-    points.insert(*vertex0, point_t<2> { 0.0, 0.0 });
+    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
     auto vertex1 = mito::mesh::vertex();
-    points.insert(*vertex1, point_t<2> { 1.0, 0.0 });
+    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
     auto vertex2 = mito::mesh::vertex();
-    points.insert(*vertex2, point_t<2> { 1.0, 1.0 });
+    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
     auto vertex3 = mito::mesh::vertex();
-    points.insert(*vertex3, point_t<2> { 0.5, 0.5 });
+    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
 
     // show me
     std::cout << points << std::endl;

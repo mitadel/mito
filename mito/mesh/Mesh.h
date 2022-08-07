@@ -26,7 +26,7 @@ namespace mito::mesh {
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
             using type = std::tuple<
-                vertex_container<const oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
+                vertex_container<oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
         };
 
         // this expands to:
@@ -181,9 +181,9 @@ namespace mito::mesh {
         void _addVertex(point_t<D> && point)
         {
             // instantiate new vertex
-            vertex_t * vertex = new vertex_t();
+            auto vertex = mito::mesh::vertex();
             // associate the new vertex to the new point
-            _vertices.insert(*vertex, point);
+            _vertices.insert(vertex, point);
             // add to the simplices the newly created vertex
             std::get<0>(_simplices).push_back(vertex);
 
@@ -193,7 +193,7 @@ namespace mito::mesh {
 
         auto & _getVertex(int n)
         {
-            return *std::get<0>(_simplices)[n];
+            return std::get<0>(_simplices)[n];
         }
 
         void _readTriangle(std::ifstream & fileStream)

@@ -9,7 +9,7 @@ namespace mito::mesh {
     class PointCloud {
 
         // using cloud_t = std::unordered_map<std::reference_wrapper<vertex_t>, point_t<D>>;
-        using cloud_t = std::unordered_map<const vertex_t *, const point_t<D>>;
+        using cloud_t = std::unordered_map<oriented_simplex_ptr<0>, const point_t<D>>;
 
       public:
         PointCloud() : _cloud() {};
@@ -34,7 +34,7 @@ namespace mito::mesh {
         {
             // iterate on map
             for (auto item : _cloud) {
-                std::cout << "Vertex: " << item.first << std::endl;
+                std::cout << "Vertex: " << item.first.get() << std::endl;
                 std::cout << "Point: " << item.second << std::endl;
             }
             // all done
@@ -49,29 +49,21 @@ namespace mito::mesh {
 
         int size() { return _cloud.size(); }
 
-        auto insert(const vertex_t & vertex, const point_t<D> & point)
+        auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> & point)
         {
             return _cloud.insert(
-                // std::pair<std::reference_wrapper<vertex_t>, point_t<D>>(vertex, point)
-                std::pair<const vertex_t *, const point_t<D>>(&vertex, point));
+                std::pair<oriented_simplex_ptr<0>, const point_t<D>>(vertex, point));
         }
 
-        auto insert(const vertex_t & vertex, const point_t<D> && point)
+        auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> && point)
         {
             return _cloud.insert(
-                // std::pair<std::reference_wrapper<vertex_t>, point_t<D>>(vertex, point)
-                std::pair<const vertex_t *, const point_t<D>>(&vertex, point));
+                std::pair<oriented_simplex_ptr<0>, const point_t<D>>(vertex, point));
         }
 
-        const point_t<D> & operator[](const vertex_t * vertex) const
+        const point_t<D> & operator[](const oriented_simplex_ptr<0> &vertex) const
         {
             auto point = _cloud.find(vertex);
-            return point->second;
-        }
-
-        const point_t<D> & operator[](const vertex_t & vertex) const
-        {
-            auto point = _cloud.find(&vertex);
             return point->second;
         }
 
@@ -84,7 +76,7 @@ namespace mito::mesh {
     std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
     {
         for (const auto & point : cloud) {
-            std::cout << "vertex: " << point.first << ",\t coordinates: " << point.second << std::endl;
+            std::cout << "vertex: " << point.first.get() << ",\t coordinates: " << point.second << std::endl;
         }
         return os;
     }

@@ -49,13 +49,13 @@ namespace mito::mesh {
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
-      private:
-        // accessor for the footprint shared pointer
-        const auto & footprint() const { return _footprint; }
-
+      // TOFIX: do we need both?
       public:
         // accessor for the footprint simplex
         const auto & simplex() const { return *_footprint.get(); }
+
+        // accessor for the footprint shared pointer
+        const auto & footprint() const { return _footprint; }
 
         // returns the orientation of this simplex
         // (true: oriented simplex is oriented as the footprint,
@@ -146,20 +146,6 @@ namespace mito::mesh {
 
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
-
-      public:
-        // accessor for the subsimplices
-        auto simplices() const { return simplex_composition_t<0>(); }    // TOFIX
-
-        // add the vertices of this simplex to a set of vertices
-        template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
-        {
-            // insert this vertex
-            vertices.insert(this);
-            // all done
-            return;
-        }
 
       public:
         // perform a sanity check

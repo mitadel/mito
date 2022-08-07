@@ -75,9 +75,9 @@ flipDiagonal(
 
     auto opposite_vertices = oppositeVertices(element_0, element_1, shared_simplex);
 
-    auto diagonal_segment = mito::mesh::segment({ *opposite_vertices[0], *opposite_vertices[1] });
+    auto diagonal_segment = mito::mesh::segment({ opposite_vertices[0], opposite_vertices[1] });
     auto opposite_diagonal_segment =
-        mito::mesh::segment({ *opposite_vertices[1], *opposite_vertices[0] });
+        mito::mesh::segment({ opposite_vertices[1], opposite_vertices[0] });
 
     std::set<mito::mesh::oriented_simplex_ptr<1>> boundary_simplices;
     // get boundary simplices of element_0 (all except diagonal)
@@ -162,10 +162,10 @@ main()
     // auto vertex0 = vertices.newVertex();
 
     // build vertices
-    mito::mesh::vertex_t vertex0;
-    mito::mesh::vertex_t vertex1;
-    mito::mesh::vertex_t vertex2;
-    mito::mesh::vertex_t vertex3;
+    auto vertex0 = mito::mesh::vertex();
+    auto vertex1 = mito::mesh::vertex();
+    auto vertex2 = mito::mesh::vertex();
+    auto vertex3 = mito::mesh::vertex();
 
     // build segments
     auto segment_a = mito::mesh::segment({ vertex0, vertex1 });
