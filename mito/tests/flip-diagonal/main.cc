@@ -1,5 +1,6 @@
 #include "../../base.h"
 #include "../../mesh.h"
+#include <set>
 
 const mito::mesh::simplex_t<1> *
 findSharedSimplex(
@@ -29,14 +30,17 @@ oppositeVertices(
     mito::mesh::oriented_simplex_ptr<2> & element_1,
     const mito::mesh::simplex_t<1> * shared_simplex)
 {
-    mito::mesh::vertex_set_t vertices;
+    // need a regular set (not an unordered one) because set_difference works with ordered sets
+    using vertex_set_t = std::set<std::shared_ptr<const mito::mesh::vertex_t>>;
+
+    vertex_set_t vertices;
     element_0->vertices(vertices);
     element_1->vertices(vertices);
 
-    mito::mesh::vertex_set_t shared_simplex_vertices;
+    vertex_set_t shared_simplex_vertices;
     shared_simplex->vertices(shared_simplex_vertices);
 
-    mito::mesh::vertex_set_t opposite_vertices;
+    vertex_set_t opposite_vertices;
     std::set_difference(
         vertices.begin(), vertices.end(), shared_simplex_vertices.begin(),
         shared_simplex_vertices.end(), std::inserter(opposite_vertices, opposite_vertices.end()));
