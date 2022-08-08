@@ -148,6 +148,9 @@ namespace mito::mesh {
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
       public:
+        // accessor for the footprint simplex
+        const auto & simplex() const { return *this; }
+
         // perform a sanity check
         bool sanityCheck() const
         {
