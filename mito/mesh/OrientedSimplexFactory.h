@@ -29,24 +29,6 @@ namespace mito::mesh {
         // delete default constructor
         OrientedSimplexFactory() = delete;
 
-        // find this oriented simplex in the factory and hand a shared pointer to it (allowing the
-        // caller to share its ownership)
-        static oriented_simplex_ptr<D> & find(const oriented_simplex_t<D> & oriented_simplex)
-        {
-            // get from the footprint of this simplex 
-            const auto & simplex = oriented_simplex.simplex();
-
-            // look up for an oriented simplex with this orientation
-            auto ret_find =
-                _orientations.find(std::make_tuple(&simplex, oriented_simplex.orientation()));
-
-            // assert the simplex could be found
-            assert (ret_find != _orientations.end());
-
-            // return shared pointer to simplex
-            return ret_find->second;
-        }
-
         // return an oriented simplex riding on footprint {simplex} and with orientation
         // {orientation} (either create a new oriented simplex if such oriented simplex does not
         // exist in the factory or return the existing representative of the class of equivalence of

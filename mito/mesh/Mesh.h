@@ -5,6 +5,7 @@
 
 namespace mito::mesh {
 
+    // TOFIX: either call this SimplicialMesh or remove simplex assumption
     template <int D>
     class Mesh {
 
@@ -118,8 +119,8 @@ namespace mito::mesh {
             for (const auto & simplex : std::get<D-1>(_simplices)) {
                 // if the simplex footprint has only one occurrence then it is on the boundary
                 if (!exists_flipped(simplex)) {
-                    // add the subsimplices of dimension I to the set of boundary simplices
-                    simplex->template getSimplices<I>(boundary_simplices);
+                    // add this (D-1) dimensional simplex to the set of boundary simplices
+                    boundary_simplices.insert(simplex);
                 }
             }
 
