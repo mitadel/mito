@@ -14,8 +14,7 @@ namespace mito::mesh {
 
     // oriented simplex factory
     template <int I>
-    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
-        I > 1)
+    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices)
     {
         return OrientedSimplexFactory<I>::orientedSimplex(simplices);
     }
@@ -26,7 +25,7 @@ namespace mito::mesh {
     // segment factory
     oriented_simplex_ptr<1> segment(const simplex_composition_t<1> & simplices)
     {
-        return OrientedSimplexFactory<1>::orientedSimplex(simplices);
+        return oriented_simplex<1>(simplices);
     }
 
     // triangle factory

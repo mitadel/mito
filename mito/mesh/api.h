@@ -11,8 +11,7 @@ namespace mito::mesh {
 
     // oriented simplex factory
     template <int I>
-    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
-        I > 1);
+    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices);
 
     // vertex factory
     oriented_simplex_ptr<0> vertex();
