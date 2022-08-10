@@ -11,9 +11,6 @@ namespace mito::mesh {
 
       private:
 
-        template <class T>
-        using vertex_container = std::vector<T>;
-
         // QUESTION: would it be better to use reference wrappers here?
         // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
@@ -21,13 +18,12 @@ namespace mito::mesh {
 
         // simplex_collection<I>... expands to:
         // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
-        template <typename = std::make_index_sequence<D>>
+        template <typename = std::make_index_sequence<D+1>>
         struct simplices_tuple;
 
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<
-                vertex_container<oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
+            using type = std::tuple<simplex_collection<I>... > ;
         };
 
         // this expands to:
@@ -179,25 +175,22 @@ namespace mito::mesh {
             return;
         }
 
-        void _addVertex(point_t<D> && point)
+        void _addVertex(point_t<D> && point, std::vector<oriented_simplex_ptr<0>> & vertices)
         {
             // instantiate new vertex
-            auto vertex = mito::mesh::vertex();
+            auto vertex = mesh::vertex();
+            // TOFIX: could we do directly auto vertex = mesh::vertex(point)? 
             // associate the new vertex to the new point
             _vertices.insert(vertex, point);
-            // add to the simplices the newly created vertex
-            std::get<0>(_simplices).push_back(vertex);
+            // register the newly created vertex
+            vertices.push_back(vertex);
 
             // all done
             return;
         }
 
-        auto & _getVertex(int n)
-        {
-            return std::get<0>(_simplices)[n];
-        }
-
-        void _readTriangle(std::ifstream & fileStream)
+        void _readTriangle(
+            std::ifstream & fileStream, const std::vector<oriented_simplex_ptr<0>> & vertices)
         {
             int index0 = 0;
             fileStream >> index0;
@@ -211,9 +204,9 @@ namespace mito::mesh {
             fileStream >> index2;
             --index2;
 
-            auto vertex0 = _getVertex(index0);
-            auto vertex1 = _getVertex(index1);
-            auto vertex2 = _getVertex(index2);
+            auto vertex0 = vertices[index0];
+            auto vertex1 = vertices[index1];
+            auto vertex2 = vertices[index2];
 
             auto segment0 = segment({ vertex0, vertex1 });
             _addSimplex(segment0);
@@ -235,10 +228,10 @@ namespace mito::mesh {
             return;
         }
 
-        void _readVertices(std::ifstream & fileStream, int N_vertices)
+        void _readVertices(
+            std::ifstream & fileStream, int N_vertices,
+            std::vector<oriented_simplex_ptr<0>> & vertices)
         {
-            // reserve space to read new vertices
-            std::get<0>(_simplices).reserve(std::get<0>(_simplices).size() + N_vertices);
             // fill in vertices
             for (int n = 0; n < N_vertices; ++n) {
                 // instantiate new point
@@ -247,7 +240,7 @@ namespace mito::mesh {
                     // read point coordinates
                     fileStream >> point[d];
                 }
-                _addVertex(std::move(point));
+                _addVertex(std::move(point), vertices);
             }
             // _vertices.print();
 
@@ -255,14 +248,16 @@ namespace mito::mesh {
             return;
         }
 
-        void _readElements(std::ifstream & fileStream, int N_elements)
+        void _readElements(
+            std::ifstream & fileStream, int N_elements,
+            const std::vector<oriented_simplex_ptr<0>> & vertices)
         {
             for (int i = 0; i < N_elements; ++i) {
                 int element_type = 0;
                 fileStream >> element_type;
 
                 if (element_type == 3) {
-                    _readTriangle(fileStream);
+                    _readTriangle(fileStream, vertices);
                 } else {
                     std::cout << "Error: Unknown element type" << std::endl;
                 }
@@ -292,7 +287,8 @@ namespace mito::mesh {
             int N_vertices = 0;
             fileStream >> N_vertices;
             // reserve space for vertices
-            std::get<0>(_simplices).reserve(N_vertices);
+            std::vector<oriented_simplex_ptr<0>> vertices;
+            vertices.reserve(N_vertices);
 
             // read number of elements
             int N_elements = 0;
@@ -308,13 +304,14 @@ namespace mito::mesh {
             assert(N_element_types == 1);
 
             // read the vertices
-            _readVertices(fileStream, N_vertices);
+            _readVertices(fileStream, N_vertices, vertices);
 
             // read the elements
-            _readElements(fileStream, N_elements);
+            _readElements(fileStream, N_elements, vertices);
 
             // sanity check: the number of vertices in the map is N_vertices
-            assert(nElements<0>() == N_vertices);
+            vertices.shrink_to_fit();
+            assert(vertices.size() == N_vertices);
 
             // sanity check: the number of elements of highest dimension in the map is N_elements
             assert(nElements<D>() == N_elements);
