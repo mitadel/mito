@@ -208,11 +208,8 @@ namespace mito::mesh {
             auto vertex2 = vertices[index2];
 
             auto segment0 = segment({ vertex0, vertex1 });
-            addSimplex(segment0);
             auto segment1 = segment({ vertex1, vertex2 });
-            addSimplex(segment1);
             auto segment2 = segment({ vertex2, vertex0 });
-            addSimplex(segment2);
 
             auto element = triangle({ segment0, segment1, segment2 });
             addSimplex(element);
