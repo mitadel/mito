@@ -106,13 +106,6 @@ namespace mito::mesh {
     // tetrahedron alias
     using tetrahedron_t = OrientedSimplex<3>;
 
-    // class vertex set
-    template <int D>
-    class PointCloud;
-
-    // vertex set alias
-    template <int D>
-    using point_cloud_t = PointCloud<D>;
 
 }
 
