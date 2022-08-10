@@ -27,7 +27,7 @@ namespace mito::mesh {
 
     // point cloud alias
     template <int D>
-    using point_cloud_t = PointCloud<D>;
+    using point_cloud = PointCloud<D>;
 
     // element set alias
     template <class elementT>

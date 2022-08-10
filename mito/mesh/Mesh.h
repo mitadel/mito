@@ -33,7 +33,7 @@ namespace mito::mesh {
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
       public:
-        Mesh(std::string meshFileName) : _simplices(), _vertices()
+        Mesh(std::string meshFileName) : _simplices()
         {
             _loadMesh(meshFileName);
         }
@@ -89,12 +89,6 @@ namespace mito::mesh {
         {
             // all done
             return std::get<I>(_simplices);
-        }
-
-        const auto & vertices() const
-        {
-            // all done
-            return _vertices;
         }
 
         /**
@@ -174,20 +168,6 @@ namespace mito::mesh {
         }
 
       private:
-        void _addVertex(point_t<D> && point, std::vector<oriented_simplex_ptr<0>> & vertices)
-        {
-            // instantiate new vertex
-            auto vertex = mesh::vertex();
-            // TOFIX: could we do directly auto vertex = mesh::vertex(point)? 
-            // associate the new vertex to the new point
-            _vertices.insert(vertex, point);
-            // register the newly created vertex
-            vertices.push_back(vertex);
-
-            // all done
-            return;
-        }
-
         void _readTriangle(
             std::ifstream & fileStream, const std::vector<oriented_simplex_ptr<0>> & vertices)
         {
@@ -236,9 +216,13 @@ namespace mito::mesh {
                     // read point coordinates
                     fileStream >> point[d];
                 }
-                _addVertex(std::move(point), vertices);
+
+                // instantiate new vertex
+                auto vertex = mesh::vertex(std::move(point));
+
+                // instantiate new vertex and add it to {vertices}
+                vertices.push_back(vertex);
             }
-            // _vertices.print();
 
             // all done
             return;
@@ -325,8 +309,6 @@ namespace mito::mesh {
       private:
         // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
         simplices_tuple_t _simplices;
-        // the mesh vertices
-        point_cloud_t<D> _vertices;
     };
 
 }    // namespace mito

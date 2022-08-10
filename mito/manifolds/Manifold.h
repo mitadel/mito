@@ -14,19 +14,14 @@ namespace mito::manifolds {
     template <class elementT, int D>
     class Manifold {
 
-      private:
-        using point_cloud_t = mesh::point_cloud_t<D>;
-
       public:
         using element_t = elementT;
         static constexpr int dim = D;
 
       public:
         Manifold(
-            const mesh::simplex_set_t<element_t> & elements,
-            const point_cloud_t & points) :
+            const mesh::simplex_set_t<element_t> & elements) :
             _elements(elements.begin(), elements.end()),
-            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
@@ -34,10 +29,8 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            mesh::simplex_set_t<element_t> && elements,
-            const point_cloud_t & points) :
+            mesh::simplex_set_t<element_t> && elements) :
             _elements(elements.begin(), elements.end()),
-            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
@@ -45,10 +38,8 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            const mesh::simplex_vector_t<element_t> & elements,
-            const point_cloud_t & points) :
+            const mesh::simplex_vector_t<element_t> & elements) :
             _elements(elements),
-            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
@@ -56,22 +47,13 @@ namespace mito::manifolds {
         }
 
         Manifold(
-            mesh::simplex_vector_t<element_t> && elements, const point_cloud_t & points) :
+            mesh::simplex_vector_t<element_t> && elements) :
             _elements(elements),
-            _points(points),
             _jacobians(elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
             _computeJacobians();
         }
-
-        Manifold(
-            const mesh::simplex_vector_t<element_t> & elements,
-            const point_cloud_t && points) = delete;
-
-        Manifold(
-            mesh::simplex_vector_t<element_t> && elements,
-            const point_cloud_t && points) = delete;
 
         ~Manifold() {}
 
@@ -109,19 +91,18 @@ namespace mito::manifolds {
         inline real jacobian(int e) const { return _jacobians[e]; }
         inline const auto & coordinatesVertex(const mesh::oriented_simplex_ptr<0> & v) const
         {
-            return _points[v];
+            return mesh::point_cloud<D>::point(v);
         }
 
       private:
         void _computeJacobians()
         {
             return computeElementsVolume<element_t /* element type */, D /* spatial dim*/>(
-                _elements, _points, _jacobians);
+                _elements, _jacobians);
         }
 
       private:
         const mesh::simplex_vector_t<element_t> _elements;
-        const point_cloud_t & _points;
         std::vector<real> _jacobians;
     };
 

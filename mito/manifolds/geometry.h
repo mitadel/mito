@@ -15,8 +15,8 @@ namespace mito::manifolds {
 
     template <int D>
     void computeSimplicesVolume(
-        const mesh::simplex_vector_t<mesh::oriented_simplex_t<D>> & elements,
-        const mesh::point_cloud_t<D> & points, std::vector<real> & volumes)
+        const mesh::simplex_vector_t<mesh::oriented_simplex_t<D>> & elements, 
+        std::vector<real> & volumes)
     {
         // number of element vertices
         constexpr int V = D + 1;
@@ -45,7 +45,7 @@ namespace mito::manifolds {
             for (const auto & vertex : element_vertices) {
                 // fill up pointsTensor container
                 for (int d = 0; d < D; ++d) {
-                    pointsTensor[v * V + d] = points[vertex][d];
+                    pointsTensor[v * V + d] = mesh::point_cloud<D>::point(vertex)[d];
                 }
                 pointsTensor[v * V + D] = 1.0;
                 // update element vertices counter
@@ -65,37 +65,33 @@ namespace mito::manifolds {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const mesh::simplex_vector_t<element_t> & elements, const mesh::point_cloud_t<D> & points,
+        const mesh::simplex_vector_t<element_t> & elements,
         std::vector<real> & volumes);
 
     template <>
     void computeElementsVolume<mesh::triangle_t, 2>(
-        const mesh::simplex_vector_t<mesh::triangle_t> & elements,
-        const mesh::point_cloud_t<2> & points, std::vector<real> & volumes)
+        const mesh::simplex_vector_t<mesh::triangle_t> & elements, std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<2>(elements, points, volumes);
+        return computeSimplicesVolume<2>(elements, volumes);
     }
 
     template <>
     void computeElementsVolume<mesh::tetrahedron_t, 3>(
-        const mesh::simplex_vector_t<mesh::tetrahedron_t> & elements,
-        const mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
+        const mesh::simplex_vector_t<mesh::tetrahedron_t> & elements, std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<3>(elements, points, volumes);
+        return computeSimplicesVolume<3>(elements, volumes);
     }
 
     template <>
     void computeElementsVolume<mesh::segment_t, 1>(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements,
-        const mesh::point_cloud_t<1> & points, std::vector<real> & volumes)
+        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & volumes)
     {
-        return computeSimplicesVolume<1>(elements, points, volumes);
+        return computeSimplicesVolume<1>(elements, volumes);
     }
 
     template <int D>
     void computeSegmentsLength(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements,
-        const mesh::point_cloud_t<D> & points, std::vector<real> & length)
+        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & length)
     {
         // number of element vertices
         constexpr int V = 2;
@@ -117,7 +113,7 @@ namespace mito::manifolds {
 
             // store the distance between the two element vertices as the element length
             length[e] =
-                computeDistance<D>(points[element_vertices[0]], points[element_vertices[1]]);
+                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[0]), mesh::point_cloud<D>::point(element_vertices[1]));
 
             // update elements counter
             ++e;
@@ -129,25 +125,22 @@ namespace mito::manifolds {
 
     template <>
     void computeElementsVolume<mesh::segment_t, 2>(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements,
-        const mesh::point_cloud_t<2> & points, std::vector<real> & volumes)
+        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & volumes)
     {
-        return computeSegmentsLength<2>(elements, points, volumes);
+        return computeSegmentsLength<2>(elements, volumes);
     }
 
     template <>
     void computeElementsVolume<mesh::segment_t, 3>(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements,
-        const mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
+        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & volumes)
     {
-        return computeSegmentsLength<3>(elements, points, volumes);
+        return computeSegmentsLength<3>(elements, volumes);
     }
 
     // follows implementation by Kahan2014
     template <int D = 3>
     void computeTriangleArea(
-        const mesh::simplex_vector_t<mesh::triangle_t> & elements,
-        const mesh::point_cloud_t<D> & points, std::vector<real> & areas)
+        const mesh::simplex_vector_t<mesh::triangle_t> & elements, std::vector<real> & areas)
     {
         // loop on elements
         int e = 0;
@@ -161,11 +154,11 @@ namespace mito::manifolds {
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
             edges_lengths[0] =
-                computeDistance<D>(points[element_vertices[0]], points[element_vertices[1]]);
+                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[0]), mesh::point_cloud<D>::point(element_vertices[1]));
             edges_lengths[1] =
-                computeDistance<D>(points[element_vertices[0]], points[element_vertices[2]]);
+                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[0]), mesh::point_cloud<D>::point(element_vertices[2]));
             edges_lengths[2] =
-                computeDistance<D>(points[element_vertices[1]], points[element_vertices[2]]);
+                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[1]), mesh::point_cloud<D>::point(element_vertices[2]));
 
             // sort edges lengths in ascending order
             std::sort(edges_lengths.begin(), edges_lengths.end());
@@ -191,10 +184,9 @@ namespace mito::manifolds {
 
     template <>
     void computeElementsVolume<mesh::triangle_t, 3>(
-        const mesh::simplex_vector_t<mesh::triangle_t> & elements,
-        const mesh::point_cloud_t<3> & points, std::vector<real> & volumes)
+        const mesh::simplex_vector_t<mesh::triangle_t> & elements, std::vector<real> & volumes)
     {
-        return computeTriangleArea(elements, points, volumes);
+        return computeTriangleArea(elements, volumes);
     }
 }
 
