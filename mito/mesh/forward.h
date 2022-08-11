@@ -53,6 +53,10 @@ namespace mito::mesh {
     template <int D>
     class OrientedSimplexFactory;
 
+    // class oriented simplex factory
+    template <int D>
+    class Topology;
+
     // vertex alias
     using vertex_t = OrientedSimplex<0>;
 

@@ -16,11 +16,11 @@ namespace mito::mesh {
     template <int I>
     oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices)
     {
-        return OrientedSimplexFactory<I>::orientedSimplex(simplices);
+        return Topology<I>::orientedSimplex(simplices);
     }
 
     // vertex factory
-    oriented_simplex_ptr<0> vertex() { return OrientedSimplexFactory<0>::orientedSimplex(); }
+    oriented_simplex_ptr<0> vertex() { return Topology<0>::orientedSimplex(); }
 
     template <int D>
     oriented_simplex_ptr<0> vertex(point_t<D> && point)

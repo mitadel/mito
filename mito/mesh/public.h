@@ -18,6 +18,7 @@
 #include "OrientedSimplex.h"
 #include "SimplexFactory.h"
 #include "OrientedSimplexFactory.h"
+#include "Topology.h"
 #include "PointCloud.h"
 #include "Mesh.h"
 

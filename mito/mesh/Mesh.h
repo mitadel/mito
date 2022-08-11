@@ -153,7 +153,7 @@ namespace mito::mesh {
             _erase(simplex);
 
             // cleanup oriented simplex factory around this simplex
-            OrientedSimplexFactory<I>::cleanup(simplex);
+            Topology<I>::cleanup(simplex);
 
             // all done
             return;
