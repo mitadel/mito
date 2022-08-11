@@ -20,7 +20,7 @@ namespace mito::mesh {
     }
 
     // vertex factory
-    oriented_simplex_ptr<0> vertex() { return std::make_shared<oriented_simplex_t<0>>(); }
+    oriented_simplex_ptr<0> vertex() { return OrientedSimplexFactory<0>::orientedSimplex(); }
 
     template <int D>
     oriented_simplex_ptr<0> vertex(point_t<D> && point)

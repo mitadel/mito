@@ -120,12 +120,6 @@ namespace mito::mesh {
             return;
         }
 
-        static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D == 0)
-        {
-            // all done (nothing to be done for vertices)
-            return;
-        }
-
         // cleanup the factory around an oriented simplex (i.e. remove from the factory unused
         // oriented simplices related to this oriented simplex)
         static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
@@ -200,6 +194,60 @@ namespace mito::mesh {
     template <int D>
     typename OrientedSimplexFactory<D>::orientation_map_t OrientedSimplexFactory<D>::_orientations =
         OrientedSimplexFactory<D>::orientation_map_t();
+
+    /*
+     * This class specializes OrientedSimplexFactory<D> for D = 0.
+     */
+    template <>
+    class OrientedSimplexFactory<0> {
+      private:
+        using vertex_collection_t = simplex_set_t<oriented_simplex_t<0>>;
+
+      public:
+        // delete default constructor
+        OrientedSimplexFactory() = delete;
+
+        // adds a new vertex to the vertex collection and returns it
+        static oriented_simplex_ptr<0> orientedSimplex()
+        {
+            // insert the new vertex in the vertex set
+            auto ret = _vertices.insert(std::make_shared<oriented_simplex_t<0>>());
+
+            // return vertex
+            return *ret.first;
+        }
+
+        // TOFIX: change name, this is not actually the incidence
+        // returns the number of owners of the shared pointer to this oriented simplex
+        static int incidence(const oriented_simplex_ptr<0> & oriented_simplex)
+        {
+            return oriented_simplex.use_count() - 1;
+        }
+
+        static void _cleanup(const oriented_simplex_ptr<0> & oriented_simplex)
+        {
+            std::cout << incidence(oriented_simplex) << std::endl;
+
+            // if the oriented simplex is unused
+            if (incidence(oriented_simplex) == 0) {
+
+                // erase this oriented simplex from the oriented simplex factory
+                _vertices.erase(oriented_simplex);
+
+            }
+
+            // all done
+            return;
+        }
+
+      private:
+        // container to store the vertices
+        static vertex_collection_t _vertices;
+    };
+
+    // initialize static attribute
+    typename OrientedSimplexFactory<0>::vertex_collection_t OrientedSimplexFactory<0>::_vertices =
+        OrientedSimplexFactory<0>::vertex_collection_t();
 }
 
 #endif    // mito_mesh_OrientedSimplexFactory_h
