@@ -9,7 +9,6 @@ namespace mito::mesh {
     class Mesh {
 
       private:
-
         template <class T>
         using vertex_container = std::vector<T>;
 
@@ -25,8 +24,8 @@ namespace mito::mesh {
 
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<
-                vertex_container<oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
+            using type =
+                std::tuple<vertex_container<oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
         };
 
         // this expands to:
@@ -36,10 +35,7 @@ namespace mito::mesh {
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
       public:
-        Mesh(std::string meshFileName) : _simplices(), _vertices()
-        {
-            _loadMesh(meshFileName);
-        }
+        Mesh(std::string meshFileName) : _simplices(), _vertices() { _loadMesh(meshFileName); }
 
         ~Mesh() {}
 
@@ -88,7 +84,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        const auto & elements() const requires (I <= D)
+        const auto & elements() const requires(I <= D)
         {
             // all done
             return std::get<I>(_simplices);
@@ -106,8 +102,8 @@ namespace mito::mesh {
         // QUESTION: I don't like the asymmetry of elements returning a const reference and boundary
         //  elements returning an instance. Either:
         //  1) say that these methods will make copies of the elements for the client to use, or
-        //  2) say that boundary_elements will create a new data structure at run time and return a 
-        //      (const) reference for the client to use. 
+        //  2) say that boundary_elements will create a new data structure at run time and return a
+        //      (const) reference for the client to use.
         template <int I>
         constexpr auto boundary_elements() const requires(I<D && I> 0)
         {
@@ -115,7 +111,7 @@ namespace mito::mesh {
             simplex_collection<I> boundary_simplices;
 
             // loop on simplices (D-1) dimensional simplices
-            for (const auto & simplex : std::get<D-1>(_simplices)) {
+            for (const auto & simplex : std::get<D - 1>(_simplices)) {
                 // if the simplex footprint has only one occurrence then it is on the boundary
                 if (!exists_flipped(simplex)) {
                     // add the subsimplices of dimension I to the set of boundary simplices
@@ -131,8 +127,7 @@ namespace mito::mesh {
         void _erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // erase the subsimplices from the mesh (erase bottom -> up)
-            for (const auto & subsimplex :
-                 simplex->simplices()) {
+            for (const auto & subsimplex : simplex->simplices()) {
                 std::get<I - 1>(_simplices).erase(subsimplex);
             }
 
@@ -145,7 +140,7 @@ namespace mito::mesh {
 
         template <int I>
         void _erase(const oriented_simplex_ptr<I> & simplex) requires(I == 0)
-        {   
+        {
             // all done
             return;
         }
@@ -153,9 +148,9 @@ namespace mito::mesh {
         template <int I>
         void erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
-            // QUESTION: can we wrap simplices in a way that the reference count can be called 
+            // QUESTION: can we wrap simplices in a way that the reference count can be called
             //  incidence?
-            
+
             // erase recursively until D = 0
             _erase(simplex);
 
@@ -166,10 +161,9 @@ namespace mito::mesh {
             return;
         }
 
-      private :
-          template <int I>
-          void
-          _addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
+      private:
+        template <int I>
+        void _addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // add the oriented simplex to the set of simplices with same dimension
             std::get<I>(_simplices).insert(simplex);
