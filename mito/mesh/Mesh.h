@@ -121,39 +121,20 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
-        {
-            // erase the subsimplices from the mesh (erase bottom -> up)
-            for (const auto & subsimplex :
-                 simplex->simplices()) {
-                std::get<I - 1>(_simplices).erase(subsimplex);
-            }
-
-            // erase the simplex from the mesh
-            std::get<I>(_simplices).erase(simplex);
-
-            // all done
-            return;
-        }
-
-        template <int I>
-        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I == 0)
-        {   
-            // all done
-            return;
-        }
-
-        template <int I>
         void erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // QUESTION: can we wrap simplices in a way that the reference count can be called 
             //  incidence?
-            
-            // erase recursively until D = 0
-            _erase(simplex);
+
+            // erase the simplex from the mesh
+            std::get<I>(_simplices).erase(simplex);
 
             // cleanup oriented simplex factory around this simplex
             Topology<I>::cleanup(simplex);
+
+            // // TOFIX: synchronize with the geometry, check whether any point should be erased 
+            // // in the cloud of points
+            // PointCloud<D>::cleanup(simplex);
 
             // all done
             return;
