@@ -74,7 +74,6 @@ namespace mito::mesh {
         using simplex_type = vertex_t;
     };
 
-    // TOFIX: not sure that we need a Simplex<0> 
     // simplex alias
     template <int D>
     using simplex_t = typename helperSimplexClass<D>::simplex_type;
