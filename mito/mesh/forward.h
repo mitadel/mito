@@ -46,7 +46,7 @@ namespace mito::mesh {
     class OrientedSimplex;
 
     // class simplex factory
-    template <int D>
+    template <int D> requires (D > 0)
     class SimplexFactory;
 
     // class oriented simplex factory
