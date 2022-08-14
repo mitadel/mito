@@ -72,7 +72,7 @@ namespace mito::mesh {
             return oriented_simplex.use_count() - 1;
         }
 
-        static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
+        static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {
             // if the oriented simplex is unused
             if (incidence(oriented_simplex) == 0) {
@@ -104,7 +104,7 @@ namespace mito::mesh {
 
         // cleanup the factory around an oriented simplex (i.e. remove from the factory unused
         // oriented simplices related to this oriented simplex)
-        static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex) requires(D > 0)
+        static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {
             // cleanup recursively until D = 0
             _cleanup(oriented_simplex);
