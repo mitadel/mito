@@ -39,15 +39,15 @@ namespace mito::mesh {
 
         ~Mesh() {}
 
+        // move constructor
+        Mesh(Mesh &&) = default;
+
       private:
         // delete default constructor
         Mesh() = delete;
 
         // delete copy constructor
         Mesh(const Mesh &) = delete;
-
-        // delete move constructor
-        Mesh(const Mesh &&) = delete;
 
         // delete assignment operator
         const Mesh & operator=(const Mesh &) = delete;

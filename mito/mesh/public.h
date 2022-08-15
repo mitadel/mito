@@ -20,6 +20,7 @@
 #include "OrientedSimplexFactory.h"
 #include "PointCloud.h"
 #include "Mesh.h"
+#include "summit.h"
 
 // factories implementation
 #include "factories.h"
