@@ -35,6 +35,9 @@ namespace mito::mesh {
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
       public:
+        // default constructor
+        Mesh() : _simplices(), _vertices() {};
+
         Mesh(std::string meshFileName) : _simplices(), _vertices() { _loadMesh(meshFileName); }
 
         ~Mesh() {}
@@ -43,9 +46,6 @@ namespace mito::mesh {
         Mesh(Mesh &&) = default;
 
       private:
-        // delete default constructor
-        Mesh() = delete;
-
         // delete copy constructor
         Mesh(const Mesh &) = delete;
 
@@ -84,7 +84,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        const auto & elements() const requires(I <= D)
+        auto & elements() requires(I <= D)
         {
             // all done
             return std::get<I>(_simplices);
@@ -161,9 +161,9 @@ namespace mito::mesh {
             return;
         }
 
-      private:
+      public:
         template <int I>
-        void _addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
+        void addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // add the oriented simplex to the set of simplices with same dimension
             std::get<I>(_simplices).insert(simplex);
@@ -172,7 +172,7 @@ namespace mito::mesh {
             return;
         }
 
-        void _addVertex(point_t<D> && point)
+        void addVertex(point_t<D> && point)
         {
             // instantiate new vertex
             auto vertex = mito::mesh::vertex();
@@ -185,11 +185,12 @@ namespace mito::mesh {
             return;
         }
 
-        auto & _getVertex(int n)
+        auto & getVertex(int n)
         {
             return std::get<0>(_simplices)[n];
         }
 
+      private:
         void _readTriangle(std::ifstream & fileStream)
         {
             int index0 = 0;
@@ -204,9 +205,9 @@ namespace mito::mesh {
             fileStream >> index2;
             --index2;
 
-            auto vertex0 = _getVertex(index0);
-            auto vertex1 = _getVertex(index1);
-            auto vertex2 = _getVertex(index2);
+            auto vertex0 = getVertex(index0);
+            auto vertex1 = getVertex(index1);
+            auto vertex2 = getVertex(index2);
 
             auto segment0 = segment({ vertex0, vertex1 });
             _addSimplex(segment0);
@@ -314,9 +315,6 @@ namespace mito::mesh {
 
             // sanity check: run sanity check for all mesh simplices in cascade
             assert(sanityCheck());
-
-            // finalize file stream
-            fileStream.close();
 
             // all done
             return;
