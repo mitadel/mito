@@ -48,12 +48,6 @@ namespace mito::mesh {
         return point_cloud_t<D>();
     }
 
-    // mesh factory
-    template <int D>
-    auto mesh(std::string meshFileName)
-    {
-        return mesh_t<D>(meshFileName);
-    }
 }
 
 
