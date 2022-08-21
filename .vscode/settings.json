@@ -3,5 +3,6 @@
         "*.cppm": "cpp"
     },
     "editor.formatOnSave": true,
-    "editor.formatOnPaste": true
+    "editor.formatOnPaste": true,
+    // "editor.hover": false,
 }
