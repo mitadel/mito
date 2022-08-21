@@ -6,6 +6,7 @@
             "label": "C/C++: g++ build active file",
             "command": "g++",
             "args": [
+                "-fdiagnostics-color=always",
                 "-g",
                 "-std=c++2a",
                 "-I${env:PYRE_DIR}/include",
@@ -35,6 +36,7 @@
             "label": "C/C++: clang++ build active file",
             "command": "clang++",
             "args": [
+                "-fdiagnostics-color=always",
                 "-g",
                 "-std=c++2a",
                 "-stdlib=libc++",
@@ -67,6 +69,7 @@
             "label": "C/C++: clang++ (GCC stdlib) build active file",
             "command": "clang++",
             "args": [
+                "-fdiagnostics-color=always",
                 "-g",
                 "-std=c++2a",
                 "-stdlib=libc++",
