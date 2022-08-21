@@ -8,9 +8,10 @@ int
 main()
 {
     // load mesh
-    auto mesh = mito::mesh::mesh<2>("square.summit");
+    std::ifstream fileStream("square.summit");
+    auto mesh = mito::mesh::summit<2>(fileStream);
     // instantiate a element set as a collection of simplices and vertices.
-    const auto & elements = mesh.elements<2>(); //TODO: region label to fetch elements
+    const auto & elements = mesh.elements<2>();    // TODO: region label to fetch elements
     const auto & vertices = mesh.vertices();
     auto elementSet = mito::manifolds::manifold(elements, vertices);
 

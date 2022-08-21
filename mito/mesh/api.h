@@ -30,10 +30,6 @@ namespace mito::mesh {
     template <int D>
     constexpr auto point_cloud();
 
-    // mesh factory
-    template <int D>
-    auto mesh(std::string meshFileName);
-
     // TOFIX: where should the implementation of these methods go?
     template <int D>
     auto exists_flipped(const oriented_simplex_ptr<D> & oriented_simplex)

@@ -15,12 +15,12 @@ namespace mito::mesh {
 
         ~PointCloud() {}
 
+        // move constructor
+        PointCloud(PointCloud &&) = default;
+
       private:
         // delete copy constructor
         PointCloud(const PointCloud &) = delete;
-
-        // delete move constructor
-        PointCloud(const PointCloud &&) = delete;
 
         // delete assignment operator
         const PointCloud & operator=(const PointCloud &) = delete;
@@ -60,7 +60,7 @@ namespace mito::mesh {
                 std::pair<oriented_simplex_ptr<0>, const point_t<D>>(vertex, point));
         }
 
-        const point_t<D> & operator[](const oriented_simplex_ptr<0> &vertex) const
+        const point_t<D> & operator[](const oriented_simplex_ptr<0> & vertex) const
         {
             auto point = _cloud.find(vertex);
             return point->second;
@@ -75,7 +75,8 @@ namespace mito::mesh {
     std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
     {
         for (const auto & point : cloud) {
-            std::cout << "vertex: " << point.first.get() << ",\t coordinates: " << point.second << std::endl;
+            std::cout << "vertex: " << point.first.get() << ",\t coordinates: " << point.second
+                      << std::endl;
         }
         return os;
     }
