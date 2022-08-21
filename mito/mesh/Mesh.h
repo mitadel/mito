@@ -32,7 +32,7 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        Mesh() : _simplices(), _vertices() {};
+        Mesh() : _simplices() {};
 
         ~Mesh() {}
 
@@ -139,19 +139,6 @@ namespace mito::mesh {
         {
             // add the oriented simplex to the set of simplices with same dimension
             std::get<I>(_simplices).insert(simplex);
-
-            // all done
-            return;
-        }
-
-        void addVertex(point_t<D> && point)
-        {
-            // instantiate new vertex
-            auto vertex = mito::mesh::vertex();
-            // associate the new vertex to the new point
-            _vertices.insert(vertex, point);
-            // add to the simplices the newly created vertex
-            std::get<0>(_simplices).push_back(vertex);
 
             // all done
             return;
