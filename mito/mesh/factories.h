@@ -47,13 +47,6 @@ namespace mito::mesh {
     {
         return oriented_simplex<3>(simplices);
     }
-
-    // mesh factory
-    template <int D>
-    auto mesh(std::string meshFileName)
-    {
-        return mesh_t<D>(meshFileName);
-    }
 }
 
 

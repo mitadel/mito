@@ -29,10 +29,6 @@ namespace mito::mesh {
     // tetrahedron factory
     oriented_simplex_ptr<3> tetrahedron(const simplex_composition_t<3> & simplices);
 
-    // mesh factory
-    template <int D>
-    auto mesh(std::string meshFileName);
-
     // TOFIX: where should the implementation of these methods go?
     // to a {topology} namespace!
     template <int D>

@@ -5,9 +5,10 @@ int
 main()
 {
     // load mesh of the unit square
-    auto mesh = mito::mesh::mesh<2>("small-square.summit");
+    std::ifstream fileStream("small-square.summit");
+    auto mesh = mito::mesh::summit<2>(fileStream);
 
-    // show me the points 
+    // show me the points
     // std::cout << "Point cloud: " << std::endl;
     // std::cout << mesh.vertices() << std::endl;
 
@@ -17,7 +18,7 @@ main()
     // assert the boundary is made of 4 elements
     assert(mesh.boundary_elements<1>().size() == 4);
 
-    // show me the elements 
+    // show me the elements
     // std::cout << "Initial mesh: " << std::endl;
     // for (const auto & simplex : mesh.elements<2>())
     // {

@@ -57,6 +57,15 @@ namespace mito::mesh {
     template <int D>
     typename PointCloud<D>::cloud_t PointCloud<D>::_cloud = PointCloud<D>::cloud_t();
 
+    std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
+    {
+        for (const auto & point : cloud) {
+            std::cout << "vertex: " << point.first.get() << ",\t coordinates: " << point.second
+                      << std::endl;
+        }
+        return os;
+    }
+
 }    // namespace mito
 
 #endif    // mito_mesh_PointCloud_h

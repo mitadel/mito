@@ -8,7 +8,8 @@ main()
 
     //
     t = clock();
-    auto mesh = mito::mesh::mesh<2>("rectangle.summit");
+    std::ifstream fileStream("rectangle.summit");
+    auto mesh = mito::mesh::summit<2>(fileStream);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
