@@ -31,11 +31,11 @@ main()
         (0,0)           (1,0)
     */
 
-    auto vertex0 = mito::mesh::vertex(point_t<2>{0.0, 0.0});
-    auto vertex1 = mito::mesh::vertex(point_t<2>{1.0, 0.0});
-    auto vertex2 = mito::mesh::vertex(point_t<2>{1.0, 1.0});
-    auto vertex3 = mito::mesh::vertex(point_t<2>{0.5, 0.5});
-    auto vertex4 = mito::mesh::vertex(point_t<2>{0.0, 1.0});
+    auto vertex0 = mito::mesh::vertex(point_t<2> { 0.0, 0.0 });
+    auto vertex1 = mito::mesh::vertex(point_t<2> { 1.0, 0.0 });
+    auto vertex2 = mito::mesh::vertex(point_t<2> { 1.0, 1.0 });
+    auto vertex3 = mito::mesh::vertex(point_t<2> { 0.5, 0.5 });
+    auto vertex4 = mito::mesh::vertex(point_t<2> { 0.0, 1.0 });
 
     auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
     auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
@@ -81,8 +81,8 @@ main()
     assert((resultVector == mito::vector_t<2> { result, result }));
 
     // a scalar function
-    auto f_one = mito::math::function(
-        []([[maybe_unused]] const vector_t<2> & x) -> real { return 1.0; });
+    auto f_one =
+        mito::math::function([]([[maybe_unused]] const vector_t<2> & x) -> real { return 1.0; });
     // a scalar field
     auto one = mito::math::field(f_one);
     // integrate the field

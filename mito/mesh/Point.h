@@ -97,8 +97,8 @@ operator<<(std::ostream & os, const mito::mesh::Point<3> & x)
 std::ostream &
 operator<<(std::ostream & os, const mito::mesh::Point<4> & x)
 {
-    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ", " << x[mito::mesh::x2] << "," << x[mito::mesh::x3]
-       << ")";
+    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ", " << x[mito::mesh::x2] << ","
+       << x[mito::mesh::x3] << ")";
     return os;
 }
 

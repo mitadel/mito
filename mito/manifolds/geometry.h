@@ -15,7 +15,7 @@ namespace mito::manifolds {
 
     template <int D>
     void computeSimplicesVolume(
-        const mesh::simplex_vector_t<mesh::oriented_simplex_t<D>> & elements, 
+        const mesh::simplex_vector_t<mesh::oriented_simplex_t<D>> & elements,
         std::vector<real> & volumes)
     {
         // number of element vertices
@@ -65,8 +65,7 @@ namespace mito::manifolds {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const mesh::simplex_vector_t<element_t> & elements,
-        std::vector<real> & volumes);
+        const mesh::simplex_vector_t<element_t> & elements, std::vector<real> & volumes);
 
     template <>
     void computeElementsVolume<mesh::triangle_t, 2>(
@@ -112,8 +111,9 @@ namespace mito::manifolds {
             assert(element_vertices.size() == V);
 
             // store the distance between the two element vertices as the element length
-            length[e] =
-                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[0]), mesh::point_cloud<D>::point(element_vertices[1]));
+            length[e] = computeDistance<D>(
+                mesh::point_cloud<D>::point(element_vertices[0]),
+                mesh::point_cloud<D>::point(element_vertices[1]));
 
             // update elements counter
             ++e;
@@ -153,12 +153,15 @@ namespace mito::manifolds {
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
-            edges_lengths[0] =
-                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[0]), mesh::point_cloud<D>::point(element_vertices[1]));
-            edges_lengths[1] =
-                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[0]), mesh::point_cloud<D>::point(element_vertices[2]));
-            edges_lengths[2] =
-                computeDistance<D>(mesh::point_cloud<D>::point(element_vertices[1]), mesh::point_cloud<D>::point(element_vertices[2]));
+            edges_lengths[0] = computeDistance<D>(
+                mesh::point_cloud<D>::point(element_vertices[0]),
+                mesh::point_cloud<D>::point(element_vertices[1]));
+            edges_lengths[1] = computeDistance<D>(
+                mesh::point_cloud<D>::point(element_vertices[0]),
+                mesh::point_cloud<D>::point(element_vertices[2]));
+            edges_lengths[2] = computeDistance<D>(
+                mesh::point_cloud<D>::point(element_vertices[1]),
+                mesh::point_cloud<D>::point(element_vertices[2]));
 
             // sort edges lengths in ascending order
             std::sort(edges_lengths.begin(), edges_lengths.end());

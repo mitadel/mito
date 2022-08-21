@@ -25,7 +25,7 @@ namespace mito::mesh {
             return OrientedSimplexFactory<D>::orientedSimplex(composition);
         }
 
-        static oriented_simplex_ptr<0> orientedSimplex() requires (D == 0)
+        static oriented_simplex_ptr<0> orientedSimplex() requires(D == 0)
         {
             // ask the factory of oriented simplices
             return OrientedSimplexFactory<0>::orientedSimplex();

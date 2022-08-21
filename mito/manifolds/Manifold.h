@@ -19,8 +19,7 @@ namespace mito::manifolds {
         static constexpr int dim = D;
 
       public:
-        Manifold(
-            const mesh::simplex_set_t<element_t> & elements) :
+        Manifold(const mesh::simplex_set_t<element_t> & elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -28,8 +27,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(
-            mesh::simplex_set_t<element_t> && elements) :
+        Manifold(mesh::simplex_set_t<element_t> && elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -37,8 +35,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(
-            const mesh::simplex_vector_t<element_t> & elements) :
+        Manifold(const mesh::simplex_vector_t<element_t> & elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {
@@ -46,8 +43,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(
-            mesh::simplex_vector_t<element_t> && elements) :
+        Manifold(mesh::simplex_vector_t<element_t> && elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {

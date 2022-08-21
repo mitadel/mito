@@ -31,23 +31,23 @@ namespace mito::mesh {
 
     // element set alias
     template <class elementT>
-    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>; //TOFIX
+    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>;    // TOFIX
 
     // element vector alias
     template <class elementT>
-    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>; //TOFIX
+    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>;    // TOFIX
 
     // class simplex
-    template <int D> requires (D > 0)
-    class Simplex;
+    template <int D>
+    requires(D > 0) class Simplex;
 
     // class oriented simplex
     template <int D>
     class OrientedSimplex;
 
     // class simplex factory
-    template <int D> requires (D > 0)
-    class SimplexFactory;
+    template <int D>
+    requires(D > 0) class SimplexFactory;
 
     // class oriented simplex factory
     template <int D>

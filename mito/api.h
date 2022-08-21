@@ -25,47 +25,45 @@ namespace mito {
     template <int D, typename T = real>
     using diagonal_matrix_t = pyre::algebra::diagonal_matrix_t<D, T>;
 
-template <typename X>
-std::ostream &
-operator<<(std::ostream & os, const std::vector<X> & x)
-{
+    template <typename X>
+    std::ostream & operator<<(std::ostream & os, const std::vector<X> & x)
+    {
 
-    if (x.size() == 0) {
-        os << "[]";
+        if (x.size() == 0) {
+            os << "[]";
+            return os;
+        }
+
+        os << "[" << x[0];
+
+        for (auto i = 1; i < x.size(); ++i) {
+            os << ", " << x[i];
+        }
+
+        os << "]";
+
         return os;
     }
 
-    os << "[" << x[0];
+    template <typename X, long unsigned int N>
+    std::ostream & operator<<(std::ostream & os, const std::array<X, N> & x)
+    {
 
-    for (auto i = 1; i < x.size(); ++i) {
-        os << ", " << x[i];
-    }
+        if (N == 0) {
+            os << "[]";
+            return os;
+        }
 
-    os << "]";
+        os << "[" << x[0];
 
-    return os;
-}
+        for (long unsigned int i = 1; i < N; ++i) {
+            os << ", " << x[i];
+        }
 
-template <typename X, long unsigned int N>
-std::ostream &
-operator<<(std::ostream & os, const std::array<X, N> & x)
-{
+        os << "]";
 
-    if (N == 0) {
-        os << "[]";
         return os;
     }
-
-    os << "[" << x[0];
-
-    for (long unsigned int i = 1; i < N; ++i) {
-        os << ", " << x[i];
-    }
-
-    os << "]";
-
-    return os;
-}
 
 }
 

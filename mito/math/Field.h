@@ -17,8 +17,10 @@ namespace mito::math {
       public:
         // constructors with function_t<X, Y>
         constexpr Field(const function_t<X, Y> & f) : _f(f), _Df() {}
-        constexpr Field(const function_t<X, Y> & f, const std::array<function_t<X, Y>, D> & Df) : 
-            _f(f), _Df(Df) {}
+        constexpr Field(const function_t<X, Y> & f, const std::array<function_t<X, Y>, D> & Df) :
+            _f(f),
+            _Df(Df)
+        {}
 
         // default move constructor
         constexpr Field(Field &&) = default;
@@ -36,7 +38,7 @@ namespace mito::math {
         constexpr Field() = delete;
 
         // destructor
-        constexpr  ~Field() {}
+        constexpr ~Field() {}
 
         constexpr auto operator()(const X & x) const
         {
@@ -88,8 +90,7 @@ namespace mito::math {
 
         // helper function to sum the derivatives of fieldA and fieldB
         constexpr auto _dSum = []<size_t... I>(
-                                   const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB,
-                                   std::index_sequence<I...>)
+            const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB, std::index_sequence<I...>)
         {
             std::array<function_t<X, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
             return Df;

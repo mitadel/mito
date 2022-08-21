@@ -17,8 +17,8 @@ namespace mito::mesh {
      */
 
     // TOFIX: should this require that D > 0?
-    template <int D> requires (D > 0)
-    class SimplexFactory {
+    template <int D>
+    requires(D > 0) class SimplexFactory {
 
       private:
         // typedef for a composition map of simplices:
@@ -51,7 +51,7 @@ namespace mito::mesh {
             return ret.first->second;
         }
 
-        // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from 
+        // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
         // the factory if this oriented simplex is the only owner of its footprint)
         static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {

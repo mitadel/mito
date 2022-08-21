@@ -1,14 +1,14 @@
 #include <iostream>
 #include <typeinfo>
 
-// values for template parameter packing 
-template<int N>
+// values for template parameter packing
+template <int N>
 class Canonical {};
 
-template<int N>
+template <int N>
 class Symmetric {};
 
-template<int N>
+template <int N>
 class Diagonal {};
 
 template <class T, class S>
@@ -59,9 +59,11 @@ struct repacking<Symmetric<N>, Diagonal<N>> {
     using packing_type = Symmetric<N>;
 };
 
-int main () {
+int
+main()
+{
 
-    repacking<Symmetric<1>, Symmetric<1>>::packing_type a; 
+    repacking<Symmetric<1>, Symmetric<1>>::packing_type a;
 
     std::cout << typeid(a).name() << std::endl;
 

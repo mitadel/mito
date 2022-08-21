@@ -23,14 +23,12 @@ namespace mito::math {
 
     // factories for field from either a field_t or a function_t (with derivatives in an array)
     template <int D, class Y, template <class, class> class FUNCTION>
-    constexpr auto field(
-        FUNCTION<vector_t<D>, Y> f, std::array<FUNCTION<vector_t<D>, Y>, D> df);
+    constexpr auto field(FUNCTION<vector_t<D>, Y> f, std::array<FUNCTION<vector_t<D>, Y>, D> df);
 
     // factories for field from either a field_t or a function_t (with derivatives in a vector)
     // only for scalar fields (gradient is a vector)
     template <int D, template <class, class> class FUNCTION>
-    constexpr auto field(
-        FUNCTION<vector_t<D>, scalar_t> f, FUNCTION<vector_t<D>, vector_t<D>> df);
+    constexpr auto field(FUNCTION<vector_t<D>, scalar_t> f, FUNCTION<vector_t<D>, vector_t<D>> df);
 
 }
 

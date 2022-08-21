@@ -16,12 +16,12 @@ namespace mito::mesh {
 
         // simplex_collection<I>... expands to:
         // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
-        template <typename = std::make_index_sequence<D+1>>
+        template <typename = std::make_index_sequence<D + 1>>
         struct simplices_tuple;
 
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<simplex_collection<I>... > ;
+            using type = std::tuple<simplex_collection<I>...>;
         };
 
         // this expands to:
@@ -99,7 +99,7 @@ namespace mito::mesh {
             simplex_collection<I> boundary_simplices;
 
             // loop on simplices (I+1) dimensional simplices
-            for (const auto & simplex : std::get<I+1>(_simplices)) {
+            for (const auto & simplex : std::get<I + 1>(_simplices)) {
                 for (const auto & subsimplex : simplex->simplices()) {
                     // if the simplex footprint has only one occurrence then it is on the boundary
                     if (!exists_flipped(subsimplex)) {
@@ -125,7 +125,7 @@ namespace mito::mesh {
             // cleanup oriented simplex factory around this simplex
             Topology<I>::cleanup(simplex);
 
-            // // TOFIX: synchronize with the geometry, check whether any point should be erased 
+            // // TOFIX: synchronize with the geometry, check whether any point should be erased
             // // in the cloud of points
             // PointCloud<D>::cleanup(simplex);
 
@@ -133,9 +133,10 @@ namespace mito::mesh {
             return;
         }
 
-      public:
-        template <int I>
-        void addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
+      public :
+          template <int I>
+          void
+          addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // add the oriented simplex to the set of simplices with same dimension
             std::get<I>(_simplices).insert(simplex);
@@ -144,9 +145,9 @@ namespace mito::mesh {
             return;
         }
 
-      private:
-        // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
-        simplices_tuple_t _simplices;
+      private :
+          // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
+          simplices_tuple_t _simplices;
     };
 
 }    // namespace mito

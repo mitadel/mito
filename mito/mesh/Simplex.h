@@ -11,8 +11,8 @@ namespace mito::mesh {
      * OrientedSimplex<D-1>.
      */
 
-    template <int D> requires (D > 0)
-    class Simplex {
+    template <int D>
+    requires(D > 0) class Simplex {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
@@ -48,7 +48,7 @@ namespace mito::mesh {
 
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const requires (D > 1) 
+        void vertices(VERTEX_COLLECTION_T & vertices) const requires(D > 1)
         {
             for (const auto & simplex : simplices()) {
                 simplex->vertices(vertices);
@@ -78,7 +78,7 @@ namespace mito::mesh {
             vertex_set_t vertices;
             // collect vertices of this simplex
             this->vertices(vertices);
-            
+
             // if this simplex does not have D+1 vertices, something went wrong
             if (vertices.size() != int(D) + 1) {
                 // all done

@@ -46,7 +46,7 @@
                 "-lpyre",
                 "-ljournal",
                 "-L${env:PYRE_DIR}/lib",
-                "-Wl,-rpath ${env:PYRE_DIR}/lib", 
+                "-Wl,-rpath ${env:PYRE_DIR}/lib",
                 "-Wall",
                 "-Wextra",
                 "-pedantic",

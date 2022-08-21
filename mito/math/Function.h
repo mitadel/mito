@@ -14,8 +14,9 @@ namespace mito::math {
         // constructor
         constexpr Function(const functor_t<X, Y> & f) : _functor(f) {}
         // constructor for lambdas
-        template <class F> 
-        constexpr Function(F f) : _functor(f) {}
+        template <class F>
+        constexpr Function(F f) : _functor(f)
+        {}
         // default constructor
         constexpr Function() = default;
         // copy constructor
@@ -41,11 +42,10 @@ namespace mito::math {
         }
 
       private:
-
         // helper function to vectorize an array of scalar-valued functions
         template <size_t N, size_t... I>
-        constexpr auto _vectorize(const function_t<X, scalar_t> (&f_list)[N], 
-            std::index_sequence<I...>)
+        constexpr auto _vectorize(
+            const function_t<X, scalar_t> (&f_list)[N], std::index_sequence<I...>)
         {
             return function_t<X, vector_t<N>>(
                 [f_list](const X & x) { return vector_t<N> { f_list[I](x)... }; });
@@ -63,17 +63,16 @@ namespace mito::math {
 
         // cast vector-valued function to an array of scalar-valued functions
         template <size_t N>
-        constexpr operator std::array<function_t<X, scalar_t>, N>() const requires(Y::size == N) 
+        constexpr operator std::array<function_t<X, scalar_t>, N>() const requires(Y::size == N)
         {
             auto _components = [this]<size_t... I>(std::index_sequence<I...>)
             {
-                return std::array<function_t<X, scalar_t>, N>({operator[](I)...});
+                return std::array<function_t<X, scalar_t>, N>({ operator[](I)... });
             };
             return _components(std::make_index_sequence<N> {});
         }
 
-      private:
-        const functor_t<X, Y> _functor;
+      private : const functor_t<X, Y> _functor;
     };
 
     // Algebraic operations on Function

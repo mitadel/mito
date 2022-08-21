@@ -123,7 +123,7 @@ namespace mito::fem {
             os << "Element e = " << e << std::endl;
             for (int q = 0; q < quadratureField.n_quad_points(); ++q) {
                 os << "\tQuadrature point q = " << q << std::endl;
-                os << "\t\t" << quadratureField[{e, q}] << std::endl;
+                os << "\t\t" << quadratureField[{ e, q }] << std::endl;
             }
         }
 

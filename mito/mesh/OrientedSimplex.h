@@ -49,7 +49,7 @@ namespace mito::mesh {
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
-      // TOFIX: do we need both?
+        // TOFIX: do we need both?
       public:
         // accessor for the footprint simplex
         const auto & simplex() const { return *_footprint.get(); }
@@ -75,7 +75,7 @@ namespace mito::mesh {
         // returns whether the simplex passes the sanity check
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-        // TOFIX: these should be helper methods in mesh, not sure it makes sense to have them as 
+        // TOFIX: these should be helper methods in mesh, not sure it makes sense to have them as
         // part of the OrientedSimplex interface
         // get the set of subsimplices of order I
         template <int I>
@@ -102,7 +102,6 @@ namespace mito::mesh {
       public :
           // the number of barycentric coordinates
           static constexpr int parametricDim = D + 1;
-
       private:
         // the shared pointer to the footprint
         const simplex_ptr<D> _footprint;

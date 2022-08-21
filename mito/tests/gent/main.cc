@@ -5,8 +5,8 @@ int
 main(int argc, char ** argv)
 {
     // can either use this syntax...
-    //mito::materials::gent_t material(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);
-    // ... or this syntax 
+    // mito::materials::gent_t material(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);
+    // ... or this syntax
     auto material = mito::materials::gent(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);
 
     mito::vector_t<3> u = { 0.0, 0.0, 0.0 };

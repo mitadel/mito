@@ -44,7 +44,7 @@ namespace mito::mesh {
         }
 
         // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
-        static const point_t<D> & point(const oriented_simplex_ptr<0> &vertex)
+        static const point_t<D> & point(const oriented_simplex_ptr<0> & vertex)
         {
             return _cloud.find(vertex)->second;
         }

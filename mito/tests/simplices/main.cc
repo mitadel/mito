@@ -32,7 +32,7 @@ main()
     auto vertex2 = mito::mesh::vertex(point_t<2> { 1.0, 1.0 });
     auto vertex3 = mito::mesh::vertex(point_t<2> { 0.5, 0.5 });
 
-    // QUESTION: How about we return the simplices from the factories as reference wrappers? 
+    // QUESTION: How about we return the simplices from the factories as reference wrappers?
     // build a segment connecting {vertex0} and {vertex1}
     auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
     // assert there is only one segment connecting {vertex0} and {vertex1}

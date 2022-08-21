@@ -37,7 +37,7 @@ namespace mito::mesh {
             const simplex_ptr<D> & simplex, bool orientation)
         {
 
-            // bind the footprint and the orientation in a tuple 
+            // bind the footprint and the orientation in a tuple
             auto mytuple = std::make_tuple(simplex.get(), orientation);
 
             // if there is no oriented simplex registered in the map riding on simplex {simplex},
@@ -97,7 +97,7 @@ namespace mito::mesh {
                     // TOFIX: because the subsimplices are fetched by copy (they cannot be fetched
                     // by reference because the {oriented_simplex} is deleted after being erased
                     // from the orientation map), we need to account for a {use_count} artificially
-                    // increased by one, which is taken care of by passing 1 in the {_cleanup} 
+                    // increased by one, which is taken care of by passing 1 in the {_cleanup}
                     // function. This will be fixed once we pass to {mito::shared_ptr} instead of
                     // {std::shared_ptr}.
                     OrientedSimplexFactory<D - 1>::_cleanup(subsimplex, 1);
@@ -120,11 +120,10 @@ namespace mito::mesh {
         }
 
       private:
-          // compute the orientation of the {composition} with respect to the orientation of
-          // {simplex}
-          static bool
-          _orientation(
-              const simplex_composition_t<D> & composition, const simplex_ptr<D> & simplex);
+        // compute the orientation of the {composition} with respect to the orientation of
+        // {simplex}
+        static bool _orientation(
+            const simplex_composition_t<D> & composition, const simplex_ptr<D> & simplex);
 
       private:
         // container to store the relation (simplex, orientation) -> oriented simplex
@@ -219,10 +218,10 @@ namespace mito::mesh {
                 // erase this oriented simplex from the oriented simplex factory
                 _vertices.erase(oriented_simplex);
                 // TOFIX: at this point it should also be checked whether the vertex should be
-                // erased from the PointCloud too. However, at this point in the code we do not 
-                // have the information of the spatial dimension D. In alternative this cleanup 
-                // can be done in the mesh but with the current implementation this is not possible 
-                // as we would need to loop on the subsimplices of a deleted simplex 
+                // erased from the PointCloud too. However, at this point in the code we do not
+                // have the information of the spatial dimension D. In alternative this cleanup
+                // can be done in the mesh but with the current implementation this is not possible
+                // as we would need to loop on the subsimplices of a deleted simplex
             }
 
             // all done

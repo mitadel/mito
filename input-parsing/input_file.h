@@ -6,7 +6,7 @@ using real = double;
 class InputFile {
 
     // public methods
-public:
+  public:
     // constructor from string with input file name
     InputFile(std::string inputFileName);
     // constructor from command line arguments "--input input.dat"
@@ -20,11 +20,11 @@ public:
     inline std::string GetString(std::string key) const { return _dictionaryStrings.at(key); }
 
     // private methods
-private:
+  private:
     int _readFile(std::string inputFileName);
 
     // private attributes
-private:
+  private:
     std::map<std::string, real> _dictionaryReals;
     std::map<std::string, std::string> _dictionaryStrings;
 };

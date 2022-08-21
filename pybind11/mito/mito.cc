@@ -116,8 +116,8 @@ PYBIND11_MODULE(mito, m)
         // the elements; read-only property
         .def_property_readonly("elements", &mito::mesh::mesh_t<2>::elements<2>, "the body elements")
         // the vertex-point map; read-only property
-        .def_property_readonly("vertices", &mito::mesh::mesh_t<2>::vertices, 
-            "the positions of the vertices")
+        .def_property_readonly(
+            "vertices", &mito::mesh::mesh_t<2>::vertices, "the positions of the vertices")
         // done
         ;
 
@@ -127,7 +127,8 @@ PYBIND11_MODULE(mito, m)
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::mesh::simplex_vector_t<mito::mesh::triangle_t> &, 
+            py::init<
+                const mito::mesh::simplex_vector_t<mito::mesh::triangle_t> &,
                 const mito::mesh::point_cloud_t<2> &>())
         // the constructor
         .def(
@@ -138,8 +139,7 @@ PYBIND11_MODULE(mito, m)
                 mito::mesh::mesh_t<2> * mesh = new mito::mesh::mesh_t<2>(filename);
                 // instantiate
                 return new mito::manifolds::manifold_t<mito::mesh::triangle_t, 2>(
-                    mesh->elements<2>(), 
-                    mesh->vertices());
+                    mesh->elements<2>(), mesh->vertices());
             }))
         // done
         ;

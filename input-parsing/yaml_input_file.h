@@ -7,7 +7,7 @@ using real = double;
 class YAMLInputFile {
 
     // public methods
-public:
+  public:
     // constructor from string with input file name
     YAMLInputFile(std::string inputFileName);
     // constructor from command line arguments "--input input.dat"
@@ -21,10 +21,10 @@ public:
     inline std::string GetString(std::string key) const { return _file[key].as<std::string>(); }
 
     // private methods
-private:
+  private:
     int _readFile(std::string inputFileName);
 
     // private attributes
-public:
+  public:
     YAML::Node _file;
 };

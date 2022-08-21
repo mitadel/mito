@@ -63,8 +63,7 @@ main()
     auto function13 = mito::math::function(my_function);
     auto function14 = function13 + function1;
 
-    std::function<mito::real(const mito::vector_t<2> &)> my_other_f(
-        my_function);
+    std::function<mito::real(const mito::vector_t<2> &)> my_other_f(my_function);
     auto my_other_function = mito::math::function(my_other_f);
     auto function15 = my_other_function + function1;
 

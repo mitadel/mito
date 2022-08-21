@@ -8,8 +8,7 @@ int
 main()
 {
     // a scalar function
-    auto f =
-        mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
+    auto f = mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
 
     auto Df = mito::math::function([](const vector_t<2> & x) -> vector_t<2> {
         return { -sin(x[0] * x[1]) * x[1], -sin(x[0] * x[1]) * x[0] };
@@ -67,7 +66,7 @@ main()
               << std::endl;
     std::cout << "Evaluating divergence of cosine vector function at X = " << x << " : "
               << divergence(x) << std::endl;
-    
+
     // all done
     return 0;
 }
