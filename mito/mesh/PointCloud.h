@@ -57,6 +57,7 @@ namespace mito::mesh {
     template <int D>
     typename PointCloud<D>::cloud_t PointCloud<D>::_cloud = PointCloud<D>::cloud_t();
 
+    template <int D>
     std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
     {
         for (const auto & point : cloud) {
