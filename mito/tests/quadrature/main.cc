@@ -31,18 +31,11 @@ main()
         (0,0)           (1,0)
     */
 
-    auto points = mito::mesh::point_cloud<2>();
-
-    auto vertex0 = mito::mesh::vertex();
-    points.insert(vertex0, point_t<2> { 0.0, 0.0 });
-    auto vertex1 = mito::mesh::vertex();
-    points.insert(vertex1, point_t<2> { 1.0, 0.0 });
-    auto vertex2 = mito::mesh::vertex();
-    points.insert(vertex2, point_t<2> { 1.0, 1.0 });
-    auto vertex3 = mito::mesh::vertex();
-    points.insert(vertex3, point_t<2> { 0.5, 0.5 });
-    auto vertex4 = mito::mesh::vertex();
-    points.insert(vertex4, point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::mesh::vertex(point_t<2>{0.0, 0.0});
+    auto vertex1 = mito::mesh::vertex(point_t<2>{1.0, 0.0});
+    auto vertex2 = mito::mesh::vertex(point_t<2>{1.0, 1.0});
+    auto vertex3 = mito::mesh::vertex(point_t<2>{0.5, 0.5});
+    auto vertex4 = mito::mesh::vertex(point_t<2>{0.0, 1.0});
 
     auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
     auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
@@ -60,7 +53,7 @@ main()
     mito::mesh::simplex_vector_t<triangle_t> elements = { element0, element1, element2, element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    auto bodyManifold = mito::manifolds::manifold(elements, points);
+    auto bodyManifold = mito::manifolds::manifold<2>(elements);
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
@@ -137,15 +130,14 @@ main()
     assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
     // attach different coordinates (3D coordinates to the same points as above)
-    auto points3D = mito::mesh::point_cloud<3>();
-    points3D.insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
-    points3D.insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
-    points3D.insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
-    points3D.insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
-    points3D.insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
+    mito::mesh::point_cloud<3>::insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
+    mito::mesh::point_cloud<3>::insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
+    mito::mesh::point_cloud<3>::insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
+    mito::mesh::point_cloud<3>::insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
+    mito::mesh::point_cloud<3>::insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
 
     // instantiate an element set with the same elements as above but the new coordinates map
-    auto bodyManifold3D = mito::manifolds::manifold(elements, points3D);
+    auto bodyManifold3D = mito::manifolds::manifold<3>(elements);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyIntegrator3D =

@@ -5,27 +5,23 @@
 
 namespace mito::mesh {
 
+    // TOFIX: either call this SimplicialMesh or remove simplex assumption
     template <int D>
     class Mesh {
 
       private:
-        template <class T>
-        using vertex_container = std::vector<T>;
-
-        // QUESTION: would it be better to use reference wrappers here?
         // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
         using simplex_collection = simplex_set_t<oriented_simplex_t<int(I)>>;
 
         // simplex_collection<I>... expands to:
         // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
-        template <typename = std::make_index_sequence<D>>
+        template <typename = std::make_index_sequence<D+1>>
         struct simplices_tuple;
 
         template <size_t... I>
         struct simplices_tuple<std::index_sequence<I...>> {
-            using type =
-                std::tuple<vertex_container<oriented_simplex_ptr<0>>, simplex_collection<I + 1>...>;
+            using type = std::tuple<simplex_collection<I>... > ;
         };
 
         // this expands to:
@@ -88,12 +84,6 @@ namespace mito::mesh {
             return std::get<I>(_simplices);
         }
 
-        const auto & vertices() const
-        {
-            // all done
-            return _vertices;
-        }
-
         /**
          * @brief Returns an element set with all boundary simplices of dimension I
          */
@@ -108,12 +98,14 @@ namespace mito::mesh {
             // instantiate a simplex collection
             simplex_collection<I> boundary_simplices;
 
-            // loop on simplices (D-1) dimensional simplices
-            for (const auto & simplex : std::get<D - 1>(_simplices)) {
-                // if the simplex footprint has only one occurrence then it is on the boundary
-                if (!exists_flipped(simplex)) {
-                    // add the subsimplices of dimension I to the set of boundary simplices
-                    simplex->template getSimplices<I>(boundary_simplices);
+            // loop on simplices (I+1) dimensional simplices
+            for (const auto & simplex : std::get<I+1>(_simplices)) {
+                for (const auto & subsimplex : simplex->simplices()) {
+                    // if the simplex footprint has only one occurrence then it is on the boundary
+                    if (!exists_flipped(subsimplex)) {
+                        // add this (D-1) dimensional simplex to the set of boundary simplices
+                        boundary_simplices.insert(subsimplex);
+                    }
                 }
             }
 
@@ -122,38 +114,20 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
-        {
-            // erase the subsimplices from the mesh (erase bottom -> up)
-            for (const auto & subsimplex : simplex->simplices()) {
-                std::get<I - 1>(_simplices).erase(subsimplex);
-            }
-
-            // erase the simplex from the mesh
-            std::get<I>(_simplices).erase(simplex);
-
-            // all done
-            return;
-        }
-
-        template <int I>
-        void _erase(const oriented_simplex_ptr<I> & simplex) requires(I == 0)
-        {
-            // all done
-            return;
-        }
-
-        template <int I>
         void erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
         {
             // QUESTION: can we wrap simplices in a way that the reference count can be called
             //  incidence?
 
-            // erase recursively until D = 0
-            _erase(simplex);
+            // erase the simplex from the mesh
+            std::get<I>(_simplices).erase(simplex);
 
             // cleanup oriented simplex factory around this simplex
-            OrientedSimplexFactory<I>::cleanup(simplex);
+            Topology<I>::cleanup(simplex);
+
+            // // TOFIX: synchronize with the geometry, check whether any point should be erased 
+            // // in the cloud of points
+            // PointCloud<D>::cleanup(simplex);
 
             // all done
             return;
@@ -183,16 +157,9 @@ namespace mito::mesh {
             return;
         }
 
-        auto & getVertex(int n)
-        {
-            return std::get<0>(_simplices)[n];
-        }
-
       private:
         // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
         simplices_tuple_t _simplices;
-        // the mesh vertices
-        point_cloud_t<D> _vertices;
     };
 
 }    // namespace mito

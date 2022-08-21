@@ -14,19 +14,26 @@ namespace mito::mesh {
 
     // oriented simplex factory
     template <int I>
-    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices) requires(
-        I > 1)
+    oriented_simplex_ptr<I> oriented_simplex(const simplex_composition_t<I> & simplices)
     {
-        return OrientedSimplexFactory<I>::orientedSimplex(simplices);
+        return Topology<I>::orientedSimplex(simplices);
     }
 
     // vertex factory
-    oriented_simplex_ptr<0> vertex() { return std::make_shared<oriented_simplex_t<0>>(); }
+    oriented_simplex_ptr<0> vertex() { return Topology<0>::orientedSimplex(); }
+
+    template <int D>
+    oriented_simplex_ptr<0> vertex(point_t<D> && point)
+    {
+        auto new_vertex = std::make_shared<oriented_simplex_t<0>>();
+        point_cloud<D>::insert(new_vertex, point);
+        return new_vertex;
+    }
 
     // segment factory
     oriented_simplex_ptr<1> segment(const simplex_composition_t<1> & simplices)
     {
-        return OrientedSimplexFactory<1>::orientedSimplex(simplices);
+        return oriented_simplex<1>(simplices);
     }
 
     // triangle factory
@@ -40,14 +47,6 @@ namespace mito::mesh {
     {
         return oriented_simplex<3>(simplices);
     }
-
-    // points cloud factory
-    template <int D>
-    constexpr auto point_cloud()
-    {
-        return point_cloud_t<D>();
-    }
-
 }
 
 

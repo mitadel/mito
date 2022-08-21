@@ -27,7 +27,7 @@ namespace mito::mesh {
 
     // point cloud alias
     template <int D>
-    using point_cloud_t = PointCloud<D>;
+    using point_cloud = PointCloud<D>;
 
     // element set alias
     template <class elementT>
@@ -46,12 +46,16 @@ namespace mito::mesh {
     class OrientedSimplex;
 
     // class simplex factory
-    template <int D>
+    template <int D> requires (D > 0)
     class SimplexFactory;
 
     // class oriented simplex factory
     template <int D>
     class OrientedSimplexFactory;
+
+    // class oriented simplex factory
+    template <int D>
+    class Topology;
 
     // vertex alias
     using vertex_t = OrientedSimplex<0>;
@@ -70,7 +74,6 @@ namespace mito::mesh {
         using simplex_type = vertex_t;
     };
 
-    // TOFIX: not sure that we need a Simplex<0> 
     // simplex alias
     template <int D>
     using simplex_t = typename helperSimplexClass<D>::simplex_type;
@@ -106,13 +109,6 @@ namespace mito::mesh {
     // tetrahedron alias
     using tetrahedron_t = OrientedSimplex<3>;
 
-    // class vertex set
-    template <int D>
-    class PointCloud;
-
-    // vertex set alias
-    template <int D>
-    using point_cloud_t = PointCloud<D>;
 
 }
 

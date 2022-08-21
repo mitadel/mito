@@ -6,20 +6,18 @@
 namespace mito::manifolds {
 
     // element set factory (from vectors)
-    template <class elementT, int D>
-    constexpr auto manifold(
-        const mesh::simplex_vector_t<elementT> & elements, const mesh::point_cloud_t<D> & points);
-    template <class elementT, int D>
-    constexpr auto manifold(
-        mesh::simplex_vector_t<elementT> && elements, const mesh::point_cloud_t<D> & points);
+    template <int D, class elementT>
+    constexpr auto manifold(const mesh::simplex_vector_t<elementT> & elements);
+    template <int D, class elementT>
+    constexpr auto manifold(mesh::simplex_vector_t<elementT> && elements);
 
     // element set factory (from sets)
-    template <class elementT, int D>
+    template <int D, class elementT>
     constexpr auto manifold(
-        const mesh::simplex_set_t<elementT> & elements, const mesh::point_cloud_t<D> & points);
-    template <class elementT, int D>
+        const mesh::simplex_set_t<elementT> & elements);
+    template <int D, class elementT>
     constexpr auto manifold(
-        mesh::simplex_set_t<elementT> && elements, const mesh::point_cloud_t<D> & points);
+        mesh::simplex_set_t<elementT> && elements);
 }
 
 

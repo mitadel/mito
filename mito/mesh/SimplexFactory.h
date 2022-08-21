@@ -16,7 +16,8 @@ namespace mito::mesh {
      * addresses of the instances of the subsimplices.
      */
 
-    template <int D>
+    // TOFIX: should this require that D > 0?
+    template <int D> requires (D > 0)
     class SimplexFactory {
 
       private:

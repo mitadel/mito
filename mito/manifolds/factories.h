@@ -8,31 +8,27 @@ namespace mito::manifolds {
     // TOFIX: typedef mito::mesh::point_cloud_t in manifold
 
     // element set factory (from vectors)
-    template <class elementT, int D>
-    constexpr auto manifold(
-        const mesh::simplex_vector_t<elementT> & elements, const mesh::point_cloud_t<D> & vertices)
+    template <int D, class elementT>
+    constexpr auto manifold(const mesh::simplex_vector_t<elementT> & elements)
     {
-        return manifold_t<elementT, D>(elements, vertices);
+        return manifold_t<elementT, D>(elements);
     }
-    template <class elementT, int D>
-    constexpr auto manifold(
-        mesh::simplex_vector_t<elementT> && elements, const mesh::point_cloud_t<D> & vertices)
+    template <int D, class elementT>
+    constexpr auto manifold(mesh::simplex_vector_t<elementT> && elements)
     {
-        return manifold_t<elementT, D>(std::move(elements), vertices);
+        return manifold_t<elementT, D>(std::move(elements));
     }
 
     // element set factory (from sets)
-    template <class elementT, int D>
-    constexpr auto manifold(
-        const mesh::simplex_set_t<elementT> & elements, const mesh::point_cloud_t<D> & vertices)
+    template <int D, class elementT>
+    constexpr auto manifold(const mesh::simplex_set_t<elementT> & elements)
     {
-        return manifold_t<elementT, D>(elements, vertices);
+        return manifold_t<elementT, D>(elements);
     }
-    template <class elementT, int D>
-    constexpr auto manifold(
-        mesh::simplex_set_t<elementT> && elements, const mesh::point_cloud_t<D> & vertices)
+    template <int D, class elementT>
+    constexpr auto manifold(mesh::simplex_set_t<elementT> && elements)
     {
-        return manifold_t<elementT, D>(std::move(elements), vertices);
+        return manifold_t<elementT, D>(std::move(elements));
     }
 
 }

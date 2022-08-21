@@ -7,29 +7,14 @@ namespace mito::mesh {
 
     template <int D>
     class PointCloud {
-
-        using cloud_t = std::unordered_map<oriented_simplex_ptr<0>, const point_t<D>>;
-
-      public:
-        PointCloud() : _cloud() {};
-
-        ~PointCloud() {}
-
-        // move constructor
-        PointCloud(PointCloud &&) = default;
-
       private:
-        // delete copy constructor
-        PointCloud(const PointCloud &) = delete;
-
-        // delete assignment operator
-        const PointCloud & operator=(const PointCloud &) = delete;
-
-        // delete move assignment operator
-        const PointCloud & operator=(const PointCloud &&) = delete;
+        using cloud_t = std::unordered_map<oriented_simplex_ptr<0>, point_t<D>>;
 
       public:
-        void print() const
+        PointCloud() = delete;
+
+      public:
+        static void print()
         {
             // iterate on map
             for (auto item : _cloud) {
@@ -41,37 +26,37 @@ namespace mito::mesh {
         }
 
         // support for ranged for loops (wrapping grid)
-        inline const auto begin() const { return _cloud.cbegin(); }
-        inline const auto end() const { return _cloud.cend(); }
-        inline auto begin() { return _cloud.begin(); }
-        inline auto end() { return _cloud.end(); }
+        static inline const auto begin() { return _cloud.cbegin(); }
+        static inline const auto end() { return _cloud.cend(); }
 
-        int size() { return _cloud.size(); }
+        static int size() { return _cloud.size(); }
 
-        auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> & point)
+        static auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> & point)
         {
             return _cloud.insert(
                 std::pair<oriented_simplex_ptr<0>, const point_t<D>>(vertex, point));
         }
 
-        auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> && point)
+        static auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> && point)
         {
             return _cloud.insert(
                 std::pair<oriented_simplex_ptr<0>, const point_t<D>>(vertex, point));
         }
 
-        const point_t<D> & operator[](const oriented_simplex_ptr<0> & vertex) const
+        // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
+        static const point_t<D> & point(const oriented_simplex_ptr<0> &vertex)
         {
-            auto point = _cloud.find(vertex);
-            return point->second;
+            return _cloud.find(vertex)->second;
         }
 
       private:
-        cloud_t _cloud;
+        static cloud_t _cloud;
     };
 
-    // overload operator<< for point clouds
+    // initialize static attribute
     template <int D>
+    typename PointCloud<D>::cloud_t PointCloud<D>::_cloud = PointCloud<D>::cloud_t();
+
     std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
     {
         for (const auto & point : cloud) {

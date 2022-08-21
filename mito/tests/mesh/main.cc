@@ -11,9 +11,8 @@ main()
     std::ifstream fileStream("square.summit");
     auto mesh = mito::mesh::summit<2>(fileStream);
     // instantiate a element set as a collection of simplices and vertices.
-    const auto & elements = mesh.elements<2>();    // TODO: region label to fetch elements
-    const auto & vertices = mesh.vertices();
-    auto elementSet = mito::manifolds::manifold(elements, vertices);
+    const auto & elements = mesh.elements<2>(); //TODO: region label to fetch elements
+    auto elementSet = mito::manifolds::manifold<2>(elements);
 
     // instantiate a scalar field
     auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
