@@ -36,10 +36,12 @@ namespace mito::mesh {
         // QUESTION: Not sure that we need this...
         assert(N_element_types == 1);
 
-        // // read the vertices
+        // QUESTION: do we need to reserve space for elements before reading them?
+
+        // read the vertices
         readVertices<D>(fileStream, mesh, N_vertices);
 
-        // // read the elements
+        // read the elements
         readElements(fileStream, mesh, N_elements);
 
         // sanity check: the number of vertices in the map is N_vertices
@@ -59,8 +61,6 @@ namespace mito::mesh {
     void readVertices(std::ifstream & fileStream, Mesh<D> & mesh, int N_vertices)
     {
         auto & vertices = mesh.template elements<0>();
-        // reserve space to read new vertices
-        vertices.reserve(vertices.size() + N_vertices);
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {
             // instantiate new point

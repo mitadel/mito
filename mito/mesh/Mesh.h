@@ -82,7 +82,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        auto & elements() requires(I <= D)
+        const auto & elements() const requires(I <= D)
         {
             // all done
             return std::get<I>(_simplices);
