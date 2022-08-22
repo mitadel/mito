@@ -100,7 +100,7 @@ function(mito_test_driver testfile)
 
     # make a target to run the test and get standard output
     # (calling 'make output_<test_name>' will run the test out of the test suite and will not delete the output)
-    add_custom_target(${targetout} WORKING_DIRECTORY ${TEST_WORKING_DIRECTORY} COMMAND sh -c "${TEST_EXECUTABLE_DIR}/${target} ${ARGN}")
+    add_custom_target(${targetout} WORKING_DIRECTORY ${TEST_WORKING_DIRECTORY} COMMAND sh -c "${CMAKE_CURRENT_BINARY_DIR}/${target}")
 
     # all done
 endfunction(mito_test_driver)
