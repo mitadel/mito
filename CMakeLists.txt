@@ -17,6 +17,10 @@ mito_getVersion()
 project(MITO LANGUAGES CXX)
 include(GNUInstallDirs)
 
+# packages
+# pyre
+find_package(pyre REQUIRED)
+
 # set up c++
 mito_cxxInit()
 

@@ -84,6 +84,9 @@ function(mito_test_driver testfile)
     # link against my libraries
     target_link_libraries(${target} PUBLIC mito)
 
+    # link against pyre
+    target_link_libraries(${target} PUBLIC pyre::pyre)
+
     # make it a test case
     add_test(NAME ${testname} COMMAND ${target} ${ARGN})
 
