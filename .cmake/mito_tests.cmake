@@ -95,6 +95,9 @@ function(mito_test_driver testfile)
         LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     )
 
+    # request c++20
+    set_property(TARGET ${target} PROPERTY CXX_STANDARD 20)
+
     # make a target to run the test and get standard output
     # (calling 'make output_<test_name>' will run the test out of the test suite and will not delete the output)
     add_custom_target(${targetout} WORKING_DIRECTORY ${TEST_WORKING_DIRECTORY} COMMAND sh -c "${TEST_EXECUTABLE_DIR}/${target} ${ARGN}")

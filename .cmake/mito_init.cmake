@@ -23,8 +23,8 @@ function(mito_cxxInit)
     # set C++ standard
     include(CheckCXXCompilerFlag)
 
-    #  check for highest c++ standard between c++11,..., c++17 and use it
-    CHECK_CXX_COMPILER_FLAG("-std=c++20" COMPILER_SUPPORTS_CXX17)
+    # request c++20
+    set(CMAKE_CXX_STANDARD 20)
 
     # all done
 endfunction(mito_cxxInit)
