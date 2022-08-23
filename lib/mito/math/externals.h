@@ -7,8 +7,7 @@
 
 // support
 #include "lambda_traits.h"
-#include "../fem.h"    // TOFIX, should be:
-//#include <mito/fem.h>
+#include "../fem.h"
 
 #endif
 

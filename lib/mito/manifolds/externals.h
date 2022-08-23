@@ -9,7 +9,7 @@
 #include <vector>
 
 // support
-#include "../mesh.h"    // TOFIX
+#include "../mesh.h"
 
 #endif
 

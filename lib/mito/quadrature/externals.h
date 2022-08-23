@@ -6,12 +6,9 @@
 // externals
 
 // support
-#include "../mesh.h"    // TOFIX, should be:
-//#include <mito/mesh.h>
-#include "../math.h"    // TOFIX, should be:
-//#include <mito/math.h>
-#include "../fem.h"    // TOFIX, should be:
-//#include <mito/fem.h>
+#include "../mesh.h"
+#include "../math.h"
+#include "../fem.h"
 
 
 #endif
