@@ -82,6 +82,9 @@ function(mito_test_driver testfile)
     # link against pyre
     target_link_libraries(${target} PUBLIC pyre::pyre)
 
+    # link against pyre
+    target_link_libraries(${target} PUBLIC pyre::journal)
+
     #  setup the test working directory
     get_filename_component(path ${testfile} DIRECTORY)
     set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})

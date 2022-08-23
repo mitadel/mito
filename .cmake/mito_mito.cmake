@@ -43,6 +43,7 @@ function(mito_mitoLib)
     target_link_libraries(
         mito
         pyre::pyre
+        pyre::journal
     )
 
     # request c++20
