@@ -14,7 +14,11 @@ include(mito_mito)
 mito_getVersion()
 
 # set up the project
-project(MITO LANGUAGES CXX)
+project(MITO VERSION "${MITO_VERSION}" LANGUAGES CXX)
+set(MAJOR ${PROJECT_VERSION_MAJOR})
+set(MINOR ${PROJECT_VERSION_MINOR})
+set(MICRO ${PROJECT_VERSION_PATCH})
+
 include(GNUInstallDirs)
 
 # packages

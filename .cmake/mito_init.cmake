@@ -78,6 +78,8 @@ function(mito_getVersion)
     set(REVISION ${REPO_COMMIT} PARENT_SCOPE)
     string(TIMESTAMP TODAY PARENT_SCOPE)
 
+    set(MITO_VERSION "${REPO_MAJOR}.${REPO_MINOR}.${REPO_MICRO}" PARENT_SCOPE)
+
     # all done
 endfunction(mito_getVersion)
 
