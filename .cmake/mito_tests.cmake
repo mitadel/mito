@@ -82,8 +82,12 @@ function(mito_test_driver testfile)
     # link against pyre
     target_link_libraries(${target} PUBLIC pyre::pyre)
 
+    #  setup the test working directory
+    get_filename_component(path ${testfile} DIRECTORY)
+    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})
+
     # make it a test case
-    add_test(NAME ${testname} COMMAND ${target} ${ARGN})
+    add_test(NAME ${testname} COMMAND ${target} ${ARGN} WORKING_DIRECTORY ${test_workdir})
 
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
@@ -95,7 +99,7 @@ function(mito_test_driver testfile)
 
     # make a target to run the test and get standard output
     # (calling 'make output_<test_name>' will run the test out of the test suite and will not delete the output)
-    add_custom_target(${targetout} WORKING_DIRECTORY ${TEST_WORKING_DIRECTORY} COMMAND sh -c "${CMAKE_CURRENT_BINARY_DIR}/${target}")
+    add_custom_target(${targetout} WORKING_DIRECTORY ${test_workdir} COMMAND sh -c "${CMAKE_CURRENT_BINARY_DIR}/${target} ${ARGN}")
 
     # all done
 endfunction(mito_test_driver)
