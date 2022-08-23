@@ -1,4 +1,4 @@
-#include "../../utilities.h"
+#include <mito/utilities.h>
 
 #include <cassert>
 #include <iostream>

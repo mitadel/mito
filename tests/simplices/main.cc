@@ -1,6 +1,6 @@
-#include "../../base.h"
-#include "../../mesh.h"
-#include "../../manifolds.h"
+#include <mito/base.h>
+#include <mito/mesh.h>
+#include <mito/manifolds.h>
 
 using mito::mesh::point_t;
 using mito::mesh::vertex_t;

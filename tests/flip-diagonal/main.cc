@@ -1,5 +1,5 @@
-#include "../../base.h"
-#include "../../mesh.h"
+#include <mito/base.h>
+#include <mito/mesh.h>
 #include <set>
 
 const mito::mesh::simplex_t<1> *

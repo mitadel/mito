@@ -1,8 +1,8 @@
-#include "../../base.h"
-#include "../../mesh.h"
-#include "../../manifolds.h"
-#include "../../math.h"
-#include "../../quadrature.h"
+#include <mito/base.h>
+#include <mito/mesh.h>
+#include <mito/manifolds.h>
+#include <mito/math.h>
+#include <mito/quadrature.h>
 
 int
 main()

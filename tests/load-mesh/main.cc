@@ -1,5 +1,5 @@
-#include "../../base.h"
-#include "../../mesh.h"
+#include <mito/base.h>
+#include <mito/mesh.h>
 
 int
 main()

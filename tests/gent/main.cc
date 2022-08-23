@@ -1,5 +1,5 @@
-#include "../../base.h"
-#include "../../materials.h"
+#include <mito/base.h>
+#include <mito/materials.h>
 
 int
 main(int argc, char ** argv)

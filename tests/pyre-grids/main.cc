@@ -1,7 +1,7 @@
 // get the grid
 #include <pyre/grid.h>
 
-#include "../../base.h"
+#include <mito/base.h>
 
 namespace mito {
 

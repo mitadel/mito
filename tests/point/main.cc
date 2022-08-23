@@ -1,6 +1,6 @@
 #include <algorithm>
-#include "../../base.h"
-#include "../../mesh/Point.h"
+#include <mito/base.h>
+#include <mito/mesh/Point.h>
 
 using mito::mesh::Point;
 

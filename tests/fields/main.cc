@@ -1,5 +1,5 @@
-#include "../../base.h"
-#include "../../math.h"
+#include <mito/base.h>
+#include <mito/math.h>
 
 using mito::vector_t;
 using mito::real;

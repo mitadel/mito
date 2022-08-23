@@ -1,4 +1,4 @@
-#include "../../base.h"
+#include <mito/base.h>
 
 int
 main(int argc, char ** argv)

@@ -1,8 +1,8 @@
-#include "../../base.h"
-#include "../../manifolds.h"
-#include "../../math.h"
-#include "../../mesh.h"
-#include "../../quadrature.h"
+#include <mito/base.h>
+#include <mito/manifolds.h>
+#include <mito/math.h>
+#include <mito/mesh.h>
+#include <mito/quadrature.h>
 
 using mito::math::function_t;
 using mito::vector_t;
