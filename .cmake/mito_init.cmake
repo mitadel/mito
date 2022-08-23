@@ -83,4 +83,41 @@ function(mito_getVersion)
     # all done
 endfunction(mito_getVersion)
 
+function(mito_shareCmakePackage)
+    # make exports available in binary dir during build
+    export(EXPORT mito-targets
+        NAMESPACE mito::
+    )
+
+    # install exports to installation prefix
+    set(MITO_CMAKE_DIR "share/cmake/mito" CACHE STRING
+        "Installation directory for cmake files, relative to install prefix")
+    install(EXPORT mito-targets
+        NAMESPACE mito::
+        DESTINATION ${MITO_CMAKE_DIR}
+    )
+
+    # set up version detection for cmake find_package
+    include(CMakePackageConfigHelpers)
+    write_basic_package_version_file(
+        mito-config-version.cmake
+        VERSION ${PROJECT_VERSION}
+        COMPATIBILITY ExactVersion
+    )
+
+    # install config file for find_package
+    configure_package_config_file(
+        ${PROJECT_SOURCE_DIR}/.cmake/mito-config.cmake.in
+        ${PROJECT_BINARY_DIR}/mito-config.cmake
+        INSTALL_DESTINATION ${MITO_CMAKE_DIR})
+    install(FILES ${PROJECT_BINARY_DIR}/mito-config.cmake
+        ${PROJECT_BINARY_DIR}/mito-config-version.cmake
+        DESTINATION ${MITO_CMAKE_DIR})
+
+    # create aliases matching the exports above
+    add_library(mito::mito ALIAS mito)
+
+    # all done
+endfunction(mito_shareCmakePackage)
+
 # end of file
