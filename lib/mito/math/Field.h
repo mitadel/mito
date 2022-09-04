@@ -46,22 +46,6 @@ namespace mito::math {
             return _f(x);
         }
 
-        template <int Q>
-        constexpr auto operator()(const fem::quadrature_field_t<Q, X> & x) const
-        {
-            fem::quadrature_field_t<Q, Y> values(x.n_elements());
-
-            // evaluate operator() at all elements of x
-            for (int e = 0; e < values.n_elements(); ++e) {
-                for (int q = 0; q < Q; ++q) {
-                    values[{ e, q }] = operator()(x[{ e, q }]);
-                }
-            }
-
-            // all done
-            return values;
-        }
-
       public:
         // accessor for function
         constexpr const auto & f() const { return _f; }

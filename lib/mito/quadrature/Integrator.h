@@ -67,15 +67,13 @@ namespace mito::quadrature {
         template <class Y>
         Y integrate(const math::field_t<vector_t<D>, Y> & field) const
         {
-            auto values = field(_coordinates);
-
             auto result = Y();
 
             // assemble elementary contributions
             for (auto e = 0; e < _manifold.nElements(); ++e) {
                 for (auto q = 0; q < Q; ++q) {
-                    result +=
-                        values[{ e, q }] * _quadratureRule.getWeight(q) * _manifold.jacobian(e);
+                    result += field(_coordinates[{ e, q }]) * _quadratureRule.getWeight(q)
+                            * _manifold.jacobian(e);
                 }
             }
 
