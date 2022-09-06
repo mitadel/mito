@@ -2,106 +2,48 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "type": "cppbuild",
-            "label": "C/C++: g++ build active file",
-            "command": "g++",
+            "type": "shell",
+            "label": "cmake release",
+            "command": "cmake",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
             "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "-std=c++2a",
-                "-I${env:PYRE_DIR}/include",
-                "-lpyre",
-                "-ljournal",
-                "-L${env:PYRE_DIR}/lib",
-                "-Wall",
-                "-Wextra",
-                "-pedantic",
-                "-Werror",
-                "-Wno-unused-variable",
-                "-Wno-unused-parameter",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "type": "cppbuild",
-            "label": "C/C++: clang++ build active file",
-            "command": "clang++",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "-std=c++2a",
-                "-stdlib=libc++",
-                "-nostdinc++",
-                "-I/opt/local/include/gcc/c++",
-                "-I/opt/local/include/gcc/c++/x86_64-apple-darwin20",
-                "/opt/local/lib/libstdc++.6.dylib",
-                "-I${env:PYRE_DIR}/include",
-                "-lpyre",
-                "-ljournal",
-                "-L${env:PYRE_DIR}/lib",
-                "-Wl,-rpath ${env:PYRE_DIR}/lib",
-                "-Wall",
-                "-Wextra",
-                "-pedantic",
-                "-Werror",
-                "-Wno-unused-variable",
-                "-Wno-unused-parameter",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "type": "cppbuild",
-            "label": "C/C++: clang++ (GCC stdlib) build active file",
-            "command": "clang++",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "-std=c++2a",
-                "-stdlib=libc++",
-                // the following four lines point clang to the gcc standard library
-                "-nostdinc++",
-                "-I/opt/local/include/gcc/c++", // TOFIX: directories not general across OS
-                "-I/opt/local/include/gcc/c++/x86_64-apple-darwin20",
-                "/opt/local/lib/libstdc++.6.dylib",
-                "-I${env:PYRE_DIR}/include",
-                "-lpyre",
-                "-ljournal",
-                "-L${env:PYRE_DIR}/lib",
-                "-Wl,-rpath ${env:PYRE_DIR}/lib",
-                "-Wall",
-                "-Wextra",
-                "-pedantic",
-                "-Werror",
-                "-Wno-unused-variable",
-                "-Wno-unused-parameter",
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_INSTALL_PREFIX=/usr/local/mito",
+                "-DMITO_BUILD_TESTING=ON",
+                ".."
+            ]
         },
         {
             "type": "shell",
-            "label": "Run all tests",
-            "command": "python3 scripts/run_tests.py",
+            "label": "build release",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "args": [
+                "-j",
+                "4"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "cmake release"
+            ]
+        },
+        {
+            "type": "shell",
+            "label": "run tests release",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceRoot}/build"
+            },
+            "args": [
+                "test"
+            ],
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -113,7 +55,12 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": true
-            }
+            },
+            "dependsOn": [
+                "cmake release",
+                "make release"
+            ],
+            "dependsOrder": "sequence"
         }
     ]
 }
