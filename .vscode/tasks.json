@@ -57,10 +57,8 @@
                 "clear": true
             },
             "dependsOn": [
-                "cmake release",
-                "make release"
-            ],
-            "dependsOrder": "sequence"
+                "build release"
+            ]
         }
     ]
 }
