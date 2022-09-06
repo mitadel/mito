@@ -3,7 +3,7 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "cmake release",
+            "label": "Cmake Release",
             "command": "cmake",
             "options": {
                 "cwd": "${workspaceRoot}/build"
@@ -17,7 +17,7 @@
         },
         {
             "type": "shell",
-            "label": "build release",
+            "label": "Make",
             "command": "make",
             "options": {
                 "cwd": "${workspaceRoot}/build"
@@ -27,16 +27,12 @@
                 "4"
             ],
             "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "dependsOn": [
-                "cmake release"
-            ]
+                "kind": "build"
+            }
         },
         {
             "type": "shell",
-            "label": "run tests release",
+            "label": "Run Tests",
             "command": "make",
             "options": {
                 "cwd": "${workspaceRoot}/build"
@@ -45,8 +41,7 @@
                 "test"
             ],
             "group": {
-                "kind": "test",
-                "isDefault": true
+                "kind": "test"
             },
             "presentation": {
                 "echo": true,
@@ -55,10 +50,31 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": true
+            }
+        },
+        {
+            "label": "Build Release",
+            "group": {
+                "kind": "build",
+                "isDefault": true
             },
             "dependsOn": [
-                "build release"
-            ]
+                "Cmake Release",
+                "Make"
+            ],
+            "dependsOrder": "sequence"
+        },
+        {
+            "label": "Run Tests Release",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "dependsOn": [
+                "Build Release",
+                "Run Tests"
+            ],
+            "dependsOrder": "sequence"
         }
     ]
 }
