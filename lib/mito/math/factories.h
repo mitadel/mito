@@ -17,8 +17,8 @@ namespace mito::math {
     constexpr auto function(F && f)
     {
         typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
-        using X = typename std::remove_reference<typename traits::argument_type>::type;
-        using Y = typename std::remove_reference<typename traits::result_type>::type;
+        using X = typename std::remove_reference_t<typename traits::argument_type>;
+        using Y = typename std::remove_reference_t<typename traits::result_type>;
         return function_t<std::remove_const_t<X>, Y>(f);
     }
     // make a vector-valued function from N scalar-valued functions
