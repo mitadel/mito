@@ -161,10 +161,6 @@ flipDiagonal(
 int
 main()
 {
-    // TOFIX: vertices factories discussed with Michael
-    // auto points = mito::geometry::point_cloud<2>();
-    // auto vertices = mito::topology::vertex_cloud();
-    // auto vertex0 = vertices.newVertex();
 
     // build vertices
     auto vertex0 = mito::topology::vertex();
