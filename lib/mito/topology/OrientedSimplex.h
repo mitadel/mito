@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_mesh_OrientedSimplex_h)
-#define mito_mesh_OrientedSimplex_h
+#if !defined(mito_topology_OrientedSimplex_h)
+#define mito_topology_OrientedSimplex_h
 
 /*
  * This class represents an OrientedSimplex of order D.
@@ -15,7 +15,7 @@
  * also be deleted.
  */
 
-namespace mito::mesh {
+namespace mito::topology {
 
     template <int D>
     class OrientedSimplex {
@@ -24,7 +24,7 @@ namespace mito::mesh {
         // oriented simplices
       private:
         // constructor with an existing shared pointer as footprint
-        constexpr OrientedSimplex(const simplex_ptr<D> & footprint, bool orientation) :
+        constexpr OrientedSimplex(const unoriented_simplex_ptr<D> & footprint, bool orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
@@ -63,7 +63,7 @@ namespace mito::mesh {
         bool orientation() const { return _orientation; }
 
         // returns the array of subsimplices
-        const auto & simplices() const { return _footprint.get()->simplices(); }
+        const auto & composition() const { return _footprint.get()->composition(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
@@ -75,36 +75,9 @@ namespace mito::mesh {
         // returns whether the simplex passes the sanity check
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-        // TOFIX: these should be helper methods in mesh, not sure it makes sense to have them as
-        // part of the OrientedSimplex interface
-        // get the set of subsimplices of order I
-        template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const
-            requires(I < D - 1 && I != 0)
-        {
-            for (const auto & simplex : simplices()) {
-                simplex->simplices<I - 1>(sub_simplices);
-            }
-            return;
-        }
-        void getSimplices(vertex_set_t & sub_simplices) const { return vertices(sub_simplices); }
-        template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const
-            requires(I == D - 1 && I != 0)
-        {
-            for (const auto & simplex : simplices()) {
-                auto & sub_simplex = oriented_simplex(simplex.simplices());
-                sub_simplices.insert(sub_simplex);
-            }
-            return;
-        }
-
-      public :
-          // the number of barycentric coordinates
-          static constexpr int parametricDim = D + 1;
       private:
         // the shared pointer to the footprint
-        const simplex_ptr<D> _footprint;
+        const unoriented_simplex_ptr<D> _footprint;
         // the orientation
         bool _orientation;
         // private friendship with the factory of oriented simplices
@@ -174,21 +147,21 @@ namespace mito::mesh {
     auto tail(const oriented_simplex_ptr<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->simplices()[0];
+            return oriented_simplex->composition()[0];
         } else {
-            return oriented_simplex->simplices()[1];
+            return oriented_simplex->composition()[1];
         }
     }
 
     auto head(const oriented_simplex_ptr<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->simplices()[1];
+            return oriented_simplex->composition()[1];
         } else {
-            return oriented_simplex->simplices()[0];
+            return oriented_simplex->composition()[0];
         }
     }
 }
-#endif    // mito_mesh_OrientedSimplex_h
+#endif    // mito_topology_OrientedSimplex_h
 
 // end of file

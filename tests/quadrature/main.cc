@@ -7,9 +7,8 @@
 using mito::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
-using mito::mesh::point_t;
-using mito::mesh::vertex_t;
-using mito::mesh::triangle_t;
+using mito::geometry::point_t;
+using mito::topology::triangle_t;
 
 int
 main()
@@ -31,26 +30,27 @@ main()
         (0,0)           (1,0)
     */
 
-    auto vertex0 = mito::mesh::vertex(point_t<2> { 0.0, 0.0 });
-    auto vertex1 = mito::mesh::vertex(point_t<2> { 1.0, 0.0 });
-    auto vertex2 = mito::mesh::vertex(point_t<2> { 1.0, 1.0 });
-    auto vertex3 = mito::mesh::vertex(point_t<2> { 0.5, 0.5 });
-    auto vertex4 = mito::mesh::vertex(point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::geometry::vertex(point_t<2> { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::vertex(point_t<2> { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::vertex(point_t<2> { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::vertex(point_t<2> { 0.5, 0.5 });
+    auto vertex4 = mito::geometry::vertex(point_t<2> { 0.0, 1.0 });
 
-    auto segment0 = mito::mesh::segment({ vertex0, vertex1 });
-    auto segment1 = mito::mesh::segment({ vertex1, vertex3 });
-    auto segment2 = mito::mesh::segment({ vertex3, vertex0 });
-    auto segment3 = mito::mesh::segment({ vertex1, vertex2 });
-    auto segment4 = mito::mesh::segment({ vertex2, vertex3 });
-    auto segment5 = mito::mesh::segment({ vertex4, vertex3 });
-    auto segment6 = mito::mesh::segment({ vertex2, vertex4 });
-    auto segment7 = mito::mesh::segment({ vertex4, vertex0 });
+    auto segment0 = mito::topology::segment({ vertex0, vertex1 });
+    auto segment1 = mito::topology::segment({ vertex1, vertex3 });
+    auto segment2 = mito::topology::segment({ vertex3, vertex0 });
+    auto segment3 = mito::topology::segment({ vertex1, vertex2 });
+    auto segment4 = mito::topology::segment({ vertex2, vertex3 });
+    auto segment5 = mito::topology::segment({ vertex4, vertex3 });
+    auto segment6 = mito::topology::segment({ vertex2, vertex4 });
+    auto segment7 = mito::topology::segment({ vertex4, vertex0 });
 
-    auto element0 = mito::mesh::triangle({ segment0, segment1, segment2 });
-    auto element1 = mito::mesh::triangle({ segment3, segment4, segment1 });
-    auto element2 = mito::mesh::triangle({ segment6, segment5, segment4 });
-    auto element3 = mito::mesh::triangle({ segment7, segment2, segment5 });
-    mito::mesh::simplex_vector_t<triangle_t> elements = { element0, element1, element2, element3 };
+    auto element0 = mito::topology::triangle({ segment0, segment1, segment2 });
+    auto element1 = mito::topology::triangle({ segment3, segment4, segment1 });
+    auto element2 = mito::topology::triangle({ segment6, segment5, segment4 });
+    auto element3 = mito::topology::triangle({ segment7, segment2, segment5 });
+    mito::topology::element_vector_t<triangle_t> elements = { element0, element1, element2,
+                                                              element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyManifold = mito::manifolds::manifold<2>(elements);
@@ -130,11 +130,11 @@ main()
     assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
 
     // attach different coordinates (3D coordinates to the same points as above)
-    mito::mesh::point_cloud<3>::insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
-    mito::mesh::point_cloud<3>::insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
-    mito::mesh::point_cloud<3>::insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
-    mito::mesh::point_cloud<3>::insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
-    mito::mesh::point_cloud<3>::insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
+    mito::geometry::point_cloud<3>::insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
+    mito::geometry::point_cloud<3>::insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
+    mito::geometry::point_cloud<3>::insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
+    mito::geometry::point_cloud<3>::insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
+    mito::geometry::point_cloud<3>::insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
 
     // instantiate an element set with the same elements as above but the new coordinates map
     auto bodyManifold3D = mito::manifolds::manifold<3>(elements);

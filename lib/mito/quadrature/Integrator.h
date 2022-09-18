@@ -34,7 +34,7 @@ namespace mito::quadrature {
             int e = 0;
             for (const auto & element : _manifold.elements()) {
                 // use a set to collect vertices without repeated entries
-                mesh::vertex_set_t vertices;
+                topology::vertex_set_t vertices;
                 element->vertices(vertices);
                 // loop on vertices
                 int v = 0;

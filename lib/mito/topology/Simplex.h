@@ -1,8 +1,8 @@
 // code guard
-#if !defined(mito_mesh_Simplex_h)
-#define mito_mesh_Simplex_h
+#if !defined(mito_topology_Simplex_h)
+#define mito_topology_Simplex_h
 
-namespace mito::mesh {
+namespace mito::topology {
 
     /*
      * This class represents a Simplex of order D > 0.
@@ -44,13 +44,13 @@ namespace mito::mesh {
 
       public:
         // accessor for the subsimplices
-        const auto & simplices() const { return _simplices; }
+        const auto & composition() const { return _simplices; }
 
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const requires(D > 1)
         {
-            for (const auto & simplex : simplices()) {
+            for (const auto & simplex : composition()) {
                 simplex->vertices(vertices);
             }
         }
@@ -66,7 +66,7 @@ namespace mito::mesh {
         bool sanityCheck() const
         {
             // check the subsimplices
-            for (const auto & simplex : simplices()) {
+            for (const auto & simplex : composition()) {
                 // if a subsimplex is broken, the sanity check fails
                 if (!simplex->sanityCheck()) {
                     // all done
@@ -102,7 +102,7 @@ namespace mito::mesh {
     std::ostream & operator<<(std::ostream & os, const Simplex<D> & s) requires(D > 0)
     {
         os << &s << " composed of:" << std::endl;
-        for (const auto & simplex : s.simplices()) {
+        for (const auto & simplex : s.composition()) {
             std::cout << "\t" << *simplex << std::endl;
         }
         return os;
@@ -112,6 +112,6 @@ namespace mito::mesh {
 }    // namespace mito
 
 
-#endif    // mito_mesh_Simplex_h
+#endif    // mito_topology_Simplex_h
 
 // end of file

@@ -1,9 +1,9 @@
 // code guard
-#if !defined(mito_mesh_Point_h)
-#define mito_mesh_Point_h
+#if !defined(mito_geometry_Point_h)
+#define mito_geometry_Point_h
 
 
-namespace mito::mesh {
+namespace mito::geometry {
 
     static constexpr auto x0 = std::integral_constant<int, 0> {};
     static constexpr auto x1 = std::integral_constant<int, 1> {};
@@ -71,37 +71,38 @@ namespace mito::mesh {
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::mesh::Point<1> & x)
+operator<<(std::ostream & os, const mito::geometry::Point<1> & x)
 {
-    os << "(" << x[mito::mesh::x0] << ")";
+    os << "(" << x[mito::geometry::x0] << ")";
     return os;
 }
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::mesh::Point<2> & x)
+operator<<(std::ostream & os, const mito::geometry::Point<2> & x)
 {
-    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ")";
+    os << "(" << x[mito::geometry::x0] << ", " << x[mito::geometry::x1] << ")";
     return os;
 }
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::mesh::Point<3> & x)
+operator<<(std::ostream & os, const mito::geometry::Point<3> & x)
 {
-    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ", " << x[mito::mesh::x2] << ")";
+    os << "(" << x[mito::geometry::x0] << ", " << x[mito::geometry::x1] << ", "
+       << x[mito::geometry::x2] << ")";
     return os;
 }
 
 // overload operator<< for Point
 std::ostream &
-operator<<(std::ostream & os, const mito::mesh::Point<4> & x)
+operator<<(std::ostream & os, const mito::geometry::Point<4> & x)
 {
-    os << "(" << x[mito::mesh::x0] << ", " << x[mito::mesh::x1] << ", " << x[mito::mesh::x2] << ","
-       << x[mito::mesh::x3] << ")";
+    os << "(" << x[mito::geometry::x0] << ", " << x[mito::geometry::x1] << ", "
+       << x[mito::geometry::x2] << "," << x[mito::geometry::x3] << ")";
     return os;
 }
 
-#endif    // mito_mesh_Point_h
+#endif    // mito_geometry_Point_h
 
 // end of file

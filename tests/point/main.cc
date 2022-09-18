@@ -1,8 +1,8 @@
 #include <algorithm>
 #include <mito/base.h>
-#include <mito/mesh/Point.h>
+#include <mito/geometry/Point.h>
 
-using mito::mesh::Point;
+using mito::geometry::Point;
 
 template <int I>
 constexpr auto

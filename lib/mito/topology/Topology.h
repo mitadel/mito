@@ -1,8 +1,8 @@
 // code guard
-#if !defined(mito_mesh_Topology_h)
-#define mito_mesh_Topology_h
+#if !defined(mito_topology_Topology_h)
+#define mito_topology_Topology_h
 
-namespace mito::mesh {
+namespace mito::topology {
 
     /**
      *
@@ -69,6 +69,6 @@ namespace mito::mesh {
 }
 
 
-#endif    // mito_mesh_Topology_h
+#endif    // mito_topology_Topology_h
 
 // end of file

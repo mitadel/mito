@@ -6,7 +6,7 @@
 
 namespace mito::mesh {
     template <int D>
-    Mesh<D> summit(std::ifstream & fileStream)
+    auto summit(std::ifstream & fileStream)
     {
         std::cout << "Loading summit mesh..." << std::endl;
         assert(fileStream.is_open());
@@ -18,14 +18,14 @@ namespace mito::mesh {
         // assert this mesh object is of same dimension of the mesh being read
         assert(int(D) == dim);
 
-        // instantiate mesh
-        Mesh<D> mesh;
+        // instantiate mesh of simplicial elements
+        Mesh<D, simplex_t> mesh;
 
         // read number of vertices
         int N_vertices = 0;
         fileStream >> N_vertices;
         // reserve space for vertices
-        std::vector<oriented_simplex_ptr<0>> vertices;
+        std::vector<vertex_t> vertices;
         vertices.reserve(N_vertices);
 
         // read number of elements
@@ -63,8 +63,8 @@ namespace mito::mesh {
 
     template <int D>
     void readVertices(
-        std::ifstream & fileStream, Mesh<D> & mesh, int N_vertices,
-        std::vector<oriented_simplex_ptr<0>> & vertices)
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_vertices,
+        std::vector<vertex_t> & vertices)
     {
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {
@@ -76,7 +76,7 @@ namespace mito::mesh {
             }
 
             // instantiate new vertex
-            auto vertex = mesh::vertex(std::move(point));
+            auto vertex = geometry::vertex(std::move(point));
 
             // instantiate new vertex and add it to {vertices}
             vertices.push_back(vertex);
@@ -88,8 +88,8 @@ namespace mito::mesh {
 
     template <int D>
     void readElements(
-        std::ifstream & fileStream, Mesh<D> & mesh, int N_elements,
-        const std::vector<oriented_simplex_ptr<0>> & vertices)
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
+        const std::vector<vertex_t> & vertices)
     {
         for (int i = 0; i < N_elements; ++i) {
             int element_type = 0;
@@ -108,8 +108,8 @@ namespace mito::mesh {
 
     template <int D>
     void readTriangle(
-        std::ifstream & fileStream, Mesh<D> & mesh,
-        const std::vector<oriented_simplex_ptr<0>> & vertices)
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
+        const std::vector<vertex_t> & vertices)
     {
         int index0 = 0;
         fileStream >> index0;
@@ -127,11 +127,11 @@ namespace mito::mesh {
         auto vertex1 = vertices[index1];
         auto vertex2 = vertices[index2];
 
-        auto segment0 = segment({ vertex0, vertex1 });
-        auto segment1 = segment({ vertex1, vertex2 });
-        auto segment2 = segment({ vertex2, vertex0 });
+        auto segment0 = mito::topology::segment({ vertex0, vertex1 });
+        auto segment1 = mito::topology::segment({ vertex1, vertex2 });
+        auto segment2 = mito::topology::segment({ vertex2, vertex0 });
 
-        auto element = triangle({ segment0, segment1, segment2 });
+        auto element = mito::topology::triangle({ segment0, segment1, segment2 });
         mesh.addSimplex(element);
 
         // QUESTION: Can the label be more than one?

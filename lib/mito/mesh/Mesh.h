@@ -5,34 +5,36 @@
 
 namespace mito::mesh {
 
-    // TOFIX: either call this SimplicialMesh or remove simplex assumption
-    template <int D>
+    template <int D, template <int> class elementT>
     class Mesh {
 
       private:
-        // typedef for a collection of oriented simplices of dimension I
-        template <size_t I>
-        using simplex_collection = simplex_set_t<oriented_simplex_t<int(I)>>;
+        template <int I>
+        using element_t = elementT<I>;
 
-        // simplex_collection<I>... expands to:
-        // simplex_set_t<oriented_simplex_t<1>>, ..., simplex_set_t<oriented_simplex_t<D>>
+        // typedef for a collection of elements of dimension I
+        template <size_t I>
+        using element_collection = element_set_t<element_t<I>>;
+
+        // element_collection<I>... expands to:
+        // element_set_t<element_t<1>>, ..., element_set_t<element_t<D>>
         template <typename = std::make_index_sequence<D + 1>>
-        struct simplices_tuple;
+        struct element_tuple;
 
         template <size_t... I>
-        struct simplices_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<simplex_collection<I>...>;
+        struct element_tuple<std::index_sequence<I...>> {
+            using type = std::tuple<element_collection<I>...>;
         };
 
         // this expands to:
-        // tuple<simplex_set_t<simplex_t<0>>,
-        //      simplex_set_t<oriented_simplex_t<1>>, ...,
-        //      simplex_set_t<oriented_simplex_t<D>>
-        using simplices_tuple_t = typename simplices_tuple<>::type;
+        // tuple<element_set_t<element_t<0>>,
+        //      element_set_t<element_t<1>>, ...,
+        //      element_set_t<element_t<D>>
+        using element_tuple_t = typename element_tuple<>::type;
 
       public:
         // default constructor
-        Mesh() : _simplices() {};
+        Mesh() : _elements() {};
 
         ~Mesh() {}
 
@@ -55,14 +57,14 @@ namespace mito::mesh {
 #if 0
             // print summary
             std::cout << "Mesh composition: " << std::endl;
-            std::cout << "0: " << std::get<0>(_simplices).size() << " simplices " << std::endl;
-            std::cout << "1: " << std::get<1>(_simplices).size() << " simplices " << std::endl;
-            std::cout << "2: " << std::get<2>(_simplices).size() << " simplices " << std::endl;
+            std::cout << "0: " << std::get<0>(_elements).size() << " elements " << std::endl;
+            std::cout << "1: " << std::get<1>(_elements).size() << " elements " << std::endl;
+            std::cout << "2: " << std::get<2>(_elements).size() << " elements " << std::endl;
 #endif
 
-            // sanity check: each simplex is self-consistent
-            for (const auto & simplex : std::get<D>(_simplices)) {
-                if (!simplex->sanityCheck()) {
+            // sanity check: each element is self-consistent
+            for (const auto & element : std::get<D>(_elements)) {
+                if (!element->sanityCheck()) {
                     return false;
                 }
             }
@@ -74,18 +76,18 @@ namespace mito::mesh {
         int nElements() const requires(I <= D)
         {
             // all done
-            return std::get<I>(_simplices).size();
+            return std::get<I>(_elements).size();
         }
 
         template <int I>
         const auto & elements() const requires(I <= D)
         {
             // all done
-            return std::get<I>(_simplices);
+            return std::get<I>(_elements);
         }
 
         /**
-         * @brief Returns an element set with all boundary simplices of dimension I
+         * @brief Returns an element set with all boundary elements of dimension I
          */
         // QUESTION: I don't like the asymmetry of elements returning a const reference and boundary
         //  elements returning an instance. Either:
@@ -95,59 +97,60 @@ namespace mito::mesh {
         template <int I>
         constexpr auto boundary_elements() const requires(I<D && I> 0)
         {
-            // instantiate a simplex collection
-            simplex_collection<I> boundary_simplices;
+            // instantiate an element collection
+            element_collection<I> boundary_elements;
 
-            // loop on simplices (I+1) dimensional simplices
-            for (const auto & simplex : std::get<I + 1>(_simplices)) {
-                for (const auto & subsimplex : simplex->simplices()) {
-                    // if the simplex footprint has only one occurrence then it is on the boundary
-                    if (!exists_flipped(subsimplex)) {
-                        // add this (D-1) dimensional simplex to the set of boundary simplices
-                        boundary_simplices.insert(subsimplex);
+            // loop on the (I+1) dimensional elements
+            for (const auto & element : std::get<I + 1>(_elements)) {
+                for (const auto & subelement : element->composition()) {
+                    // if the element footprint has only one occurrence then it is on the boundary
+                    if (!exists_flipped(subelement)) {
+                        // add this (D-1) dimensional element to the set of boundary elements
+                        boundary_elements.insert(subelement);
                     }
                 }
             }
 
-            // return the boundary simplices
-            return boundary_simplices;
+            // return the boundary elements
+            return boundary_elements;
         }
 
         template <int I>
-        void erase(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
+        void erase(const element_t<I> & element) requires(I > 0 && I <= D)
         {
-            // QUESTION: can we wrap simplices in a way that the reference count can be called
+            // QUESTION: can we wrap elements in a way that the reference count can be called
             //  incidence?
 
-            // erase the simplex from the mesh
-            std::get<I>(_simplices).erase(simplex);
+            // erase the element from the mesh
+            std::get<I>(_elements).erase(element);
 
-            // cleanup oriented simplex factory around this simplex
-            Topology<I>::cleanup(simplex);
+            // cleanup oriented element factory around this element
+            mito::topology::Topology<I>::cleanup(element);
 
             // // TOFIX: synchronize with the geometry, check whether any point should be erased
             // // in the cloud of points
-            // PointCloud<D>::cleanup(simplex);
+            // mito::geometry::PointCloud<D>::cleanup(element);
 
             // all done
             return;
         }
 
       public :
+          // TOFIX: {oriented_simplex_ptr}
           template <int I>
           void
-          addSimplex(const oriented_simplex_ptr<I> & simplex) requires(I > 0 && I <= D)
+          addSimplex(const element_t<I> & element) requires(I > 0 && I <= D)
         {
-            // add the oriented simplex to the set of simplices with same dimension
-            std::get<I>(_simplices).insert(simplex);
+            // add the element to the set of elements with same dimension
+            std::get<I>(_elements).insert(element);
 
             // all done
             return;
         }
 
       private :
-          // container to store D+1 containers of d dimensional simplices with d = 0, ..., D
-          simplices_tuple_t _simplices;
+          // container to store D+1 containers of d dimensional elements with d = 0, ..., D
+          element_tuple_t _elements;
     };
 
 }    // namespace mito

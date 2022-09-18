@@ -1,8 +1,8 @@
 // code guard
-#if !defined(mito_mesh_OrientedSimplexFactory_h)
-#define mito_mesh_OrientedSimplexFactory_h
+#if !defined(mito_topology_OrientedSimplexFactory_h)
+#define mito_topology_OrientedSimplexFactory_h
 
-namespace mito::mesh {
+namespace mito::topology {
 
     /**
      *
@@ -23,7 +23,7 @@ namespace mito::mesh {
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
         using orientation_map_t =
-            std::map<std::tuple<const simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
+            std::map<std::tuple<const unoriented_simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
 
       public:
         // delete default constructor
@@ -34,7 +34,7 @@ namespace mito::mesh {
         // exist in the factory or return the existing representative of the class of equivalence of
         // oriented simplices with footprint {simplex} orientation {orientation}
         static oriented_simplex_ptr<D> orientedSimplex(
-            const simplex_ptr<D> & simplex, bool orientation)
+            const unoriented_simplex_ptr<D> & simplex, bool orientation)
         {
 
             // bind the footprint and the orientation in a tuple
@@ -78,7 +78,7 @@ namespace mito::mesh {
             if (incidence(oriented_simplex) == i) {
 
                 // fetch subsimplices before doing any harm to the oriented simplex
-                auto subsimplices = oriented_simplex->simplices();
+                auto subsimplices = oriented_simplex->composition();
 
                 // get footprint of the oriented simplex
                 const auto & simplex = oriented_simplex->simplex();
@@ -123,7 +123,8 @@ namespace mito::mesh {
         // compute the orientation of the {composition} with respect to the orientation of
         // {simplex}
         static bool _orientation(
-            const simplex_composition_t<D> & composition, const simplex_ptr<D> & simplex);
+            const simplex_composition_t<D> & composition,
+            const unoriented_simplex_ptr<D> & simplex);
 
       private:
         // container to store the relation (simplex, orientation) -> oriented simplex
@@ -133,9 +134,9 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<1>::_orientation(
-        const simplex_composition_t<1> & composition, const simplex_ptr<1> & simplex)
+        const simplex_composition_t<1> & composition, const unoriented_simplex_ptr<1> & simplex)
     {
-        if (composition == simplex->simplices()) {
+        if (composition == simplex->composition()) {
             return true;
         }
         return false;
@@ -162,9 +163,9 @@ namespace mito::mesh {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<2>::_orientation(
-        const simplex_composition_t<2> & composition, const simplex_ptr<2> & simplex)
+        const simplex_composition_t<2> & composition, const unoriented_simplex_ptr<2> & simplex)
     {
-        if (_rotate(composition) == _rotate(simplex->simplices())) {
+        if (_rotate(composition) == _rotate(simplex->composition())) {
             return true;
         }
         return false;
@@ -172,7 +173,7 @@ namespace mito::mesh {
 
     template <>    // TODO: implement
     bool OrientedSimplexFactory<3>::_orientation(
-        const simplex_composition_t<3> & composition, const simplex_ptr<3> & simplex)
+        const simplex_composition_t<3> & composition, const unoriented_simplex_ptr<3> & simplex)
     {
         return true;
     }
@@ -187,8 +188,6 @@ namespace mito::mesh {
      */
     template <>
     class OrientedSimplexFactory<0> {
-      private:
-        using vertex_collection_t = simplex_set_t<oriented_simplex_t<0>>;
 
       public:
         // delete default constructor
@@ -230,14 +229,13 @@ namespace mito::mesh {
 
       private:
         // container to store the vertices
-        static vertex_collection_t _vertices;
+        static vertex_set_t _vertices;
     };
 
     // initialize static attribute
-    typename OrientedSimplexFactory<0>::vertex_collection_t OrientedSimplexFactory<0>::_vertices =
-        OrientedSimplexFactory<0>::vertex_collection_t();
+    vertex_set_t OrientedSimplexFactory<0>::_vertices = vertex_set_t();
 }
 
-#endif    // mito_mesh_OrientedSimplexFactory_h
+#endif    // mito_topology_OrientedSimplexFactory_h
 
 // end of file

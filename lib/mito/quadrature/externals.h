@@ -6,9 +6,9 @@
 // externals
 
 // support
-#include "../mesh.h"
+#include "../manifolds.h"
 #include "../math.h"
-#include "../fem.h"
+#include "../fem.h"    // TOFIX
 
 
 #endif
