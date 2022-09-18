@@ -70,7 +70,7 @@ namespace mito::topology {
 
     // simplex pointer alias
     template <int D>
-    using simplex_ptr = std::shared_ptr<simplex_t<D>>;
+    using simplex_ptr = std::shared_ptr<const simplex_t<D>>;
 
     // oriented simplex composition alias
     template <int D>
