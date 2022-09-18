@@ -103,14 +103,16 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Mesh interface
-    py::class_<mito::mesh::Mesh<2>>(m, "Mesh2D")
+    py::class_<mito::mesh::Mesh<2, mito::topology::oriented_simplex_t>>(m, "SimplicialMesh2D")
         // the default constructor
         .def(
             // the implementation
             py::init<>())
         // accessors
         // the elements; read-only property
-        .def_property_readonly("elements", &mito::mesh::mesh_t<2>::elements<2>, "the body elements")
+        .def_property_readonly(
+            "elements", &mito::mesh::mesh_t<2, mito::topology::oriented_simplex_t>::elements<2>,
+            "the body elements")
         // done
         ;
 
@@ -128,7 +130,7 @@ PYBIND11_MODULE(mito, m)
                 // create an input stream
                 auto filestream = std::ifstream(filename);
                 // read the mesh
-                mito::mesh::mesh_t<2> mesh = mito::mesh::summit<2>(filestream);
+                auto mesh = mito::mesh::summit<2>(filestream);
                 // instantiate
                 return new mito::manifolds::manifold_t<mito::topology::triangle_t, 2>(
                     mesh.elements<2>());
