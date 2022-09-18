@@ -17,8 +17,8 @@ namespace mito::math {
     constexpr auto function(F && f)
     {
         typedef lambda_traits<remove_reference_lambda<decltype(f)>> traits;
-        using X = typename std::remove_reference<typename traits::argument_type>::type;
-        using Y = typename std::remove_reference<typename traits::result_type>::type;
+        using X = typename std::remove_reference_t<typename traits::argument_type>;
+        using Y = typename std::remove_reference_t<typename traits::result_type>;
         return function_t<std::remove_const_t<X>, Y>(f);
     }
     // make a vector-valued function from N scalar-valued functions
@@ -42,13 +42,6 @@ namespace mito::math {
         return field_t<vector_t<D>, Y>(f, df);
     }
 
-    // factories for field from either a field_t or a function_t (with derivatives in a vector)
-    // only for scalar fields (gradient is a vector)
-    template <int D, template <class, class> class FUNCTION>
-    constexpr auto field(FUNCTION<vector_t<D>, scalar_t> f, FUNCTION<vector_t<D>, vector_t<D>> df)
-    {
-        return scalar_field_t<D>(f, df);
-    }
 
 }
 

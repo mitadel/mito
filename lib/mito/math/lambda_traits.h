@@ -16,7 +16,7 @@ namespace mito::math {
 
     // helper typedef to remove the reference to F&&
     template <class F>
-    using remove_reference_lambda = typename std::remove_reference<F>::type;
+    using remove_reference_lambda = typename std::remove_reference_t<F>;
 }
 
 
