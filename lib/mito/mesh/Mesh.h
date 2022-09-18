@@ -99,7 +99,7 @@ namespace mito::mesh {
 
             // loop on the (I+1) dimensional elements
             for (const auto & element : std::get<I + 1>(_elements)) {
-                for (const auto & subelement : element->simplices()) {
+                for (const auto & subelement : element->composition()) {
                     // if the element footprint has only one occurrence then it is on the boundary
                     if (!exists_flipped(subelement)) {
                         // add this (D-1) dimensional element to the set of boundary elements

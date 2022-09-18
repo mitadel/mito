@@ -44,13 +44,13 @@ namespace mito::topology {
 
       public:
         // accessor for the subsimplices
-        const auto & simplices() const { return _simplices; }
+        const auto & composition() const { return _simplices; }
 
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const requires(D > 1)
         {
-            for (const auto & simplex : simplices()) {
+            for (const auto & simplex : composition()) {
                 simplex->vertices(vertices);
             }
         }
@@ -66,7 +66,7 @@ namespace mito::topology {
         bool sanityCheck() const
         {
             // check the subsimplices
-            for (const auto & simplex : simplices()) {
+            for (const auto & simplex : composition()) {
                 // if a subsimplex is broken, the sanity check fails
                 if (!simplex->sanityCheck()) {
                     // all done
@@ -102,7 +102,7 @@ namespace mito::topology {
     std::ostream & operator<<(std::ostream & os, const Simplex<D> & s) requires(D > 0)
     {
         os << &s << " composed of:" << std::endl;
-        for (const auto & simplex : s.simplices()) {
+        for (const auto & simplex : s.composition()) {
             std::cout << "\t" << *simplex << std::endl;
         }
         return os;

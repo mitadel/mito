@@ -58,7 +58,7 @@ namespace mito::topology {
             if (!exists_flipped(oriented_simplex)) {
 
                 // pick a representative (factor out equivalence relation)
-                auto representative = _representative(oriented_simplex->simplices());
+                auto representative = _representative(oriented_simplex->composition());
 
                 // erase this simplex from the compositions map
                 _compositions.erase(representative);

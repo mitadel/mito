@@ -63,7 +63,7 @@ namespace mito::topology {
         bool orientation() const { return _orientation; }
 
         // returns the array of subsimplices
-        const auto & simplices() const { return _footprint.get()->simplices(); }
+        const auto & composition() const { return _footprint.get()->composition(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
@@ -151,18 +151,18 @@ namespace mito::topology {
     auto tail(const oriented_simplex_ptr<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->simplices()[0];
+            return oriented_simplex->composition()[0];
         } else {
-            return oriented_simplex->simplices()[1];
+            return oriented_simplex->composition()[1];
         }
     }
 
     auto head(const oriented_simplex_ptr<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->simplices()[1];
+            return oriented_simplex->composition()[1];
         } else {
-            return oriented_simplex->simplices()[0];
+            return oriented_simplex->composition()[0];
         }
     }
 }

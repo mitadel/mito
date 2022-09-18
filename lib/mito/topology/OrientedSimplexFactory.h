@@ -78,7 +78,7 @@ namespace mito::topology {
             if (incidence(oriented_simplex) == i) {
 
                 // fetch subsimplices before doing any harm to the oriented simplex
-                auto subsimplices = oriented_simplex->simplices();
+                auto subsimplices = oriented_simplex->composition();
 
                 // get footprint of the oriented simplex
                 const auto & simplex = oriented_simplex->simplex();
@@ -135,7 +135,7 @@ namespace mito::topology {
     bool OrientedSimplexFactory<1>::_orientation(
         const simplex_composition_t<1> & composition, const simplex_ptr<1> & simplex)
     {
-        if (composition == simplex->simplices()) {
+        if (composition == simplex->composition()) {
             return true;
         }
         return false;
@@ -164,7 +164,7 @@ namespace mito::topology {
     bool OrientedSimplexFactory<2>::_orientation(
         const simplex_composition_t<2> & composition, const simplex_ptr<2> & simplex)
     {
-        if (_rotate(composition) == _rotate(simplex->simplices())) {
+        if (_rotate(composition) == _rotate(simplex->composition())) {
             return true;
         }
         return false;

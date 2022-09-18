@@ -8,8 +8,8 @@ findSharedSimplex(
     mito::topology::oriented_simplex_ptr<2> & element_1)
 {
     // loop on lower-dimensional simplices to find the edge shared by the two elements
-    for (const auto & subsimplex_0 : element_0->simplices()) {
-        for (const auto & subsimplex_1 : element_1->simplices()) {
+    for (const auto & subsimplex_0 : element_0->composition()) {
+        for (const auto & subsimplex_1 : element_1->composition()) {
             // if you found it
             if (&subsimplex_0->simplex() == &subsimplex_1->simplex()) {
                 // report
@@ -86,7 +86,7 @@ flipDiagonal(
 
     std::set<mito::topology::oriented_simplex_ptr<1>> boundary_simplices;
     // get boundary simplices of element_0 (all except diagonal)
-    for (const auto & subsimplex : element_0->simplices()) {
+    for (const auto & subsimplex : element_0->composition()) {
         // if it is not the shared simplex
         if (&subsimplex->simplex() != shared_simplex) {
             boundary_simplices.insert(subsimplex);
@@ -94,7 +94,7 @@ flipDiagonal(
     }
     assert(boundary_simplices.size() == 2);
     // get boundary simplices of element_1 (all except diagonal)
-    for (const auto & subsimplex : element_1->simplices()) {
+    for (const auto & subsimplex : element_1->composition()) {
         // if it is not the shared simplex
         if (&subsimplex->simplex() != shared_simplex) {
             boundary_simplices.insert(subsimplex);
