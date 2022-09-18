@@ -11,7 +11,7 @@ namespace mito::geometry {
 
     // vertex factory
     template <int D>
-    oriented_simplex_ptr<0> vertex(point_t<D> &&);
+    auto vertex(point_t<D> &&);
 }
 
 

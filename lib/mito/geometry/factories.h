@@ -13,7 +13,7 @@ namespace mito::geometry {
     }
 
     template <int D>
-    oriented_simplex_ptr<0> vertex(point_t<D> && point)
+    auto vertex(point_t<D> && point)
     {
         // get a new vertex from the topology
         auto new_vertex = mito::topology::vertex();
