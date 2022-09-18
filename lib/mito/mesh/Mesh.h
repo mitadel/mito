@@ -5,17 +5,16 @@
 
 namespace mito::mesh {
 
-    // TOFIX: either call this SimplicialMesh or remove simplex assumption
-    template <int D>
+    template <int D, template <int> class elementT>
     class Mesh {
 
       private:
         // typedef for a collection of oriented simplices of dimension I
         template <size_t I>
-        using simplex_collection = element_set_t<oriented_simplex_t<int(I)>>;
+        using simplex_collection = element_set_t<elementT<int(I)>>;
 
         // simplex_collection<I>... expands to:
-        // element_set_t<oriented_simplex_t<1>>, ..., element_set_t<oriented_simplex_t<D>>
+        // element_set_t<elementT<1>>, ..., element_set_t<elementT<D>>
         template <typename = std::make_index_sequence<D + 1>>
         struct simplices_tuple;
 
@@ -26,8 +25,8 @@ namespace mito::mesh {
 
         // this expands to:
         // tuple<element_set_t<simplex_t<0>>,
-        //      element_set_t<oriented_simplex_t<1>>, ...,
-        //      element_set_t<oriented_simplex_t<D>>
+        //      element_set_t<elementT<1>>, ...,
+        //      element_set_t<elementT<D>>
         using simplices_tuple_t = typename simplices_tuple<>::type;
 
       public:

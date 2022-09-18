@@ -6,12 +6,12 @@
 namespace mito::mesh {
 
     // class mesh
-    template <int D>
+    template <int D, template <int> class elementT>
     class Mesh;
 
     // mesh alias
-    template <int D>
-    using mesh_t = Mesh<D>;
+    template <int D, template <int> class elementT>
+    using mesh_t = Mesh<D, elementT>;
 
     // oriented simplex alias
     template <int D>
