@@ -9,12 +9,15 @@ namespace mito::mesh {
     class Mesh {
 
       private:
+        template <int I>
+        using element_t = elementT<I>;
+
         // typedef for a collection of elements of dimension I
         template <size_t I>
-        using element_collection = element_set_t<elementT<int(I)>>;
+        using element_collection = element_set_t<element_t<I>>;
 
         // element_collection<I>... expands to:
-        // element_set_t<elementT<1>>, ..., element_set_t<elementT<D>>
+        // element_set_t<element_t<1>>, ..., element_set_t<element_t<D>>
         template <typename = std::make_index_sequence<D + 1>>
         struct element_tuple;
 
@@ -24,9 +27,9 @@ namespace mito::mesh {
         };
 
         // this expands to:
-        // tuple<element_set_t<elementT<0>>,
-        //      element_set_t<elementT<1>>, ...,
-        //      element_set_t<elementT<D>>
+        // tuple<element_set_t<element_t<0>>,
+        //      element_set_t<element_t<1>>, ...,
+        //      element_set_t<element_t<D>>
         using element_tuple_t = typename element_tuple<>::type;
 
       public:
