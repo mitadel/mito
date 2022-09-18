@@ -10,10 +10,6 @@ main()
     // a scalar function
     auto f = mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
 
-    auto Df = mito::math::function([](const vector_t<2> & x) -> vector_t<2> {
-        return { -sin(x[0] * x[1]) * x[1], -sin(x[0] * x[1]) * x[0] };
-    });
-
     // df/dx[0]
     auto Dfx = mito::math::function(
         [](const vector_t<2> & x) -> real { return -sin(x[0] * x[1]) * x[1]; });
@@ -23,8 +19,7 @@ main()
         [](const vector_t<2> & x) -> real { return -sin(x[0] * x[1]) * x[0]; });
 
     // instantiate a scalar field
-    auto f_cosine = mito::math::field(f, Df);
-    // auto f_cosine = mito::math::field(f, { Dfx, Dfy });
+    auto f_cosine = mito::math::field(f, { Dfx, Dfy });
 
     auto cosine_sum1 = mito::math::field(f + f);
     auto cosine_sum2 = mito::math::field(f_cosine + f_cosine);
