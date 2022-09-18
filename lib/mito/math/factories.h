@@ -42,13 +42,6 @@ namespace mito::math {
         return field_t<vector_t<D>, Y>(f, df);
     }
 
-    // factories for field from either a field_t or a function_t (with derivatives in a vector)
-    // only for scalar fields (gradient is a vector)
-    template <int D, template <class, class> class FUNCTION>
-    constexpr auto field(FUNCTION<vector_t<D>, scalar_t> f, FUNCTION<vector_t<D>, vector_t<D>> df)
-    {
-        return scalar_field_t<D>(f, df);
-    }
 
 }
 

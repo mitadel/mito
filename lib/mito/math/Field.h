@@ -15,6 +15,7 @@ namespace mito::math {
         static constexpr int D = size<X>::value;
 
       public:
+        // TOFIX: should these be passed by reference or by value?
         // constructors with function_t<X, Y>
         constexpr Field(const function_t<X, Y> & f) : _f(f), _Df() {}
         constexpr Field(const function_t<X, Y> & f, const std::array<function_t<X, Y>, D> & Df) :
