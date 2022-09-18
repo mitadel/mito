@@ -15,7 +15,7 @@ namespace mito::geometry {
 
     template <int D>
     void computeSimplicesVolume(
-        const element_vector_t<oriented_simplex_t<D>> & elements, std::vector<real> & volumes)
+        const element_vector_t<simplex_t<D>> & elements, std::vector<real> & volumes)
     {
         // number of element vertices
         constexpr int V = D + 1;

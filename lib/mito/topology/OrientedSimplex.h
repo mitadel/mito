@@ -75,10 +75,6 @@ namespace mito::topology {
         // returns whether the simplex passes the sanity check
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-      public:
-        // the number of barycentric coordinates
-        static constexpr int parametricDim = D + 1;
-
       private:
         // the shared pointer to the footprint
         const unoriented_simplex_ptr<D> _footprint;

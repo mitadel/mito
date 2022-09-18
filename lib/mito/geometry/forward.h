@@ -21,14 +21,6 @@ namespace mito::geometry {
     template <int D>
     using point_cloud = PointCloud<D>;
 
-    // oriented simplex pointer alias
-    template <int D>
-    using oriented_simplex_ptr = topology::oriented_simplex_ptr<D>;
-
-    // oriented simplex alias
-    template <int D>
-    using oriented_simplex_t = topology::oriented_simplex_t<D>;
-
     // vertex set alias
     using vertex_set_t = topology::vertex_set_t;
 
@@ -38,6 +30,13 @@ namespace mito::geometry {
 
     // vertex vector alias
     using vertex_vector_t = topology::vertex_vector_t;
+
+    // simplex alias
+    template <int D>
+    using simplex_t = topology::simplex_t<D>;
+
+    // vertex alias
+    using vertex_t = topology::vertex_t;
 
     // segment alias
     using segment_t = topology::segment_t;

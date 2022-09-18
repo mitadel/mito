@@ -11,7 +11,7 @@ namespace mito::quadrature {
     template <class quadrature_t, class element_t, int r>
     struct QuadratureRulesFactory {
         static constexpr auto degreeExactness = r;
-        static constexpr int parametricDim = element_t::parametricDim;
+        static constexpr int parametricDim = mito::manifolds::parametric_dim<element_t>();
         static constexpr auto Get();
 
       private:

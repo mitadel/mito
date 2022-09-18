@@ -19,13 +19,13 @@ namespace mito::mesh {
         assert(int(D) == dim);
 
         // instantiate mesh of simplicial elements
-        Mesh<D, oriented_simplex_t> mesh;
+        Mesh<D, simplex_t> mesh;
 
         // read number of vertices
         int N_vertices = 0;
         fileStream >> N_vertices;
         // reserve space for vertices
-        std::vector<oriented_simplex_ptr<0>> vertices;
+        std::vector<vertex_t> vertices;
         vertices.reserve(N_vertices);
 
         // read number of elements
@@ -63,8 +63,8 @@ namespace mito::mesh {
 
     template <int D>
     void readVertices(
-        std::ifstream & fileStream, Mesh<D, oriented_simplex_t> & mesh, int N_vertices,
-        std::vector<oriented_simplex_ptr<0>> & vertices)
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_vertices,
+        std::vector<vertex_t> & vertices)
     {
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {
@@ -88,8 +88,8 @@ namespace mito::mesh {
 
     template <int D>
     void readElements(
-        std::ifstream & fileStream, Mesh<D, oriented_simplex_t> & mesh, int N_elements,
-        const std::vector<oriented_simplex_ptr<0>> & vertices)
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
+        const std::vector<vertex_t> & vertices)
     {
         for (int i = 0; i < N_elements; ++i) {
             int element_type = 0;
@@ -108,8 +108,8 @@ namespace mito::mesh {
 
     template <int D>
     void readTriangle(
-        std::ifstream & fileStream, Mesh<D, oriented_simplex_t> & mesh,
-        const std::vector<oriented_simplex_ptr<0>> & vertices)
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
+        const std::vector<vertex_t> & vertices)
     {
         int index0 = 0;
         fileStream >> index0;

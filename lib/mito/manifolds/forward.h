@@ -13,20 +13,28 @@ namespace mito::manifolds {
     template <class elementT, int D>
     using manifold_t = Manifold<elementT, D>;
 
-    // element set alias
-    template <class elementT>
-    using element_set_t = topology::element_set_t<elementT>;
+    // vertex alias
+    using vertex_t = topology::vertex_t;
+
+    // segment alias
+    using segment_t = topology::segment_t;
+
+    // triangle alias
+    using triangle_t = topology::triangle_t;
+
+    // tetrahedron alias
+    using tetrahedron_t = topology::tetrahedron_t;
 
     // vertex set alias
     using vertex_set_t = topology::vertex_set_t;
 
+    // element set alias
+    template <class elementT>
+    using element_set_t = topology::element_set_t<elementT>;
+
     // element vector alias
     template <class elementT>
     using element_vector_t = topology::element_vector_t<elementT>;
-
-    // oriented simplex pointer alias
-    template <int D>
-    using oriented_simplex_ptr = topology::oriented_simplex_ptr<D>;
 }
 
 

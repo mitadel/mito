@@ -18,6 +18,8 @@
 // factories implementation
 #include "factories.h"
 
+// information on the reference elements
+#include "reference_elements.h"
 
 #endif
 

@@ -7,7 +7,7 @@ namespace mito::geometry {
     template <int D>
     class PointCloud {
       private:
-        using cloud_t = std::unordered_map<oriented_simplex_ptr<0>, point_t<D>>;
+        using cloud_t = std::unordered_map<vertex_t, point_t<D>>;
 
       public:
         PointCloud() = delete;
@@ -30,20 +30,18 @@ namespace mito::geometry {
 
         static int size() { return _cloud.size(); }
 
-        static auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> & point)
+        static auto insert(const vertex_t & vertex, const point_t<D> & point)
         {
-            return _cloud.insert(
-                std::pair<oriented_simplex_ptr<0>, const point_t<D>>(vertex, point));
+            return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
         }
 
-        static auto insert(const oriented_simplex_ptr<0> & vertex, const point_t<D> && point)
+        static auto insert(const vertex_t & vertex, const point_t<D> && point)
         {
-            return _cloud.insert(
-                std::pair<oriented_simplex_ptr<0>, const point_t<D>>(vertex, point));
+            return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
         }
 
         // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
-        static const point_t<D> & point(const oriented_simplex_ptr<0> & vertex)
+        static const point_t<D> & point(const vertex_t & vertex)
         {
             return _cloud.find(vertex)->second;
         }

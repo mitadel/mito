@@ -85,7 +85,7 @@ namespace mito::manifolds {
         inline const element_vector_t<element_t> & elements() const { return _elements; }
         inline int nElements() const { return _elements.size(); }
         inline real jacobian(int e) const { return _jacobians[e]; }
-        inline const auto & coordinatesVertex(const oriented_simplex_ptr<0> & v) const
+        inline const auto & coordinatesVertex(const vertex_t & v) const
         {
             return geometry::point_cloud<D>::point(v);
         }

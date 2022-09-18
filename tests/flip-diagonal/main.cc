@@ -31,7 +31,7 @@ oppositeVertices(
     const mito::topology::unoriented_simplex_t<1> * shared_simplex)
 {
     // need a regular set (not an unordered one) because set_difference works with ordered sets
-    using vertex_set_t = std::set<std::shared_ptr<const mito::topology::vertex_t>>;
+    using vertex_set_t = std::set<std::shared_ptr<const mito::topology::oriented_simplex_t<0>>>;
 
     vertex_set_t vertices;
     element_0->vertices(vertices);

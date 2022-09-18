@@ -116,7 +116,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void erase(const oriented_simplex_ptr<I> & element) requires(I > 0 && I <= D)
+        void erase(const element_t<I> & element) requires(I > 0 && I <= D)
         {
             // QUESTION: can we wrap elements in a way that the reference count can be called
             //  incidence?
@@ -139,7 +139,7 @@ namespace mito::mesh {
           // TOFIX: {oriented_simplex_ptr}
           template <int I>
           void
-          addSimplex(const oriented_simplex_ptr<I> & element) requires(I > 0 && I <= D)
+          addSimplex(const element_t<I> & element) requires(I > 0 && I <= D)
         {
             // add the element to the set of elements with same dimension
             std::get<I>(_elements).insert(element);
