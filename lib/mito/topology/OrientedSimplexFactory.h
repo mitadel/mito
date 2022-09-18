@@ -187,8 +187,6 @@ namespace mito::topology {
      */
     template <>
     class OrientedSimplexFactory<0> {
-      private:
-        using vertex_collection_t = simplex_set_t<oriented_simplex_t<0>>;
 
       public:
         // delete default constructor
@@ -230,12 +228,11 @@ namespace mito::topology {
 
       private:
         // container to store the vertices
-        static vertex_collection_t _vertices;
+        static vertex_set_t _vertices;
     };
 
     // initialize static attribute
-    typename OrientedSimplexFactory<0>::vertex_collection_t OrientedSimplexFactory<0>::_vertices =
-        OrientedSimplexFactory<0>::vertex_collection_t();
+    vertex_set_t OrientedSimplexFactory<0>::_vertices = vertex_set_t();
 }
 
 #endif    // mito_topology_OrientedSimplexFactory_h
