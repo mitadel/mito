@@ -1,8 +1,8 @@
 // code guard
-#if !defined(mito_mesh_OrientedSimplexFactory_h)
-#define mito_mesh_OrientedSimplexFactory_h
+#if !defined(mito_topology_OrientedSimplexFactory_h)
+#define mito_topology_OrientedSimplexFactory_h
 
-namespace mito::mesh {
+namespace mito::topology {
 
     /**
      *
@@ -238,6 +238,6 @@ namespace mito::mesh {
         OrientedSimplexFactory<0>::vertex_collection_t();
 }
 
-#endif    // mito_mesh_OrientedSimplexFactory_h
+#endif    // mito_topology_OrientedSimplexFactory_h
 
 // end of file

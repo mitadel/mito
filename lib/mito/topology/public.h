@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_mesh_public_h)
-#define mito_mesh_public_h
+#if !defined(mito_topology_public_h)
+#define mito_topology_public_h
 
 
 // external packages
@@ -13,8 +13,11 @@
 #include "api.h"
 
 // classes implementation
-#include "Mesh.h"
-#include "readers/summit.h"
+#include "Simplex.h"
+#include "OrientedSimplex.h"
+#include "SimplexFactory.h"
+#include "OrientedSimplexFactory.h"
+#include "Topology.h"
 
 // factories implementation
 #include "factories.h"

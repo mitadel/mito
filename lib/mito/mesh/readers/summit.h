@@ -76,7 +76,7 @@ namespace mito::mesh {
             }
 
             // instantiate new vertex
-            auto vertex = mesh::vertex(std::move(point));
+            auto vertex = geometry::vertex(std::move(point));
 
             // instantiate new vertex and add it to {vertices}
             vertices.push_back(vertex);
@@ -127,11 +127,11 @@ namespace mito::mesh {
         auto vertex1 = vertices[index1];
         auto vertex2 = vertices[index2];
 
-        auto segment0 = segment({ vertex0, vertex1 });
-        auto segment1 = segment({ vertex1, vertex2 });
-        auto segment2 = segment({ vertex2, vertex0 });
+        auto segment0 = mito::topology::segment({ vertex0, vertex1 });
+        auto segment1 = mito::topology::segment({ vertex1, vertex2 });
+        auto segment2 = mito::topology::segment({ vertex2, vertex0 });
 
-        auto element = triangle({ segment0, segment1, segment2 });
+        auto element = mito::topology::triangle({ segment0, segment1, segment2 });
         mesh.addSimplex(element);
 
         // QUESTION: Can the label be more than one?

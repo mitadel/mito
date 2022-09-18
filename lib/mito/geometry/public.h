@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_mesh_public_h)
-#define mito_mesh_public_h
+#if !defined(mito_geometry_public_h)
+#define mito_geometry_public_h
 
 
 // external packages
@@ -13,8 +13,9 @@
 #include "api.h"
 
 // classes implementation
-#include "Mesh.h"
-#include "readers/summit.h"
+// #include "Point.h"
+#include "metrics.h"
+#include "PointCloud.h"
 
 // factories implementation
 #include "factories.h"

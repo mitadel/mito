@@ -70,7 +70,7 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, mesh::triangle_t, 1>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, topology::triangle_t, 1>::GetQuadratureRule()
     {
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
@@ -79,7 +79,7 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, mesh::triangle_t, 2>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, topology::triangle_t, 2>::GetQuadratureRule()
     {
         return quadrature_array_t<parametricDim, 3 /* nPoints */>(
             { /*{point}, weight*/
@@ -95,7 +95,7 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, mesh::segment_t, 1>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, topology::segment_t, 1>::GetQuadratureRule()
     {
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
@@ -103,7 +103,7 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, mesh::segment_t, 2>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, topology::segment_t, 2>::GetQuadratureRule()
     {
 
         return quadrature_array_t<parametricDim, 2 /* nPoints */>(
@@ -116,7 +116,7 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, mesh::tetrahedron_t, 1>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, topology::tetrahedron_t, 1>::GetQuadratureRule()
     { /*Hammer rule*/
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
@@ -126,7 +126,7 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureRulesFactory<GAUSS, mesh::tetrahedron_t, 2>::GetQuadratureRule()
+    constexpr auto QuadratureRulesFactory<GAUSS, topology::tetrahedron_t, 2>::GetQuadratureRule()
     { /*Hammer rule*/
         return quadrature_array_t<parametricDim, 4 /* nPoints */>(
             { /*{point}, weight*/

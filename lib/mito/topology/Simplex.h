@@ -1,8 +1,8 @@
 // code guard
-#if !defined(mito_mesh_Simplex_h)
-#define mito_mesh_Simplex_h
+#if !defined(mito_topology_Simplex_h)
+#define mito_topology_Simplex_h
 
-namespace mito::mesh {
+namespace mito::topology {
 
     /*
      * This class represents a Simplex of order D > 0.
@@ -112,6 +112,6 @@ namespace mito::mesh {
 }    // namespace mito
 
 
-#endif    // mito_mesh_Simplex_h
+#endif    // mito_topology_Simplex_h
 
 // end of file

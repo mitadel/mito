@@ -13,7 +13,6 @@
 #include "api.h"
 
 // classes implementation
-#include "geometry.h"    // TOFIX: where should this header live?
 #include "Manifold.h"
 
 // factories implementation

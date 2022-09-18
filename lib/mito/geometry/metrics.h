@@ -1,12 +1,12 @@
 // code guard
-#if !defined(mito_manifolds_geometry_h)
-#define mito_manifolds_geometry_h
+#if !defined(mito_geometry_metrics_h)
+#define mito_geometry_metrics_h
 
 
-namespace mito::manifolds {
+namespace mito::geometry {
 
     template <int D>
-    real computeDistance(const mesh::point_t<D> & pointA, const mesh::point_t<D> & pointB)
+    real computeDistance(const point_t<D> & pointA, const point_t<D> & pointB)
     {
         // return the distance between the two points
         auto dist = pointA - pointB;
@@ -15,7 +15,7 @@ namespace mito::manifolds {
 
     template <int D>
     void computeSimplicesVolume(
-        const mesh::simplex_vector_t<mesh::oriented_simplex_t<D>> & elements,
+        const topology::simplex_vector_t<topology::oriented_simplex_t<D>> & elements,
         std::vector<real> & volumes)
     {
         // number of element vertices
@@ -35,7 +35,7 @@ namespace mito::manifolds {
             pointsTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            mesh::vertex_set_t element_vertices;
+            topology::vertex_set_t element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
             assert(V == element_vertices.size());
@@ -45,7 +45,7 @@ namespace mito::manifolds {
             for (const auto & vertex : element_vertices) {
                 // fill up pointsTensor container
                 for (int d = 0; d < D; ++d) {
-                    pointsTensor[v * V + d] = mesh::point_cloud<D>::point(vertex)[d];
+                    pointsTensor[v * V + d] = point_cloud<D>::point(vertex)[d];
                 }
                 pointsTensor[v * V + D] = 1.0;
                 // update element vertices counter
@@ -65,32 +65,36 @@ namespace mito::manifolds {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const mesh::simplex_vector_t<element_t> & elements, std::vector<real> & volumes);
+        const topology::simplex_vector_t<element_t> & elements, std::vector<real> & volumes);
 
     template <>
-    void computeElementsVolume<mesh::triangle_t, 2>(
-        const mesh::simplex_vector_t<mesh::triangle_t> & elements, std::vector<real> & volumes)
+    void computeElementsVolume<topology::triangle_t, 2>(
+        const topology::simplex_vector_t<topology::triangle_t> & elements,
+        std::vector<real> & volumes)
     {
         return computeSimplicesVolume<2>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<mesh::tetrahedron_t, 3>(
-        const mesh::simplex_vector_t<mesh::tetrahedron_t> & elements, std::vector<real> & volumes)
+    void computeElementsVolume<topology::tetrahedron_t, 3>(
+        const topology::simplex_vector_t<topology::tetrahedron_t> & elements,
+        std::vector<real> & volumes)
     {
         return computeSimplicesVolume<3>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<mesh::segment_t, 1>(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & volumes)
+    void computeElementsVolume<topology::segment_t, 1>(
+        const topology::simplex_vector_t<topology::segment_t> & elements,
+        std::vector<real> & volumes)
     {
         return computeSimplicesVolume<1>(elements, volumes);
     }
 
     template <int D>
     void computeSegmentsLength(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & length)
+        const topology::simplex_vector_t<topology::segment_t> & elements,
+        std::vector<real> & length)
     {
         // number of element vertices
         constexpr int V = 2;
@@ -103,17 +107,17 @@ namespace mito::manifolds {
         for (const auto & element : elements) {
 
             // collect vertices
-            mesh::vertex_set_t vertices_set;
+            topology::vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            mesh::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
+            topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of element vertices
             assert(element_vertices.size() == V);
 
             // store the distance between the two element vertices as the element length
             length[e] = computeDistance<D>(
-                mesh::point_cloud<D>::point(element_vertices[0]),
-                mesh::point_cloud<D>::point(element_vertices[1]));
+                point_cloud<D>::point(element_vertices[0]),
+                point_cloud<D>::point(element_vertices[1]));
 
             // update elements counter
             ++e;
@@ -124,15 +128,17 @@ namespace mito::manifolds {
     }
 
     template <>
-    void computeElementsVolume<mesh::segment_t, 2>(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & volumes)
+    void computeElementsVolume<topology::segment_t, 2>(
+        const topology::simplex_vector_t<topology::segment_t> & elements,
+        std::vector<real> & volumes)
     {
         return computeSegmentsLength<2>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<mesh::segment_t, 3>(
-        const mesh::simplex_vector_t<mesh::segment_t> & elements, std::vector<real> & volumes)
+    void computeElementsVolume<topology::segment_t, 3>(
+        const topology::simplex_vector_t<topology::segment_t> & elements,
+        std::vector<real> & volumes)
     {
         return computeSegmentsLength<3>(elements, volumes);
     }
@@ -140,28 +146,29 @@ namespace mito::manifolds {
     // follows implementation by Kahan2014
     template <int D = 3>
     void computeTriangleArea(
-        const mesh::simplex_vector_t<mesh::triangle_t> & elements, std::vector<real> & areas)
+        const topology::simplex_vector_t<topology::triangle_t> & elements,
+        std::vector<real> & areas)
     {
         // loop on elements
         int e = 0;
         for (const auto & element : elements) {
 
             // collect vertices
-            mesh::vertex_set_t vertices_set;
+            topology::vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            mesh::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
+            topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
             edges_lengths[0] = computeDistance<D>(
-                mesh::point_cloud<D>::point(element_vertices[0]),
-                mesh::point_cloud<D>::point(element_vertices[1]));
+                point_cloud<D>::point(element_vertices[0]),
+                point_cloud<D>::point(element_vertices[1]));
             edges_lengths[1] = computeDistance<D>(
-                mesh::point_cloud<D>::point(element_vertices[0]),
-                mesh::point_cloud<D>::point(element_vertices[2]));
+                point_cloud<D>::point(element_vertices[0]),
+                point_cloud<D>::point(element_vertices[2]));
             edges_lengths[2] = computeDistance<D>(
-                mesh::point_cloud<D>::point(element_vertices[1]),
-                mesh::point_cloud<D>::point(element_vertices[2]));
+                point_cloud<D>::point(element_vertices[1]),
+                point_cloud<D>::point(element_vertices[2]));
 
             // sort edges lengths in ascending order
             std::sort(edges_lengths.begin(), edges_lengths.end());
@@ -186,8 +193,9 @@ namespace mito::manifolds {
     }
 
     template <>
-    void computeElementsVolume<mesh::triangle_t, 3>(
-        const mesh::simplex_vector_t<mesh::triangle_t> & elements, std::vector<real> & volumes)
+    void computeElementsVolume<topology::triangle_t, 3>(
+        const topology::simplex_vector_t<topology::triangle_t> & elements,
+        std::vector<real> & volumes)
     {
         return computeTriangleArea(elements, volumes);
     }

@@ -1,8 +1,8 @@
 // code guard
-#if !defined(mito_mesh_SimplexFactory_h)
-#define mito_mesh_SimplexFactory_h
+#if !defined(mito_topology_SimplexFactory_h)
+#define mito_topology_SimplexFactory_h
 
-namespace mito::mesh {
+namespace mito::topology {
 
     /**
      *
@@ -125,6 +125,6 @@ namespace mito::mesh {
         SimplexFactory<D>::composition_map_t();
 }
 
-#endif    // mito_mesh_SimplexFactory_h
+#endif    // mito_topology_SimplexFactory_h
 
 // end of file

@@ -123,11 +123,11 @@ namespace mito::mesh {
             std::get<I>(_simplices).erase(simplex);
 
             // cleanup oriented simplex factory around this simplex
-            Topology<I>::cleanup(simplex);
+            mito::topology::Topology<I>::cleanup(simplex);
 
             // // TOFIX: synchronize with the geometry, check whether any point should be erased
             // // in the cloud of points
-            // PointCloud<D>::cleanup(simplex);
+            // mito::geometry::PointCloud<D>::cleanup(simplex);
 
             // all done
             return;

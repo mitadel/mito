@@ -1,9 +1,8 @@
 // code guard
-#if !defined(mito_mesh_PointCloud_h)
-#define mito_mesh_PointCloud_h
+#if !defined(mito_geometry_PointCloud_h)
+#define mito_geometry_PointCloud_h
 
-// QUESTION: should Point and PointCloud live in the mesh namespace?
-namespace mito::mesh {
+namespace mito::geometry {
 
     template <int D>
     class PointCloud {
@@ -69,6 +68,6 @@ namespace mito::mesh {
 
 }    // namespace mito
 
-#endif    // mito_mesh_PointCloud_h
+#endif    // mito_geometry_PointCloud_h
 
 // end of file

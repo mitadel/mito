@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_mesh_OrientedSimplex_h)
-#define mito_mesh_OrientedSimplex_h
+#if !defined(mito_topology_OrientedSimplex_h)
+#define mito_topology_OrientedSimplex_h
 
 /*
  * This class represents an OrientedSimplex of order D.
@@ -15,7 +15,7 @@
  * also be deleted.
  */
 
-namespace mito::mesh {
+namespace mito::topology {
 
     template <int D>
     class OrientedSimplex {
@@ -189,6 +189,6 @@ namespace mito::mesh {
         }
     }
 }
-#endif    // mito_mesh_OrientedSimplex_h
+#endif    // mito_topology_OrientedSimplex_h
 
 // end of file
