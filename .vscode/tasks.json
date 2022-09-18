@@ -9,7 +9,7 @@
                 "cwd": "${workspaceRoot}/build"
             },
             "args": [
-                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
                 "-DCMAKE_INSTALL_PREFIX=/usr/local/mito",
                 "-DMITO_BUILD_TESTING=ON",
                 ".."
