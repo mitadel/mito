@@ -8,7 +8,6 @@ using mito::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
 using mito::geometry::point_t;
-using mito::topology::vertex_t;
 using mito::topology::triangle_t;
 
 int

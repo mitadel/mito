@@ -3,7 +3,6 @@
 #include <mito/manifolds.h>
 
 using mito::geometry::point_t;
-using mito::topology::vertex_t;
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
