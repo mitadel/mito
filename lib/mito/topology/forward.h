@@ -5,14 +5,6 @@
 
 namespace mito::topology {
 
-    // element set alias
-    template <class elementT>
-    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>;    // TOFIX
-
-    // element vector alias
-    template <class elementT>
-    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>;    // TOFIX
-
     // class simplex
     template <int D>
     requires(D > 0) class Simplex;
@@ -54,11 +46,9 @@ namespace mito::topology {
     template <int D>
     using simplex_t = typename helperSimplexClass<D>::simplex_type;
 
-    // vertex set alias
-    using vertex_set_t = simplex_set_t<vertex_t>;
-
-    // vertex vector alias
-    using vertex_vector_t = simplex_vector_t<vertex_t>;
+    // simplex pointer alias
+    template <int D>
+    using simplex_ptr = std::shared_ptr<const simplex_t<D>>;
 
     // oriented simplex alias
     template <int D>
@@ -68,9 +58,19 @@ namespace mito::topology {
     template <int D>
     using oriented_simplex_ptr = std::shared_ptr<const OrientedSimplex<D>>;
 
-    // simplex pointer alias
-    template <int D>
-    using simplex_ptr = std::shared_ptr<const simplex_t<D>>;
+    // element set alias
+    template <class elementT>
+    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>;    // TOFIX
+
+    // element vector alias
+    template <class elementT>
+    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>;    // TOFIX
+
+    // vertex set alias
+    using vertex_set_t = simplex_set_t<vertex_t>;
+
+    // vertex vector alias
+    using vertex_vector_t = simplex_vector_t<vertex_t>;
 
     // oriented simplex composition alias
     template <int D>
