@@ -23,11 +23,30 @@ namespace mito::geometry {
 
     // oriented simplex pointer alias
     template <int D>
-    using oriented_simplex_ptr = mito::topology::oriented_simplex_ptr<D>;
+    using oriented_simplex_ptr = topology::oriented_simplex_ptr<D>;
 
     // oriented simplex alias
     template <int D>
-    using oriented_simplex_t = mito::topology::oriented_simplex_t<D>;
+    using oriented_simplex_t = topology::oriented_simplex_t<D>;
+
+    // vertex set alias
+    using vertex_set_t = topology::vertex_set_t;
+
+    // element vector alias
+    template <class elementT>
+    using element_vector_t = topology::element_vector_t<elementT>;
+
+    // vertex vector alias
+    using vertex_vector_t = topology::vertex_vector_t;
+
+    // segment alias
+    using segment_t = topology::segment_t;
+
+    // triangle alias
+    using triangle_t = topology::triangle_t;
+
+    // tetrahedron alias
+    using tetrahedron_t = topology::tetrahedron_t;
 }
 
 

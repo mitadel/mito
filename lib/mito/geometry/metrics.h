@@ -15,8 +15,7 @@ namespace mito::geometry {
 
     template <int D>
     void computeSimplicesVolume(
-        const topology::element_vector_t<topology::oriented_simplex_t<D>> & elements,
-        std::vector<real> & volumes)
+        const element_vector_t<oriented_simplex_t<D>> & elements, std::vector<real> & volumes)
     {
         // number of element vertices
         constexpr int V = D + 1;
@@ -35,7 +34,7 @@ namespace mito::geometry {
             pointsTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            topology::vertex_set_t element_vertices;
+            vertex_set_t element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
             assert(V == element_vertices.size());
@@ -65,36 +64,32 @@ namespace mito::geometry {
 
     template <class element_t, int D>
     void computeElementsVolume(
-        const topology::element_vector_t<element_t> & elements, std::vector<real> & volumes);
+        const element_vector_t<element_t> & elements, std::vector<real> & volumes);
 
     template <>
-    void computeElementsVolume<topology::triangle_t, 2>(
-        const topology::element_vector_t<topology::triangle_t> & elements,
-        std::vector<real> & volumes)
+    void computeElementsVolume<triangle_t, 2>(
+        const element_vector_t<triangle_t> & elements, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<2>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<topology::tetrahedron_t, 3>(
-        const topology::element_vector_t<topology::tetrahedron_t> & elements,
-        std::vector<real> & volumes)
+    void computeElementsVolume<tetrahedron_t, 3>(
+        const element_vector_t<tetrahedron_t> & elements, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<3>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<topology::segment_t, 1>(
-        const topology::element_vector_t<topology::segment_t> & elements,
-        std::vector<real> & volumes)
+    void computeElementsVolume<segment_t, 1>(
+        const element_vector_t<segment_t> & elements, std::vector<real> & volumes)
     {
         return computeSimplicesVolume<1>(elements, volumes);
     }
 
     template <int D>
     void computeSegmentsLength(
-        const topology::element_vector_t<topology::segment_t> & elements,
-        std::vector<real> & length)
+        const element_vector_t<segment_t> & elements, std::vector<real> & length)
     {
         // number of element vertices
         constexpr int V = 2;
@@ -107,9 +102,9 @@ namespace mito::geometry {
         for (const auto & element : elements) {
 
             // collect vertices
-            topology::vertex_set_t vertices_set;
+            vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
+            vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of element vertices
             assert(element_vertices.size() == V);
@@ -128,17 +123,15 @@ namespace mito::geometry {
     }
 
     template <>
-    void computeElementsVolume<topology::segment_t, 2>(
-        const topology::element_vector_t<topology::segment_t> & elements,
-        std::vector<real> & volumes)
+    void computeElementsVolume<segment_t, 2>(
+        const element_vector_t<segment_t> & elements, std::vector<real> & volumes)
     {
         return computeSegmentsLength<2>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<topology::segment_t, 3>(
-        const topology::element_vector_t<topology::segment_t> & elements,
-        std::vector<real> & volumes)
+    void computeElementsVolume<segment_t, 3>(
+        const element_vector_t<segment_t> & elements, std::vector<real> & volumes)
     {
         return computeSegmentsLength<3>(elements, volumes);
     }
@@ -146,17 +139,16 @@ namespace mito::geometry {
     // follows implementation by Kahan2014
     template <int D = 3>
     void computeTriangleArea(
-        const topology::element_vector_t<topology::triangle_t> & elements,
-        std::vector<real> & areas)
+        const element_vector_t<triangle_t> & elements, std::vector<real> & areas)
     {
         // loop on elements
         int e = 0;
         for (const auto & element : elements) {
 
             // collect vertices
-            topology::vertex_set_t vertices_set;
+            vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
+            vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
@@ -193,9 +185,8 @@ namespace mito::geometry {
     }
 
     template <>
-    void computeElementsVolume<topology::triangle_t, 3>(
-        const topology::element_vector_t<topology::triangle_t> & elements,
-        std::vector<real> & volumes)
+    void computeElementsVolume<triangle_t, 3>(
+        const element_vector_t<triangle_t> & elements, std::vector<real> & volumes)
     {
         return computeTriangleArea(elements, volumes);
     }
