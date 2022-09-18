@@ -75,33 +75,10 @@ namespace mito::topology {
         // returns whether the simplex passes the sanity check
         bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
 
-        // TOFIX: these should be helper methods in mesh, not sure it makes sense to have them as
-        // part of the OrientedSimplex interface
-        // get the set of subsimplices of order I
-        template <int I>
-        void getSimplices(element_set_t<oriented_simplex_t<I>> & sub_simplices) const
-            requires(I < D - 1 && I != 0)
-        {
-            for (const auto & simplex : simplices()) {
-                simplex->simplices<I - 1>(sub_simplices);
-            }
-            return;
-        }
-        void getSimplices(vertex_set_t & sub_simplices) const { return vertices(sub_simplices); }
-        template <int I>
-        void getSimplices(element_set_t<oriented_simplex_t<I>> & sub_simplices) const
-            requires(I == D - 1 && I != 0)
-        {
-            for (const auto & simplex : simplices()) {
-                auto & sub_simplex = oriented_simplex(simplex.simplices());
-                sub_simplices.insert(sub_simplex);
-            }
-            return;
-        }
+      public:
+        // the number of barycentric coordinates
+        static constexpr int parametricDim = D + 1;
 
-      public :
-          // the number of barycentric coordinates
-          static constexpr int parametricDim = D + 1;
       private:
         // the shared pointer to the footprint
         const simplex_ptr<D> _footprint;
