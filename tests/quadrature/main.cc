@@ -50,7 +50,7 @@ main()
     auto element1 = mito::topology::triangle({ segment3, segment4, segment1 });
     auto element2 = mito::topology::triangle({ segment6, segment5, segment4 });
     auto element3 = mito::topology::triangle({ segment7, segment2, segment5 });
-    mito::topology::simplex_vector_t<triangle_t> elements = { element0, element1, element2,
+    mito::topology::element_vector_t<triangle_t> elements = { element0, element1, element2,
                                                               element3 };
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)

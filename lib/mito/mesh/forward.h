@@ -19,7 +19,7 @@ namespace mito::mesh {
 
     // element set alias
     template <class elementT>
-    using simplex_set_t = mito::topology::simplex_set_t<elementT>;
+    using element_set_t = mito::topology::element_set_t<elementT>;
 
     // oriented simplex pointer alias
     template <int D>

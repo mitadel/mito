@@ -113,7 +113,7 @@ main()
     // assert no simplex rides on this segment
     assert(mito::topology::incidence(element1) == 1);
 
-    mito::topology::simplex_vector_t<triangle_t> elements = { element0, element1 };
+    mito::topology::element_vector_t<triangle_t> elements = { element0, element1 };
 
     // sanity check
     for (const auto & e : elements) {

@@ -19,7 +19,7 @@ namespace mito::manifolds {
         static constexpr int dim = D;
 
       public:
-        Manifold(const topology::simplex_set_t<element_t> & elements) :
+        Manifold(const topology::element_set_t<element_t> & elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -27,7 +27,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(topology::simplex_set_t<element_t> && elements) :
+        Manifold(topology::element_set_t<element_t> && elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -35,7 +35,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(const topology::simplex_vector_t<element_t> & elements) :
+        Manifold(const topology::element_vector_t<element_t> & elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {
@@ -43,7 +43,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(topology::simplex_vector_t<element_t> && elements) :
+        Manifold(topology::element_vector_t<element_t> && elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {
@@ -82,7 +82,7 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline const topology::simplex_vector_t<element_t> & elements() const { return _elements; }
+        inline const topology::element_vector_t<element_t> & elements() const { return _elements; }
         inline int nElements() const { return _elements.size(); }
         inline real jacobian(int e) const { return _jacobians[e]; }
         inline const auto & coordinatesVertex(const topology::oriented_simplex_ptr<0> & v) const
@@ -98,7 +98,7 @@ namespace mito::manifolds {
         }
 
       private:
-        const topology::simplex_vector_t<element_t> _elements;
+        const topology::element_vector_t<element_t> _elements;
         std::vector<real> _jacobians;
     };
 

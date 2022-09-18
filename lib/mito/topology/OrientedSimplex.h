@@ -79,7 +79,7 @@ namespace mito::topology {
         // part of the OrientedSimplex interface
         // get the set of subsimplices of order I
         template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const
+        void getSimplices(element_set_t<oriented_simplex_t<I>> & sub_simplices) const
             requires(I < D - 1 && I != 0)
         {
             for (const auto & simplex : simplices()) {
@@ -89,7 +89,7 @@ namespace mito::topology {
         }
         void getSimplices(vertex_set_t & sub_simplices) const { return vertices(sub_simplices); }
         template <int I>
-        void getSimplices(simplex_set_t<oriented_simplex_t<I>> & sub_simplices) const
+        void getSimplices(element_set_t<oriented_simplex_t<I>> & sub_simplices) const
             requires(I == D - 1 && I != 0)
         {
             for (const auto & simplex : simplices()) {

@@ -60,17 +60,17 @@ namespace mito::topology {
 
     // element set alias
     template <class elementT>
-    using simplex_set_t = std::unordered_set<std::shared_ptr<const elementT>>;    // TOFIX
+    using element_set_t = std::unordered_set<std::shared_ptr<const elementT>>;
 
     // element vector alias
     template <class elementT>
-    using simplex_vector_t = std::vector<std::shared_ptr<const elementT>>;    // TOFIX
+    using element_vector_t = std::vector<std::shared_ptr<const elementT>>;
 
     // vertex set alias
-    using vertex_set_t = simplex_set_t<vertex_t>;
+    using vertex_set_t = element_set_t<vertex_t>;
 
     // vertex vector alias
-    using vertex_vector_t = simplex_vector_t<vertex_t>;
+    using vertex_vector_t = element_vector_t<vertex_t>;
 
     // oriented simplex composition alias
     template <int D>

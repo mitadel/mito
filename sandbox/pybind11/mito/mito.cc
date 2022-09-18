@@ -120,7 +120,7 @@ PYBIND11_MODULE(mito, m)
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::topology::simplex_vector_t<mito::topology::triangle_t> &>())
+            py::init<const mito::topology::element_vector_t<mito::topology::triangle_t> &>())
         // the constructor
         .def(
             // the implementation
