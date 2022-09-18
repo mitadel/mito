@@ -2,7 +2,7 @@
 #include <mito/mesh.h>
 #include <set>
 
-const mito::topology::simplex_t<1> *
+const mito::topology::unoriented_simplex_t<1> *
 findSharedSimplex(
     mito::topology::oriented_simplex_ptr<2> & element_0,
     mito::topology::oriented_simplex_ptr<2> & element_1)
@@ -28,7 +28,7 @@ mito::topology::vertex_vector_t
 oppositeVertices(
     mito::topology::oriented_simplex_ptr<2> & element_0,
     mito::topology::oriented_simplex_ptr<2> & element_1,
-    const mito::topology::simplex_t<1> * shared_simplex)
+    const mito::topology::unoriented_simplex_t<1> * shared_simplex)
 {
     // need a regular set (not an unordered one) because set_difference works with ordered sets
     using vertex_set_t = std::set<std::shared_ptr<const mito::topology::vertex_t>>;
@@ -70,7 +70,7 @@ flipDiagonal(
     mito::topology::oriented_simplex_ptr<2> & element_1)
 {
     // get the shared simplex between the two elements
-    const mito::topology::simplex_t<1> * shared_simplex = findSharedSimplex(element_0, element_1);
+    const auto * shared_simplex = findSharedSimplex(element_0, element_1);
 
     // assert you could find it
     assert(shared_simplex != nullptr);

@@ -23,7 +23,7 @@ namespace mito::topology {
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
         using orientation_map_t =
-            std::map<std::tuple<const simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
+            std::map<std::tuple<const unoriented_simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
 
       public:
         // delete default constructor
@@ -34,7 +34,7 @@ namespace mito::topology {
         // exist in the factory or return the existing representative of the class of equivalence of
         // oriented simplices with footprint {simplex} orientation {orientation}
         static oriented_simplex_ptr<D> orientedSimplex(
-            const simplex_ptr<D> & simplex, bool orientation)
+            const unoriented_simplex_ptr<D> & simplex, bool orientation)
         {
 
             // bind the footprint and the orientation in a tuple
@@ -123,7 +123,8 @@ namespace mito::topology {
         // compute the orientation of the {composition} with respect to the orientation of
         // {simplex}
         static bool _orientation(
-            const simplex_composition_t<D> & composition, const simplex_ptr<D> & simplex);
+            const simplex_composition_t<D> & composition,
+            const unoriented_simplex_ptr<D> & simplex);
 
       private:
         // container to store the relation (simplex, orientation) -> oriented simplex
@@ -133,7 +134,7 @@ namespace mito::topology {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<1>::_orientation(
-        const simplex_composition_t<1> & composition, const simplex_ptr<1> & simplex)
+        const simplex_composition_t<1> & composition, const unoriented_simplex_ptr<1> & simplex)
     {
         if (composition == simplex->composition()) {
             return true;
@@ -162,7 +163,7 @@ namespace mito::topology {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<2>::_orientation(
-        const simplex_composition_t<2> & composition, const simplex_ptr<2> & simplex)
+        const simplex_composition_t<2> & composition, const unoriented_simplex_ptr<2> & simplex)
     {
         if (_rotate(composition) == _rotate(simplex->composition())) {
             return true;
@@ -172,7 +173,7 @@ namespace mito::topology {
 
     template <>    // TODO: implement
     bool OrientedSimplexFactory<3>::_orientation(
-        const simplex_composition_t<3> & composition, const simplex_ptr<3> & simplex)
+        const simplex_composition_t<3> & composition, const unoriented_simplex_ptr<3> & simplex)
     {
         return true;
     }

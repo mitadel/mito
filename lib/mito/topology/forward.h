@@ -42,13 +42,13 @@ namespace mito::topology {
         using simplex_type = vertex_t;
     };
 
-    // simplex alias
+    // unoriented simplex alias
     template <int D>
-    using simplex_t = typename helperSimplexClass<D>::simplex_type;
+    using unoriented_simplex_t = typename helperSimplexClass<D>::simplex_type;
 
-    // simplex pointer alias
+    // unoriented simplex pointer alias
     template <int D>
-    using simplex_ptr = std::shared_ptr<const simplex_t<D>>;
+    using unoriented_simplex_ptr = std::shared_ptr<const unoriented_simplex_t<D>>;
 
     // oriented simplex alias
     template <int D>

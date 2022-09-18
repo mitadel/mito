@@ -24,7 +24,7 @@ namespace mito::topology {
         // oriented simplices
       private:
         // constructor with an existing shared pointer as footprint
-        constexpr OrientedSimplex(const simplex_ptr<D> & footprint, bool orientation) :
+        constexpr OrientedSimplex(const unoriented_simplex_ptr<D> & footprint, bool orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
@@ -81,7 +81,7 @@ namespace mito::topology {
 
       private:
         // the shared pointer to the footprint
-        const simplex_ptr<D> _footprint;
+        const unoriented_simplex_ptr<D> _footprint;
         // the orientation
         bool _orientation;
         // private friendship with the factory of oriented simplices
