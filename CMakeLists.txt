@@ -21,6 +21,9 @@ set(MICRO ${PROJECT_VERSION_PATCH})
 
 include(GNUInstallDirs)
 
+# additional compilation flags
+set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -Wall -Wextra -pedantic -Werror")
+
 # packages
 # pyre
 find_package(pyre REQUIRED)

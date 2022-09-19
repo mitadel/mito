@@ -2,7 +2,7 @@
 #include <mito/materials.h>
 
 int
-main(int argc, char ** argv)
+main()
 {
     // can either use this syntax...
     // mito::materials::gent_t material(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);

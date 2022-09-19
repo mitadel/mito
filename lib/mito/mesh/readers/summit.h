@@ -42,14 +42,14 @@ namespace mito::mesh {
         // QUESTION: do we need to reserve space for elements before reading them?
 
         // read the vertices
-        readVertices<D>(fileStream, mesh, N_vertices, vertices);
+        readVertices<D>(fileStream, N_vertices, vertices);
 
         // read the elements
         readElements(fileStream, mesh, N_elements, vertices);
 
         // sanity check: the number of vertices in the map is N_vertices
         vertices.shrink_to_fit();
-        assert(vertices.size() == N_vertices);
+        assert(vertices.size() == static_cast<size_t>(N_vertices));
 
         // sanity check: the number of elements of highest dimension in the map is N_elements
         assert(mesh.template nElements<D>() == N_elements);
@@ -62,9 +62,7 @@ namespace mito::mesh {
     }
 
     template <int D>
-    void readVertices(
-        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_vertices,
-        std::vector<vertex_t> & vertices)
+    void readVertices(std::ifstream & fileStream, int N_vertices, std::vector<vertex_t> & vertices)
     {
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {

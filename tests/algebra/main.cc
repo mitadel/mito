@@ -1,7 +1,7 @@
 #include <mito/base.h>
 
 int
-main(int argc, char ** argv)
+main()
 {
     /*constexpr*/ mito::matrix_t<3> Du { 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 1.0 };
 

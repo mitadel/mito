@@ -25,7 +25,7 @@ namespace mito::materials {
 
     template <int D /*dim*/>
     constexpr void Gent::Constitutive(
-        const vector_t<D> & u, const matrix_t<D> & Du, matrix_t<D> & P)
+        const vector_t<D> & /*u*/, const matrix_t<D> & Du, matrix_t<D> & P)
     {
         // deformation gradient
         matrix_t<D> F = Du;

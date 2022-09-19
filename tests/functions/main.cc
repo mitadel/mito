@@ -23,7 +23,7 @@ main()
 
     // a scalar function
     auto function2 =
-        mito::math::function([](const mito::vector_t<2> & x) -> mito::scalar_t { return 5; });
+        mito::math::function([](const mito::vector_t<2> & /*x*/) -> mito::scalar_t { return 5; });
 
     // the sum of the two scalar functions
     auto function3 = function1 + function2;

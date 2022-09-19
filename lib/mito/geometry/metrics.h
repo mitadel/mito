@@ -91,9 +91,6 @@ namespace mito::geometry {
     void computeSegmentsLength(
         const element_vector_t<segment_t> & elements, std::vector<real> & length)
     {
-        // number of element vertices
-        constexpr int V = 2;
-
         // assert memory allocation is consistent
         assert(length.size() == elements.size());
 
@@ -107,7 +104,7 @@ namespace mito::geometry {
             vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of element vertices
-            assert(element_vertices.size() == V);
+            assert(element_vertices.size() == /*number of element vertices*/ 2);
 
             // store the distance between the two element vertices as the element length
             length[e] = computeDistance<D>(

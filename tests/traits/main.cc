@@ -18,8 +18,6 @@ class Test {
             std::cout << "Is int! " << std::endl;
         }
 
-        typename mito::type<Y>::value c = 0.0;
-
         // all done
         return;
     }

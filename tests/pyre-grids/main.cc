@@ -152,7 +152,7 @@ myConstFunction(const mito::QuadratureFieldGrid<Q, Y> & quadF)
 
 // verify the basic layout of memory mapped grids
 int
-main(int argc, char * argv[])
+main()
 {
     // we'll work with a 3d conventionally packed grid
     using pack_t = pyre::grid::canonical_t<3>;

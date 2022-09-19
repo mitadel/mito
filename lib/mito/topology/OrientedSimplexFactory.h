@@ -173,7 +173,8 @@ namespace mito::topology {
 
     template <>    // TODO: implement
     bool OrientedSimplexFactory<3>::_orientation(
-        const simplex_composition_t<3> & composition, const unoriented_simplex_ptr<3> & simplex)
+        const simplex_composition_t<3> & /*composition*/,
+        const unoriented_simplex_ptr<3> & /*simplex*/)
     {
         return true;
     }
