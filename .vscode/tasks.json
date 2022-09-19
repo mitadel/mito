@@ -21,8 +21,6 @@
                 "-Wextra",
                 "-pedantic",
                 "-Werror",
-                "-Wno-unused-variable",
-                "-Wno-unused-parameter",
                 "${file}",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
