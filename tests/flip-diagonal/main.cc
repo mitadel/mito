@@ -4,8 +4,7 @@
 
 const mito::topology::unoriented_simplex_t<1> *
 findSharedSimplex(
-    mito::topology::oriented_simplex_ptr<2> & element_0,
-    mito::topology::oriented_simplex_ptr<2> & element_1)
+    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1)
 {
     // loop on lower-dimensional simplices to find the edge shared by the two elements
     for (const auto & subsimplex_0 : element_0->composition()) {
@@ -26,12 +25,11 @@ findSharedSimplex(
 
 mito::topology::vertex_vector_t
 oppositeVertices(
-    mito::topology::oriented_simplex_ptr<2> & element_0,
-    mito::topology::oriented_simplex_ptr<2> & element_1,
+    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1,
     const mito::topology::unoriented_simplex_t<1> * shared_simplex)
 {
     // need a regular set (not an unordered one) because set_difference works with ordered sets
-    using vertex_set_t = std::set<std::shared_ptr<const mito::topology::oriented_simplex_t<0>>>;
+    using vertex_set_t = std::set<mito::topology::simplex_t<0>>;
 
     vertex_set_t vertices;
     element_0->vertices(vertices);
@@ -54,8 +52,7 @@ oppositeVertices(
 
 bool
 headTailConnects(
-    mito::topology::oriented_simplex_ptr<1> simplex_1,
-    mito::topology::oriented_simplex_ptr<1> simplex_2)
+    const mito::topology::simplex_t<1> & simplex_1, const mito::topology::simplex_t<1> & simplex_2)
 {
     if (mito::topology::head(simplex_1) == mito::topology::tail(simplex_2)) {
         return true;
@@ -66,8 +63,7 @@ headTailConnects(
 
 int
 flipDiagonal(
-    mito::topology::oriented_simplex_ptr<2> & element_0,
-    mito::topology::oriented_simplex_ptr<2> & element_1)
+    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1)
 {
     // get the shared simplex between the two elements
     const auto * shared_simplex = findSharedSimplex(element_0, element_1);
@@ -84,7 +80,7 @@ flipDiagonal(
     auto opposite_diagonal_segment =
         mito::topology::segment({ opposite_vertices[1], opposite_vertices[0] });
 
-    std::set<mito::topology::oriented_simplex_ptr<1>> boundary_simplices;
+    std::set<mito::topology::simplex_t<1>> boundary_simplices;
     // get boundary simplices of element_0 (all except diagonal)
     for (const auto & subsimplex : element_0->composition()) {
         // if it is not the shared simplex
