@@ -42,13 +42,12 @@ namespace mito::topology {
         // returns whether there exists the flipped oriented simplex in the factory
         static bool exists_flipped(const oriented_simplex_ptr<D> & oriented_simplex)
         {
-            // get the use count of the simplex footprint
-            auto use_count = oriented_simplex->footprint().use_count();
-            // assert the footprint cannot be used by more than two oriented simplices (on top of
-            // the the SimplexFactory)
-            assert(use_count == 2 || use_count == 3);
+            // get the incidence of the simplex footprint
+            auto inc = incidence(oriented_simplex);
+            // assert the footprint cannot be used by more than two oriented simplices
+            assert(inc == 1 || inc == 2);
             // return true if the footprint is in used by two oriented simplices
-            return use_count == 3 ? true : false;
+            return inc == 2 ? true : false;
         }
 
         // returns the simplex with opposite orientation
