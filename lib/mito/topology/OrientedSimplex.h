@@ -52,7 +52,7 @@ namespace mito::topology {
         // TOFIX: do we need both?
       public:
         // accessor for the footprint simplex
-        const auto & simplex() const { return *_footprint.get(); }
+        const auto & simplex() const { return *_footprint; }
 
         // accessor for the footprint shared pointer
         const auto & footprint() const { return _footprint; }
@@ -63,17 +63,17 @@ namespace mito::topology {
         bool orientation() const { return _orientation; }
 
         // returns the array of subsimplices
-        const auto & composition() const { return _footprint.get()->composition(); }
+        const auto & composition() const { return _footprint->composition(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const
         {
-            return _footprint.get()->vertices(vertices);
+            return _footprint->vertices(vertices);
         }
 
         // returns whether the simplex passes the sanity check
-        bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
+        bool sanityCheck() const { return _footprint->sanityCheck(); }
 
       private:
         // the shared pointer to the footprint
