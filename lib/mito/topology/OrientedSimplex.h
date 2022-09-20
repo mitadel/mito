@@ -63,14 +63,14 @@ namespace mito::topology {
 
         // returns the id of this (oriented) simplex
         // (the id is its (immutable) address in memory)
-        const auto * id() const { return this; }
+        oriented_simplex_id_t<D> id() const { return this; }
 
         // returns the id of this (oriented) simplex
-        const auto * simplex_id() const { return id(); }
+        oriented_simplex_id_t<D> simplex_id() const { return id(); }
 
         // returns the (unoriented) footprint id
         // (the footprint id is the (immutable) address of the unoriented footprint)
-        const auto * footprint_id() const { return _footprint->id(); }
+        unoriented_simplex_id_t<D> footprint_id() const { return _footprint->id(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
@@ -123,7 +123,7 @@ namespace mito::topology {
         // returns the (unoriented) footprint id
         // (the footprint id is the (immutable) address of the unoriented footprint)
         // Note: the footprint of a vertex is the vertex itself
-        const auto * footprint_id() const { return this; }
+        unoriented_simplex_id_t<0> footprint_id() const { return this; }
 
         // perform a sanity check
         bool sanityCheck() const

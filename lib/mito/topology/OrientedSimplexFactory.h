@@ -22,9 +22,8 @@ namespace mito::topology {
       private:
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
-        // TOFIX: {const unoriented_simplex_t<D> *} should be a footprint id of an oriented simplex
         using orientation_map_t =
-            std::map<std::tuple<const unoriented_simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
+            std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, oriented_simplex_ptr<D>>;
 
       public:
         // delete default constructor
@@ -82,7 +81,7 @@ namespace mito::topology {
                 auto subsimplices = oriented_simplex->composition();
 
                 // get footprint of the oriented simplex
-                const auto * id = oriented_simplex->footprint_id();
+                unoriented_simplex_id_t<D> id = oriented_simplex->footprint_id();
 
                 // get the key to this oriented simplex
                 auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
@@ -146,8 +145,8 @@ namespace mito::topology {
     namespace {
         auto _rotate(const simplex_composition_t<2> & composition)
         {
-            // an array of pointers to oriented simplices
-            using oriented_simplex_array_t = std::array<const oriented_simplex_t<1> *, 3>;
+            // an array of oriented simplices ids
+            using oriented_simplex_array_t = std::array<oriented_simplex_id_t<1>, 3>;
 
             // get the oriented simplices from the shared pointers
             auto composition_copy =

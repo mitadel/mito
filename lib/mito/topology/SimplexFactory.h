@@ -27,8 +27,7 @@ namespace mito::topology {
         // std::map<std::array<simplex_t<0> *, 2>, simplex_t<1> *>  edges composition
         // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
         // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
-        // TOFIX: {const unoriented_simplex_t<D> *} should be a footprint id of an oriented simplex
-        using composition_t = std::array<const unoriented_simplex_t<D - 1> *, D + 1>;
+        using composition_t = std::array<unoriented_simplex_id_t<D - 1>, D + 1>;
         using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
 
       public:

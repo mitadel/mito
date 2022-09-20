@@ -48,7 +48,7 @@ namespace mito::topology {
 
         // returns the simplex id
         // (the simplex id is its (immutable) address in memory)
-        const auto * id() const { return this; }
+        unoriented_simplex_id_t<D> id() const { return this; }
 
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
