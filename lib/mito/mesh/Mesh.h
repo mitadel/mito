@@ -136,7 +136,6 @@ namespace mito::mesh {
         }
 
       public :
-          // TOFIX: {oriented_simplex_ptr}
           template <int I>
           void
           addSimplex(const element_t<I> & element) requires(I > 0 && I <= D)
