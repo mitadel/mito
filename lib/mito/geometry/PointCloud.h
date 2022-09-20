@@ -17,7 +17,7 @@ namespace mito::geometry {
         {
             // iterate on map
             for (auto item : _cloud) {
-                std::cout << "Vertex: " << item.first.get() << std::endl;
+                std::cout << "Vertex: " << item.first->id() << std::endl;
                 std::cout << "Point: " << item.second << std::endl;
             }
             // all done
@@ -58,7 +58,7 @@ namespace mito::geometry {
     std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
     {
         for (const auto & point : cloud) {
-            std::cout << "vertex: " << point.first.get() << ",\t coordinates: " << point.second
+            std::cout << "vertex: " << point.first->id() << ",\t coordinates: " << point.second
                       << std::endl;
         }
         return os;

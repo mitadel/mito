@@ -11,11 +11,11 @@ findSharedSimplex(
     for (const auto & subsimplex_0 : element_0->composition()) {
         for (const auto & subsimplex_1 : element_1->composition()) {
             // if you found it
-            if (&subsimplex_0->simplex() == &subsimplex_1->simplex()) {
+            if (subsimplex_0->footprint_id() == subsimplex_1->footprint_id()) {
                 // report
                 std::cout << "Found it!" << std::endl;
                 // return
-                return &subsimplex_0->simplex();
+                return subsimplex_0->footprint_id();
             }
         }
     }
@@ -88,7 +88,7 @@ flipDiagonal(
     // get boundary simplices of element_0 (all except diagonal)
     for (const auto & subsimplex : element_0->composition()) {
         // if it is not the shared simplex
-        if (&subsimplex->simplex() != shared_simplex) {
+        if (subsimplex->footprint_id() != shared_simplex->id()) {
             boundary_simplices.insert(subsimplex);
         }
     }
@@ -96,7 +96,7 @@ flipDiagonal(
     // get boundary simplices of element_1 (all except diagonal)
     for (const auto & subsimplex : element_1->composition()) {
         // if it is not the shared simplex
-        if (&subsimplex->simplex() != shared_simplex) {
+        if (subsimplex->footprint_id() != shared_simplex->id()) {
             boundary_simplices.insert(subsimplex);
         }
     }

@@ -22,6 +22,7 @@ namespace mito::topology {
       private:
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
+        // TOFIX: {const unoriented_simplex_t<D> *} should be a footprint id of an oriented simplex
         using orientation_map_t =
             std::map<std::tuple<const unoriented_simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
 
@@ -38,7 +39,7 @@ namespace mito::topology {
         {
 
             // bind the footprint and the orientation in a tuple
-            auto mytuple = std::make_tuple(simplex.get(), orientation);
+            auto mytuple = std::make_tuple(simplex->id(), orientation);
 
             // if there is no oriented simplex registered in the map riding on simplex {simplex},
             // with orientation {orientation} then create such new oriented simplex and register it
@@ -81,10 +82,10 @@ namespace mito::topology {
                 auto subsimplices = oriented_simplex->composition();
 
                 // get footprint of the oriented simplex
-                const auto & simplex = oriented_simplex->simplex();
+                const auto * id = oriented_simplex->footprint_id();
 
                 // get the key to this oriented simplex
-                auto mytuple = std::make_tuple(&simplex, oriented_simplex->orientation());
+                auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
 
                 // cleanup simplex factory around this oriented simplex
                 SimplexFactory<D>::cleanup(oriented_simplex);
@@ -150,8 +151,8 @@ namespace mito::topology {
 
             // get the oriented simplices from the shared pointers
             auto composition_copy =
-                oriented_simplex_array_t { composition[0].get(), composition[1].get(),
-                                           composition[2].get() };
+                oriented_simplex_array_t { composition[0]->id(), composition[1]->id(),
+                                           composition[2]->id() };
             auto first_simplex = std::min_element(composition_copy.begin(), composition_copy.end());
             std::rotate(composition_copy.begin(), first_simplex, composition_copy.end());
 

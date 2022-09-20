@@ -49,12 +49,8 @@ namespace mito::topology {
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
-        // TOFIX: do we need both?
       public:
-        // accessor for the footprint simplex
-        const auto & simplex() const { return *_footprint; }
-
-        // accessor for the footprint shared pointer
+        // accessor for the unoriented footprint
         const auto & footprint() const { return _footprint; }
 
         // returns the orientation of this simplex
@@ -64,6 +60,17 @@ namespace mito::topology {
 
         // returns the array of subsimplices
         const auto & composition() const { return _footprint->composition(); }
+
+        // returns the id of this (oriented) simplex
+        // (the id is its (immutable) address in memory)
+        const auto * id() const { return this; }
+
+        // returns the id of this (oriented) simplex
+        const auto * simplex_id() const { return id(); }
+
+        // returns the (unoriented) footprint id
+        // (the footprint id is the (immutable) address of the unoriented footprint)
+        const auto * footprint_id() const { return _footprint->id(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
@@ -113,8 +120,10 @@ namespace mito::topology {
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
       public:
-        // accessor for the footprint simplex
-        const auto & simplex() const { return *this; }
+        // returns the (unoriented) footprint id
+        // (the footprint id is the (immutable) address of the unoriented footprint)
+        // Note: the footprint of a vertex is the vertex itself
+        const auto * footprint_id() const { return this; }
 
         // perform a sanity check
         bool sanityCheck() const
@@ -131,7 +140,7 @@ namespace mito::topology {
         // print orientation
         os << "orientation: " << s.orientation() << std::endl;
         // print footprint
-        os << "footprint: " << s.simplex() << std::endl;
+        os << "footprint: " << *(s.footprint()) << std::endl;
         // all done
         return os;
     }
