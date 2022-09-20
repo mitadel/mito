@@ -90,10 +90,10 @@ namespace mito::topology {
     using vertex_vector_t = element_vector_t<vertex_t>;
 
     template <int D>
-    using unoriented_simplex_id_t = const unoriented_simplex_t<D> *;
+    using unoriented_simplex_id_t = std::uintptr_t;
 
     template <int D>
-    using oriented_simplex_id_t = const oriented_simplex_t<D> *;
+    using oriented_simplex_id_t = std::uintptr_t;
 }
 
 

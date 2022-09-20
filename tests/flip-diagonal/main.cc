@@ -2,7 +2,7 @@
 #include <mito/mesh.h>
 #include <set>
 
-const auto *
+const auto &
 findSharedSimplex(
     const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1)
 {
@@ -14,20 +14,22 @@ findSharedSimplex(
                 // report
                 std::cout << "Found it!" << std::endl;
                 // return
-                return subsimplex_0->footprint_id();
+                return subsimplex_0->footprint();
             }
         }
     }
 
-    // TOFIX: control reaches end of non-void function
-    // // all done
-    // return nullptr;
+    // TOFIX: throw error with journal, but control reaches end of non-void function
+    // pyre::journal::error_t error("error");
+    // error << "Found no shared simplices" << pyre::journal::endl;
+    // something went wrong
+    throw std::logic_error("Found no shared simplices.");
 }
 
 mito::topology::vertex_vector_t
 oppositeVertices(
     const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1,
-    const auto * shared_simplex)
+    const auto & shared_simplex)
 {
     // need a regular set (not an unordered one) because set_difference works with ordered sets
     using vertex_set_t = std::set<mito::topology::simplex_t<0>>;
@@ -67,7 +69,7 @@ flipDiagonal(
     const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1)
 {
     // get the shared simplex between the two elements
-    const auto * shared_simplex = findSharedSimplex(element_0, element_1);
+    const auto & shared_simplex = findSharedSimplex(element_0, element_1);
 
     // assert you could find it
     assert(shared_simplex != nullptr);
