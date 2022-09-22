@@ -131,6 +131,22 @@ namespace mito::utilities {
             return;
         }
 
+        /**
+         * Iterators
+         */
+        T * begin()
+        {
+            for (size_t i = 0; i < _data.size(); ++i) {
+                if (_data[i]->is_valid()) {
+                    return _data[i];
+                }
+            }
+
+            return _end;
+        }
+
+        T * end() { return _end; }
+
       private:
         // the underlying data
         std::vector<T *> _data;
