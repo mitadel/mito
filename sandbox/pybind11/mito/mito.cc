@@ -103,7 +103,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Mesh interface
-    py::class_<mito::mesh::Mesh<2, mito::topology::oriented_simplex_t>>(m, "SimplicialMesh2D")
+    py::class_<mito::mesh::Mesh<2, mito::topology::simplex_t>>(m, "SimplicialMesh2D")
         // the default constructor
         .def(
             // the implementation
@@ -111,7 +111,7 @@ PYBIND11_MODULE(mito, m)
         // accessors
         // the elements; read-only property
         .def_property_readonly(
-            "elements", &mito::mesh::mesh_t<2, mito::topology::oriented_simplex_t>::elements<2>,
+            "elements", &mito::mesh::mesh_t<2, mito::topology::simplex_t>::elements<2>,
             "the body elements")
         // done
         ;
