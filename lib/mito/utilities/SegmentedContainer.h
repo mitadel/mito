@@ -103,6 +103,28 @@ namespace mito::utilities {
         constexpr SegmentedContainerIterator & operator=(SegmentedContainerIterator &&) = default;
     };
 
+    // the global operators
+    // equality
+    template <class SegmentedContainerT, bool isConst>
+    constexpr auto operator==(
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool
+    {
+        // iterators are equal if they point to the same segmented container
+        return &it1.segmented_container() == &it2.segmented_container();
+    }
+
+
+    // and not
+    template <class SegmentedContainerT, bool isConst>
+    constexpr auto operator!=(
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool
+    {
+        // iterators are unequal iff they are not equal
+        return !(it1 == it2);
+    }
+
     template <class T, int N = 10 /* segment size */>
     class SegmentedContainer {
 
@@ -235,20 +257,24 @@ namespace mito::utilities {
         }
 
         /**
-         * Iterators
+         * iterators
          */
-        T * begin()
+        constexpr auto begin() -> iterator
         {
-            for (size_t i = 0; i < _data.size(); ++i) {
+            // make an {iterator} that points to the first valid data of my segmented container
+            for (size_t i = 0; i < std::size(_data); ++i) {
                 if (_data[i]->is_valid()) {
-                    return _data[i];
+                    return _data.begin() + i;
                 }
             }
-
             return _end;
         }
 
-        T * end() { return _end; }
+        constexpr auto end() -> iterator
+        {
+            // make an {iterator} that points to the end of my segmented container
+            return iterator(*this);
+        }
 
       private:
         // the underlying data

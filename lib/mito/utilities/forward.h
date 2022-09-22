@@ -21,9 +21,27 @@ namespace mito::utilities {
     template <class T, int N /* segment size */>
     class SegmentedContainer;
 
+    // and its iterator
+    template <class SegmentedContainerT, bool isConst>
+    class SegmentedContainerIterator;
+
     // segmented container alias
     template <class T, int N /* segment size */>
     using segmented_t = SegmentedContainer<T, N>;
+
+    // segmented container iterator
+    // equality
+    template <class SegmentedContainerT, bool isConst>
+    constexpr auto operator==(
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool;
+
+
+    // and not
+    template <class SegmentedContainerT, bool isConst>
+    constexpr auto operator!=(
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool;
 }
 
 
