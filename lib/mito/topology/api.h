@@ -21,6 +21,7 @@ namespace mito::topology {
     // tetrahedron factory
     simplex_t<3> tetrahedron(const simplex_composition_t<3> & simplices);
 
+    // TOFIX: where should we park these methods?
     template <int D>
     auto exists_flipped(const simplex_t<D> & oriented_simplex)
     {
