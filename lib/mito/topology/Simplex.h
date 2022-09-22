@@ -106,11 +106,12 @@ namespace mito::topology {
 
     // overload operator<< for simplices
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const Simplex<D> & s) requires(D > 0)
+    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_ptr<D> & s) requires(
+        D > 0)
     {
         os << &s << " composed of:" << std::endl;
-        for (const auto & simplex : s.composition()) {
-            std::cout << "\t" << *simplex << std::endl;
+        for (const auto & simplex : s->composition()) {
+            std::cout << "\t" << simplex << std::endl;
         }
         return os;
     }

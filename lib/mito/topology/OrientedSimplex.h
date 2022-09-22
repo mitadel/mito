@@ -141,21 +141,21 @@ namespace mito::topology {
 
     // overload operator<< for oriented simplices
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const OrientedSimplex<D> & s)
+    std::ostream & operator<<(std::ostream & os, const simplex_t<D> & s)
     {
         // print orientation
-        os << "orientation: " << s.orientation() << std::endl;
+        os << "orientation: " << s->orientation() << std::endl;
         // print footprint
-        os << "footprint: " << *(s.footprint()) << std::endl;
+        os << "footprint: " << s->footprint() << std::endl;
         // all done
         return os;
     }
 
     // overload operator<< specialization for simplices with D = 0 (vertices)
     template <>
-    std::ostream & operator<<(std::ostream & os, const OrientedSimplex<0> & s)
+    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
     {
-        os << &s;
+        os << s->footprint_id();
         return os;
     }
 
