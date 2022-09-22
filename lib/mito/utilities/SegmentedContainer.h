@@ -14,6 +14,13 @@ namespace mito::utilities {
     class SegmentedContainer {
 
       public:
+        // my value
+        using value_type = T;
+        using pointer = T *;
+        using const_pointer = const T *;
+        using reference = T &;
+        using const_reference = const T &;
+
         // default constructor (empty data structure)
         SegmentedContainer() : _data(), _end(nullptr), _n_elements(0) {}
 
@@ -133,6 +140,90 @@ namespace mito::utilities {
         int _n_elements;
         // a queue with the available locations for writing
         std::queue<T *> _available_locations;
+    };
+
+    // polymorphic base class for building iterators
+    template <class containerT, bool isConst>
+    class iterator_base {
+      public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = typename containerT::value_type;
+        using pointer = std::conditional_t<
+            isConst, typename containerT::const_pointer, typename containerT::pointer>;
+        using reference = std::conditional_t<
+            isConst, typename containerT::const_reference, typename containerT::reference>;
+    };
+
+    // in iterator that visit the cells of a grid in a specific order
+    template <class SegmentedContainerT, bool isConst>
+    class SegmentedContainerIterator : public iterator_base<SegmentedContainerT, isConst> {
+        // types
+      public:
+        // my template parameters
+        using segmented_container_type = SegmentedContainerT;
+        // me
+        using iterator = SegmentedContainerIterator<segmented_container_type, isConst>;
+        using iterator_reference = iterator &;
+        // my base class
+        using iterbase = iterator_base<segmented_container_type, isConst>;
+        // my parts
+        using segmented_container_reference = std::conditional_t<
+            isConst, const segmented_container_type &, segmented_container_type &>;
+        using segmented_container_const_reference = const segmented_container_type &;
+        // what i point to
+        using value_type = typename iterbase::value_type;
+        using pointer = typename iterbase::pointer;
+        using reference = typename iterbase::reference;
+
+        // metamethods
+      public:
+        // constructor
+        constexpr SegmentedContainerIterator(segmented_container_reference segmentedContainer) :
+            _segmentedContainer(segmentedContainer)
+        {
+            //_ptr = _segmentedContainer.begin();
+        }
+
+        // iterator protocol
+      public:
+        // // dereference
+        // constexpr auto operator*() const -> reference;
+        // // arithmetic
+        // constexpr auto operator++() -> iterator_reference;
+
+        // arithmetic: postfix
+        constexpr auto operator++(int) -> iterator
+        {
+            // make a copy of me
+            auto clone = *this;
+            // increment me
+            ++(*this);
+            // and return the clone
+            return clone;
+        }
+
+        // accessors
+        constexpr auto segmented_container() const -> segmented_container_const_reference
+        {
+            // easy enough
+            return _segmentedContainer;
+        }
+
+        // implementation details: data
+      private:
+        segmented_container_reference _segmentedContainer;
+        pointer _ptr;
+
+        // default metamethods
+      public:
+        // destructor
+        ~SegmentedContainerIterator() = default;
+        // let the compiler write the rest
+        constexpr SegmentedContainerIterator(const SegmentedContainerIterator &) = default;
+        constexpr SegmentedContainerIterator(SegmentedContainerIterator &&) = default;
+        constexpr SegmentedContainerIterator & operator=(const SegmentedContainerIterator &) =
+            default;
+        constexpr SegmentedContainerIterator & operator=(SegmentedContainerIterator &&) = default;
     };
 }
 
