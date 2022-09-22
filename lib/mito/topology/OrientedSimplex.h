@@ -159,7 +159,7 @@ namespace mito::topology {
         return os;
     }
 
-    auto tail(const oriented_simplex_ptr<1> & oriented_simplex)
+    auto tail(const simplex_t<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
             return oriented_simplex->composition()[0];
@@ -168,7 +168,7 @@ namespace mito::topology {
         }
     }
 
-    auto head(const oriented_simplex_ptr<1> & oriented_simplex)
+    auto head(const simplex_t<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
             return oriented_simplex->composition()[1];
