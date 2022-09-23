@@ -285,6 +285,9 @@ namespace mito::utilities {
         int _n_elements;
         // a queue with the available locations for writing
         std::queue<T *> _available_locations;
+
+      private:
+        friend SegmentedContainerIterator<segmented_container_type, false>;
     };
 }
 
