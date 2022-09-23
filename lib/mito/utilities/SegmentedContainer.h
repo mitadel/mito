@@ -26,6 +26,7 @@ namespace mito::utilities {
       public:
         // my template parameters
         using segmented_container_type = SegmentedContainerT;
+        constexpr static int segmented_container_segment_size = SegmentedContainerT::segment_size;
         // me
         using iterator = SegmentedContainerIterator<segmented_container_type, isConst>;
         using iterator_reference = iterator &;
@@ -131,9 +132,11 @@ namespace mito::utilities {
       public:
         // aliases for my template parameters
         using segment_type = T;
+        // aliases for my segment size
+        constexpr static int segment_size = N;
 
         // me
-        using segmented_container_type = SegmentedContainer<segment_type, N>;
+        using segmented_container_type = SegmentedContainer<segment_type, segment_size>;
 
         // my value
         using value_type = T;
