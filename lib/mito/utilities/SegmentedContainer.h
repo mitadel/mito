@@ -52,6 +52,13 @@ namespace mito::utilities {
 
         // iterator protocol
       public:
+        // dereference
+        constexpr auto operator*() const -> reference
+        {
+            // retrieve the value and return it
+            return *_ptr;
+        }
+
         // arithmetic: prefix
         constexpr auto operator++() -> iterator_reference
         {
