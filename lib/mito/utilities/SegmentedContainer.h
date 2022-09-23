@@ -81,10 +81,10 @@ namespace mito::utilities {
         }
 
         // accessors
-        constexpr auto segmented_container() const -> segmented_container_const_reference
+        constexpr auto ptr() const -> typename SegmentedContainerT::pointer
         {
             // easy enough
-            return _segmentedContainer;
+            return _ptr;
         }
 
         // implementation details: data
@@ -112,9 +112,8 @@ namespace mito::utilities {
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool
     {
         // iterators are equal if they point to the same segmented container
-        return &it1.segmented_container() == &it2.segmented_container();
+        return it1.ptr() == it2.ptr();
     }
-
 
     // and not
     template <class SegmentedContainerT, bool isConst>
