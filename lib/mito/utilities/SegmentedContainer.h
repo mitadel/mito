@@ -45,10 +45,28 @@ namespace mito::utilities {
       public:
         // constructor
         constexpr SegmentedContainerIterator(segmented_container_reference segmentedContainer) :
-            _segmentedContainer(segmentedContainer)
+            _segmentedContainer(segmentedContainer),
+            _index(0),
+            _ptr(segmentedContainer._data[0])
         {
-            _ptr = _segmentedContainer.begin();
+            // if the first element is not a valid one
+            if (!_ptr->is_valid()) {
+                // find the first valid element
+                operator++();
+            }
+
+            // all done
+            return;
         }
+
+        // constructor
+        constexpr SegmentedContainerIterator(
+            segmented_container_reference segmentedContainer, size_t index,
+            typename SegmentedContainerT::pointer ptr) :
+            _segmentedContainer(segmentedContainer),
+            _index(index),
+            _ptr(ptr)
+        {}
 
         // iterator protocol
       public:
@@ -63,14 +81,25 @@ namespace mito::utilities {
         constexpr auto operator++() -> iterator_reference
         {
             // TOFIX Add concept base type is invalidatable
-            ++_ptr;
-            if (_ptr == _segmentedContainer.end()) {
-                return *this;
+
+            const auto & data = _segmentedContainer._data;
+
+            // loop on segments
+            for (; _index < data.size(); ++_index) {
+                // if not at the end of the segment
+                while (_ptr != data[_index] + segmented_container_segment_size) {
+                    // try next element
+                    ++_ptr;
+                    // if the element is valid
+                    if (_ptr->is_valid()) {
+                        // found it
+                        return *this;
+                    }
+                }
             }
 
-            if (!_ptr->is_valid()) {
-                return operator++();
-            }
+            // restore index to last segment
+            --_index;
 
             // all done
             return *this;
@@ -96,7 +125,11 @@ namespace mito::utilities {
 
         // implementation details: data
       private:
+        // reference to segmented container
         segmented_container_reference _segmentedContainer;
+        // index for segments
+        size_t _index;
+        // pointer to an element of the segments
         typename SegmentedContainerT::pointer _ptr;
 
         // default metamethods
@@ -172,7 +205,6 @@ namespace mito::utilities {
             return _data.size() * N;
         }
 
-        T * end() const { return _end; }
 
         int size() const { return _n_elements; }
 
@@ -268,21 +300,13 @@ namespace mito::utilities {
         /**
          * iterators
          */
-        constexpr auto begin() -> iterator
-        {
-            // make an {iterator} that points to the first valid data of my segmented container
-            for (size_t i = 0; i < std::size(_data); ++i) {
-                if (_data[i]->is_valid()) {
-                    return _data.begin() + i;
-                }
-            }
-            return _end;
-        }
+        constexpr auto begin() -> iterator { return iterator(*this); }
 
+        // TOFIX: bug if the last valid element happens before the last segment
         constexpr auto end() -> iterator
         {
             // make an {iterator} that points to the end of my segmented container
-            return iterator(*this);
+            return iterator(*this, _data.size(), _end);
         }
 
       private:
