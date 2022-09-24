@@ -28,8 +28,9 @@ namespace mito::utilities {
         using const_reference = const T &;
 
         // iterators
-        using iterator = SegmentedContainerIterator<segmented_container_type, false>;
-        // using const_iterator = SegmentedContainerIterator<segmented_container_type, true>;
+        using iterator = SegmentedContainerIterator<segmented_container_type, false /* isConst */>;
+        using const_iterator =
+            SegmentedContainerIterator<segmented_container_type, true /* isConst */>;
 
         // default constructor (empty data structure)
         SegmentedContainer() : _data(), _end(nullptr), _n_elements(0) {}
@@ -152,6 +153,14 @@ namespace mito::utilities {
             return iterator(*this, _data.size(), _end);
         }
 
+        constexpr auto begin() const -> const_iterator { return const_iterator(*this); }
+
+        constexpr auto end() const -> const_iterator
+        {
+            // make an {iterator} that points to the end of my segmented container
+            return const_iterator(*this, _data.size(), _end);
+        }
+
       private:
         // the underlying data
         std::vector<T *> _data;
@@ -163,7 +172,10 @@ namespace mito::utilities {
         std::queue<T *> _available_locations;
 
       private:
-        friend SegmentedContainerIterator<segmented_container_type, false>;
+        // non-const iterator
+        friend iterator;
+        // const iterator
+        friend const_iterator;
     };
 }
 
