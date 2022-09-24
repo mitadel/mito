@@ -15,6 +15,7 @@
 // classes implementation
 #include "SharedPointer.h"
 #include "SegmentedContainer.h"
+#include "SegmentedContainerIterator.h"
 
 // factories implementation
 #include "factories.h"
