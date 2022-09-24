@@ -5,10 +5,6 @@
 
 namespace mito::topology {
 
-    // oriented simplex factory
-    template <int I>
-    simplex_t<I> oriented_simplex(const simplex_composition_t<I> & simplices);
-
     // vertex factory
     simplex_t<0> vertex();
 
