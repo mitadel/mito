@@ -6,8 +6,7 @@
 namespace mito::materials {
 
     // gent material factory
-    constexpr auto gent(real rho, real kappa, real mu, real Jm);
-
+    constexpr auto gent(real rho, real kappa, real mu, real Jm) -> gent_t;
 }
 
 

@@ -18,14 +18,16 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static inline simplex_t<D> orientedSimplex(
-            const simplex_composition_t<D> & composition) requires(D > 0)
+        static inline auto orientedSimplex(const simplex_composition_t<D> & composition)
+            -> simplex_t<D>
+        requires(D > 0)
         {
             // ask the factory of oriented simplices
             return OrientedSimplexFactory<D>::orientedSimplex(composition);
         }
 
-        static inline simplex_t<0> orientedSimplex() requires(D == 0)
+        static inline auto orientedSimplex() -> simplex_t<0>
+        requires(D == 0)
         {
             // ask the factory of oriented simplices
             return OrientedSimplexFactory<0>::orientedSimplex();
@@ -33,14 +35,14 @@ namespace mito::topology {
 
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
-        static inline int incidence(const simplex_t<D> & oriented_simplex)
+        static inline auto incidence(const simplex_t<D> & oriented_simplex) -> int
         {
             // ask the factory of oriented simplices
             return OrientedSimplexFactory<D>::incidence(oriented_simplex);
         }
 
         // returns whether there exists the flipped oriented simplex in the factory
-        static inline bool exists_flipped(const simplex_t<D> & oriented_simplex)
+        static inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> bool
         {
             // get the incidence of the simplex footprint
             auto inc = incidence(oriented_simplex);
@@ -51,14 +53,14 @@ namespace mito::topology {
         }
 
         // returns the simplex with opposite orientation
-        static inline auto flip(const simplex_t<D> & oriented_simplex)
+        static inline auto flip(const simplex_t<D> & oriented_simplex) -> simplex_t<D>
         {
             // ask the factory of oriented simplices
             return OrientedSimplexFactory<D>::orientedSimplex(
                 oriented_simplex->footprint(), !oriented_simplex->orientation());
         }
 
-        static inline void cleanup(const simplex_t<D> & oriented_simplex)
+        static inline auto cleanup(const simplex_t<D> & oriented_simplex) -> void
         {
             // cleanup the oriented factory around {oriented_simplex}
             return OrientedSimplexFactory<D>::cleanup(oriented_simplex);

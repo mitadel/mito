@@ -52,7 +52,7 @@ namespace mito::mesh {
         const Mesh & operator=(const Mesh &&) = delete;
 
       public:
-        inline bool sanityCheck()
+        inline auto sanityCheck() -> bool
         {
 #if 0
             // print summary
@@ -73,14 +73,14 @@ namespace mito::mesh {
         }
 
         template <int I>
-        inline int nElements() const requires(I <= D)
+        inline auto nElements() const -> int requires(I <= D)
         {
             // all done
             return std::get<I>(_elements).size();
         }
 
         template <int I>
-        inline const auto & elements() const requires(I <= D)
+        inline auto elements() const -> const auto & requires(I <= D)
         {
             // all done
             return std::get<I>(_elements);
@@ -95,7 +95,7 @@ namespace mito::mesh {
         //  2) say that boundary_elements will create a new data structure at run time and return a
         //      (const) reference for the client to use.
         template <int I>
-        inline auto boundary_elements() const requires(I<D && I> 0)
+        inline auto boundary_elements() const -> auto requires(I<D && I> 0)
         {
             // instantiate an element collection
             element_collection<I> boundary_elements;
@@ -116,7 +116,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        inline void erase(const element_t<I> & element) requires(I > 0 && I <= D)
+        inline auto erase(const element_t<I> & element) -> void requires(I > 0 && I <= D)
         {
             // QUESTION: can we wrap elements in a way that the reference count can be called
             //  incidence?
@@ -137,8 +137,8 @@ namespace mito::mesh {
 
       public :
           template <int I>
-          inline void
-          addSimplex(const element_t<I> & element) requires(I > 0 && I <= D)
+          inline auto
+          addSimplex(const element_t<I> & element) -> void requires(I > 0 && I <= D)
         {
             // add the element to the set of elements with same dimension
             std::get<I>(_elements).insert(element);

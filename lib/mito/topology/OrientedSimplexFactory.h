@@ -196,7 +196,7 @@ namespace mito::topology {
         OrientedSimplexFactory() = delete;
 
         // adds a new vertex to the vertex collection and returns it
-        static inline oriented_simplex_ptr<0> orientedSimplex()
+        static inline auto orientedSimplex() -> oriented_simplex_ptr<0>
         {
             // insert the new vertex in the vertex set
             auto ret = _vertices.insert(std::make_shared<oriented_simplex_t<0>>());
@@ -207,12 +207,13 @@ namespace mito::topology {
 
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
-        static inline int incidence(const oriented_simplex_ptr<0> & oriented_simplex)
+        static inline auto incidence(const oriented_simplex_ptr<0> & oriented_simplex) -> int
         {
             return oriented_simplex.use_count() - 1;
         }
 
-        static inline void _cleanup(const oriented_simplex_ptr<0> & oriented_simplex, int i = 0)
+        static inline auto _cleanup(const oriented_simplex_ptr<0> & oriented_simplex, int i = 0)
+            -> void
         {
             // if the oriented simplex is unused
             if (incidence(oriented_simplex) == i) {

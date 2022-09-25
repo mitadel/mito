@@ -13,7 +13,7 @@ namespace mito::geometry {
         PointCloud() = delete;
 
       public:
-        static void print()
+        static auto print() -> void
         {
             // iterate on map
             for (auto item : _cloud) {
@@ -25,23 +25,23 @@ namespace mito::geometry {
         }
 
         // support for ranged for loops (wrapping grid)
-        static inline const auto begin() { return _cloud.cbegin(); }
-        static inline const auto end() { return _cloud.cend(); }
+        static inline auto begin() -> const auto { return _cloud.cbegin(); }
+        static inline auto end() -> const auto { return _cloud.cend(); }
 
-        static int size() { return _cloud.size(); }
+        static auto size() -> int { return _cloud.size(); }
 
-        static auto insert(const vertex_t & vertex, const point_t<D> & point)
+        static auto insert(const vertex_t & vertex, const point_t<D> & point) -> auto
         {
             return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
         }
 
-        static auto insert(const vertex_t & vertex, const point_t<D> && point)
+        static auto insert(const vertex_t & vertex, const point_t<D> && point) -> auto
         {
             return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
         }
 
         // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
-        static const point_t<D> & point(const vertex_t & vertex)
+        static auto point(const vertex_t & vertex) -> const point_t<D> &
         {
             return _cloud.find(vertex)->second;
         }
