@@ -83,23 +83,31 @@ namespace mito::utilities {
             // TOFIX Add concept base type is invalidatable
 
             const auto & data = _segmentedContainer._data;
+            const auto & end = _segmentedContainer._end;
 
-            // loop on segments
-            for (; _index < data.size(); ++_index) {
-                // if not at the end of the segment
-                while (_ptr != data[_index] + segmented_container_segment_size) {
-                    // try next element
-                    ++_ptr;
-                    // if the element is valid
-                    if (_ptr->is_valid()) {
-                        // found it
-                        return *this;
-                    }
+            // if not at the end of the segment
+            while (++_ptr) {
+                // end of the container
+                if (_ptr == end) {
+                    return *this;
+                }
+
+                // end of the segment
+                if (_ptr == data[_index] + segmented_container_segment_size) {
+                    // go to the next segment
+                    ++_index;
+                    _ptr = data[_index];
+                }
+
+                // if the element is valid
+                if (_ptr->is_valid()) {
+                    // found it
+                    return *this;
                 }
             }
 
-            // restore index to last segment
-            --_index;
+            // you should never end up here
+            assert(false);
 
             // all done
             return *this;
