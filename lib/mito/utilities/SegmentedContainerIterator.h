@@ -43,9 +43,9 @@ namespace mito::utilities {
       public:
         // constructor
         constexpr SegmentedContainerIterator(segmented_container_reference segmentedContainer) :
-            _segmentedContainer(segmentedContainer),
-            _index(0),
-            _ptr(segmentedContainer._data[0])
+            _ptr(segmentedContainer._data[0]),
+            _segment_start(_ptr),
+            _end(segmentedContainer._end)
         {
             // if the first element is not a valid one
             if (!_ptr->is_valid()) {
@@ -58,11 +58,10 @@ namespace mito::utilities {
         }
 
         // constructor
-        constexpr SegmentedContainerIterator(
-            segmented_container_reference segmentedContainer, size_t index, pointer ptr) :
-            _segmentedContainer(segmentedContainer),
-            _index(index),
-            _ptr(ptr)
+        constexpr SegmentedContainerIterator(pointer ptr, pointer segment_start, pointer end) :
+            _ptr(ptr),
+            _segment_start(segment_start),
+            _end(end)
         {}
 
         // iterator protocol
@@ -79,21 +78,20 @@ namespace mito::utilities {
         {
             // TOFIX Add concept base type is invalidatable
 
-            const auto & data = _segmentedContainer._data;
-            const auto & end = _segmentedContainer._end;
-
             // if not at the end of the segment
             while (++_ptr) {
                 // end of the container
-                if (_ptr == end) {
+                if (_ptr == _end) {
                     return *this;
                 }
 
                 // end of the segment
-                if (_ptr == data[_index] + segmented_container_segment_size) {
+                if (_ptr == _segment_start + segmented_container_segment_size) {
                     // retrieve the location of the next segment which is left behind
                     // by the segmented container right at the end of the current segment
                     _ptr = *(reinterpret_cast<pointer *>(_ptr));
+                    // store the start of the current segment
+                    _segment_start = _ptr;
                 }
 
                 // if the element is valid
@@ -130,12 +128,14 @@ namespace mito::utilities {
 
         // implementation details: data
       private:
-        // reference to segmented container
-        segmented_container_reference _segmentedContainer;
-        // index for segments
-        size_t _index;
         // pointer to an element of the segments
         pointer _ptr;
+        // pointer to the beginning of the current segment
+        pointer _segment_start;
+        // pointer to the end of the segmented container
+        // (this is necessary as the end of the container may not coincide with the end of the
+        // allocated memory)
+        pointer _end;
 
         // default metamethods
       public:
