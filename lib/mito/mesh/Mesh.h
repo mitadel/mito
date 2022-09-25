@@ -5,6 +5,12 @@
 
 namespace mito::mesh {
 
+    // TOFIX: it would be great to rename this {elementT} in a way that would not imply any
+    //          of the baggage of the "finite-element element"
+    //          For example, a Mesh<D, simplex_t> should be thought as a mesh of simplicial
+    //          topology, not of simplicial elements.
+    //          (e.g. simplexT would be ok but it would be too specific to meshes of simplices,
+    //          excluding quads, hex, ...)
     template <int D, template <int> class elementT>
     class Mesh {
 
@@ -94,6 +100,7 @@ namespace mito::mesh {
         //  1) say that these methods will make copies of the elements for the client to use, or
         //  2) say that boundary_elements will create a new data structure at run time and return a
         //      (const) reference for the client to use.
+        // TOFIX: this method should return an iterator
         template <int I>
         inline auto boundary_elements() const -> auto requires(I<D && I> 0)
         {
