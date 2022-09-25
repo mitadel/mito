@@ -56,7 +56,14 @@ namespace mito::utilities {
         T * _allocate_new_segment()
         {
             // allocate a new segment of memory
-            T * segment = static_cast<T *>(::operator new(N * sizeof(T)));
+            T * segment = static_cast<T *>(::operator new(N * sizeof(T) + sizeof(T *)));
+            // if it is not the first segment
+            if (_data.size() > 0) {
+                // reinterpret the element after the last element in data as a T*
+                T ** tail = reinterpret_cast<T **>(_data.back() + N);
+                // leave behind a pointer with the location of the next segment
+                *tail = segment;
+            }
             // add the new segment to the pile
             _data.push_back(segment);
             // update the end of the container
