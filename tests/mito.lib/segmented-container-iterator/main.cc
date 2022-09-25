@@ -28,10 +28,10 @@ main()
     assert(vector.capacity() == 0);
     assert(vector.size() == 0);
 
-    // add three simplices to the container
-    auto simplex0 = vector.add(0);
-    auto simplex1 = vector.add(1);
-    auto simplex2 = vector.add(2);
+    // insert three simplices in the container
+    auto simplex0 = vector.insert(0);
+    auto simplex1 = vector.insert(1);
+    auto simplex2 = vector.insert(2);
 
     std::vector<int> store_elements;
     for (const auto & el : vector) {
@@ -81,8 +81,8 @@ main()
 
     store_elements.clear();
 
-    // add another simplex (trigger allocation of new segment)
-    const auto & simplex4 = vector.add(4);
+    // insert another simplex (trigger allocation of new segment)
+    const auto & simplex4 = vector.insert(4);
 
     for (const auto & el : vector) {
         store_elements.emplace_back(el.foo());

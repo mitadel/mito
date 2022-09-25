@@ -26,10 +26,10 @@ main()
     assert(vector.capacity() == 0);
     assert(vector.size() == 0);
 
-    // add three simplices to the container
-    const auto & simplex0 = vector.add(0);
-    const auto & simplex1 = vector.add(1);
-    const auto & simplex2 = vector.add(2);
+    // insert three simplices in the container
+    const auto & simplex0 = vector.insert(0);
+    const auto & simplex1 = vector.insert(1);
+    const auto & simplex2 = vector.insert(2);
 
     // assert that the container has 3 elements and its capacity is also 3
     assert(vector.capacity() == 3);
@@ -42,15 +42,15 @@ main()
     assert(vector.capacity() == 3);
     assert(vector.size() == 2);
 
-    // add one simplex
-    const auto & simplex3 = vector.add(3);
+    // insert one simplex
+    const auto & simplex3 = vector.insert(3);
 
     // assert that the container has again 3 elements and its capacity is 3
     assert(vector.capacity() == 3);
     assert(vector.size() == 3);
 
-    // add another simplex (trigger allocation of new segment)
-    const auto & simplex4 = vector.add(4);
+    // insert another simplex (trigger allocation of new segment)
+    const auto & simplex4 = vector.insert(4);
 
     // assert that the container has now 4 elements and its capacity is 6
     // (new memory allocation was in fact triggered)

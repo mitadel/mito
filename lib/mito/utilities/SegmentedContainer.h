@@ -103,7 +103,7 @@ namespace mito::utilities {
 
       public:
         template <class... Args>
-        auto add(Args &&... args) -> auto
+        auto insert(Args &&... args) -> auto
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
