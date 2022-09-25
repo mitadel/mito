@@ -7,7 +7,7 @@ namespace mito::topology {
 
     // oriented simplex factory
     template <int I>
-    simplex_t<I> oriented_simplex(const simplex_composition_t<I> & simplices)
+    inline simplex_t<I> oriented_simplex(const simplex_composition_t<I> & simplices)
     {
         return Topology<I>::orientedSimplex(simplices);
     }

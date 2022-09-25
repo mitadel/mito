@@ -34,12 +34,12 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        Mesh() : _elements() {};
+        inline Mesh() : _elements() {};
 
-        ~Mesh() {}
+        inline ~Mesh() {}
 
         // move constructor
-        Mesh(Mesh &&) = default;
+        inline Mesh(Mesh &&) = default;
 
       private:
         // delete copy constructor
@@ -52,7 +52,7 @@ namespace mito::mesh {
         const Mesh & operator=(const Mesh &&) = delete;
 
       public:
-        bool sanityCheck()
+        inline bool sanityCheck()
         {
 #if 0
             // print summary
@@ -73,14 +73,14 @@ namespace mito::mesh {
         }
 
         template <int I>
-        int nElements() const requires(I <= D)
+        inline int nElements() const requires(I <= D)
         {
             // all done
             return std::get<I>(_elements).size();
         }
 
         template <int I>
-        const auto & elements() const requires(I <= D)
+        inline const auto & elements() const requires(I <= D)
         {
             // all done
             return std::get<I>(_elements);
@@ -95,7 +95,7 @@ namespace mito::mesh {
         //  2) say that boundary_elements will create a new data structure at run time and return a
         //      (const) reference for the client to use.
         template <int I>
-        constexpr auto boundary_elements() const requires(I<D && I> 0)
+        inline auto boundary_elements() const requires(I<D && I> 0)
         {
             // instantiate an element collection
             element_collection<I> boundary_elements;
@@ -116,7 +116,7 @@ namespace mito::mesh {
         }
 
         template <int I>
-        void erase(const element_t<I> & element) requires(I > 0 && I <= D)
+        inline void erase(const element_t<I> & element) requires(I > 0 && I <= D)
         {
             // QUESTION: can we wrap elements in a way that the reference count can be called
             //  incidence?
@@ -137,7 +137,7 @@ namespace mito::mesh {
 
       public :
           template <int I>
-          void
+          inline void
           addSimplex(const element_t<I> & element) requires(I > 0 && I <= D)
         {
             // add the element to the set of elements with same dimension

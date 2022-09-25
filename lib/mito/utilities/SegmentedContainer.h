@@ -25,15 +25,15 @@ namespace mito::utilities {
             }
         }
 
-        int capacity() const
+        inline int capacity() const
         {
             // the number of segments times the size of each segment
             return _data.size() * N;
         }
 
-        T * end() const { return _end; }
+        inline T * end() const { return _end; }
 
-        int size() const { return _n_elements; }
+        inline int size() const { return _n_elements; }
 
       private:
         T * _allocate_new_segment()

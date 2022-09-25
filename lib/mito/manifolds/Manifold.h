@@ -19,7 +19,7 @@ namespace mito::manifolds {
         static constexpr int dim = D;
 
       public:
-        Manifold(const element_set_t<element_t> & elements) :
+        inline Manifold(const element_set_t<element_t> & elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -27,7 +27,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(element_set_t<element_t> && elements) :
+        inline Manifold(element_set_t<element_t> && elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -35,7 +35,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(const element_vector_t<element_t> & elements) :
+        inline Manifold(const element_vector_t<element_t> & elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {
@@ -43,7 +43,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(element_vector_t<element_t> && elements) :
+        inline Manifold(element_vector_t<element_t> && elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {
@@ -51,7 +51,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        ~Manifold() {}
+        inline ~Manifold() {}
 
       private:
         // delete default constructor
@@ -70,7 +70,7 @@ namespace mito::manifolds {
         const Manifold & operator=(const Manifold &&) = delete;
 
       public:
-        bool sanityCheck()
+        inline bool sanityCheck()
         {
             bool check = true;
             for (const auto & e : _elements) {
@@ -91,7 +91,7 @@ namespace mito::manifolds {
         }
 
       private:
-        void _computeJacobians()
+        inline void _computeJacobians()
         {
             return mito::geometry::computeElementsVolume<
                 element_t /* element type */, D /* spatial dim*/>(_elements, _jacobians);

@@ -11,7 +11,7 @@ namespace mito::geometry {
 
     // vertex factory
     template <int D>
-    auto vertex(point_t<D> &&);
+    inline auto vertex(point_t<D> &&);
 }
 
 

@@ -10,14 +10,14 @@
 // helper functions
 namespace {
     template <class Resource, class... Args, size_t... I>
-    auto _place_instantiate_object(
+    inline auto _place_instantiate_object(
         Resource * location, std::tuple<Args...> args, std::index_sequence<I...>)
     {
         return new (location) Resource(std::get<I>(args)...);
     }
 
     template <class... Args>
-    auto _last_argument(std::tuple<Args...> args)
+    inline auto _last_argument(std::tuple<Args...> args)
     {
         auto constexpr Last = sizeof...(Args) - 1;
         return std::get<Last>(args);

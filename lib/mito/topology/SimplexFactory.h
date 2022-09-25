@@ -36,7 +36,8 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static unoriented_simplex_ptr<D> simplex(const simplex_composition_t<D> & composition)
+        static inline unoriented_simplex_ptr<D> simplex(
+            const simplex_composition_t<D> & composition)
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
@@ -53,7 +54,7 @@ namespace mito::topology {
 
         // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
         // the factory if this oriented simplex is the only owner of its footprint)
-        static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
+        static inline void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {
             // if the footprint is not shared
             if (!exists_flipped(oriented_simplex)) {
@@ -71,7 +72,7 @@ namespace mito::topology {
 
       private:
         // equivalence class relation for a simplex
-        static auto _representative(const simplex_composition_t<D> & composition);
+        static inline auto _representative(const simplex_composition_t<D> & composition);
 
       private:
         // container to map simplex composition to simplices
