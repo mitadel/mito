@@ -94,9 +94,9 @@ namespace mito::utilities {
 
                 // end of the segment
                 if (_ptr == data[_index] + segmented_container_segment_size) {
-                    // go to the next segment
-                    ++_index;
-                    _ptr = data[_index];
+                    // retrieve the location of the next segment which is left behind
+                    // by the segmented container right at the end of the current segment
+                    _ptr = *(reinterpret_cast<pointer *>(_ptr));
                 }
 
                 // if the element is valid
