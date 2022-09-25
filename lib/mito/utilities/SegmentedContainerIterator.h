@@ -61,8 +61,7 @@ namespace mito::utilities {
 
         // constructor
         constexpr SegmentedContainerIterator(
-            segmented_container_reference segmentedContainer, size_t index,
-            typename SegmentedContainerT::pointer ptr) :
+            segmented_container_reference segmentedContainer, size_t index, pointer ptr) :
             _segmentedContainer(segmentedContainer),
             _index(index),
             _ptr(ptr)
@@ -125,7 +124,7 @@ namespace mito::utilities {
         }
 
         // accessors
-        constexpr auto ptr() const -> typename SegmentedContainerT::pointer
+        constexpr auto ptr() const -> pointer
         {
             // easy enough
             return _ptr;
@@ -138,7 +137,7 @@ namespace mito::utilities {
         // index for segments
         size_t _index;
         // pointer to an element of the segments
-        typename SegmentedContainerT::pointer _ptr;
+        pointer _ptr;
 
         // default metamethods
       public:
