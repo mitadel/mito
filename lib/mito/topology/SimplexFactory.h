@@ -27,7 +27,7 @@ namespace mito::topology {
         // std::map<std::array<simplex_t<0> *, 2>, simplex_t<1> *>  edges composition
         // std::map<std::array<simplex_t<1> *, 3>, simplex_t<2> *>  faces compositions
         // std::map<std::array<simplex_t<2> *, 4>, simplex_t<3> *>  volumes compositions
-        using composition_t = std::array<const unoriented_simplex_t<D - 1> *, D + 1>;
+        using composition_t = std::array<unoriented_simplex_id_t<D - 1>, D + 1>;
         using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
 
       public:
@@ -36,7 +36,8 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static unoriented_simplex_ptr<D> simplex(const simplex_composition_t<D> & composition)
+        static inline auto simplex(const simplex_composition_t<D> & composition)
+            -> unoriented_simplex_ptr<D>
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
@@ -53,7 +54,7 @@ namespace mito::topology {
 
         // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
         // the factory if this oriented simplex is the only owner of its footprint)
-        static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
+        static inline auto cleanup(const oriented_simplex_ptr<D> & oriented_simplex) -> void
         {
             // if the footprint is not shared
             if (!exists_flipped(oriented_simplex)) {
@@ -71,7 +72,7 @@ namespace mito::topology {
 
       private:
         // equivalence class relation for a simplex
-        static auto _representative(const simplex_composition_t<D> & composition);
+        static inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
 
       private:
         // container to map simplex composition to simplices
@@ -80,10 +81,11 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 1D
     template <>
-    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition)
+    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition) -> auto
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { &composition[0]->simplex(), &composition[1]->simplex() };
+        composition_t representative { composition[0]->footprint_id(),
+                                       composition[1]->footprint_id() };
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
         // all done
@@ -92,11 +94,12 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 2D
     template <>
-    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition)
+    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition) -> auto
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
-                                       &composition[2]->simplex() };
+        composition_t representative { composition[0]->footprint_id(),
+                                       composition[1]->footprint_id(),
+                                       composition[2]->footprint_id() };
 
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
@@ -107,11 +110,13 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 3D
     template <>
-    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition)
+    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition) -> auto
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { &composition[0]->simplex(), &composition[1]->simplex(),
-                                       &composition[2]->simplex(), &composition[3]->simplex() };
+        composition_t representative { composition[0]->footprint_id(),
+                                       composition[1]->footprint_id(),
+                                       composition[2]->footprint_id(),
+                                       composition[3]->footprint_id() };
 
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());

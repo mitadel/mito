@@ -44,13 +44,13 @@ namespace mito::geometry {
 
       public:
         template <class I>
-        real & operator[](I i)
+        inline auto operator[](I i) -> real &
         {
             return std::get<i>(_tuple);
         }
 
         template <class I>
-        const real & operator[](I i) const
+        inline auto operator[](I i) const -> const real &
         {
             return std::get<i>(_tuple);
         }

@@ -79,7 +79,7 @@ main()
     // build a triangle connecting {segment0}, {segment1}, and {segment2}
     auto element0 = mito::topology::triangle({ segment0, segment1, segment2 });
     // show me
-    std::cout << *element0 << std::endl;
+    std::cout << element0 << std::endl;
 
     // assert there is one simplex riding on this segment (element0)
     assert(mito::topology::incidence(segment0) == 2);
@@ -98,7 +98,7 @@ main()
     // build a triangle connecting {segment3}, {segment4}, and {segment1m}
     auto element1 = mito::topology::triangle({ segment3, segment4, segment1m });
     // show me
-    std::cout << *element1 << std::endl;
+    std::cout << element1 << std::endl;
 
     // assert there is one simplex riding on this segment (element1)
     assert(mito::topology::incidence(segment3) == 2);

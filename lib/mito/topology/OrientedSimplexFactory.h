@@ -23,7 +23,7 @@ namespace mito::topology {
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
         using orientation_map_t =
-            std::map<std::tuple<const unoriented_simplex_t<D> *, bool>, oriented_simplex_ptr<D>>;
+            std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, oriented_simplex_ptr<D>>;
 
       public:
         // delete default constructor
@@ -33,12 +33,12 @@ namespace mito::topology {
         // {orientation} (either create a new oriented simplex if such oriented simplex does not
         // exist in the factory or return the existing representative of the class of equivalence of
         // oriented simplices with footprint {simplex} orientation {orientation}
-        static oriented_simplex_ptr<D> orientedSimplex(
+        static inline oriented_simplex_ptr<D> orientedSimplex(
             const unoriented_simplex_ptr<D> & simplex, bool orientation)
         {
 
             // bind the footprint and the orientation in a tuple
-            auto mytuple = std::make_tuple(simplex.get(), orientation);
+            auto mytuple = std::make_tuple(simplex->id(), orientation);
 
             // if there is no oriented simplex registered in the map riding on simplex {simplex},
             // with orientation {orientation} then create such new oriented simplex and register it
@@ -53,7 +53,8 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static oriented_simplex_ptr<D> orientedSimplex(const simplex_composition_t<D> & composition)
+        static inline oriented_simplex_ptr<D> orientedSimplex(
+            const simplex_composition_t<D> & composition)
         {
             // get from the factory the representative of simplices with this composition
             auto simplex = SimplexFactory<D>::simplex(composition);
@@ -67,12 +68,12 @@ namespace mito::topology {
 
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
-        static int incidence(const oriented_simplex_ptr<D> & oriented_simplex)
+        static inline int incidence(const oriented_simplex_ptr<D> & oriented_simplex)
         {
             return oriented_simplex.use_count() - 1;
         }
 
-        static void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex, int i = 0)
+        static inline void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex, int i = 0)
         {
             // if the oriented simplex is unused
             if (incidence(oriented_simplex) == i) {
@@ -81,10 +82,10 @@ namespace mito::topology {
                 auto subsimplices = oriented_simplex->composition();
 
                 // get footprint of the oriented simplex
-                const auto & simplex = oriented_simplex->simplex();
+                unoriented_simplex_id_t<D> id = oriented_simplex->footprint_id();
 
                 // get the key to this oriented simplex
-                auto mytuple = std::make_tuple(&simplex, oriented_simplex->orientation());
+                auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
 
                 // cleanup simplex factory around this oriented simplex
                 SimplexFactory<D>::cleanup(oriented_simplex);
@@ -110,7 +111,7 @@ namespace mito::topology {
 
         // cleanup the factory around an oriented simplex (i.e. remove from the factory unused
         // oriented simplices related to this oriented simplex)
-        static void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
+        static inline void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {
             // cleanup recursively until D = 0
             _cleanup(oriented_simplex);
@@ -122,7 +123,7 @@ namespace mito::topology {
       private:
         // compute the orientation of the {composition} with respect to the orientation of
         // {simplex}
-        static bool _orientation(
+        static inline bool _orientation(
             const simplex_composition_t<D> & composition,
             const unoriented_simplex_ptr<D> & simplex);
 
@@ -143,15 +144,15 @@ namespace mito::topology {
     }
 
     namespace {
-        auto _rotate(const simplex_composition_t<2> & composition)
+        inline auto _rotate(const simplex_composition_t<2> & composition)
         {
-            // an array of pointers to oriented simplices
-            using oriented_simplex_array_t = std::array<const oriented_simplex_t<1> *, 3>;
+            // an array of oriented simplices ids
+            using oriented_simplex_array_t = std::array<oriented_simplex_id_t<1>, 3>;
 
             // get the oriented simplices from the shared pointers
             auto composition_copy =
-                oriented_simplex_array_t { composition[0].get(), composition[1].get(),
-                                           composition[2].get() };
+                oriented_simplex_array_t { composition[0]->id(), composition[1]->id(),
+                                           composition[2]->id() };
             auto first_simplex = std::min_element(composition_copy.begin(), composition_copy.end());
             std::rotate(composition_copy.begin(), first_simplex, composition_copy.end());
 
@@ -195,7 +196,7 @@ namespace mito::topology {
         OrientedSimplexFactory() = delete;
 
         // adds a new vertex to the vertex collection and returns it
-        static oriented_simplex_ptr<0> orientedSimplex()
+        static inline auto orientedSimplex() -> oriented_simplex_ptr<0>
         {
             // insert the new vertex in the vertex set
             auto ret = _vertices.insert(std::make_shared<oriented_simplex_t<0>>());
@@ -206,12 +207,13 @@ namespace mito::topology {
 
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
-        static int incidence(const oriented_simplex_ptr<0> & oriented_simplex)
+        static inline auto incidence(const oriented_simplex_ptr<0> & oriented_simplex) -> int
         {
             return oriented_simplex.use_count() - 1;
         }
 
-        static void _cleanup(const oriented_simplex_ptr<0> & oriented_simplex, int i = 0)
+        static inline auto _cleanup(const oriented_simplex_ptr<0> & oriented_simplex, int i = 0)
+            -> void
         {
             // if the oriented simplex is unused
             if (incidence(oriented_simplex) == i) {

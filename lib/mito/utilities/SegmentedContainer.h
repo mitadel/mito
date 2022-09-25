@@ -42,17 +42,16 @@ namespace mito::utilities {
             }
         }
 
-        int capacity() const
+        inline auto capacity() const -> int
         {
             // the number of segments times the size of each segment
             return _data.size() * N;
         }
 
-
-        int size() const { return _n_elements; }
+        inline auto size() const -> int { return _n_elements; }
 
       private:
-        T * _allocate_new_segment()
+        auto _allocate_new_segment() -> T *
         {
             // allocate a new segment of memory
             T * segment = static_cast<T *>(::operator new(N * sizeof(T) + sizeof(T *)));
@@ -71,7 +70,7 @@ namespace mito::utilities {
             return segment;
         }
 
-        T * _next_available_location()
+        auto _next_available_location() -> T *
         {
             // if the container is empty
             if (_data.size() == 0) {
@@ -104,7 +103,7 @@ namespace mito::utilities {
 
       public:
         template <class... Args>
-        auto add(Args &&... args)
+        auto add(Args &&... args) -> auto
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
@@ -132,7 +131,7 @@ namespace mito::utilities {
             return pointer;
         }
 
-        void erase(const mito::utilities::shared_ptr<T, true> & element)
+        auto erase(const mito::utilities::shared_ptr<T, true> & element) -> void
         {
             // mark element as invalid
             element->invalidate();

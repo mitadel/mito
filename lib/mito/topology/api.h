@@ -5,36 +5,33 @@
 
 namespace mito::topology {
 
-    // oriented simplex factory
-    template <int I>
-    simplex_t<I> oriented_simplex(const simplex_composition_t<I> & simplices);
-
     // vertex factory
-    simplex_t<0> vertex();
+    inline auto vertex() -> simplex_t<0>;
 
     // segment factory
-    simplex_t<1> segment(const simplex_composition_t<1> & simplices);
+    inline auto segment(const simplex_composition_t<1> & simplices) -> simplex_t<1>;
 
     // triangle factory
-    simplex_t<2> triangle(const simplex_composition_t<2> & simplices);
+    inline auto triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2>;
 
     // tetrahedron factory
-    simplex_t<3> tetrahedron(const simplex_composition_t<3> & simplices);
+    inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3>;
 
+    // TOFIX: where should we park these methods?
     template <int D>
-    auto exists_flipped(const simplex_t<D> & oriented_simplex)
+    inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> auto
     {
         return Topology<D>::exists_flipped(oriented_simplex);
     }
 
     template <int D>
-    auto flip(const simplex_t<D> & oriented_simplex)
+    inline auto flip(const simplex_t<D> & oriented_simplex) -> auto
     {
         return Topology<D>::flip(oriented_simplex);
     }
 
     template <int D>
-    auto incidence(const simplex_t<D> & oriented_simplex)
+    inline auto incidence(const simplex_t<D> & oriented_simplex) -> auto
     {
         return Topology<D>::incidence(oriented_simplex);
     }

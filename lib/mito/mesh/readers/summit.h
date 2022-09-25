@@ -6,7 +6,7 @@
 
 namespace mito::mesh {
     template <int D>
-    auto summit(std::ifstream & fileStream)
+    auto summit(std::ifstream & fileStream) -> auto
     {
         std::cout << "Loading summit mesh..." << std::endl;
         assert(fileStream.is_open());
@@ -18,7 +18,7 @@ namespace mito::mesh {
         // assert this mesh object is of same dimension of the mesh being read
         assert(int(D) == dim);
 
-        // instantiate mesh of simplicial elements
+        // instantiate mesh of simplicial topology
         Mesh<D, simplex_t> mesh;
 
         // read number of vertices
@@ -62,7 +62,8 @@ namespace mito::mesh {
     }
 
     template <int D>
-    void readVertices(std::ifstream & fileStream, int N_vertices, std::vector<vertex_t> & vertices)
+    auto readVertices(std::ifstream & fileStream, int N_vertices, std::vector<vertex_t> & vertices)
+        -> void
     {
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {
@@ -85,9 +86,9 @@ namespace mito::mesh {
     }
 
     template <int D>
-    void readElements(
+    auto readElements(
         std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
-        const std::vector<vertex_t> & vertices)
+        const std::vector<vertex_t> & vertices) -> void
     {
         for (int i = 0; i < N_elements; ++i) {
             int element_type = 0;
@@ -105,9 +106,9 @@ namespace mito::mesh {
     }
 
     template <int D>
-    void readTriangle(
+    auto readTriangle(
         std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
-        const std::vector<vertex_t> & vertices)
+        const std::vector<vertex_t> & vertices) -> void
     {
         int index0 = 0;
         fileStream >> index0;

@@ -19,7 +19,7 @@ namespace mito::manifolds {
         static constexpr int dim = D;
 
       public:
-        Manifold(const element_set_t<element_t> & elements) :
+        inline Manifold(const element_set_t<element_t> & elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -27,7 +27,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(element_set_t<element_t> && elements) :
+        inline Manifold(element_set_t<element_t> && elements) :
             _elements(elements.begin(), elements.end()),
             _jacobians(elements.size(), 0.0)
         {
@@ -35,7 +35,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(const element_vector_t<element_t> & elements) :
+        inline Manifold(const element_vector_t<element_t> & elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {
@@ -43,7 +43,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        Manifold(element_vector_t<element_t> && elements) :
+        inline Manifold(element_vector_t<element_t> && elements) :
             _elements(elements),
             _jacobians(elements.size(), 0.0)
         {
@@ -51,7 +51,7 @@ namespace mito::manifolds {
             _computeJacobians();
         }
 
-        ~Manifold() {}
+        inline ~Manifold() {}
 
       private:
         // delete default constructor
@@ -70,7 +70,7 @@ namespace mito::manifolds {
         const Manifold & operator=(const Manifold &&) = delete;
 
       public:
-        bool sanityCheck()
+        inline auto sanityCheck() -> bool
         {
             bool check = true;
             for (const auto & e : _elements) {
@@ -82,16 +82,16 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline const element_vector_t<element_t> & elements() const { return _elements; }
-        inline int nElements() const { return _elements.size(); }
-        inline real jacobian(int e) const { return _jacobians[e]; }
-        inline const auto & coordinatesVertex(const vertex_t & v) const
+        inline auto elements() const -> const element_vector_t<element_t> & { return _elements; }
+        inline auto nElements() const -> int { return _elements.size(); }
+        inline auto jacobian(int e) const -> real { return _jacobians[e]; }
+        inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
         {
             return geometry::point_cloud<D>::point(v);
         }
 
       private:
-        void _computeJacobians()
+        inline auto _computeJacobians() -> void
         {
             return mito::geometry::computeElementsVolume<
                 element_t /* element type */, D /* spatial dim*/>(_elements, _jacobians);

@@ -8,7 +8,7 @@
 // support
 #include "../manifolds.h"
 #include "../math.h"
-#include "../fem.h"    // TOFIX
+#include "../fem.h"
 
 
 #endif

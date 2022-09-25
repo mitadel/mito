@@ -49,12 +49,8 @@ namespace mito::topology {
         // delete move assignment operator
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
-        // TOFIX: do we need both?
       public:
-        // accessor for the footprint simplex
-        const auto & simplex() const { return *_footprint.get(); }
-
-        // accessor for the footprint shared pointer
+        // accessor for the unoriented footprint
         const auto & footprint() const { return _footprint; }
 
         // returns the orientation of this simplex
@@ -63,17 +59,31 @@ namespace mito::topology {
         bool orientation() const { return _orientation; }
 
         // returns the array of subsimplices
-        const auto & composition() const { return _footprint.get()->composition(); }
+        const auto & composition() const { return _footprint->composition(); }
+
+        // returns the id of this (oriented) simplex
+        oriented_simplex_id_t<D> id() const
+        {
+            // the id is the (immutable) address of this object
+            return reinterpret_cast<unoriented_simplex_id_t<D>>(this);
+        }
+
+        // returns the id of this (oriented) simplex
+        oriented_simplex_id_t<D> simplex_id() const { return id(); }
+
+        // returns the (unoriented) footprint id
+        // (the footprint id is the (immutable) address of the unoriented footprint)
+        unoriented_simplex_id_t<D> footprint_id() const { return _footprint->id(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const
         {
-            return _footprint.get()->vertices(vertices);
+            return _footprint->vertices(vertices);
         }
 
         // returns whether the simplex passes the sanity check
-        bool sanityCheck() const { return _footprint.get()->sanityCheck(); }
+        bool sanityCheck() const { return _footprint->sanityCheck(); }
 
       private:
         // the shared pointer to the footprint
@@ -113,8 +123,13 @@ namespace mito::topology {
         const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
 
       public:
-        // accessor for the footprint simplex
-        const auto & simplex() const { return *this; }
+        // returns the (unoriented) footprint id
+        // Note: the footprint of a vertex is the vertex itself
+        unoriented_simplex_id_t<0> footprint_id() const
+        {
+            // the id is the (immutable) address of this object
+            return reinterpret_cast<unoriented_simplex_id_t<0>>(this);
+        }
 
         // perform a sanity check
         bool sanityCheck() const
@@ -126,25 +141,25 @@ namespace mito::topology {
 
     // overload operator<< for oriented simplices
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const OrientedSimplex<D> & s)
+    std::ostream & operator<<(std::ostream & os, const simplex_t<D> & s)
     {
         // print orientation
-        os << "orientation: " << s.orientation() << std::endl;
+        os << "orientation: " << s->orientation() << std::endl;
         // print footprint
-        os << "footprint: " << s.simplex() << std::endl;
+        os << "footprint: " << s->footprint() << std::endl;
         // all done
         return os;
     }
 
     // overload operator<< specialization for simplices with D = 0 (vertices)
     template <>
-    std::ostream & operator<<(std::ostream & os, const OrientedSimplex<0> & s)
+    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
     {
-        os << &s;
+        os << s->footprint_id();
         return os;
     }
 
-    auto tail(const oriented_simplex_ptr<1> & oriented_simplex)
+    auto tail(const simplex_t<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
             return oriented_simplex->composition()[0];
@@ -153,7 +168,7 @@ namespace mito::topology {
         }
     }
 
-    auto head(const oriented_simplex_ptr<1> & oriented_simplex)
+    auto head(const simplex_t<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
             return oriented_simplex->composition()[1];

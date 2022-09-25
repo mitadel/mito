@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     template <int D>
-    real computeDistance(const point_t<D> & pointA, const point_t<D> & pointB)
+    auto computeDistance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
     {
         // return the distance between the two points
         auto dist = pointA - pointB;
@@ -14,8 +14,8 @@ namespace mito::geometry {
     }
 
     template <int D>
-    void computeSimplicesVolume(
-        const element_vector_t<simplex_t<D>> & elements, std::vector<real> & volumes)
+    auto computeSimplicesVolume(
+        const element_vector_t<simplex_t<D>> & elements, std::vector<real> & volumes) -> void
     {
         // number of element vertices
         constexpr int V = D + 1;
@@ -63,33 +63,33 @@ namespace mito::geometry {
     }
 
     template <class element_t, int D>
-    void computeElementsVolume(
-        const element_vector_t<element_t> & elements, std::vector<real> & volumes);
+    auto computeElementsVolume(
+        const element_vector_t<element_t> & elements, std::vector<real> & volumes) -> void;
 
     template <>
-    void computeElementsVolume<triangle_t, 2>(
-        const element_vector_t<triangle_t> & elements, std::vector<real> & volumes)
+    auto computeElementsVolume<triangle_t, 2>(
+        const element_vector_t<triangle_t> & elements, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<2>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<tetrahedron_t, 3>(
-        const element_vector_t<tetrahedron_t> & elements, std::vector<real> & volumes)
+    auto computeElementsVolume<tetrahedron_t, 3>(
+        const element_vector_t<tetrahedron_t> & elements, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<3>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<segment_t, 1>(
-        const element_vector_t<segment_t> & elements, std::vector<real> & volumes)
+    auto computeElementsVolume<segment_t, 1>(
+        const element_vector_t<segment_t> & elements, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<1>(elements, volumes);
     }
 
     template <int D>
-    void computeSegmentsLength(
-        const element_vector_t<segment_t> & elements, std::vector<real> & length)
+    auto computeSegmentsLength(
+        const element_vector_t<segment_t> & elements, std::vector<real> & length) -> void
     {
         // assert memory allocation is consistent
         assert(length.size() == elements.size());
@@ -120,23 +120,23 @@ namespace mito::geometry {
     }
 
     template <>
-    void computeElementsVolume<segment_t, 2>(
-        const element_vector_t<segment_t> & elements, std::vector<real> & volumes)
+    auto computeElementsVolume<segment_t, 2>(
+        const element_vector_t<segment_t> & elements, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<2>(elements, volumes);
     }
 
     template <>
-    void computeElementsVolume<segment_t, 3>(
-        const element_vector_t<segment_t> & elements, std::vector<real> & volumes)
+    auto computeElementsVolume<segment_t, 3>(
+        const element_vector_t<segment_t> & elements, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<3>(elements, volumes);
     }
 
     // follows implementation by Kahan2014
     template <int D = 3>
-    void computeTriangleArea(
-        const element_vector_t<triangle_t> & elements, std::vector<real> & areas)
+    auto computeTriangleArea(
+        const element_vector_t<triangle_t> & elements, std::vector<real> & areas) -> void
     {
         // loop on elements
         int e = 0;
@@ -182,8 +182,8 @@ namespace mito::geometry {
     }
 
     template <>
-    void computeElementsVolume<triangle_t, 3>(
-        const element_vector_t<triangle_t> & elements, std::vector<real> & volumes)
+    auto computeElementsVolume<triangle_t, 3>(
+        const element_vector_t<triangle_t> & elements, std::vector<real> & volumes) -> void
     {
         return computeTriangleArea(elements, volumes);
     }

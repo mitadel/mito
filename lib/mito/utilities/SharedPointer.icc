@@ -15,8 +15,8 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::operator mito::util
 }
 
 template <class Resource, bool isConst, bool immortal>
-int
-mito::utilities::SharedPointer<Resource, isConst, immortal>::references() const
+auto
+mito::utilities::SharedPointer<Resource, isConst, immortal>::references() const -> int
 {
     // return the count of outstanding references
     return _count;
@@ -24,8 +24,9 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::references() const
 
 // operator->
 template <class Resource, bool isConst, bool immortal>
-mito::utilities::SharedPointer<Resource, isConst, immortal>::handle_t
+auto
 mito::utilities::SharedPointer<Resource, isConst, immortal>::operator->() const
+    -> mito::utilities::SharedPointer<Resource, isConst, immortal>::handle_t
 {
     // return the handle
     return _handle;
@@ -120,16 +121,16 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::operator=(
 
 // interface
 template <class Resource, bool isConst, bool immortal>
-int
-mito::utilities::SharedPointer<Resource, isConst, immortal>::_acquire()
+auto
+mito::utilities::SharedPointer<Resource, isConst, immortal>::_acquire() -> int
 {
     // increment the reference count and return it
     return ++_count;
 }
 
 template <class Resource, bool isConst, bool immortal>
-int
-mito::utilities::SharedPointer<Resource, isConst, immortal>::_release()
+auto
+mito::utilities::SharedPointer<Resource, isConst, immortal>::_release() -> int
 {
     // decrement the reference count
     if (--_count == 0 && !immortal) {

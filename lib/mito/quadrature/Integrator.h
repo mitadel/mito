@@ -24,7 +24,7 @@ namespace mito::quadrature {
         //           in the elements? The quadrature rule has the coordinates of the quadrature
         //           points on the reference element, the elements have the coordinate of the
         //           vertices.
-        void _computeQuadPointCoordinates()
+        auto _computeQuadPointCoordinates() -> void
         {
             // TOFIX: We should avoid the 4 nested for loops
             // QUESTION: 3 out 4 of these loops can be unrolled as Q and D are template parameters
@@ -65,7 +65,7 @@ namespace mito::quadrature {
         }
 
         template <class Y>
-        Y integrate(const math::field_t<vector_t<D>, Y> & field) const
+        auto integrate(const math::field_t<vector_t<D>, Y> & field) const -> Y
         {
             auto result = Y();
 

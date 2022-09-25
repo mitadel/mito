@@ -5,8 +5,6 @@
 
 namespace mito::manifolds {
 
-    // TOFIX: typedef mito::geometry::point_cloud_t in manifold
-
     // element set factory (from vectors)
     template <int D, class elementT>
     constexpr auto manifold(const element_vector_t<elementT> & elements)

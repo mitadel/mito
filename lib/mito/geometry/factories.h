@@ -7,13 +7,13 @@ namespace mito::geometry {
 
     // point factory
     template <int D, class... Args>
-    constexpr auto point(Args &&... args)
+    constexpr auto point(Args &&... args) -> point_t<D>
     {
         return point_t<D>(std::forward<Args>(args)...);
     }
 
     template <int D>
-    auto vertex(point_t<D> && point)
+    auto vertex(point_t<D> && point) -> mito::topology::vertex_t
     {
         // get a new vertex from the topology
         auto new_vertex = mito::topology::vertex();

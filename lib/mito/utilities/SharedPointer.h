@@ -10,14 +10,14 @@
 // helper functions
 namespace {
     template <class Resource, class... Args, size_t... I>
-    auto _place_instantiate_object(
+    inline auto _place_instantiate_object(
         Resource * location, std::tuple<Args...> args, std::index_sequence<I...>)
     {
         return new (location) Resource(std::get<I>(args)...);
     }
 
     template <class... Args>
-    auto _last_argument(std::tuple<Args...> args)
+    inline auto _last_argument(std::tuple<Args...> args)
     {
         auto constexpr Last = sizeof...(Args) - 1;
         return std::get<Last>(args);
@@ -39,9 +39,9 @@ namespace mito::utilities {
         // cast to handle_t
         inline operator handle_t() const;
         // accessor for the number of outstanding references
-        inline int references() const;
+        inline auto references() const -> int;
         // operator->
-        handle_t operator->() const;
+        auto operator->() const -> handle_t;
 
         // meta methods
       public:
@@ -70,9 +70,9 @@ namespace mito::utilities {
 
       private:
         // increment the reference count
-        inline int _acquire();
+        inline auto _acquire() -> int;
         // decrement the reference count
-        inline int _release();
+        inline auto _release() -> int;
 
         // data members
       private:

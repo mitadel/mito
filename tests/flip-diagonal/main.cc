@@ -2,36 +2,37 @@
 #include <mito/mesh.h>
 #include <set>
 
-const mito::topology::unoriented_simplex_t<1> *
+const auto &
 findSharedSimplex(
-    mito::topology::oriented_simplex_ptr<2> & element_0,
-    mito::topology::oriented_simplex_ptr<2> & element_1)
+    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1)
 {
     // loop on lower-dimensional simplices to find the edge shared by the two elements
     for (const auto & subsimplex_0 : element_0->composition()) {
         for (const auto & subsimplex_1 : element_1->composition()) {
             // if you found it
-            if (&subsimplex_0->simplex() == &subsimplex_1->simplex()) {
+            if (subsimplex_0->footprint_id() == subsimplex_1->footprint_id()) {
                 // report
                 std::cout << "Found it!" << std::endl;
                 // return
-                return &subsimplex_0->simplex();
+                return subsimplex_0->footprint();
             }
         }
     }
 
-    // all done
-    return nullptr;
+    // TOFIX: throw error with journal, but control reaches end of non-void function
+    // pyre::journal::error_t error("error");
+    // error << "Found no shared simplices" << pyre::journal::endl;
+    // something went wrong
+    throw std::logic_error("Found no shared simplices.");
 }
 
 mito::topology::vertex_vector_t
 oppositeVertices(
-    mito::topology::oriented_simplex_ptr<2> & element_0,
-    mito::topology::oriented_simplex_ptr<2> & element_1,
-    const mito::topology::unoriented_simplex_t<1> * shared_simplex)
+    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1,
+    const auto & shared_simplex)
 {
     // need a regular set (not an unordered one) because set_difference works with ordered sets
-    using vertex_set_t = std::set<std::shared_ptr<const mito::topology::oriented_simplex_t<0>>>;
+    using vertex_set_t = std::set<mito::topology::simplex_t<0>>;
 
     vertex_set_t vertices;
     element_0->vertices(vertices);
@@ -54,8 +55,7 @@ oppositeVertices(
 
 bool
 headTailConnects(
-    mito::topology::oriented_simplex_ptr<1> simplex_1,
-    mito::topology::oriented_simplex_ptr<1> simplex_2)
+    const mito::topology::simplex_t<1> & simplex_1, const mito::topology::simplex_t<1> & simplex_2)
 {
     if (mito::topology::head(simplex_1) == mito::topology::tail(simplex_2)) {
         return true;
@@ -66,11 +66,10 @@ headTailConnects(
 
 int
 flipDiagonal(
-    mito::topology::oriented_simplex_ptr<2> & element_0,
-    mito::topology::oriented_simplex_ptr<2> & element_1)
+    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1)
 {
     // get the shared simplex between the two elements
-    const auto * shared_simplex = findSharedSimplex(element_0, element_1);
+    const auto & shared_simplex = findSharedSimplex(element_0, element_1);
 
     // assert you could find it
     assert(shared_simplex != nullptr);
@@ -84,11 +83,11 @@ flipDiagonal(
     auto opposite_diagonal_segment =
         mito::topology::segment({ opposite_vertices[1], opposite_vertices[0] });
 
-    std::set<mito::topology::oriented_simplex_ptr<1>> boundary_simplices;
+    std::set<mito::topology::simplex_t<1>> boundary_simplices;
     // get boundary simplices of element_0 (all except diagonal)
     for (const auto & subsimplex : element_0->composition()) {
         // if it is not the shared simplex
-        if (&subsimplex->simplex() != shared_simplex) {
+        if (subsimplex->footprint_id() != shared_simplex->id()) {
             boundary_simplices.insert(subsimplex);
         }
     }
@@ -96,7 +95,7 @@ flipDiagonal(
     // get boundary simplices of element_1 (all except diagonal)
     for (const auto & subsimplex : element_1->composition()) {
         // if it is not the shared simplex
-        if (&subsimplex->simplex() != shared_simplex) {
+        if (subsimplex->footprint_id() != shared_simplex->id()) {
             boundary_simplices.insert(subsimplex);
         }
     }

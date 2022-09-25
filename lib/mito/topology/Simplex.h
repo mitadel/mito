@@ -46,6 +46,13 @@ namespace mito::topology {
         // accessor for the subsimplices
         const auto & composition() const { return _simplices; }
 
+        // returns the simplex id
+        unoriented_simplex_id_t<D> id() const
+        {
+            // the id is the (immutable) address of this object
+            return reinterpret_cast<unoriented_simplex_id_t<D>>(this);
+        }
+
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const requires(D > 1)
@@ -99,11 +106,12 @@ namespace mito::topology {
 
     // overload operator<< for simplices
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const Simplex<D> & s) requires(D > 0)
+    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_ptr<D> & s) requires(
+        D > 0)
     {
         os << &s << " composed of:" << std::endl;
-        for (const auto & simplex : s.composition()) {
-            std::cout << "\t" << *simplex << std::endl;
+        for (const auto & simplex : s->composition()) {
+            std::cout << "\t" << simplex << std::endl;
         }
         return os;
     }

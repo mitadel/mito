@@ -12,10 +12,10 @@ namespace mito::quadrature {
     struct QuadratureRulesFactory {
         static constexpr auto degreeExactness = r;
         static constexpr int parametricDim = mito::manifolds::parametric_dim<element_t>();
-        static constexpr auto Get();
+        static constexpr auto Get() -> auto;
 
       private:
-        static constexpr auto GetQuadratureRule();
+        static constexpr auto GetQuadratureRule() -> auto;
     };
 
     struct GAUSS {
@@ -37,7 +37,7 @@ namespace mito::quadrature {
     };
 
     template <class quadrature_t, class element_t, int r>
-    constexpr auto QuadratureRulesFactory<quadrature_t, element_t, r>::Get()
+    constexpr auto QuadratureRulesFactory<quadrature_t, element_t, r>::Get() -> auto
     {
         // get the appropriate quadrature rule
         constexpr auto quadrature_rule =
@@ -71,6 +71,7 @@ namespace mito::quadrature {
 
     template <>
     constexpr auto QuadratureRulesFactory<GAUSS, topology::triangle_t, 1>::GetQuadratureRule()
+        -> auto
     {
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
@@ -80,6 +81,7 @@ namespace mito::quadrature {
 
     template <>
     constexpr auto QuadratureRulesFactory<GAUSS, topology::triangle_t, 2>::GetQuadratureRule()
+        -> auto
     {
         return quadrature_array_t<parametricDim, 3 /* nPoints */>(
             { /*{point}, weight*/
@@ -96,6 +98,7 @@ namespace mito::quadrature {
 
     template <>
     constexpr auto QuadratureRulesFactory<GAUSS, topology::segment_t, 1>::GetQuadratureRule()
+        -> auto
     {
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
@@ -104,8 +107,8 @@ namespace mito::quadrature {
 
     template <>
     constexpr auto QuadratureRulesFactory<GAUSS, topology::segment_t, 2>::GetQuadratureRule()
+        -> auto
     {
-
         return quadrature_array_t<parametricDim, 2 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
@@ -117,7 +120,9 @@ namespace mito::quadrature {
 
     template <>
     constexpr auto QuadratureRulesFactory<GAUSS, topology::tetrahedron_t, 1>::GetQuadratureRule()
-    { /*Hammer rule*/
+        -> auto
+    {
+        /*Hammer rule*/
         return quadrature_array_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
@@ -127,7 +132,9 @@ namespace mito::quadrature {
 
     template <>
     constexpr auto QuadratureRulesFactory<GAUSS, topology::tetrahedron_t, 2>::GetQuadratureRule()
-    { /*Hammer rule*/
+        -> auto
+    {
+        /*Hammer rule*/
         return quadrature_array_t<parametricDim, 4 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(

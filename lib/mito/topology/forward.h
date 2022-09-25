@@ -59,21 +59,21 @@ namespace mito::topology {
     template <int D>
     using simplex_composition_t = std::array<oriented_simplex_ptr<D - 1>, D + 1>;
 
-    // vertex alias
-    using vertex_t = std::shared_ptr<const OrientedSimplex<0>>;
-
-    // segment alias
-    using segment_t = std::shared_ptr<const OrientedSimplex<1>>;
-
-    // triangle alias
-    using triangle_t = std::shared_ptr<const OrientedSimplex<2>>;
-
-    // tetrahedron alias
-    using tetrahedron_t = std::shared_ptr<const OrientedSimplex<3>>;
-
     // simplex alias
     template <int D>
     using simplex_t = oriented_simplex_ptr<D>;
+
+    // vertex alias
+    using vertex_t = simplex_t<0>;
+
+    // segment alias
+    using segment_t = simplex_t<1>;
+
+    // triangle alias
+    using triangle_t = simplex_t<2>;
+
+    // tetrahedron alias
+    using tetrahedron_t = simplex_t<3>;
 
     // element set alias
     template <class elementT>
@@ -88,6 +88,12 @@ namespace mito::topology {
 
     // vertex vector alias
     using vertex_vector_t = element_vector_t<vertex_t>;
+
+    template <int D>
+    using unoriented_simplex_id_t = std::uintptr_t;
+
+    template <int D>
+    using oriented_simplex_id_t = std::uintptr_t;
 }
 
 
