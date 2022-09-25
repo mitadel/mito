@@ -4,6 +4,7 @@
 
 
 // externals
+#include <cassert>
 #include <queue>
 #include <vector>
 #include <utility>

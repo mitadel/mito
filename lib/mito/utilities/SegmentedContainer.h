@@ -8,12 +8,29 @@
 
 
 namespace mito::utilities {
-
-
     template <class T, int N = 10 /* segment size */>
     class SegmentedContainer {
 
       public:
+        // aliases for my template parameters
+        using segment_type = T;
+        // aliases for my segment size
+        constexpr static int segment_size = N;
+
+        // me
+        using segmented_container_type = SegmentedContainer<segment_type, segment_size>;
+
+        // my value
+        using pointer = T *;
+        using const_pointer = const T *;
+        using reference = T &;
+        using const_reference = const T &;
+
+        // iterators
+        using iterator = SegmentedContainerIterator<segmented_container_type, false /* isConst */>;
+        using const_iterator =
+            SegmentedContainerIterator<segmented_container_type, true /* isConst */>;
+
         // default constructor (empty data structure)
         SegmentedContainer() : _data(), _end(nullptr), _n_elements(0) {}
 
@@ -31,15 +48,20 @@ namespace mito::utilities {
             return _data.size() * N;
         }
 
-        inline auto end() const -> T * { return _end; }
-
         inline auto size() const -> int { return _n_elements; }
 
       private:
         auto _allocate_new_segment() -> T *
         {
             // allocate a new segment of memory
-            T * segment = static_cast<T *>(::operator new(N * sizeof(T)));
+            T * segment = static_cast<T *>(::operator new(N * sizeof(T) + sizeof(T *)));
+            // if it is not the first segment
+            if (_data.size() > 0) {
+                // reinterpret the element after the last element in data as a T*
+                T ** tail = reinterpret_cast<T **>(_data.back() + N);
+                // leave behind a pointer with the location of the next segment
+                *tail = segment;
+            }
             // add the new segment to the pile
             _data.push_back(segment);
             // update the end of the container
@@ -124,6 +146,27 @@ namespace mito::utilities {
             return;
         }
 
+        /**
+         * iterators
+         */
+        constexpr auto begin() -> iterator { return iterator(*this); }
+
+        // TOFIX: bug if the last valid element happens before the last segment
+        constexpr auto end() -> iterator
+        {
+            // make an {iterator} that points to the end of my segmented container
+            return iterator(
+                _end /* ptr */, _data[_data.size() - 1] /* segment_start */, _end /* end */);
+        }
+
+        constexpr auto begin() const -> const_iterator { return const_iterator(*this); }
+
+        constexpr auto end() const -> const_iterator
+        {
+            // make an {iterator} that points to the end of my segmented container
+            return const_iterator(*this, _data.size(), _end);
+        }
+
       private:
         // the underlying data
         std::vector<T *> _data;
@@ -133,6 +176,12 @@ namespace mito::utilities {
         int _n_elements;
         // a queue with the available locations for writing
         std::queue<T *> _available_locations;
+
+      private:
+        // non-const iterator
+        friend iterator;
+        // const iterator
+        friend const_iterator;
     };
 }
 
