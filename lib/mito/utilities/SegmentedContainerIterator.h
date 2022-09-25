@@ -13,7 +13,6 @@ namespace mito::utilities {
     class iterator_base {
       public:
         using iterator_category = std::forward_iterator_tag;
-        using value_type = typename containerT::value_type;
         using pointer = std::conditional_t<
             isConst, typename containerT::const_pointer, typename containerT::pointer>;
         using reference = std::conditional_t<
@@ -37,7 +36,6 @@ namespace mito::utilities {
             isConst, const segmented_container_type &, segmented_container_type &>;
         using segmented_container_const_reference = const segmented_container_type &;
         // what i point to
-        using value_type = typename iterbase::value_type;
         using pointer = typename iterbase::pointer;
         using reference = typename iterbase::reference;
 

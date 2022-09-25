@@ -21,7 +21,6 @@ namespace mito::utilities {
         using segmented_container_type = SegmentedContainer<segment_type, segment_size>;
 
         // my value
-        using value_type = T;
         using pointer = T *;
         using const_pointer = const T *;
         using reference = T &;
