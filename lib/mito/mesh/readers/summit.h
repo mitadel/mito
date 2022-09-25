@@ -18,7 +18,7 @@ namespace mito::mesh {
         // assert this mesh object is of same dimension of the mesh being read
         assert(int(D) == dim);
 
-        // instantiate mesh of simplicial elements
+        // instantiate mesh of simplicial topology
         Mesh<D, simplex_t> mesh;
 
         // read number of vertices
