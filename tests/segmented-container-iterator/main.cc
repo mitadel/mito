@@ -79,6 +79,18 @@ main()
 
     assert(std::size(store_elements) == 0);
 
+    store_elements.clear();
+
+    // add another simplex (trigger allocation of new segment)
+    const auto & simplex4 = vector.add(4);
+
+    for (const auto & el : vector) {
+        store_elements.emplace_back(el.foo());
+    }
+
+    assert(store_elements[0] == 4);
+    assert(std::size(store_elements) == 1);
+
     // all done
     return 0;
 }
