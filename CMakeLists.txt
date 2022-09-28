@@ -57,9 +57,7 @@ mito_destinationInit()
 
 # visit subdirectories
 add_subdirectory(lib)
-
-# add_subdirectory(packages)
-# add_subdirectory(extensions)
+add_subdirectory(extensions)
 
 # configure mito as a cmake package (so that mito can be found by cmake with find_package(mito))
 mito_shareCmakePackage()

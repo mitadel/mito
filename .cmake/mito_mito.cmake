@@ -67,4 +67,25 @@ function(mito_mitoLib)
     # all done
 endfunction(mito_mitoLib)
 
+# build the mito extension modules
+function(mito_mitoModule)
+    # the mito bindings
+    Python_add_library(mitomodule MODULE)
+    # adjust the name to match what python expects
+    set_target_properties(mitomodule PROPERTIES LIBRARY_OUTPUT_NAME mito)
+    set_target_properties(mitomodule PROPERTIES SUFFIX ${PYTHON3_SUFFIX})
+    # set the libraries to link against
+    target_link_libraries(mitomodule PRIVATE mito pybind11::module)
+    # add the sources
+    target_sources(mitomodule PRIVATE
+        mito/mito.cc
+    )
+
+    # install the mito extensions
+    install(
+        TARGETS mitomodule
+        LIBRARY
+        DESTINATION ${MITO_DEST_PACKAGES}/mito/extensions
+    )
+endfunction(mito_mitoModule)
 # end of file

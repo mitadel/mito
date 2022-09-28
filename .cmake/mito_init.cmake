@@ -33,6 +33,10 @@ endfunction(mito_cxxInit)
 function(mito_destinationInit)
     # create variables to hold the roots in the install directory
     set(MITO_DEST_INCLUDE ${CMAKE_INSTALL_INCLUDEDIR} PARENT_SCOPE)
+    if(NOT DEFINED MITO_DEST_PACKAGES)
+        set(MITO_DEST_PACKAGES packages CACHE STRING
+            "Python package install location, absolute or relative to install prefix")
+    endif()
 endfunction(mito_destinationInit)
 
 # ask git for the most recent tag and use it to build the version
