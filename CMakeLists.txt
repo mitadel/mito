@@ -28,6 +28,9 @@ set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -Wall -Wextra -pedantic -Werror"
 # pyre
 find_package(pyre REQUIRED)
 
+# python
+find_package(Python 3.10 COMPONENTS Interpreter Development NumPy)
+
 # set up c++
 mito_cxxInit()
 
