@@ -120,4 +120,18 @@ function(mito_shareCmakePackage)
     # all done
 endfunction(mito_shareCmakePackage)
 
+# set up python
+function(mito_pythonInit)
+    # ask the executable for the module suffix
+    execute_process(
+        COMMAND ${Python_EXECUTABLE} -c
+            "from distutils.sysconfig import *; print(get_config_var('EXT_SUFFIX'))"
+        RESULT_VARIABLE PYTHON3_SUFFIX_STATUS
+        OUTPUT_VARIABLE PYTHON3_SUFFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    # export
+    set(PYTHON3_SUFFIX ${PYTHON3_SUFFIX} PARENT_SCOPE)
+    # all done
+endfunction(mito_pythonInit)
 # end of file

@@ -34,6 +34,9 @@ find_package(Python 3.10 COMPONENTS Interpreter Development NumPy)
 # set up c++
 mito_cxxInit()
 
+# set up python
+mito_pythonInit()
+
 # set up user configurable options
 mito_optionsInit()
 
