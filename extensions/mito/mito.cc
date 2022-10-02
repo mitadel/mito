@@ -9,27 +9,23 @@
 // > c++ -O3 -Wall -shared -std=c++11 -fPIC `python3 -m pybind11 --includes` mito.cpp -o
 // mito`python3-config --extension-suffix`
 
-#include <pybind11/pybind11.h>
-#include <pybind11/functional.h>
-#include <mito/mito.h>
-
-namespace py = pybind11;
+// external dependencies
+#include "external.h"
 
 PYBIND11_MODULE(mito, m)
 {
     m.doc() = "pybind11 mito plugin";    // optional module docstring
 
-
     // the mito vector interface
-    py::class_<mito::vector_t<3>>(m, "Vector3D")
+    mito::py::class_<mito::vector_t<3>>(m, "Vector3D")
         // the default constructor
         .def(
             // the implementation
-            py::init<>())
+            mito::py::init<>())
         // the brace-enclosed initializer list constructor
         .def(
             // the implementation
-            py::init([](std::tuple<mito::real, mito::real, mito::real> data) {
+            mito::py::init([](std::tuple<mito::real, mito::real, mito::real> data) {
                 // unpack
                 auto [x0, x1, x2] = data;
                 // instantiate
@@ -45,15 +41,15 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito vector interface
-    py::class_<mito::vector_t<2>>(m, "Vector2D")
+    mito::py::class_<mito::vector_t<2>>(m, "Vector2D")
         // the default constructor
         .def(
             // the implementation
-            py::init<>())
+            mito::py::init<>())
         // the brace-enclosed initializer list constructor
         .def(
             // the implementation
-            py::init([](std::tuple<mito::real, mito::real> data) {
+            mito::py::init([](std::tuple<mito::real, mito::real> data) {
                 // unpack
                 auto [x0, x1] = data;
                 // instantiate
@@ -69,11 +65,11 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar Field interface
-    py::class_<mito::math::scalar_field_t<3>>(m, "ScalarField3D")
+    mito::py::class_<mito::math::scalar_field_t<3>>(m, "ScalarField3D")
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::math::functor_t<mito::vector_t<3>, mito::scalar_t> &>())
+            mito::py::init<const mito::math::functor_t<mito::vector_t<3>, mito::scalar_t> &>())
         // operator()
         .def(
             "__call__",
@@ -86,11 +82,11 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar Field interface
-    py::class_<mito::math::scalar_field_t<2>>(m, "ScalarField2D")
+    mito::py::class_<mito::math::scalar_field_t<2>>(m, "ScalarField2D")
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::math::functor_t<mito::vector_t<2>, mito::scalar_t> &>())
+            mito::py::init<const mito::math::functor_t<mito::vector_t<2>, mito::scalar_t> &>())
         // operator()
         .def(
             "__call__",
@@ -103,11 +99,11 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Mesh interface
-    py::class_<mito::mesh::Mesh<2, mito::topology::simplex_t>>(m, "SimplicialMesh2D")
+    mito::py::class_<mito::mesh::Mesh<2, mito::topology::simplex_t>>(m, "SimplicialMesh2D")
         // the default constructor
         .def(
             // the implementation
-            py::init<>())
+            mito::py::init<>())
         // accessors
         // the elements; read-only property
         .def_property_readonly(
@@ -118,15 +114,16 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito manifold interface
-    py::class_<mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>(m, "ManifoldTriangle2D")
+    mito::py::class_<mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>(
+        m, "ManifoldTriangle2D")
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::topology::element_vector_t<mito::topology::triangle_t> &>())
+            mito::py::init<const mito::topology::element_vector_t<mito::topology::triangle_t> &>())
         // the constructor
         .def(
             // the implementation
-            py::init([](std::string filename) {
+            mito::py::init([](std::string filename) {
                 // create an input stream
                 auto filestream = std::ifstream(filename);
                 // read the mesh
@@ -140,14 +137,14 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Integrator interface
-    py::class_<mito::quadrature::integrator_t<
+    mito::py::class_<mito::quadrature::integrator_t<
         mito::quadrature::GAUSS, 2 /* degree of exactness */,
         mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>>(
         m, "GaussIntegrator2Triangle2D")
         // the constructor
         .def(
             // the implementation
-            py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
+            mito::py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
         // interface
         // QUESTION: should this be called integrateScalarfield?
         // integrate a scalar field
