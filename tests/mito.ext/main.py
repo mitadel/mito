@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 
-import mito
-from numpy import cos
+import mito.extensions.mito as mito
 
 def myfunction(x):
     return eval('cos(x[0] * x[1])')
@@ -17,4 +16,4 @@ N = 1
 for i in range(0, N):
     result = integrator.integrate(field)
 
-print(result)
+assert abs(result - 0.946083) < 1.e-3

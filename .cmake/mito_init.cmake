@@ -37,6 +37,10 @@ function(mito_destinationInit)
         set(MITO_DEST_PACKAGES packages CACHE STRING
             "Python package install location, absolute or relative to install prefix")
     endif()
+    # Translate to unconditional absolute path
+    get_filename_component(MITO_DEST_FULL_PACKAGES ${MITO_DEST_PACKAGES} ABSOLUTE
+                           BASE_DIR ${CMAKE_INSTALL_PREFIX})
+    set(MITO_DEST_FULL_PACKAGES ${MITO_DEST_FULL_PACKAGES} PARENT_SCOPE)
 endfunction(mito_destinationInit)
 
 # ask git for the most recent tag and use it to build the version
