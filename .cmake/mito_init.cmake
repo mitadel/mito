@@ -33,6 +33,14 @@ endfunction(mito_cxxInit)
 function(mito_destinationInit)
     # create variables to hold the roots in the install directory
     set(MITO_DEST_INCLUDE ${CMAKE_INSTALL_INCLUDEDIR} PARENT_SCOPE)
+    if(NOT DEFINED MITO_DEST_PACKAGES)
+        set(MITO_DEST_PACKAGES packages CACHE STRING
+            "Python package install location, absolute or relative to install prefix")
+    endif()
+    # Translate to unconditional absolute path
+    get_filename_component(MITO_DEST_FULL_PACKAGES ${MITO_DEST_PACKAGES} ABSOLUTE
+                           BASE_DIR ${CMAKE_INSTALL_PREFIX})
+    set(MITO_DEST_FULL_PACKAGES ${MITO_DEST_FULL_PACKAGES} PARENT_SCOPE)
 endfunction(mito_destinationInit)
 
 # ask git for the most recent tag and use it to build the version
@@ -120,4 +128,18 @@ function(mito_shareCmakePackage)
     # all done
 endfunction(mito_shareCmakePackage)
 
+# set up python
+function(mito_pythonInit)
+    # ask the executable for the module suffix
+    execute_process(
+        COMMAND ${Python_EXECUTABLE} -c
+            "from distutils.sysconfig import *; print(get_config_var('EXT_SUFFIX'))"
+        RESULT_VARIABLE PYTHON3_SUFFIX_STATUS
+        OUTPUT_VARIABLE PYTHON3_SUFFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    # export
+    set(PYTHON3_SUFFIX ${PYTHON3_SUFFIX} PARENT_SCOPE)
+    # all done
+endfunction(mito_pythonInit)
 # end of file

@@ -107,4 +107,29 @@ function(mito_test_driver testfile)
     # all done
 endfunction(mito_test_driver)
 
+# register a python script as a test case; use a path relative to {MITO_TESTSUITE_DIR}
+function(mito_test_python_testcase testfile)
+    # generate the name of the testcase
+    mito_test_testcase(testname ${testfile} ${ARGN})
+
+    # we run the test cases in their local directory, so we need the base name
+    get_filename_component(base ${testfile} NAME)
+    # get the relative path to the test case local directory so we can set the working dir
+    get_filename_component(dir ${testfile} DIRECTORY)
+
+    # set up the harness
+    add_test(NAME ${testname}
+      COMMAND ${Python_EXECUTABLE} ./${base} ${ARGN})
+    # register the runtime environment requirements
+    set_property(TEST ${testname} PROPERTY ENVIRONMENT
+      PYTHONPATH=${MITO_DEST_FULL_PACKAGES}
+    )
+    # launch from the location of the testcase
+    set_property(TEST ${testname} PROPERTY
+      WORKING_DIRECTORY ${MITO_TESTSUITE_DIR}/${dir}
+    )
+
+    # all done
+endfunction()
+
 # end of file
