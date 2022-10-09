@@ -83,7 +83,7 @@ namespace mito::topology {
         }
 
         // returns whether the simplex passes the sanity check
-        bool sanityCheck() const { return _footprint->sanityCheck(); }
+        inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
       private:
         // the shared pointer to the footprint
@@ -125,14 +125,14 @@ namespace mito::topology {
       public:
         // returns the (unoriented) footprint id
         // Note: the footprint of a vertex is the vertex itself
-        unoriented_simplex_id_t<0> footprint_id() const
+        inline auto footprint_id() const -> unoriented_simplex_id_t<0>
         {
             // the id is the (immutable) address of this object
             return reinterpret_cast<unoriented_simplex_id_t<0>>(this);
         }
 
         // perform a sanity check
-        bool sanityCheck() const
+        inline auto sanityCheck() const -> bool
         {
             // a simplex of order 0 has only 1 vertex (this one!)
             return true;
