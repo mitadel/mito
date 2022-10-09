@@ -122,7 +122,7 @@ function(mito_test_python_testcase testfile)
       COMMAND ${Python_EXECUTABLE} ./${base} ${ARGN})
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
-      PYTHONPATH=${MITO_DEST_FULL_PACKAGES}
+      PYTHONPATH=${MITO_DEST_FULL_EXTENSIONS}
     )
     # launch from the location of the testcase
     set_property(TEST ${testname} PROPERTY

@@ -85,7 +85,7 @@ function(mito_mitoModule)
     install(
         TARGETS mitomodule
         LIBRARY
-        DESTINATION ${MITO_DEST_PACKAGES}/mito/extensions
+        DESTINATION ${MITO_DEST_EXTENSIONS}
     )
 endfunction(mito_mitoModule)
 # end of file

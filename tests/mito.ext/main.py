@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import mito.extensions.mito as mito
+import mito
 from numpy import cos
 
 def myfunction(x):
