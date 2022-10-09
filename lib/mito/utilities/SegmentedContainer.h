@@ -181,9 +181,10 @@ namespace mito::utilities {
          */
         constexpr auto begin() -> iterator { return iterator(*this); }
 
-        // TOFIX: bug if the last valid element happens before the last segment
         constexpr auto end() -> iterator
         {
+            // assert that {_end} is in the last allocated segment
+            assert(_end_allocation - _end <= N);
             // make an {iterator} that points to the end of my segmented container
             return iterator(_end /* ptr */, _end_allocation /* segment_end */, _end /* end */);
         }
@@ -192,6 +193,8 @@ namespace mito::utilities {
 
         constexpr auto end() const -> const_iterator
         {
+            // assert that {_end} is in the last allocated segment
+            assert(_end_allocation - _end <= N);
             // make an {iterator} that points to the end of my segmented container
             return const_iterator(
                 _end /* ptr */, _end_allocation /* segment_end */, _end /* end */);
