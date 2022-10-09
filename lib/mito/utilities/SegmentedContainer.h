@@ -103,12 +103,7 @@ namespace mito::utilities {
 
         auto _next_available_location() -> T *
         {
-            // if the container is empty
-            if (_begin == _end) {
-                // there is no available location
-                return nullptr;
-            }
-
+            // if there are available locations to spare
             if (!_available_locations.empty()) {
                 // get an available location from the queue
                 T * location = _available_locations.front();
@@ -122,7 +117,8 @@ namespace mito::utilities {
                 return location;
             }
 
-            // if the container is all filled up
+            // if the container is all filled up (note that this case also includes the case that
+            // the container is completely empty)
             if (_end == _end_allocation) {
                 // there is no available location
                 return nullptr;
