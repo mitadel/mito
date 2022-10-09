@@ -156,7 +156,7 @@ namespace mito::utilities {
         {
             // make an {iterator} that points to the end of my segmented container
             return iterator(
-                _end /* ptr */, _data[_data.size() - 1] /* segment_start */, _end /* end */);
+                _end /* ptr */, _data[_data.size() - 1] + N /* segment_end */, _end /* end */);
         }
 
         constexpr auto begin() const -> const_iterator { return const_iterator(*this); }
@@ -164,7 +164,7 @@ namespace mito::utilities {
         constexpr auto end() const -> const_iterator
         {
             // make an {iterator} that points to the end of my segmented container
-            return const_iterator(*this, _data.size(), _end);
+            return const_iterator(*this, _data[_data.size() - 1] + N /* segment_end */, _end);
         }
 
       private:

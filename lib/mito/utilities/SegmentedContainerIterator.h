@@ -44,7 +44,7 @@ namespace mito::utilities {
         // constructor
         constexpr SegmentedContainerIterator(segmented_container_reference segmentedContainer) :
             _ptr(segmentedContainer._data[0]),
-            _segment_start(_ptr),
+            _segment_end(_ptr + segmented_container_segment_size),
             _end(segmentedContainer._end)
         {
             // if the first element is not a valid one
@@ -58,9 +58,9 @@ namespace mito::utilities {
         }
 
         // constructor
-        constexpr SegmentedContainerIterator(pointer ptr, pointer segment_start, pointer end) :
+        constexpr SegmentedContainerIterator(pointer ptr, pointer segment_end, pointer end) :
             _ptr(ptr),
-            _segment_start(segment_start),
+            _segment_end(segment_end),
             _end(end)
         {}
 
@@ -86,12 +86,12 @@ namespace mito::utilities {
                 }
 
                 // end of the segment
-                if (_ptr == _segment_start + segmented_container_segment_size) {
+                if (_ptr == _segment_end) {
                     // retrieve the location of the next segment which is left behind
                     // by the segmented container right at the end of the current segment
                     _ptr = *(reinterpret_cast<pointer *>(_ptr));
                     // store the start of the current segment
-                    _segment_start = _ptr;
+                    _segment_end = _ptr + segmented_container_segment_size;
                 }
 
                 // if the element is valid
@@ -130,8 +130,8 @@ namespace mito::utilities {
       private:
         // pointer to an element of the segments
         pointer _ptr;
-        // pointer to the beginning of the current segment
-        pointer _segment_start;
+        // pointer to the end of the current segment
+        pointer _segment_end;
         // pointer to the end of the segmented container
         // (this is necessary as the end of the container may not coincide with the end of the
         // allocated memory)
