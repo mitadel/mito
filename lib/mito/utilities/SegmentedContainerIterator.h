@@ -73,6 +73,20 @@ namespace mito::utilities {
             return *_ptr;
         }
 
+        // accessors
+        constexpr auto ptr() const -> pointer
+        {
+            // easy enough
+            return _ptr;
+        }
+
+        // operator->
+        constexpr auto operator->() const -> pointer
+        {
+            // return the pointer
+            return ptr();
+        }
+
         // arithmetic: prefix
         constexpr auto operator++() -> iterator_reference
         {
@@ -115,13 +129,6 @@ namespace mito::utilities {
             ++(*this);
             // and return the clone
             return clone;
-        }
-
-        // accessors
-        constexpr auto ptr() const -> pointer
-        {
-            // easy enough
-            return _ptr;
         }
 
         // implementation details: data
