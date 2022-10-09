@@ -32,7 +32,6 @@ find_package(pyre REQUIRED)
 find_package(Python 3.10 COMPONENTS Interpreter Development NumPy)
 
 # pybind11
-set(PYBIND11_CPP_STANDARD -std=c++20)
 set(PYBIND11_PYTHON_VERSION ${Python_VERSION})
 set(PYBIND11_FINDPYTHON ON) # Use new FindPython if available
 find_package(pybind11)

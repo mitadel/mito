@@ -133,7 +133,7 @@ function(mito_pythonInit)
     # ask the executable for the module suffix
     execute_process(
         COMMAND ${Python_EXECUTABLE} -c
-            "from distutils.sysconfig import *; print(get_config_var('EXT_SUFFIX'))"
+            "from sysconfig import *; print(get_config_var('EXT_SUFFIX'))"
         RESULT_VARIABLE PYTHON3_SUFFIX_STATUS
         OUTPUT_VARIABLE PYTHON3_SUFFIX
         OUTPUT_STRIP_TRAILING_WHITESPACE
