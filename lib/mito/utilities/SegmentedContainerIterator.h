@@ -42,22 +42,6 @@ namespace mito::utilities {
         // metamethods
       public:
         // constructor
-        constexpr SegmentedContainerIterator(segmented_container_reference segmentedContainer) :
-            _ptr(segmentedContainer._begin),
-            _segment_end(_ptr + segmented_container_segment_size),
-            _end(segmentedContainer._end)
-        {
-            // if the first element is not a valid one
-            if (!_ptr->is_valid()) {
-                // find the first valid element
-                operator++();
-            }
-
-            // all done
-            return;
-        }
-
-        // constructor
         constexpr SegmentedContainerIterator(pointer ptr, pointer segment_end, pointer end) :
             _ptr(ptr),
             _segment_end(segment_end),

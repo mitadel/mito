@@ -179,7 +179,14 @@ namespace mito::utilities {
         /**
          * iterators
          */
-        constexpr auto begin() -> iterator { return iterator(*this); }
+        constexpr auto begin() -> iterator
+        {
+            // get an iterator to the first element
+            auto it = iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */);
+
+            // if the first element is valid, return it, else return the next valid element
+            return (it->is_valid() ? it : ++it);
+        }
 
         constexpr auto end() -> iterator
         {
@@ -189,7 +196,15 @@ namespace mito::utilities {
             return iterator(_end /* ptr */, _end_allocation /* segment_end */, _end /* end */);
         }
 
-        constexpr auto begin() const -> const_iterator { return const_iterator(*this); }
+        constexpr auto begin() const -> const_iterator
+        {
+            // get an iterator to the first element
+            auto it =
+                const_iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */);
+
+            // if the first element is valid, return it, else return the next valid element
+            return (it->is_valid() ? it : ++it);
+        }
 
         constexpr auto end() const -> const_iterator
         {
