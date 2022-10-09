@@ -76,8 +76,6 @@ namespace mito::utilities {
         // arithmetic: prefix
         constexpr auto operator++() -> iterator_reference
         {
-            // TOFIX Add concept base type is invalidatable
-
             // if not at the end of the segment
             while (++_ptr) {
                 // end of the container

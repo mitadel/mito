@@ -9,6 +9,9 @@
 
 namespace mito::utilities {
     template <class T, int N = 10 /* segment size */>
+    requires(
+        std::is_member_function_pointer_v<decltype(&T::invalidate)>
+        && std::is_member_function_pointer_v<decltype(&T::is_valid)>)
     class SegmentedContainer {
 
       public:
