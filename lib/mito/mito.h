@@ -12,6 +12,7 @@
 #include "manifolds.h"
 #include "mesh.h"
 #include "quadrature.h"
+#include "utilities.h"
 
 #endif
 
