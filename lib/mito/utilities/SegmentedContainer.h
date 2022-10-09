@@ -9,6 +9,9 @@
 
 namespace mito::utilities {
     template <class T, int N = 10 /* segment size */>
+    requires(
+        std::is_member_function_pointer_v<decltype(&T::invalidate)>
+        && std::is_member_function_pointer_v<decltype(&T::is_valid)>)
     class SegmentedContainer {
 
       public:
@@ -32,20 +35,44 @@ namespace mito::utilities {
             SegmentedContainerIterator<segmented_container_type, true /* isConst */>;
 
         // default constructor (empty data structure)
-        SegmentedContainer() : _data(), _end(nullptr), _n_elements(0) {}
+        SegmentedContainer() :
+            _begin(nullptr),
+            _end(_begin),
+            _end_allocation(_begin),
+            _n_segments(0),
+            _n_elements(0)
+        {}
 
         // destructor
         ~SegmentedContainer()
         {
-            for (const auto & segment : _data) {
-                ::operator delete(segment);
+            // start from the beginning of the first segment
+            T * ptr = _begin;
+
+            // while the current segment is not the last segment
+            while (ptr + N != _end_allocation) {
+                // retrieve the location of the next segment which is left behind
+                // by the segmented container right at the end of the current segment
+                T * next = *(reinterpret_cast<pointer *>(ptr + N));
+
+                // delete the current segment
+                ::operator delete(ptr);
+
+                // go to the next segment
+                ptr = next;
             }
+
+            // delete the last segment
+            ::operator delete(ptr);
+
+            // all done
+            return;
         }
 
         inline auto capacity() const -> int
         {
             // the number of segments times the size of each segment
-            return _data.size() * N;
+            return _n_segments * N;
         }
 
         inline auto size() const -> int { return _n_elements; }
@@ -55,29 +82,31 @@ namespace mito::utilities {
         {
             // allocate a new segment of memory
             T * segment = static_cast<T *>(::operator new(N * sizeof(T) + sizeof(T *)));
-            // if it is not the first segment
-            if (_data.size() > 0) {
+            // if it is the first segment
+            if (_begin == _end) {
+                // point {_begin} to the beginning of the allocated memory
+                _begin = segment;
+            }
+            // otherwise
+            else {
                 // reinterpret the element after the last element in data as a T*
-                T ** tail = reinterpret_cast<T **>(_data.back() + N);
+                T ** tail = reinterpret_cast<T **>(_end_allocation);
                 // leave behind a pointer with the location of the next segment
                 *tail = segment;
             }
-            // add the new segment to the pile
-            _data.push_back(segment);
+            // increment the number of segments
+            ++_n_segments;
             // update the end of the container
-            _end = _data[_data.size() - 1];
+            _end = segment;
+            // update the end of the memory allocation
+            _end_allocation = segment + N;
             // return the address of the new segment of memory
             return segment;
         }
 
         auto _next_available_location() -> T *
         {
-            // if the container is empty
-            if (_data.size() == 0) {
-                // there is no available location
-                return nullptr;
-            }
-
+            // if there are available locations to spare
             if (!_available_locations.empty()) {
                 // get an available location from the queue
                 T * location = _available_locations.front();
@@ -91,8 +120,9 @@ namespace mito::utilities {
                 return location;
             }
 
-            // if the container is all filled up
-            if (_end == _data[_data.size() - 1] + N) {
+            // if the container is all filled up (note that this case also includes the case that
+            // the container is completely empty)
+            if (_end == _end_allocation) {
                 // there is no available location
                 return nullptr;
             }
@@ -149,29 +179,52 @@ namespace mito::utilities {
         /**
          * iterators
          */
-        constexpr auto begin() -> iterator { return iterator(*this); }
-
-        // TOFIX: bug if the last valid element happens before the last segment
-        constexpr auto end() -> iterator
+        constexpr auto begin() -> iterator
         {
-            // make an {iterator} that points to the end of my segmented container
-            return iterator(
-                _end /* ptr */, _data[_data.size() - 1] /* segment_start */, _end /* end */);
+            // get an iterator to the first element
+            auto it = iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */);
+
+            // if the first element is valid, return it, else return the next valid element
+            return (it->is_valid() ? it : ++it);
         }
 
-        constexpr auto begin() const -> const_iterator { return const_iterator(*this); }
+        constexpr auto end() -> iterator
+        {
+            // assert that {_end} is in the last allocated segment
+            assert(_end_allocation - _end <= N);
+            // make an {iterator} that points to the end of my segmented container
+            return iterator(_end /* ptr */, _end_allocation /* segment_end */, _end /* end */);
+        }
+
+        constexpr auto begin() const -> const_iterator
+        {
+            // get an iterator to the first element
+            auto it =
+                const_iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */);
+
+            // if the first element is valid, return it, else return the next valid element
+            return (it->is_valid() ? it : ++it);
+        }
 
         constexpr auto end() const -> const_iterator
         {
+            // assert that {_end} is in the last allocated segment
+            assert(_end_allocation - _end <= N);
             // make an {iterator} that points to the end of my segmented container
-            return const_iterator(*this, _data.size(), _end);
+            return const_iterator(
+                _end /* ptr */, _end_allocation /* segment_end */, _end /* end */);
         }
 
       private:
-        // the underlying data
-        std::vector<T *> _data;
-        // the end of the container
+        // the beginning of the container
+        T * _begin;
+        // the end of the container (no element has been constructed so far after this point)
+        // (it does not necessarily coincide with the end of the last allocated segment)
         T * _end;
+        // points right after the last segment of allocated memory
+        T * _end_allocation;
+        // the number of segments stored in the container
+        int _n_segments;
         // the number of elements stored in the container
         int _n_elements;
         // a queue with the available locations for writing
