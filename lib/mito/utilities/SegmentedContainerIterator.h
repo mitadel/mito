@@ -43,7 +43,7 @@ namespace mito::utilities {
       public:
         // constructor
         constexpr SegmentedContainerIterator(segmented_container_reference segmentedContainer) :
-            _ptr(segmentedContainer._data[0]),
+            _ptr(segmentedContainer._begin),
             _segment_end(_ptr + segmented_container_segment_size),
             _end(segmentedContainer._end)
         {
