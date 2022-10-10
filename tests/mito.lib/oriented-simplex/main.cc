@@ -2,7 +2,7 @@
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-TEST(OrientedSimplex, TestOrientedSimplex)
+TEST(OrientedSimplex, DISABLED_TestOrientedSimplex)
 {
     {
         // two vertices

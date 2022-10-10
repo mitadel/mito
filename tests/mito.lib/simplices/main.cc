@@ -7,7 +7,7 @@ using mito::geometry::point_t;
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
-TEST(Simplices, TestSimplices)
+TEST(Simplices, DISABLED_TestSimplices)
 {
     /**
      * Mesh with four elements:
