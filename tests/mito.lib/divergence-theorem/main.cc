@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/math.h>
 #include <mito/mesh.h>
@@ -12,8 +13,7 @@ using mito::geometry::point_t;
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
-int
-main()
+TEST(DivergenceTheorem, TestDivergenceTheorem)
 {
     // a scalar function
     auto f = mito::math::function([](const vector_t<2> & x) -> vector_t<2> {
@@ -131,10 +131,7 @@ main()
     std::cout << "Result of boundary integration = " << resultBoundary << std::endl;
 
     // assert divergence theorem
-    assert(std::fabs(resultBody - resultBoundary) < 1.e-15);
-
-    // all done
-    return 0;
+    EXPECT_NEAR(resultBody, resultBoundary, 1.e-15);
 }
 
 // end of file

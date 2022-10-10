@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
 #include <set>
@@ -48,7 +49,7 @@ oppositeVertices(
 
     mito::topology::vertex_vector_t opposite_vertices_vector(
         opposite_vertices.begin(), opposite_vertices.end());
-    assert(opposite_vertices.size() == 2);
+    EXPECT_EQ(opposite_vertices.size(), 2);
 
     return opposite_vertices_vector;
 }
@@ -72,7 +73,7 @@ flipDiagonal(
     const auto & shared_simplex = findSharedSimplex(element_0, element_1);
 
     // assert you could find it
-    assert(shared_simplex != nullptr);
+    EXPECT_TRUE(shared_simplex != nullptr);
 
     // show me
     // std::cout << "shared simplex: " << *shared_simplex << std::endl;
@@ -91,7 +92,7 @@ flipDiagonal(
             boundary_simplices.insert(subsimplex);
         }
     }
-    assert(boundary_simplices.size() == 2);
+    EXPECT_EQ(boundary_simplices.size(), 2);
     // get boundary simplices of element_1 (all except diagonal)
     for (const auto & subsimplex : element_1->composition()) {
         // if it is not the shared simplex
@@ -99,7 +100,7 @@ flipDiagonal(
             boundary_simplices.insert(subsimplex);
         }
     }
-    assert(boundary_simplices.size() == 4);
+    EXPECT_EQ(boundary_simplices.size(), 4);
 
     mito::topology::simplex_composition_t<2> new_element_composition_0;
     new_element_composition_0[0] = diagonal_segment;
@@ -110,7 +111,7 @@ flipDiagonal(
             boundary_simplices.erase(subsimplex);
         }
     }
-    assert(boundary_simplices.size() == 3);
+    EXPECT_EQ(boundary_simplices.size(), 3);
 
     for (const auto & subsimplex : boundary_simplices) {
         if (headTailConnects(new_element_composition_0[1], subsimplex)) {
@@ -118,9 +119,9 @@ flipDiagonal(
             boundary_simplices.erase(subsimplex);
         }
     }
-    assert(boundary_simplices.size() == 2);
+    EXPECT_EQ(boundary_simplices.size(), 2);
 
-    assert(headTailConnects(new_element_composition_0[2], new_element_composition_0[0]));
+    EXPECT_TRUE(headTailConnects(new_element_composition_0[2], new_element_composition_0[0]));
 
     mito::topology::simplex_composition_t<2> new_element_composition_1;
     new_element_composition_1[0] = opposite_diagonal_segment;
@@ -131,7 +132,7 @@ flipDiagonal(
             boundary_simplices.erase(subsimplex);
         }
     }
-    assert(boundary_simplices.size() == 1);
+    EXPECT_EQ(boundary_simplices.size(), 1);
 
     for (const auto & subsimplex : boundary_simplices) {
         if (headTailConnects(new_element_composition_1[1], subsimplex)) {
@@ -139,9 +140,9 @@ flipDiagonal(
             boundary_simplices.erase(subsimplex);
         }
     }
-    assert(boundary_simplices.size() == 0);
+    EXPECT_EQ(boundary_simplices.size(), 0);
 
-    assert(headTailConnects(new_element_composition_1[2], new_element_composition_1[0]));
+    EXPECT_TRUE(headTailConnects(new_element_composition_1[2], new_element_composition_1[0]));
 
     // TOFIX: how to delete the old simplices?
 
@@ -157,8 +158,7 @@ flipDiagonal(
     return 0;
 }
 
-int
-main()
+TEST(FlipDiagonal, DISABLED_TestFlipDiagonal)
 {
 
     // build vertices
@@ -181,7 +181,4 @@ main()
 
     // flip the common edge of the two triangles
     flipDiagonal(element_0, element_1);
-
-    // all done
-    return 0;
 }

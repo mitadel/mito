@@ -64,6 +64,9 @@ mito_shareCmakePackage()
 
 # if we are building the test suite
 if(MITO_BUILD_TESTING)
+    # googletest
+    find_package(GTest REQUIRED)
+
     # get support
     include(CTest)
 

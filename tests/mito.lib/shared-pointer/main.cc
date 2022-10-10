@@ -1,6 +1,6 @@
-#include <mito/utilities.h>
-#include <cassert>
+#include <gtest/gtest.h>
 #include <iostream>
+#include <mito/utilities.h>
 
 class Resource {
   public:
@@ -14,8 +14,7 @@ class Resource {
     int _a;
 };
 
-int
-main()
+TEST(SharedPointer, TestSharedPointer)
 {
     // the type of resource to be stored
     using resource_t = Resource;
@@ -40,17 +39,14 @@ main()
     handle->_a += 1;
 
     // assert that the resource was modified correctly
-    assert(handle->_a == a + 1);
+    EXPECT_EQ(handle->_a, a + 1);
 
     // assert that the const handle has the same value as the nonconst
-    assert(handle->_a == const_handle->_a);
+    EXPECT_TRUE(handle->_a == const_handle->_a);
 
     // assert that the pointed resource is the same
-    assert((Resource *) handle == (const Resource *) const_handle);
+    EXPECT_TRUE((Resource *) handle == (const Resource *) const_handle);
 
     // free the segment of memory
     ::operator delete(segment);
-
-    // all done
-    return 0;
 }

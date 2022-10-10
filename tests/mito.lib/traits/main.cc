@@ -1,10 +1,11 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 
 template <typename Y>
-class Test {
+class ClassTest {
 
   public:
-    Test()
+    ClassTest()
     {
         std::cout << "size = " << mito::size<Y>::value << std::endl;
         // static_assert(std::is_same<mito::real, mito::real>::value);
@@ -23,20 +24,16 @@ class Test {
     }
 };
 
-int
-main()
+TEST(Traits, TestTraits)
 {
     // size = 2, type = real
-    Test<mito::vector_t<2>> test1;
+    ClassTest<mito::vector_t<2>> test1;
     // size = 1, type = real
-    Test<mito::real> test2;
+    ClassTest<mito::real> test2;
     // size = 1, type = int
-    Test<int> test3;
+    ClassTest<int> test3;
     // size = 4, type = int
-    Test<mito::vector_t<4, int>> test4;
+    ClassTest<mito::vector_t<4, int>> test4;
     // size = 4, type = double
-    Test<mito::vector_t<4, double>> test5;
-
-    // all done
-    return 0;
+    ClassTest<mito::vector_t<4, double>> test5;
 }

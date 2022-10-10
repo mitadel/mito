@@ -1,8 +1,8 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-int
-main()
+TEST(LoadMesh, TestLoadMesh)
 {
     clock_t t;
 
@@ -15,6 +15,4 @@ main()
     t = clock();
     auto boundary_elements = mesh.boundary_elements<1>();
     std::cout << "Fetched boundary in " << clock() - t << std::endl;
-
-    return 0;
 }
