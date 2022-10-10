@@ -7,7 +7,8 @@ namespace mito::topology {
 
     // class simplex
     template <int D>
-    requires(D > 0) class Simplex;
+    requires(D > 0)
+    class Simplex;
 
     // class oriented simplex
     template <int D>
@@ -15,7 +16,8 @@ namespace mito::topology {
 
     // class simplex factory
     template <int D>
-    requires(D > 0) class SimplexFactory;
+    requires(D > 0)
+    class SimplexFactory;
 
     // class oriented simplex factory
     template <int D>

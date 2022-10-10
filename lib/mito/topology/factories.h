@@ -13,7 +13,10 @@ namespace mito::topology {
     }
 
     // vertex factory
-    auto vertex() -> simplex_t<0> { return Topology<0>::orientedSimplex(); }
+    auto vertex() -> simplex_t<0>
+    {
+        return Topology<0>::orientedSimplex();
+    }
 
     // segment factory
     auto segment(const simplex_composition_t<1> & simplices) -> simplex_t<1>

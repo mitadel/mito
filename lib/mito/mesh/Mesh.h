@@ -79,18 +79,18 @@ namespace mito::mesh {
         }
 
         template <int I>
-        inline auto nElements() const -> int requires(I <= D)
+        inline auto nElements() const -> int
+        requires(I <= D)
         {
             // all done
             return std::get<I>(_elements).size();
         }
 
         template <int I>
-        inline auto elements() const -> const auto & requires(I <= D)
-        {
-            // all done
-            return std::get<I>(_elements);
-        }
+        inline auto elements() const -> const auto & requires(I <= D) {
+                                                         // all done
+                                                         return std::get<I>(_elements);
+                                                     }
 
         /**
          * @brief Returns an element set with all boundary elements of dimension I
@@ -102,7 +102,8 @@ namespace mito::mesh {
         //      (const) reference for the client to use.
         // TOFIX: this method should return an iterator
         template <int I>
-        inline auto boundary_elements() const -> auto requires(I<D && I> 0)
+        inline auto boundary_elements() const -> auto
+        requires(I<D && I> 0)
         {
             // instantiate an element collection
             element_collection<I> boundary_elements;
@@ -123,7 +124,8 @@ namespace mito::mesh {
         }
 
         template <int I>
-        inline auto erase(const element_t<I> & element) -> void requires(I > 0 && I <= D)
+        inline auto erase(const element_t<I> & element) -> void
+        requires(I > 0 && I <= D)
         {
             // QUESTION: can we wrap elements in a way that the reference count can be called
             //  incidence?
@@ -142,10 +144,10 @@ namespace mito::mesh {
             return;
         }
 
-      public :
-          template <int I>
-          inline auto
-          addSimplex(const element_t<I> & element) -> void requires(I > 0 && I <= D)
+      public:
+        template <int I>
+        inline auto addSimplex(const element_t<I> & element) -> void
+        requires(I > 0 && I <= D)
         {
             // add the element to the set of elements with same dimension
             std::get<I>(_elements).insert(element);
@@ -154,9 +156,9 @@ namespace mito::mesh {
             return;
         }
 
-      private :
-          // container to store D+1 containers of d dimensional elements with d = 0, ..., D
-          element_tuple_t _elements;
+      private:
+        // container to store D+1 containers of d dimensional elements with d = 0, ..., D
+        element_tuple_t _elements;
     };
 
 }    // namespace mito

@@ -55,8 +55,9 @@ namespace mito::math {
       public:
         // constructor for a vector-valued function from an array of scalar-valued functions
         template <size_t N>
-        constexpr Function(const function_t<X, scalar_t> (&f_list)[N]) requires(Y::size == N) :
-            _functor(_vectorize(f_list, std::make_index_sequence<N> {}))
+        constexpr Function(const function_t<X, scalar_t> (&f_list)[N])
+        requires(Y::size == N)
+            : _functor(_vectorize(f_list, std::make_index_sequence<N> {}))
         {}
 
         // cast operator from Function<X, Y> to functor_t<X, Y>
@@ -87,7 +88,8 @@ namespace mito::math {
     // y * f (inner product)
     template <class X, class Y>
     constexpr function_t<X, typename type<Y>::value> operator*(
-        const Y & y, const function_t<X, Y> & f) requires(Y::size != 1)
+        const Y & y, const function_t<X, Y> & f)
+    requires(Y::size != 1)
     {
         return function_t<X, typename type<Y>::value>([y, f](const X & x) { return y * f(x); });
     }
@@ -95,7 +97,8 @@ namespace mito::math {
     // f * y (inner product)
     template <class X, class Y>
     constexpr function_t<X, typename type<Y>::value> operator*(
-        const function_t<X, Y> & f, const Y & y) requires(Y::size != 1)
+        const function_t<X, Y> & f, const Y & y)
+    requires(Y::size != 1)
     {
         return y * f;
     }

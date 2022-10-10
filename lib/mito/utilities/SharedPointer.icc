@@ -46,11 +46,11 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::~SharedPointer()
 // the default constructor
 template <class Resource, bool isConst, bool immortal>
 template <class... Args>
-mito::utilities::SharedPointer<Resource, isConst, immortal>::
-    SharedPointer(Args &&... args) requires(
-        // require that the {Resource} is constructible from the full parameter pack
-        std::is_constructible_v<Resource, Args &&...>) :
-    _handle(new Resource(args...))
+mito::utilities::SharedPointer<Resource, isConst, immortal>::SharedPointer(Args &&... args)
+requires(
+    // require that the {Resource} is constructible from the full parameter pack
+    std::is_constructible_v<Resource, Args && ...>)
+    : _handle(new Resource(args...))
 {
     // grab a reference to the shared handle
     _acquire();
@@ -59,12 +59,13 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::
 // the placement-new constructor
 template <class Resource, bool isConst, bool immortal>
 template <class... Args>
-mito::utilities::SharedPointer<Resource, isConst, immortal>::
-    SharedPointer(Args &&... args) requires(
-        // require that the Resource is not constructible from the parameter pack
-        !(std::is_constructible_v<Resource, Args &&...>) &&
-        // and that the trailing parameter is a pointer to {Resource}
-        std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>) :
+mito::utilities::SharedPointer<Resource, isConst, immortal>::SharedPointer(Args &&... args)
+requires(
+    // require that the Resource is not constructible from the parameter pack
+    !(std::is_constructible_v<Resource, Args &&...>) &&
+    // and that the trailing parameter is a pointer to {Resource}
+    std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>)
+    :
     _handle(_place_instantiate_object(
         // extract the location for the placement new
         _last_argument(std::forward_as_tuple(args...)),
@@ -91,9 +92,9 @@ mito::utilities::SharedPointer<Resource, isConst, immortal>::SharedPointer(
 template <class Resource, bool isConst, bool immortal>
 template <class OtherResource, bool OtherImmortal>
 mito::utilities::SharedPointer<Resource, isConst, immortal>::SharedPointer(
-    const SharedPointer<OtherResource, false, OtherImmortal> &
-        other) requires(std::is_same_v<Resource, OtherResource> && isConst == true) :
-    _handle(other)
+    const SharedPointer<OtherResource, false, OtherImmortal> & other)
+requires(std::is_same_v<Resource, OtherResource> && isConst == true)
+    : _handle(other)
 {
     // grab a reference to the shared handle
     _acquire();

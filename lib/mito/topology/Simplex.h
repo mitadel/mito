@@ -12,7 +12,8 @@ namespace mito::topology {
      */
 
     template <int D>
-    requires(D > 0) class Simplex {
+    requires(D > 0)
+    class Simplex {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
@@ -55,7 +56,8 @@ namespace mito::topology {
 
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const requires(D > 1)
+        void vertices(VERTEX_COLLECTION_T & vertices) const
+        requires(D > 1)
         {
             for (const auto & simplex : composition()) {
                 simplex->vertices(vertices);
@@ -63,7 +65,8 @@ namespace mito::topology {
         }
 
         template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const requires(D == 1)
+        void vertices(VERTEX_COLLECTION_T & vertices) const
+        requires(D == 1)
         {
             vertices.insert(_simplices[0]);
             vertices.insert(_simplices[1]);
@@ -106,8 +109,8 @@ namespace mito::topology {
 
     // overload operator<< for simplices
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_ptr<D> & s) requires(
-        D > 0)
+    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_ptr<D> & s)
+    requires(D > 0)
     {
         os << &s << " composed of:" << std::endl;
         for (const auto & simplex : s->composition()) {

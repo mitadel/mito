@@ -19,7 +19,8 @@ namespace mito::topology {
     // TOFIX: rename this to UnorientedSimplexFactory
 
     template <int D>
-    requires(D > 0) class SimplexFactory {
+    requires(D > 0)
+    class SimplexFactory {
 
       private:
         // typedef for a composition map of simplices:

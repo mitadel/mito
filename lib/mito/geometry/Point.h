@@ -58,7 +58,9 @@ namespace mito::geometry {
         inline Point() : _tuple() { _initialize(std::make_index_sequence<D> {}); }
 
         template <class... real>
-        Point(real... args) requires(sizeof...(real) == D) : _tuple()
+        Point(real... args)
+        requires(sizeof...(real) == D)
+            : _tuple()
         {
             _initialize(std::make_index_sequence<D> {}, args...);
         }

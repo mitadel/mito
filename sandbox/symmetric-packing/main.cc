@@ -7,14 +7,16 @@ using index_t = std::array<int, N>;
 
 template <int N>
 constexpr int
-entries(int D) requires(N == 1)
+entries(int D)
+requires(N == 1)
 {
     return D;
 }
 
 template <int N>
 constexpr int
-entries(int D) requires(N > 1)
+entries(int D)
+requires(N > 1)
 {
     int sum_entries = 0;
     for (int i = 0; i < D; ++i) {
@@ -26,14 +28,16 @@ entries(int D) requires(N > 1)
 
 template <int N, class... T>
 constexpr int
-offset(int D, int i) requires(sizeof...(T) == N - 1 && N == 1)
+offset(int D, int i)
+requires(sizeof...(T) == N - 1 && N == 1)
 {
     return i;
 }
 
 template <int N, class... T>
 constexpr int
-offset(int D, int i, T... j) requires(sizeof...(T) == N - 1 && N > 1)
+offset(int D, int i, T... j)
+requires(sizeof...(T) == N - 1 && N > 1)
 {
     int sum_entries = 0;
     for (int a = 0; a < i; ++a) {

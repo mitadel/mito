@@ -49,12 +49,13 @@ namespace mito::utilities {
         inline ~SharedPointer();
         // regular constructor (all arguments are forwarded to the constructor of {Resource})
         template <class... Args>
-        inline SharedPointer(Args &&... args) requires(
-            std::is_constructible_v<Resource, Args &&...>);
+        inline SharedPointer(Args &&... args)
+        requires(std::is_constructible_v<Resource, Args && ...>);
         // placement-new constructor: the last argument is the memory location to be used in the
         // placement new, all other arguments are forwarded to the constructor of {Resource}
         template <class... Args>
-        inline SharedPointer(Args &&... args) requires(
+        inline SharedPointer(Args &&... args)
+        requires(
             // require that the Resource is not constructible from the parameter pack
             !(std::is_constructible_v<Resource, Args &&...>) &&
             // and that the trailing parameter is a pointer to {Resource}
@@ -63,8 +64,8 @@ namespace mito::utilities {
         inline SharedPointer(const SharedPointer &);
         // copy constructor (const from nonconst)
         template <class OtherResource, bool OtherImmortal>
-        inline SharedPointer(const SharedPointer<OtherResource, false, OtherImmortal> &) requires(
-            std::is_same_v<Resource, OtherResource> && isConst == true);
+        inline SharedPointer(const SharedPointer<OtherResource, false, OtherImmortal> &)
+        requires(std::is_same_v<Resource, OtherResource> && isConst == true);
         // operator=
         inline SharedPointer & operator=(const SharedPointer &);
 
