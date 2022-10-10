@@ -2,7 +2,7 @@
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-TEST(EraseElement, TestEraseElement)
+TEST(EraseElement, DISABLED_TestEraseElement)
 {
     // load mesh of the unit square
     std::ifstream fileStream("small-square.summit");

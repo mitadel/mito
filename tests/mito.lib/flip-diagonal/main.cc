@@ -158,7 +158,7 @@ flipDiagonal(
     return 0;
 }
 
-TEST(FlipDiagonal, TestFlipDiagonal)
+TEST(FlipDiagonal, DISABLED_TestFlipDiagonal)
 {
 
     // build vertices
