@@ -1,8 +1,8 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/materials.h>
 
-int
-main()
+TEST(Gent, TestGent)
 {
     // can either use this syntax...
     // mito::materials::gent_t material(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);
@@ -21,6 +21,4 @@ main()
 
     std::cout << "P = " << P << std::endl;
     std::cout << "P2 = " << P2 << std::endl;
-
-    return 0;
 }

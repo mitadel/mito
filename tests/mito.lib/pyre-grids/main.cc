@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 // get the grid
 #include <pyre/grid.h>
 
@@ -151,8 +152,7 @@ myConstFunction(const mito::QuadratureFieldGrid<Q, Y> & quadF)
 }
 
 // verify the basic layout of memory mapped grids
-int
-main()
+TEST(PyreGrids, TestPyreGrids)
 {
     // we'll work with a 3d conventionally packed grid
     using pack_t = pyre::grid::canonical_t<3>;
@@ -189,7 +189,4 @@ main()
     std::cout << myvector2[0] << "\t" << myvector2[1] << std::endl;
 
     myConstFunction(quadratureField);
-
-    // all done
-    return 0;
 }

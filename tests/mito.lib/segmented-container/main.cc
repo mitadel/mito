@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/utilities.h>
 
 #include <cassert>
@@ -16,8 +17,7 @@ class Simplex {
     bool _is_valid;
 };
 
-int
-main()
+TEST(SegmentedContainer, TestSegmentedContainer)
 {
     // instantiate a segmented container
     mito::utilities::segmented_t<Simplex, 3> vector;
@@ -66,7 +66,4 @@ main()
     // assert that the container is empty and but has still capacity of 6
     assert(vector.capacity() == 6);
     assert(vector.size() == 0);
-
-    // all done
-    return 0;
 }

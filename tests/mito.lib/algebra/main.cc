@@ -1,7 +1,7 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 
-int
-main()
+TEST(Algebra, TestAlgebra)
 {
     /*constexpr*/ mito::matrix_t<3> Du { 1.0, 2.0, 3.0, 1.0, 2.0, 3.0, 1.0, 2.0, 1.0 };
 
@@ -24,6 +24,4 @@ main()
         ++i;
         // std::cout << A << std::endl;
     }
-
-    return 0;
 }

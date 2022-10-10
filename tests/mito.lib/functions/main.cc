@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/math.h>
 
@@ -14,8 +15,7 @@ my_function(const mito::vector_t<2> & x)
     return cos(x[0] * x[1]) + 1.0;
 }
 
-int
-main()
+TEST(Functions, TestFunctions)
 {
     // a scalar function
     auto function1 = mito::math::function(
@@ -83,6 +83,4 @@ main()
     auto function18 = my_vector * function16;
     std::cout << "function16 = " << function16(x) << std::endl;
     std::cout << "function18 = " << function18(x) << std::endl;
-
-    return 0;
 }

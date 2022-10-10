@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/utilities.h>
 
 #include <cassert>
@@ -18,8 +19,7 @@ class Simplex {
     bool _is_valid;
 };
 
-int
-main()
+TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
     // instantiate a segmented container
     mito::utilities::segmented_t<Simplex, 3> vector;
@@ -90,7 +90,4 @@ main()
 
     assert(store_elements[0] == 4);
     assert(std::size(store_elements) == 1);
-
-    // all done
-    return 0;
 }

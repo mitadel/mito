@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/utilities.h>
 #include <cassert>
 #include <iostream>
@@ -14,8 +15,7 @@ class Resource {
     int _a;
 };
 
-int
-main()
+TEST(SharedPointer, TestSharedPointer)
 {
     // the type of resource to be stored
     using resource_t = Resource;
@@ -50,7 +50,4 @@ main()
 
     // free the segment of memory
     ::operator delete(segment);
-
-    // all done
-    return 0;
 }

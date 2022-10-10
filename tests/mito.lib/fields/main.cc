@@ -1,11 +1,11 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/math.h>
 
 using mito::vector_t;
 using mito::real;
 
-int
-main()
+TEST(Fields, TestFields)
 {
     // a scalar function
     auto f = mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
@@ -61,7 +61,4 @@ main()
               << std::endl;
     std::cout << "Evaluating divergence of cosine vector function at X = " << x << " : "
               << divergence(x) << std::endl;
-
-    // all done
-    return 0;
 }

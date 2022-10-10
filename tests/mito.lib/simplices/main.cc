@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
 #include <mito/manifolds.h>
@@ -6,8 +7,7 @@ using mito::geometry::point_t;
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
-int
-main()
+TEST(Simplices, TestSimplices)
 {
     /**
      * Mesh with four elements:
@@ -120,7 +120,4 @@ main()
             std::cout << "Failed sanity check for element " << e << std::endl;
         }
     }
-
-    // all done
-    return 0;
 }

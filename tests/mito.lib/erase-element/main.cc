@@ -1,8 +1,8 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-int
-main()
+TEST(EraseElement, TestEraseElement)
 {
     // load mesh of the unit square
     std::ifstream fileStream("small-square.summit");
@@ -46,7 +46,4 @@ main()
     // for (const auto & simplex : mesh.boundary_elements<1>()) {
     //     std::cout << *simplex << std::endl;
     // }
-
-    // all done
-    return 0;
 }

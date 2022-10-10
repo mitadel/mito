@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/math.h>
 #include <mito/mesh.h>
@@ -10,8 +11,7 @@ using mito::quadrature::GAUSS;
 using mito::geometry::point_t;
 using mito::topology::triangle_t;
 
-int
-main()
+TEST(Quadrature, TestQuadrature)
 {
     /**
      * Mesh with four elements:
@@ -154,9 +154,6 @@ main()
               << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;
     // check the result
     assert(std::fabs(result - 0.35355339059327384) < 1.e-15);
-
-    // all done
-    return 0;
 }
 
 // end of file

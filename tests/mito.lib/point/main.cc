@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/geometry/Point.h>
 
@@ -34,7 +35,8 @@ index<3>()
 }
 
 template <std::size_t N, std::size_t... I>
-constexpr auto create_array_impl(std::index_sequence<I...>)
+constexpr auto
+create_array_impl(std::index_sequence<I...>)
 {
     return std::array<int, N> { I... };
 }
@@ -52,8 +54,7 @@ integralConstant(auto i)
     return index<i>();
 }
 
-int
-main()
+TEST(Point, TestPoint)
 {
 
     Point<1> a(10.0);
@@ -76,6 +77,4 @@ main()
     std::cout << c[index<indexx>()] << std::endl;
 
     // std::cout << c[0] << std::endl;
-
-    return 0;
 }

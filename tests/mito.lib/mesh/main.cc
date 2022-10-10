@@ -1,11 +1,11 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
 #include <mito/manifolds.h>
 #include <mito/math.h>
 #include <mito/quadrature.h>
 
-int
-main()
+TEST(Mesh, TestMesh)
 {
     // load mesh
     std::ifstream fileStream("square.summit");
@@ -25,6 +25,4 @@ main()
     std::cout << "Integration of cos(x*y): Result = " << result
               << ", Error = " << std::fabs(result - 0.946083) << std::endl;
     assert(std::fabs(result - 0.946083) < 1.e-7);
-
-    return 0;
 }

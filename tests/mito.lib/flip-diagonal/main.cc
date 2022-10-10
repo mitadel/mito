@@ -1,3 +1,4 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
 #include <set>
@@ -157,8 +158,7 @@ flipDiagonal(
     return 0;
 }
 
-int
-main()
+TEST(FlipDiagonal, TestFlipDiagonal)
 {
 
     // build vertices
@@ -181,7 +181,4 @@ main()
 
     // flip the common edge of the two triangles
     flipDiagonal(element_0, element_1);
-
-    // all done
-    return 0;
 }

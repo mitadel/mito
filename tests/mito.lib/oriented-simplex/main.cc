@@ -1,8 +1,8 @@
+#include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-int
-main()
+TEST(OrientedSimplex, TestOrientedSimplex)
 {
     {
         // two vertices
@@ -67,7 +67,4 @@ main()
         // assert that the triangle with flipped segments is the same object as the flipped triangle
         assert((*element_0_flip).simplex_id() == (*element_2).simplex_id());
     }
-
-    // all done
-    return 0;
 }
