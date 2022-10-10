@@ -1,0 +1,94 @@
+// -*- C++ -*-
+//
+
+#if !defined(mito_utilities_Shareable_icc)
+#error This header file contains implementation details of class mito::utilities::Shareable
+#else
+
+auto
+mito::utilities::Shareable::references() const -> int
+{
+    // return the count of outstanding references
+    return *_reference_count;
+}
+
+// destructor
+mito::utilities::Shareable::~Shareable()
+{
+    // decrement reference count
+    _release();
+
+    // if I was the last pointer to the reference
+    if (references() == 0) {
+        // free the memory
+        delete _reference_count;
+    }
+
+    // all done
+    return;
+}
+
+// the default constructor
+mito::utilities::Shareable::Shareable() : _reference_count(new int(1)) {}
+
+// the copy constructor
+mito::utilities::Shareable::Shareable(mito::utilities::Shareable & other) :
+    _reference_count(other._reference_count)
+{
+    // increment the reference count
+    _acquire();
+
+    // all done
+    return;
+}
+
+// move constructor
+mito::utilities::Shareable::Shareable(Shareable && other) :
+    _reference_count(other._reference_count++) {};
+
+
+// assignment operator
+mito::utilities::Shareable &
+mito::utilities::Shareable::operator=(mito::utilities::Shareable & other)
+{
+    // decrement the reference count
+    _release();
+
+    // reset the reference count to that of {other}
+    _reference_count = other._reference_count;
+
+    // increment the reference count
+    _acquire();
+
+    // all done
+    return *this;
+}
+
+// move assignment operator
+mito::utilities::Shareable &
+mito::utilities::Shareable::operator=(Shareable && other)
+{
+    // sync the reference count with {other}
+    _reference_count = other._reference_count++;
+
+    // all done
+    return *this;
+}
+
+// interface
+auto
+mito::utilities::Shareable::_acquire() -> int
+{
+    // increment the reference count and return it
+    return ++(*_reference_count);
+}
+
+auto
+mito::utilities::Shareable::_release() -> int
+{
+    // decrement the reference count and return it
+    return --(*_reference_count);
+}
+
+#endif
+// end of file
