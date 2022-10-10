@@ -24,5 +24,5 @@ TEST(Mesh, TestMesh)
     auto result = integrator.integrate(f_cosine);
     std::cout << "Integration of cos(x*y): Result = " << result
               << ", Error = " << std::fabs(result - 0.946083) << std::endl;
-    assert(std::fabs(result - 0.946083) < 1.e-7);
+    EXPECT_NEAR(result, 0.946083, 1.e-7);
 }

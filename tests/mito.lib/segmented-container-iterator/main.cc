@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
-#include <mito/utilities.h>
-
-#include <cassert>
 #include <iostream>
+#include <mito/utilities.h>
 
 class Simplex {
   public:
@@ -25,8 +23,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     mito::utilities::segmented_t<Simplex, 3> vector;
 
     // assert that the container is empty and with no capacity
-    assert(vector.capacity() == 0);
-    assert(vector.size() == 0);
+    EXPECT_EQ(vector.capacity(), 0);
+    EXPECT_EQ(vector.size(), 0);
 
     // insert three simplices in the container
     auto simplex0 = vector.insert(0);
@@ -38,10 +36,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
         store_elements.emplace_back(el.foo());
     }
 
-    assert(store_elements[0] == 0);
-    assert(store_elements[1] == 1);
-    assert(store_elements[2] == 2);
-    assert(std::size(store_elements) == 3);
+    EXPECT_EQ(store_elements[0], 0);
+    EXPECT_EQ(store_elements[1], 1);
+    EXPECT_EQ(store_elements[2], 2);
+    EXPECT_EQ(std::size(store_elements), 3);
 
     store_elements.clear();
 
@@ -52,9 +50,9 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
         store_elements.emplace_back(el.foo());
     }
 
-    assert(store_elements[0] == 0);
-    assert(store_elements[1] == 2);
-    assert(std::size(store_elements) == 2);
+    EXPECT_EQ(store_elements[0], 0);
+    EXPECT_EQ(store_elements[1], 2);
+    EXPECT_EQ(std::size(store_elements), 2);
 
     store_elements.clear();
 
@@ -65,8 +63,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
         store_elements.emplace_back(el.foo());
     }
 
-    assert(store_elements[0] == 2);
-    assert(std::size(store_elements) == 1);
+    EXPECT_EQ(store_elements[0], 2);
+    EXPECT_EQ(std::size(store_elements), 1);
 
     store_elements.clear();
 
@@ -77,7 +75,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
         store_elements.emplace_back(el.foo());
     }
 
-    assert(std::size(store_elements) == 0);
+    EXPECT_EQ(std::size(store_elements), 0);
 
     store_elements.clear();
 
@@ -88,6 +86,6 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
         store_elements.emplace_back(el.foo());
     }
 
-    assert(store_elements[0] == 4);
-    assert(std::size(store_elements) == 1);
+    EXPECT_EQ(store_elements[0], 4);
+    EXPECT_EQ(std::size(store_elements), 1);
 }

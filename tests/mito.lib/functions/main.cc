@@ -38,27 +38,27 @@ TEST(Functions, TestFunctions)
 
     auto function4 = function3 + function3 + function3;
     auto function5 = 3.0 * function3;
-    assert(std::fabs(function4(x) - function5(x)) < TOL);
+    EXPECT_NEAR(function4(x), function5(x), TOL);
 
     auto function6 = function4 - function3;
     auto function7 = function5 - function3;
-    assert(std::fabs(function6(x) - function7(x)) < TOL);
+    EXPECT_NEAR(function6(x), function7(x), TOL);
 
     auto function8 = (function7 * 0.5) / 0.5;
-    assert(std::fabs(function7(x) - function8(x)) < TOL);
+    EXPECT_NEAR(function7(x), function8(x), TOL);
 
     auto function9 = (0.5 / function7) * function7;
-    assert(std::fabs(function9(x) - 0.5) < TOL);
+    EXPECT_NEAR(function9(x), 0.5, TOL);
 
     auto function10 = (PI + function7) - function7;
-    assert(std::fabs(function10(x) - PI) < TOL);
+    EXPECT_NEAR(function10(x), PI, TOL);
 
     auto function11 = PI + function7 - 2.0 * PI;
-    assert(std::fabs(function11(x) - function7(x) + PI) < TOL);
+    EXPECT_NEAR(function11(x), function7(x) - PI, TOL);
 
     // (cos(xy) + 5) / cos(xy)
     auto function12 = (function1 + function2) / function1;
-    assert(std::fabs((function1(x) + function2(x)) / function1(x) - function12(x)) < TOL);
+    EXPECT_NEAR((function1(x) + function2(x)) / function1(x), function12(x), TOL);
 
     auto function13 = mito::math::function(my_function);
     auto function14 = function13 + function1;

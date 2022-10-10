@@ -175,7 +175,7 @@ TEST(PyreGrids, TestPyreGrids)
     auto sliced_grid = grid.slice<1>(index, shape);
     auto sliced_grid_a = grid.slice<2>(index, shape);
     // verify that the address is the same regardless of the way it is computed
-    assert((&sliced_grid[{ 1 }] == &sliced_grid_a[{ 0, 1 }]));
+    EXPECT_TRUE((&sliced_grid[{ 1 }] == &sliced_grid_a[{ 0, 1 }]));
 
     int nElements = 20;
     constexpr int Q = 10;

@@ -13,10 +13,10 @@ TEST(EraseElement, TestEraseElement)
     // std::cout << mesh.vertices() << std::endl;
 
     // assert you read 4 elements
-    assert(mesh.elements<2>().size() == 4);
+    EXPECT_EQ(mesh.elements<2>().size(), 4);
 
     // assert the boundary is made of 4 elements
-    assert(mesh.boundary_elements<1>().size() == 4);
+    EXPECT_EQ(mesh.boundary_elements<1>().size(), 4);
 
     // show me the elements
     // std::cout << "Initial mesh: " << std::endl;
@@ -39,7 +39,7 @@ TEST(EraseElement, TestEraseElement)
     // }
 
     // assert the boundary is now made of 5 elements
-    assert(mesh.boundary_elements<1>().size() == 5);
+    EXPECT_EQ(mesh.boundary_elements<1>().size(), 5);
 
     // show me the boundary elements
     // std::cout << "Boundary: " << std::endl;

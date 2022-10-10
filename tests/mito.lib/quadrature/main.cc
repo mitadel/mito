@@ -67,7 +67,7 @@ TEST(Quadrature, TestQuadrature)
     std::cout << "Integration of cos(x*y): Result = " << result
               << ", Error = " << std::fabs(result - 0.946083) << std::endl;
     // check the result
-    assert(std::fabs(result - 0.946083) < 1.e-3);
+    EXPECT_NEAR(result, 0.946083, 1.e-3);
 
     // a vector function
     auto g = mito::math::function([](const mito::vector_t<2> & x) -> vector_t<2> {
@@ -78,7 +78,7 @@ TEST(Quadrature, TestQuadrature)
     // integrate the field
     auto resultVector = bodyIntegrator.integrate(g_field);
     // check the result
-    assert((resultVector == mito::vector_t<2> { result, result }));
+    EXPECT_TRUE((resultVector == mito::vector_t<2> { result, result }));
 
     // a scalar function
     auto f_one =
@@ -91,7 +91,7 @@ TEST(Quadrature, TestQuadrature)
     std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
               << std::endl;
     // check the result
-    assert(std::fabs(result - 1.0) < 1.e-16);
+    EXPECT_NEAR(result, 1.0, 1.e-16);
 
     // a scalar function
     auto f_linear = mito::math::function([](const vector_t<2> & x) -> real { return x[0]; });
@@ -103,7 +103,7 @@ TEST(Quadrature, TestQuadrature)
     std::cout << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
               << std::endl;
     // check the result
-    assert(std::fabs(result - 0.5) < 1.e-16);
+    EXPECT_NEAR(result, 0.5, 1.e-16);
 
     // a scalar function
     auto f_xy = mito::math::function([](const vector_t<2> & x) -> real { return x[0] * x[1]; });
@@ -115,7 +115,7 @@ TEST(Quadrature, TestQuadrature)
     std::cout << "Integration of x*y: Result = " << result
               << ", Error = " << std::fabs(result - 0.25) << std::endl;
     // check the result
-    assert(std::fabs(result - 0.25) < 1.e-16);
+    EXPECT_NEAR(result, 0.25, 1.e-16);
 
     // a scalar function
     auto f_xx = mito::math::function([](const vector_t<2> & x) -> real { return x[0] * x[0]; });
@@ -127,7 +127,7 @@ TEST(Quadrature, TestQuadrature)
     std::cout << "Integration of x*x: Result = " << result
               << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
     // check the result
-    assert(std::fabs(result - 1.0 / 3.0) < 1.e-16);
+    EXPECT_NEAR(result, 1.0 / 3.0, 1.e-16);
 
     // attach different coordinates (3D coordinates to the same points as above)
     mito::geometry::point_cloud<3>::insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
@@ -153,7 +153,7 @@ TEST(Quadrature, TestQuadrature)
     std::cout << "Integration of x*y in 3D: Result = " << result
               << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;
     // check the result
-    assert(std::fabs(result - 0.35355339059327384) < 1.e-15);
+    EXPECT_NEAR(result, 0.35355339059327384, 1.e-15);
 }
 
 // end of file
