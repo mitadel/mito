@@ -5,6 +5,13 @@
 
 namespace mito::utilities {
 
+    // base class for a reference counted object
+    class Shareable;
+
+    // concept for a reference counted object
+    template <typename T>
+    concept ReferenceCountedObject = std::is_base_of<Shareable, T>::value;
+
     // class shared pointer
     template <class Resource, bool isConst = false, bool immortal = false>
     class SharedPointer;
