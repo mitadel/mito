@@ -15,6 +15,12 @@ mito::utilities::Shareable::references() const -> int
 // destructor
 mito::utilities::Shareable::~Shareable()
 {
+    // if the object is in invalid state
+    if (_reference_count == nullptr) {
+        // all done
+        return;
+    }
+
     // decrement reference count
     _release();
 
@@ -43,8 +49,14 @@ mito::utilities::Shareable::Shareable(mito::utilities::Shareable & other) :
 }
 
 // move constructor
-mito::utilities::Shareable::Shareable(Shareable && other) :
-    _reference_count(other._reference_count++) {};
+mito::utilities::Shareable::Shareable(Shareable && other) : _reference_count(other._reference_count)
+{
+    // invalidate {other}
+    other._reference_count = nullptr;
+
+    // all done
+    return;
+};
 
 
 // assignment operator
@@ -69,7 +81,10 @@ mito::utilities::Shareable &
 mito::utilities::Shareable::operator=(Shareable && other)
 {
     // sync the reference count with {other}
-    _reference_count = other._reference_count++;
+    _reference_count = other._reference_count;
+
+    // invalidate {other}
+    other._reference_count = nullptr;
 
     // all done
     return *this;
