@@ -1,0 +1,85 @@
+# -*- yaml -*-
+
+name: cmake
+on: [push]
+
+jobs:
+  # build and test the ref that launched this action
+  build:
+    name: >-
+      ${{matrix.target}}
+      python-${{matrix.python}}+${{matrix.suite}}-${{matrix.suiteVersion}}
+      on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04]
+        target: [Release]
+        python: ["3.10"]
+        suite: [gcc]
+        suiteVersion: ["11"]
+        include:
+          - suite: gcc
+            cc: gcc
+            cxx: g++
+
+    steps:
+      - name: ${{matrix.os}} refresh
+        run: |
+          echo " -- update the package cache"
+          sudo apt update
+          echo " -- upgradables"
+          sudo apt list --upgradable
+          echo " -- upgrade"
+          sudo apt dist-upgrade
+          echo " -- install our dependencies"
+          sudo apt install -y make cmake
+
+      - name: python ${{matrix.python}} setup
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{matrix.python}}
+
+      - name: install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install distro numpy pybind11
+
+      - name: list system packages
+        run: |
+          dpkg -l
+
+      - name: versions
+        run: |
+          echo " -- platform tag from python"
+          python${pythonVersion} -c "import sys; print(sys.platform)"
+          echo " -- distribution tag from python"
+          python${pythonVersion} -c "import distro; print(distro.linux_distribution(full_distribution_name=False))"
+          echo " -- make"
+          make --version
+          echo " -- cmake"
+          cmake --version
+          echo " -- python"
+          python3 --version
+          echo " -- ${{matrix.suite}}"
+          ${{matrix.suite}}-${{matrix.suiteVersion}} --version
+        env:
+          pythonVersion: ${{matrix.python}}
+
+      - name: locations of python packages
+        run: |
+          echo " -- distro"
+          pip3 show distro
+          echo " -- numpy"
+          pip3 show numpy
+          echo " -- its headers"
+          find ${pythonLocation}/lib/python${pythonVersion}/site-packages/numpy/core/include
+          echo " -- pybind11"
+          pip3 show pybind11
+          echo " -- its headers"
+          find ${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11
+        env:
+          pythonVersion: ${{matrix.python}}
+
+# end of file
