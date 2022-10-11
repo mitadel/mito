@@ -5,8 +5,7 @@
 
 TEST(Shareable, DefaultConstructor)
 {
-    int * a = new int(1);
-    std::shared_ptr<int> shared_ptr1(a);
+    auto shared_ptr1 = std::make_shared<int>(1);
 
     mito::utilities::Shareable shareable1;
 
@@ -15,8 +14,7 @@ TEST(Shareable, DefaultConstructor)
 
 TEST(Shareable, CopyConstructor)
 {
-    int * a = new int(1);
-    std::shared_ptr<int> shared_ptr1(a);
+    auto shared_ptr1 = std::make_shared<int>(1);
     std::shared_ptr<int> shared_ptr2 = shared_ptr1;
 
     mito::utilities::Shareable shareable1;
@@ -28,8 +26,7 @@ TEST(Shareable, CopyConstructor)
 
 TEST(Shareable, MoveConstructor)
 {
-    int * a = new int(1);
-    std::shared_ptr<int> shared_ptr1(a);
+    auto shared_ptr1 = std::make_shared<int>(1);
     std::shared_ptr<int> shared_ptr2(std::move(shared_ptr1));
 
     mito::utilities::Shareable shareable1;
@@ -40,10 +37,8 @@ TEST(Shareable, MoveConstructor)
 
 TEST(Shareable, AssignmentOperator)
 {
-    int * a = new int(1);
-    std::shared_ptr<int> shared_ptr1(a);
-    int * b = new int(1);
-    std::shared_ptr<int> shared_ptr2(b);
+    auto shared_ptr1 = std::make_shared<int>(1);
+    auto shared_ptr2 = std::make_shared<int>(1);
     shared_ptr2 = shared_ptr1;
 
     mito::utilities::Shareable shareable1;
@@ -56,10 +51,8 @@ TEST(Shareable, AssignmentOperator)
 
 TEST(Shareable, MoveAssignmentOperator)
 {
-    int * a = new int(1);
-    std::shared_ptr<int> shared_ptr1(a);
-    int * b = new int(1);
-    std::shared_ptr<int> shared_ptr2(b);
+    auto shared_ptr1 = std::make_shared<int>(1);
+    auto shared_ptr2 = std::make_shared<int>(1);
     shared_ptr2 = std::move(shared_ptr1);
 
     mito::utilities::Shareable shareable1;
@@ -71,11 +64,9 @@ TEST(Shareable, MoveAssignmentOperator)
 
 TEST(Shareable, ThreeWayAssignment)
 {
-    int * a = new int(1);
-    std::shared_ptr<int> shared_ptr1(a);
+    auto shared_ptr1 = std::make_shared<int>(1);
     std::shared_ptr<int> shared_ptr2 = shared_ptr1;
-    int * b = new int(1);
-    std::shared_ptr<int> shared_ptr3(b);
+    auto shared_ptr3 = std::make_shared<int>(1);
     shared_ptr2 = shared_ptr3;
 
     mito::utilities::Shareable shareable1;
@@ -92,8 +83,7 @@ TEST(Shareable, Destructor)
 {
     std::shared_ptr<int> shared_ptr2;
     {
-        int * a = new int(1);
-        std::shared_ptr<int> shared_ptr1(a);
+        auto shared_ptr1 = std::make_shared<int>(1);
         shared_ptr2 = shared_ptr1;
     }
 
