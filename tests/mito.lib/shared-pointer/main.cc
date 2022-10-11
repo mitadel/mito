@@ -2,7 +2,7 @@
 #include <iostream>
 #include <mito/utilities.h>
 
-class Resource {
+class Resource : public mito::utilities::Shareable {
   public:
     Resource(int a, Resource * c) : _a(a)
     {

@@ -12,8 +12,9 @@ namespace mito::utilities {
     template <typename T>
     concept ReferenceCountedObject = std::is_base_of<Shareable, T>::value;
 
-    // class shared pointer
+    // class shared pointer based on a reference counted resource
     template <class Resource, bool isConst = false, bool immortal = false>
+    requires ReferenceCountedObject<Resource>
     class SharedPointer;
 
     // shared pointer alias

@@ -28,6 +28,7 @@ namespace mito::utilities {
 
     // declaration
     template <class Resource, bool isConst, bool immortal>
+    requires ReferenceCountedObject<Resource>
     class SharedPointer {
         // types
       public:
