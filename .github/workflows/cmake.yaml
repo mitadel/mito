@@ -55,7 +55,7 @@ jobs:
           echo " -- platform tag from python"
           python${pythonVersion} -c "import sys; print(sys.platform)"
           echo " -- distribution tag from python"
-          python${pythonVersion} -c "import distro; print(distro.linux_distribution(full_distribution_name=False))"
+          python${pythonVersion} -c "import distro; print(distro.id(), distro.version())"
           echo " -- make"
           make --version
           echo " -- cmake"
