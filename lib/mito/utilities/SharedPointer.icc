@@ -35,9 +35,12 @@ mito::utilities::SharedPointer<Resource>::operator->() const
 // destructor
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::~SharedPointer()
-{}
+{
+    // decrement reference count
+    _release();
+}
 
-// default constructor
+// default constructor (invalid shared handle)
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer() : _handle(nullptr)
 {}
@@ -45,7 +48,10 @@ mito::utilities::SharedPointer<Resource>::SharedPointer() : _handle(nullptr)
 // the constructor
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer(handle_t resource) : _handle(resource)
-{}
+{
+    // grab a reference to the shared handle
+    _acquire();
+}
 
 // the copy constructor
 template <class Resource>
@@ -101,6 +107,7 @@ mito::utilities::SharedPointer<Resource>::operator=(
         _handle = other._handle;
     }
 
+    // QUESTION: should this go here or in the if statement?
     // invalidate {other}
     other._handle = nullptr;
 

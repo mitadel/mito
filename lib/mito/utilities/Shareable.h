@@ -26,17 +26,17 @@ namespace mito::utilities {
 
         // copy constructors
         inline Shareable(const Shareable &) = delete;
-        inline Shareable(Shareable &);
+        inline Shareable(Shareable &) = delete;
 
         // move constructor
-        inline Shareable(Shareable &&);
+        inline Shareable(Shareable &&) = delete;
 
         // assignment operator
         inline Shareable & operator=(const Shareable &) = delete;
-        inline Shareable & operator=(Shareable &);
+        inline Shareable & operator=(Shareable &) = delete;
 
         // move assignment operator
-        inline Shareable & operator=(Shareable &&);
+        inline Shareable & operator=(Shareable &&) = delete;
 
       private:
         // increment the reference count
@@ -46,7 +46,7 @@ namespace mito::utilities {
 
         // data members
       private:
-        int * _reference_count;
+        int _reference_count;
 
       private:
         // friendship with SharedPointer (the shared pointer needs r/w access to the reference count
