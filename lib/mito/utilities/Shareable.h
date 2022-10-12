@@ -47,6 +47,13 @@ namespace mito::utilities {
         // data members
       private:
         int * _reference_count;
+
+      private:
+        // friendship with SharedPointer (the shared pointer needs r/w access to the reference count
+        // of the Shareable instance)
+        template <class T>
+        requires mito::utilities::ReferenceCountedObject<T>
+        friend class mito::utilities::SharedPointer;
     };
 }
 
