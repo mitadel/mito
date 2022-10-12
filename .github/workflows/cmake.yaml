@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-22.04]
-        target: [Release]
+        target: [Debug, Release, RelWithDebInfo]
         python: ["3.10"]
         suite: [gcc]
         suiteVersion: ["11"]
