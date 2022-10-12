@@ -145,8 +145,9 @@ namespace mito::utilities {
             }
 
             // create a new instance of T at {location} with placement new
+            T * resource = new (location) T(args...);
             // and assign it to a new pointer
-            mito::utilities::shared_ptr<T, true> pointer(args..., location);
+            mito::utilities::shared_ptr<T> pointer(resource);
 
             // increment the size of the container
             ++_n_elements;
@@ -161,7 +162,7 @@ namespace mito::utilities {
             return pointer;
         }
 
-        auto erase(const mito::utilities::shared_ptr<T, true> & element) -> void
+        auto erase(const mito::utilities::shared_ptr<T> & element) -> void
         {
             // mark element as invalid
             element->invalidate();

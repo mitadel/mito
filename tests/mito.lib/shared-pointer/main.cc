@@ -30,22 +30,14 @@ TEST(SharedPointer, TestSharedPointer)
     resource_t * location = (segment + 3);
 
     // instantiate new resource at {location}
-    mito::utilities::shared_ptr<resource_t, true /*immortal*/> handle(a, nullptr, location);
-
-    // instantiate new const shared pointer pointing to the nonconst one
-    mito::utilities::const_shared_ptr<resource_t, true /*immortal*/> const_handle(handle);
+    resource_t * resource = new (location) resource_t(a, nullptr);
+    mito::utilities::shared_ptr<resource_t> handle(resource);
 
     // modify the resource
     handle->_a += 1;
 
     // assert that the resource was modified correctly
     EXPECT_EQ(handle->_a, a + 1);
-
-    // assert that the const handle has the same value as the nonconst
-    EXPECT_TRUE(handle->_a == const_handle->_a);
-
-    // assert that the pointed resource is the same
-    EXPECT_TRUE((Resource *) handle == (const Resource *) const_handle);
 
     // free the segment of memory
     ::operator delete(segment);

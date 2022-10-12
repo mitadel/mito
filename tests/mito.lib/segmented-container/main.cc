@@ -2,7 +2,7 @@
 #include <iostream>
 #include <mito/utilities.h>
 
-class Simplex {
+class Simplex : public mito::utilities::Shareable {
   public:
     Simplex(int foo) : _foo(foo), _is_valid(true) {}
 

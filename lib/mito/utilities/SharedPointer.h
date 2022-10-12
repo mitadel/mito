@@ -7,40 +7,25 @@
 #define mito_utilities_SharedPointer_h
 
 
-// helper functions
-namespace {
-    template <class Resource, class... Args, size_t... I>
-    inline auto _place_instantiate_object(
-        Resource * location, std::tuple<Args...> args, std::index_sequence<I...>)
-    {
-        return new (location) Resource(std::get<I>(args)...);
-    }
-
-    template <class... Args>
-    inline auto _last_argument(std::tuple<Args...> args)
-    {
-        auto constexpr Last = sizeof...(Args) - 1;
-        return std::get<Last>(args);
-    }
-}
-
 namespace mito::utilities {
 
     // declaration
-    template <class Resource, bool isConst, bool immortal>
+    template <class Resource>
     requires ReferenceCountedObject<Resource>
     class SharedPointer {
         // types
       public:
         using resource_t = Resource;
-        using handle_t = std::conditional_t<isConst, const Resource *, Resource *>;
+        using handle_t = Resource *;
 
         // interface
       public:
         // cast to handle_t
         inline operator handle_t() const;
+
         // accessor for the number of outstanding references
         inline auto references() const -> int;
+
         // operator->
         auto operator->() const -> handle_t;
 
@@ -48,27 +33,24 @@ namespace mito::utilities {
       public:
         // destructor
         inline ~SharedPointer();
-        // regular constructor (all arguments are forwarded to the constructor of {Resource})
-        template <class... Args>
-        inline SharedPointer(Args &&... args)
-        requires(std::is_constructible_v<Resource, Args && ...>);
-        // placement-new constructor: the last argument is the memory location to be used in the
-        // placement new, all other arguments are forwarded to the constructor of {Resource}
-        template <class... Args>
-        inline SharedPointer(Args &&... args)
-        requires(
-            // require that the Resource is not constructible from the parameter pack
-            !(std::is_constructible_v<Resource, Args &&...>) &&
-            // and that the trailing parameter is a pointer to {Resource}
-            std::is_same_v<decltype(_last_argument(std::forward_as_tuple(args...))), Resource *>);
+
+        // default constructor
+        inline SharedPointer();
+
+        // constructor
+        inline SharedPointer(handle_t);
+
         // copy constructor
-        inline SharedPointer(const SharedPointer &);
-        // copy constructor (const from nonconst)
-        template <class OtherResource, bool OtherImmortal>
-        inline SharedPointer(const SharedPointer<OtherResource, false, OtherImmortal> &)
-        requires(std::is_same_v<Resource, OtherResource> && isConst == true);
-        // operator=
-        inline SharedPointer & operator=(const SharedPointer &);
+        inline SharedPointer(const SharedPointer<Resource> &);
+
+        // move constructor
+        inline SharedPointer(SharedPointer<Resource> &&);
+
+        // assignment operator
+        inline SharedPointer & operator=(const SharedPointer<Resource> &);
+
+        // move assignment operator
+        inline SharedPointer & operator=(SharedPointer<Resource> &&);
 
       private:
         // increment the reference count
@@ -78,7 +60,6 @@ namespace mito::utilities {
 
         // data members
       private:
-        int _count;
         handle_t _handle;
     };
 }
