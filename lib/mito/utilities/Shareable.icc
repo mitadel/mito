@@ -56,7 +56,7 @@ mito::utilities::Shareable::Shareable(Shareable && other) : _reference_count(oth
 
     // all done
     return;
-};
+}
 
 
 // assignment operator
