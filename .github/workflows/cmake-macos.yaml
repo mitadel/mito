@@ -1,0 +1,36 @@
+# -*- yaml -*-
+
+name: cmake-macos
+on: 
+  push:
+  pull_request:
+  
+
+jobs:
+  # build and test the ref that launched this action
+  build:
+    name: >-
+      ${{matrix.target}}
+      python-${{matrix.python}}+${{matrix.suite}}-${{matrix.suiteVersion}}
+      on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-12]
+        target: [Release]
+        python: ["3.10"]
+        suite: [gcc]
+        suiteVersion: ["11"]
+        include:
+          - suite: gcc
+            cc: gcc
+            cxx: g++
+
+    steps:
+      - name: ${{matrix.os}} refresh
+        run: |
+          echo " -- install our dependencies"
+          brew install make cmake googletest
+
+# end of file

@@ -1,6 +1,6 @@
 # -*- yaml -*-
 
-name: cmake
+name: cmake-ubuntu
 on: 
   push:
     branches:
