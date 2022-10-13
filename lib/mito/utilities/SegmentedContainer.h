@@ -8,10 +8,8 @@
 
 
 namespace mito::utilities {
-    template <class T, int N = 10 /* segment size */>
-    requires(
-        std::is_member_function_pointer_v<decltype(&T::invalidate)>
-        && std::is_member_function_pointer_v<decltype(&T::is_valid)>)
+    template <class T, int N /* segment size */>
+    requires ReferenceCountedObject<T>
     class SegmentedContainer {
 
       public:
@@ -162,16 +160,19 @@ namespace mito::utilities {
             return pointer;
         }
 
-        auto erase(const mito::utilities::shared_ptr<T> & element) -> void
+        auto erase(mito::utilities::shared_ptr<T> & element) -> void
         {
-            // mark element as invalid
-            element->invalidate();
-
             // decrement the number of elements
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
             _available_locations.push(element);
+
+            // assert that you are the last one reference to this item
+            assert(element.references() == 1);
+
+            // reset the shared pointer
+            element.reset();
 
             // all done
             return;
