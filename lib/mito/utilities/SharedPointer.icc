@@ -22,6 +22,28 @@ mito::utilities::SharedPointer<Resource>::references() const -> int
     return _handle->references();
 }
 
+template <class Resource>
+auto
+mito::utilities::SharedPointer<Resource>::is_valid() const -> bool
+{
+    // true unless, the handle has no references pointing to it 
+    return (_handle->references() == 0 ? false : true);
+}
+
+template <class Resource>
+auto
+mito::utilities::SharedPointer<Resource>::reset() -> void
+{
+    // release my current handle
+    _release();
+
+    // invalidate handle
+    _handle = nullptr;
+
+    // all done
+    return;
+}
+
 // operator->
 template <class Resource>
 auto
@@ -36,7 +58,7 @@ mito::utilities::SharedPointer<Resource>::operator->() const
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::~SharedPointer()
 {
-    // decrement reference count
+    // release my current handle
     _release();
 }
 
