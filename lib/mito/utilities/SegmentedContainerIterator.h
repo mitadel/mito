@@ -25,6 +25,7 @@ namespace mito::utilities {
       public:
         // my template parameters
         using segmented_container_type = SegmentedContainerT;
+        using segmented_container_resource_type = typename SegmentedContainerT::resource_type;
         constexpr static int segmented_container_segment_size = SegmentedContainerT::segment_size;
         // me
         using iterator = SegmentedContainerIterator<segmented_container_type, isConst>;
@@ -37,6 +38,7 @@ namespace mito::utilities {
         using segmented_container_const_reference = const segmented_container_type &;
         // what i point to
         using pointer = typename iterbase::pointer;
+        using shared_pointer = shared_ptr<segmented_container_resource_type>;
         using reference = typename iterbase::reference;
 
         // metamethods
@@ -51,10 +53,10 @@ namespace mito::utilities {
         // iterator protocol
       public:
         // dereference
-        constexpr auto operator*() const -> reference
+        constexpr auto operator*() const -> shared_pointer
         {
-            // retrieve the value and return it
-            return *_ptr;
+            // wrap the resource in a shared pointer and return it
+            return shared_pointer(_ptr);
         }
 
         // accessors
