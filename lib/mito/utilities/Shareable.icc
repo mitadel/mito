@@ -12,6 +12,13 @@ mito::utilities::Shareable::references() const -> int
     return _reference_count;
 }
 
+auto
+mito::utilities::Shareable::is_valid() const -> bool
+{
+    // true unless the references count is zero 
+    return (_reference_count == 0 ? false : true);
+}
+
 // destructor
 mito::utilities::Shareable::~Shareable() {}
 

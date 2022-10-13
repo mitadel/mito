@@ -24,14 +24,6 @@ mito::utilities::SharedPointer<Resource>::references() const -> int
 
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::is_valid() const -> bool
-{
-    // true unless, the handle has no references pointing to it 
-    return (_handle->references() == 0 ? false : true);
-}
-
-template <class Resource>
-auto
 mito::utilities::SharedPointer<Resource>::reset() -> void
 {
     // release my current handle

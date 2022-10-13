@@ -29,9 +29,6 @@ namespace mito::utilities {
         // reset the shared pointer
         inline auto reset() -> void;
 
-        // whether the resource is valid or not
-        inline auto is_valid() const -> bool;
-
         // operator->
         auto operator->() const -> handle_t;
 

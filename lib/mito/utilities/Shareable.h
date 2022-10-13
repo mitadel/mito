@@ -16,6 +16,9 @@ namespace mito::utilities {
         // accessor for the number of outstanding references
         inline auto references() const -> int;
 
+        // whether the resource is valid or not
+        inline auto is_valid() const -> bool;
+
         // meta methods
       public:
         // destructor
