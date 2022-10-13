@@ -14,12 +14,12 @@ namespace mito::utilities {
 
       public:
         // aliases for my template parameters
-        using segment_type = T;
+        using resource_type = T;
         // aliases for my segment size
         constexpr static int segment_size = N;
 
         // me
-        using segmented_container_type = SegmentedContainer<segment_type, segment_size>;
+        using segmented_container_type = SegmentedContainer<resource_type, segment_size>;
 
         // my value
         using pointer = T *;
