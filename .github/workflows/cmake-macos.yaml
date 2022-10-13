@@ -71,5 +71,46 @@ jobs:
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
           pythonVersion: ${{matrix.python}}
+      
+      - name: list system packages
+        run: |
+          brew list
+
+      - name: versions
+        run: |
+          echo " -- platform tag from python"
+          python${pythonVersion} -c "import sys; print(sys.platform)"
+          echo " -- distribution tag from python"
+          python${pythonVersion} -c "import distro; print(distro.id(), distro.version())"
+          echo " -- make"
+          make --version
+          echo " -- cmake"
+          cmake --version
+          echo " -- python"
+          python3 --version
+          echo " -- ${{matrix.suite}}"
+          ${{matrix.suite}}-${{matrix.suiteVersion}} --version
+        env:
+          pythonVersion: ${{matrix.python}}
+      
+      - name: external dependencies
+        run: |
+          echo " -- gtest"
+          brew ls --verbose googletest
+
+      - name: locations of python packages
+        run: |
+          echo " -- distro"
+          pip3 show distro
+          echo " -- numpy"
+          pip3 show numpy
+          echo " -- its headers"
+          find ${pythonLocation}/lib/python${pythonVersion}/site-packages/numpy/core/include
+          echo " -- pybind11"
+          pip3 show pybind11
+          echo " -- its headers"
+          find ${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11
+        env:
+          pythonVersion: ${{matrix.python}}
 
 # end of file
