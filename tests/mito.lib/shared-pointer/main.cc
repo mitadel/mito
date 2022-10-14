@@ -19,8 +19,7 @@ TEST(SharedPointer, DefaultConstructor)
 {
     auto std_shared_ptr1 = std::make_shared<int>(1);
 
-    resource_t resource(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr1(&resource);
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
 
     EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
 }
@@ -30,8 +29,7 @@ TEST(SharedPointer, CopyConstructor)
     auto std_shared_ptr1 = std::make_shared<int>(1);
     std::shared_ptr<int> std_shared_ptr2 = std_shared_ptr1;
 
-    resource_t resource(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr1(&resource);
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
     mito::utilities::SharedPointer<resource_t> shared_ptr2 = shared_ptr1;
 
     EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
@@ -43,8 +41,7 @@ TEST(SharedPointer, MoveConstructor)
     auto std_shared_ptr1 = std::make_shared<int>(1);
     std::shared_ptr<int> std_shared_ptr2(std::move(std_shared_ptr1));
 
-    resource_t resource(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr1(&resource);
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
     mito::utilities::SharedPointer<resource_t> shared_ptr2(std::move(shared_ptr1));
 
     EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
@@ -56,10 +53,8 @@ TEST(SharedPointer, AssignmentOperator)
     auto std_shared_ptr2 = std::make_shared<int>(1);
     std_shared_ptr2 = std_shared_ptr1;
 
-    resource_t resource1(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr1(&resource1);
-    resource_t resource2(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr2(&resource2);
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+    mito::utilities::SharedPointer<resource_t> shared_ptr2(new resource_t(1));
     shared_ptr2 = shared_ptr1;
 
     EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
@@ -72,10 +67,8 @@ TEST(SharedPointer, MoveAssignmentOperator)
     auto std_shared_ptr2 = std::make_shared<int>(1);
     std_shared_ptr2 = std::move(std_shared_ptr1);
 
-    resource_t resource1(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr1(&resource1);
-    resource_t resource2(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr2(&resource2);
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+    mito::utilities::SharedPointer<resource_t> shared_ptr2(new resource_t(1));
     shared_ptr2 = std::move(shared_ptr1);
 
     EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
@@ -88,11 +81,9 @@ TEST(SharedPointer, ThreeWayAssignment)
     auto std_shared_ptr3 = std::make_shared<int>(1);
     std_shared_ptr2 = std_shared_ptr3;
 
-    resource_t resource1(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr1(&resource1);
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
     mito::utilities::SharedPointer<resource_t> shared_ptr2 = shared_ptr1;
-    resource_t resource3(1);
-    mito::utilities::SharedPointer<resource_t> shared_ptr3(&resource3);
+    mito::utilities::SharedPointer<resource_t> shared_ptr3(new resource_t(1));
     shared_ptr2 = shared_ptr3;
 
     EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
@@ -110,8 +101,7 @@ TEST(SharedPointer, Destructor)
 
     mito::utilities::SharedPointer<resource_t> shared_ptr2;
     {
-        resource_t resource1(1);
-        mito::utilities::SharedPointer<resource_t> shared_ptr1(&resource1);
+        mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
         shared_ptr2 = shared_ptr1;
     }
 
