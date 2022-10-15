@@ -18,7 +18,7 @@
 namespace mito::topology {
 
     template <int D>
-    class OrientedSimplex {
+    class OrientedSimplex : public mito::utilities::Shareable {
 
         // private constructors: only the OrientedSimplexFactory has the right to instantiate
         // oriented simplices
@@ -101,7 +101,7 @@ namespace mito::topology {
      */
 
     template <>
-    class OrientedSimplex<0> {
+    class OrientedSimplex<0> : public mito::utilities::Shareable {
       public:
         // default constructor
         constexpr OrientedSimplex() {}

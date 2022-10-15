@@ -13,7 +13,7 @@ namespace mito::topology {
 
     template <int D>
     requires(D > 0)
-    class Simplex {
+    class Simplex : public mito::utilities::Shareable {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
