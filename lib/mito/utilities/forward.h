@@ -5,23 +5,25 @@
 
 namespace mito::utilities {
 
-    // class shared pointer
-    template <class Resource, bool isConst = false, bool immortal = false>
+    // base class for a reference counted object
+    class Shareable;
+
+    // concept for a reference counted object
+    template <typename T>
+    concept ReferenceCountedObject = std::is_base_of<Shareable, T>::value;
+
+    // class shared pointer based on a reference counted resource
+    template <class Resource>
+    requires ReferenceCountedObject<Resource>
     class SharedPointer;
 
     // shared pointer alias
-    template <class Resource, bool immortal = false>
-    using shared_ptr = SharedPointer<Resource, false, immortal>;
-
-    // const shared pointer alias
-    template <class Resource, bool immortal = false>
-    using const_shared_ptr = SharedPointer<Resource, true, immortal>;
+    template <class Resource>
+    using shared_ptr = SharedPointer<Resource>;
 
     // class segmented container
     template <class T, int N /* segment size */>
-    requires(
-        std::is_member_function_pointer_v<decltype(&T::invalidate)>
-        && std::is_member_function_pointer_v<decltype(&T::is_valid)>)
+    requires ReferenceCountedObject<T>
     class SegmentedContainer;
 
     // and its iterator

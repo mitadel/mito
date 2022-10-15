@@ -2,19 +2,14 @@
 #include <iostream>
 #include <mito/utilities.h>
 
-class Simplex {
+class Simplex : public mito::utilities::Shareable {
   public:
-    Simplex(int foo) : _foo(foo), _is_valid(true) {}
-
-    void invalidate() { _is_valid = false; }
-
-    bool is_valid() { return _is_valid; }
+    Simplex(int foo) : _foo(foo) {}
 
     int foo() const { return _foo; }
 
   private:
     int _foo;
-    bool _is_valid;
 };
 
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
@@ -33,7 +28,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     std::vector<int> store_elements;
     for (const auto & el : vector) {
-        store_elements.emplace_back(el.foo());
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -44,10 +39,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     store_elements.clear();
 
     // invalidate element in the middle
-    simplex1->invalidate();
+    simplex1.reset();
 
     for (const auto & el : vector) {
-        store_elements.emplace_back(el.foo());
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -57,10 +52,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     store_elements.clear();
 
     // invalidate first element
-    simplex0->invalidate();
+    simplex0.reset();
 
     for (const auto & el : vector) {
-        store_elements.emplace_back(el.foo());
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(store_elements[0], 2);
@@ -69,10 +64,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     store_elements.clear();
 
     // invalidate last element
-    simplex2->invalidate();
+    simplex2.reset();
 
     for (const auto & el : vector) {
-        store_elements.emplace_back(el.foo());
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(std::size(store_elements), 0);
@@ -80,10 +75,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     store_elements.clear();
 
     // insert another simplex (trigger allocation of new segment)
-    const auto & simplex4 = vector.insert(4);
+    auto simplex4 = vector.insert(4);
 
     for (const auto & el : vector) {
-        store_elements.emplace_back(el.foo());
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(store_elements[0], 4);

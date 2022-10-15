@@ -1,23 +1,115 @@
 #include <gtest/gtest.h>
-#include <iostream>
 #include <mito/utilities.h>
 
-class Resource {
+#include <memory>
+
+class Resource : public mito::utilities::Shareable {
   public:
-    Resource(int a, Resource * c) : _a(a)
-    {
-        std::cout << "Built resource " << _a << " " << c << std::endl;
-    }
+    Resource(int a) : _a(a) { std::cout << "Built resource " << _a << std::endl; }
 
     ~Resource() { std::cout << "Destroying resource " << _a << std::endl; }
 
     int _a;
 };
 
-TEST(SharedPointer, TestSharedPointer)
+// the type of resource to be stored
+using resource_t = Resource;
+
+TEST(SharedPointer, DefaultConstructor)
 {
-    // the type of resource to be stored
-    using resource_t = Resource;
+    auto std_shared_ptr1 = std::make_shared<int>(1);
+
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+
+    EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
+}
+
+TEST(SharedPointer, CopyConstructor)
+{
+    auto std_shared_ptr1 = std::make_shared<int>(1);
+    std::shared_ptr<int> std_shared_ptr2 = std_shared_ptr1;
+
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+    mito::utilities::SharedPointer<resource_t> shared_ptr2 = shared_ptr1;
+
+    EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
+    EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
+}
+
+TEST(SharedPointer, MoveConstructor)
+{
+    auto std_shared_ptr1 = std::make_shared<int>(1);
+    std::shared_ptr<int> std_shared_ptr2(std::move(std_shared_ptr1));
+
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+    mito::utilities::SharedPointer<resource_t> shared_ptr2(std::move(shared_ptr1));
+
+    EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
+}
+
+TEST(SharedPointer, AssignmentOperator)
+{
+    auto std_shared_ptr1 = std::make_shared<int>(1);
+    auto std_shared_ptr2 = std::make_shared<int>(1);
+    std_shared_ptr2 = std_shared_ptr1;
+
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+    mito::utilities::SharedPointer<resource_t> shared_ptr2(new resource_t(1));
+    shared_ptr2 = shared_ptr1;
+
+    EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
+    EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
+}
+
+TEST(SharedPointer, MoveAssignmentOperator)
+{
+    auto std_shared_ptr1 = std::make_shared<int>(1);
+    auto std_shared_ptr2 = std::make_shared<int>(1);
+    std_shared_ptr2 = std::move(std_shared_ptr1);
+
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+    mito::utilities::SharedPointer<resource_t> shared_ptr2(new resource_t(1));
+    shared_ptr2 = std::move(shared_ptr1);
+
+    EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
+}
+
+TEST(SharedPointer, ThreeWayAssignment)
+{
+    auto std_shared_ptr1 = std::make_shared<int>(1);
+    std::shared_ptr<int> std_shared_ptr2 = std_shared_ptr1;
+    auto std_shared_ptr3 = std::make_shared<int>(1);
+    std_shared_ptr2 = std_shared_ptr3;
+
+    mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+    mito::utilities::SharedPointer<resource_t> shared_ptr2 = shared_ptr1;
+    mito::utilities::SharedPointer<resource_t> shared_ptr3(new resource_t(1));
+    shared_ptr2 = shared_ptr3;
+
+    EXPECT_EQ(shared_ptr1.references(), std_shared_ptr1.use_count());
+    EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
+    EXPECT_EQ(shared_ptr3.references(), std_shared_ptr3.use_count());
+}
+
+TEST(SharedPointer, Destructor)
+{
+    std::shared_ptr<int> std_shared_ptr2;
+    {
+        auto std_shared_ptr1 = std::make_shared<int>(1);
+        std_shared_ptr2 = std_shared_ptr1;
+    }
+
+    mito::utilities::SharedPointer<resource_t> shared_ptr2;
+    {
+        mito::utilities::SharedPointer<resource_t> shared_ptr1(new resource_t(1));
+        shared_ptr2 = shared_ptr1;
+    }
+
+    EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
+}
+
+TEST(SharedPointer, TestSegmentAllocation)
+{
     // the size of the segment of memory
     constexpr int N = 10;
     // the initialization value for the resource
@@ -30,22 +122,14 @@ TEST(SharedPointer, TestSharedPointer)
     resource_t * location = (segment + 3);
 
     // instantiate new resource at {location}
-    mito::utilities::shared_ptr<resource_t, true /*immortal*/> handle(a, nullptr, location);
-
-    // instantiate new const shared pointer pointing to the nonconst one
-    mito::utilities::const_shared_ptr<resource_t, true /*immortal*/> const_handle(handle);
+    resource_t * resource = new (location) resource_t(a);
+    mito::utilities::shared_ptr<resource_t> handle(resource);
 
     // modify the resource
     handle->_a += 1;
 
     // assert that the resource was modified correctly
     EXPECT_EQ(handle->_a, a + 1);
-
-    // assert that the const handle has the same value as the nonconst
-    EXPECT_TRUE(handle->_a == const_handle->_a);
-
-    // assert that the pointed resource is the same
-    EXPECT_TRUE((Resource *) handle == (const Resource *) const_handle);
 
     // free the segment of memory
     ::operator delete(segment);

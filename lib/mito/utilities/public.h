@@ -13,6 +13,7 @@
 #include "api.h"
 
 // classes implementation
+#include "Shareable.h"
 #include "SharedPointer.h"
 #include "SegmentedContainer.h"
 #include "SegmentedContainerIterator.h"

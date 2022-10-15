@@ -6,22 +6,77 @@
 #if !defined(mito_utilities_SegmentedContainer_h)
 #define mito_utilities_SegmentedContainer_h
 
+// DESIGN NOTES
+
+// Class {SegmentedContainer} implements a data structure that is resizable, while also being stable 
+// in memory and able to concurrently instantiate multiple resources collectively. 
+// While this data structure has been developed with the application in mind of collecting mesh 
+// elements, the implementation is quite general and can be extended to storage of other type of 
+// resources.
+
+// A {SegmentedContainer} is articulated in multiple segments of (contiguous) memory. Each segment
+// allocates memory for {N} resources of type {T}. Right at the end of each segment, a pointer {T*} 
+// allows to reach the beginning of the next segment, much like what happens in linked lists. 
+
+// Resources are added to this container by place-instantiating them in the next available 
+// location (if any). If the container is completely full, a new segment of memory is allocated 
+// altogether. 
+// Resources are removed from this container by marking the resource as 'invalid' and signing up
+// its position in memory to be overwritten by a new resource.
+
+// The template parameter {N}, namely the length of each segment, needs to be set by balancing the
+// following trade-off: 
+// - a higher value of {N} leads to a more compact data structure with a larger number of elements 
+// lying adjacent to each other in memory and, in case of a fully populated segment, a high value 
+// of {N} leads to a smaller allocation time per individual resource. Note, however, that, in case 
+// of a non fully-populated segment, more resources than actually needed are committed.
+// - a smaller value of {N} leads to a more scattered data structure and more memory allocation 
+// calls, but certainly reduces redundancy in memory allocation.
+
+// Iterators to this data structure are smart enough to skip the invalid elements and jump from one 
+// segment to the next one, once the end of a segment has been reached.
+
+// The {SegmentedContainer} data structure is meant to closely collaborate with a {SharedPointer} 
+// class, which provides the information of resources being unused and therefore redundant. However, 
+// the {SharedPointer} class differs from the {shared_ptr} offered by the C++ standard library in 
+// two respects: 
+//      1) the {SharedPointer} does not have ownership of the resource and does not have privileges 
+//          to allocate and deallocate memory for it. In fact, the allocation and deallocation of 
+//          memory is entirely managed by the {SegmentedContainer} class, which allocates and 
+//          deallocates resources collectively to optimize memory allocation/deallocation. In this 
+//          respect, the role of the {SharedPointer} is only that of managing the book keeping on 
+//          the count of references to the resources.
+//      2) the {SharedPointer} does not store the reference count directly, but manages a reference 
+//          count stored by the resource. The reason for this is that, in order not to compromise 
+//          the correctness of the reference count, the {SegmentedContainer} should only make the 
+//          resource available to its clients via a {SharedPointer}, which knows how to do the 
+//          relative book keeping. Because the reference count is stored directly within the 
+//          resource, the {SegmentedContainer} does not need to store a {SharedPointer} to each of 
+//          its resources but is able to synthesize a {SharedPointer} on the fly, upon request of 
+//          a given resource by a given client.
+
+// The only requirement of the {SegmentedContainer} on the template type {T} of the resources stored 
+// is simply that the resource is a {ReferenceCountedObject}, which means that the resource is able 
+// to provide the machinery needed by the {SharedPointer} to do the book keeping. Specifically, this 
+// translates into the class of the resource inheriting from class {Shareable}, which provides the 
+// minimal interface necessary to collaborate with {SharedPointer} to perform reference counting.
+// Ideally, the resource is otherwise immutable (i.e. except from the reference count attribute). 
+// The use of {SegmentedContainer} for a class that is not immutable can be envisioned but has not 
+// been explored so far.
 
 namespace mito::utilities {
-    template <class T, int N = 10 /* segment size */>
-    requires(
-        std::is_member_function_pointer_v<decltype(&T::invalidate)>
-        && std::is_member_function_pointer_v<decltype(&T::is_valid)>)
+    template <class T, int N /* segment size */>
+    requires ReferenceCountedObject<T>
     class SegmentedContainer {
 
       public:
         // aliases for my template parameters
-        using segment_type = T;
+        using resource_type = T;
         // aliases for my segment size
         constexpr static int segment_size = N;
 
         // me
-        using segmented_container_type = SegmentedContainer<segment_type, segment_size>;
+        using segmented_container_type = SegmentedContainer<resource_type, segment_size>;
 
         // my value
         using pointer = T *;
@@ -145,8 +200,9 @@ namespace mito::utilities {
             }
 
             // create a new instance of T at {location} with placement new
+            T * resource = new (location) T(args...);
             // and assign it to a new pointer
-            mito::utilities::shared_ptr<T, true> pointer(args..., location);
+            mito::utilities::shared_ptr<T> pointer(resource);
 
             // increment the size of the container
             ++_n_elements;
@@ -161,16 +217,19 @@ namespace mito::utilities {
             return pointer;
         }
 
-        auto erase(const mito::utilities::shared_ptr<T, true> & element) -> void
+        auto erase(mito::utilities::shared_ptr<T> & element) -> void
         {
-            // mark element as invalid
-            element->invalidate();
-
             // decrement the number of elements
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
             _available_locations.push(element);
+
+            // assert that you are the last one reference to this item
+            assert(element.references() == 1);
+
+            // reset the shared pointer
+            element.reset();
 
             // all done
             return;

@@ -2,17 +2,12 @@
 #include <iostream>
 #include <mito/utilities.h>
 
-class Simplex {
+class Simplex : public mito::utilities::Shareable {
   public:
-    Simplex(int foo) : _foo(foo), _is_valid(true) {}
-
-    void invalidate() { _is_valid = false; }
-
-    bool is_valid() { return _is_valid; }
+    Simplex(int foo) : _foo(foo) {}
 
   private:
     int _foo;
-    bool _is_valid;
 };
 
 TEST(SegmentedContainer, TestSegmentedContainer)
@@ -25,9 +20,9 @@ TEST(SegmentedContainer, TestSegmentedContainer)
     EXPECT_EQ(vector.size(), 0);
 
     // insert three simplices in the container
-    const auto & simplex0 = vector.insert(0);
-    const auto & simplex1 = vector.insert(1);
-    const auto & simplex2 = vector.insert(2);
+    auto simplex0 = vector.insert(0);
+    auto simplex1 = vector.insert(1);
+    auto simplex2 = vector.insert(2);
 
     // assert that the container has 3 elements and its capacity is also 3
     EXPECT_EQ(vector.capacity(), 3);
@@ -41,14 +36,14 @@ TEST(SegmentedContainer, TestSegmentedContainer)
     EXPECT_EQ(vector.size(), 2);
 
     // insert one simplex
-    const auto & simplex3 = vector.insert(3);
+    auto simplex3 = vector.insert(3);
 
     // assert that the container has again 3 elements and its capacity is 3
     EXPECT_EQ(vector.capacity(), 3);
     EXPECT_EQ(vector.size(), 3);
 
     // insert another simplex (trigger allocation of new segment)
-    const auto & simplex4 = vector.insert(4);
+    auto simplex4 = vector.insert(4);
 
     // assert that the container has now 4 elements and its capacity is 6
     // (new memory allocation was in fact triggered)
