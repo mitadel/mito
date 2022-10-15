@@ -101,7 +101,7 @@ namespace mito::topology {
 
       private:
         // the simplex composition in terms of subsimplices
-        simplex_composition_t<D> _simplices;
+        const simplex_composition_t<D> _simplices;
 
         // private friendship with the factory of simplices
         friend class SimplexFactory<D>;

@@ -89,7 +89,7 @@ namespace mito::topology {
         // the shared pointer to the footprint
         const unoriented_simplex_ptr<D> _footprint;
         // the orientation
-        bool _orientation;
+        const bool _orientation;
         // private friendship with the factory of oriented simplices
         friend class OrientedSimplexFactory<D>;
     };
