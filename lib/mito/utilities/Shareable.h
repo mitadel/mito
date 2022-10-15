@@ -22,10 +22,10 @@ namespace mito::utilities {
         // meta methods
       public:
         // destructor
-        inline ~Shareable();
+        constexpr inline ~Shareable();
 
         // default constructor
-        inline Shareable();
+        constexpr inline Shareable();
 
         // copy constructors
         inline Shareable(const Shareable &) = delete;

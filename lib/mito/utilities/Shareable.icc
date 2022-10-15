@@ -20,10 +20,10 @@ mito::utilities::Shareable::is_valid() const -> bool
 }
 
 // destructor
-mito::utilities::Shareable::~Shareable() {}
+constexpr mito::utilities::Shareable::~Shareable() {}
 
 // the default constructor
-mito::utilities::Shareable::Shareable() : _reference_count(0) {}
+constexpr mito::utilities::Shareable::Shareable() : _reference_count(0) {}
 
 // interface
 auto
