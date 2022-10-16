@@ -57,6 +57,13 @@ namespace mito::topology {
     template <int D>
     using oriented_simplex_ptr = std::shared_ptr<const OrientedSimplex<D>>;
 
+    // id type of unoriented simplex 
+    using unoriented_simplex_id_t = std::uintptr_t;
+
+    // id type of unoriented simplex 
+    // QUESTION: should we collapse these two ids and call them {element_id_t}?
+    using oriented_simplex_id_t = std::uintptr_t;
+
     // oriented simplex composition alias
     template <int D>
     using simplex_composition_t = std::array<oriented_simplex_ptr<D - 1>, D + 1>;
@@ -91,11 +98,6 @@ namespace mito::topology {
     // vertex vector alias
     using vertex_vector_t = element_vector_t<vertex_t>;
 
-    template <int D>
-    using unoriented_simplex_id_t = std::uintptr_t;
-
-    template <int D>
-    using oriented_simplex_id_t = std::uintptr_t;
 }
 
 

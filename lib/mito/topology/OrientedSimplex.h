@@ -62,18 +62,18 @@ namespace mito::topology {
         const auto & composition() const { return _footprint->composition(); }
 
         // returns the id of this (oriented) simplex
-        oriented_simplex_id_t<D> id() const
+        oriented_simplex_id_t id() const
         {
             // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t<D>>(this);
+            return reinterpret_cast<unoriented_simplex_id_t>(this);
         }
 
         // returns the id of this (oriented) simplex
-        oriented_simplex_id_t<D> simplex_id() const { return id(); }
+        oriented_simplex_id_t simplex_id() const { return id(); }
 
         // returns the (unoriented) footprint id
         // (the footprint id is the (immutable) address of the unoriented footprint)
-        unoriented_simplex_id_t<D> footprint_id() const { return _footprint->id(); }
+        unoriented_simplex_id_t footprint_id() const { return _footprint->id(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
@@ -125,10 +125,10 @@ namespace mito::topology {
       public:
         // returns the (unoriented) footprint id
         // Note: the footprint of a vertex is the vertex itself
-        inline auto footprint_id() const -> unoriented_simplex_id_t<0>
+        inline auto footprint_id() const -> unoriented_simplex_id_t
         {
             // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t<0>>(this);
+            return reinterpret_cast<unoriented_simplex_id_t>(this);
         }
 
         // perform a sanity check

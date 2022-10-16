@@ -28,12 +28,12 @@ namespace mito::topology {
         //      2 pointers to nodes into a pointer to edge,
         //      3 pointers to edges into a pointer to face, ...
         // edges composition
-        // std::map<std::array<unoriented_simplex_id_t<0>, 2>, unoriented_simplex_ptr<1>>
+        // std::map<std::array<unoriented_simplex_id_t, 2>, unoriented_simplex_ptr<1>>
         // faces compositions
-        // std::map<std::array<unoriented_simplex_id_t<1>, 3>, unoriented_simplex_ptr<2>>
+        // std::map<std::array<unoriented_simplex_id_t, 3>, unoriented_simplex_ptr<2>>
         // volumes compositions
-        // std::map<std::array<unoriented_simplex_id_t<2>, 4>, unoriented_simplex_ptr<3>>
-        using composition_t = std::array<unoriented_simplex_id_t<D - 1>, D + 1>;
+        // std::map<std::array<unoriented_simplex_id_t, 4>, unoriented_simplex_ptr<3>>
+        using composition_t = std::array<unoriented_simplex_id_t, D + 1>;
         using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
 
       public:
