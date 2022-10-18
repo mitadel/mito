@@ -217,7 +217,7 @@ namespace mito::utilities {
             return pointer;
         }
 
-        auto erase(mito::utilities::shared_ptr<T> & element) -> void
+        auto erase(const mito::utilities::shared_ptr<T> & element) -> void
         {
             // decrement the number of elements
             --_n_elements;
@@ -229,7 +229,11 @@ namespace mito::utilities {
             assert(element.references() == 1);
 
             // reset the shared pointer
-            element.reset();
+            // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
+            //          declared mutable. Should we call reset here and make the handle mutable or 
+            //          should we accept that {element} points to an invalid resource after call to
+            //          {erase}?
+            // element.reset();
 
             // all done
             return;

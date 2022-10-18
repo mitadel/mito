@@ -49,7 +49,7 @@ namespace mito::utilities {
 
         // data members
       private:
-        int _reference_count;
+        mutable int _reference_count;
 
       private:
         // friendship with SharedPointer (the shared pointer needs r/w access to the reference count
