@@ -7,7 +7,7 @@ namespace mito::geometry {
     template <int D>
     class PointCloud {
       private:
-        using cloud_t = std::unordered_map<vertex_t, point_t<D>>;
+        using cloud_t = mito::geometry::cloud_t<D>;
 
       public:
         PointCloud() = delete;
