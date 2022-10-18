@@ -191,6 +191,8 @@ namespace mito::topology {
     template <>
     class OrientedSimplexFactory<0> {
 
+        using vertex_collection_t = element_collection_t<vertex_t>;
+
       public:
         // delete default constructor
         OrientedSimplexFactory() = delete;
@@ -198,18 +200,15 @@ namespace mito::topology {
         // adds a new vertex to the vertex collection and returns it
         static inline auto orientedSimplex() -> oriented_simplex_ptr<0>
         {
-            // insert the new vertex in the vertex set
-            auto ret = _vertices.insert(std::make_shared<oriented_simplex_t<0>>());
-
-            // return vertex
-            return *ret.first;
+            // insert the new vertex and return it
+            return _vertices.insert();
         }
 
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
         static inline auto incidence(const oriented_simplex_ptr<0> & oriented_simplex) -> int
         {
-            return oriented_simplex.use_count() - 1;
+            return oriented_simplex->references() - 1;
         }
 
         static inline auto _cleanup(const oriented_simplex_ptr<0> & oriented_simplex, int i = 0)
@@ -232,11 +231,12 @@ namespace mito::topology {
 
       private:
         // container to store the vertices
-        static vertex_set_t _vertices;
+        static vertex_collection_t _vertices;
     };
 
     // initialize static attribute
-    vertex_set_t OrientedSimplexFactory<0>::_vertices = vertex_set_t();
+    OrientedSimplexFactory<0>::vertex_collection_t OrientedSimplexFactory<0>::_vertices = 
+        OrientedSimplexFactory<0>::vertex_collection_t();
 }
 
 #endif    // mito_topology_OrientedSimplexFactory_h
