@@ -101,6 +101,8 @@ namespace mito::utilities {
         // destructor
         ~SegmentedContainer()
         {
+            if (_begin == nullptr) return;
+
             // start from the beginning of the first segment
             T * ptr = _begin;
 
