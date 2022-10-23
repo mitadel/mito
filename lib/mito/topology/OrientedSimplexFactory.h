@@ -70,7 +70,7 @@ namespace mito::topology {
         // returns the number of owners of the shared pointer to this oriented simplex
         static inline int incidence(const oriented_simplex_ptr<D> & oriented_simplex)
         {
-            return oriented_simplex.use_count() - 1;
+            return oriented_simplex.references() - 1;
         }
 
         static inline void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex, int i = 0)
