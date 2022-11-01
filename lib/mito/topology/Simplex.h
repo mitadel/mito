@@ -16,7 +16,7 @@ namespace mito::topology {
     class Simplex : public mito::utilities::Shareable {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
-      private:
+      public: // TOFIX: should be private
         // constructor for a simplex based on its composition in terms of subsimplices
         constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
 
