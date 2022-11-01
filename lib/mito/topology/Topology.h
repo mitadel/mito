@@ -67,6 +67,24 @@ namespace mito::topology {
         }
     };
 
+    template <int D>
+    inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> auto
+    {
+        return Topology<D>::exists_flipped(oriented_simplex);
+    }
+
+    template <int D>
+    inline auto flip(const simplex_t<D> & oriented_simplex) -> auto
+    {
+        return Topology<D>::flip(oriented_simplex);
+    }
+
+    template <int D>
+    inline auto incidence(const simplex_t<D> & oriented_simplex) -> auto
+    {
+        return Topology<D>::incidence(oriented_simplex);
+    }
+
 }
 
 

@@ -17,24 +17,15 @@ namespace mito::topology {
     // tetrahedron factory
     inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3>;
 
-    // TOFIX: where should we park these methods?
     template <int D>
-    inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> auto
-    {
-        return Topology<D>::exists_flipped(oriented_simplex);
-    }
+    inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> auto;
 
     template <int D>
-    inline auto flip(const simplex_t<D> & oriented_simplex) -> auto
-    {
-        return Topology<D>::flip(oriented_simplex);
-    }
+    inline auto flip(const simplex_t<D> & oriented_simplex) -> auto;
 
     template <int D>
-    inline auto incidence(const simplex_t<D> & oriented_simplex) -> auto
-    {
-        return Topology<D>::incidence(oriented_simplex);
-    }
+    inline auto incidence(const simplex_t<D> & oriented_simplex) -> auto;
+
 }
 
 
