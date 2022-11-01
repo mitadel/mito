@@ -21,10 +21,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     EXPECT_EQ(vector.capacity(), 0);
     EXPECT_EQ(vector.size(), 0);
 
-    // insert three simplices in the container
-    auto simplex0 = vector.insert(0);
-    auto simplex1 = vector.insert(1);
-    auto simplex2 = vector.insert(2);
+    // emplace three simplices in the container
+    auto simplex0 = vector.emplace(0);
+    auto simplex1 = vector.emplace(1);
+    auto simplex2 = vector.emplace(2);
 
     std::vector<int> store_elements;
     for (const auto & el : vector) {
@@ -74,8 +74,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
-    // insert another simplex (trigger allocation of new segment)
-    auto simplex4 = vector.insert(4);
+    // emplace another simplex (trigger allocation of new segment)
+    auto simplex4 = vector.emplace(4);
 
     for (const auto & el : vector) {
         store_elements.emplace_back(el->foo());

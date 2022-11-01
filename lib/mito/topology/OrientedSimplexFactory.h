@@ -200,8 +200,8 @@ namespace mito::topology {
         // adds a new vertex to the vertex collection and returns it
         static inline auto orientedSimplex() -> oriented_simplex_ptr<0>
         {
-            // insert the new vertex and return it
-            return _vertices.insert();
+            // emplace the new vertex in the vertex collection and return it
+            return _vertices.emplace();
         }
 
         // TOFIX: change name, this is not actually the incidence

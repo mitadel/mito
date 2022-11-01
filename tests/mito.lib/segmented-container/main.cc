@@ -19,10 +19,10 @@ TEST(SegmentedContainer, TestSegmentedContainer)
     EXPECT_EQ(vector.capacity(), 0);
     EXPECT_EQ(vector.size(), 0);
 
-    // insert three simplices in the container
-    auto simplex0 = vector.insert(0);
-    auto simplex1 = vector.insert(1);
-    auto simplex2 = vector.insert(2);
+    // emplace three simplices in the container
+    auto simplex0 = vector.emplace(0);
+    auto simplex1 = vector.emplace(1);
+    auto simplex2 = vector.emplace(2);
 
     // assert that the container has 3 elements and its capacity is also 3
     EXPECT_EQ(vector.capacity(), 3);
@@ -35,15 +35,15 @@ TEST(SegmentedContainer, TestSegmentedContainer)
     EXPECT_EQ(vector.capacity(), 3);
     EXPECT_EQ(vector.size(), 2);
 
-    // insert one simplex
-    auto simplex3 = vector.insert(3);
+    // emplace one simplex
+    auto simplex3 = vector.emplace(3);
 
     // assert that the container has again 3 elements and its capacity is 3
     EXPECT_EQ(vector.capacity(), 3);
     EXPECT_EQ(vector.size(), 3);
 
-    // insert another simplex (trigger allocation of new segment)
-    auto simplex4 = vector.insert(4);
+    // emplace another simplex (trigger allocation of new segment)
+    auto simplex4 = vector.emplace(4);
 
     // assert that the container has now 4 elements and its capacity is 6
     // (new memory allocation was in fact triggered)
