@@ -23,6 +23,9 @@ namespace mito::topology {
     class SimplexFactory {
 
       private:
+        // typedef for a collection of unoriented simplices
+        using simplex_collection_t = element_collection_t<unoriented_simplex_ptr<D>>;
+
         // typedef for a composition map of simplices:
         // these maps map:
         //      2 pointers to nodes into a pointer to edge,
@@ -48,14 +51,27 @@ namespace mito::topology {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
 
-            // if there is no representative registered in the map, then create a new simplex
-            // with this composition
-            // TODO: placement new here
-            auto ret =
-                _compositions.emplace(representative, new unoriented_simplex_t<D>(composition));
+            // look up for this representative in the compositions map 
+            auto it_find = _compositions.find(representative);  
 
-            // return representative of simplex with composition {composition}
-            return ret.first->second;
+            // if a representative simplex with this composition is already registered in the map
+            if (it_find != _compositions.end()) {
+                // then return it
+                return it_find->second;
+            }
+            // otherwise
+            else {
+                // create a new simplex with composition {composition}
+                auto simplex = _simplices.emplace(composition);
+
+                // register it in the compositions map
+                auto ret = _compositions.insert(
+                    std::pair<composition_t, unoriented_simplex_ptr<D>>
+                    (representative, simplex));
+
+                // and return it
+                return ret.first->second;
+            }  
         }
 
         // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
@@ -81,9 +97,17 @@ namespace mito::topology {
         static inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
 
       private:
+        // container to store the unoriented simplices
+        static simplex_collection_t _simplices;
+
         // container to map simplex composition to simplices
         static composition_map_t _compositions;
     };
+
+    // initialize static attribute
+    template<int D>
+    SimplexFactory<D>::simplex_collection_t SimplexFactory<D>::_simplices = 
+        SimplexFactory<D>::simplex_collection_t();
 
     // equivalence class relation for a simplex in 1D
     template <>
