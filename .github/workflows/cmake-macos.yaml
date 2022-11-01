@@ -141,7 +141,7 @@ jobs:
           echo " -- switching to the mito home directory"
           cd mito
           echo " -- checking out the correct ref"
-          git checkout ${GITHUB_SHA}
+          git checkout ${{github.event.pull_request.head.sha}}
 
       - name: build mito
         run: |
