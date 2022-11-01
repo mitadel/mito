@@ -31,7 +31,7 @@ jobs:
       - name: ${{matrix.os}} refresh
         run: |
           echo " -- install our dependencies"
-          brew install make cmake googletest
+          brew install make cmake
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v2
@@ -42,6 +42,27 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install distro numpy pybind11
+      
+      - name: install gtest
+        run: |
+          echo " -- cloning gtest"
+          git clone https://github.com/google/googletest
+          echo " -- switching to the build directory"
+          cd ${{runner.temp}}
+          mkdir build
+          cd build
+          echo " -- configuring the build"
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} ${{github.workspace}}/googletest
+          echo " -- building gtest"
+          make -j 2 install
+          echo " -- clean up"
+          cd ${{runner.temp}}
+          rm -r build
+        env:
+          prefix: ${{runner.temp}}/gtest_install
+          target: Release
+          cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
+          cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
       
       - name: pyre setup
         run: |
@@ -92,11 +113,6 @@ jobs:
           ${{matrix.suite}}-${{matrix.suiteVersion}} --version
         env:
           pythonVersion: ${{matrix.python}}
-      
-      - name: external dependencies
-        run: |
-          echo " -- gtest"
-          brew ls --verbose googletest
 
       - name: locations of python packages
         run: |
@@ -132,7 +148,7 @@ jobs:
           mkdir build
           cd build
           echo " -- configuring the build"
-          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre ${{github.workspace}}/mito
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest ${{github.workspace}}/mito
           echo " -- building mito"
           make -j 2 install
         env:
