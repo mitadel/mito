@@ -6,62 +6,6 @@
 
 namespace mito::mesh {
     template <int D>
-    auto summit(std::ifstream & fileStream) -> auto
-    {
-        std::cout << "Loading summit mesh..." << std::endl;
-        assert(fileStream.is_open());
-
-        // read dimension of physical space
-        int dim = 0;
-        fileStream >> dim;
-
-        // assert this mesh object is of same dimension of the mesh being read
-        assert(int(D) == dim);
-
-        // instantiate mesh of simplicial topology
-        Mesh<D, simplex_t> mesh;
-
-        // read number of vertices
-        int N_vertices = 0;
-        fileStream >> N_vertices;
-        // reserve space for vertices
-        std::vector<vertex_t> vertices;
-        vertices.reserve(N_vertices);
-
-        // read number of elements
-        int N_elements = 0;
-        fileStream >> N_elements;
-
-        // read number of element types
-        int N_element_types = 0;
-        fileStream >> N_element_types;
-
-        // QUESTION: Not sure that we need this...
-        assert(N_element_types == 1);
-
-        // QUESTION: do we need to reserve space for elements before reading them?
-
-        // read the vertices
-        readVertices<D>(fileStream, N_vertices, vertices);
-
-        // read the elements
-        readElements(fileStream, mesh, N_elements, vertices);
-
-        // sanity check: the number of vertices in the map is N_vertices
-        vertices.shrink_to_fit();
-        assert(vertices.size() == static_cast<size_t>(N_vertices));
-
-        // sanity check: the number of elements of highest dimension in the map is N_elements
-        assert(mesh.template nElements<D>() == N_elements);
-
-        // sanity check: run sanity check for all mesh simplices in cascade
-        assert(mesh.sanityCheck());
-
-        // all done
-        return mesh;
-    }
-
-    template <int D>
     auto readVertices(std::ifstream & fileStream, int N_vertices, std::vector<vertex_t> & vertices)
         -> void
     {
@@ -142,6 +86,63 @@ namespace mito::mesh {
         // all done
         return;
     }
+
+    template <int D>
+    auto summit(std::ifstream & fileStream) -> auto
+    {
+        std::cout << "Loading summit mesh..." << std::endl;
+        assert(fileStream.is_open());
+
+        // read dimension of physical space
+        int dim = 0;
+        fileStream >> dim;
+
+        // assert this mesh object is of same dimension of the mesh being read
+        assert(int(D) == dim);
+
+        // instantiate mesh of simplicial topology
+        Mesh<D, simplex_t> mesh;
+
+        // read number of vertices
+        int N_vertices = 0;
+        fileStream >> N_vertices;
+        // reserve space for vertices
+        std::vector<vertex_t> vertices;
+        vertices.reserve(N_vertices);
+
+        // read number of elements
+        int N_elements = 0;
+        fileStream >> N_elements;
+
+        // read number of element types
+        int N_element_types = 0;
+        fileStream >> N_element_types;
+
+        // QUESTION: Not sure that we need this...
+        assert(N_element_types == 1);
+
+        // QUESTION: do we need to reserve space for elements before reading them?
+
+        // read the vertices
+        readVertices<D>(fileStream, N_vertices, vertices);
+
+        // read the elements
+        readElements(fileStream, mesh, N_elements, vertices);
+
+        // sanity check: the number of vertices in the map is N_vertices
+        vertices.shrink_to_fit();
+        assert(vertices.size() == static_cast<size_t>(N_vertices));
+
+        // sanity check: the number of elements of highest dimension in the map is N_elements
+        assert(mesh.template nElements<D>() == N_elements);
+
+        // sanity check: run sanity check for all mesh simplices in cascade
+        assert(mesh.sanityCheck());
+
+        // all done
+        return mesh;
+    }
+
 }    // namespace mito::mesh
 
 #endif    // mito_mesh_summit_h
