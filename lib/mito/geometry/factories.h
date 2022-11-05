@@ -6,10 +6,10 @@
 namespace mito::geometry {
 
     // point factory
-    template <int D, class... Args>
-    constexpr auto point(Args &&... args) -> point_t<D>
+    template <class... Args>
+    constexpr auto point(Args &&... args) -> point_t<sizeof...(Args)>
     {
-        return point_t<D>(std::forward<Args>(args)...);
+        return point_t<sizeof...(Args)>(std::forward<Args>(args)...);
     }
 
     template <int D>
