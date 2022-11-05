@@ -48,7 +48,8 @@ namespace mito::geometry {
     using tetrahedron_t = topology::tetrahedron_t;
 
     template <int D>
-    using cloud_t = std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
+    using cloud_t =
+        std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
 
 }
 

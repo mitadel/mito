@@ -22,7 +22,7 @@ namespace mito::topology {
 
         // private constructors: only the OrientedSimplexFactory has the right to instantiate
         // oriented simplices
-      public: // TOFIX: should be private
+      public:    // TOFIX: should be private
         // constructor with an existing shared pointer as footprint
         constexpr OrientedSimplex(const unoriented_simplex_ptr<D> & footprint, bool orientation) :
             _footprint(footprint),
@@ -102,7 +102,7 @@ namespace mito::topology {
 
     template <>
     class OrientedSimplex<0> : public mito::utilities::Shareable {
-      public: // TOFIX: should be private
+      public:    // TOFIX: should be private
         // default constructor
         constexpr OrientedSimplex() {}
 

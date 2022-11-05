@@ -51,8 +51,8 @@ namespace mito::topology {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
 
-            // look up for this representative in the compositions map 
-            auto it_find = _compositions.find(representative);  
+            // look up for this representative in the compositions map
+            auto it_find = _compositions.find(representative);
 
             // if a representative simplex with this composition is already registered in the map
             if (it_find != _compositions.end()) {
@@ -66,12 +66,11 @@ namespace mito::topology {
 
                 // register it in the compositions map
                 auto ret = _compositions.insert(
-                    std::pair<composition_t, unoriented_simplex_ptr<D>>
-                    (representative, simplex));
+                    std::pair<composition_t, unoriented_simplex_ptr<D>>(representative, simplex));
 
                 // and return it
                 return ret.first->second;
-            }  
+            }
         }
 
         // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
@@ -105,8 +104,8 @@ namespace mito::topology {
     };
 
     // initialize static attribute
-    template<int D>
-    SimplexFactory<D>::simplex_collection_t SimplexFactory<D>::_simplices = 
+    template <int D>
+    SimplexFactory<D>::simplex_collection_t SimplexFactory<D>::_simplices =
         SimplexFactory<D>::simplex_collection_t();
 
     // equivalence class relation for a simplex in 1D

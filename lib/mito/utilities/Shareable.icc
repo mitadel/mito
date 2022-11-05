@@ -15,7 +15,7 @@ mito::utilities::Shareable::references() const -> int
 auto
 mito::utilities::Shareable::is_valid() const -> bool
 {
-    // true unless the references count is negative or zero 
+    // true unless the references count is negative or zero
     return (_reference_count > 0 ? true : false);
 }
 

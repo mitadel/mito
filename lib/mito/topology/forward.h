@@ -57,10 +57,10 @@ namespace mito::topology {
     template <int D>
     using oriented_simplex_ptr = mito::utilities::shared_ptr<oriented_simplex_t<D>>;
 
-    // id type of unoriented simplex 
+    // id type of unoriented simplex
     using unoriented_simplex_id_t = std::uintptr_t;
 
-    // id type of unoriented simplex 
+    // id type of unoriented simplex
     // QUESTION: should we collapse these two ids and call them {element_id_t}?
     using oriented_simplex_id_t = std::uintptr_t;
 
@@ -85,13 +85,15 @@ namespace mito::topology {
     using tetrahedron_t = simplex_t<3>;
 
     // hash function for {elementT}, which is a (shared) pointer to an element
-    // Note that two pointers pointing to the same element collapse on the same hashed value 
+    // Note that two pointers pointing to the same element collapse on the same hashed value
     template <class elementT>
     struct element_hash {
-       size_t operator() (const elementT &element) const {
+        size_t operator()(const elementT & element) const
+        {
             // reinterpret the address of the pointed handle as a {size_t} and return it
-            return reinterpret_cast<mito::topology::unoriented_simplex_id_t>(static_cast<elementT::handle_t>(element));
-       }
+            return reinterpret_cast<mito::topology::unoriented_simplex_id_t>(
+                static_cast<elementT::handle_t>(element));
+        }
     };
 
     // element set alias
@@ -108,11 +110,12 @@ namespace mito::topology {
     // vertex vector alias
     using vertex_vector_t = element_vector_t<vertex_t>;
 
-    // a collection of elements 
-    // QUESTION: this data structure should only be used by the factories, so where should it be 
+    // a collection of elements
+    // QUESTION: this data structure should only be used by the factories, so where should it be
     //              typedef'ed?
     template <class elementT>
-    using element_collection_t = mito::utilities::segmented_t<typename elementT::resource_t, 100 /* segment size */>;
+    using element_collection_t =
+        mito::utilities::segmented_t<typename elementT::resource_t, 100 /* segment size */>;
 }
 
 

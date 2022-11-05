@@ -42,8 +42,8 @@ namespace mito::topology {
             // bind the footprint and the orientation in a tuple
             auto mytuple = std::make_tuple(simplex->id(), orientation);
 
-            // look up the tuple in the orientation map 
-            auto it_find = _orientations.find(mytuple);  
+            // look up the tuple in the orientation map
+            auto it_find = _orientations.find(mytuple);
 
             // if an oriented simplex riding on simplex {simplex} with orientation {orientation}
             // is already registered in the map
@@ -53,18 +53,18 @@ namespace mito::topology {
             }
             // otherwise
             else {
-                // create a new oriented simplex riding on simplex {simplex} with orientation 
+                // create a new oriented simplex riding on simplex {simplex} with orientation
                 // {orientation}
                 auto oriented_simplex = _oriented_simplices.emplace(simplex, orientation);
 
                 // register it in the map
                 auto ret = _orientations.insert(
-                    std::pair<std::tuple<unoriented_simplex_id_t, bool>, oriented_simplex_ptr<D>>
-                    (mytuple, oriented_simplex));
+                    std::pair<std::tuple<unoriented_simplex_id_t, bool>, oriented_simplex_ptr<D>>(
+                        mytuple, oriented_simplex));
 
                 // and return it
                 return ret.first->second;
-            }  
+            }
         }
 
         // return a simplex with composition {composition} (either create a new simplex if such
@@ -153,9 +153,10 @@ namespace mito::topology {
     };
 
     // initialize static attribute
-    template<int D>
-    OrientedSimplexFactory<D>::oriented_simplex_collection_t OrientedSimplexFactory<D>::_oriented_simplices = 
-        OrientedSimplexFactory<D>::oriented_simplex_collection_t();
+    template <int D>
+    OrientedSimplexFactory<D>::oriented_simplex_collection_t
+        OrientedSimplexFactory<D>::_oriented_simplices =
+            OrientedSimplexFactory<D>::oriented_simplex_collection_t();
 
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
@@ -260,7 +261,7 @@ namespace mito::topology {
     };
 
     // initialize static attribute
-    OrientedSimplexFactory<0>::vertex_collection_t OrientedSimplexFactory<0>::_vertices = 
+    OrientedSimplexFactory<0>::vertex_collection_t OrientedSimplexFactory<0>::_vertices =
         OrientedSimplexFactory<0>::vertex_collection_t();
 }
 

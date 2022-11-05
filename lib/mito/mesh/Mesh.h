@@ -87,12 +87,10 @@ namespace mito::mesh {
         }
 
         template <int I>
-        inline auto elements() const -> const auto & 
-        requires(I <= D) 
-        {
-            // all done
-            return std::get<I>(_elements);
-        }
+        inline auto elements() const -> const auto & requires(I <= D) {
+                                                         // all done
+                                                         return std::get<I>(_elements);
+                                                     }
 
         /**
          * @brief Returns an element set with all boundary elements of dimension I
