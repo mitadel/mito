@@ -30,26 +30,6 @@ namespace mito::mesh {
     }
 
     template <int D>
-    auto readElements(
-        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
-        const std::vector<vertex_t> & vertices) -> void
-    {
-        for (int i = 0; i < N_elements; ++i) {
-            int element_type = 0;
-            fileStream >> element_type;
-
-            if (element_type == 3) {
-                readTriangle(fileStream, mesh, vertices);
-            } else {
-                std::cout << "Error: Unknown element type" << std::endl;
-            }
-        }
-
-        // all done
-        return;
-    }
-
-    template <int D>
     auto readTriangle(
         std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
         const std::vector<vertex_t> & vertices) -> void
@@ -82,6 +62,26 @@ namespace mito::mesh {
         // TOFIX: Ignored for now
         std::string element_label;
         fileStream >> element_label;
+
+        // all done
+        return;
+    }
+
+    template <int D>
+    auto readElements(
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
+        const std::vector<vertex_t> & vertices) -> void
+    {
+        for (int i = 0; i < N_elements; ++i) {
+            int element_type = 0;
+            fileStream >> element_type;
+
+            if (element_type == 3) {
+                readTriangle(fileStream, mesh, vertices);
+            } else {
+                std::cout << "Error: Unknown element type" << std::endl;
+            }
+        }
 
         // all done
         return;
