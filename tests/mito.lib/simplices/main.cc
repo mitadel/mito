@@ -3,7 +3,6 @@
 #include <mito/mesh.h>
 #include <mito/manifolds.h>
 
-using mito::geometry::point_t;
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
@@ -26,10 +25,10 @@ TEST(Simplices, DISABLED_TestSimplices)
         (0,0)             (1,0)
     */
 
-    auto vertex0 = mito::geometry::vertex(point_t<2> { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::vertex(point_t<2> { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::vertex(point_t<2> { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::vertex(point_t<2> { 0.5, 0.5 });
+    auto vertex0 = mito::geometry::vertex(mito::geometry::point(0.0, 0.0));
+    auto vertex1 = mito::geometry::vertex(mito::geometry::point(1.0, 0.0));
+    auto vertex2 = mito::geometry::vertex(mito::geometry::point(1.0, 1.0));
+    auto vertex3 = mito::geometry::vertex(mito::geometry::point(0.5, 0.5));
 
     // QUESTION: How about we return the simplices from the factories as reference wrappers?
     // build a segment connecting {vertex0} and {vertex1}
