@@ -145,6 +145,7 @@ namespace mito::mesh {
         }
 
       public:
+        // TOFIX: should be called addElement
         template <int I>
         inline auto addSimplex(const element_t<I> & element) -> void
         requires(I > 0 && I <= D)

@@ -13,6 +13,7 @@ class Simplex : public mito::utilities::Shareable {
 TEST(SegmentedContainer, TestSegmentedContainer)
 {
     // instantiate a segmented container
+    // TOFIX: rename {vector} to {collection}
     mito::utilities::segmented_t<Simplex, 3> vector;
 
     // assert that the container is empty and with no capacity
