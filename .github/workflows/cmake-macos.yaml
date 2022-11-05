@@ -1,0 +1,170 @@
+# -*- yaml -*-
+
+name: cmake-macos
+on: 
+  push:
+    branches:
+      - 'main'
+  pull_request:
+  
+
+jobs:
+  # build and test the ref that launched this action
+  build:
+    name: >-
+      ${{matrix.target}}
+      python-${{matrix.python}}+${{matrix.suite}}-${{matrix.suiteVersion}}
+      on ${{matrix.os}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-11]
+        target: [Debug, Release, RelWithDebInfo]
+        python: ["3.10"]
+        suite: [gcc]
+        suiteVersion: ["11"]
+        include:
+          - suite: gcc
+            cc: gcc
+            cxx: g++
+
+    steps:
+      - name: ${{matrix.os}} refresh
+        run: |
+          echo " -- install our dependencies"
+          brew install make cmake
+
+      - name: python ${{matrix.python}} setup
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.python}}
+
+      - name: install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install distro numpy pybind11
+      
+      - name: install gtest
+        run: |
+          echo " -- cloning gtest"
+          git clone https://github.com/google/googletest
+          echo " -- switching to the build directory"
+          cd ${{runner.temp}}
+          mkdir build
+          cd build
+          echo " -- configuring the build"
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} ${{github.workspace}}/googletest
+          echo " -- building gtest"
+          make -j 2 install
+          echo " -- clean up"
+          cd ${{runner.temp}}
+          rm -r build
+        env:
+          prefix: ${{runner.temp}}/gtest_install
+          target: Release
+          cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
+          cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
+      
+      - name: pyre setup
+        run: |
+          echo " -- cloning pyre"
+          git clone https://github.com/pyre/pyre
+          echo " -- switching to the pyre home directory"
+          cd pyre
+          echo " -- checking out the correct ref"
+          git checkout ft-tensor
+
+      - name: build pyre
+        run: |
+          echo " -- switching to the build directory"
+          cd ${{runner.temp}}
+          mkdir build
+          cd build
+          echo " -- configuring the build"
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 ${{github.workspace}}/pyre
+          echo " -- building pyre"
+          make -j 2 install
+          echo " -- clean up"
+          cd ${{runner.temp}}
+          rm -r build
+        env:
+          prefix: ${{runner.temp}}/pyre_install
+          target: Release
+          cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
+          cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
+          pythonVersion: ${{matrix.python}}
+      
+      - name: list system packages
+        run: |
+          brew list
+
+      - name: versions
+        run: |
+          echo " -- platform tag from python"
+          python${pythonVersion} -c "import sys; print(sys.platform)"
+          echo " -- distribution tag from python"
+          python${pythonVersion} -c "import distro; print(distro.id(), distro.version())"
+          echo " -- make"
+          make --version
+          echo " -- cmake"
+          cmake --version
+          echo " -- python"
+          python3 --version
+          echo " -- ${{matrix.suite}}"
+          ${{matrix.suite}}-${{matrix.suiteVersion}} --version
+        env:
+          pythonVersion: ${{matrix.python}}
+
+      - name: locations of python packages
+        run: |
+          echo " -- distro"
+          pip3 show distro
+          echo " -- numpy"
+          pip3 show numpy
+          echo " -- its headers"
+          find ${pythonLocation}/lib/python${pythonVersion}/site-packages/numpy/core/include
+          echo " -- pybind11"
+          pip3 show pybind11
+          echo " -- its headers"
+          find ${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11
+        env:
+          pythonVersion: ${{matrix.python}}
+
+      - name: clone mito
+        run: |
+          echo " -- cloning mito"
+          git clone https://github.com/mitadel/mito
+
+      - name: checkout mito
+        run: |
+          echo " -- switching to the mito home directory"
+          cd mito
+          echo " -- checking out the correct ref"
+          git checkout ${{github.event.pull_request.head.sha}}
+
+      - name: build mito
+        run: |
+          echo " -- switching to the build directory"
+          cd ${{runner.temp}}
+          mkdir build
+          cd build
+          echo " -- configuring the build"
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest ${{github.workspace}}/mito
+          echo " -- building mito"
+          make -j 2 install
+        env:
+          prefix: ${{runner.temp}}/mito_install
+          target: ${{matrix.target}}
+          cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
+          cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
+          pythonVersion: ${{matrix.python}}
+
+      - name: test mito
+        run: |
+          echo " -- switching to the build directory"
+          cd ${{runner.temp}}/build
+          echo " -- testing mito"
+          ctest -E postgres.ext
+
+# end of file

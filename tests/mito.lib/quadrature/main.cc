@@ -8,7 +8,6 @@
 using mito::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
-using mito::geometry::point_t;
 using mito::topology::triangle_t;
 
 TEST(Quadrature, TestQuadrature)
@@ -30,11 +29,11 @@ TEST(Quadrature, TestQuadrature)
         (0,0)           (1,0)
     */
 
-    auto vertex0 = mito::geometry::vertex(point_t<2> { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::vertex(point_t<2> { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::vertex(point_t<2> { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::vertex(point_t<2> { 0.5, 0.5 });
-    auto vertex4 = mito::geometry::vertex(point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::geometry::vertex(mito::geometry::point(0.0, 0.0));
+    auto vertex1 = mito::geometry::vertex(mito::geometry::point(1.0, 0.0));
+    auto vertex2 = mito::geometry::vertex(mito::geometry::point(1.0, 1.0));
+    auto vertex3 = mito::geometry::vertex(mito::geometry::point(0.5, 0.5));
+    auto vertex4 = mito::geometry::vertex(mito::geometry::point(0.0, 1.0));
 
     auto segment0 = mito::topology::segment({ vertex0, vertex1 });
     auto segment1 = mito::topology::segment({ vertex1, vertex3 });
@@ -130,11 +129,11 @@ TEST(Quadrature, TestQuadrature)
     EXPECT_NEAR(result, 1.0 / 3.0, 1.e-16);
 
     // attach different coordinates (3D coordinates to the same points as above)
-    mito::geometry::point_cloud<3>::insert(vertex0, point_t<3> { 0.0, 0.0, 0.0 });
-    mito::geometry::point_cloud<3>::insert(vertex1, point_t<3> { 1.0, 0.0, 1.0 });
-    mito::geometry::point_cloud<3>::insert(vertex2, point_t<3> { 1.0, 1.0, 1.0 });
-    mito::geometry::point_cloud<3>::insert(vertex3, point_t<3> { 0.5, 0.5, 0.5 });
-    mito::geometry::point_cloud<3>::insert(vertex4, point_t<3> { 0.0, 1.0, 0.0 });
+    mito::geometry::point_cloud<3>::insert(vertex0, mito::geometry::point(0.0, 0.0, 0.0));
+    mito::geometry::point_cloud<3>::insert(vertex1, mito::geometry::point(1.0, 0.0, 1.0));
+    mito::geometry::point_cloud<3>::insert(vertex2, mito::geometry::point(1.0, 1.0, 1.0));
+    mito::geometry::point_cloud<3>::insert(vertex3, mito::geometry::point(0.5, 0.5, 0.5));
+    mito::geometry::point_cloud<3>::insert(vertex4, mito::geometry::point(0.0, 1.0, 0.0));
 
     // instantiate an element set with the same elements as above but the new coordinates map
     auto bodyManifold3D = mito::manifolds::manifold<3>(elements);

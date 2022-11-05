@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     template <int D>
-    auto computeDistance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
+    auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
     {
         // return the distance between the two points
         auto dist = pointA - pointB;
@@ -107,7 +107,7 @@ namespace mito::geometry {
             assert(element_vertices.size() == /*number of element vertices*/ 2);
 
             // store the distance between the two element vertices as the element length
-            length[e] = computeDistance<D>(
+            length[e] = distance(
                 point_cloud<D>::point(element_vertices[0]),
                 point_cloud<D>::point(element_vertices[1]));
 
@@ -149,13 +149,13 @@ namespace mito::geometry {
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
-            edges_lengths[0] = computeDistance<D>(
+            edges_lengths[0] = distance(
                 point_cloud<D>::point(element_vertices[0]),
                 point_cloud<D>::point(element_vertices[1]));
-            edges_lengths[1] = computeDistance<D>(
+            edges_lengths[1] = distance(
                 point_cloud<D>::point(element_vertices[0]),
                 point_cloud<D>::point(element_vertices[2]));
-            edges_lengths[2] = computeDistance<D>(
+            edges_lengths[2] = distance(
                 point_cloud<D>::point(element_vertices[1]),
                 point_cloud<D>::point(element_vertices[2]));
 

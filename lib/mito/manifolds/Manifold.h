@@ -87,6 +87,7 @@ namespace mito::manifolds {
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
         inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
         {
+            // get the point corresponding to vertex {v}
             return geometry::point_cloud<D>::point(v);
         }
 

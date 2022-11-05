@@ -9,7 +9,6 @@ using mito::math::function_t;
 using mito::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
-using mito::geometry::point_t;
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
@@ -61,11 +60,11 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
         (0,0)           (1,0)
     */
 
-    auto vertex0 = mito::geometry::vertex(point_t<2> { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::vertex(point_t<2> { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::vertex(point_t<2> { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::vertex(point_t<2> { 0.5, 0.5 });
-    auto vertex4 = mito::geometry::vertex(point_t<2> { 0.0, 1.0 });
+    auto vertex0 = mito::geometry::vertex(mito::geometry::point(0.0, 0.0));
+    auto vertex1 = mito::geometry::vertex(mito::geometry::point(1.0, 0.0));
+    auto vertex2 = mito::geometry::vertex(mito::geometry::point(1.0, 1.0));
+    auto vertex3 = mito::geometry::vertex(mito::geometry::point(0.5, 0.5));
+    auto vertex4 = mito::geometry::vertex(mito::geometry::point(0.0, 1.0));
 
     auto segment0 = mito::topology::segment({ vertex0, vertex1 });
     auto segment1 = mito::topology::segment({ vertex1, vertex3 });

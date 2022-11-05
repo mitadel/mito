@@ -6,6 +6,88 @@
 
 namespace mito::mesh {
     template <int D>
+    auto readVertices(std::ifstream & fileStream, int N_vertices, std::vector<vertex_t> & vertices)
+        -> void
+    {
+        // fill in vertices
+        for (int n = 0; n < N_vertices; ++n) {
+            // instantiate new point
+            point_t<D> point;
+            for (int d = 0; d < D; ++d) {
+                // read point coordinates
+                fileStream >> point[d];
+            }
+
+            // instantiate new vertex
+            auto vertex = geometry::vertex(std::move(point));
+
+            // instantiate new vertex and add it to {vertices}
+            vertices.push_back(vertex);
+        }
+
+        // all done
+        return;
+    }
+
+    template <int D>
+    auto readTriangle(
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
+        const std::vector<vertex_t> & vertices) -> void
+    {
+        int index0 = 0;
+        fileStream >> index0;
+        --index0;
+
+        int index1 = 0;
+        fileStream >> index1;
+        --index1;
+
+        int index2 = 0;
+        fileStream >> index2;
+        --index2;
+
+        auto vertex0 = vertices[index0];
+        auto vertex1 = vertices[index1];
+        auto vertex2 = vertices[index2];
+
+        auto segment0 = mito::topology::segment({ vertex0, vertex1 });
+        auto segment1 = mito::topology::segment({ vertex1, vertex2 });
+        auto segment2 = mito::topology::segment({ vertex2, vertex0 });
+
+        auto element = mito::topology::triangle({ segment0, segment1, segment2 });
+        mesh.addSimplex(element);
+
+        // QUESTION: Can the label be more than one?
+        // read label for element
+        // TOFIX: Ignored for now
+        std::string element_label;
+        fileStream >> element_label;
+
+        // all done
+        return;
+    }
+
+    template <int D>
+    auto readElements(
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
+        const std::vector<vertex_t> & vertices) -> void
+    {
+        for (int i = 0; i < N_elements; ++i) {
+            int element_type = 0;
+            fileStream >> element_type;
+
+            if (element_type == 3) {
+                readTriangle(fileStream, mesh, vertices);
+            } else {
+                std::cout << "Error: Unknown element type" << std::endl;
+            }
+        }
+
+        // all done
+        return;
+    }
+
+    template <int D>
     auto summit(std::ifstream & fileStream) -> auto
     {
         std::cout << "Loading summit mesh..." << std::endl;
@@ -61,87 +143,6 @@ namespace mito::mesh {
         return mesh;
     }
 
-    template <int D>
-    auto readVertices(std::ifstream & fileStream, int N_vertices, std::vector<vertex_t> & vertices)
-        -> void
-    {
-        // fill in vertices
-        for (int n = 0; n < N_vertices; ++n) {
-            // instantiate new point
-            point_t<D> point;
-            for (int d = 0; d < D; ++d) {
-                // read point coordinates
-                fileStream >> point[d];
-            }
-
-            // instantiate new vertex
-            auto vertex = geometry::vertex(std::move(point));
-
-            // instantiate new vertex and add it to {vertices}
-            vertices.push_back(vertex);
-        }
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readElements(
-        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
-        const std::vector<vertex_t> & vertices) -> void
-    {
-        for (int i = 0; i < N_elements; ++i) {
-            int element_type = 0;
-            fileStream >> element_type;
-
-            if (element_type == 3) {
-                readTriangle(fileStream, mesh, vertices);
-            } else {
-                std::cout << "Error: Unknown element type" << std::endl;
-            }
-        }
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readTriangle(
-        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
-        const std::vector<vertex_t> & vertices) -> void
-    {
-        int index0 = 0;
-        fileStream >> index0;
-        --index0;
-
-        int index1 = 0;
-        fileStream >> index1;
-        --index1;
-
-        int index2 = 0;
-        fileStream >> index2;
-        --index2;
-
-        auto vertex0 = vertices[index0];
-        auto vertex1 = vertices[index1];
-        auto vertex2 = vertices[index2];
-
-        auto segment0 = mito::topology::segment({ vertex0, vertex1 });
-        auto segment1 = mito::topology::segment({ vertex1, vertex2 });
-        auto segment2 = mito::topology::segment({ vertex2, vertex0 });
-
-        auto element = mito::topology::triangle({ segment0, segment1, segment2 });
-        mesh.addSimplex(element);
-
-        // QUESTION: Can the label be more than one?
-        // read label for element
-        // TOFIX: Ignored for now
-        std::string element_label;
-        fileStream >> element_label;
-
-        // all done
-        return;
-    }
 }    // namespace mito::mesh
 
 #endif    // mito_mesh_summit_h
