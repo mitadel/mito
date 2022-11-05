@@ -108,6 +108,30 @@ TEST(SharedPointer, Destructor)
     EXPECT_EQ(shared_ptr2.references(), std_shared_ptr2.use_count());
 }
 
+template <class RESOURCE>
+class Segment {
+
+  public:
+    using resource_t = RESOURCE;
+    using resource_ptr = RESOURCE *;
+
+  public:
+    static auto create(int N)
+    {
+        resource_ptr segment = static_cast<resource_ptr>(::operator new(N * sizeof(resource_t)));
+        return segment;
+    }
+
+    ~Segment()
+    {
+        // free the segment of memory
+        ::operator delete(segment);
+    }
+
+  private:
+    static resource_ptr segment;
+};
+
 TEST(SharedPointer, TestSegmentAllocation)
 {
     // the size of the segment of memory
@@ -116,7 +140,7 @@ TEST(SharedPointer, TestSegmentAllocation)
     int a = 10;
 
     // allocate a new segment of memory
-    resource_t * segment = static_cast<resource_t *>(::operator new(N * sizeof(resource_t)));
+    resource_t * segment = Segment<resource_t>::create(N);
 
     // select a location within the segment of memory
     resource_t * location = (segment + 3);
@@ -130,7 +154,4 @@ TEST(SharedPointer, TestSegmentAllocation)
 
     // assert that the resource was modified correctly
     EXPECT_EQ(handle->_a, a + 1);
-
-    // free the segment of memory
-    ::operator delete(segment);
 }
