@@ -19,13 +19,23 @@ namespace mito::topology {
     requires(D > 0)
     class SimplexFactory;
 
+    // simplex factory alias
+    template <int D>
+    using simplex_factory_t = SimplexFactory<D>;
+
     // class oriented simplex factory
     template <int D>
     class OrientedSimplexFactory;
 
-    // class oriented simplex factory
+    // oriented simplex factory alias
     template <int D>
+    using oriented_simplex_factory_t = OrientedSimplexFactory<D>;
+
+    // class topology
     class Topology;
+
+    // topology alias
+    using topology_t = Topology;
 
     // helper class to allow template specialization of simplex alias
     template <int D>

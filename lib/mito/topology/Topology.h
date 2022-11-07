@@ -9,43 +9,66 @@ namespace mito::topology {
      *
      */
 
-    template <int D>
     class Topology {
       public:
-        // delete default constructor
-        Topology() = delete;
+        // default constructor
+        Topology() : _factories() {};
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static inline auto orientedSimplex(const simplex_composition_t<D> & composition)
-            -> simplex_t<D>
+        template <int D>
+        inline auto simplex(const simplex_composition_t<D> & composition) -> simplex_t<D>
         requires(D > 0)
         {
             // ask the factory of oriented simplices
-            return OrientedSimplexFactory<D>::orientedSimplex(composition);
+            return std::get<D>(_factories).orientedSimplex(composition);
         }
 
-        static inline auto orientedSimplex() -> simplex_t<0>
+        template <int D>
+        inline auto simplex() -> simplex_t<0>
         requires(D == 0)
         {
             // ask the factory of oriented simplices
-            return OrientedSimplexFactory<0>::orientedSimplex();
+            return std::get<0>(_factories).orientedSimplex();
+        }
+
+        // instantiate a vertex
+        inline auto vertex() -> simplex_t<0> { return simplex<0>(); }
+
+        // instantiate a segment
+        inline auto segment(const simplex_composition_t<1> & simplices) -> simplex_t<1>
+        {
+            return simplex<1>(simplices);
+        }
+
+        // instantiate a triangle
+        inline auto triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2>
+        {
+            return simplex<2>(simplices);
+        }
+
+        // instantiate a tetrahedron
+        inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3>
+        {
+            return simplex<3>(simplices);
         }
 
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
-        static inline auto incidence(const simplex_t<D> & oriented_simplex) -> int
+        template <int D>
+        inline auto incidence(const simplex_t<D> & simplex) -> int
         {
             // ask the factory of oriented simplices
-            return OrientedSimplexFactory<D>::incidence(oriented_simplex);
+            return std::get<D>(_factories).incidence(simplex);
         }
 
         // returns whether there exists the flipped oriented simplex in the factory
-        static inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> bool
+        template <int D>
+        inline auto exists_flipped(const simplex_t<D> & simplex) -> bool
         {
             // get the incidence of the simplex footprint
-            auto inc = incidence(oriented_simplex);
+            auto inc = incidence(simplex);
             // assert the footprint cannot be used by more than two oriented simplices
             assert(inc == 1 || inc == 2);
             // return true if the footprint is in used by two oriented simplices
@@ -53,38 +76,27 @@ namespace mito::topology {
         }
 
         // returns the simplex with opposite orientation
-        static inline auto flip(const simplex_t<D> & oriented_simplex) -> simplex_t<D>
+        template <int D>
+        inline auto flip(const simplex_t<D> & simplex) -> simplex_t<D>
         {
             // ask the factory of oriented simplices
-            return OrientedSimplexFactory<D>::orientedSimplex(
-                oriented_simplex->footprint(), !oriented_simplex->orientation());
+            return std::get<D>(_factories)
+                .orientedSimplex(simplex->footprint(), !simplex->orientation());
         }
 
-        static inline auto cleanup(const simplex_t<D> & oriented_simplex) -> void
+        template <int D>
+        inline auto cleanup(const simplex_t<D> & simplex) -> void
         {
-            // cleanup the oriented factory around {oriented_simplex}
-            return OrientedSimplexFactory<D>::cleanup(oriented_simplex);
+            // cleanup the oriented factory around {simplex}
+            return std::get<D>(_factories).cleanup(simplex);
         }
+
+      private:
+        std::tuple<
+            oriented_simplex_factory_t<0>, oriented_simplex_factory_t<1>,
+            oriented_simplex_factory_t<2>, oriented_simplex_factory_t<3>>
+            _factories;
     };
-
-    template <int D>
-    inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> auto
-    {
-        return Topology<D>::exists_flipped(oriented_simplex);
-    }
-
-    template <int D>
-    inline auto flip(const simplex_t<D> & oriented_simplex) -> auto
-    {
-        return Topology<D>::flip(oriented_simplex);
-    }
-
-    template <int D>
-    inline auto incidence(const simplex_t<D> & oriented_simplex) -> auto
-    {
-        return Topology<D>::incidence(oriented_simplex);
-    }
-
 }
 
 

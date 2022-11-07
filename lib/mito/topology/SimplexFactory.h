@@ -6,7 +6,7 @@ namespace mito::topology {
 
     /**
      *
-     * This static class represents a factory for simplices of order D.
+     * This class represents a factory for simplices of order D.
      *
      * The factory class is aware of the class of equivalence for a Simplex of order D. In fact,
      * being an instance of Simplex<D> identified by its D+1 subsimplices, there are (D+1)! possible
@@ -40,12 +40,12 @@ namespace mito::topology {
         using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
 
       public:
-        SimplexFactory() = delete;
+        SimplexFactory() : _simplices(), _compositions() {};
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static inline auto simplex(const simplex_composition_t<D> & composition)
+        inline auto simplex(const simplex_composition_t<D> & composition)
             -> unoriented_simplex_ptr<D>
         {
             // pick a representative (factor out equivalence relation)
@@ -75,7 +75,7 @@ namespace mito::topology {
 
         // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
         // the factory if this oriented simplex is the only owner of its footprint)
-        static inline auto cleanup(const oriented_simplex_ptr<D> & oriented_simplex) -> void
+        inline auto cleanup(const oriented_simplex_ptr<D> & oriented_simplex) -> void
         {
             // if the footprint is not shared
             if (!exists_flipped(oriented_simplex)) {
@@ -93,20 +93,15 @@ namespace mito::topology {
 
       private:
         // equivalence class relation for a simplex
-        static inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
+        inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
 
       private:
         // container to store the unoriented simplices
-        static simplex_collection_t _simplices;
+        simplex_collection_t _simplices;
 
         // container to map simplex composition to simplices
-        static composition_map_t _compositions;
+        composition_map_t _compositions;
     };
-
-    // initialize static attribute
-    template <int D>
-    SimplexFactory<D>::simplex_collection_t SimplexFactory<D>::_simplices =
-        SimplexFactory<D>::simplex_collection_t();
 
     // equivalence class relation for a simplex in 1D
     template <>
@@ -153,11 +148,6 @@ namespace mito::topology {
         // all done
         return representative;
     }
-
-    // initialize static attribute
-    template <int D>
-    typename SimplexFactory<D>::composition_map_t SimplexFactory<D>::_compositions =
-        SimplexFactory<D>::composition_map_t();
 }
 
 #endif    // mito_topology_SimplexFactory_h

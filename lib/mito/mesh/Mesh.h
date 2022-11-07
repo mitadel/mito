@@ -133,8 +133,9 @@ namespace mito::mesh {
             // erase the element from the mesh
             std::get<I>(_elements).erase(element);
 
+            // TOFIX
             // cleanup oriented element factory around this element
-            mito::topology::Topology<I>::cleanup(element);
+            // mito::topology::Topology<I>::cleanup(element);
 
             // // TOFIX: synchronize with the geometry, check whether any point should be erased
             // // in the cloud of points
