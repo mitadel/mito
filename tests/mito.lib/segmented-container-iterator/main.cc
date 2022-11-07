@@ -83,4 +83,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     EXPECT_EQ(store_elements[0], 4);
     EXPECT_EQ(std::size(store_elements), 1);
+
+    // free the memory
+    vector.clear();
 }

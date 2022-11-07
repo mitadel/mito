@@ -60,4 +60,7 @@ TEST(SegmentedContainer, TestSegmentedContainer)
     // assert that the container is empty and but has still capacity of 6
     EXPECT_EQ(vector.capacity(), 6);
     EXPECT_EQ(vector.size(), 0);
+
+    // free the memory
+    vector.clear();
 }
