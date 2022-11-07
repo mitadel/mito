@@ -99,9 +99,7 @@ namespace mito::utilities {
         {}
 
         // destructor
-        ~SegmentedContainer() {}
-
-        auto clear() -> void
+        ~SegmentedContainer()
         {
             if (_begin == nullptr)
                 return;
@@ -125,9 +123,6 @@ namespace mito::utilities {
             // delete the last segment
             ::operator delete(ptr);
 
-            // reset the attributes
-            _reset();
-
             // all done
             return;
         }
@@ -141,18 +136,6 @@ namespace mito::utilities {
         inline auto size() const -> int { return _n_elements; }
 
       private:
-        auto _reset() -> void
-        {
-            _begin = nullptr;
-            _end = _begin;
-            _end_allocation = _begin;
-            _n_segments = 0;
-            _n_elements = 0;
-
-            // all done
-            return;
-        }
-
         auto _allocate_new_segment() -> T *
         {
             // allocate a new segment of memory

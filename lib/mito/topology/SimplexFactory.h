@@ -42,16 +42,6 @@ namespace mito::topology {
       public:
         SimplexFactory() = delete;
 
-        // destructor
-        ~SimplexFactory()
-        {
-            // free the memory
-            _simplices.clear();
-
-            // all done
-            return;
-        };
-
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)

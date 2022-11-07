@@ -32,16 +32,6 @@ namespace mito::topology {
         // delete default constructor
         OrientedSimplexFactory() = delete;
 
-        // destructor
-        ~OrientedSimplexFactory()
-        {
-            // free the memory
-            _oriented_simplices.clear();
-
-            // all done
-            return;
-        };
-
         // return an oriented simplex riding on footprint {simplex} and with orientation
         // {orientation} (either create a new oriented simplex if such oriented simplex does not
         // exist in the factory or return the existing representative of the class of equivalence of
@@ -232,16 +222,6 @@ namespace mito::topology {
       public:
         // delete default constructor
         OrientedSimplexFactory() = delete;
-
-        // destructor
-        ~OrientedSimplexFactory()
-        {
-            // free the memory
-            _vertices.clear();
-
-            // all done
-            return;
-        };
 
         // adds a new vertex to the vertex collection and returns it
         static inline auto orientedSimplex() -> oriented_simplex_ptr<0>
