@@ -38,7 +38,7 @@ namespace mito::utilities {
         using segmented_container_const_reference = const segmented_container_type &;
         // what i point to
         using pointer = typename iterbase::pointer;
-        using shared_pointer = shared_ptr<segmented_container_resource_type>;
+        using const_shared_pointer = shared_ptr<const segmented_container_resource_type>;
         using reference = typename iterbase::reference;
 
         // metamethods
@@ -53,10 +53,10 @@ namespace mito::utilities {
         // iterator protocol
       public:
         // dereference
-        constexpr auto operator*() const -> shared_pointer
+        constexpr auto operator*() const -> const_shared_pointer
         {
             // wrap the resource in a shared pointer and return it
-            return shared_pointer(_ptr);
+            return const_shared_pointer(_ptr);
         }
 
         // accessors
@@ -87,7 +87,7 @@ namespace mito::utilities {
                 if (_ptr == _segment_end) {
                     // retrieve the location of the next segment which is left behind
                     // by the segmented container right at the end of the current segment
-                    _ptr = *(reinterpret_cast<pointer *>(_ptr));
+                    _ptr = *(reinterpret_cast<const pointer *>(_ptr));
                     // store the start of the current segment
                     _segment_end = _ptr + segmented_container_segment_size;
                 }

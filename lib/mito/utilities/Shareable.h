@@ -43,9 +43,9 @@ namespace mito::utilities {
 
       private:
         // increment the reference count
-        inline auto _acquire() -> int;
+        inline auto _acquire() const -> int;
         // decrement the reference count
-        inline auto _release() -> int;
+        inline auto _release() const -> int;
 
         // data members
       private:
