@@ -13,7 +13,7 @@
 #include "api.h"
 
 // classes implementation
-// #include "Point.h"
+#include "Point.h"
 #include "metrics.h"
 #include "PointCloud.h"
 

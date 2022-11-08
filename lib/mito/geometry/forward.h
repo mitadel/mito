@@ -11,7 +11,7 @@ namespace mito::geometry {
 
     // point alias
     template <int D>
-    using point_t = vector_t<D>;    // Point<D>;
+    using point_t = mito::utilities::shared_ptr<Point<D>>;
 
     // class point cloud
     template <int D>
@@ -19,7 +19,7 @@ namespace mito::geometry {
 
     // point cloud alias
     template <int D>
-    using point_cloud = PointCloud<D>;
+    using point_cloud_t = PointCloud<D>;
 
     // vertex set alias
     using vertex_set_t = topology::vertex_set_t;
@@ -49,7 +49,10 @@ namespace mito::geometry {
 
     template <int D>
     using cloud_t =
-        std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
+        mito::utilities::segmented_t<typename point_t<D>::resource_t, 100 /* segment size */>;
+
+    // this information belongs to the mesh
+    // std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
 
 }
 

@@ -5,22 +5,23 @@
 
 namespace mito::geometry {
 
-    // point factory
-    template <class... Args>
-    constexpr auto point(Args &&... args) -> point_t<sizeof...(Args)>
-    {
-        return point_t<sizeof...(Args)>(std::forward<Args>(args)...);
-    }
+    // TOFIX: adjust it to the new design
+    // template <int D>
+    // auto vertex(point_t<D> && point) -> mito::topology::vertex_t
+    // {
+    //     // get a new vertex from the topology
+    //     auto new_vertex = mito::topology::vertex();
+    //     // register the new vertex with the point cloud
+    //     point_cloud<D>::insert(new_vertex, point);
+    //     // return the new vertex
+    //     return new_vertex;
+    // }
 
+    // point cloud factory
     template <int D>
-    auto vertex(point_t<D> && point) -> mito::topology::vertex_t
+    auto point_cloud() -> mito::geometry::point_cloud_t<D>
     {
-        // get a new vertex from the topology
-        auto new_vertex = mito::topology::vertex();
-        // register the new vertex with the point cloud
-        point_cloud<D>::insert(new_vertex, point);
-        // return the new vertex
-        return new_vertex;
+        return mito::geometry::point_cloud_t<D>();
     }
 }
 

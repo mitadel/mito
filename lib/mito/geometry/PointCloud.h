@@ -10,57 +10,62 @@ namespace mito::geometry {
         using cloud_t = mito::geometry::cloud_t<D>;
 
       public:
-        PointCloud() = delete;
+        PointCloud() : _cloud() {}
 
       public:
-        static auto print() -> void
+        auto print() const -> void
         {
             // iterate on map
             for (auto item : _cloud) {
-                std::cout << "Vertex: " << item.first->id() << std::endl;
-                std::cout << "Point: " << item.second << std::endl;
+                std::cout << "Point: " << *item << std::endl;
             }
             // all done
             return;
         }
 
         // support for ranged for loops (wrapping grid)
-        static inline auto begin() -> const auto & { return _cloud.cbegin(); }
-        static inline auto end() -> const auto & { return _cloud.cend(); }
+        inline auto begin() -> const auto & { return _cloud.cbegin(); }
+        inline auto end() -> const auto & { return _cloud.cend(); }
 
-        static auto size() -> int { return _cloud.size(); }
+        auto size() -> int { return _cloud.size(); }
 
-        static auto insert(const vertex_t & vertex, const point_t<D> & point) -> auto
+        template <class... Args>
+        auto point(Args &&... args) -> auto
+        requires(sizeof...(Args) == D)
         {
-            return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
+            return _cloud.emplace(std::forward<Args>(args)...);
         }
 
-        static auto insert(const vertex_t & vertex, const point_t<D> && point) -> auto
-        {
-            return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
-        }
+        // TOFIX: this belongs to the mesh
+        // auto insert(const vertex_t & vertex, const point_t<D> & point) -> auto
+        // {
+        //     return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
+        // }
 
+        // TOFIX: this belongs to the mesh
+        // auto insert(const vertex_t & vertex, const point_t<D> && point) -> auto
+        // {
+        //     return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
+        // }
+
+        // TOFIX: this belongs to the mesh
         // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
-        static auto point(const vertex_t & vertex) -> const point_t<D> &
-        {
-            return _cloud.find(vertex)->second;
-        }
+        // auto point(const vertex_t & vertex) -> const point_t<D> &
+        // {
+        //     return _cloud.find(vertex)->second;
+        // }
 
       private:
-        static cloud_t _cloud;
+        cloud_t _cloud;
     };
-
-    // initialize static attribute
-    template <int D>
-    typename PointCloud<D>::cloud_t PointCloud<D>::_cloud = PointCloud<D>::cloud_t();
 
     template <int D>
     std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
     {
-        for (const auto & point : cloud) {
-            std::cout << "vertex: " << point.first->id() << ",\t coordinates: " << point.second
-                      << std::endl;
-        }
+        // print the cloud
+        cloud.print();
+
+        // all done
         return os;
     }
 

@@ -9,7 +9,7 @@ namespace mito::geometry {
     auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
     {
         // return the distance between the two points
-        auto dist = pointA - pointB;
+        auto dist = *pointA - *pointB;
         return sqrt(dist * dist);
     }
 

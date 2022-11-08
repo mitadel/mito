@@ -5,13 +5,9 @@
 
 namespace mito::geometry {
 
-    // point factory
-    template <class... Args>
-    constexpr auto point(Args &&... args) -> point_t<sizeof...(Args)>;
-
-    // vertex factory
-    template <int D>
-    inline auto vertex(point_t<D> &&) -> vertex_t;
+    // // vertex factory
+    // template <int D>
+    // inline auto vertex(point_t<D> &&) -> vertex_t;
 }
 
 
