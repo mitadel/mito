@@ -14,7 +14,6 @@
 
 // classes implementation
 #include "Point.h"
-#include "metrics.h"
 #include "PointCloud.h"
 
 // factories implementation
