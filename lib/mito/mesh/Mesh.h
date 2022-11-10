@@ -15,6 +15,9 @@ namespace mito::mesh {
     class Mesh {
 
       private:
+        using vertex_point_map_t =
+            std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
+
         template <int I>
         using element_t = elementT<I>;
 
@@ -40,7 +43,7 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        inline Mesh() : _elements() {};
+        inline Mesh() : _elements(), _vertices() {};
 
         inline ~Mesh() {}
 
@@ -158,9 +161,18 @@ namespace mito::mesh {
             return;
         }
 
+        inline auto addVertex(vertex_t vertex, point_t<D> point) -> void
+        {
+            // register the vertex - point relation with the mesh
+            _vertices.insert(std::pair<vertex_t, point_t<D>>(vertex, point));
+        }
+
       private:
         // container to store D+1 containers of d dimensional elements with d = 0, ..., D
         element_tuple_t _elements;
+
+        // the mapping of vertices to points
+        vertex_point_map_t _vertices;
     };
 
 }    // namespace mito
