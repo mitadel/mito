@@ -94,6 +94,8 @@ namespace mito::topology {
     // tetrahedron alias
     using tetrahedron_t = simplex_t<3>;
 
+    // TOFIX: many typedefs in this file require cleanup
+
     // hash function for {elementT}, which is a (shared) pointer to an element
     // Note that two pointers pointing to the same element collapse on the same hashed value
     template <class elementT>
