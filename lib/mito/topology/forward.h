@@ -102,7 +102,7 @@ namespace mito::topology {
         {
             // reinterpret the address of the pointed handle as a {size_t} and return it
             return reinterpret_cast<mito::topology::unoriented_simplex_id_t>(
-                static_cast<elementT::handle_t>(element));
+                static_cast<elementT::handle_t>(element.handle()));
         }
     };
 

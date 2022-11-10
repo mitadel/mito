@@ -20,8 +20,8 @@ namespace mito::utilities {
 
         // interface
       public:
-        // cast to handle_t
-        inline operator handle_t() const;
+        // accessor for {handle}
+        inline auto handle() const -> handle_t;
 
         // accessor for the number of outstanding references
         inline auto references() const -> int;
@@ -65,6 +65,12 @@ namespace mito::utilities {
       private:
         handle_t _handle;
     };
+
+    template <class Resource>
+    inline bool operator==(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    {
+        return lhs.handle() == rhs.handle();
+    }
 }
 
 

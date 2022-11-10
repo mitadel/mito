@@ -7,8 +7,9 @@
 
 // interface
 template <class Resource>
-mito::utilities::SharedPointer<Resource>::operator mito::utilities::SharedPointer<
-    Resource>::handle_t() const
+auto
+mito::utilities::SharedPointer<Resource>::handle() const
+    -> mito::utilities::SharedPointer<Resource>::handle_t
 {
     // return the handle
     return _handle;
@@ -71,7 +72,7 @@ mito::utilities::SharedPointer<Resource>::SharedPointer(handle_t resource) : _ha
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer(
     const mito::utilities::SharedPointer<Resource> & other) :
-    _handle(other)
+    _handle(other._handle)
 {
     // grab a reference to the shared handle
     _acquire();
@@ -81,7 +82,7 @@ mito::utilities::SharedPointer<Resource>::SharedPointer(
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer(
     mito::utilities::SharedPointer<Resource> && other) :
-    _handle(other)
+    _handle(other._handle)
 {
     // invalidate other
     other._handle = nullptr;

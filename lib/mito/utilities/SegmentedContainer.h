@@ -226,7 +226,7 @@ namespace mito::utilities {
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
-            _available_locations.push(element);
+            _available_locations.push(element.handle());
 
             // assert that you are the last one reference to this item
             assert(element.references() == 1);
