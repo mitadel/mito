@@ -24,6 +24,9 @@ namespace mito::mesh {
     template <class elementT>
     using element_set_t = topology::element_set_t<elementT>;
 
+    // topology alias
+    using topology_t = topology::topology_t;
+
     // point alias
     template <int D>
     using point_t = geometry::point_t<D>;
