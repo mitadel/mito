@@ -29,11 +29,28 @@ namespace mito::geometry {
 
         auto size() -> int { return _cloud.size(); }
 
+        // example use: cloud.point(0.0, ..., 0.0)
+        // TOFIX: this method should be deprecated in favor of the one that follows
         template <class... Args>
         auto point(Args &&... args) -> auto
         requires(sizeof...(Args) == D)
         {
             return _cloud.emplace(std::forward<Args>(args)...);
+        }
+
+        // example use: cloud.point({0.0, ..., 0.0})
+        auto point(std::array<real, D> && coord) -> auto
+        {
+            // helper function to convert std::array to variadic template argument
+            auto _emplace_point = [this]<size_t... I>(
+                                      const std::array<real, D> & coord, std::index_sequence<I...>)
+                                      ->auto
+            {
+                // return the newly added point
+                return _cloud.emplace(coord[I]...);
+            };
+            // return the newly added point
+            return _emplace_point(coord, std::make_index_sequence<D> {});
         }
 
         // TOFIX: this belongs to the mesh
