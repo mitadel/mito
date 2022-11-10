@@ -2,6 +2,8 @@
 #include <mito/base.h>
 #include <mito/mesh.h>
 
+// TOFIX: merge this test with test in directory {mesh}
+
 TEST(LoadMesh, TestLoadMesh)
 {
     // an empty topology
