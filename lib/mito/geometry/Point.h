@@ -13,6 +13,9 @@ namespace mito::geometry {
         requires(sizeof...(Args) == D)
             : vector_t<D>(args...), mito::utilities::Shareable()
         {}
+
+        // get the coordinates of the point
+        auto coordinates() -> vector_t<D> { return static_cast<vector_t<D>>(*this); }
     };
 
 }    // namespace mito
