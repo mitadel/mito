@@ -1,9 +1,9 @@
 // code guard
-#if !defined(mito_mesh_metrics_h)
-#define mito_mesh_metrics_h
+#if !defined(mito_manifold_metrics_h)
+#define mito_manifold_metrics_h
 
 
-namespace mito::mesh {
+namespace mito::manifold {
 
     template <int D>
     auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
