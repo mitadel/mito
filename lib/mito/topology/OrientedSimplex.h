@@ -147,7 +147,7 @@ namespace mito::topology {
         // print orientation
         os << "orientation: " << s->orientation() << std::endl;
         // print footprint
-        os << "footprint: " << s->footprint() << std::endl;
+        os << "footprint: " << s->footprint().handle() << std::endl;
         // all done
         return os;
     }
