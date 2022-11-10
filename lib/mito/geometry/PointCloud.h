@@ -39,11 +39,11 @@ namespace mito::geometry {
         }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(std::array<real, D> && coord) -> auto
+        auto point(vector_t<D> && coord) -> auto
         {
-            // helper function to convert std::array to variadic template argument
+            // helper function to convert vector_t to variadic template argument
             auto _emplace_point = [this]<size_t... I>(
-                                      const std::array<real, D> & coord, std::index_sequence<I...>)
+                                      const vector_t<D> & coord, std::index_sequence<I...>)
                                       ->auto
             {
                 // return the newly added point
