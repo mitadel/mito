@@ -6,22 +6,30 @@
 
 namespace mito::mesh {
     template <int D>
-    auto readVertices(std::ifstream & fileStream, int N_vertices, std::vector<vertex_t> & vertices)
-        -> void
+    auto readVertices(
+        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_vertices,
+        std::vector<vertex_t> & vertices, mito::topology::topology_t & topology,
+        mito::geometry::point_cloud_t<D> & point_cloud) -> void
     {
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {
             // instantiate new point
-            point_t<D> point;
+            vector_t<D> coordinates;
             for (int d = 0; d < D; ++d) {
                 // read point coordinates
-                fileStream >> point[d];
+                fileStream >> coordinates[d];
             }
 
-            // instantiate new vertex
-            auto vertex = geometry::vertex(std::move(point));
+            // instantiate a new vertex
+            auto vertex = topology.vertex();
 
-            // instantiate new vertex and add it to {vertices}
+            // instantiate a new point with coordinates {coordinates}
+            auto point = point_cloud.point(std::move(coordinates));
+
+            // register vertex-point mapping in {mesh}
+            mesh.addVertex(vertex, point);
+
+            // add vertex to {vertices}
             vertices.push_back(vertex);
         }
 
@@ -32,7 +40,7 @@ namespace mito::mesh {
     template <int D>
     auto readTriangle(
         std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
-        const std::vector<vertex_t> & vertices) -> void
+        const std::vector<vertex_t> & vertices, mito::topology::topology_t & topology) -> void
     {
         int index0 = 0;
         fileStream >> index0;
@@ -50,11 +58,11 @@ namespace mito::mesh {
         auto vertex1 = vertices[index1];
         auto vertex2 = vertices[index2];
 
-        auto segment0 = mito::topology::segment({ vertex0, vertex1 });
-        auto segment1 = mito::topology::segment({ vertex1, vertex2 });
-        auto segment2 = mito::topology::segment({ vertex2, vertex0 });
+        auto segment0 = topology.segment({ vertex0, vertex1 });
+        auto segment1 = topology.segment({ vertex1, vertex2 });
+        auto segment2 = topology.segment({ vertex2, vertex0 });
 
-        auto element = mito::topology::triangle({ segment0, segment1, segment2 });
+        auto element = topology.triangle({ segment0, segment1, segment2 });
         mesh.addSimplex(element);
 
         // QUESTION: Can the label be more than one?
@@ -70,14 +78,14 @@ namespace mito::mesh {
     template <int D>
     auto readElements(
         std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
-        const std::vector<vertex_t> & vertices) -> void
+        const std::vector<vertex_t> & vertices, mito::topology::topology_t & topology) -> void
     {
         for (int i = 0; i < N_elements; ++i) {
             int element_type = 0;
             fileStream >> element_type;
 
             if (element_type == 3) {
-                readTriangle(fileStream, mesh, vertices);
+                readTriangle(fileStream, mesh, vertices, topology);
             } else {
                 std::cout << "Error: Unknown element type" << std::endl;
             }
@@ -87,8 +95,12 @@ namespace mito::mesh {
         return;
     }
 
+    // QUESTION: this is a reader of simplicial meshes only. Maybe we should clarify this in the
+    //          name of the function?
     template <int D>
-    auto summit(std::ifstream & fileStream) -> auto
+    auto summit(
+        std::ifstream & fileStream, mito::topology::topology_t & topology,
+        mito::geometry::point_cloud_t<D> & point_cloud) -> auto
     {
         std::cout << "Loading summit mesh..." << std::endl;
         assert(fileStream.is_open());
@@ -121,13 +133,11 @@ namespace mito::mesh {
         // QUESTION: Not sure that we need this...
         assert(N_element_types == 1);
 
-        // QUESTION: do we need to reserve space for elements before reading them?
-
         // read the vertices
-        readVertices<D>(fileStream, N_vertices, vertices);
+        readVertices<D>(fileStream, mesh, N_vertices, vertices, topology, point_cloud);
 
         // read the elements
-        readElements(fileStream, mesh, N_elements, vertices);
+        readElements(fileStream, mesh, N_elements, vertices, topology);
 
         // sanity check: the number of vertices in the map is N_vertices
         vertices.shrink_to_fit();
