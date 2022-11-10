@@ -95,6 +95,11 @@ namespace mito::mesh {
                                                          return std::get<I>(_elements);
                                                      }
 
+        inline auto vertices() const -> const auto &
+        {
+            // all done
+            return _vertices;
+        }
 
         template <int I>
         inline auto erase(const element_t<I> & element) -> void
