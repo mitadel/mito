@@ -57,7 +57,7 @@ namespace mito::topology {
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
         template <int D>
-        inline auto incidence(const simplex_t<D> & simplex) -> int
+        inline auto incidence(const simplex_t<D> & simplex) const -> int
         {
             // ask the factory of oriented simplices
             return std::get<D>(_factories).incidence(simplex);
@@ -65,7 +65,7 @@ namespace mito::topology {
 
         // returns whether there exists the flipped oriented simplex in the factory
         template <int D>
-        inline auto exists_flipped(const simplex_t<D> & simplex) -> bool
+        inline auto exists_flipped(const simplex_t<D> & simplex) const -> bool
         {
             // get the incidence of the simplex footprint
             auto inc = incidence(simplex);

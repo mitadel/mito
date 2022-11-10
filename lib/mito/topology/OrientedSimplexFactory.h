@@ -84,7 +84,7 @@ namespace mito::topology {
 
         // TOFIX: change name, this is not actually the incidence
         // returns the number of owners of the shared pointer to this oriented simplex
-        inline int incidence(const oriented_simplex_ptr<D> & oriented_simplex)
+        inline int incidence(const oriented_simplex_ptr<D> & oriented_simplex) const
         {
             return oriented_simplex.references() - 1;
         }
