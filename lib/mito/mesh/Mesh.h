@@ -101,6 +101,12 @@ namespace mito::mesh {
             return _vertices;
         }
 
+        // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
+        auto point(const vertex_t & vertex) -> const point_t<D> &
+        {
+            return _vertices.find(vertex)->second;
+        }
+
         template <int I>
         inline auto erase(const element_t<I> & element) -> void
         requires(I > 0 && I <= D)

@@ -53,25 +53,6 @@ namespace mito::geometry {
             return _emplace_point(coord, std::make_index_sequence<D> {});
         }
 
-        // TOFIX: this belongs to the mesh
-        // auto insert(const vertex_t & vertex, const point_t<D> & point) -> auto
-        // {
-        //     return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
-        // }
-
-        // TOFIX: this belongs to the mesh
-        // auto insert(const vertex_t & vertex, const point_t<D> && point) -> auto
-        // {
-        //     return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
-        // }
-
-        // TOFIX: this belongs to the mesh
-        // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
-        // auto point(const vertex_t & vertex) -> const point_t<D> &
-        // {
-        //     return _cloud.find(vertex)->second;
-        // }
-
       private:
         cloud_t _cloud;
     };
