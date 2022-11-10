@@ -20,6 +20,7 @@
 
 // information on the reference elements
 #include "reference_elements.h"
+#include "metrics.h"
 
 #endif
 
