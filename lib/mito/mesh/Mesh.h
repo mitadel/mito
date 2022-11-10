@@ -15,9 +15,6 @@ namespace mito::mesh {
     class Mesh {
 
       private:
-        using vertex_point_table_t =
-            std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
-
         template <int I>
         using element_t = elementT<I>;
 
@@ -153,7 +150,7 @@ namespace mito::mesh {
         element_tuple_t _elements;
 
         // the mapping of vertices to points
-        vertex_point_table_t _vertices;
+        vertex_point_table_t<D> _vertices;
     };
 
 }    // namespace mito

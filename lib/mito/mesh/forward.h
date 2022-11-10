@@ -30,6 +30,11 @@ namespace mito::mesh {
     // point alias
     template <int D>
     using point_t = geometry::point_t<D>;
+
+    // mapping from vertices to points
+    template <int D>
+    using vertex_point_table_t =
+        std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
 }
 
 
