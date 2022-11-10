@@ -20,14 +20,30 @@ TEST(Mesh, TestMeshBuild)
         (0,0)           (1,0)
     */
 
+    // an empty topology
     auto topology = mito::topology::topology();
 
-    // TOFIX
-    auto vertex0 = topology.vertex(/*mito::geometry::point(0.0, 0.0)*/);
-    auto vertex1 = topology.vertex(/*mito::geometry::point(1.0, 0.0)*/);
-    auto vertex2 = topology.vertex(/*mito::geometry::point(1.0, 1.0)*/);
-    auto vertex3 = topology.vertex(/*mito::geometry::point(0.5, 0.5)*/);
-    auto vertex4 = topology.vertex(/*mito::geometry::point(0.0, 1.0)*/);
+    // an empty cloud of points
+    auto point_cloud = mito::geometry::point_cloud<2>();
+
+    // an empty mesh of simplicial topology in 2D
+    mito::mesh::Mesh<2, mito::topology::simplex_t> mesh;
+
+    auto vertex0 = topology.vertex();
+    auto point0 = point_cloud.point({ 0.0, 0.0 });
+    mesh.addVertex(vertex0, point0);
+    auto vertex1 = topology.vertex();
+    auto point1 = point_cloud.point({ 1.0, 0.0 });
+    mesh.addVertex(vertex1, point1);
+    auto vertex2 = topology.vertex();
+    auto point2 = point_cloud.point({ 1.0, 1.0 });
+    mesh.addVertex(vertex2, point2);
+    auto vertex3 = topology.vertex();
+    auto point3 = point_cloud.point({ 0.5, 0.5 });
+    mesh.addVertex(vertex3, point3);
+    auto vertex4 = topology.vertex();
+    auto point4 = point_cloud.point({ 0.0, 1.0 });
+    mesh.addVertex(vertex4, point4);
 
     auto segment0 = topology.segment({ vertex0, vertex1 });
     auto segment1 = topology.segment({ vertex1, vertex3 });
@@ -43,22 +59,25 @@ TEST(Mesh, TestMeshBuild)
     auto element2 = topology.triangle({ segment6, segment5, segment4 });
     auto element3 = topology.triangle({ segment7, segment2, segment5 });
 
-    // TOFIX
-    // instantiate mesh of simplicial topology
-    // mito::mesh::Mesh<2, mito::topology::simplex_t> mesh;
-    // mesh.addSimplex(element0);
-    // mesh.addSimplex(element1);
-    // mesh.addSimplex(element2);
-    // mesh.addSimplex(element3);
+    mesh.addSimplex(element0);
+    mesh.addSimplex(element1);
+    mesh.addSimplex(element2);
+    mesh.addSimplex(element3);
 
     return;
 }
 
 TEST(Mesh, TestMeshQuadrature)
 {
+    // an empty topology
+    auto topology = mito::topology::topology();
+
+    // an empty cloud of points
+    auto point_cloud = mito::geometry::point_cloud<2>();
+
     // load mesh
     std::ifstream fileStream("square.summit");
-    auto mesh = mito::mesh::summit<2>(fileStream);
+    auto mesh = mito::mesh::summit<2>(fileStream, topology, point_cloud);
     // instantiate a element set as a collection of simplices and vertices.
     const auto & elements = mesh.elements<2>();    // TODO: region label to fetch elements
     auto elementSet = mito::manifolds::manifold<2>(elements);
