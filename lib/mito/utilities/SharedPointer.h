@@ -32,6 +32,9 @@ namespace mito::utilities {
         // operator->
         auto operator->() const -> handle_t;
 
+        // // operator*
+        // auto operator*() const -> const resource_t &;
+
         // meta methods
       public:
         // destructor

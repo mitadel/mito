@@ -47,6 +47,16 @@ mito::utilities::SharedPointer<Resource>::operator->() const
     return _handle;
 }
 
+// // operator*
+// template <class Resource>
+// auto
+// mito::utilities::SharedPointer<Resource>::operator*() const
+//     -> const mito::utilities::SharedPointer<Resource>::resource_t &
+// {
+//     // return the resource
+//     return *_handle;
+// }
+
 // destructor
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::~SharedPointer()
