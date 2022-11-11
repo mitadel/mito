@@ -11,12 +11,12 @@ namespace mito::manifolds {
     // derivative of the parametrization, the normal times the area differential, as the returned
     // value by a method called, say, differential?
 
-    template <class elementT, int D>
+    template <class elementT, int I>
     class Manifold {
 
       public:
         using element_t = elementT;
-        static constexpr int dim = D;
+        static constexpr int dim = I;
 
       public:
         inline Manifold(const element_set_t<element_t> & elements) :
@@ -88,14 +88,14 @@ namespace mito::manifolds {
         inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
         {
             // get the point corresponding to vertex {v}
-            return geometry::point_cloud<D>::point(v);
+            return geometry::point_cloud<I>::point(v);
         }
 
       private:
         inline auto _computeJacobians() -> void
         {
-            return mito::geometry::computeElementsVolume<
-                element_t /* element type */, D /* spatial dim*/>(_elements, _jacobians);
+            return mito::manifolds::computeElementsVolume<
+                element_t /* element type */, I /* spatial dim*/>(_elements, _jacobians);
         }
 
       private:
@@ -103,8 +103,8 @@ namespace mito::manifolds {
         std::vector<real> _jacobians;
     };
 
-    template <class elementT, int D>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<elementT, D> & manifold)
+    template <class elementT, int I>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<elementT, I> & manifold)
     {
         os << "Element set: " << std::endl;
 
