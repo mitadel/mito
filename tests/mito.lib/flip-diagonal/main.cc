@@ -67,22 +67,23 @@ headTailConnects(
 
 int
 flipDiagonal(
-    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1)
+    const mito::topology::simplex_t<2> & element_0, const mito::topology::simplex_t<2> & element_1,
+    mito::topology::topology_t & topology)
 {
     // get the shared simplex between the two elements
     const auto & shared_simplex = findSharedSimplex(element_0, element_1);
 
     // assert you could find it
-    EXPECT_TRUE(shared_simplex != nullptr);
+    EXPECT_TRUE(shared_simplex.handle() != nullptr);
 
     // show me
     // std::cout << "shared simplex: " << *shared_simplex << std::endl;
 
     auto opposite_vertices = oppositeVertices(element_0, element_1, shared_simplex);
 
-    auto diagonal_segment = mito::topology::segment({ opposite_vertices[0], opposite_vertices[1] });
+    auto diagonal_segment = topology.segment({ opposite_vertices[0], opposite_vertices[1] });
     auto opposite_diagonal_segment =
-        mito::topology::segment({ opposite_vertices[1], opposite_vertices[0] });
+        topology.segment({ opposite_vertices[1], opposite_vertices[0] });
 
     std::set<mito::topology::simplex_t<1>> boundary_simplices;
     // get boundary simplices of element_0 (all except diagonal)
@@ -149,8 +150,8 @@ flipDiagonal(
     // delete old simplices
 
     // build new simplices
-    auto new_element_0 = mito::topology::triangle(new_element_composition_0);
-    auto new_element_1 = mito::topology::triangle(new_element_composition_1);
+    auto new_element_0 = topology.triangle(new_element_composition_0);
+    auto new_element_1 = topology.triangle(new_element_composition_1);
 
     // TOFIX: how to return the new elements?
 
@@ -158,27 +159,29 @@ flipDiagonal(
     return 0;
 }
 
-TEST(FlipDiagonal, DISABLED_TestFlipDiagonal)
+TEST(FlipDiagonal, TestFlipDiagonal)
 {
+    // an empty topology
+    auto topology = mito::topology::topology();
 
     // build vertices
-    auto vertex0 = mito::topology::vertex();
-    auto vertex1 = mito::topology::vertex();
-    auto vertex2 = mito::topology::vertex();
-    auto vertex3 = mito::topology::vertex();
+    auto vertex0 = topology.vertex();
+    auto vertex1 = topology.vertex();
+    auto vertex2 = topology.vertex();
+    auto vertex3 = topology.vertex();
 
     // build segments
-    auto segment_a = mito::topology::segment({ vertex0, vertex1 });
-    auto segment_b = mito::topology::segment({ vertex1, vertex2 });
-    auto segment_c = mito::topology::segment({ vertex2, vertex3 });
-    auto segment_d = mito::topology::segment({ vertex3, vertex0 });
-    auto segment_e = mito::topology::segment({ vertex0, vertex2 });
-    auto segment_e_flip = mito::topology::flip(segment_e);
+    auto segment_a = topology.segment({ vertex0, vertex1 });
+    auto segment_b = topology.segment({ vertex1, vertex2 });
+    auto segment_c = topology.segment({ vertex2, vertex3 });
+    auto segment_d = topology.segment({ vertex3, vertex0 });
+    auto segment_e = topology.segment({ vertex0, vertex2 });
+    auto segment_e_flip = topology.flip(segment_e);
 
     // build triangles
-    auto element_0 = mito::topology::triangle({ segment_a, segment_b, segment_e_flip });
-    auto element_1 = mito::topology::triangle({ segment_e, segment_c, segment_d });
+    auto element_0 = topology.triangle({ segment_a, segment_b, segment_e_flip });
+    auto element_1 = topology.triangle({ segment_e, segment_c, segment_d });
 
     // flip the common edge of the two triangles
-    flipDiagonal(element_0, element_1);
+    flipDiagonal(element_0, element_1, topology);
 }

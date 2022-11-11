@@ -3,12 +3,18 @@
 import mito
 from numpy import cos
 
+
 def myfunction(x):
     return eval('cos(x[0] * x[1])')
 
+
 field = mito.ScalarField2D(myfunction)
 
+# TOFIX: this line ...
 elementset = mito.ManifoldTriangle2D("square.summit")
+# ...should be instead:
+# mesh = mito.SimplicialMesh2D("square.summit")
+# elementset = mito.ManifoldTriangle2D(mesh)
 integrator = mito.GaussIntegrator2Triangle2D(elementset)
 
 N = 1
