@@ -6,14 +6,6 @@
 namespace mito::manifolds {
 
     template <int D>
-    auto distance(const geometry::point_t<D> & pointA, const geometry::point_t<D> & pointB) -> real
-    {
-        // return the distance between the two points
-        auto dist = pointA->coordinates() - pointB->coordinates();
-        return sqrt(dist * dist);
-    }
-
-    template <int D>
     auto computeSimplicesVolume(
         const element_vector_t<topology::simplex_t<D>> & elements,
         const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & volumes) -> void
@@ -112,8 +104,8 @@ namespace mito::manifolds {
             // assert the size of vertices container is equal to the number of element vertices
             assert(element_vertices.size() == /*number of element vertices*/ 2);
 
-            // store the distance between the two element vertices as the element length
-            length[e] = distance(
+            // store the geometry::distance between the two element vertices as the element length
+            length[e] = geometry::distance(
                 vertices.find(element_vertices[0])->second,
                 vertices.find(element_vertices[1])->second);
 
@@ -158,13 +150,13 @@ namespace mito::manifolds {
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
-            edges_lengths[0] = distance(
+            edges_lengths[0] = geometry::distance(
                 vertices.find(element_vertices[0])->second,
                 vertices.find(element_vertices[1])->second);
-            edges_lengths[1] = distance(
+            edges_lengths[1] = geometry::distance(
                 vertices.find(element_vertices[0])->second,
                 vertices.find(element_vertices[2])->second);
-            edges_lengths[2] = distance(
+            edges_lengths[2] = geometry::distance(
                 vertices.find(element_vertices[1])->second,
                 vertices.find(element_vertices[2])->second);
 

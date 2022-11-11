@@ -23,6 +23,14 @@ namespace mito::geometry {
         vector_t<D> _coodinates;
     };
 
+    template <int D>
+    auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
+    {
+        // return the distance between the two points
+        auto dist = pointA->coordinates() - pointB->coordinates();
+        return sqrt(dist * dist);
+    }
+
 }    // namespace mito
 
 #endif    // mito_geometry_Point_h
