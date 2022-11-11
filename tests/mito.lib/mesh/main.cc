@@ -78,9 +78,12 @@ TEST(Mesh, TestMeshQuadrature)
     // load mesh
     std::ifstream fileStream("square.summit");
     auto mesh = mito::mesh::summit<2>(fileStream, topology, point_cloud);
+    // TOFIX: is it better that the elements and vertices are first fetched from mesh and then
+    //  used to build the manifold?
     // instantiate a element set as a collection of simplices and vertices.
-    const auto & elements = mesh.elements<2>();    // TODO: region label to fetch elements
-    auto elementSet = mito::manifolds::manifold<2>(elements);
+    // const auto & elements = mesh.elements<2>();    // TODO: region label to fetch elements
+    // auto elementSet = mito::manifolds::manifold<2>(elements);
+    auto elementSet = mito::manifolds::manifold<2>(mesh);
 
     // instantiate a scalar field
     auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
