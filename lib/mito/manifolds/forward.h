@@ -6,12 +6,14 @@
 namespace mito::manifolds {
 
     // class manifold
-    template <class element_t, int D>
+    template <int I, int D, template <int> class elementT>
+    requires(I <= D)
     class Manifold;
 
     // manifold alias
-    template <class elementT, int D>
-    using manifold_t = Manifold<elementT, D>;
+    template <int I, int D, template <int> class elementT>
+    requires(I <= D)
+    using manifold_t = Manifold<I, D, elementT>;
 
     // vertex alias
     using vertex_t = topology::vertex_t;

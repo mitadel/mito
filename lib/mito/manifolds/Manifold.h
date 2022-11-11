@@ -11,41 +11,23 @@ namespace mito::manifolds {
     // derivative of the parametrization, the normal times the area differential, as the returned
     // value by a method called, say, differential?
 
-    template <class elementT, int I>
+    // TOFIX: distinguish between element family/class (simplicial) and element type (triangles)
+
+    template <
+        int I /* dimension of the manifold */, int D /* dimension of physical space */,
+        template <int> class elementT /* manifold element type */>
+    requires(I <= D)
     class Manifold {
 
       public:
-        using element_t = elementT;
+        using element_t = elementT<I>;
         static constexpr int dim = I;
 
       public:
-        inline Manifold(const element_set_t<element_t> & elements) :
-            _elements(elements.begin(), elements.end()),
-            _jacobians(elements.size(), 0.0)
-        {
-            // compute the jacobians of the map from reference to current element for each element
-            _computeJacobians();
-        }
-
-        inline Manifold(element_set_t<element_t> && elements) :
-            _elements(elements.begin(), elements.end()),
-            _jacobians(elements.size(), 0.0)
-        {
-            // compute the jacobians of the map from reference to current element for each element
-            _computeJacobians();
-        }
-
-        inline Manifold(const element_vector_t<element_t> & elements) :
-            _elements(elements),
-            _jacobians(elements.size(), 0.0)
-        {
-            // compute the jacobians of the map from reference to current element for each element
-            _computeJacobians();
-        }
-
-        inline Manifold(element_vector_t<element_t> && elements) :
-            _elements(elements),
-            _jacobians(elements.size(), 0.0)
+        inline Manifold(const mesh::mesh_t<D, elementT> & mesh) :
+            _elements(mesh.template elements<I>().begin(), mesh.template elements<I>().end()),
+            _vertices(mesh.vertices()),
+            _jacobians(_elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
             _computeJacobians();
@@ -82,29 +64,33 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline auto elements() const -> const element_vector_t<element_t> & { return _elements; }
+        inline auto elements() const -> const auto & { return _elements; }
         inline auto nElements() const -> int { return _elements.size(); }
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
         inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
         {
+            // TOFIX: add intermediate function
             // get the point corresponding to vertex {v}
-            return geometry::point_cloud<I>::point(v);
+            return _vertices.find(v)->second->coordinates();
         }
 
       private:
         inline auto _computeJacobians() -> void
         {
-            return mito::manifolds::computeElementsVolume<
-                element_t /* element type */, I /* spatial dim*/>(_elements, _jacobians);
+            return computeElementsVolume(_elements, _vertices, _jacobians);
         }
 
       private:
+        // TOFIX: not sure I like that {_elements} is a copy while {_vertices} is a reference
         const element_vector_t<element_t> _elements;
+        // QUESTION: should the manifold hold directly a reference to the mesh?
+        // the mapping of vertices to points
+        const mesh::vertex_point_table_t<D> & _vertices;
         std::vector<real> _jacobians;
     };
 
-    template <class elementT, int I>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<elementT, I> & manifold)
+    template <int I, int D, template <int> class elementT>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<I, D, elementT> & manifold)
     {
         os << "Element set: " << std::endl;
 
