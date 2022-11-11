@@ -5,9 +5,10 @@
 #include <fstream>
 
 namespace mito::mesh {
+    // TOFIX: typedef {topology_t} and {point_cloud_t} in {mesh}
     template <int D>
     auto readVertices(
-        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_vertices,
+        std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh, int N_vertices,
         std::vector<vertex_t> & vertices, mito::topology::topology_t & topology,
         mito::geometry::point_cloud_t<D> & point_cloud) -> void
     {
@@ -39,7 +40,7 @@ namespace mito::mesh {
 
     template <int D>
     auto readTriangle(
-        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh,
+        std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh,
         const std::vector<vertex_t> & vertices, mito::topology::topology_t & topology) -> void
     {
         int index0 = 0;
@@ -77,7 +78,7 @@ namespace mito::mesh {
 
     template <int D>
     auto readElements(
-        std::ifstream & fileStream, Mesh<D, simplex_t> & mesh, int N_elements,
+        std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh, int N_elements,
         const std::vector<vertex_t> & vertices, mito::topology::topology_t & topology) -> void
     {
         for (int i = 0; i < N_elements; ++i) {
