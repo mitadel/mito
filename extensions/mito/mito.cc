@@ -114,23 +114,24 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito manifold interface
-    mito::py::class_<mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>(
+    mito::py::class_<mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>>(
         m, "ManifoldTriangle2D")
         // the constructor
         .def(
             // the implementation
-            mito::py::init<const mito::topology::element_vector_t<mito::topology::triangle_t> &>())
-        // the constructor
-        .def(
-            // the implementation
             mito::py::init([](std::string filename) {
+                // TOFIX: who is going to delete?
+                // an empty topology
+                auto topology = new mito::topology::topology_t();
+                // an empty cloud of points in 2D
+                auto point_cloud = new mito::geometry::point_cloud_t<2>();
+
                 // create an input stream
                 auto filestream = std::ifstream(filename);
                 // read the mesh
-                auto mesh = mito::mesh::summit<2>(filestream);
+                auto mesh = mito::mesh::summit<2>(filestream, *topology, *point_cloud);
                 // instantiate
-                return new mito::manifolds::manifold_t<mito::topology::triangle_t, 2>(
-                    mesh.elements<2>());
+                return new mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>(mesh);
             }))
         // done
         ;
@@ -139,12 +140,12 @@ PYBIND11_MODULE(mito, m)
     // the mito Integrator interface
     mito::py::class_<mito::quadrature::integrator_t<
         mito::quadrature::GAUSS, 2 /* degree of exactness */,
-        mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>>(
+        mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>>>(
         m, "GaussIntegrator2Triangle2D")
         // the constructor
         .def(
             // the implementation
-            mito::py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
+            mito::py::init<const mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t> &>())
         // interface
         // QUESTION: should this be called integrateScalarfield?
         // integrate a scalar field
@@ -153,7 +154,8 @@ PYBIND11_MODULE(mito, m)
             // the method;
             &mito::quadrature::integrator_t<
                 mito::quadrature::GAUSS, 2 /* degree of exactness */,
-                mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>::integrate<mito::real>,
+                mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>>::
+                integrate<mito::real>,
             // the docstring
             "integrate a field")
         // done
