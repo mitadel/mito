@@ -5,9 +5,9 @@
 
 namespace mito::geometry {
 
-    // // vertex factory
-    // template <int D>
-    // inline auto vertex(point_t<D> &&) -> vertex_t;
+    // point cloud factory
+    template <int D>
+    auto point_cloud() -> mito::geometry::point_cloud_t<D>;
 }
 
 
