@@ -74,6 +74,12 @@ namespace mito::utilities {
     {
         return lhs.handle() == rhs.handle();
     }
+
+    template <class Resource>
+    inline bool operator<(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    {
+        return lhs.handle() < rhs.handle();
+    }
 }
 
 
