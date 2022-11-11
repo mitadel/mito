@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <mito/mito.h>
 
-TEST(Mesh, TestMeshBuild)
+TEST(Mesh, BuildMesh)
 {
     /**
      * Mesh with four elements:
@@ -67,7 +67,28 @@ TEST(Mesh, TestMeshBuild)
     return;
 }
 
-TEST(Mesh, TestMeshQuadrature)
+TEST(Mesh, LoadMesh)
+{
+    // an empty topology
+    auto topology = mito::topology::topology();
+
+    // an empty cloud of points
+    auto point_cloud = mito::geometry::point_cloud<2>();
+
+    clock_t t;
+
+    //
+    t = clock();
+    std::ifstream fileStream("rectangle.summit");
+    auto mesh = mito::mesh::summit<2>(fileStream, topology, point_cloud);
+    std::cout << "Loaded mesh in " << clock() - t << std::endl;
+
+    t = clock();
+    auto boundary_elements = mito::mesh::boundary<1>(mesh, topology);
+    std::cout << "Fetched boundary in " << clock() - t << std::endl;
+}
+
+TEST(Mesh, QuadratureOnMesh)
 {
     // an empty topology
     auto topology = mito::topology::topology();
