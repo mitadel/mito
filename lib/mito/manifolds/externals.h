@@ -10,7 +10,6 @@
 
 // support
 #include "../mesh.h"
-#include "../topology.h"
 
 #endif
 
