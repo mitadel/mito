@@ -13,6 +13,7 @@
 #include "api.h"
 
 // classes implementation
+#include "metrics.h"
 #include "Manifold.h"
 
 // factories implementation
@@ -20,7 +21,6 @@
 
 // information on the reference elements
 #include "reference_elements.h"
-#include "metrics.h"
 
 #endif
 
