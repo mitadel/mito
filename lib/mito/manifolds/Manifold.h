@@ -21,7 +21,7 @@ namespace mito::manifolds {
 
       public:
         using element_t = elementT<I>;
-        static constexpr int dim = I;
+        static constexpr int dim = D;
 
       public:
         inline Manifold(const mesh::mesh_t<D, elementT> & mesh) :
