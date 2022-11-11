@@ -27,7 +27,7 @@ TEST(Mesh, TestMeshBuild)
     auto point_cloud = mito::geometry::point_cloud<2>();
 
     // an empty mesh of simplicial topology in 2D
-    mito::mesh::Mesh<2, mito::topology::simplex_t> mesh;
+    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
 
     auto vertex0 = topology.vertex();
     auto point0 = point_cloud.point({ 0.0, 0.0 });

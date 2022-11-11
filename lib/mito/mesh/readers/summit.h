@@ -113,7 +113,7 @@ namespace mito::mesh {
         assert(int(D) == dim);
 
         // instantiate mesh of simplicial topology
-        Mesh<D, simplex_t> mesh;
+        auto mesh = mito::mesh::mesh<D, simplex_t>();
 
         // read number of vertices
         int N_vertices = 0;
