@@ -82,19 +82,6 @@ namespace mito::topology {
     template <int D>
     using simplex_t = oriented_simplex_ptr<D>;
 
-    // vertex alias
-    using vertex_t = simplex_t<0>;
-
-    // segment alias
-    using segment_t = simplex_t<1>;
-
-    // triangle alias
-    using triangle_t = simplex_t<2>;
-
-    // tetrahedron alias
-    using tetrahedron_t = simplex_t<3>;
-
-    // TOFIX: many typedefs in this file require cleanup
 
     // hash function for {elementT}, which is a (shared) pointer to an element
     // Note that two pointers pointing to the same element collapse on the same hashed value
@@ -115,12 +102,6 @@ namespace mito::topology {
     // element vector alias
     template <class elementT>
     using element_vector_t = std::vector<elementT>;
-
-    // vertex set alias
-    using vertex_set_t = element_set_t<vertex_t>;
-
-    // vertex vector alias
-    using vertex_vector_t = element_vector_t<vertex_t>;
 
     // a collection of elements
     // QUESTION: this data structure should only be used by the factories, so where should it be
