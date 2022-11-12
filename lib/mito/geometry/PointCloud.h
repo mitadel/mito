@@ -29,15 +29,6 @@ namespace mito::geometry {
 
         auto size() -> int { return _cloud.size(); }
 
-        // example use: cloud.point(0.0, ..., 0.0)
-        // TOFIX: this method should be deprecated in favor of the one that follows
-        template <class... Args>
-        auto point(Args &&... args) -> auto
-        requires(sizeof...(Args) == D)
-        {
-            return _cloud.emplace(std::forward<Args>(args)...);
-        }
-
         // example use: cloud.point({0.0, ..., 0.0})
         auto point(vector_t<D> && coord) -> auto
         {
