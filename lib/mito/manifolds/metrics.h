@@ -27,7 +27,7 @@ namespace mito::manifolds {
             pointsTensor.reset();
 
             // use a set to collect vertices without repeated entries
-            vertex_set_t element_vertices;
+            topology::vertex_set_t element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
             assert(V == element_vertices.size());
@@ -61,24 +61,24 @@ namespace mito::manifolds {
         const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & volumes) -> void;
 
     template <>
-    auto computeElementsVolume<triangle_t, 2>(
-        const element_vector_t<triangle_t> & elements,
+    auto computeElementsVolume<topology::triangle_t, 2>(
+        const element_vector_t<topology::triangle_t> & elements,
         const mesh::vertex_point_table_t<2> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<2>(elements, vertices, volumes);
     }
 
     template <>
-    auto computeElementsVolume<tetrahedron_t, 3>(
-        const element_vector_t<tetrahedron_t> & elements,
+    auto computeElementsVolume<topology::tetrahedron_t, 3>(
+        const element_vector_t<topology::tetrahedron_t> & elements,
         const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<3>(elements, vertices, volumes);
     }
 
     template <>
-    auto computeElementsVolume<segment_t, 1>(
-        const element_vector_t<segment_t> & elements,
+    auto computeElementsVolume<topology::segment_t, 1>(
+        const element_vector_t<topology::segment_t> & elements,
         const mesh::vertex_point_table_t<1> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<1>(elements, vertices, volumes);
@@ -86,7 +86,7 @@ namespace mito::manifolds {
 
     template <int D>
     auto computeSegmentsLength(
-        const element_vector_t<segment_t> & elements,
+        const element_vector_t<topology::segment_t> & elements,
         const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & length) -> void
     {
         // assert memory allocation is consistent
@@ -97,7 +97,7 @@ namespace mito::manifolds {
         for (const auto & element : elements) {
 
             // collect vertices
-            vertex_set_t vertices_set;
+            topology::vertex_set_t vertices_set;
             element->vertices(vertices_set);
             topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
@@ -118,16 +118,16 @@ namespace mito::manifolds {
     }
 
     template <>
-    auto computeElementsVolume<segment_t, 2>(
-        const element_vector_t<segment_t> & elements,
+    auto computeElementsVolume<topology::segment_t, 2>(
+        const element_vector_t<topology::segment_t> & elements,
         const mesh::vertex_point_table_t<2> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<2>(elements, vertices, volumes);
     }
 
     template <>
-    auto computeElementsVolume<segment_t, 3>(
-        const element_vector_t<segment_t> & elements,
+    auto computeElementsVolume<topology::segment_t, 3>(
+        const element_vector_t<topology::segment_t> & elements,
         const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<3>(elements, vertices, volumes);
@@ -136,7 +136,7 @@ namespace mito::manifolds {
     // follows implementation by Kahan2014
     template <int D = 3>
     auto computeTriangleArea(
-        const element_vector_t<triangle_t> & elements,
+        const element_vector_t<topology::triangle_t> & elements,
         const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & areas) -> void
     {
         // loop on elements
@@ -144,7 +144,7 @@ namespace mito::manifolds {
         for (const auto & element : elements) {
 
             // collect vertices
-            vertex_set_t vertices_set;
+            topology::vertex_set_t vertices_set;
             element->vertices(vertices_set);
             topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
@@ -183,8 +183,8 @@ namespace mito::manifolds {
     }
 
     template <>
-    auto computeElementsVolume<triangle_t, 3>(
-        const element_vector_t<triangle_t> & elements,
+    auto computeElementsVolume<topology::triangle_t, 3>(
+        const element_vector_t<topology::triangle_t> & elements,
         const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeTriangleArea(elements, vertices, volumes);

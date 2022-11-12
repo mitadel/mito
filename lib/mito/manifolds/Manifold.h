@@ -67,14 +67,14 @@ namespace mito::manifolds {
         inline auto elements() const -> const auto & { return _elements; }
         inline auto nElements() const -> int { return _elements.size(); }
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
-        inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
+        inline auto coordinatesVertex(const topology::vertex_t & v) const -> const auto &
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
         }
 
       private:
-        inline auto _point(const vertex_t & v) const -> const auto &
+        inline auto _point(const topology::vertex_t & v) const -> const auto &
         {
             // look up the point attached to vertex {v}
             return _vertices.find(v)->second;
@@ -103,7 +103,7 @@ namespace mito::manifolds {
             os << "Composition: " << std::endl;
             os << *e;
             os << "Vertices: " << std::endl;
-            vertex_set_t vertices;
+            topology::vertex_set_t vertices;
             e->vertices(vertices);
             for (const auto v : vertices) {
                 os << manifold.coordinatesVertex(v) << std::endl;
