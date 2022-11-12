@@ -23,15 +23,6 @@ namespace mito::topology {
     // vertex vector alias
     using vertex_vector_t = element_vector_t<vertex_t>;
 
-    template <int D>
-    inline auto exists_flipped(const simplex_t<D> & oriented_simplex) -> auto;
-
-    template <int D>
-    inline auto flip(const simplex_t<D> & oriented_simplex) -> auto;
-
-    template <int D>
-    inline auto incidence(const simplex_t<D> & oriented_simplex) -> auto;
-
 }
 
 
