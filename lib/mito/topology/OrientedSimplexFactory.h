@@ -32,6 +32,24 @@ namespace mito::topology {
         // default constructor
         OrientedSimplexFactory() : _simplex_factory(), _oriented_simplices(), _orientations() {};
 
+        inline auto existsOrientedSimplex(
+            const unoriented_simplex_ptr<D> & simplex, bool orientation) const -> bool
+        {
+            // bind the footprint and the orientation in a tuple
+            auto tuple = std::make_tuple(simplex->id(), orientation);
+
+            // look up the tuple in the orientation map
+            auto it_find = _orientations.find(tuple);
+
+            // if there exists an oriented simplex riding on {simplex} with orientation
+            // {orientation}
+            if (it_find != _orientations.end()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         // return an oriented simplex riding on footprint {simplex} and with orientation
         // {orientation} (either create a new oriented simplex if such oriented simplex does not
         // exist in the factory or return the existing representative of the class of equivalence of
@@ -40,10 +58,10 @@ namespace mito::topology {
             const unoriented_simplex_ptr<D> & simplex, bool orientation)
         {
             // bind the footprint and the orientation in a tuple
-            auto mytuple = std::make_tuple(simplex->id(), orientation);
+            auto tuple = std::make_tuple(simplex->id(), orientation);
 
             // look up the tuple in the orientation map
-            auto it_find = _orientations.find(mytuple);
+            auto it_find = _orientations.find(tuple);
 
             // if an oriented simplex riding on simplex {simplex} with orientation {orientation}
             // is already registered in the map
@@ -60,7 +78,7 @@ namespace mito::topology {
                 // register it in the map
                 auto ret = _orientations.insert(
                     std::pair<std::tuple<unoriented_simplex_id_t, bool>, oriented_simplex_ptr<D>>(
-                        mytuple, oriented_simplex));
+                        tuple, oriented_simplex));
 
                 // and return it
                 return ret.first->second;
