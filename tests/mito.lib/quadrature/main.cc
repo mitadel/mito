@@ -40,19 +40,19 @@ TEST(Quadrature, TestQuadrature)
 
     auto vertex0 = topology.vertex();
     auto point0 = point_cloud_2D.point({ 0.0, 0.0 });
-    mesh_2D.addVertex(vertex0, point0);
+    mesh_2D.insert(vertex0, point0);
     auto vertex1 = topology.vertex();
     auto point1 = point_cloud_2D.point({ 1.0, 0.0 });
-    mesh_2D.addVertex(vertex1, point1);
+    mesh_2D.insert(vertex1, point1);
     auto vertex2 = topology.vertex();
     auto point2 = point_cloud_2D.point({ 1.0, 1.0 });
-    mesh_2D.addVertex(vertex2, point2);
+    mesh_2D.insert(vertex2, point2);
     auto vertex3 = topology.vertex();
     auto point3 = point_cloud_2D.point({ 0.5, 0.5 });
-    mesh_2D.addVertex(vertex3, point3);
+    mesh_2D.insert(vertex3, point3);
     auto vertex4 = topology.vertex();
     auto point4 = point_cloud_2D.point({ 0.0, 1.0 });
-    mesh_2D.addVertex(vertex4, point4);
+    mesh_2D.insert(vertex4, point4);
 
     auto segment0 = topology.segment({ vertex0, vertex1 });
     auto segment1 = topology.segment({ vertex1, vertex3 });
@@ -156,11 +156,11 @@ TEST(Quadrature, TestQuadrature)
 
     // an empty mesh of simplicial topology in 3D
     auto mesh_3D = mito::mesh::mesh<3, mito::topology::simplex_t>();
-    mesh_3D.addVertex(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
-    mesh_3D.addVertex(vertex1, point_cloud_3D.point({ 1.0, 0.0, 1.0 }));
-    mesh_3D.addVertex(vertex2, point_cloud_3D.point({ 1.0, 1.0, 1.0 }));
-    mesh_3D.addVertex(vertex3, point_cloud_3D.point({ 0.5, 0.5, 0.5 }));
-    mesh_3D.addVertex(vertex4, point_cloud_3D.point({ 0.0, 1.0, 0.0 }));
+    mesh_3D.insert(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
+    mesh_3D.insert(vertex1, point_cloud_3D.point({ 1.0, 0.0, 1.0 }));
+    mesh_3D.insert(vertex2, point_cloud_3D.point({ 1.0, 1.0, 1.0 }));
+    mesh_3D.insert(vertex3, point_cloud_3D.point({ 0.5, 0.5, 0.5 }));
+    mesh_3D.insert(vertex4, point_cloud_3D.point({ 0.0, 1.0, 0.0 }));
     mesh_3D.insert(element0);
     mesh_3D.insert(element1);
     mesh_3D.insert(element2);

@@ -27,7 +27,7 @@ namespace mito::mesh {
             auto point = point_cloud.point(std::move(coordinates));
 
             // register vertex-point mapping in {mesh}
-            mesh.addVertex(vertex, point);
+            mesh.insert(vertex, point);
 
             // add vertex to {vertices}
             vertices.push_back(vertex);
