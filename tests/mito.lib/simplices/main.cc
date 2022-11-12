@@ -33,7 +33,6 @@ TEST(Simplices, DISABLED_TestSimplices)
     auto vertex2 = topology.vertex();
     auto vertex3 = topology.vertex();
 
-    // QUESTION: How about we return the simplices from the factories as reference wrappers?
     // build a segment connecting {vertex0} and {vertex1}
     auto segment0 = topology.segment({ vertex0, vertex1 });
     // assert there is only one segment connecting {vertex0} and {vertex1}
