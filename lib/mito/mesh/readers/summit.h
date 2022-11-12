@@ -76,14 +76,79 @@ namespace mito::mesh {
     }
 
     template <int D, template <int> class elementT>
+    auto readTetrahedron(
+        std::ifstream & fileStream, mesh_t<D, elementT> & mesh,
+        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
+    {
+        int index0 = 0;
+        fileStream >> index0;
+        --index0;
+
+        int index1 = 0;
+        fileStream >> index1;
+        --index1;
+
+        int index2 = 0;
+        fileStream >> index2;
+        --index2;
+
+        int index3 = 0;
+        fileStream >> index3;
+        --index3;
+
+        auto vertex0 = vertices[index0];
+        auto vertex1 = vertices[index1];
+        auto vertex2 = vertices[index2];
+        auto vertex3 = vertices[index3];
+
+        auto segment0 = topology.segment({ vertex0, vertex1 });
+        auto segment1 = topology.segment({ vertex1, vertex3 });
+        auto segment2 = topology.segment({ vertex3, vertex0 });
+        auto triangle0 = topology.triangle({ segment0, segment1, segment2 });
+
+        auto segment3 = topology.segment({ vertex1, vertex2 });
+        auto segment4 = topology.segment({ vertex2, vertex3 });
+        auto segment5 = topology.segment({ vertex3, vertex1 });
+        auto triangle1 = topology.triangle({ segment3, segment4, segment5 });
+
+        auto segment6 = topology.segment({ vertex2, vertex0 });
+        auto segment7 = topology.segment({ vertex0, vertex3 });
+        auto segment8 = topology.segment({ vertex3, vertex2 });
+        auto triangle2 = topology.triangle({ segment6, segment7, segment8 });
+
+        auto segment9 = topology.segment({ vertex0, vertex2 });
+        auto segment10 = topology.segment({ vertex2, vertex1 });
+        auto segment11 = topology.segment({ vertex1, vertex0 });
+        auto triangle3 = topology.triangle({ segment9, segment10, segment11 });
+
+        // QUESTION: Can the label be more than one?
+        // read label for element
+        // TOFIX: Ignored for now
+        std::string element_set_id;
+        fileStream >> element_set_id;
+
+        auto element = topology.tetrahedron({ triangle0, triangle1, triangle2, triangle3 });
+        mesh.addSimplex(element);
+
+        // all done
+        return;
+    }
+
+    template <int D, template <int> class elementT>
     auto readElements(
         std::ifstream & fileStream, mesh_t<D, elementT> & mesh, int N_elements,
+        const std::vector<vertex_t> & vertices, topology_t & topology) -> void;
+
+    template <>
+    auto readElements(
+        std::ifstream & fileStream, mesh_t<2, topology::simplex_t> & mesh, int N_elements,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         for (int i = 0; i < N_elements; ++i) {
             int element_type = 0;
             fileStream >> element_type;
 
+            // TODO: add read segment
             if (element_type == 3) {
                 readTriangle(fileStream, mesh, vertices, topology);
             } else {
@@ -95,8 +160,29 @@ namespace mito::mesh {
         return;
     }
 
-    // QUESTION: this is a reader of simplicial meshes only. Maybe we should clarify this in the
-    //          name of the function?
+    template <>
+    auto readElements(
+        std::ifstream & fileStream, mesh_t<3, topology::simplex_t> & mesh, int N_elements,
+        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
+    {
+        for (int i = 0; i < N_elements; ++i) {
+            int element_type = 0;
+            fileStream >> element_type;
+
+            // TODO: add read segment
+            if (element_type == 3) {
+                readTriangle(fileStream, mesh, vertices, topology);
+            } else if (element_type == 4) {
+                readTetrahedron(fileStream, mesh, vertices, topology);
+            } else {
+                std::cout << "Error: Unknown element type" << std::endl;
+            }
+        }
+
+        // all done
+        return;
+    }
+
     template <int D, template <int> class elementT>
     auto summit(std::ifstream & fileStream, topology_t & topology, point_cloud_t<D> & point_cloud)
         -> auto
