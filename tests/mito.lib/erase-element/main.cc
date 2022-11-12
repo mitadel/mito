@@ -12,7 +12,7 @@ TEST(EraseElement, DISABLED_TestEraseElement)
 
     // load mesh of the unit square
     std::ifstream fileStream("small-square.summit");
-    auto mesh = mito::mesh::summit<2>(fileStream, topology, point_cloud);
+    auto mesh = mito::mesh::summit<2, mito::topology::simplex_t>(fileStream, topology, point_cloud);
 
     // show me the points
     // std::cout << "Point cloud: " << std::endl;

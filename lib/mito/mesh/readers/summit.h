@@ -5,9 +5,9 @@
 #include <fstream>
 
 namespace mito::mesh {
-    template <int D>
+    template <int D, template <int> class elementT>
     auto readVertices(
-        std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh, int N_vertices,
+        std::ifstream & fileStream, mesh_t<D, elementT> & mesh, int N_vertices,
         std::vector<vertex_t> & vertices, topology_t & topology, point_cloud_t<D> & point_cloud)
         -> void
     {
@@ -37,9 +37,9 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D>
+    template <int D, template <int> class elementT>
     auto readTriangle(
-        std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh,
+        std::ifstream & fileStream, mesh_t<D, elementT> & mesh,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         int index0 = 0;
@@ -75,9 +75,9 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D>
+    template <int D, template <int> class elementT>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh, int N_elements,
+        std::ifstream & fileStream, mesh_t<D, elementT> & mesh, int N_elements,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         for (int i = 0; i < N_elements; ++i) {
@@ -97,7 +97,7 @@ namespace mito::mesh {
 
     // QUESTION: this is a reader of simplicial meshes only. Maybe we should clarify this in the
     //          name of the function?
-    template <int D>
+    template <int D, template <int> class elementT>
     auto summit(std::ifstream & fileStream, topology_t & topology, point_cloud_t<D> & point_cloud)
         -> auto
     {
@@ -111,8 +111,8 @@ namespace mito::mesh {
         // assert this mesh object is of same dimension of the mesh being read
         assert(int(D) == dim);
 
-        // instantiate mesh of simplicial topology
-        auto mesh = mito::mesh::mesh<D, simplex_t>();
+        // instantiate mesh
+        auto mesh = mito::mesh::mesh<D, elementT>();
 
         // read number of vertices
         int N_vertices = 0;

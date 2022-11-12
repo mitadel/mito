@@ -80,7 +80,7 @@ TEST(Mesh, LoadMesh)
     //
     t = clock();
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::mesh::summit<2>(fileStream, topology, point_cloud);
+    auto mesh = mito::mesh::summit<2, mito::topology::simplex_t>(fileStream, topology, point_cloud);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
@@ -98,7 +98,7 @@ TEST(Mesh, QuadratureOnMesh)
 
     // load mesh
     std::ifstream fileStream("square.summit");
-    auto mesh = mito::mesh::summit<2>(fileStream, topology, point_cloud);
+    auto mesh = mito::mesh::summit<2, mito::topology::simplex_t>(fileStream, topology, point_cloud);
     // TOFIX: is it better that the elements and vertices are first fetched from mesh and then
     //  used to build the manifold?
     // instantiate a element set as a collection of simplices and vertices.
