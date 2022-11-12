@@ -105,10 +105,9 @@ PYBIND11_MODULE(mito, m)
             // the implementation
             mito::py::init<>())
         // accessors
-        // the elements; read-only property
+        // the cells; read-only property
         .def_property_readonly(
-            "elements", &mito::mesh::mesh_t<2, mito::topology::simplex_t>::elements<2>,
-            "the body elements")
+            "cells", &mito::mesh::mesh_t<2, mito::topology::simplex_t>::cells<2>, "the body cells")
         // done
         ;
 

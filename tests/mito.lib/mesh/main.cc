@@ -4,7 +4,7 @@
 TEST(Mesh, BuildMesh)
 {
     /**
-     * Mesh with four elements:
+     * Mesh with four cells:
         (0,1)           (1,1)
           4               2
           +---------------+
@@ -54,15 +54,15 @@ TEST(Mesh, BuildMesh)
     auto segment6 = topology.segment({ vertex2, vertex4 });
     auto segment7 = topology.segment({ vertex4, vertex0 });
 
-    auto element0 = topology.triangle({ segment0, segment1, segment2 });
-    auto element1 = topology.triangle({ segment3, segment4, segment1 });
-    auto element2 = topology.triangle({ segment6, segment5, segment4 });
-    auto element3 = topology.triangle({ segment7, segment2, segment5 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto cell1 = topology.triangle({ segment3, segment4, segment1 });
+    auto cell2 = topology.triangle({ segment6, segment5, segment4 });
+    auto cell3 = topology.triangle({ segment7, segment2, segment5 });
 
-    mesh.insert(element0);
-    mesh.insert(element1);
-    mesh.insert(element2);
-    mesh.insert(element3);
+    mesh.insert(cell0);
+    mesh.insert(cell1);
+    mesh.insert(cell2);
+    mesh.insert(cell3);
 
     return;
 }
@@ -84,7 +84,7 @@ TEST(Mesh, LoadSummitMesh2D)
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
-    auto boundary_elements = mito::mesh::boundary<1>(mesh, topology);
+    auto boundary_cells = mito::mesh::boundary<1>(mesh, topology);
     std::cout << "Fetched boundary in " << clock() - t << std::endl;
 }
 
@@ -116,11 +116,11 @@ TEST(Mesh, QuadratureOnMesh)
     // load mesh
     std::ifstream fileStream("square.summit");
     auto mesh = mito::mesh::summit<2, mito::topology::simplex_t>(fileStream, topology, point_cloud);
-    // TOFIX: is it better that the elements and vertices are first fetched from mesh and then
+    // TOFIX: is it better that the cells and vertices are first fetched from mesh and then
     //  used to build the manifold?
-    // instantiate a element set as a collection of simplices and vertices.
-    // const auto & elements = mesh.elements<2>();    // TODO: region label to fetch elements
-    // auto manifold = mito::manifolds::manifold<2>(elements);
+    // instantiate a cell set as a collection of simplices and vertices.
+    // const auto & cells = mesh.cells<2>();    // TODO: region label to fetch cells
+    // auto manifold = mito::manifolds::manifold<2>(cells);
     auto manifold = mito::manifolds::manifold<2>(mesh);
 
     // instantiate a scalar field

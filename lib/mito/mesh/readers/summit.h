@@ -5,9 +5,9 @@
 #include <fstream>
 
 namespace mito::mesh {
-    template <int D, template <int> class elementT>
+    template <int D, template <int> class cellT>
     auto readVertices(
-        std::ifstream & fileStream, mesh_t<D, elementT> & mesh, int N_vertices,
+        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, int N_vertices,
         std::vector<vertex_t> & vertices, topology_t & topology, point_cloud_t<D> & point_cloud)
         -> void
     {
@@ -37,10 +37,10 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D, template <int> class elementT>
+    template <int D, template <int> class cellT>
     auto readTriangle(
-        std::ifstream & fileStream, mesh_t<D, elementT> & mesh,
-        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
+        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, const std::vector<vertex_t> & vertices,
+        topology_t & topology) -> void
     {
         int index0 = 0;
         fileStream >> index0;
@@ -62,23 +62,23 @@ namespace mito::mesh {
         auto segment1 = topology.segment({ vertex1, vertex2 });
         auto segment2 = topology.segment({ vertex2, vertex0 });
 
-        auto element = topology.triangle({ segment0, segment1, segment2 });
-        mesh.insert(element);
+        auto cell = topology.triangle({ segment0, segment1, segment2 });
+        mesh.insert(cell);
 
         // QUESTION: Can the label be more than one?
-        // read label for element
+        // read label for cell
         // TOFIX: Ignored for now
-        std::string element_label;
-        fileStream >> element_label;
+        std::string cell_label;
+        fileStream >> cell_label;
 
         // all done
         return;
     }
 
-    template <int D, template <int> class elementT>
+    template <int D, template <int> class cellT>
     auto readTetrahedron(
-        std::ifstream & fileStream, mesh_t<D, elementT> & mesh,
-        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
+        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, const std::vector<vertex_t> & vertices,
+        topology_t & topology) -> void
     {
         int index0 = 0;
         fileStream >> index0;
@@ -122,37 +122,37 @@ namespace mito::mesh {
         auto triangle3 = topology.triangle({ segment9, segment10, segment11 });
 
         // QUESTION: Can the label be more than one?
-        // read label for element
+        // read label for cell
         // TOFIX: Ignored for now
-        std::string element_set_id;
-        fileStream >> element_set_id;
+        std::string cell_set_id;
+        fileStream >> cell_set_id;
 
-        auto element = topology.tetrahedron({ triangle0, triangle1, triangle2, triangle3 });
-        mesh.insert(element);
+        auto cell = topology.tetrahedron({ triangle0, triangle1, triangle2, triangle3 });
+        mesh.insert(cell);
 
         // all done
         return;
     }
 
-    template <int D, template <int> class elementT>
+    template <int D, template <int> class cellT>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<D, elementT> & mesh, int N_elements,
+        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void;
 
     template <>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<2, topology::simplex_t> & mesh, int N_elements,
+        std::ifstream & fileStream, mesh_t<2, topology::simplex_t> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
-        for (int i = 0; i < N_elements; ++i) {
-            int element_type = 0;
-            fileStream >> element_type;
+        for (int i = 0; i < N_cells; ++i) {
+            int cell_type = 0;
+            fileStream >> cell_type;
 
             // TODO: add read segment
-            if (element_type == 3) {
+            if (cell_type == 3) {
                 readTriangle(fileStream, mesh, vertices, topology);
             } else {
-                std::cout << "Error: Unknown element type" << std::endl;
+                std::cout << "Error: Unknown cell type" << std::endl;
             }
         }
 
@@ -162,20 +162,20 @@ namespace mito::mesh {
 
     template <>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<3, topology::simplex_t> & mesh, int N_elements,
+        std::ifstream & fileStream, mesh_t<3, topology::simplex_t> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
-        for (int i = 0; i < N_elements; ++i) {
-            int element_type = 0;
-            fileStream >> element_type;
+        for (int i = 0; i < N_cells; ++i) {
+            int cell_type = 0;
+            fileStream >> cell_type;
 
             // TODO: add read segment
-            if (element_type == 3) {
+            if (cell_type == 3) {
                 readTriangle(fileStream, mesh, vertices, topology);
-            } else if (element_type == 4) {
+            } else if (cell_type == 4) {
                 readTetrahedron(fileStream, mesh, vertices, topology);
             } else {
-                std::cout << "Error: Unknown element type" << std::endl;
+                std::cout << "Error: Unknown cell type" << std::endl;
             }
         }
 
@@ -183,7 +183,7 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D, template <int> class elementT>
+    template <int D, template <int> class cellT>
     auto summit(std::ifstream & fileStream, topology_t & topology, point_cloud_t<D> & point_cloud)
         -> auto
     {
@@ -198,7 +198,7 @@ namespace mito::mesh {
         assert(int(D) == dim);
 
         // instantiate mesh
-        auto mesh = mito::mesh::mesh<D, elementT>();
+        auto mesh = mito::mesh::mesh<D, cellT>();
 
         // read number of vertices
         int N_vertices = 0;
@@ -207,29 +207,29 @@ namespace mito::mesh {
         std::vector<vertex_t> vertices;
         vertices.reserve(N_vertices);
 
-        // read number of elements
-        int N_elements = 0;
-        fileStream >> N_elements;
+        // read number of cells
+        int N_cells = 0;
+        fileStream >> N_cells;
 
-        // read number of element types
-        int N_element_types = 0;
-        fileStream >> N_element_types;
+        // read number of cell types
+        int N_cell_types = 0;
+        fileStream >> N_cell_types;
 
         // QUESTION: Not sure that we need this...
-        assert(N_element_types == 1);
+        assert(N_cell_types == 1);
 
         // read the vertices
         readVertices<D>(fileStream, mesh, N_vertices, vertices, topology, point_cloud);
 
-        // read the elements
-        readElements(fileStream, mesh, N_elements, vertices, topology);
+        // read the cells
+        readElements(fileStream, mesh, N_cells, vertices, topology);
 
         // sanity check: the number of vertices in the map is N_vertices
         vertices.shrink_to_fit();
         assert(vertices.size() == static_cast<size_t>(N_vertices));
 
-        // sanity check: the number of elements of highest dimension in the map is N_elements
-        assert(mesh.template nElements<D>() == N_elements);
+        // sanity check: the number of cells of highest dimension in the map is N_cells
+        assert(mesh.template nCells<D>() == N_cells);
 
         // sanity check: run sanity check for all mesh simplices in cascade
         assert(mesh.sanityCheck());

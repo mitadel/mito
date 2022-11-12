@@ -5,42 +5,36 @@
 
 namespace mito::mesh {
 
-    // TOFIX: it would be great to rename this {elementT} in a way that would not imply any
-    //          of the baggage of the "finite-element element"
-    //          For example, a Mesh<D, simplex_t> should be thought as a mesh of simplicial
-    //          topology, not of simplicial elements.
-    //          (e.g. simplexT would be ok but it would be too specific to meshes of simplices,
-    //          excluding quads, hex, ...)
-    template <int D, template <int> class elementT>
+    template <int D, template <int> class cellT>
     class Mesh {
 
       private:
         template <int I>
-        using element_t = elementT<I>;
+        using cell_t = cellT<I>;
 
-        // typedef for a collection of elements of dimension I
+        // typedef for a collection of cells of dimension I
         template <size_t I>
-        using element_collection = element_set_t<element_t<I>>;
+        using cell_collection = element_set_t<cell_t<I>>;
 
-        // element_collection<I>... expands to:
-        // element_set_t<element_t<1>>, ..., element_set_t<element_t<D>>
+        // cell_collection<I>... expands to:
+        // cell_set_t<cell_t<1>>, ..., cell_set_t<cell_t<D>>
         template <typename = std::make_index_sequence<D + 1>>
-        struct element_tuple;
+        struct cell_tuple;
 
         template <size_t... I>
-        struct element_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<element_collection<I>...>;
+        struct cell_tuple<std::index_sequence<I...>> {
+            using type = std::tuple<cell_collection<I>...>;
         };
 
         // this expands to:
-        // tuple<element_set_t<element_t<0>>,
-        //      element_set_t<element_t<1>>, ...,
-        //      element_set_t<element_t<D>>
-        using element_tuple_t = typename element_tuple<>::type;
+        // tuple<cell_set_t<cell_t<0>>,
+        //      cell_set_t<cell_t<1>>, ...,
+        //      cell_set_t<cell_t<D>>
+        using cell_tuple_t = typename cell_tuple<>::type;
 
       public:
         // default constructor
-        inline Mesh() : _elements(), _vertices() {};
+        inline Mesh() : _cells(), _vertices() {};
 
         inline ~Mesh() {}
 
@@ -63,14 +57,14 @@ namespace mito::mesh {
 #if 0
             // print summary
             std::cout << "Mesh composition: " << std::endl;
-            std::cout << "0: " << std::get<0>(_elements).size() << " elements " << std::endl;
-            std::cout << "1: " << std::get<1>(_elements).size() << " elements " << std::endl;
-            std::cout << "2: " << std::get<2>(_elements).size() << " elements " << std::endl;
+            std::cout << "0: " << std::get<0>(_cells).size() << " cells " << std::endl;
+            std::cout << "1: " << std::get<1>(_cells).size() << " cells " << std::endl;
+            std::cout << "2: " << std::get<2>(_cells).size() << " cells " << std::endl;
 #endif
 
-            // sanity check: each element is self-consistent
-            for (const auto & element : std::get<D>(_elements)) {
-                if (!element->sanityCheck()) {
+            // sanity check: each cell is self-consistent
+            for (const auto & cell : std::get<D>(_cells)) {
+                if (!cell->sanityCheck()) {
                     return false;
                 }
             }
@@ -79,18 +73,18 @@ namespace mito::mesh {
         }
 
         template <int I>
-        inline auto nElements() const -> int
+        inline auto nCells() const -> int
         requires(I <= D)
         {
             // all done
-            return std::get<I>(_elements).size();
+            return std::get<I>(_cells).size();
         }
 
         template <int I>
-        inline auto elements() const -> const auto & requires(I <= D) {
-                                                         // all done
-                                                         return std::get<I>(_elements);
-                                                     }
+        inline auto cells() const -> const auto & requires(I <= D) {
+                                                      // all done
+                                                      return std::get<I>(_cells);
+                                                  }
 
         inline auto vertices() const -> const auto &
         {
@@ -105,22 +99,22 @@ namespace mito::mesh {
         }
 
         template <int I>
-        inline auto erase(const element_t<I> & element) -> void
+        inline auto erase(const cell_t<I> & cell) -> void
         requires(I > 0 && I <= D)
         {
-            // QUESTION: can we wrap elements in a way that the reference count can be called
+            // QUESTION: can we wrap cells in a way that the reference count can be called
             //  incidence?
 
-            // erase the element from the mesh
-            std::get<I>(_elements).erase(element);
+            // erase the cell from the mesh
+            std::get<I>(_cells).erase(cell);
 
             // TOFIX
-            // cleanup oriented element factory around this element
-            // mito::topology::Topology<I>::cleanup(element);
+            // cleanup oriented cell factory around this cell
+            // mito::topology::Topology<I>::cleanup(cell);
 
             // // TOFIX: synchronize with the geometry, check whether any point should be erased
             // // in the cloud of points
-            // mito::geometry::PointCloud<D>::cleanup(element);
+            // mito::geometry::PointCloud<D>::cleanup(cell);
 
             // all done
             return;
@@ -128,11 +122,11 @@ namespace mito::mesh {
 
       public:
         template <int I>
-        inline auto insert(const element_t<I> & element) -> void
+        inline auto insert(const cell_t<I> & cell) -> void
         requires(I > 0 && I <= D)
         {
-            // add the element to the set of elements with same dimension
-            std::get<I>(_elements).insert(element);
+            // add the cell to the set of cells with same dimension
+            std::get<I>(_cells).insert(cell);
 
             // all done
             return;
@@ -145,8 +139,8 @@ namespace mito::mesh {
         }
 
       private:
-        // container to store D+1 containers of d dimensional elements with d = 0, ..., D
-        element_tuple_t _elements;
+        // container to store D+1 containers of d dimensional cells with d = 0, ..., D
+        cell_tuple_t _cells;
 
         // the mapping of vertices to points
         vertex_point_table_t<D> _vertices;

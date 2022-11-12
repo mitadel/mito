@@ -13,7 +13,7 @@ using mito::topology::triangle_t;
 TEST(Quadrature, TestQuadrature)
 {
     /**
-     * Mesh with four elements:
+     * Mesh with four cells:
         (0,1)           (1,1)
           4               2
           +---------------+
@@ -63,17 +63,17 @@ TEST(Quadrature, TestQuadrature)
     auto segment6 = topology.segment({ vertex2, vertex4 });
     auto segment7 = topology.segment({ vertex4, vertex0 });
 
-    auto element0 = topology.triangle({ segment0, segment1, segment2 });
-    auto element1 = topology.triangle({ segment3, segment4, segment1 });
-    auto element2 = topology.triangle({ segment6, segment5, segment4 });
-    auto element3 = topology.triangle({ segment7, segment2, segment5 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto cell1 = topology.triangle({ segment3, segment4, segment1 });
+    auto cell2 = topology.triangle({ segment6, segment5, segment4 });
+    auto cell3 = topology.triangle({ segment7, segment2, segment5 });
 
-    mesh_2D.insert(element0);
-    mesh_2D.insert(element1);
-    mesh_2D.insert(element2);
-    mesh_2D.insert(element3);
+    mesh_2D.insert(cell0);
+    mesh_2D.insert(cell1);
+    mesh_2D.insert(cell2);
+    mesh_2D.insert(cell3);
 
-    // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
+    // This instantiates a quad rule on the cells (pairing cell type and degree of exactness)
     auto bodyManifold = mito::manifolds::manifold<2>(mesh_2D);
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
@@ -161,15 +161,15 @@ TEST(Quadrature, TestQuadrature)
     mesh_3D.insert(vertex2, point_cloud_3D.point({ 1.0, 1.0, 1.0 }));
     mesh_3D.insert(vertex3, point_cloud_3D.point({ 0.5, 0.5, 0.5 }));
     mesh_3D.insert(vertex4, point_cloud_3D.point({ 0.0, 1.0, 0.0 }));
-    mesh_3D.insert(element0);
-    mesh_3D.insert(element1);
-    mesh_3D.insert(element2);
-    mesh_3D.insert(element3);
+    mesh_3D.insert(cell0);
+    mesh_3D.insert(cell1);
+    mesh_3D.insert(cell2);
+    mesh_3D.insert(cell3);
 
-    // instantiate an element set with the same elements as above but the new coordinates map
+    // instantiate an cell set with the same cells as above but the new coordinates map
     auto bodyManifold3D = mito::manifolds::manifold<2>(mesh_3D);
 
-    // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
+    // This instantiates a quad rule on the cells (pairing cell type and degree of exactness)
     auto bodyIntegrator3D =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold3D);
 

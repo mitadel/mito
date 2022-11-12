@@ -58,7 +58,7 @@ namespace mito::topology {
     using unoriented_simplex_id_t = std::uintptr_t;
 
     // id type of unoriented simplex
-    // QUESTION: should we collapse these two ids and call them {element_id_t}?
+    // QUESTION: should we collapse these two ids and call them {cell_id_t}?
     using oriented_simplex_id_t = std::uintptr_t;
 
     // oriented simplex composition alias
@@ -69,32 +69,34 @@ namespace mito::topology {
     template <int D>
     using simplex_t = oriented_simplex_ptr<D>;
 
-    // hash function for {elementT}, which is a (shared) pointer to an element
-    // Note that two pointers pointing to the same element collapse on the same hashed value
-    template <class elementT>
-    struct element_hash {
-        size_t operator()(const elementT & element) const
+    // hash function for {cellT}, which is a (shared) pointer to a cell
+    // Note that two pointers pointing to the same cell collapse on the same hashed value
+    template <class cellT>
+    struct cell_hash {
+        size_t operator()(const cellT & cell) const
         {
             // reinterpret the address of the pointed handle as a {size_t} and return it
             return reinterpret_cast<mito::topology::unoriented_simplex_id_t>(
-                static_cast<elementT::handle_t>(element.handle()));
+                static_cast<cellT::handle_t>(cell.handle()));
         }
     };
 
+    // TOFIX: not sure if this type is useful in other places than {Mesh}
     // element set alias
-    template <class elementT>
-    using element_set_t = std::unordered_set<elementT, element_hash<elementT>>;
+    template <class cellT>
+    using element_set_t = std::unordered_set<cellT, cell_hash<cellT>>;
 
+    // TOFIX: this is mostly used in {Manifold}: either remove it or {typedef} there
     // element vector alias
-    template <class elementT>
-    using element_vector_t = std::vector<elementT>;
+    template <class cellT>
+    using element_vector_t = std::vector<cellT>;
 
-    // a collection of elements
+    // a collection of cells
     // QUESTION: this data structure should only be used by the factories, so where should it be
     //              typedef'ed?
-    template <class elementT>
+    template <class cellT>
     using element_collection_t =
-        mito::utilities::segmented_t<typename elementT::resource_t, 100 /* segment size */>;
+        mito::utilities::segmented_t<typename cellT::resource_t, 100 /* segment size */>;
 }
 
 

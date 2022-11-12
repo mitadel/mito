@@ -12,7 +12,7 @@ TEST(Simplices, TestSimplices)
     auto topology = mito::topology::topology();
 
     /**
-     * Mesh with four elements:
+     * Mesh with four cells:
         (0,1)           (1,1)
           4       6         2
           +-----------------+
@@ -79,45 +79,45 @@ TEST(Simplices, TestSimplices)
     EXPECT_EQ(segment4.references(), 2);
 
     // build a triangle connecting {segment0}, {segment1}, and {segment2}
-    auto element0 = topology.triangle({ segment0, segment1, segment2 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
     // show me
-    std::cout << element0 << std::endl;
+    std::cout << cell0 << std::endl;
 
-    // assert there is one simplex riding on this segment (element0)
+    // assert there is one simplex riding on this segment (cell0)
     EXPECT_EQ(segment0.references(), 3);
-    // assert there is one simplex riding on this segment (element0)
+    // assert there is one simplex riding on this segment (cell0)
     EXPECT_EQ(segment1.references(), 3);
     // assert no simplex rides on this segment yet
     EXPECT_EQ(segment1m.references(), 2);
-    // assert there is one simplex riding on this segment (element0)
+    // assert there is one simplex riding on this segment (cell0)
     EXPECT_EQ(segment2.references(), 3);
 
     // assert there is one triangle connecting {segment0}, {segment1}, and {segment2}
-    EXPECT_FALSE(topology.exists_flipped(element0));
+    EXPECT_FALSE(topology.exists_flipped(cell0));
     // assert no simplex rides on this segment
-    EXPECT_EQ(element0.references(), 2);
+    EXPECT_EQ(cell0.references(), 2);
 
     // build a triangle connecting {segment3}, {segment4}, and {segment1m}
-    auto element1 = topology.triangle({ segment3, segment4, segment1m });
+    auto cell1 = topology.triangle({ segment3, segment4, segment1m });
     // show me
-    std::cout << element1 << std::endl;
+    std::cout << cell1 << std::endl;
 
-    // assert there is one simplex riding on this segment (element1)
+    // assert there is one simplex riding on this segment (cell1)
     EXPECT_EQ(segment3.references(), 3);
-    // assert there is one simplex riding on this segment (element1)
+    // assert there is one simplex riding on this segment (cell1)
     EXPECT_EQ(segment4.references(), 3);
-    // assert there is one simplex riding on this segment (element1)
+    // assert there is one simplex riding on this segment (cell1)
     EXPECT_EQ(segment1m.references(), 3);
 
     // assert there is one triangle connecting {segment3}, {segment4}, and {segment1m}
-    EXPECT_FALSE(topology.exists_flipped(element1));
+    EXPECT_FALSE(topology.exists_flipped(cell1));
     // assert no simplex rides on this segment
-    EXPECT_EQ(element1.references(), 2);
+    EXPECT_EQ(cell1.references(), 2);
 
     // sanity check
-    for (const auto & e : { element0, element1 }) {
+    for (const auto & e : { cell0, cell1 }) {
         if (!e->sanityCheck()) {
-            std::cout << "Failed sanity check for element " << e << std::endl;
+            std::cout << "Failed sanity check for cell " << e << std::endl;
         }
     }
 }

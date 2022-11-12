@@ -6,19 +6,19 @@
 namespace mito::mesh {
 
     // class mesh
-    template <int D, template <int> class elementT>
+    template <int D, template <int> class cellT>
     class Mesh;
 
     // mesh alias
-    template <int D, template <int> class elementT>
-    using mesh_t = Mesh<D, elementT>;
+    template <int D, template <int> class cellT>
+    using mesh_t = Mesh<D, cellT>;
 
     // vertex alias
     using vertex_t = topology::vertex_t;
 
     // element set alias
-    template <class elementT>
-    using element_set_t = topology::element_set_t<elementT>;
+    template <class cellT>
+    using element_set_t = topology::element_set_t<cellT>;
 
     // topology alias
     using topology_t = topology::topology_t;
@@ -34,7 +34,7 @@ namespace mito::mesh {
     // mapping from vertices to points
     template <int D>
     using vertex_point_table_t =
-        std::unordered_map<vertex_t, point_t<D>, mito::topology::element_hash<vertex_t>>;
+        std::unordered_map<vertex_t, point_t<D>, mito::topology::cell_hash<vertex_t>>;
 }
 
 

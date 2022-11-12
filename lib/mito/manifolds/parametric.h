@@ -1,7 +1,7 @@
 
 namespace mito::manifolds {
 
-    template <class elementT>
+    template <class cellT>
     constexpr auto parametric_dim() -> int;
 
     template <>

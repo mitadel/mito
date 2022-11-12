@@ -44,7 +44,7 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     // int_{bot} (f.n) = - int_{bot} (f1) = - int_0^1 x^2 dx = - 1/3
 
     /**
-     * Mesh with four elements:
+     * Mesh with four cells:
         (0,1)           (1,1)
           4               2
           +---------------+
@@ -94,19 +94,18 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     auto segment6 = topology.segment({ vertex2, vertex4 });
     auto segment7 = topology.segment({ vertex4, vertex0 });
 
-    auto element0 = topology.triangle({ segment0, segment1, segment2 });
-    auto element1 = topology.triangle({ segment3, segment4, segment1 });
-    auto element2 = topology.triangle({ segment6, segment5, segment4 });
-    auto element3 = topology.triangle({ segment7, segment2, segment5 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto cell1 = topology.triangle({ segment3, segment4, segment1 });
+    auto cell2 = topology.triangle({ segment6, segment5, segment4 });
+    auto cell3 = topology.triangle({ segment7, segment2, segment5 });
 
-    mesh.insert(element0);
-    mesh.insert(element1);
-    mesh.insert(element2);
-    mesh.insert(element3);
+    mesh.insert(cell0);
+    mesh.insert(cell1);
+    mesh.insert(cell2);
+    mesh.insert(cell3);
 
-    // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
-    // static mito::manifolds::ManifoldTri elementSet;
     auto bodyManifold = mito::manifolds::manifold<2>(mesh);
+    // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
