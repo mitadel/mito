@@ -27,6 +27,10 @@ namespace mito::mesh {
     // topology alias
     using topology_t = topology::topology_t;
 
+    // point cloud alias
+    template <int D>
+    using point_cloud_t = geometry::point_cloud_t<D>;
+
     // point alias
     template <int D>
     using point_t = geometry::point_t<D>;

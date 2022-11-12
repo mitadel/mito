@@ -5,12 +5,11 @@
 #include <fstream>
 
 namespace mito::mesh {
-    // TOFIX: typedef {topology_t} and {point_cloud_t} in {mesh}
     template <int D>
     auto readVertices(
         std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh, int N_vertices,
-        std::vector<vertex_t> & vertices, mito::topology::topology_t & topology,
-        mito::geometry::point_cloud_t<D> & point_cloud) -> void
+        std::vector<vertex_t> & vertices, topology_t & topology, point_cloud_t<D> & point_cloud)
+        -> void
     {
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {
@@ -41,7 +40,7 @@ namespace mito::mesh {
     template <int D>
     auto readTriangle(
         std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh,
-        const std::vector<vertex_t> & vertices, mito::topology::topology_t & topology) -> void
+        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         int index0 = 0;
         fileStream >> index0;
@@ -79,7 +78,7 @@ namespace mito::mesh {
     template <int D>
     auto readElements(
         std::ifstream & fileStream, mesh_t<D, simplex_t> & mesh, int N_elements,
-        const std::vector<vertex_t> & vertices, mito::topology::topology_t & topology) -> void
+        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         for (int i = 0; i < N_elements; ++i) {
             int element_type = 0;
@@ -99,9 +98,8 @@ namespace mito::mesh {
     // QUESTION: this is a reader of simplicial meshes only. Maybe we should clarify this in the
     //          name of the function?
     template <int D>
-    auto summit(
-        std::ifstream & fileStream, mito::topology::topology_t & topology,
-        mito::geometry::point_cloud_t<D> & point_cloud) -> auto
+    auto summit(std::ifstream & fileStream, topology_t & topology, point_cloud_t<D> & point_cloud)
+        -> auto
     {
         std::cout << "Loading summit mesh..." << std::endl;
         assert(fileStream.is_open());
