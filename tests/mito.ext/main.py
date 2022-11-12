@@ -11,11 +11,11 @@ def myfunction(x):
 field = mito.ScalarField2D(myfunction)
 
 # TOFIX: this line ...
-elementset = mito.ManifoldTriangle2D("square.summit")
+manifold = mito.ManifoldTriangle2D("square.summit")
 # ...should be instead:
 # mesh = mito.SimplicialMesh2D("square.summit")
-# elementset = mito.ManifoldTriangle2D(mesh)
-integrator = mito.GaussIntegrator2Triangle2D(elementset)
+# manifold = mito.ManifoldTriangle2D(mesh)
+integrator = mito.GaussIntegrator2Triangle2D(manifold)
 
 N = 1
 for i in range(0, N):
