@@ -63,7 +63,7 @@ namespace mito::mesh {
         auto segment2 = topology.segment({ vertex2, vertex0 });
 
         auto element = topology.triangle({ segment0, segment1, segment2 });
-        mesh.addSimplex(element);
+        mesh.insert(element);
 
         // QUESTION: Can the label be more than one?
         // read label for element
@@ -128,7 +128,7 @@ namespace mito::mesh {
         fileStream >> element_set_id;
 
         auto element = topology.tetrahedron({ triangle0, triangle1, triangle2, triangle3 });
-        mesh.addSimplex(element);
+        mesh.insert(element);
 
         // all done
         return;

@@ -68,10 +68,10 @@ TEST(Quadrature, TestQuadrature)
     auto element2 = topology.triangle({ segment6, segment5, segment4 });
     auto element3 = topology.triangle({ segment7, segment2, segment5 });
 
-    mesh_2D.addSimplex(element0);
-    mesh_2D.addSimplex(element1);
-    mesh_2D.addSimplex(element2);
-    mesh_2D.addSimplex(element3);
+    mesh_2D.insert(element0);
+    mesh_2D.insert(element1);
+    mesh_2D.insert(element2);
+    mesh_2D.insert(element3);
 
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyManifold = mito::manifolds::manifold<2>(mesh_2D);
@@ -161,10 +161,10 @@ TEST(Quadrature, TestQuadrature)
     mesh_3D.addVertex(vertex2, point_cloud_3D.point({ 1.0, 1.0, 1.0 }));
     mesh_3D.addVertex(vertex3, point_cloud_3D.point({ 0.5, 0.5, 0.5 }));
     mesh_3D.addVertex(vertex4, point_cloud_3D.point({ 0.0, 1.0, 0.0 }));
-    mesh_3D.addSimplex(element0);
-    mesh_3D.addSimplex(element1);
-    mesh_3D.addSimplex(element2);
-    mesh_3D.addSimplex(element3);
+    mesh_3D.insert(element0);
+    mesh_3D.insert(element1);
+    mesh_3D.insert(element2);
+    mesh_3D.insert(element3);
 
     // instantiate an element set with the same elements as above but the new coordinates map
     auto bodyManifold3D = mito::manifolds::manifold<2>(mesh_3D);

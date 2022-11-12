@@ -59,10 +59,10 @@ TEST(Mesh, BuildMesh)
     auto element2 = topology.triangle({ segment6, segment5, segment4 });
     auto element3 = topology.triangle({ segment7, segment2, segment5 });
 
-    mesh.addSimplex(element0);
-    mesh.addSimplex(element1);
-    mesh.addSimplex(element2);
-    mesh.addSimplex(element3);
+    mesh.insert(element0);
+    mesh.insert(element1);
+    mesh.insert(element2);
+    mesh.insert(element3);
 
     return;
 }
