@@ -2,7 +2,7 @@
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-TEST(OrientedSimplex, DISABLED_TestOrientedSimplex)
+TEST(OrientedSimplex, TestOrientedSimplex)
 {
     {
         // an empty topology

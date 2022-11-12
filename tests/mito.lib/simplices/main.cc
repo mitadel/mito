@@ -6,7 +6,7 @@
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
-TEST(Simplices, DISABLED_TestSimplices)
+TEST(Simplices, TestSimplices)
 {
     // an empty topology
     auto topology = mito::topology::topology();
