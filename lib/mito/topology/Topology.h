@@ -67,12 +67,8 @@ namespace mito::topology {
         template <int D>
         inline auto exists_flipped(const simplex_t<D> & simplex) const -> bool
         {
-            // get the incidence of the simplex footprint
-            auto inc = incidence(simplex);
-            // assert the footprint cannot be used by more than two oriented simplices
-            assert(inc == 1 || inc == 2);
-            // return true if the footprint is in used by two oriented simplices
-            return inc == 2 ? true : false;
+            return std::get<D>(_factories)
+                .existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
         }
 
         // returns the simplex with opposite orientation
