@@ -67,7 +67,7 @@ TEST(Mesh, BuildMesh)
     return;
 }
 
-TEST(Mesh, LoadMesh)
+TEST(Mesh, LoadSummitMesh2D)
 {
     // an empty topology
     auto topology = mito::topology::topology();
@@ -86,6 +86,23 @@ TEST(Mesh, LoadMesh)
     t = clock();
     auto boundary_elements = mito::mesh::boundary<1>(mesh, topology);
     std::cout << "Fetched boundary in " << clock() - t << std::endl;
+}
+
+TEST(Mesh, LoadSummitMesh3D)
+{
+    // an empty topology
+    auto topology = mito::topology::topology();
+
+    // an empty cloud of points
+    auto point_cloud = mito::geometry::point_cloud<3>();
+
+    clock_t t;
+
+    //
+    t = clock();
+    std::ifstream fileStream("cube.summit");
+    auto mesh = mito::mesh::summit<3, mito::topology::simplex_t>(fileStream, topology, point_cloud);
+    std::cout << "Loaded mesh in " << clock() - t << std::endl;
 }
 
 TEST(Mesh, QuadratureOnMesh)
