@@ -114,10 +114,8 @@ TEST(Simplices, TestSimplices)
     // assert no simplex rides on this segment
     EXPECT_EQ(element1.references(), 2);
 
-    mito::topology::element_vector_t<triangle_t> elements = { element0, element1 };
-
     // sanity check
-    for (const auto & e : elements) {
+    for (const auto & e : { element0, element1 }) {
         if (!e->sanityCheck()) {
             std::cout << "Failed sanity check for element " << e << std::endl;
         }
