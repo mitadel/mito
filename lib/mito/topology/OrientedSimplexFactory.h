@@ -100,58 +100,54 @@ namespace mito::topology {
             return orientedSimplex(simplex, orientation);
         }
 
-        // TOFIX: change name, this is not actually the incidence
-        // returns the number of owners of the shared pointer to this oriented simplex
-        inline int incidence(const oriented_simplex_ptr<D> & oriented_simplex) const
-        {
-            return oriented_simplex.references() - 1;
-        }
+        // inline void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex, int i = 0)
+        // {
+        //     // TOFIX
+        //     // // if the oriented simplex is unused
+        //     // if (incidence(oriented_simplex) == i) {
 
-        inline void _cleanup(const oriented_simplex_ptr<D> & oriented_simplex, int i = 0)
-        {
-            // TOFIX
-            // // if the oriented simplex is unused
-            // if (incidence(oriented_simplex) == i) {
+        //     //     // fetch subsimplices before doing any harm to the oriented simplex
+        //     //     auto subsimplices = oriented_simplex->composition();
 
-            //     // fetch subsimplices before doing any harm to the oriented simplex
-            //     auto subsimplices = oriented_simplex->composition();
+        //     //     // get footprint of the oriented simplex
+        //     //     unoriented_simplex_id_t id = oriented_simplex->footprint_id();
 
-            //     // get footprint of the oriented simplex
-            //     unoriented_simplex_id_t id = oriented_simplex->footprint_id();
+        //     //     // get the key to this oriented simplex
+        //     //     auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
 
-            //     // get the key to this oriented simplex
-            //     auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
+        //     //     // cleanup simplex factory around this oriented simplex
+        //     //     SimplexFactory<D>::cleanup(oriented_simplex);
 
-            //     // cleanup simplex factory around this oriented simplex
-            //     SimplexFactory<D>::cleanup(oriented_simplex);
+        //     //     // erase this oriented simplex from the oriented simplex factory
+        //     //     _orientations.erase(mytuple);
 
-            //     // erase this oriented simplex from the oriented simplex factory
-            //     _orientations.erase(mytuple);
+        //     //     // erase the subsimplices from the oriented simplex factory
+        //     //     for (const auto & subsimplex : subsimplices) {
+        //     //         // TOFIX: because the subsimplices are fetched by copy (they cannot be
+        //     //         fetched
+        //     //         // by reference because the {oriented_simplex} is deleted after being
+        //     erased
+        //     //         // from the orientation map), we need to account for a {use_count}
+        //     //         artificially
+        //     //         // increased by one, which is taken care of by passing 1 in the {_cleanup}
+        //     //         // function. This will be fixed once we pass to {mito::shared_ptr} instead
+        //     of
+        //     //         // {std::shared_ptr}.
+        //     //         OrientedSimplexFactory<D - 1>::_cleanup(subsimplex, 1);
+        //     //     }
+        //     // }
 
-            //     // erase the subsimplices from the oriented simplex factory
-            //     for (const auto & subsimplex : subsimplices) {
-            //         // TOFIX: because the subsimplices are fetched by copy (they cannot be
-            //         fetched
-            //         // by reference because the {oriented_simplex} is deleted after being erased
-            //         // from the orientation map), we need to account for a {use_count}
-            //         artificially
-            //         // increased by one, which is taken care of by passing 1 in the {_cleanup}
-            //         // function. This will be fixed once we pass to {mito::shared_ptr} instead of
-            //         // {std::shared_ptr}.
-            //         OrientedSimplexFactory<D - 1>::_cleanup(subsimplex, 1);
-            //     }
-            // }
-
-            // all done
-            return;
-        }
+        //     // all done
+        //     return;
+        // }
 
         // cleanup the factory around an oriented simplex (i.e. remove from the factory unused
         // oriented simplices related to this oriented simplex)
         inline void cleanup(const oriented_simplex_ptr<D> & oriented_simplex)
         {
-            // cleanup recursively until D = 0
-            _cleanup(oriented_simplex);
+            // TOFIX
+            // // cleanup recursively until D = 0
+            // _cleanup(oriented_simplex);
 
             // all done
             return;
@@ -242,29 +238,23 @@ namespace mito::topology {
             return _vertices.emplace();
         }
 
-        // TOFIX: change name, this is not actually the incidence
-        // returns the number of owners of the shared pointer to this oriented simplex
-        inline auto incidence(const oriented_simplex_ptr<0> & oriented_simplex) -> int
-        {
-            return oriented_simplex->references() - 1;
-        }
+        // inline auto _cleanup(const oriented_simplex_ptr<0> & oriented_simplex, int i = 0) -> void
+        // {
+        //     // if the oriented simplex is unused
+        //     if (incidence(oriented_simplex) == i) {
+        //         // erase this oriented simplex from the oriented simplex factory
+        //         _vertices.erase(oriented_simplex);
+        //         // TOFIX: at this point it should also be checked whether the vertex should be
+        //         // erased from the PointCloud too. However, at this point in the code we do not
+        //         // have the information of the spatial dimension D. In alternative this cleanup
+        //         // can be done in the mesh but with the current implementation this is not
+        //         possible
+        //         // as we would need to loop on the subsimplices of a deleted simplex
+        //     }
 
-        inline auto _cleanup(const oriented_simplex_ptr<0> & oriented_simplex, int i = 0) -> void
-        {
-            // if the oriented simplex is unused
-            if (incidence(oriented_simplex) == i) {
-                // erase this oriented simplex from the oriented simplex factory
-                _vertices.erase(oriented_simplex);
-                // TOFIX: at this point it should also be checked whether the vertex should be
-                // erased from the PointCloud too. However, at this point in the code we do not
-                // have the information of the spatial dimension D. In alternative this cleanup
-                // can be done in the mesh but with the current implementation this is not possible
-                // as we would need to loop on the subsimplices of a deleted simplex
-            }
-
-            // all done
-            return;
-        }
+        //     // all done
+        //     return;
+        // }
 
       private:
         // container to store the vertices
