@@ -156,8 +156,6 @@ TEST(Quadrature, TestQuadrature)
 
     // an empty mesh of simplicial topology in 3D
     auto mesh_3D = mito::mesh::mesh<3, mito::topology::simplex_t>();
-
-    // TOFIX: add actually replaces the vertex entry in the map, not safe
     mesh_3D.addVertex(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
     mesh_3D.addVertex(vertex1, point_cloud_3D.point({ 1.0, 0.0, 1.0 }));
     mesh_3D.addVertex(vertex2, point_cloud_3D.point({ 1.0, 1.0, 1.0 }));
