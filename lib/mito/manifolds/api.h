@@ -5,17 +5,11 @@
 
 namespace mito::manifolds {
 
-    // element set factory (from vectors)
-    template <int D, class elementT>
-    constexpr auto manifold(const element_vector_t<elementT> & elements);
-    template <int D, class elementT>
-    constexpr auto manifold(element_vector_t<elementT> && elements);
+    // factory manifolds
+    template <int I, int D, template <int> class elementT>
+    requires(I <= D)
+    constexpr auto manifold(const mesh::mesh_t<D, elementT> & mesh);
 
-    // element set factory (from sets)
-    template <int D, class elementT>
-    constexpr auto manifold(const element_set_t<elementT> & elements);
-    template <int D, class elementT>
-    constexpr auto manifold(element_set_t<elementT> && elements);
 }
 
 
