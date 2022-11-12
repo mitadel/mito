@@ -16,10 +16,6 @@ namespace mito::mesh {
     // vertex alias
     using vertex_t = topology::vertex_t;
 
-    // simplex alias
-    template <int D>
-    using simplex_t = topology::simplex_t<D>;
-
     // element set alias
     template <class elementT>
     using element_set_t = topology::element_set_t<elementT>;
