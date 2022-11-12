@@ -15,19 +15,19 @@ class Simplex : public mito::utilities::Shareable {
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
     // instantiate a segmented container
-    mito::utilities::segmented_t<Simplex, 3> vector;
+    mito::utilities::segmented_t<Simplex, 3> collection;
 
     // assert that the container is empty and with no capacity
-    EXPECT_EQ(vector.capacity(), 0);
-    EXPECT_EQ(vector.size(), 0);
+    EXPECT_EQ(collection.capacity(), 0);
+    EXPECT_EQ(collection.size(), 0);
 
     // emplace three simplices in the container
-    auto simplex0 = vector.emplace(0);
-    auto simplex1 = vector.emplace(1);
-    auto simplex2 = vector.emplace(2);
+    auto simplex0 = collection.emplace(0);
+    auto simplex1 = collection.emplace(1);
+    auto simplex2 = collection.emplace(2);
 
     std::vector<int> store_elements;
-    for (const auto & el : vector) {
+    for (const auto & el : collection) {
         store_elements.emplace_back(el->foo());
     }
 
@@ -41,7 +41,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // invalidate element in the middle
     simplex1.reset();
 
-    for (const auto & el : vector) {
+    for (const auto & el : collection) {
         store_elements.emplace_back(el->foo());
     }
 
@@ -54,7 +54,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // invalidate first element
     simplex0.reset();
 
-    for (const auto & el : vector) {
+    for (const auto & el : collection) {
         store_elements.emplace_back(el->foo());
     }
 
@@ -66,7 +66,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // invalidate last element
     simplex2.reset();
 
-    for (const auto & el : vector) {
+    for (const auto & el : collection) {
         store_elements.emplace_back(el->foo());
     }
 
@@ -75,9 +75,9 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     store_elements.clear();
 
     // emplace another simplex (trigger allocation of new segment)
-    auto simplex4 = vector.emplace(4);
+    auto simplex4 = collection.emplace(4);
 
-    for (const auto & el : vector) {
+    for (const auto & el : collection) {
         store_elements.emplace_back(el->foo());
     }
 
