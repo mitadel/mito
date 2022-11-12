@@ -37,23 +37,10 @@ namespace mito::topology {
     // topology alias
     using topology_t = Topology;
 
-    // helper class to allow template specialization of simplex alias
-    template <int D>
-    class helperSimplexClass {
-      public:
-        using simplex_type = Simplex<D>;
-    };
-
-    // helper class to allow template specialization of simplex alias
-    template <>
-    class helperSimplexClass<0> {
-      public:
-        using simplex_type = OrientedSimplex<0>;
-    };
-
     // unoriented simplex alias
     template <int D>
-    using unoriented_simplex_t = typename helperSimplexClass<D>::simplex_type;
+    requires(D > 0)
+    using unoriented_simplex_t = Simplex<D>;
 
     // unoriented simplex pointer alias
     template <int D>
@@ -81,7 +68,6 @@ namespace mito::topology {
     // simplex alias
     template <int D>
     using simplex_t = oriented_simplex_ptr<D>;
-
 
     // hash function for {elementT}, which is a (shared) pointer to an element
     // Note that two pointers pointing to the same element collapse on the same hashed value
