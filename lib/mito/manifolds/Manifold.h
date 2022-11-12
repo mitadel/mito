@@ -69,12 +69,17 @@ namespace mito::manifolds {
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
         inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
         {
-            // TOFIX: add intermediate function
-            // get the point corresponding to vertex {v}
-            return _vertices.find(v)->second->coordinates();
+            // get the coordinates of the point attached to vertex {v}
+            return _point(v)->coordinates();
         }
 
       private:
+        inline auto _point(const vertex_t & v) const -> const auto &
+        {
+            // look up the point attached to vertex {v}
+            return _vertices.find(v)->second;
+        }
+
         inline auto _computeJacobians() -> void
         {
             return computeElementsVolume(_elements, _vertices, _jacobians);
