@@ -248,7 +248,8 @@ namespace mito::utilities {
         constexpr auto begin() -> iterator
         {
             // get an iterator to the first element
-            auto it = iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */);
+            auto it =
+                iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */, *this);
 
             // if the first element is valid, return it, else return the next valid element
             return (it->is_valid() ? it : ++it);
@@ -259,14 +260,15 @@ namespace mito::utilities {
             // assert that {_end} is in the last allocated segment
             assert(_end_allocation - _end <= N);
             // make an {iterator} that points to the end of my segmented container
-            return iterator(_end /* ptr */, _end_allocation /* segment_end */, _end /* end */);
+            return iterator(
+                _end /* ptr */, _end_allocation /* segment_end */, _end /* end */, *this);
         }
 
         constexpr auto begin() const -> const_iterator
         {
             // get an iterator to the first element
-            auto it =
-                const_iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */);
+            auto it = const_iterator(
+                _begin /* ptr */, _begin + N /* segment_end */, _end /* end */, *this);
 
             // if the first element is valid, return it, else return the next valid element
             return (it->is_valid() ? it : ++it);
@@ -278,7 +280,7 @@ namespace mito::utilities {
             assert(_end_allocation - _end <= N);
             // make an {iterator} that points to the end of my segmented container
             return const_iterator(
-                _end /* ptr */, _end_allocation /* segment_end */, _end /* end */);
+                _end /* ptr */, _end_allocation /* segment_end */, _end /* end */, *this);
         }
 
       private:
