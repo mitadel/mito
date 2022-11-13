@@ -206,7 +206,7 @@ namespace mito::utilities {
             // create a new instance of T at {location} with placement new
             T * resource = new (location) T(args...);
             // and assign it to a new pointer
-            mito::utilities::shared_ptr<T> pointer(resource);
+            mito::utilities::shared_ptr<T> pointer(resource, this);
 
             // increment the size of the container
             ++_n_elements;
@@ -221,23 +221,17 @@ namespace mito::utilities {
             return pointer;
         }
 
+        // This method is called by {shared_ptr::_release}
         auto erase(const mito::utilities::shared_ptr<T> & element) -> void
         {
+            // assert that the resource is invalid
+            assert(element->is_valid() == 0);
+
             // decrement the number of elements
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
             _available_locations.push(element.handle());
-
-            // assert that you are the last one reference to this item
-            assert(element.references() == 1);
-
-            // reset the shared pointer
-            // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
-            //          declared mutable. Should we call reset here and make the handle mutable or
-            //          should we accept that {element} points to an invalid resource after call to
-            //          {erase}?
-            // element.reset();
 
             // all done
             return;
