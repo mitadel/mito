@@ -143,24 +143,28 @@ mito::utilities::SharedPointer<Resource>::operator=(
 // interface
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::_acquire() const -> int
+mito::utilities::SharedPointer<Resource>::_acquire() const -> void
 {
     // acquire resource
-    return _handle->_acquire();
+    _handle->_acquire();
+    // all done
+    return;
 }
 
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::_release() const -> int
+mito::utilities::SharedPointer<Resource>::_release() const -> void
 {
     // if the handle is in valid state
     if (_handle != nullptr) {
         // release my current handle
-        return _handle->_release();
+        _handle->_release();
+        // all done
+        return;
     }
 
     // all done
-    return 0;
+    return;
 }
 
 #endif
