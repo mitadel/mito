@@ -10,7 +10,7 @@ namespace mito::geometry {
         using cloud_t = mito::geometry::cloud_t<D>;
 
       public:
-        PointCloud() : _cloud() {}
+        PointCloud() : _cloud(100 /*segment size */) {}
 
       public:
         auto print() const -> void

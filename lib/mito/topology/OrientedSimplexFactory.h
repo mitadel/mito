@@ -30,7 +30,10 @@ namespace mito::topology {
 
       public:
         // default constructor
-        OrientedSimplexFactory() : _simplex_factory(), _oriented_simplices(), _orientations() {};
+        OrientedSimplexFactory() :
+            _simplex_factory(),
+            _oriented_simplices(100 /*segment size */),
+            _orientations() {};
 
         inline auto existsOrientedSimplex(
             const unoriented_simplex_ptr<D> & simplex, bool orientation) const -> bool
@@ -229,7 +232,7 @@ namespace mito::topology {
 
       public:
         // default constructor
-        OrientedSimplexFactory() : _vertices() {};
+        OrientedSimplexFactory() : _vertices(100 /*segment size */) {};
 
         // adds a new vertex to the vertex collection and returns it
         inline auto orientedSimplex() -> oriented_simplex_ptr<0>

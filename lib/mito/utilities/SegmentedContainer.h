@@ -15,8 +15,9 @@
 // resources.
 
 // A {SegmentedContainer} is articulated in multiple segments of (contiguous) memory. Each segment
-// allocates memory for {N} resources of type {T}. Right at the end of each segment, a pointer {T*}
-// allows to reach the beginning of the next segment, much like what happens in linked lists.
+// allocates memory for {_segment_size} resources of type {T}. Right at the end of each segment, a
+// pointer {T*} allows to reach the beginning of the next segment, much like what happens in linked
+// lists.
 
 // Resources are added to this container by place-instantiating them in the next available
 // location (if any). If the container is completely full, a new segment of memory is allocated
@@ -24,13 +25,12 @@
 // Resources are removed from this container by marking the resource as 'invalid' and signing up
 // its position in memory to be overwritten by a new resource.
 
-// The template parameter {N}, namely the length of each segment, needs to be set by balancing the
-// following trade-off:
-// - a higher value of {N} leads to a more compact data structure with a larger number of elements
-// lying adjacent to each other in memory and, in case of a fully populated segment, a high value
-// of {N} leads to a smaller allocation time per individual resource. Note, however, that, in case
-// of a non fully-populated segment, more resources than actually needed are committed.
-// - a smaller value of {N} leads to a more scattered data structure and more memory allocation
+// The length of each segment, needs to be set by balancing the following trade-off:
+// - a larger segment size leads to a more compact data structure with a larger number of elements
+// lying adjacent to each other in memory and, in case of a fully populated segment, a large segment
+// size leads to a smaller allocation time per individual resource. Note, however, that, in case of
+// a non fully-populated segment, more resources than actually needed are committed.
+// - a smaller segment size leads to a more scattered data structure and more memory allocation
 // calls, but certainly reduces redundancy in memory allocation.
 
 // Iterators to this data structure are smart enough to skip the invalid elements and jump from one
@@ -65,18 +65,16 @@
 // been explored so far.
 
 namespace mito::utilities {
-    template <class T, int N /* segment size */>
+    template <class T>
     requires ReferenceCountedObject<T>
     class SegmentedContainer {
 
       public:
         // aliases for my template parameters
         using resource_type = T;
-        // aliases for my segment size
-        constexpr static int segment_size = N;
 
         // me
-        using segmented_container_type = SegmentedContainer<resource_type, segment_size>;
+        using segmented_container_type = SegmentedContainer<resource_type>;
 
         // my value
         using pointer = T *;
@@ -90,7 +88,8 @@ namespace mito::utilities {
             SegmentedContainerIterator<segmented_container_type, true /* isConst */>;
 
         // default constructor (empty data structure)
-        SegmentedContainer() :
+        SegmentedContainer(int segment_size) :
+            _segment_size(segment_size),
             _begin(nullptr),
             _end(_begin),
             _end_allocation(_begin),
@@ -108,10 +107,10 @@ namespace mito::utilities {
             T * ptr = _begin;
 
             // while the current segment is not the last segment
-            while (ptr + N != _end_allocation) {
+            while (ptr + _segment_size != _end_allocation) {
                 // retrieve the location of the next segment which is left behind
                 // by the segmented container right at the end of the current segment
-                T * next = *(reinterpret_cast<pointer *>(ptr + N));
+                T * next = *(reinterpret_cast<pointer *>(ptr + _segment_size));
 
                 // delete the current segment
                 ::operator delete(ptr);
@@ -130,7 +129,7 @@ namespace mito::utilities {
         inline auto capacity() const -> int
         {
             // the number of segments times the size of each segment
-            return _n_segments * N;
+            return _n_segments * _segment_size;
         }
 
         inline auto size() const -> int { return _n_elements; }
@@ -139,7 +138,7 @@ namespace mito::utilities {
         auto _allocate_new_segment() -> T *
         {
             // allocate a new segment of memory
-            T * segment = static_cast<T *>(::operator new(N * sizeof(T) + sizeof(T *)));
+            T * segment = static_cast<T *>(::operator new(_segment_size * sizeof(T) + sizeof(T *)));
             // if it is the first segment
             if (_begin == _end) {
                 // point {_begin} to the beginning of the allocated memory
@@ -157,7 +156,7 @@ namespace mito::utilities {
             // update the end of the container
             _end = segment;
             // update the end of the memory allocation
-            _end_allocation = segment + N;
+            _end_allocation = segment + _segment_size;
             // return the address of the new segment of memory
             return segment;
         }
@@ -190,6 +189,8 @@ namespace mito::utilities {
         }
 
       public:
+        auto segment_size() const -> int { return _segment_size; }
+
         template <class... Args>
         auto emplace(Args &&... args) -> auto
         {
@@ -248,8 +249,8 @@ namespace mito::utilities {
         constexpr auto begin() -> iterator
         {
             // get an iterator to the first element
-            auto it =
-                iterator(_begin /* ptr */, _begin + N /* segment_end */, _end /* end */, *this);
+            auto it = iterator(
+                _begin /* ptr */, _begin + _segment_size /* segment_end */, _end /* end */, *this);
 
             // if the first element is valid, return it, else return the next valid element
             return (it->is_valid() ? it : ++it);
@@ -258,7 +259,7 @@ namespace mito::utilities {
         constexpr auto end() -> iterator
         {
             // assert that {_end} is in the last allocated segment
-            assert(_end_allocation - _end <= N);
+            assert(_end_allocation - _end <= _segment_size);
             // make an {iterator} that points to the end of my segmented container
             return iterator(
                 _end /* ptr */, _end_allocation /* segment_end */, _end /* end */, *this);
@@ -268,7 +269,7 @@ namespace mito::utilities {
         {
             // get an iterator to the first element
             auto it = const_iterator(
-                _begin /* ptr */, _begin + N /* segment_end */, _end /* end */, *this);
+                _begin /* ptr */, _begin + _segment_size /* segment_end */, _end /* end */, *this);
 
             // if the first element is valid, return it, else return the next valid element
             return (it->is_valid() ? it : ++it);
@@ -277,13 +278,15 @@ namespace mito::utilities {
         constexpr auto end() const -> const_iterator
         {
             // assert that {_end} is in the last allocated segment
-            assert(_end_allocation - _end <= N);
+            assert(_end_allocation - _end <= _segment_size);
             // make an {iterator} that points to the end of my segmented container
             return const_iterator(
                 _end /* ptr */, _end_allocation /* segment_end */, _end /* end */, *this);
         }
 
       private:
+        // the segment size
+        const int _segment_size;
         // the beginning of the container
         T * _begin;
         // the end of the container (no element has been constructed so far after this point)

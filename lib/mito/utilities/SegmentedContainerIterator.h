@@ -26,7 +26,6 @@ namespace mito::utilities {
         // my template parameters
         using segmented_container_type = SegmentedContainerT;
         using segmented_container_resource_type = typename SegmentedContainerT::resource_type;
-        constexpr static int segmented_container_segment_size = SegmentedContainerT::segment_size;
         // me
         using iterator = SegmentedContainerIterator<segmented_container_type, isConst>;
         using iterator_reference = iterator &;
@@ -94,7 +93,7 @@ namespace mito::utilities {
                     // by the segmented container right at the end of the current segment
                     _ptr = *(reinterpret_cast<const pointer *>(_ptr));
                     // store the start of the current segment
-                    _segment_end = _ptr + segmented_container_segment_size;
+                    _segment_end = _ptr + _container.segment_size();
                 }
 
                 // if the element is valid

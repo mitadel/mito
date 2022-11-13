@@ -22,7 +22,7 @@ namespace mito::utilities {
     using shared_ptr = SharedPointer<Resource>;
 
     // class segmented container
-    template <class T, int N /* segment size */>
+    template <class T>
     requires ReferenceCountedObject<T>
     class SegmentedContainer;
 
@@ -31,8 +31,8 @@ namespace mito::utilities {
     class SegmentedContainerIterator;
 
     // segmented container alias
-    template <class T, int N /* segment size */>
-    using segmented_t = SegmentedContainer<T, N>;
+    template <class T>
+    using segmented_t = SegmentedContainer<T>;
 
     // segmented container iterator
     // equality

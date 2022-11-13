@@ -22,8 +22,7 @@ namespace mito::geometry {
     using point_cloud_t = PointCloud<D>;
 
     template <int D>
-    using cloud_t =
-        mito::utilities::segmented_t<typename point_t<D>::resource_t, 100 /* segment size */>;
+    using cloud_t = mito::utilities::segmented_t<typename point_t<D>::resource_t>;
 
 }
 

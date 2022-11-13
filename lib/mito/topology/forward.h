@@ -95,8 +95,7 @@ namespace mito::topology {
     // QUESTION: this data structure should only be used by the factories, so where should it be
     //              typedef'ed?
     template <class cellT>
-    using element_collection_t =
-        mito::utilities::segmented_t<typename cellT::resource_t, 100 /* segment size */>;
+    using element_collection_t = mito::utilities::segmented_t<typename cellT::resource_t>;
 }
 
 
