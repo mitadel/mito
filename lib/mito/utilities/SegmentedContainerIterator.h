@@ -38,7 +38,9 @@ namespace mito::utilities {
         using segmented_container_const_reference = const segmented_container_type &;
         // what i point to
         using pointer = typename iterbase::pointer;
-        using const_shared_pointer = shared_ptr<const segmented_container_resource_type>;
+        using shared_pointer = std::conditional_t<
+            isConst, shared_ptr<const segmented_container_resource_type>,
+            shared_ptr<segmented_container_resource_type>>;
         using reference = typename iterbase::reference;
 
         // metamethods
@@ -53,10 +55,10 @@ namespace mito::utilities {
         // iterator protocol
       public:
         // dereference
-        constexpr auto operator*() const -> const_shared_pointer
+        constexpr auto operator*() const -> shared_pointer
         {
             // wrap the resource in a shared pointer and return it
-            return const_shared_pointer(_ptr);
+            return shared_pointer(_ptr);
         }
 
         // accessors
