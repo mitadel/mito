@@ -192,7 +192,7 @@ namespace mito::utilities {
         auto segment_size() const -> int { return _segment_size; }
 
         template <class... Args>
-        auto emplace(Args &&... args) -> auto
+        auto emplace(Args &&... args) -> shared_ptr<T>
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
