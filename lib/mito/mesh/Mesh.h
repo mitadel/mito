@@ -132,7 +132,7 @@ namespace mito::mesh {
             return;
         }
 
-        inline auto insert(vertex_t vertex, point_t<D> point) -> void
+        inline auto insert(const vertex_t & vertex, const point_t<D> & point) -> void
         {
             // register the vertex - point relation with the mesh
             _vertices.insert(std::pair<vertex_t, point_t<D>>(vertex, point));
