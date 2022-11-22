@@ -21,10 +21,10 @@ namespace mito::mesh {
             }
 
             // instantiate a new vertex
-            auto vertex = topology.vertex();
+            const auto & vertex = topology.vertex();
 
             // instantiate a new point with coordinates {coordinates}
-            auto point = point_cloud.point(std::move(coordinates));
+            const auto & point = point_cloud.point(std::move(coordinates));
 
             // register vertex-point mapping in {mesh}
             mesh.insert(vertex, point);
@@ -54,15 +54,15 @@ namespace mito::mesh {
         fileStream >> index2;
         --index2;
 
-        auto vertex0 = vertices[index0];
-        auto vertex1 = vertices[index1];
-        auto vertex2 = vertices[index2];
+        const auto & vertex0 = vertices[index0];
+        const auto & vertex1 = vertices[index1];
+        const auto & vertex2 = vertices[index2];
 
-        auto segment0 = topology.segment({ vertex0, vertex1 });
-        auto segment1 = topology.segment({ vertex1, vertex2 });
-        auto segment2 = topology.segment({ vertex2, vertex0 });
+        const auto & segment0 = topology.segment({ vertex0, vertex1 });
+        const auto & segment1 = topology.segment({ vertex1, vertex2 });
+        const auto & segment2 = topology.segment({ vertex2, vertex0 });
 
-        auto cell = topology.triangle({ segment0, segment1, segment2 });
+        const auto & cell = topology.triangle({ segment0, segment1, segment2 });
         mesh.insert(cell);
 
         // QUESTION: Can the label be more than one?
@@ -101,25 +101,25 @@ namespace mito::mesh {
         auto vertex2 = vertices[index2];
         auto vertex3 = vertices[index3];
 
-        auto segment0 = topology.segment({ vertex0, vertex1 });
-        auto segment1 = topology.segment({ vertex1, vertex3 });
-        auto segment2 = topology.segment({ vertex3, vertex0 });
-        auto triangle0 = topology.triangle({ segment0, segment1, segment2 });
+        const auto & segment0 = topology.segment({ vertex0, vertex1 });
+        const auto & segment1 = topology.segment({ vertex1, vertex3 });
+        const auto & segment2 = topology.segment({ vertex3, vertex0 });
+        const auto & triangle0 = topology.triangle({ segment0, segment1, segment2 });
 
-        auto segment3 = topology.segment({ vertex1, vertex2 });
-        auto segment4 = topology.segment({ vertex2, vertex3 });
-        auto segment5 = topology.segment({ vertex3, vertex1 });
-        auto triangle1 = topology.triangle({ segment3, segment4, segment5 });
+        const auto & segment3 = topology.segment({ vertex1, vertex2 });
+        const auto & segment4 = topology.segment({ vertex2, vertex3 });
+        const auto & segment5 = topology.segment({ vertex3, vertex1 });
+        const auto & triangle1 = topology.triangle({ segment3, segment4, segment5 });
 
-        auto segment6 = topology.segment({ vertex2, vertex0 });
-        auto segment7 = topology.segment({ vertex0, vertex3 });
-        auto segment8 = topology.segment({ vertex3, vertex2 });
-        auto triangle2 = topology.triangle({ segment6, segment7, segment8 });
+        const auto & segment6 = topology.segment({ vertex2, vertex0 });
+        const auto & segment7 = topology.segment({ vertex0, vertex3 });
+        const auto & segment8 = topology.segment({ vertex3, vertex2 });
+        const auto & triangle2 = topology.triangle({ segment6, segment7, segment8 });
 
-        auto segment9 = topology.segment({ vertex0, vertex2 });
-        auto segment10 = topology.segment({ vertex2, vertex1 });
-        auto segment11 = topology.segment({ vertex1, vertex0 });
-        auto triangle3 = topology.triangle({ segment9, segment10, segment11 });
+        const auto & segment9 = topology.segment({ vertex0, vertex2 });
+        const auto & segment10 = topology.segment({ vertex2, vertex1 });
+        const auto & segment11 = topology.segment({ vertex1, vertex0 });
+        const auto & triangle3 = topology.triangle({ segment9, segment10, segment11 });
 
         // QUESTION: Can the label be more than one?
         // read label for cell
@@ -127,7 +127,7 @@ namespace mito::mesh {
         std::string cell_set_id;
         fileStream >> cell_set_id;
 
-        auto cell = topology.tetrahedron({ triangle0, triangle1, triangle2, triangle3 });
+        const auto & cell = topology.tetrahedron({ triangle0, triangle1, triangle2, triangle3 });
         mesh.insert(cell);
 
         // all done
