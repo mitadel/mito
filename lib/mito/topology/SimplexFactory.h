@@ -46,7 +46,7 @@ namespace mito::topology {
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
         inline auto simplex(const simplex_composition_t<D> & composition)
-            -> unoriented_simplex_ptr<D>
+            -> const unoriented_simplex_ptr<D> &
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
