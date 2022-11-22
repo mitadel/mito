@@ -57,8 +57,8 @@ namespace mito::topology {
         // {orientation} (either create a new oriented simplex if such oriented simplex does not
         // exist in the factory or return the existing representative of the class of equivalence of
         // oriented simplices with footprint {simplex} orientation {orientation}
-        inline oriented_simplex_ptr<D> orientedSimplex(
-            const unoriented_simplex_ptr<D> & simplex, bool orientation)
+        inline auto orientedSimplex(const unoriented_simplex_ptr<D> & simplex, bool orientation)
+            -> oriented_simplex_ptr<D>
         {
             // bind the footprint and the orientation in a tuple
             auto tuple = std::make_tuple(simplex->id(), orientation);
@@ -91,7 +91,8 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        inline oriented_simplex_ptr<D> orientedSimplex(const simplex_composition_t<D> & composition)
+        inline auto orientedSimplex(const simplex_composition_t<D> & composition)
+            -> oriented_simplex_ptr<D>
         {
             // get the representative of simplices with composition {composition} from the factory
             auto simplex = _simplex_factory.simplex(composition);
