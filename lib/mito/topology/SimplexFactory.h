@@ -62,7 +62,7 @@ namespace mito::topology {
             // otherwise
             else {
                 // create a new simplex with composition {composition}
-                auto simplex = _simplices.emplace(composition);
+                const auto & simplex = _simplices.emplace(composition);
 
                 // register it in the compositions map
                 auto ret = _compositions.insert(

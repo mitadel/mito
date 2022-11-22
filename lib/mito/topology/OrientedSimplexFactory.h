@@ -95,7 +95,7 @@ namespace mito::topology {
             -> oriented_simplex_ptr<D>
         {
             // get the representative of simplices with composition {composition} from the factory
-            auto simplex = _simplex_factory.simplex(composition);
+            const auto & simplex = _simplex_factory.simplex(composition);
 
             // compute the orientation of the current composition with respect to the representative
             bool orientation = _orientation(composition, simplex);
@@ -118,7 +118,7 @@ namespace mito::topology {
             }
 
             // get the footprint
-            auto & footprint = oriented_simplex->footprint();
+            const auto & footprint = oriented_simplex->footprint();
 
             // get footprint of the oriented simplex
             unoriented_simplex_id_t id = oriented_simplex->footprint_id();
