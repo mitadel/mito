@@ -96,10 +96,10 @@ namespace mito::mesh {
         fileStream >> index3;
         --index3;
 
-        auto vertex0 = vertices[index0];
-        auto vertex1 = vertices[index1];
-        auto vertex2 = vertices[index2];
-        auto vertex3 = vertices[index3];
+        const auto & vertex0 = vertices[index0];
+        const auto & vertex1 = vertices[index1];
+        const auto & vertex2 = vertices[index2];
+        const auto & vertex3 = vertices[index3];
 
         const auto & segment0 = topology.segment({ vertex0, vertex1 });
         const auto & segment1 = topology.segment({ vertex1, vertex3 });
