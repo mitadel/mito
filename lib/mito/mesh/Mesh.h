@@ -102,19 +102,8 @@ namespace mito::mesh {
         inline auto erase(const cell_t<I> & cell) -> void
         requires(I > 0 && I <= D)
         {
-            // QUESTION: can we wrap cells in a way that the reference count can be called
-            //  incidence?
-
             // erase the cell from the mesh
             std::get<I>(_cells).erase(cell);
-
-            // TOFIX
-            // cleanup oriented cell factory around this cell
-            // mito::topology::Topology<I>::cleanup(cell);
-
-            // // TOFIX: synchronize with the geometry, check whether any point should be erased
-            // // in the cloud of points
-            // mito::geometry::PointCloud<D>::cleanup(cell);
 
             // all done
             return;
