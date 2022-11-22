@@ -72,10 +72,33 @@ namespace mito::topology {
         }
 
         template <int D>
-        inline auto cleanup(const simplex_t<D> & simplex) -> void
+        inline auto erase(const simplex_t<D> & simplex) -> void
+        requires(D == 0)
         {
+            // erase the vertex from the factory
+            std::get<D>(_factories).erase(simplex);
+
+            // all done
+            return;
+        }
+
+        template <int D>
+        inline auto erase(const simplex_t<D> & simplex) -> void
+        requires(D > 0)
+        {
+            // fetch subsimplices before doing any harm to the simplex
+            const auto & subsimplices = simplex->composition();
+
             // cleanup the oriented factory around {simplex}
-            return std::get<D>(_factories).cleanup(simplex);
+            std::get<D>(_factories).erase(simplex);
+
+            // recursively erase the subsimplices from the oriented simplex factory
+            for (const auto & subsimplex : subsimplices) {
+                erase(subsimplex);
+            }
+
+            // all done
+            return;
         }
 
       private:

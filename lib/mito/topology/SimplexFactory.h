@@ -73,19 +73,24 @@ namespace mito::topology {
             }
         }
 
-        // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
-        // the factory if this oriented simplex is the only owner of its footprint)
-        inline auto cleanup(const oriented_simplex_ptr<D> & oriented_simplex) -> void
+        // erase a simplex from the factory (this method actually erases the simplex only if there
+        // is no one else using it, otherwise does nothing)
+        inline auto erase(const unoriented_simplex_ptr<D> & simplex) -> void
         {
-            // if the footprint is not shared
-            if (!exists_flipped(oriented_simplex)) {
+            // sanity check
+            assert(simplex->references() > 0);
 
-                // pick a representative (factor out equivalence relation)
-                auto representative = _representative(oriented_simplex->composition());
-
-                // erase this simplex from the compositions map
-                _compositions.erase(representative);
+            // if someone else (other than this factory) is still using this resource
+            if (simplex->references() > 1) {
+                // do nothing
+                return;
             }
+
+            // pick a representative (factor out equivalence relation)
+            auto representative = _representative(simplex->composition());
+
+            // erase this simplex from the compositions map
+            _compositions.erase(representative);
 
             // all done
             return;
