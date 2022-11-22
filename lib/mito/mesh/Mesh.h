@@ -112,7 +112,7 @@ namespace mito::mesh {
       public:
         template <int I>
         inline auto insert(const cell_t<I> & cell) -> void
-        requires(I > 0 && I <= D)
+        requires(I >= 0 && I <= D)
         {
             // add the cell to the set of cells with same dimension
             std::get<I>(_cells).insert(cell);
