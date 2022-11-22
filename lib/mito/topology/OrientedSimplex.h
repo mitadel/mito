@@ -87,7 +87,7 @@ namespace mito::topology {
 
       private:
         // the shared pointer to the footprint
-        const unoriented_simplex_ptr<D> _footprint;
+        const unoriented_simplex_ptr<D> & _footprint;
         // the orientation
         const bool _orientation;
         // private friendship with the factory of oriented simplices
