@@ -99,9 +99,8 @@ namespace mito::topology {
             return true;
         }
 
-        // TOFIX: this method should be private. Also the name of this method should be changed so
-        // as not to clash with the method of the simplex class, thus creating misunderstandings.
-        inline auto reset() -> void
+        // TOFIX: this method should be private.
+        inline auto erase() -> void
         {
             // reset the subsimplices shared pointers
             for (auto & simplex : _simplices) {
