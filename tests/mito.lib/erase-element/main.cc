@@ -88,6 +88,46 @@ requires(D == 0)
     return mito::utilities::shared_ptr<mito::topology::oriented_simplex_t<0>>(resource, nullptr);
 }
 
+template <int D>
+auto
+erase(mito::topology::simplex_t<D> & simplex) -> void
+requires(D == 0)
+{
+    simplex->reset();
+    return;
+}
+
+template <int D>
+auto
+erase(mito::topology::simplex_t<D> & simplex) -> void
+requires(D > 0)
+{
+    // grab a copy of the footprint
+    auto footprint = simplex->footprint();
+
+    // grab a copy of the composition
+    auto composition = simplex->composition();
+
+    // reset the simplex
+    simplex->reset();
+
+    // if this simplex is the last one using the footprint
+    if (footprint.references() == 2) {
+        // reset it
+        footprint->reset();
+    }
+
+    // loop on subsimplices
+    for (auto & subsimplex : composition) {
+        // if this simplex is the last one using the subsimplex
+        if (subsimplex.references() == 2) {
+            erase(subsimplex);
+        }
+    }
+
+    return;
+}
+
 TEST(EraseElement, TestEraseElement)
 {
     // instantiate vertices
@@ -205,37 +245,39 @@ TEST(EraseElement, TestEraseElement)
     // vertex_1->reset();
     // vertex_3->reset();
 
-    // erase one triangle (non recursive)
-    {
-        // grab a copy of the footprint
-        auto footprint = triangle_0->footprint();
+    // // erase one triangle (non recursive)
+    // {
+    //     // grab a copy of the footprint
+    //     auto footprint = triangle_0->footprint();
 
-        // grab a copy of the composition
-        auto composition = triangle_0->composition();
+    //     // grab a copy of the composition
+    //     auto composition = triangle_0->composition();
 
-        triangle_0->reset();
-        if (footprint.references() == 2) {
-            footprint->reset();
-        }
+    //     triangle_0->reset();
+    //     if (footprint.references() == 2) {
+    //         footprint->reset();
+    //     }
 
-        // loop on the subsimplices
-        for (auto & simplex : composition) {
-            // std::cout << simplex.references() << std::endl;
-            if (simplex.references() == 2) {
-                // grab a copy of the footprint
-                auto footprint_2 = simplex->footprint();
-                simplex->reset();
-                if (footprint_2.references() == 2) {
-                    footprint_2->reset();
-                    // fetch vertices...
-                    // vertex_0->reset();
-                    // vertex_1->reset();
-                    // vertex_3->reset();
-                }
-            }
-        }
-    }
+    //     // loop on the subsimplices
+    //     for (auto & simplex : composition) {
+    //         // std::cout << simplex.references() << std::endl;
+    //         if (simplex.references() == 2) {
+    //             // grab a copy of the footprint
+    //             auto footprint_2 = simplex->footprint();
+    //             simplex->reset();
+    //             if (footprint_2.references() == 2) {
+    //                 footprint_2->reset();
+    //                 // fetch vertices...
+    //                 // vertex_0->reset();
+    //                 // vertex_1->reset();
+    //                 // vertex_3->reset();
+    //             }
+    //         }
+    //     }
+    // }
 
+    // erase one triangle (recursive)
+    erase(triangle_0);
 
     // assert that the footprint of {triangle_0} is now unused
     EXPECT_EQ(triangle_a.references(), 1);
@@ -256,4 +298,40 @@ TEST(EraseElement, TestEraseElement)
     EXPECT_EQ(vertex_0.references(), 3);
     EXPECT_EQ(vertex_1.references(), 3);
     EXPECT_EQ(vertex_3.references(), 5);
+
+    // erase all other triangles
+    erase(triangle_1);
+    erase(triangle_2);
+    erase(triangle_3);
+
+    // assert everything is now unused
+    EXPECT_EQ(triangle_a.references(), 1);
+    EXPECT_EQ(triangle_b.references(), 1);
+    EXPECT_EQ(triangle_c.references(), 1);
+    EXPECT_EQ(triangle_d.references(), 1);
+    EXPECT_EQ(oriented_segment_0.references(), 1);
+    EXPECT_EQ(oriented_segment_1.references(), 1);
+    EXPECT_EQ(oriented_segment_2.references(), 1);
+    EXPECT_EQ(oriented_segment_3.references(), 1);
+    EXPECT_EQ(oriented_segment_4.references(), 1);
+    EXPECT_EQ(oriented_segment_5.references(), 1);
+    EXPECT_EQ(oriented_segment_6.references(), 1);
+    EXPECT_EQ(oriented_segment_7.references(), 1);
+    EXPECT_EQ(oriented_segment_8.references(), 1);
+    EXPECT_EQ(oriented_segment_9.references(), 1);
+    EXPECT_EQ(oriented_segment_10.references(), 1);
+    EXPECT_EQ(oriented_segment_11.references(), 1);
+    EXPECT_EQ(segment_a.references(), 1);
+    EXPECT_EQ(segment_b.references(), 1);
+    EXPECT_EQ(segment_c.references(), 1);
+    EXPECT_EQ(segment_d.references(), 1);
+    EXPECT_EQ(segment_e.references(), 1);
+    EXPECT_EQ(segment_f.references(), 1);
+    EXPECT_EQ(segment_g.references(), 1);
+    EXPECT_EQ(segment_h.references(), 1);
+    EXPECT_EQ(vertex_0.references(), 1);
+    EXPECT_EQ(vertex_1.references(), 1);
+    EXPECT_EQ(vertex_2.references(), 1);
+    EXPECT_EQ(vertex_3.references(), 1);
+    EXPECT_EQ(vertex_4.references(), 1);
 }
