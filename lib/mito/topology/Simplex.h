@@ -99,9 +99,22 @@ namespace mito::topology {
             return true;
         }
 
+        // TOFIX: this method should be private. Also the name of this method should be changed so
+        // as not to clash with the method of the simplex class, thus creating misunderstandings.
+        inline auto reset() -> void
+        {
+            // reset the subsimplices shared pointers
+            for (auto & simplex : _simplices) {
+                simplex.reset();
+            }
+
+            // all done
+            return;
+        }
+
       private:
         // the simplex composition in terms of subsimplices
-        const simplex_composition_t<D> _simplices;
+        simplex_composition_t<D> _simplices;    // TOFIX: should this be {const}?
 
         // private friendship with the factory of simplices
         friend class SimplexFactory<D>;

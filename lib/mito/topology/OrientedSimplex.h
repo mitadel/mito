@@ -85,9 +85,20 @@ namespace mito::topology {
         // returns whether the simplex passes the sanity check
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
+        // TOFIX: this method should be private. Also the name of this method should be changed so
+        // as not to clash with the method of the simplex class, thus creating misunderstandings.
+        inline auto reset() -> void
+        {
+            // reset the footprint shared pointer
+            _footprint.reset();
+
+            // all done
+            return;
+        }
+
       private:
         // the shared pointer to the footprint
-        const unoriented_simplex_ptr<D> _footprint;
+        unoriented_simplex_ptr<D> _footprint;    // TOFIX: should this be {const}?
         // the orientation
         const bool _orientation;
         // private friendship with the factory of oriented simplices
@@ -137,6 +148,12 @@ namespace mito::topology {
         {
             // a simplex of order 0 has only 1 vertex (this one!)
             return true;
+        }
+
+        inline auto reset() -> void
+        {
+            // all done
+            return;
         }
     };
 
