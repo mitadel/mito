@@ -79,12 +79,6 @@ namespace mito::topology {
             // sanity check
             assert(simplex.references() > 0);
 
-            // if someone else (other than this factory) is still using this resource
-            if (simplex.references() > 2) {
-                // do nothing
-                return;
-            }
-
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(simplex->composition());
 

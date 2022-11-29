@@ -106,11 +106,8 @@ namespace mito::topology {
         // if there is no one else using it, otherwise does nothing)
         inline auto erase(const oriented_simplex_ptr<D> & oriented_simplex) -> void
         {
-            // if someone else (other than the factory) is still using this resource
-            if (oriented_simplex.references() > 2) {
-                // do nothing
-                return;
-            }
+            // sanity check
+            assert(oriented_simplex.references() > 0);
 
             // grab a copy of the footprint
             auto footprint = oriented_simplex->footprint();
@@ -127,7 +124,7 @@ namespace mito::topology {
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);
 
-            // if this simplex is the last one using the footprint
+            // if this simplex is the last one using the footprint (other than the copy we just did)
             if (footprint.references() == 2) {
                 // cleanup the unoriented factory around {footprint}
                 _simplex_factory.erase(footprint);
@@ -229,12 +226,6 @@ namespace mito::topology {
         {
             // sanity check
             assert(vertex.references() > 0);
-
-            // if someone is still using this resource
-            if (vertex.references() > 0) {
-                // do nothing
-                return;
-            }
 
             // erase the vertex
             vertex->erase();
