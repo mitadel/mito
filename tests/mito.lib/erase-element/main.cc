@@ -2,7 +2,7 @@
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-TEST(EraseElement, DISABLED_TestEraseElement)
+TEST(EraseElement, TestEraseElement)
 {
     // an empty topology
     auto topology = mito::topology::topology();
@@ -36,6 +36,7 @@ TEST(EraseElement, DISABLED_TestEraseElement)
     for (const auto & simplex : mesh.cells<2>()) {
         // std::cout << *simplex << std::endl;
         mesh.erase(simplex);
+        topology.erase(simplex);
         break;
     }
 

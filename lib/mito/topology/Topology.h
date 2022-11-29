@@ -86,15 +86,36 @@ namespace mito::topology {
         inline auto erase(const simplex_t<D> & simplex) -> void
         requires(D > 0)
         {
-            // fetch subsimplices before doing any harm to the simplex
-            const auto & subsimplices = simplex->composition();
+            // sanity check
+            assert(simplex.references() > 0);
+
+            // // if someone else (other than the topology) is still using this resource
+            // if (simplex.references() > 1) {
+            //     // do nothing
+            //     return;
+            // }
+
+            // grab a copy of the footprint
+            auto footprint = simplex->footprint();
+
+            // grab a copy of the composition
+            auto composition = simplex->composition();
 
             // cleanup the oriented factory around {simplex}
             std::get<D>(_factories).erase(simplex);
 
-            // recursively erase the subsimplices from the oriented simplex factory
-            for (const auto & subsimplex : subsimplices) {
-                erase(subsimplex);
+            // if this simplex is the last one using the footprint
+            if (footprint.references() == 2) {
+                // cleanup the unoriented factory around {footprint}
+                std::get<D>(_factories).erase(footprint);
+            }
+
+            // loop on subsimplices
+            for (auto & subsimplex : composition) {
+                // if this simplex is the last one using the subsimplex
+                if (subsimplex.references() == 2) {
+                    erase(subsimplex);
+                }
             }
 
             // all done

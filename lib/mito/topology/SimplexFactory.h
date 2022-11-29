@@ -77,16 +77,19 @@ namespace mito::topology {
         inline auto erase(const unoriented_simplex_ptr<D> & simplex) -> void
         {
             // sanity check
-            assert(simplex->references() > 0);
+            assert(simplex.references() > 0);
 
             // if someone else (other than this factory) is still using this resource
-            if (simplex->references() > 1) {
+            if (simplex.references() > 2) {
                 // do nothing
                 return;
             }
 
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(simplex->composition());
+
+            // erase it
+            simplex->erase();
 
             // erase this simplex from the compositions map
             _compositions.erase(representative);

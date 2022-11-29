@@ -106,17 +106,11 @@ namespace mito::topology {
         // if there is no one else using it, otherwise does nothing)
         inline auto erase(const oriented_simplex_ptr<D> & oriented_simplex) -> void
         {
-            // sanity check
-            assert(oriented_simplex->references() > 0);
-
-            // if someone else (other than this factory) is still using this resource
-            if (oriented_simplex->references() > 1) {
+            // if someone else (other than the factory) is still using this resource
+            if (oriented_simplex.references() > 2) {
                 // do nothing
                 return;
             }
-
-            // get the footprint
-            const auto & footprint = oriented_simplex->footprint();
 
             // get footprint of the oriented simplex
             unoriented_simplex_id_t id = oriented_simplex->footprint_id();
@@ -124,11 +118,28 @@ namespace mito::topology {
             // get the key to this oriented simplex
             auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
 
+            // erase the simplex
+            oriented_simplex->erase();
+
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);
 
+            // all done
+            return;
+        }
+
+        // erase an unoriented simplex from the factory (this method actually erases the simplex
+        // only if there is no one else using it, otherwise does nothing)
+        inline auto erase(const unoriented_simplex_ptr<D> & unoriented_simplex) -> void
+        {
+            // if someone else (other than the topology) is still using this resource
+            if (unoriented_simplex.references() > 2) {
+                // do nothing
+                return;
+            }
+
             // cleanup simplex factory around this oriented simplex
-            _simplex_factory.erase(footprint);
+            _simplex_factory.erase(unoriented_simplex);
 
             // all done
             return;
@@ -225,16 +236,16 @@ namespace mito::topology {
         inline auto erase(const oriented_simplex_ptr<0> & vertex) -> void
         {
             // sanity check
-            assert(vertex->references() >= 0);
+            assert(vertex.references() > 0);
 
             // if someone is still using this resource
-            if (vertex->references() > 0) {
+            if (vertex.references() > 0) {
                 // do nothing
                 return;
             }
 
-            // erase this vertex from the factory
-            _vertices.erase(vertex);
+            // erase the vertex
+            vertex->erase();
 
             // all done
             return;
