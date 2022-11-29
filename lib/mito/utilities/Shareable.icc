@@ -5,13 +5,7 @@
 #error This header file contains implementation details of class mito::utilities::Shareable
 #else
 
-auto
-mito::utilities::Shareable::references() const -> int
-{
-    // return the count of outstanding references
-    return _reference_count;
-}
-
+// interface
 auto
 mito::utilities::Shareable::is_valid() const -> bool
 {
@@ -25,7 +19,13 @@ constexpr mito::utilities::Shareable::~Shareable() {}
 // the default constructor
 constexpr mito::utilities::Shareable::Shareable() : _reference_count(0) {}
 
-// interface
+auto
+mito::utilities::Shareable::_references() const -> int
+{
+    // return the count of outstanding references
+    return _reference_count;
+}
+
 auto
 mito::utilities::Shareable::_acquire() const -> int
 {

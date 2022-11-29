@@ -20,7 +20,7 @@ auto
 mito::utilities::SharedPointer<Resource>::references() const -> int
 {
     // return the count of outstanding references
-    return _handle->references();
+    return _handle->_references();
 }
 
 template <class Resource>

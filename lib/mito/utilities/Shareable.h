@@ -13,9 +13,6 @@ namespace mito::utilities {
 
         // interface
       public:
-        // accessor for the number of outstanding references
-        inline auto references() const -> int;
-
         // whether the resource is valid or not
         inline auto is_valid() const -> bool;
 
@@ -42,6 +39,8 @@ namespace mito::utilities {
         inline Shareable & operator=(Shareable &&) = delete;
 
       private:
+        // accessor for the number of outstanding references
+        inline auto _references() const -> int;
         // increment the reference count
         inline auto _acquire() const -> int;
         // decrement the reference count
