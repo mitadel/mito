@@ -18,7 +18,7 @@ namespace mito::topology {
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
         template <int D>
-        inline auto simplex(const simplex_composition_t<D> & composition) -> simplex_t<D>
+        inline auto simplex(const simplex_composition_t<D> & composition) -> const simplex_t<D> &
         requires(D > 0)
         {
             // ask the factory of oriented simplices
@@ -37,19 +37,19 @@ namespace mito::topology {
         inline auto vertex() -> simplex_t<0> { return simplex<0>(); }
 
         // instantiate a segment
-        inline auto segment(const simplex_composition_t<1> & simplices) -> simplex_t<1>
+        inline auto segment(const simplex_composition_t<1> & simplices) -> const simplex_t<1> &
         {
             return simplex<1>(simplices);
         }
 
         // instantiate a triangle
-        inline auto triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2>
+        inline auto triangle(const simplex_composition_t<2> & simplices) -> const simplex_t<2> &
         {
             return simplex<2>(simplices);
         }
 
         // instantiate a tetrahedron
-        inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3>
+        inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> const simplex_t<3> &
         {
             return simplex<3>(simplices);
         }
@@ -64,7 +64,7 @@ namespace mito::topology {
 
         // returns the simplex with opposite orientation
         template <int D>
-        inline auto flip(const simplex_t<D> & simplex) -> simplex_t<D>
+        inline auto flip(const simplex_t<D> & simplex) -> const simplex_t<D> &
         {
             // ask the factory of oriented simplices
             return std::get<D>(_factories)
