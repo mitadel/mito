@@ -95,20 +95,11 @@ namespace mito::topology {
             //     return;
             // }
 
-            // grab a copy of the footprint
-            auto footprint = simplex->footprint();
-
             // grab a copy of the composition
             auto composition = simplex->composition();
 
             // cleanup the oriented factory around {simplex}
             std::get<D>(_factories).erase(simplex);
-
-            // if this simplex is the last one using the footprint
-            if (footprint.references() == 2) {
-                // cleanup the unoriented factory around {footprint}
-                std::get<D>(_factories).erase(footprint);
-            }
 
             // loop on subsimplices
             for (auto & subsimplex : composition) {

@@ -112,6 +112,9 @@ namespace mito::topology {
                 return;
             }
 
+            // grab a copy of the footprint
+            auto footprint = oriented_simplex->footprint();
+
             // get footprint of the oriented simplex
             unoriented_simplex_id_t id = oriented_simplex->footprint_id();
 
@@ -124,22 +127,11 @@ namespace mito::topology {
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);
 
-            // all done
-            return;
-        }
-
-        // erase an unoriented simplex from the factory (this method actually erases the simplex
-        // only if there is no one else using it, otherwise does nothing)
-        inline auto erase(const unoriented_simplex_ptr<D> & unoriented_simplex) -> void
-        {
-            // if someone else (other than the topology) is still using this resource
-            if (unoriented_simplex.references() > 2) {
-                // do nothing
-                return;
+            // if this simplex is the last one using the footprint
+            if (footprint.references() == 2) {
+                // cleanup the unoriented factory around {footprint}
+                _simplex_factory.erase(footprint);
             }
-
-            // cleanup simplex factory around this oriented simplex
-            _simplex_factory.erase(unoriented_simplex);
 
             // all done
             return;
