@@ -68,8 +68,8 @@ requires(D > 0)
 template <int D>
 auto
 instantiate_oriented_simplex(
-    mito::utilities::shared_ptr<mito::topology::unoriented_simplex_t<D>> simplex, bool orientation)
-    -> mito::utilities::shared_ptr<mito::topology::oriented_simplex_t<D>>
+    const mito::utilities::shared_ptr<mito::topology::unoriented_simplex_t<D>> & simplex,
+    bool orientation) -> mito::utilities::shared_ptr<mito::topology::oriented_simplex_t<D>>
 requires(D > 0)
 {
     mito::topology::oriented_simplex_t<D> * resource =
