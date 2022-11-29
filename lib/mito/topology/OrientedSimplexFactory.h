@@ -206,6 +206,7 @@ namespace mito::topology {
     template <>
     class OrientedSimplexFactory<0> {
 
+        // typedef for a collection of vertices
         using vertex_collection_t = element_collection_t<vertex_t>;
 
       public:
