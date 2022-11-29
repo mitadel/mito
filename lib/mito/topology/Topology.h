@@ -71,8 +71,9 @@ namespace mito::topology {
                 .orientedSimplex(simplex->footprint(), !simplex->orientation());
         }
 
+      private:
         template <int D>
-        inline auto erase(const simplex_t<D> & simplex) -> void
+        inline auto _erase(const simplex_t<D> & simplex) -> void
         requires(D == 0)
         {
             // erase the vertex from the factory
@@ -83,17 +84,11 @@ namespace mito::topology {
         }
 
         template <int D>
-        inline auto erase(const simplex_t<D> & simplex) -> void
+        inline auto _erase(const simplex_t<D> & simplex) -> void
         requires(D > 0)
         {
             // sanity check
             assert(simplex.references() > 0);
-
-            // // if someone else (other than the topology) is still using this resource
-            // if (simplex.references() > 1) {
-            //     // do nothing
-            //     return;
-            // }
 
             // grab a copy of the composition
             auto composition = simplex->composition();
@@ -103,14 +98,30 @@ namespace mito::topology {
 
             // loop on subsimplices
             for (auto & subsimplex : composition) {
-                // if this simplex is the last one using the subsimplex
+                // if this simplex is the last one using the subsimplex (other than the copy we just
+                // did)
                 if (subsimplex.references() == 2) {
-                    erase(subsimplex);
+                    // recursively erase the subsimplices
+                    _erase(subsimplex);
                 }
             }
 
             // all done
             return;
+        }
+
+      public:
+        template <int D>
+        inline auto erase(const simplex_t<D> & simplex) -> void
+        {
+            // if someone else (other than the topology) is still using this resource
+            if (simplex.references() > 1) {
+                // do nothing
+                return;
+            }
+
+            // otherwise, erase the simplex
+            return _erase(simplex);
         }
 
       private:
