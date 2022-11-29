@@ -54,16 +54,14 @@ TEST(EraseElement, DISABLED_TestEraseElement)
     // }
 }
 
-template <int D, class... Args>
+template <int D>
 auto
-instantiate_simplex(Args &&... args)
+instantiate_simplex(mito::topology::simplex_composition_t<D> composition)
     -> mito::utilities::shared_ptr<mito::topology::unoriented_simplex_t<D>>
-requires(
-    (D > 0 && sizeof...(Args) == D + 1)
-    && (std::is_same_v<Args, mito::topology::simplex_t<D - 1> &> && ...))
+requires(D > 0)
 {
     mito::topology::unoriented_simplex_t<D> * resource =
-        new mito::topology::unoriented_simplex_t<D>({ args... });
+        new mito::topology::unoriented_simplex_t<D>(composition);
     return mito::utilities::shared_ptr<mito::topology::unoriented_simplex_t<D>>(resource, nullptr);
 }
 
@@ -145,14 +143,14 @@ TEST(EraseElement, TestEraseElement)
     EXPECT_EQ(vertex_4.references(), 1);
 
     // instantiate segments
-    auto segment_a = instantiate_simplex<1>(vertex_0, vertex_1);
-    auto segment_b = instantiate_simplex<1>(vertex_1, vertex_3);
-    auto segment_c = instantiate_simplex<1>(vertex_3, vertex_0);
-    auto segment_d = instantiate_simplex<1>(vertex_1, vertex_2);
-    auto segment_e = instantiate_simplex<1>(vertex_2, vertex_3);
-    auto segment_f = instantiate_simplex<1>(vertex_4, vertex_3);
-    auto segment_g = instantiate_simplex<1>(vertex_2, vertex_4);
-    auto segment_h = instantiate_simplex<1>(vertex_4, vertex_0);
+    auto segment_a = instantiate_simplex<1>({ vertex_0, vertex_1 });
+    auto segment_b = instantiate_simplex<1>({ vertex_1, vertex_3 });
+    auto segment_c = instantiate_simplex<1>({ vertex_3, vertex_0 });
+    auto segment_d = instantiate_simplex<1>({ vertex_1, vertex_2 });
+    auto segment_e = instantiate_simplex<1>({ vertex_2, vertex_3 });
+    auto segment_f = instantiate_simplex<1>({ vertex_4, vertex_3 });
+    auto segment_g = instantiate_simplex<1>({ vertex_2, vertex_4 });
+    auto segment_h = instantiate_simplex<1>({ vertex_4, vertex_0 });
 
     // assert that all vertices are referenced once
     EXPECT_EQ(segment_a.references(), 1);
@@ -180,25 +178,25 @@ TEST(EraseElement, TestEraseElement)
     auto oriented_segment_1 = instantiate_oriented_simplex<1>(segment_b, true);
     auto oriented_segment_2 = instantiate_oriented_simplex<1>(segment_c, true);
     auto triangle_a =
-        instantiate_simplex<2>(oriented_segment_0, oriented_segment_1, oriented_segment_2);
+        instantiate_simplex<2>({ oriented_segment_0, oriented_segment_1, oriented_segment_2 });
 
     auto oriented_segment_3 = instantiate_oriented_simplex<1>(segment_d, true);
     auto oriented_segment_4 = instantiate_oriented_simplex<1>(segment_e, true);
     auto oriented_segment_5 = instantiate_oriented_simplex<1>(segment_b, false);
     auto triangle_b =
-        instantiate_simplex<2>(oriented_segment_3, oriented_segment_4, oriented_segment_5);
+        instantiate_simplex<2>({ oriented_segment_3, oriented_segment_4, oriented_segment_5 });
 
     auto oriented_segment_6 = instantiate_oriented_simplex<1>(segment_g, true);
     auto oriented_segment_7 = instantiate_oriented_simplex<1>(segment_f, true);
     auto oriented_segment_8 = instantiate_oriented_simplex<1>(segment_e, false);
     auto triangle_c =
-        instantiate_simplex<2>(oriented_segment_6, oriented_segment_7, oriented_segment_8);
+        instantiate_simplex<2>({ oriented_segment_6, oriented_segment_7, oriented_segment_8 });
 
     auto oriented_segment_9 = instantiate_oriented_simplex<1>(segment_h, true);
     auto oriented_segment_10 = instantiate_oriented_simplex<1>(segment_c, false);
     auto oriented_segment_11 = instantiate_oriented_simplex<1>(segment_f, false);
     auto triangle_d =
-        instantiate_simplex<2>(oriented_segment_9, oriented_segment_10, oriented_segment_11);
+        instantiate_simplex<2>({ oriented_segment_9, oriented_segment_10, oriented_segment_11 });
 
     // assert that all triangles are referenced once
     EXPECT_EQ(triangle_a.references(), 1);
