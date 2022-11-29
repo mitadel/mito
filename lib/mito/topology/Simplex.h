@@ -45,10 +45,10 @@ namespace mito::topology {
 
       public:
         // accessor for the subsimplices
-        const auto & composition() const { return _simplices; }
+        inline auto composition() const -> const auto & { return _simplices; }
 
         // returns the simplex id
-        unoriented_simplex_id_t id() const
+        inline auto id() const -> unoriented_simplex_id_t
         {
             // the id is the (immutable) address of this object
             return reinterpret_cast<unoriented_simplex_id_t>(this);
@@ -73,7 +73,7 @@ namespace mito::topology {
         }
 
         // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
-        bool sanityCheck() const
+        inline auto sanityCheck() const -> bool
         {
             // check the subsimplices
             for (const auto & simplex : composition()) {

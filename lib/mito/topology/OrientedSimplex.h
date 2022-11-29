@@ -51,33 +51,33 @@ namespace mito::topology {
 
       public:
         // accessor for the unoriented footprint
-        const auto & footprint() const { return _footprint; }
+        inline auto footprint() const -> const unoriented_simplex_ptr<D> & { return _footprint; }
 
         // returns the orientation of this simplex
         // (true: oriented simplex is oriented as the footprint,
         //  false: oriented simplex is oriented opposite to the footprint)
-        bool orientation() const { return _orientation; }
+        inline bool orientation() const { return _orientation; }
 
         // returns the array of subsimplices
-        const auto & composition() const { return _footprint->composition(); }
+        inline auto composition() const -> const auto & { return _footprint->composition(); }
 
         // returns the id of this (oriented) simplex
-        oriented_simplex_id_t id() const
+        inline auto id() const -> oriented_simplex_id_t
         {
             // the id is the (immutable) address of this object
             return reinterpret_cast<unoriented_simplex_id_t>(this);
         }
 
         // returns the id of this (oriented) simplex
-        oriented_simplex_id_t simplex_id() const { return id(); }
+        inline auto simplex_id() const -> oriented_simplex_id_t { return id(); }
 
         // returns the (unoriented) footprint id
         // (the footprint id is the (immutable) address of the unoriented footprint)
-        unoriented_simplex_id_t footprint_id() const { return _footprint->id(); }
+        inline auto footprint_id() const -> unoriented_simplex_id_t { return _footprint->id(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
+        inline auto vertices(VERTEX_COLLECTION_T & vertices) const -> void
         {
             return _footprint->vertices(vertices);
         }
