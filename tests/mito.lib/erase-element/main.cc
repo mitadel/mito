@@ -241,9 +241,6 @@ TEST(EraseElement, TestEraseElement)
     // // segment_b->erase(); // do not erase: other triangles use it
     // oriented_segment_2->erase();
     // // segment_c->erase(); // do not erase: other triangles use it
-    // vertex_0->erase();
-    // vertex_1->erase();
-    // vertex_3->erase();
 
     // // erase one triangle (non recursive)
     // {
@@ -268,9 +265,6 @@ TEST(EraseElement, TestEraseElement)
     //             if (footprint_2.references() == 2) {
     //                 footprint_2->erase();
     //                 // fetch vertices...
-    //                 // vertex_0->erase();
-    //                 // vertex_1->erase();
-    //                 // vertex_3->erase();
     //             }
     //         }
     //     }
