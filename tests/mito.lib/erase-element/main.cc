@@ -2,7 +2,7 @@
 #include <mito/base.h>
 #include <mito/mesh.h>
 
-TEST(EraseElement, TestEraseElement)
+TEST(EraseElement, TestEraseElementMesh)
 {
     // an empty topology
     auto topology = mito::topology::topology();
@@ -127,7 +127,7 @@ requires(D > 0)
     return;
 }
 
-TEST(EraseElement, TestEraseElement)
+TEST(EraseElement, TestEraseElementBase)
 {
     // instantiate vertices
     auto vertex_0 = instantiate_oriented_simplex<0>();
@@ -327,4 +327,58 @@ TEST(EraseElement, TestEraseElement)
     EXPECT_EQ(vertex_2.references(), 1);
     EXPECT_EQ(vertex_3.references(), 1);
     EXPECT_EQ(vertex_4.references(), 1);
+}
+
+TEST(EraseElement, TestEraseElementTopology)
+{
+    /**
+     * Mesh with four cells:
+    (0,1)           (1,1)
+      4               2
+      +---------------+
+      | .           . |
+      |   .       .   |
+      |     .   .     |
+      |       . 3     |
+      |     .   .     |
+      |   .       .   |
+      | .           . |
+      +---------------+
+      0               1
+    (0,0)           (1,0)
+    */
+
+    // an empty topology
+    auto topology = mito::topology::topology();
+
+    const auto & vertex_0 = topology.vertex();
+    const auto & vertex_1 = topology.vertex();
+    const auto & vertex_2 = topology.vertex();
+    const auto & vertex_3 = topology.vertex();
+    const auto & vertex_4 = topology.vertex();
+
+    const auto & segment_0 = topology.segment({ vertex_0, vertex_1 });
+    const auto & segment_1 = topology.segment({ vertex_1, vertex_3 });
+    const auto & segment_2 = topology.segment({ vertex_3, vertex_0 });
+    const auto & cell_0 = topology.triangle({ segment_0, segment_1, segment_2 });
+
+    const auto & segment_3 = topology.segment({ vertex_1, vertex_2 });
+    const auto & segment_4 = topology.segment({ vertex_2, vertex_3 });
+    const auto & segment_5 = topology.segment({ vertex_3, vertex_1 });
+    [[maybe_unused]] const auto & cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
+
+    const auto & segment_6 = topology.segment({ vertex_2, vertex_4 });
+    const auto & segment_7 = topology.segment({ vertex_4, vertex_3 });
+    const auto & segment_8 = topology.segment({ vertex_3, vertex_2 });
+    [[maybe_unused]] const auto & cell_2 = topology.triangle({ segment_6, segment_7, segment_8 });
+
+    const auto & segment_9 = topology.segment({ vertex_4, vertex_0 });
+    const auto & segment_10 = topology.segment({ vertex_0, vertex_3 });
+    const auto & segment_11 = topology.segment({ vertex_3, vertex_4 });
+    [[maybe_unused]] const auto & cell_3 = topology.triangle({ segment_9, segment_10, segment_11 });
+
+    topology.erase(cell_0);
+
+    EXPECT_EQ(topology.exists_flipped(segment_1), false);
+    EXPECT_EQ(segment_1.references(), 0);
 }
