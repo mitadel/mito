@@ -28,13 +28,13 @@ TEST(EraseElement, TestEraseElement)
     // std::cout << "Initial mesh: " << std::endl;
     // for (const auto & simplex : mesh.cells<2>())
     // {
-    //     std::cout << *simplex << std::endl;
+    //     std::cout << simplex << std::endl;
     // }
 
     // erase a simplex
     std::cout << "Erasing simplex..." << std::endl;
     for (const auto & simplex : mesh.cells<2>()) {
-        // std::cout << *simplex << std::endl;
+        // std::cout << simplex << std::endl;
         mesh.erase(simplex);
         topology.erase(simplex);
         break;
@@ -42,7 +42,7 @@ TEST(EraseElement, TestEraseElement)
 
     // std::cout << "After erase: " << std::endl;
     // for (const auto & simplex : mesh.cells<2>()) {
-    //     std::cout << *simplex << std::endl;
+    //     std::cout << simplex << std::endl;
     // }
 
     // assert the boundary is now made of 5 cells
@@ -51,7 +51,7 @@ TEST(EraseElement, TestEraseElement)
     // show me the boundary cells
     // std::cout << "Boundary: " << std::endl;
     // for (const auto & simplex : mito::mesh::boundary<1>(mesh, topology)) {
-    //     std::cout << *simplex << std::endl;
+    //     std::cout << simplex << std::endl;
     // }
 }
 
