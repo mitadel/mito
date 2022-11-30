@@ -23,7 +23,7 @@ namespace mito::utilities {
 
     // class segmented container
     template <class T>
-    requires ReferenceCountedObject<T>
+    // requires ReferenceCountedObject<T>
     class SegmentedContainer;
 
     // and its iterator
