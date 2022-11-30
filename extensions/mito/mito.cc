@@ -128,10 +128,10 @@ PYBIND11_MODULE(mito, m)
                 // create an input stream
                 auto filestream = std::ifstream(filename);
                 // read the mesh
-                auto mesh = mito::mesh::summit<2, mito::topology::simplex_t>(
-                    filestream, *topology, *point_cloud);
+                auto mesh = new mito::mesh::mesh_t(mito::mesh::summit<2, mito::topology::simplex_t>(
+                    filestream, *topology, *point_cloud));
                 // instantiate
-                return new mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>(mesh);
+                return new mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>(*mesh);
             }))
         // done
         ;
