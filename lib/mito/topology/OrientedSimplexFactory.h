@@ -213,16 +213,19 @@ namespace mito::topology {
         // typedef for a collection of vertices
         using vertex_collection_t = element_collection_t<vertex_t>;
 
+        // typedef for a collection of shared pointers to vertices
+        using vertex_set_t = element_set_t<vertex_t>;
+
       public:    // TOFIX: should be private but the default constructor of tuple needs it public
         // default constructor
-        OrientedSimplexFactory() : _vertices(100 /*segment size */) {};
+        OrientedSimplexFactory() : _vertex_collection(100 /*segment size */), _vertex_set() {};
 
       private:
         // adds a new vertex to the vertex collection and returns it
-        inline auto orientedSimplex() -> oriented_simplex_ptr<0>
+        inline auto orientedSimplex() -> const oriented_simplex_ptr<0> &
         {
             // emplace the new vertex in the vertex collection and return it
-            return _vertices.emplace();
+            return *_vertex_set.insert(_vertex_collection.emplace()).first;
         }
 
         // erase a vertex from the factory (this method actually erases the vertex only
@@ -235,13 +238,19 @@ namespace mito::topology {
             // erase the vertex
             vertex->erase();
 
+            // erase the vertex from the vertex set
+            _vertex_set.erase(vertex);
+
             // all done
             return;
         }
 
       private:
         // container to store the vertices
-        vertex_collection_t _vertices;
+        vertex_collection_t _vertex_collection;
+
+        // container for persistent storage of the shared pointers to vertices
+        vertex_set_t _vertex_set;
 
         // private friendship with the topology
         friend class Topology;

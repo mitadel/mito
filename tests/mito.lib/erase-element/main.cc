@@ -408,4 +408,6 @@ TEST(EraseElement, TestEraseElementTopology)
     // assert that {segment_8} (which is the flipped counterpart of newly deleted {segment_4}) does
     // not have a flipped counterpart in the topology any longer
     EXPECT_EQ(topology.exists_flipped(segment_8), false);
+    // assert that the vertex shared by {cell_0} and {cell_1} only is now unused
+    EXPECT_EQ(vertex_1.references(), 0);
 }

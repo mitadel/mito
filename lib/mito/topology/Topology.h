@@ -26,7 +26,7 @@ namespace mito::topology {
         }
 
         template <int D>
-        inline auto simplex() -> simplex_t<0>
+        inline auto simplex() -> const simplex_t<0> &
         requires(D == 0)
         {
             // ask the factory of oriented simplices
@@ -34,7 +34,7 @@ namespace mito::topology {
         }
 
         // instantiate a vertex
-        inline auto vertex() -> simplex_t<0> { return simplex<0>(); }
+        inline auto vertex() -> const simplex_t<0> & { return simplex<0>(); }
 
         // instantiate a segment
         inline auto segment(const simplex_composition_t<1> & simplices) -> const simplex_t<1> &
