@@ -39,7 +39,7 @@ namespace mito::topology {
         using composition_t = std::array<unoriented_simplex_id_t, D + 1>;
         using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
 
-      public:
+      private:
         SimplexFactory() : _simplices(100 /*segment size */), _compositions() {};
 
         // return a simplex with composition {composition} (either create a new simplex if such
@@ -102,6 +102,9 @@ namespace mito::topology {
 
         // container to map simplex composition to simplices
         composition_map_t _compositions;
+
+        // private friendship with the factory of oriented simplices
+        friend class OrientedSimplexFactory<D>;
     };
 
     // equivalence class relation for a simplex in 1D

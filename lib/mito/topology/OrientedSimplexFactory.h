@@ -28,13 +28,14 @@ namespace mito::topology {
         using orientation_map_t =
             std::map<std::tuple<unoriented_simplex_id_t, bool>, oriented_simplex_ptr<D>>;
 
-      public:
+      public:    // TOFIX: should be private but the default constructor of tuple needs it public
         // default constructor
         OrientedSimplexFactory() :
             _simplex_factory(),
             _oriented_simplices(100 /*segment size */),
             _orientations() {};
 
+      private:
         inline auto existsOrientedSimplex(
             const unoriented_simplex_ptr<D> & simplex, bool orientation) const -> bool
         {
@@ -150,6 +151,9 @@ namespace mito::topology {
 
         // container to store the relation (simplex, orientation) -> oriented simplex
         orientation_map_t _orientations;
+
+        // private friendship with the topology
+        friend class Topology;
     };
 
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
@@ -209,10 +213,11 @@ namespace mito::topology {
         // typedef for a collection of vertices
         using vertex_collection_t = element_collection_t<vertex_t>;
 
-      public:
+      public:    // TOFIX: should be private but the default constructor of tuple needs it public
         // default constructor
         OrientedSimplexFactory() : _vertices(100 /*segment size */) {};
 
+      private:
         // adds a new vertex to the vertex collection and returns it
         inline auto orientedSimplex() -> oriented_simplex_ptr<0>
         {
@@ -237,6 +242,9 @@ namespace mito::topology {
       private:
         // container to store the vertices
         vertex_collection_t _vertices;
+
+        // private friendship with the topology
+        friend class Topology;
     };
 }
 
