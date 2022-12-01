@@ -379,6 +379,8 @@ TEST(EraseElement, TestEraseElementTopology)
 
     topology.erase(cell_0);
 
-    EXPECT_EQ(topology.exists_flipped(segment_1), false);
+    // assert that {segment_5} (which is the flipped counterpart of newly deleted {segment_1}) does
+    // not have a flipped counterpart in the topology any longer
+    EXPECT_EQ(topology.exists_flipped(segment_5), false);
     EXPECT_EQ(segment_1.references(), 0);
 }
