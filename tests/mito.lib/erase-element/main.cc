@@ -365,7 +365,7 @@ TEST(EraseElement, TestEraseElementTopology)
     const auto & segment_3 = topology.segment({ vertex_1, vertex_2 });
     const auto & segment_4 = topology.segment({ vertex_2, vertex_3 });
     const auto & segment_5 = topology.segment({ vertex_3, vertex_1 });
-    [[maybe_unused]] const auto & cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
+    const auto & cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
 
     const auto & segment_6 = topology.segment({ vertex_2, vertex_4 });
     const auto & segment_7 = topology.segment({ vertex_4, vertex_3 });
@@ -377,10 +377,35 @@ TEST(EraseElement, TestEraseElementTopology)
     const auto & segment_11 = topology.segment({ vertex_3, vertex_4 });
     [[maybe_unused]] const auto & cell_3 = topology.triangle({ segment_9, segment_10, segment_11 });
 
+    // assert that {segment_5} (which is the flipped counterpart of {segment_1}) has a flipped
+    // counterpart in the topology (namely, {segment_1})
+    EXPECT_EQ(topology.exists_flipped(segment_5), true);
+    // idem for {segment_10} (which is the flipped counterpart of newly deleted {segment_2})
+    EXPECT_EQ(topology.exists_flipped(segment_10), true);
+    // idem for {segment_8} (which is the flipped counterpart of newly deleted {segment_4})
+    EXPECT_EQ(topology.exists_flipped(segment_8), true);
+
+    // erase the cell with edges {segment_0, segment_1, segment_2}
     topology.erase(cell_0);
 
+    // assert that all oriented edges of that cell are now unused
+    EXPECT_EQ(segment_0.references(), 0);
+    EXPECT_EQ(segment_1.references(), 0);
+    EXPECT_EQ(segment_2.references(), 0);
     // assert that {segment_5} (which is the flipped counterpart of newly deleted {segment_1}) does
     // not have a flipped counterpart in the topology any longer
     EXPECT_EQ(topology.exists_flipped(segment_5), false);
-    EXPECT_EQ(segment_1.references(), 0);
+    // idem for {segment_10} (which is the flipped counterpart of newly deleted {segment_2})
+    EXPECT_EQ(topology.exists_flipped(segment_10), false);
+
+    // erase the cell with edges {segment_3, segment_4, segment_5}, which used to share the
+    // footprint of {segment_5} with {segment_1} of {cell_0}
+    topology.erase(cell_1);
+    // assert that all oriented edges of that cell are now unused
+    EXPECT_EQ(segment_3.references(), 0);
+    EXPECT_EQ(segment_4.references(), 0);
+    EXPECT_EQ(segment_5.references(), 0);
+    // assert that {segment_8} (which is the flipped counterpart of newly deleted {segment_4}) does
+    // not have a flipped counterpart in the topology any longer
+    EXPECT_EQ(topology.exists_flipped(segment_8), false);
 }
