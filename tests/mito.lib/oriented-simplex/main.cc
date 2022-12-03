@@ -9,16 +9,16 @@ TEST(OrientedSimplex, TestOrientedSimplex)
         auto & topology = mito::topology::topology();
 
         // two vertices
-        auto vertex0 = topology.vertex();
-        auto vertex1 = topology.vertex();
+        auto & vertex0 = topology.vertex();
+        auto & vertex1 = topology.vertex();
 
         // instantiate an oriented segment
-        auto oriented_segment0 = topology.segment({ vertex0, vertex1 });
+        auto & oriented_segment0 = topology.segment({ vertex0, vertex1 });
         // assert there is only one pointer to the simplex footprint
         EXPECT_FALSE(topology.exists_flipped(oriented_segment0));
 
         // instantiate an identical oriented segment
-        auto oriented_segment1 = topology.segment({ vertex0, vertex1 });
+        auto & oriented_segment1 = topology.segment({ vertex0, vertex1 });
         // assert the factory returned the same oriented segment
         EXPECT_TRUE(oriented_segment0->simplex_id() == oriented_segment1->simplex_id());
         // assert there is still only one pointer to the simplex footprint
@@ -29,7 +29,7 @@ TEST(OrientedSimplex, TestOrientedSimplex)
             == oriented_segment1->simplex_id());
 
         // instantiate an oriented segment with opposite orientation
-        auto oriented_segment2 = topology.segment({ vertex1, vertex0 });
+        auto & oriented_segment2 = topology.segment({ vertex1, vertex0 });
         // assert there are now two pointers to the simplex footprint
         EXPECT_TRUE(topology.exists_flipped(oriented_segment0));
         // assert that flipping the opposite segment gives the original segment
@@ -41,33 +41,33 @@ TEST(OrientedSimplex, TestOrientedSimplex)
         auto & topology = mito::topology::topology();
 
         // build vertices
-        auto vertex0 = topology.vertex();
-        auto vertex1 = topology.vertex();
-        auto vertex2 = topology.vertex();
+        auto & vertex0 = topology.vertex();
+        auto & vertex1 = topology.vertex();
+        auto & vertex2 = topology.vertex();
 
         // build segments
-        auto segment_a = topology.segment({ vertex0, vertex1 });
-        auto segment_b = topology.segment({ vertex1, vertex2 });
-        auto segment_c = topology.segment({ vertex2, vertex0 });
+        auto & segment_a = topology.segment({ vertex0, vertex1 });
+        auto & segment_b = topology.segment({ vertex1, vertex2 });
+        auto & segment_c = topology.segment({ vertex2, vertex0 });
 
         // ask factory for a triangle with segment_a, segment_b, segment_c
-        auto cell0 = topology.triangle({ segment_a, segment_b, segment_c });
+        auto & cell0 = topology.triangle({ segment_a, segment_b, segment_c });
         // ask factory for the same triangle (with different order of segments)
-        auto cell1 = topology.triangle({ segment_b, segment_c, segment_a });
+        auto & cell1 = topology.triangle({ segment_b, segment_c, segment_a });
         // assert the factory returned the same object
         EXPECT_TRUE(cell0->simplex_id() == cell1->simplex_id());
 
         // get the flipped segments
-        auto segment_a_flip = topology.flip(segment_a);    // vertex1 -> vertex0
-        auto segment_b_flip = topology.flip(segment_b);    // vertex2 -> vertex1
-        auto segment_c_flip = topology.flip(segment_c);    // vertex0 -> vertex2
+        auto & segment_a_flip = topology.flip(segment_a);    // vertex1 -> vertex0
+        auto & segment_b_flip = topology.flip(segment_b);    // vertex2 -> vertex1
+        auto & segment_c_flip = topology.flip(segment_c);    // vertex0 -> vertex2
 
         // ask factory for a triangle with the flipped segments
-        auto cell2 = topology.triangle({ segment_a_flip, segment_c_flip, segment_b_flip });
+        auto & cell2 = topology.triangle({ segment_a_flip, segment_c_flip, segment_b_flip });
         EXPECT_TRUE(cell0->simplex_id() != cell2->simplex_id());
 
         // get the flipped triangle
-        auto cell0_flip = topology.flip(cell0);
+        auto & cell0_flip = topology.flip(cell0);
         // assert that the triangle with flipped segments is the same object as the flipped triangle
         EXPECT_TRUE(cell0_flip->simplex_id() == cell2->simplex_id());
     }

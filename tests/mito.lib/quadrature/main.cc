@@ -44,11 +44,11 @@ TEST(Quadrature, TestQuadrature)
     auto point3 = point_cloud_2D.point({ 0.5, 0.5 });
     auto point4 = point_cloud_2D.point({ 0.0, 1.0 });
 
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
-    auto vertex3 = topology.vertex();
-    auto vertex4 = topology.vertex();
+    auto & vertex0 = topology.vertex();
+    auto & vertex1 = topology.vertex();
+    auto & vertex2 = topology.vertex();
+    auto & vertex3 = topology.vertex();
+    auto & vertex4 = topology.vertex();
 
     mesh_2D.insert(vertex0, point0);
     mesh_2D.insert(vertex1, point1);
@@ -56,19 +56,19 @@ TEST(Quadrature, TestQuadrature)
     mesh_2D.insert(vertex3, point3);
     mesh_2D.insert(vertex4, point4);
 
-    auto segment0 = topology.segment({ vertex0, vertex1 });
-    auto segment1 = topology.segment({ vertex1, vertex3 });
-    auto segment2 = topology.segment({ vertex3, vertex0 });
-    auto segment3 = topology.segment({ vertex1, vertex2 });
-    auto segment4 = topology.segment({ vertex2, vertex3 });
-    auto segment5 = topology.segment({ vertex4, vertex3 });
-    auto segment6 = topology.segment({ vertex2, vertex4 });
-    auto segment7 = topology.segment({ vertex4, vertex0 });
+    auto & segment0 = topology.segment({ vertex0, vertex1 });
+    auto & segment1 = topology.segment({ vertex1, vertex3 });
+    auto & segment2 = topology.segment({ vertex3, vertex0 });
+    auto & segment3 = topology.segment({ vertex1, vertex2 });
+    auto & segment4 = topology.segment({ vertex2, vertex3 });
+    auto & segment5 = topology.segment({ vertex4, vertex3 });
+    auto & segment6 = topology.segment({ vertex2, vertex4 });
+    auto & segment7 = topology.segment({ vertex4, vertex0 });
 
-    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
-    auto cell1 = topology.triangle({ segment3, segment4, segment1 });
-    auto cell2 = topology.triangle({ segment6, segment5, segment4 });
-    auto cell3 = topology.triangle({ segment7, segment2, segment5 });
+    auto & cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto & cell1 = topology.triangle({ segment3, segment4, segment1 });
+    auto & cell2 = topology.triangle({ segment6, segment5, segment4 });
+    auto & cell3 = topology.triangle({ segment7, segment2, segment5 });
 
     mesh_2D.insert(cell0);
     mesh_2D.insert(cell1);
