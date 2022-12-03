@@ -83,7 +83,7 @@ namespace mito::topology {
             auto representative = _representative(simplex->composition());
 
             // erase it
-            simplex->erase();
+            simplex->_erase();
 
             // erase this simplex from the compositions map
             _compositions.erase(representative);

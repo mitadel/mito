@@ -120,7 +120,7 @@ namespace mito::topology {
             auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
 
             // erase the simplex
-            oriented_simplex->erase();
+            oriented_simplex->_erase();
 
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);
@@ -236,7 +236,7 @@ namespace mito::topology {
             assert(vertex.references() > 0);
 
             // erase the vertex
-            vertex->erase();
+            vertex->_erase();
 
             // erase the vertex from the vertex set
             _vertex_set.erase(vertex);

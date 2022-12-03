@@ -85,8 +85,8 @@ namespace mito::topology {
         // returns whether the simplex passes the sanity check
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
-        // TOFIX: this method should be private.
-        inline auto erase() -> void
+      private:
+        inline auto _erase() -> void
         {
             // reset the footprint shared pointer
             _footprint.reset();
@@ -149,7 +149,8 @@ namespace mito::topology {
             return true;
         }
 
-        inline auto erase() -> void
+      private:
+        inline auto _erase() -> void
         {
             // all done
             return;

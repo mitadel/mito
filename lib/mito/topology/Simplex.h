@@ -99,8 +99,8 @@ namespace mito::topology {
             return true;
         }
 
-        // TOFIX: this method should be private.
-        inline auto erase() -> void
+      private:
+        inline auto _erase() -> void
         {
             // reset the subsimplices shared pointers
             for (auto & simplex : _simplices) {
