@@ -105,6 +105,9 @@ namespace mito::mesh {
             // erase the cell from the mesh
             std::get<I>(_cells).erase(cell);
 
+            // erase cell from topology
+            mito::topology::topology().erase(cell);
+
             // all done
             return;
         }

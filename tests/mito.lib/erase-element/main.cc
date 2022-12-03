@@ -36,7 +36,6 @@ TEST(EraseElement, TestEraseElementMesh)
     for (const auto & simplex : mesh.cells<2>()) {
         // std::cout << simplex << std::endl;
         mesh.erase(simplex);
-        topology.erase(simplex);
         break;
     }
 
