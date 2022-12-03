@@ -89,6 +89,14 @@ TEST(EraseElement, TestEraseElementMesh)
     // for (const auto & simplex : mito::mesh::boundary<1>(mesh, topology)) {
     //     std::cout << simplex << std::endl;
     // }
+
+    mesh.erase(cell1);
+
+    // assert the mesh has now 2 cells
+    EXPECT_EQ(mesh.nCells<2>(), 2);
+
+    // assert the boundary is now made of 4 cells
+    EXPECT_EQ(mesh.boundary().nCells<1>(), 4);
 }
 
 #if 0
