@@ -35,6 +35,9 @@ namespace mito::topology {
             _oriented_simplices(100 /*segment size */),
             _orientations() {};
 
+        // destructor
+        ~OrientedSimplexFactory() {};
+
       private:
         inline auto existsOrientedSimplex(
             const unoriented_simplex_ptr<D> & simplex, bool orientation) const -> bool
@@ -219,6 +222,9 @@ namespace mito::topology {
       public:    // TOFIX: should be private but the default constructor of tuple needs it public
         // default constructor
         OrientedSimplexFactory() : _vertex_collection(100 /*segment size */), _vertex_set() {};
+
+        // destructor
+        ~OrientedSimplexFactory() {};
 
       private:
         // adds a new vertex to the vertex collection and returns it

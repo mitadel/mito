@@ -40,7 +40,11 @@ namespace mito::topology {
         using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
 
       private:
+        // default constructor
         SimplexFactory() : _simplices(100 /*segment size */), _compositions() {};
+
+        // destructor
+        ~SimplexFactory() {};
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
