@@ -44,6 +44,9 @@ TEST(EraseElement, TestEraseElementMesh)
     //     std::cout << simplex << std::endl;
     // }
 
+    // assert the mesh has now 3 cells
+    EXPECT_EQ(mesh.nCells<2>(), 3);
+
     // assert the boundary is now made of 5 cells
     EXPECT_EQ(mesh.boundary().nCells<1>(), 5);
 
