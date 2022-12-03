@@ -112,6 +112,43 @@ namespace mito::mesh {
             return;
         }
 
+        /**
+         * @brief Returns a mesh with all boundary cells of dimension I
+         */
+        template <int I = D - 1>
+        inline auto boundary() -> Mesh<D, cellT>
+        requires(I == D - 1)
+        {
+            // instantiate a new mesh for the boundary elements
+            Mesh<D, cellT> boundary_mesh;
+
+            // fetch the topology
+            auto & topology = mito::topology::topology();
+
+            // loop on the (I+1) dimensional cells
+            for (const auto & cell : cells<I + 1>()) {
+                // loop on the subcells of {cell}
+                for (const auto & subcell : cell->composition()) {
+                    // if {subcell} does not have a counterpart in {topology} with opposite
+                    // orientation
+                    if (!topology.exists_flipped(subcell)) {
+                        // add {subcell} to the boundary mesh
+                        boundary_mesh.insert(subcell);
+                        // get the vertices of the c
+                        topology::vertex_set_t vertices;
+                        subcell->vertices(vertices);
+                        // add the vertices of {subcell} to the boundary mesh
+                        for (const auto & vertex : vertices) {
+                            boundary_mesh.insert(vertex, point(vertex));
+                        }
+                    }
+                }
+            }
+
+            // return the boundary mesh
+            return boundary_mesh;
+        }
+
       public:
         template <int I>
         inline auto insert(const cell_t<I> & cell) -> void

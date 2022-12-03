@@ -19,10 +19,10 @@ TEST(EraseElement, TestEraseElementMesh)
     // std::cout << mesh.vertices() << std::endl;
 
     // assert you read 4 cells
-    EXPECT_EQ(mesh.cells<2>().size(), 4);
+    EXPECT_EQ(mesh.nCells<2>(), 4);
 
     // assert the boundary is made of 4 cells
-    EXPECT_EQ(mito::mesh::boundary<1>(mesh, topology).size(), 4);
+    EXPECT_EQ(mesh.boundary().nCells<1>(), 4);
 
     // show me the cells
     // std::cout << "Initial mesh: " << std::endl;
@@ -45,7 +45,7 @@ TEST(EraseElement, TestEraseElementMesh)
     // }
 
     // assert the boundary is now made of 5 cells
-    EXPECT_EQ(mito::mesh::boundary<1>(mesh, topology).size(), 5);
+    EXPECT_EQ(mesh.boundary().nCells<1>(), 5);
 
     // show me the boundary cells
     // std::cout << "Boundary: " << std::endl;

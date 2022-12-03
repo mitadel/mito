@@ -86,7 +86,7 @@ TEST(Mesh, LoadSummitMesh2D)
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
-    auto boundary_cells = mito::mesh::boundary<1>(mesh, topology);
+    auto boundary_mesh = mesh.boundary();
     std::cout << "Fetched boundary in " << clock() - t << std::endl;
 }
 
