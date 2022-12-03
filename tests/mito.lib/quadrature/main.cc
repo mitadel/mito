@@ -30,7 +30,7 @@ TEST(Quadrature, TestQuadrature)
     */
 
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
     auto point_cloud_2D = mito::geometry::point_cloud<2>();

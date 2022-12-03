@@ -10,7 +10,7 @@ namespace mito::topology {
      */
 
     class Topology {
-      public:
+      private:
         // default constructor
         Topology() : _factories() {};
 
@@ -139,7 +139,31 @@ namespace mito::topology {
             oriented_simplex_factory_t<0>, oriented_simplex_factory_t<1>,
             oriented_simplex_factory_t<2>, oriented_simplex_factory_t<3>>
             _factories;
+
+        // friendship with the singleton class
+        friend class TopologySingleton;
     };
+
+    class TopologySingleton {
+
+      public:
+        static auto GetInstance() -> Topology &
+        {
+            if (!topology) {
+                topology = new Topology();
+                return *topology;
+            }
+
+            return *topology;
+        }
+
+      private:
+        // the singleton
+        static Topology * topology;
+    };
+
+    // initialization of static member
+    mito::topology::Topology * mito::topology::TopologySingleton::topology = nullptr;
 }
 
 

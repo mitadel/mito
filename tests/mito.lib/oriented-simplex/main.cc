@@ -6,7 +6,7 @@ TEST(OrientedSimplex, TestOrientedSimplex)
 {
     {
         // an empty topology
-        auto topology = mito::topology::topology();
+        auto & topology = mito::topology::topology();
 
         // two vertices
         auto vertex0 = topology.vertex();
@@ -38,7 +38,7 @@ TEST(OrientedSimplex, TestOrientedSimplex)
     }
     {
         // an empty topology
-        auto topology = mito::topology::topology();
+        auto & topology = mito::topology::topology();
 
         // build vertices
         auto vertex0 = topology.vertex();

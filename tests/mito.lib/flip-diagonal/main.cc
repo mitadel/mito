@@ -162,7 +162,7 @@ flipDiagonal(
 TEST(FlipDiagonal, TestFlipDiagonal)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // build vertices
     auto vertex0 = topology.vertex();

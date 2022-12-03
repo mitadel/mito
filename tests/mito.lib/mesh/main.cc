@@ -21,7 +21,7 @@ TEST(Mesh, BuildMesh)
     */
 
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
     auto point_cloud = mito::geometry::point_cloud<2>();
@@ -72,7 +72,7 @@ TEST(Mesh, BuildMesh)
 TEST(Mesh, LoadSummitMesh2D)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
     auto point_cloud = mito::geometry::point_cloud<2>();
@@ -93,7 +93,7 @@ TEST(Mesh, LoadSummitMesh2D)
 TEST(Mesh, LoadSummitMesh3D)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
     auto point_cloud = mito::geometry::point_cloud<3>();
@@ -110,7 +110,7 @@ TEST(Mesh, LoadSummitMesh3D)
 TEST(Mesh, QuadratureOnMesh)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
     auto point_cloud = mito::geometry::point_cloud<2>();

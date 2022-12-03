@@ -5,7 +5,7 @@
 TEST(EraseElement, TestEraseElementMesh)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
     auto point_cloud = mito::geometry::point_cloud<2>();
@@ -351,7 +351,7 @@ TEST(EraseElement, TestEraseElementTopology)
     */
 
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     const auto & vertex_0 = topology.vertex();
     const auto & vertex_1 = topology.vertex();

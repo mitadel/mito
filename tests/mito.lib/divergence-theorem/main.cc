@@ -61,7 +61,7 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     */
 
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
     auto point_cloud = mito::geometry::point_cloud<2>();

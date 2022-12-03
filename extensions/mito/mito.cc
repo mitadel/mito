@@ -121,7 +121,7 @@ PYBIND11_MODULE(mito, m)
             mito::py::init([](std::string filename) {
                 // TOFIX: who is going to delete?
                 // an empty topology
-                auto topology = new mito::topology::topology_t();
+                auto & topology = mito::topology::topology();
                 // an empty cloud of points in 2D
                 auto point_cloud = new mito::geometry::point_cloud_t<2>();
 
@@ -129,7 +129,7 @@ PYBIND11_MODULE(mito, m)
                 auto filestream = std::ifstream(filename);
                 // read the mesh
                 auto mesh = new mito::mesh::mesh_t(mito::mesh::summit<2, mito::topology::simplex_t>(
-                    filestream, *topology, *point_cloud));
+                    filestream, topology, *point_cloud));
                 // instantiate
                 return new mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>(*mesh);
             }))
