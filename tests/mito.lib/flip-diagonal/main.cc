@@ -159,7 +159,7 @@ flipDiagonal(
     return 0;
 }
 
-TEST(FlipDiagonal, TestFlipDiagonal)
+TEST(FlipDiagonal, DISABLED_TestFlipDiagonal)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
