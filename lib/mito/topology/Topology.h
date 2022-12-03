@@ -14,6 +14,16 @@ namespace mito::topology {
         // default constructor
         Topology() : _factories() {};
 
+        // delete copy constructor
+        Topology(const Topology &) = delete;
+
+        // delete assignment operator
+        void operator=(const Topology &) = delete;
+
+        // destructor
+        ~Topology() {};
+
+      public:
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
