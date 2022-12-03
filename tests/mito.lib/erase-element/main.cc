@@ -434,10 +434,6 @@ TEST(EraseElement, TestEraseElementTopology)
     // erase the cell with edges {segment_0, segment_1, segment_2}
     topology.erase(cell_0);
 
-    // assert that all oriented edges of that cell are now unused
-    EXPECT_EQ(segment_0.references(), 0);
-    EXPECT_EQ(segment_1.references(), 0);
-    EXPECT_EQ(segment_2.references(), 0);
     // assert that {segment_5} (which is the flipped counterpart of newly deleted {segment_1}) does
     // not have a flipped counterpart in the topology any longer
     EXPECT_EQ(topology.exists_flipped(segment_5), false);
@@ -447,13 +443,7 @@ TEST(EraseElement, TestEraseElementTopology)
     // erase the cell with edges {segment_3, segment_4, segment_5}, which used to share the
     // footprint of {segment_5} with {segment_1} of {cell_0}
     topology.erase(cell_1);
-    // assert that all oriented edges of that cell are now unused
-    EXPECT_EQ(segment_3.references(), 0);
-    EXPECT_EQ(segment_4.references(), 0);
-    EXPECT_EQ(segment_5.references(), 0);
     // assert that {segment_8} (which is the flipped counterpart of newly deleted {segment_4}) does
     // not have a flipped counterpart in the topology any longer
     EXPECT_EQ(topology.exists_flipped(segment_8), false);
-    // assert that the vertex shared by {cell_0} and {cell_1} only is now unused
-    EXPECT_EQ(vertex_1.references(), 0);
 }
