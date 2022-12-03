@@ -154,6 +154,10 @@ namespace mito::topology {
             // all done
             return;
         }
+
+      private:
+        // friendship with the factory of oriented simplices
+        friend class OrientedSimplexFactory<0>;
     };
 
     // overload operator<< for oriented simplices
