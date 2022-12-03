@@ -22,41 +22,42 @@ TEST(SegmentedContainer, TestSegmentedContainer)
     // emplace three simplices in the container
     auto simplex0 = collection.emplace(0);
     auto simplex1 = collection.emplace(1);
-    auto simplex2 = collection.emplace(2);
 
-    // assert that the container has 3 elements and its capacity is also 3
+    // assert that the container has 2 elements and its capacity is 3
     EXPECT_EQ(collection.capacity(), 3);
-    EXPECT_EQ(collection.size(), 3);
+    EXPECT_EQ(collection.size(), 2);
 
-    // erase one simplex
-    collection.erase(simplex1);
+    {
+        // emplace one simplex
+        auto simplex2 = collection.emplace(2);
+
+        // assert that the container has 3 elements and its capacity is 3
+        EXPECT_EQ(collection.capacity(), 3);
+        EXPECT_EQ(collection.size(), 3);
+    }
 
     // assert that the container has 2 elements and its capacity is still 3
     EXPECT_EQ(collection.capacity(), 3);
     EXPECT_EQ(collection.size(), 2);
 
-    // emplace one simplex
-    auto simplex3 = collection.emplace(3);
+    {
+        // emplace one simplex
+        auto simplex3 = collection.emplace(3);
 
-    // assert that the container has again 3 elements and its capacity is 3
-    EXPECT_EQ(collection.capacity(), 3);
-    EXPECT_EQ(collection.size(), 3);
+        // assert that the container has again 3 elements and its capacity is 3
+        EXPECT_EQ(collection.capacity(), 3);
+        EXPECT_EQ(collection.size(), 3);
 
-    // emplace another simplex (trigger allocation of new segment)
-    auto simplex4 = collection.emplace(4);
+        // emplace another simplex (trigger allocation of new segment)
+        auto simplex4 = collection.emplace(4);
 
-    // assert that the container has now 4 elements and its capacity is 6
-    // (new memory allocation was in fact triggered)
+        // assert that the container has now 4 elements and its capacity is 6
+        // (new memory allocation was in fact triggered)
+        EXPECT_EQ(collection.capacity(), 6);
+        EXPECT_EQ(collection.size(), 4);
+    }
+
+    // assert that the container has now 2 elements but has still capacity of 6
     EXPECT_EQ(collection.capacity(), 6);
-    EXPECT_EQ(collection.size(), 4);
-
-    // erase all the simplices
-    collection.erase(simplex0);
-    collection.erase(simplex2);
-    collection.erase(simplex3);
-    collection.erase(simplex4);
-
-    // assert that the container is empty and but has still capacity of 6
-    EXPECT_EQ(collection.capacity(), 6);
-    EXPECT_EQ(collection.size(), 0);
+    EXPECT_EQ(collection.size(), 2);
 }
