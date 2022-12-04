@@ -66,6 +66,9 @@ TEST(Mesh, BuildMesh)
     mesh.insert(cell2);
     mesh.insert(cell3);
 
+    // assert you read 4 cells
+    EXPECT_EQ(mesh.nCells<2>(), 4);
+
     return;
 }
 
