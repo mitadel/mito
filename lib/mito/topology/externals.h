@@ -5,8 +5,10 @@
 
 // externals
 #include <unordered_set>
+#include <pyre/journal.h>
 
 // support
+#include "../utilities.h"
 
 #endif
 

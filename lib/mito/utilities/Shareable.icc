@@ -5,36 +5,36 @@
 #error This header file contains implementation details of class mito::utilities::Shareable
 #else
 
+// interface
 auto
-mito::utilities::Shareable::references() const -> int
+mito::utilities::Shareable::is_valid() const -> bool
+{
+    // true unless the references count is negative or zero
+    return (_reference_count > 0 ? true : false);
+}
+
+// destructor
+constexpr mito::utilities::Shareable::~Shareable() {}
+
+// the default constructor
+constexpr mito::utilities::Shareable::Shareable() : _reference_count(0) {}
+
+auto
+mito::utilities::Shareable::_references() const -> int
 {
     // return the count of outstanding references
     return _reference_count;
 }
 
 auto
-mito::utilities::Shareable::is_valid() const -> bool
-{
-    // true unless the references count is zero 
-    return (_reference_count == 0 ? false : true);
-}
-
-// destructor
-mito::utilities::Shareable::~Shareable() {}
-
-// the default constructor
-mito::utilities::Shareable::Shareable() : _reference_count(0) {}
-
-// interface
-auto
-mito::utilities::Shareable::_acquire() -> int
+mito::utilities::Shareable::_acquire() const -> int
 {
     // increment the reference count and return it
     return ++_reference_count;
 }
 
 auto
-mito::utilities::Shareable::_release() -> int
+mito::utilities::Shareable::_release() const -> int
 {
     // decrement the reference count and return it
     return --_reference_count;

@@ -20,8 +20,8 @@ namespace mito::utilities {
 
         // interface
       public:
-        // cast to handle_t
-        inline operator handle_t() const;
+        // accessor for {handle}
+        inline auto handle() const -> handle_t;
 
         // accessor for the number of outstanding references
         inline auto references() const -> int;
@@ -32,6 +32,9 @@ namespace mito::utilities {
         // operator->
         auto operator->() const -> handle_t;
 
+        // // operator*
+        // auto operator*() const -> const resource_t &;
+
         // meta methods
       public:
         // destructor
@@ -41,7 +44,7 @@ namespace mito::utilities {
         inline SharedPointer();
 
         // constructor
-        inline SharedPointer(handle_t);
+        inline SharedPointer(handle_t, segmented_t<resource_t> *);
 
         // copy constructor
         inline SharedPointer(const SharedPointer<Resource> &);
@@ -57,14 +60,33 @@ namespace mito::utilities {
 
       private:
         // increment the reference count
-        inline auto _acquire() -> int;
+        inline auto _acquire() const -> void;
         // decrement the reference count
-        inline auto _release() -> int;
+        inline auto _release() const -> void;
 
         // data members
       private:
+        // handle to the resource
         handle_t _handle;
+        // reference to the segmented container, which owns the memory
+        segmented_t<resource_t> * _container;
+
+      private:
+        // friendship with SegmentedContainer
+        friend class mito::utilities::SegmentedContainer<resource_t>;
     };
+
+    template <class Resource>
+    inline bool operator==(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    {
+        return lhs.handle() == rhs.handle();
+    }
+
+    template <class Resource>
+    inline bool operator<(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    {
+        return lhs.handle() < rhs.handle();
+    }
 }
 
 

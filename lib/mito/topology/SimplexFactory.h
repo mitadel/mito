@@ -6,7 +6,7 @@ namespace mito::topology {
 
     /**
      *
-     * This static class represents a factory for simplices of order D.
+     * This class represents a factory for simplices of order D.
      *
      * The factory class is aware of the class of equivalence for a Simplex of order D. In fact,
      * being an instance of Simplex<D> identified by its D+1 subsimplices, there are (D+1)! possible
@@ -23,54 +23,74 @@ namespace mito::topology {
     class SimplexFactory {
 
       private:
+        // typedef for a collection of unoriented simplices
+        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<D>>;
+
         // typedef for a composition map of simplices:
         // these maps map:
         //      2 pointers to nodes into a pointer to edge,
         //      3 pointers to edges into a pointer to face, ...
         // edges composition
-        // std::map<std::array<unoriented_simplex_id_t<0>, 2>, unoriented_simplex_ptr<1>>
+        // std::map<std::array<unoriented_simplex_id_t, 2>, unoriented_simplex_ptr<1>>
         // faces compositions
-        // std::map<std::array<unoriented_simplex_id_t<1>, 3>, unoriented_simplex_ptr<2>>
+        // std::map<std::array<unoriented_simplex_id_t, 3>, unoriented_simplex_ptr<2>>
         // volumes compositions
-        // std::map<std::array<unoriented_simplex_id_t<2>, 4>, unoriented_simplex_ptr<3>>
-        using composition_t = std::array<unoriented_simplex_id_t<D - 1>, D + 1>;
+        // std::map<std::array<unoriented_simplex_id_t, 4>, unoriented_simplex_ptr<3>>
+        using composition_t = std::array<unoriented_simplex_id_t, D + 1>;
         using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
 
-      public:
-        SimplexFactory() = delete;
+      private:
+        // default constructor
+        SimplexFactory() : _simplices(100 /*segment size */), _compositions() {};
+
+        // destructor
+        ~SimplexFactory() {};
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        static inline auto simplex(const simplex_composition_t<D> & composition)
-            -> unoriented_simplex_ptr<D>
+        inline auto simplex(const simplex_composition_t<D> & composition)
+            -> const unoriented_simplex_ptr<D> &
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
 
-            // if there is no representative registered in the map, then create a new simplex
-            // with this composition
-            // TODO: placement new here
-            auto ret =
-                _compositions.emplace(representative, new unoriented_simplex_t<D>(composition));
+            // look up for this representative in the compositions map
+            auto it_find = _compositions.find(representative);
 
-            // return representative of simplex with composition {composition}
-            return ret.first->second;
+            // if a representative simplex with this composition is already registered in the map
+            if (it_find != _compositions.end()) {
+                // then return it
+                return it_find->second;
+            }
+            // otherwise
+            else {
+                // create a new simplex with composition {composition}
+                auto simplex = _simplices.emplace(composition);
+
+                // register it in the compositions map
+                auto ret = _compositions.insert(std::make_pair(representative, simplex));
+
+                // and return it
+                return ret.first->second;
+            }
         }
 
-        // cleanup the factory around an oriented simplex (i.e. remove the simplex footprint from
-        // the factory if this oriented simplex is the only owner of its footprint)
-        static inline auto cleanup(const oriented_simplex_ptr<D> & oriented_simplex) -> void
+        // erase a simplex from the factory (this method actually erases the simplex only if there
+        // is no one else using it, otherwise does nothing)
+        inline auto erase(const unoriented_simplex_ptr<D> & simplex) -> void
         {
-            // if the footprint is not shared
-            if (!exists_flipped(oriented_simplex)) {
+            // sanity check
+            assert(simplex.references() > 0);
 
-                // pick a representative (factor out equivalence relation)
-                auto representative = _representative(oriented_simplex->composition());
+            // pick a representative (factor out equivalence relation)
+            auto representative = _representative(simplex->composition());
 
-                // erase this simplex from the compositions map
-                _compositions.erase(representative);
-            }
+            // erase it
+            simplex->_erase();
+
+            // erase this simplex from the compositions map
+            _compositions.erase(representative);
 
             // all done
             return;
@@ -78,11 +98,17 @@ namespace mito::topology {
 
       private:
         // equivalence class relation for a simplex
-        static inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
+        inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
 
       private:
+        // container to store the unoriented simplices
+        simplex_collection_t _simplices;
+
         // container to map simplex composition to simplices
-        static composition_map_t _compositions;
+        composition_map_t _compositions;
+
+        // private friendship with the factory of oriented simplices
+        friend class OrientedSimplexFactory<D>;
     };
 
     // equivalence class relation for a simplex in 1D
@@ -130,11 +156,6 @@ namespace mito::topology {
         // all done
         return representative;
     }
-
-    // initialize static attribute
-    template <int D>
-    typename SimplexFactory<D>::composition_map_t SimplexFactory<D>::_compositions =
-        SimplexFactory<D>::composition_map_t();
 }
 
 #endif    // mito_topology_SimplexFactory_h

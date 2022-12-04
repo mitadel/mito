@@ -13,19 +13,16 @@ namespace mito::utilities {
 
         // interface
       public:
-        // accessor for the number of outstanding references
-        inline auto references() const -> int;
-
         // whether the resource is valid or not
         inline auto is_valid() const -> bool;
 
         // meta methods
       public:
         // destructor
-        inline ~Shareable();
+        constexpr inline ~Shareable();
 
         // default constructor
-        inline Shareable();
+        constexpr inline Shareable();
 
         // copy constructors
         inline Shareable(const Shareable &) = delete;
@@ -42,20 +39,22 @@ namespace mito::utilities {
         inline Shareable & operator=(Shareable &&) = delete;
 
       private:
+        // accessor for the number of outstanding references
+        inline auto _references() const -> int;
         // increment the reference count
-        inline auto _acquire() -> int;
+        inline auto _acquire() const -> int;
         // decrement the reference count
-        inline auto _release() -> int;
+        inline auto _release() const -> int;
 
         // data members
       private:
-        int _reference_count;
+        mutable int _reference_count;
 
       private:
         // friendship with SharedPointer (the shared pointer needs r/w access to the reference count
         // of the Shareable instance)
         template <class T>
-        requires mito::utilities::ReferenceCountedObject<T>
+        requires ReferenceCountedObject<T>
         friend class mito::utilities::SharedPointer;
     };
 }

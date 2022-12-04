@@ -18,11 +18,11 @@
 namespace mito::topology {
 
     template <int D>
-    class OrientedSimplex {
+    class OrientedSimplex : public mito::utilities::Shareable {
 
         // private constructors: only the OrientedSimplexFactory has the right to instantiate
         // oriented simplices
-      private:
+      public:    // TOFIX: should be private
         // constructor with an existing shared pointer as footprint
         constexpr OrientedSimplex(const unoriented_simplex_ptr<D> & footprint, bool orientation) :
             _footprint(footprint),
@@ -51,33 +51,33 @@ namespace mito::topology {
 
       public:
         // accessor for the unoriented footprint
-        const auto & footprint() const { return _footprint; }
+        inline auto footprint() const -> const unoriented_simplex_ptr<D> & { return _footprint; }
 
         // returns the orientation of this simplex
         // (true: oriented simplex is oriented as the footprint,
         //  false: oriented simplex is oriented opposite to the footprint)
-        bool orientation() const { return _orientation; }
+        inline bool orientation() const { return _orientation; }
 
         // returns the array of subsimplices
-        const auto & composition() const { return _footprint->composition(); }
+        inline auto composition() const -> const auto & { return _footprint->composition(); }
 
         // returns the id of this (oriented) simplex
-        oriented_simplex_id_t<D> id() const
+        inline auto id() const -> oriented_simplex_id_t
         {
             // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t<D>>(this);
+            return reinterpret_cast<unoriented_simplex_id_t>(this);
         }
 
         // returns the id of this (oriented) simplex
-        oriented_simplex_id_t<D> simplex_id() const { return id(); }
+        inline auto simplex_id() const -> oriented_simplex_id_t { return id(); }
 
         // returns the (unoriented) footprint id
         // (the footprint id is the (immutable) address of the unoriented footprint)
-        unoriented_simplex_id_t<D> footprint_id() const { return _footprint->id(); }
+        inline auto footprint_id() const -> unoriented_simplex_id_t { return _footprint->id(); }
 
         // returns the set of vertices
         template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
+        inline auto vertices(VERTEX_COLLECTION_T & vertices) const -> void
         {
             return _footprint->vertices(vertices);
         }
@@ -86,10 +86,20 @@ namespace mito::topology {
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
       private:
+        inline auto _erase() -> void
+        {
+            // reset the footprint shared pointer
+            _footprint.reset();
+
+            // all done
+            return;
+        }
+
+      private:
         // the shared pointer to the footprint
-        const unoriented_simplex_ptr<D> _footprint;
+        unoriented_simplex_ptr<D> _footprint;    // TOFIX: should this be {const}?
         // the orientation
-        bool _orientation;
+        const bool _orientation;
         // private friendship with the factory of oriented simplices
         friend class OrientedSimplexFactory<D>;
     };
@@ -101,11 +111,12 @@ namespace mito::topology {
      */
 
     template <>
-    class OrientedSimplex<0> {
-      public:
+    class OrientedSimplex<0> : public mito::utilities::Shareable {
+      public:    // TOFIX: should be private
         // default constructor
         constexpr OrientedSimplex() {}
 
+      public:
         // empty destructor
         constexpr ~OrientedSimplex() {}
 
@@ -125,10 +136,10 @@ namespace mito::topology {
       public:
         // returns the (unoriented) footprint id
         // Note: the footprint of a vertex is the vertex itself
-        inline auto footprint_id() const -> unoriented_simplex_id_t<0>
+        inline auto footprint_id() const -> unoriented_simplex_id_t
         {
             // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t<0>>(this);
+            return reinterpret_cast<unoriented_simplex_id_t>(this);
         }
 
         // perform a sanity check
@@ -137,45 +148,18 @@ namespace mito::topology {
             // a simplex of order 0 has only 1 vertex (this one!)
             return true;
         }
+
+      private:
+        inline auto _erase() -> void
+        {
+            // all done
+            return;
+        }
+
+      private:
+        // friendship with the factory of oriented simplices
+        friend class OrientedSimplexFactory<0>;
     };
-
-    // overload operator<< for oriented simplices
-    template <int D>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<D> & s)
-    {
-        // print orientation
-        os << "orientation: " << s->orientation() << std::endl;
-        // print footprint
-        os << "footprint: " << s->footprint() << std::endl;
-        // all done
-        return os;
-    }
-
-    // overload operator<< specialization for simplices with D = 0 (vertices)
-    template <>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
-    {
-        os << s->footprint_id();
-        return os;
-    }
-
-    auto tail(const simplex_t<1> & oriented_simplex)
-    {
-        if (oriented_simplex->orientation()) {
-            return oriented_simplex->composition()[0];
-        } else {
-            return oriented_simplex->composition()[1];
-        }
-    }
-
-    auto head(const simplex_t<1> & oriented_simplex)
-    {
-        if (oriented_simplex->orientation()) {
-            return oriented_simplex->composition()[1];
-        } else {
-            return oriented_simplex->composition()[0];
-        }
-    }
 }
 #endif    // mito_topology_OrientedSimplex_h
 

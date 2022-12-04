@@ -6,13 +6,12 @@
 namespace mito::quadrature {
 
     // class integrator
-    template <class quadratureT, int r, class elementSetT>
+    template <class quadratureT, int r, class manifoldT>
     class Integrator;
 
     // integrator alias
-    template <class quadratureT, int r, class elementSetT>
-    using integrator_t = Integrator<quadratureT, r, elementSetT>;
-
+    template <class quadratureT, int r, class manifoldT>
+    using integrator_t = Integrator<quadratureT, r, manifoldT>;
 }
 
 

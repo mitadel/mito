@@ -7,60 +7,54 @@ namespace mito::geometry {
     template <int D>
     class PointCloud {
       private:
-        using cloud_t = std::unordered_map<vertex_t, point_t<D>>;
+        using cloud_t = mito::geometry::cloud_t<D>;
 
       public:
-        PointCloud() = delete;
+        PointCloud() : _cloud(100 /*segment size */) {}
 
       public:
-        static auto print() -> void
+        auto print() const -> void
         {
             // iterate on map
             for (auto item : _cloud) {
-                std::cout << "Vertex: " << item.first->id() << std::endl;
-                std::cout << "Point: " << item.second << std::endl;
+                std::cout << "Point: " << *item << std::endl;
             }
             // all done
             return;
         }
 
         // support for ranged for loops (wrapping grid)
-        static inline auto begin() -> const auto & { return _cloud.cbegin(); }
-        static inline auto end() -> const auto & { return _cloud.cend(); }
+        inline auto begin() -> const auto & { return _cloud.cbegin(); }
+        inline auto end() -> const auto & { return _cloud.cend(); }
 
-        static auto size() -> int { return _cloud.size(); }
+        auto size() -> int { return _cloud.size(); }
 
-        static auto insert(const vertex_t & vertex, const point_t<D> & point) -> auto
+        // example use: cloud.point({0.0, ..., 0.0})
+        auto point(vector_t<D> && coord) -> auto
         {
-            return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
-        }
-
-        static auto insert(const vertex_t & vertex, const point_t<D> && point) -> auto
-        {
-            return _cloud.insert(std::pair<vertex_t, const point_t<D>>(vertex, point));
-        }
-
-        // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
-        static auto point(const vertex_t & vertex) -> const point_t<D> &
-        {
-            return _cloud.find(vertex)->second;
+            // helper function to convert vector_t to variadic template argument
+            auto _emplace_point = [this]<size_t... I>(
+                                      const vector_t<D> & coord, std::index_sequence<I...>)
+                                      ->auto
+            {
+                // return the newly added point
+                return _cloud.emplace(coord[I]...);
+            };
+            // return the newly added point
+            return _emplace_point(coord, std::make_index_sequence<D> {});
         }
 
       private:
-        static cloud_t _cloud;
+        cloud_t _cloud;
     };
-
-    // initialize static attribute
-    template <int D>
-    typename PointCloud<D>::cloud_t PointCloud<D>::_cloud = PointCloud<D>::cloud_t();
 
     template <int D>
     std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
     {
-        for (const auto & point : cloud) {
-            std::cout << "vertex: " << point.first->id() << ",\t coordinates: " << point.second
-                      << std::endl;
-        }
+        // print the cloud
+        cloud.print();
+
+        // all done
         return os;
     }
 

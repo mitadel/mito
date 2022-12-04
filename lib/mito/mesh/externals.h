@@ -3,6 +3,7 @@
 #define mito_mesh_externals_h
 
 // externals
+#include <unordered_map>
 
 // support
 #include "../topology.h"

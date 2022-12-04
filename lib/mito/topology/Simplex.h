@@ -13,10 +13,10 @@ namespace mito::topology {
 
     template <int D>
     requires(D > 0)
-    class Simplex {
+    class Simplex : public mito::utilities::Shareable {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
-      private:
+      public:    // TOFIX: should be private
         // constructor for a simplex based on its composition in terms of subsimplices
         constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
 
@@ -45,13 +45,13 @@ namespace mito::topology {
 
       public:
         // accessor for the subsimplices
-        const auto & composition() const { return _simplices; }
+        inline auto composition() const -> const auto & { return _simplices; }
 
         // returns the simplex id
-        unoriented_simplex_id_t<D> id() const
+        inline auto id() const -> unoriented_simplex_id_t
         {
             // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t<D>>(this);
+            return reinterpret_cast<unoriented_simplex_id_t>(this);
         }
 
         // add the vertices of this simplex to a collection of vertices
@@ -73,7 +73,7 @@ namespace mito::topology {
         }
 
         // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
-        bool sanityCheck() const
+        inline auto sanityCheck() const -> bool
         {
             // check the subsimplices
             for (const auto & simplex : composition()) {
@@ -100,8 +100,20 @@ namespace mito::topology {
         }
 
       private:
+        inline auto _erase() -> void
+        {
+            // reset the subsimplices shared pointers
+            for (auto & simplex : _simplices) {
+                simplex.reset();
+            }
+
+            // all done
+            return;
+        }
+
+      private:
         // the simplex composition in terms of subsimplices
-        simplex_composition_t<D> _simplices;
+        simplex_composition_t<D> _simplices;    // TOFIX: should this be {const}?
 
         // private friendship with the factory of simplices
         friend class SimplexFactory<D>;

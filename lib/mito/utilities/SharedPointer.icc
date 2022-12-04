@@ -7,8 +7,9 @@
 
 // interface
 template <class Resource>
-mito::utilities::SharedPointer<Resource>::operator mito::utilities::SharedPointer<
-    Resource>::handle_t() const
+auto
+mito::utilities::SharedPointer<Resource>::handle() const
+    -> mito::utilities::SharedPointer<Resource>::handle_t
 {
     // return the handle
     return _handle;
@@ -19,7 +20,7 @@ auto
 mito::utilities::SharedPointer<Resource>::references() const -> int
 {
     // return the count of outstanding references
-    return _handle->references();
+    return _handle->_references();
 }
 
 template <class Resource>
@@ -29,8 +30,11 @@ mito::utilities::SharedPointer<Resource>::reset() -> void
     // release my current handle
     _release();
 
-    // invalidate handle
+    // invalidate handle to the resource
     _handle = nullptr;
+
+    // invalidate handle to the segmented container
+    _container = nullptr;
 
     // all done
     return;
@@ -46,6 +50,16 @@ mito::utilities::SharedPointer<Resource>::operator->() const
     return _handle;
 }
 
+// // operator*
+// template <class Resource>
+// auto
+// mito::utilities::SharedPointer<Resource>::operator*() const
+//     -> const mito::utilities::SharedPointer<Resource>::resource_t &
+// {
+//     // return the resource
+//     return *_handle;
+// }
+
 // destructor
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::~SharedPointer()
@@ -56,12 +70,15 @@ mito::utilities::SharedPointer<Resource>::~SharedPointer()
 
 // default constructor (invalid shared handle)
 template <class Resource>
-mito::utilities::SharedPointer<Resource>::SharedPointer() : _handle(nullptr)
+mito::utilities::SharedPointer<Resource>::SharedPointer() : _handle(nullptr), _container(nullptr)
 {}
 
 // the constructor
 template <class Resource>
-mito::utilities::SharedPointer<Resource>::SharedPointer(handle_t resource) : _handle(resource)
+mito::utilities::SharedPointer<Resource>::SharedPointer(
+    handle_t resource, segmented_t<resource_t> * container) :
+    _handle(resource),
+    _container(container)
 {
     // grab a reference to the shared handle
     _acquire();
@@ -71,7 +88,8 @@ mito::utilities::SharedPointer<Resource>::SharedPointer(handle_t resource) : _ha
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer(
     const mito::utilities::SharedPointer<Resource> & other) :
-    _handle(other)
+    _handle(other._handle),
+    _container(other._container)
 {
     // grab a reference to the shared handle
     _acquire();
@@ -81,10 +99,12 @@ mito::utilities::SharedPointer<Resource>::SharedPointer(
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer(
     mito::utilities::SharedPointer<Resource> && other) :
-    _handle(other)
+    _handle(other._handle),
+    _container(other._container)
 {
     // invalidate other
     other._handle = nullptr;
+    other._container = nullptr;
 }
 
 // assignment operator
@@ -101,6 +121,8 @@ mito::utilities::SharedPointer<Resource>::operator=(
         _handle = other._handle;
         // and grab a reference to it
         _acquire();
+        // grab the container handle
+        _container = other._container;
     }
 
     // all done
@@ -119,11 +141,14 @@ mito::utilities::SharedPointer<Resource>::operator=(
         _release();
         // adopt the new shareable
         _handle = other._handle;
+        // grab the container handle
+        _container = other._container;
     }
 
     // QUESTION: should this go here or in the if statement?
     // invalidate {other}
     other._handle = nullptr;
+    other._container = nullptr;
 
     // all done
     return *this;
@@ -132,24 +157,33 @@ mito::utilities::SharedPointer<Resource>::operator=(
 // interface
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::_acquire() -> int
+mito::utilities::SharedPointer<Resource>::_acquire() const -> void
 {
     // acquire resource
-    return _handle->_acquire();
+    _handle->_acquire();
+    // all done
+    return;
 }
 
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::_release() -> int
+mito::utilities::SharedPointer<Resource>::_release() const -> void
 {
     // if the handle is in valid state
     if (_handle != nullptr) {
         // release my current handle
-        return _handle->_release();
+        // if the resource is now unused
+        if (_handle->_release() == 0 && _container != nullptr) {
+            // erase it from the container
+            return _container->erase(*this);
+        }
+
+        // all done
+        return;
     }
 
     // all done
-    return 0;
+    return;
 }
 
 #endif
