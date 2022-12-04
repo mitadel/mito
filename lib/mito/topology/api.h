@@ -17,12 +17,6 @@ namespace mito::topology {
     // tetrahedron alias
     using tetrahedron_t = simplex_t<3>;
 
-    // vertex set alias
-    using vertex_set_t = element_set_t<vertex_t>;
-
-    // vertex vector alias
-    using vertex_vector_t = element_vector_t<vertex_t>;
-
 }
 
 

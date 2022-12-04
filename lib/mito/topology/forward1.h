@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_topology_forward_h)
-#define mito_topology_forward_h
+#if !defined(mito_topology_forward1_h)
+#define mito_topology_forward1_h
 
 
 namespace mito::topology {
@@ -50,24 +50,12 @@ namespace mito::topology {
     template <int D>
     using oriented_simplex_t = OrientedSimplex<D>;
 
-    // oriented simplex pointer alias
-    template <int D>
-    using oriented_simplex_ptr = mito::utilities::shared_ptr<oriented_simplex_t<D>>;
-
     // id type of unoriented simplex
     using unoriented_simplex_id_t = std::uintptr_t;
 
     // id type of unoriented simplex
     // QUESTION: should we collapse these two ids and call them {cell_id_t}?
     using oriented_simplex_id_t = std::uintptr_t;
-
-    // oriented simplex composition alias
-    template <int D>
-    using simplex_composition_t = std::array<oriented_simplex_ptr<D - 1>, D + 1>;
-
-    // simplex alias
-    template <int D>
-    using simplex_t = oriented_simplex_ptr<D>;
 
     // hash function for {cellT}, which is a (shared) pointer to a cell
     // Note that two pointers pointing to the same cell collapse on the same hashed value
