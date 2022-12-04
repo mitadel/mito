@@ -21,7 +21,7 @@ jobs:
       matrix:
         os: [macos-11]
         target: [Debug, Release, RelWithDebInfo]
-        python: ["3.10"]
+        python: ["3.11"]
         suite: [gcc]
         suiteVersion: ["11"]
         include:
