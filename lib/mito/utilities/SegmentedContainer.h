@@ -66,7 +66,7 @@
 
 namespace mito::utilities {
     template <class T>
-    // requires ReferenceCountedObject<T>
+    requires ReferenceCountedObject<T>
     class SegmentedContainer {
 
       public:
