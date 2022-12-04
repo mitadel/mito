@@ -54,17 +54,6 @@ oppositeVertices(
     return opposite_vertices_vector;
 }
 
-bool
-headTailConnects(
-    const mito::topology::simplex_t<1> & simplex_1, const mito::topology::simplex_t<1> & simplex_2)
-{
-    if (mito::topology::head(simplex_1) == mito::topology::tail(simplex_2)) {
-        return true;
-    }
-
-    return false;
-}
-
 int
 flipDiagonal(
     const mito::topology::simplex_t<2> & simplex0, const mito::topology::simplex_t<2> & simplex1,
@@ -107,7 +96,7 @@ flipDiagonal(
     new_simplex_composition_0[0] = diagonal_segment;
 
     for (const auto & subsimplex : boundary_simplices) {
-        if (headTailConnects(new_simplex_composition_0[0], subsimplex)) {
+        if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
             new_simplex_composition_0[1] = subsimplex;
             boundary_simplices.erase(subsimplex);
         }
@@ -115,20 +104,20 @@ flipDiagonal(
     EXPECT_EQ(boundary_simplices.size(), 3);
 
     for (const auto & subsimplex : boundary_simplices) {
-        if (headTailConnects(new_simplex_composition_0[1], subsimplex)) {
+        if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
             new_simplex_composition_0[2] = subsimplex;
             boundary_simplices.erase(subsimplex);
         }
     }
     EXPECT_EQ(boundary_simplices.size(), 2);
 
-    EXPECT_TRUE(headTailConnects(new_simplex_composition_0[2], new_simplex_composition_0[0]));
+    EXPECT_TRUE(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
 
     mito::topology::simplex_composition_t<2> new_simplex_composition_1;
     new_simplex_composition_1[0] = opposite_diagonal_segment;
 
     for (const auto & subsimplex : boundary_simplices) {
-        if (headTailConnects(new_simplex_composition_1[0], subsimplex)) {
+        if (headTailConnected(new_simplex_composition_1[0], subsimplex)) {
             new_simplex_composition_1[1] = subsimplex;
             boundary_simplices.erase(subsimplex);
         }
@@ -136,14 +125,14 @@ flipDiagonal(
     EXPECT_EQ(boundary_simplices.size(), 1);
 
     for (const auto & subsimplex : boundary_simplices) {
-        if (headTailConnects(new_simplex_composition_1[1], subsimplex)) {
+        if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
             new_simplex_composition_1[2] = subsimplex;
             boundary_simplices.erase(subsimplex);
         }
     }
     EXPECT_EQ(boundary_simplices.size(), 0);
 
-    EXPECT_TRUE(headTailConnects(new_simplex_composition_1[2], new_simplex_composition_1[0]));
+    EXPECT_TRUE(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
 
     // TOFIX: how to delete the old simplices?
 
