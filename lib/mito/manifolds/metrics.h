@@ -14,7 +14,7 @@ namespace mito::manifolds {
         constexpr int V = D + 1;
 
         // a container to store the coordinates of each vertex in a tensor
-        static matrix_t<V> pointsTensor;
+        matrix_t<V> pointsTensor;
 
         // assert memory allocation is consistent
         assert(volumes.size() == elements.size());
