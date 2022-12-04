@@ -11,7 +11,7 @@ namespace mito::utilities {
 
     // declaration
     template <class Resource>
-    // requires ReferenceCountedObject<Resource>
+    requires ReferenceCountedObject<Resource>
     class SharedPointer {
         // types
       public:
