@@ -15,6 +15,8 @@
 #include "forward2.h"
 // other classes implementation
 #include "Simplex.h"
+// simplex utilities
+#include "utilities.h"
 #include "SimplexFactory.h"
 #include "OrientedSimplexFactory.h"
 #include "Topology.h"
@@ -24,9 +26,6 @@
 
 // factories implementation
 #include "factories.h"
-
-// topology utilities
-#include "utilities.h"
 
 #endif
 
