@@ -216,9 +216,6 @@ namespace mito::topology {
         // typedef for a collection of vertices
         using vertex_collection_t = mito::utilities::segmented_t<oriented_simplex_t<0>>;
 
-        // typedef for a collection of shared pointers to vertices
-        using vertex_set_t = element_set_t<vertex_t>;
-
       public:    // TOFIX: should be private but the default constructor of tuple needs it public
         // default constructor
         OrientedSimplexFactory() : _vertex_collection(100 /*segment size */), _vertex_set() {};
