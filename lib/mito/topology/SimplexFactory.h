@@ -24,7 +24,7 @@ namespace mito::topology {
 
       private:
         // typedef for a collection of unoriented simplices
-        using simplex_collection_t = element_collection_t<unoriented_simplex_ptr<D>>;
+        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<D>>;
 
         // typedef for a composition map of simplices:
         // these maps map:

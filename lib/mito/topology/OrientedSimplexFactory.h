@@ -21,7 +21,7 @@ namespace mito::topology {
     class OrientedSimplexFactory {
       private:
         // typedef for a collection of oriented simplices
-        using oriented_simplex_collection_t = element_collection_t<oriented_simplex_ptr<D>>;
+        using oriented_simplex_collection_t = mito::utilities::segmented_t<oriented_simplex_t<D>>;
 
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
@@ -214,7 +214,7 @@ namespace mito::topology {
     class OrientedSimplexFactory<0> {
 
         // typedef for a collection of vertices
-        using vertex_collection_t = element_collection_t<vertex_t>;
+        using vertex_collection_t = mito::utilities::segmented_t<oriented_simplex_t<0>>;
 
         // typedef for a collection of shared pointers to vertices
         using vertex_set_t = element_set_t<vertex_t>;
