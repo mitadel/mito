@@ -69,20 +69,22 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
 
-    auto vertex0 = topology.vertex();
     auto point0 = point_cloud.point({ 0.0, 0.0 });
-    mesh.insert(vertex0, point0);
-    auto vertex1 = topology.vertex();
     auto point1 = point_cloud.point({ 1.0, 0.0 });
-    mesh.insert(vertex1, point1);
-    auto vertex2 = topology.vertex();
     auto point2 = point_cloud.point({ 1.0, 1.0 });
-    mesh.insert(vertex2, point2);
-    auto vertex3 = topology.vertex();
     auto point3 = point_cloud.point({ 0.5, 0.5 });
-    mesh.insert(vertex3, point3);
-    auto vertex4 = topology.vertex();
     auto point4 = point_cloud.point({ 0.0, 1.0 });
+
+    auto & vertex0 = topology.vertex();
+    auto & vertex1 = topology.vertex();
+    auto & vertex2 = topology.vertex();
+    auto & vertex3 = topology.vertex();
+    auto & vertex4 = topology.vertex();
+
+    mesh.insert(vertex0, point0);
+    mesh.insert(vertex1, point1);
+    mesh.insert(vertex2, point2);
+    mesh.insert(vertex3, point3);
     mesh.insert(vertex4, point4);
 
     auto segment0 = topology.segment({ vertex0, vertex1 });
