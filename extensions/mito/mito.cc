@@ -99,7 +99,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Mesh interface
-    mito::py::class_<mito::mesh::Mesh<2, mito::topology::simplex_t>>(m, "SimplicialMesh2D")
+    mito::py::class_<mito::mesh::Mesh<2, mito::topology::simplex_t, 2>>(m, "SimplicialMesh2D")
         // the default constructor
         .def(
             // the implementation
@@ -107,7 +107,8 @@ PYBIND11_MODULE(mito, m)
         // accessors
         // the cells; read-only property
         .def_property_readonly(
-            "cells", &mito::mesh::mesh_t<2, mito::topology::simplex_t>::cells<2>, "the body cells")
+            "cells", &mito::mesh::mesh_t<2, mito::topology::simplex_t, 2>::cells<2>,
+            "the body cells")
         // done
         ;
 
@@ -128,8 +129,9 @@ PYBIND11_MODULE(mito, m)
                 // create an input stream
                 auto filestream = std::ifstream(filename);
                 // read the mesh
-                auto mesh = new mito::mesh::mesh_t(mito::mesh::summit<2, mito::topology::simplex_t>(
-                    filestream, topology, *point_cloud));
+                auto mesh =
+                    new mito::mesh::mesh_t(mito::mesh::summit<2, mito::topology::simplex_t, 2>(
+                        filestream, topology, *point_cloud));
                 // instantiate
                 return new mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>(*mesh);
             }))

@@ -8,7 +8,7 @@ namespace mito::manifolds {
     // factory manifolds
     template <int I, int D, template <int> class elementT>
     requires(I <= D)
-    constexpr auto manifold(const mesh::mesh_t<D, elementT> & mesh);
+    constexpr auto manifold(const mesh::mesh_t<D, elementT, I> & mesh);
 
 }
 

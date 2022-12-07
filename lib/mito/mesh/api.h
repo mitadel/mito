@@ -6,9 +6,8 @@
 namespace mito::mesh {
 
     // mesh factory
-    template <int D, template <int> class cellT>
-    auto mesh() -> mesh_t<D, cellT>;
-
+    template <int D, template <int> class cellT, int N = D>
+    auto mesh() -> mesh_t<D, cellT, N>;
 }
 
 

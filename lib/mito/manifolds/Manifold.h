@@ -24,7 +24,7 @@ namespace mito::manifolds {
         static constexpr int dim = D;
 
       public:
-        inline Manifold(const mesh::mesh_t<D, elementT> & mesh) :
+        inline Manifold(const mesh::mesh_t<D, elementT, I> & mesh) :
             _elements(mesh.template cells<I>().begin(), mesh.template cells<I>().end()),
             _vertices(mesh.vertices()),
             _jacobians(_elements.size(), 0.0)

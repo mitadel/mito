@@ -5,9 +5,9 @@
 #include <fstream>
 
 namespace mito::mesh {
-    template <int D, template <int> class cellT>
+    template <int D, template <int> class cellT, int N>
     auto readVertices(
-        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, int N_vertices,
+        std::ifstream & fileStream, mesh_t<D, cellT, N> & mesh, int N_vertices,
         std::vector<vertex_t> & vertices, topology_t & topology, point_cloud_t<D> & point_cloud)
         -> void
     {
@@ -37,10 +37,10 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D, template <int> class cellT>
+    template <int D, template <int> class cellT, int N>
     auto readTriangle(
-        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, const std::vector<vertex_t> & vertices,
-        topology_t & topology) -> void
+        std::ifstream & fileStream, mesh_t<D, cellT, N> & mesh,
+        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         int index0 = 0;
         fileStream >> index0;
@@ -75,10 +75,10 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D, template <int> class cellT>
+    template <int D, template <int> class cellT, int N>
     auto readTetrahedron(
-        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, const std::vector<vertex_t> & vertices,
-        topology_t & topology) -> void
+        std::ifstream & fileStream, mesh_t<D, cellT, N> & mesh,
+        const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         int index0 = 0;
         fileStream >> index0;
@@ -134,14 +134,14 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D, template <int> class cellT>
+    template <int D, template <int> class cellT, int N>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<D, cellT> & mesh, int N_cells,
+        std::ifstream & fileStream, mesh_t<D, cellT, N> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void;
 
-    template <>
+    template <int N>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<2, topology::simplex_t> & mesh, int N_cells,
+        std::ifstream & fileStream, mesh_t<2, topology::simplex_t, N> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         for (int i = 0; i < N_cells; ++i) {
@@ -160,9 +160,9 @@ namespace mito::mesh {
         return;
     }
 
-    template <>
+    template <int N>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<3, topology::simplex_t> & mesh, int N_cells,
+        std::ifstream & fileStream, mesh_t<3, topology::simplex_t, N> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices, topology_t & topology) -> void
     {
         for (int i = 0; i < N_cells; ++i) {
@@ -183,7 +183,7 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D, template <int> class cellT>
+    template <int D, template <int> class cellT, int N = D>
     auto summit(std::ifstream & fileStream, topology_t & topology, point_cloud_t<D> & point_cloud)
         -> auto
     {
@@ -198,7 +198,7 @@ namespace mito::mesh {
         assert(int(D) == dim);
 
         // instantiate mesh
-        auto mesh = mito::mesh::mesh<D, cellT>();
+        auto mesh = mito::mesh::mesh<D, cellT, N>();
 
         // read number of vertices
         int N_vertices = 0;

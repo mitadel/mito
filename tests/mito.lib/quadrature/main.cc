@@ -163,7 +163,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     auto point_cloud_3D = mito::geometry::point_cloud<3>();
 
     // an empty mesh of simplicial topology in 3D
-    auto mesh_3D = mito::mesh::mesh<3, mito::topology::simplex_t>();
+    auto mesh_3D = mito::mesh::mesh<3, mito::topology::simplex_t, 2>();
     mesh_3D.insert(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
     mesh_3D.insert(vertex1, point_cloud_3D.point({ 1.0, 0.0, 1.0 }));
     mesh_3D.insert(vertex2, point_cloud_3D.point({ 1.0, 1.0, 1.0 }));

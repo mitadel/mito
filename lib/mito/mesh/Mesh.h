@@ -5,7 +5,10 @@
 
 namespace mito::mesh {
 
-    template <int D, template <int> class cellT>
+    template <
+        int D /*spatial dimension*/, template <int> class cellT,
+        int N /*highest order of simplices */>
+    requires(N <= D)
     class Mesh {
 
       private:
@@ -17,8 +20,8 @@ namespace mito::mesh {
         using cell_collection = element_set_t<cell_t<I>>;
 
         // cell_collection<I>... expands to:
-        // cell_set_t<cell_t<1>>, ..., cell_set_t<cell_t<D>>
-        template <typename = std::make_index_sequence<D + 1>>
+        // cell_set_t<cell_t<1>>, ..., cell_set_t<cell_t<N>>
+        template <typename = std::make_index_sequence<N + 1>>
         struct cell_tuple;
 
         template <size_t... I>
@@ -29,7 +32,7 @@ namespace mito::mesh {
         // this expands to:
         // tuple<cell_set_t<cell_t<0>>,
         //      cell_set_t<cell_t<1>>, ...,
-        //      cell_set_t<cell_t<D>>
+        //      cell_set_t<cell_t<N>>
         using cell_tuple_t = typename cell_tuple<>::type;
 
       public:
@@ -63,7 +66,7 @@ namespace mito::mesh {
 #endif
 
             // sanity check: each cell is self-consistent
-            for (const auto & cell : std::get<D>(_cells)) {
+            for (const auto & cell : std::get<N>(_cells)) {
                 if (!cell->sanityCheck()) {
                     return false;
                 }
@@ -74,14 +77,14 @@ namespace mito::mesh {
 
         template <int I>
         inline auto nCells() const -> int
-        requires(I <= D)
+        requires(I <= N)
         {
             // all done
             return std::get<I>(_cells).size();
         }
 
         template <int I>
-        inline auto cells() const -> const auto & requires(I <= D) {
+        inline auto cells() const -> const auto & requires(I <= N) {
                                                       // all done
                                                       return std::get<I>(_cells);
                                                   }
@@ -100,7 +103,7 @@ namespace mito::mesh {
 
         template <int I>
         inline auto erase(const cell_t<I> & cell) -> void
-        requires(I > 0 && I <= D)
+        requires(I > 0 && I <= N)
         {
             // erase the cell from the mesh
             std::get<I>(_cells).erase(cell);
@@ -115,12 +118,12 @@ namespace mito::mesh {
         /**
          * @brief Returns a mesh with all boundary cells of dimension I
          */
-        template <int I = D - 1>
-        inline auto boundary() -> Mesh<D, cellT>
-        requires(I == D - 1)
+        template <int I = N - 1>
+        inline auto boundary() -> Mesh<D, cellT, I>
+        requires(I == N - 1)
         {
             // instantiate a new mesh for the boundary elements
-            Mesh<D, cellT> boundary_mesh;
+            Mesh<D, cellT, I> boundary_mesh;
 
             // fetch the topology
             auto & topology = mito::topology::topology();
@@ -152,7 +155,7 @@ namespace mito::mesh {
       public:
         template <int I>
         inline auto insert(const cell_t<I> & cell) -> void
-        requires(I >= 0 && I <= D)
+        requires(I >= 0 && I <= N)
         {
             // add the cell to the set of cells with same dimension
             std::get<I>(_cells).insert(cell);
@@ -168,7 +171,7 @@ namespace mito::mesh {
         }
 
       private:
-        // container to store D+1 containers of d dimensional cells with d = 0, ..., D
+        // container to store N+1 containers of d dimensional cells with d = 0, ..., N
         cell_tuple_t _cells;
 
         // the mapping of vertices to points
