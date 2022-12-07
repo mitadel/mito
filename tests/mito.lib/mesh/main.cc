@@ -24,7 +24,7 @@ TEST(Mesh, BuildMesh)
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
@@ -84,7 +84,7 @@ TEST(Mesh, LoadSummitMesh2D)
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     clock_t t;
 
@@ -105,7 +105,7 @@ TEST(Mesh, LoadSummitMesh3D)
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<3>();
+    auto & point_cloud = mito::geometry::point_cloud<3>();
 
     clock_t t;
 

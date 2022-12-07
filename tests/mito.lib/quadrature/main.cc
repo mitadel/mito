@@ -33,7 +33,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
-    auto point_cloud_2D = mito::geometry::point_cloud<2>();
+    auto & point_cloud_2D = mito::geometry::point_cloud<2>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh_2D = mito::mesh::mesh<2, mito::topology::simplex_t>();
@@ -160,7 +160,7 @@ TEST(Quadrature, QuadratureBuildMesh)
 
     // attach different coordinates (3D coordinates to the same points as above)
     // an empty cloud of points in 3D
-    auto point_cloud_3D = mito::geometry::point_cloud<3>();
+    auto & point_cloud_3D = mito::geometry::point_cloud<3>();
 
     // an empty mesh of simplicial topology in 3D
     auto mesh_3D = mito::mesh::mesh<3, mito::topology::simplex_t, 2>();
@@ -200,7 +200,7 @@ TEST(Quadrature, QuadratureLoadMesh)
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // load mesh
     std::ifstream fileStream("square.summit");

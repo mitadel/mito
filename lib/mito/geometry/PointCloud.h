@@ -5,12 +5,44 @@
 namespace mito::geometry {
 
     template <int D>
+    class PointCloudSingleton {
+
+      public:
+        static auto GetInstance() -> PointCloud<D> &
+        {
+            if (!point_cloud) {
+                point_cloud = new PointCloud<D>();
+                return *point_cloud;
+            }
+
+            return *point_cloud;
+        }
+
+      private:
+        // the singleton
+        static PointCloud<D> * point_cloud;
+    };
+
+    // initialization of static member
+    template <int D>
+    mito::geometry::PointCloud<D> * mito::geometry::PointCloudSingleton<D>::point_cloud = nullptr;
+
+    template <int D>
     class PointCloud {
       private:
         using cloud_t = mito::geometry::cloud_t<D>;
 
-      public:
+      private:
         PointCloud() : _cloud(100 /*segment size */) {}
+
+        // delete copy constructor
+        PointCloud(const PointCloud<D> &) = delete;
+
+        // delete assignment operator
+        void operator=(const PointCloud<D> &) = delete;
+
+        // destructor
+        ~PointCloud() {};
 
       public:
         auto print() const -> void
@@ -46,6 +78,9 @@ namespace mito::geometry {
 
       private:
         cloud_t _cloud;
+
+        // friendship with the singleton class
+        friend class PointCloudSingleton<D>;
     };
 
     template <int D>

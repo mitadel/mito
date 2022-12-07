@@ -64,7 +64,7 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
