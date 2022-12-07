@@ -54,10 +54,11 @@ oppositeVertices(
     return opposite_vertices_vector;
 }
 
-int
+template <int D, int N>
+auto
 flipDiagonal(
     const mito::topology::simplex_t<2> & simplex0, const mito::topology::simplex_t<2> & simplex1,
-    mito::topology::topology_t & topology)
+    mito::mesh::mesh_t<D, mito::topology::simplex_t, N> & mesh) -> void
 {
     // get the shared simplex between the two simplices
     const auto & shared_simplex = findSharedSimplex(simplex0, simplex1);
@@ -67,8 +68,9 @@ flipDiagonal(
 
     // show me
     // std::cout << "shared simplex: " << *shared_simplex << std::endl;
-
     auto opposite_vertices = oppositeVertices(simplex0, simplex1, shared_simplex);
+
+    auto & topology = mito::topology::topology();
 
     auto diagonal_segment = topology.segment({ opposite_vertices[0], opposite_vertices[1] });
     auto opposite_diagonal_segment =
@@ -138,18 +140,17 @@ flipDiagonal(
 
     EXPECT_TRUE(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
 
-    // TOFIX: how to delete the old simplices?
-
-    // delete old simplices
-
     // build new simplices
-    auto new_simplex0 = topology.triangle(new_simplex_composition_0);
-    auto new_simplex1 = topology.triangle(new_simplex_composition_1);
+    auto & new_simplex0 = topology.triangle(new_simplex_composition_0);
+    auto & new_simplex1 = topology.triangle(new_simplex_composition_1);
 
-    // TOFIX: how to return the new simplices?
+    mesh.insert(new_simplex0);
+    mesh.insert(new_simplex1);
+    mesh.erase(simplex0);
+    mesh.erase(simplex1);
 
     // all done
-    return 0;
+    return;
 }
 
 TEST(FlipDiagonal, TestFlipDiagonal)
@@ -175,6 +176,23 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     auto & simplex0 = topology.triangle({ segment_a, segment_b, segment_e_flip });
     auto & simplex1 = topology.triangle({ segment_e, segment_c, segment_d });
 
+    // an empty mesh of simplicial topology in 2D
+    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
+    mesh.insert(simplex0);
+    mesh.insert(simplex1);
+
+    EXPECT_EQ(mesh.nCells<2>(), 2);
+
     // flip the common edge of the two triangles
-    flipDiagonal(simplex0, simplex1, topology);
+    flipDiagonal(simplex0, simplex1, mesh);
+
+    EXPECT_EQ(mesh.nCells<2>(), 2);
+
+    // assert that the original diagonal was erased
+    EXPECT_EQ(segment_e.references(), 0);
+    EXPECT_EQ(segment_e_flip.references(), 0);
+
+    // assert that the new diagonal is now in use (by the factory and by the two triangles)
+    auto & segment_f = topology.segment({ vertex1, vertex3 });
+    EXPECT_EQ(segment_f->footprint().references(), 3);
 }
