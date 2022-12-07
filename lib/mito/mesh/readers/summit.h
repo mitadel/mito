@@ -198,7 +198,7 @@ namespace mito::mesh {
         assert(int(D) == dim);
 
         // instantiate mesh
-        auto mesh = mito::mesh::mesh<D, cellT, N>();
+        auto mesh = mito::mesh::mesh<D, cellT, N>(topology, point_cloud);
 
         // read number of vertices
         int N_vertices = 0;

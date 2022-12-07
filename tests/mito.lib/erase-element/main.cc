@@ -11,7 +11,7 @@ TEST(EraseElement, TestEraseElementMesh)
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
+    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>(topology, point_cloud);
 
     auto point0 = point_cloud.point({ 0.0, 0.0 });
     auto point1 = point_cloud.point({ 1.0, 0.0 });

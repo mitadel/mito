@@ -103,7 +103,7 @@ PYBIND11_MODULE(mito, m)
         // the default constructor
         .def(
             // the implementation
-            mito::py::init<>())
+            mito::py::init<mito::topology::Topology &, mito::geometry::PointCloud<2> &>())
         // accessors
         // the cells; read-only property
         .def_property_readonly(

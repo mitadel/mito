@@ -37,7 +37,11 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        inline Mesh() : _cells(), _vertices() {};
+        inline Mesh(topology_t & topology, point_cloud_t<D> & point_cloud) :
+            _topology(topology),
+            _point_cloud(point_cloud),
+            _cells(),
+            _vertices() {};
 
         inline ~Mesh() {}
 
@@ -109,7 +113,7 @@ namespace mito::mesh {
             std::get<I>(_cells).erase(cell);
 
             // erase cell from topology
-            mito::topology::topology().erase(cell);
+            _topology.erase(cell);
 
             // all done
             return;
@@ -123,10 +127,7 @@ namespace mito::mesh {
         requires(I == N - 1)
         {
             // instantiate a new mesh for the boundary elements
-            Mesh<D, cellT, I> boundary_mesh;
-
-            // fetch the topology
-            auto & topology = mito::topology::topology();
+            Mesh<D, cellT, I> boundary_mesh(_topology, _point_cloud);
 
             // loop on the (I+1) dimensional cells
             for (const auto & cell : cells<I + 1>()) {
@@ -134,7 +135,7 @@ namespace mito::mesh {
                 for (const auto & subcell : cell->composition()) {
                     // if {subcell} does not have a counterpart in {topology} with opposite
                     // orientation
-                    if (!topology.exists_flipped(subcell)) {
+                    if (!_topology.exists_flipped(subcell)) {
                         // add {subcell} to the boundary mesh
                         boundary_mesh.insert(subcell);
                         // get the vertices of the c
@@ -171,6 +172,12 @@ namespace mito::mesh {
         }
 
       private:
+        // a reference to the topology
+        topology_t & _topology;
+
+        // a reference to the point cloud
+        point_cloud_t<D> & _point_cloud;
+
         // container to store N+1 containers of d dimensional cells with d = 0, ..., N
         cell_tuple_t _cells;
 

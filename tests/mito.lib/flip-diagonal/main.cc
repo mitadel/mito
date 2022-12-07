@@ -176,8 +176,11 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     auto & simplex0 = topology.triangle({ segment_a, segment_b, segment_e_flip });
     auto & simplex1 = topology.triangle({ segment_e, segment_c, segment_d });
 
+    // an empty cloud of points in 2D
+    auto & point_cloud = mito::geometry::point_cloud<2>();
+
     // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
+    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>(topology, point_cloud);
     mesh.insert(simplex0);
     mesh.insert(simplex1);
 
