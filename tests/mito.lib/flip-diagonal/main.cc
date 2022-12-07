@@ -99,6 +99,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
             new_simplex_composition_0[1] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            break;
         }
     }
     EXPECT_EQ(boundary_simplices.size(), 3);
@@ -107,6 +108,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
             new_simplex_composition_0[2] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            break;
         }
     }
     EXPECT_EQ(boundary_simplices.size(), 2);
@@ -120,6 +122,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_1[0], subsimplex)) {
             new_simplex_composition_1[1] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            break;
         }
     }
     EXPECT_EQ(boundary_simplices.size(), 1);
@@ -128,6 +131,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
             new_simplex_composition_1[2] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            break;
         }
     }
     EXPECT_EQ(boundary_simplices.size(), 0);
@@ -148,7 +152,7 @@ flipDiagonal(
     return 0;
 }
 
-TEST(FlipDiagonal, DISABLED_TestFlipDiagonal)
+TEST(FlipDiagonal, TestFlipDiagonal)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
