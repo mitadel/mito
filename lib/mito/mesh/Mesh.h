@@ -79,7 +79,7 @@ namespace mito::mesh {
             return true;
         }
 
-        template <int I>
+        template <int I = N>
         inline auto nCells() const -> int
         requires(I <= N)
         {
@@ -87,7 +87,7 @@ namespace mito::mesh {
             return std::get<I>(_cells).size();
         }
 
-        template <int I>
+        template <int I = N>
         inline auto cells() const -> const auto & requires(I <= N) {
                                                       // all done
                                                       return std::get<I>(_cells);
