@@ -64,6 +64,13 @@ namespace mito::topology {
             return simplex<3>(simplices);
         }
 
+        // instantiate a triangle
+        inline auto triangle(const std::array<simplex_t<0>, 3> & vertices) -> const simplex_t<2> &
+        {
+            return simplex<2>({ segment({ vertices[0], vertices[1] }),
+                                segment({ vertices[1], vertices[2] }),
+                                segment({ vertices[2], vertices[0] }) });
+        }
         // returns whether there exists the flipped oriented simplex in the factory
         template <int D>
         inline auto exists_flipped(const simplex_t<D> & simplex) const -> bool
