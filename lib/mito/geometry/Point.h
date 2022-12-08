@@ -12,15 +12,15 @@ namespace mito::geometry {
         template <class... Args>
         Point(Args &&... args)
         requires(sizeof...(Args) == D)
-            : _coodinates(args...)
+            : _coordinates(args...)
         {}
 
       public:
         // get the coordinates of the point
-        auto coordinates() const -> const vector_t<D> & { return _coodinates; }
+        auto coordinates() const -> const vector_t<D> & { return _coordinates; }
 
       private:
-        vector_t<D> _coodinates;
+        vector_t<D> _coordinates;
     };
 
     template <int D>
