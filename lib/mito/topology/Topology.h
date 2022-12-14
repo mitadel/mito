@@ -147,30 +147,10 @@ namespace mito::topology {
             oriented_simplex_factory_t<2>, oriented_simplex_factory_t<3>>
             _factories;
 
-        // friendship with the singleton class
-        friend class TopologySingleton;
+        // friendship with the singleton
+        using TopologySingleton = mito::utilities::Singleton<Topology>;
+        friend TopologySingleton;
     };
-
-    class TopologySingleton {
-
-      public:
-        static auto GetInstance() -> Topology &
-        {
-            if (!topology) {
-                topology = new Topology();
-                return *topology;
-            }
-
-            return *topology;
-        }
-
-      private:
-        // the singleton
-        static Topology * topology;
-    };
-
-    // initialization of static member
-    mito::topology::Topology * mito::topology::TopologySingleton::topology = nullptr;
 }
 
 

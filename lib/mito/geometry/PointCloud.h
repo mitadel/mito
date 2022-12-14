@@ -5,29 +5,6 @@
 namespace mito::geometry {
 
     template <int D>
-    class PointCloudSingleton {
-
-      public:
-        static auto GetInstance() -> PointCloud<D> &
-        {
-            if (!point_cloud) {
-                point_cloud = new PointCloud<D>();
-                return *point_cloud;
-            }
-
-            return *point_cloud;
-        }
-
-      private:
-        // the singleton
-        static PointCloud<D> * point_cloud;
-    };
-
-    // initialization of static member
-    template <int D>
-    mito::geometry::PointCloud<D> * mito::geometry::PointCloudSingleton<D>::point_cloud = nullptr;
-
-    template <int D>
     class PointCloud {
       private:
         using cloud_t = mito::geometry::cloud_t<D>;
@@ -79,8 +56,9 @@ namespace mito::geometry {
       private:
         cloud_t _cloud;
 
-        // friendship with the singleton class
-        friend class PointCloudSingleton<D>;
+        // friendship with the singleton
+        using PointCloudSingleton = mito::utilities::Singleton<PointCloud<D>>;
+        friend PointCloudSingleton;
     };
 
     template <int D>
