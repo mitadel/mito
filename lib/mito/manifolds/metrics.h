@@ -8,7 +8,7 @@ namespace mito::manifolds {
     template <int D>
     auto computeSimplicesVolume(
         const element_vector_t<topology::simplex_t<D>> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<D> & vertices, std::vector<real> & volumes) -> void
     {
         // number of element vertices
         constexpr int V = D + 1;
@@ -57,13 +57,13 @@ namespace mito::manifolds {
 
     template <class element_t, int D>
     auto computeElementsVolume(
-        const element_vector_t<element_t> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & volumes) -> void;
+        const element_vector_t<element_t> & elements, const geometry::nodes_t<D> & vertices,
+        std::vector<real> & volumes) -> void;
 
     template <>
     auto computeElementsVolume<topology::triangle_t, 2>(
         const element_vector_t<topology::triangle_t> & elements,
-        const mesh::vertex_point_table_t<2> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<2> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<2>(elements, vertices, volumes);
     }
@@ -71,7 +71,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::tetrahedron_t, 3>(
         const element_vector_t<topology::tetrahedron_t> & elements,
-        const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<3>(elements, vertices, volumes);
     }
@@ -79,7 +79,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::segment_t, 1>(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<1> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<1> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<1>(elements, vertices, volumes);
     }
@@ -87,7 +87,7 @@ namespace mito::manifolds {
     template <int D>
     auto computeSegmentsLength(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & length) -> void
+        const geometry::nodes_t<D> & vertices, std::vector<real> & length) -> void
     {
         // assert memory allocation is consistent
         assert(length.size() == elements.size());
@@ -120,7 +120,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::segment_t, 2>(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<2> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<2> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<2>(elements, vertices, volumes);
     }
@@ -128,7 +128,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::segment_t, 3>(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<3>(elements, vertices, volumes);
     }
@@ -137,7 +137,7 @@ namespace mito::manifolds {
     template <int D = 3>
     auto computeTriangleArea(
         const element_vector_t<topology::triangle_t> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & areas) -> void
+        const geometry::nodes_t<D> & vertices, std::vector<real> & areas) -> void
     {
         // loop on elements
         int e = 0;
@@ -185,7 +185,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::triangle_t, 3>(
         const element_vector_t<topology::triangle_t> & elements,
-        const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeTriangleArea(elements, vertices, volumes);
     }

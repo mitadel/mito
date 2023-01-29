@@ -90,7 +90,7 @@ namespace mito::manifolds {
         const element_vector_t<element_t> _elements;
         // QUESTION: should the manifold hold directly a reference to the mesh?
         // the mapping of vertices to points
-        const mesh::vertex_point_table_t<D> & _vertices;
+        const geometry::nodes_t<D> & _vertices;
         std::vector<real> _jacobians;
     };
 

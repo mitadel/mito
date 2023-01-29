@@ -182,7 +182,7 @@ namespace mito::mesh {
         cell_tuple_t _cells;
 
         // the mapping of vertices to points
-        vertex_point_table_t<D> _vertices;
+        geometry::nodes_t<D> _vertices;
     };
 
 }    // namespace mito
