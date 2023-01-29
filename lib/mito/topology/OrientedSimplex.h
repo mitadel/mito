@@ -19,6 +19,13 @@ namespace mito::topology {
 
     template <int D>
     class OrientedSimplex : public mito::utilities::Shareable {
+      public:
+        // typedef for order of simplex
+        static constexpr int order = D;
+
+        // typedef for the cell family type (simplicial)
+        template <int N>
+        using cell_family_t = simplex_t<N>;
 
         // private constructors: only the OrientedSimplexFactory has the right to instantiate
         // oriented simplices

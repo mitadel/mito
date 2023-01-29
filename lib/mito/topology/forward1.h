@@ -79,6 +79,13 @@ namespace mito::topology {
     template <class cellT>
     using element_vector_t = std::vector<cellT>;
 
+    // oriented simplex pointer alias
+    template <int D>
+    using oriented_simplex_ptr = mito::utilities::shared_ptr<oriented_simplex_t<D>>;
+
+    // simplex alias
+    template <int D>
+    using simplex_t = oriented_simplex_ptr<D>;
 }
 
 
