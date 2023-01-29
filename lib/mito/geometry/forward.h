@@ -24,6 +24,10 @@ namespace mito::geometry {
     template <int D>
     using cloud_t = mito::utilities::segmented_t<typename point_t<D>::resource_t>;
 
+    // a node is a pair of a vertex and a point
+    // TOFIX: replace this with a class so that it is nicer to fetch the attributes
+    template <int D>
+    using node_t = std::pair<topology::vertex_t, point_t<D>>;
 }
 
 
