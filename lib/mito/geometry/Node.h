@@ -29,6 +29,12 @@ namespace mito::geometry {
         point_t _point;
     };
 
+    template <int D>
+    inline bool operator==(const Node<D> & lhs, const Node<D> & rhs)
+    {
+        return lhs.vertex() == rhs.vertex() && lhs.point() == rhs.point();
+    }
+
 }    // namespace mito
 
 #endif    // mito_geometry_Node_h
