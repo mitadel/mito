@@ -35,13 +35,11 @@ namespace mito::mesh {
         //      cell_set_t<cell_t<N>>
         using cell_tuple_t = typename cell_tuple<>::type;
 
+        using geometry_t = mito::geometry::geometry_t<D>;
+
       public:
         // default constructor
-        inline Mesh(topology_t & topology, point_cloud_t<D> & point_cloud) :
-            _topology(topology),
-            _point_cloud(point_cloud),
-            _cells(),
-            _vertices() {};
+        inline Mesh(geometry_t & geometry) : _geometry(geometry), _cells() {};
 
         inline ~Mesh() {}
 
@@ -93,16 +91,20 @@ namespace mito::mesh {
                                                       return std::get<I>(_cells);
                                                   }
 
-        inline auto vertices() const -> const auto &
+        // TOFIX: let {Mesh} answer the question for now, although this is not a
+        // question for {Mesh}, but a question for {Geometry}
+        inline auto nodes() const -> const auto &
         {
-            // all done
-            return _vertices;
+            // return the collection of nodes
+            return _geometry.nodes();
         }
 
-        // TODO: accessor operator[](point_t) -> a list of all vertices sitting on the same point
+        // TOFIX: let {Mesh} answer the question for now, although this is not a
+        // question for {Mesh}, but a question for {Geometry}
         auto point(const vertex_t & vertex) -> const point_t<D> &
         {
-            return _vertices.find(vertex)->second;
+            // return the point corresponding to vertex {vertex}
+            return _geometry.point(vertex);
         }
 
         template <int I>
@@ -112,8 +114,9 @@ namespace mito::mesh {
             // erase the cell from the mesh
             std::get<I>(_cells).erase(cell);
 
+            // TOFIX: is this the only reason that {_geometry} cannot be a const reference?
             // erase cell from topology
-            _topology.erase(cell);
+            _geometry.topology().erase(cell);
 
             // all done
             return;
@@ -127,7 +130,7 @@ namespace mito::mesh {
         requires(I == N - 1)
         {
             // instantiate a new mesh for the boundary elements
-            Mesh<D, cellT, I> boundary_mesh(_topology, _point_cloud);
+            Mesh<D, cellT, I> boundary_mesh(_geometry);
 
             // loop on the (I+1) dimensional cells
             for (const auto & cell : cells<I + 1>()) {
@@ -135,16 +138,9 @@ namespace mito::mesh {
                 for (const auto & subcell : cell->composition()) {
                     // if {subcell} does not have a counterpart in {topology} with opposite
                     // orientation
-                    if (!_topology.exists_flipped(subcell)) {
+                    if (!_geometry.topology().exists_flipped(subcell)) {
                         // add {subcell} to the boundary mesh
                         boundary_mesh.insert(subcell);
-                        // get the vertices of the c
-                        topology::vertex_set_t vertices;
-                        subcell->vertices(vertices);
-                        // add the vertices of {subcell} to the boundary mesh
-                        for (const auto & vertex : vertices) {
-                            boundary_mesh.insert(vertex, point(vertex));
-                        }
                     }
                 }
             }
@@ -165,24 +161,12 @@ namespace mito::mesh {
             return;
         }
 
-        inline auto insert(const vertex_t & vertex, const point_t<D> & point) -> void
-        {
-            // register the vertex - point relation with the mesh
-            _vertices.insert(std::pair<vertex_t, point_t<D>>(vertex, point));
-        }
-
       private:
-        // a reference to the topology
-        topology_t & _topology;
-
-        // a reference to the point cloud
-        point_cloud_t<D> & _point_cloud;
+        // a reference to the geometry
+        geometry_t & _geometry;
 
         // container to store N+1 containers of d dimensional cells with d = 0, ..., N
         cell_tuple_t _cells;
-
-        // the mapping of vertices to points
-        geometry::nodes_t<D> _vertices;
     };
 
 }    // namespace mito
