@@ -6,14 +6,12 @@
 namespace mito::mesh {
 
     // class mesh
-    template <int D, template <int> class cellT, int N>
-    requires(N <= D)
+    template <class cellT, int D>
     class Mesh;
 
     // mesh alias
-    template <int D, template <int> class cellT, int N>
-    requires(N <= D)
-    using mesh_t = Mesh<D, cellT, N>;
+    template <class cellT, int D>
+    using mesh_t = Mesh<cellT, D>;
 
     // vertex alias
     using vertex_t = topology::vertex_t;

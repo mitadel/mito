@@ -5,41 +5,27 @@
 
 namespace mito::mesh {
 
-    template <
-        int D /*spatial dimension*/, template <int> class cellT,
-        int N /*highest order of simplices */>
-    requires(N <= D)
+    template <class cellT /* the type of cell */, int D /* spatial dimension */>
     class Mesh {
 
       private:
+        // typedef for cell type
+        using cell_t = cellT;
+        // get the order of the cell
+        static constexpr int N = cellT::resource_t::order;
+        // get the family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_t = cellT<I>;
-
-        // typedef for a collection of cells of dimension I
-        template <size_t I>
-        using cell_collection = element_set_t<cell_t<I>>;
-
-        // cell_collection<I>... expands to:
-        // cell_set_t<cell_t<1>>, ..., cell_set_t<cell_t<N>>
-        template <typename = std::make_index_sequence<N + 1>>
-        struct cell_tuple;
-
-        template <size_t... I>
-        struct cell_tuple<std::index_sequence<I...>> {
-            using type = std::tuple<cell_collection<I>...>;
-        };
-
-        // this expands to:
-        // tuple<cell_set_t<cell_t<0>>,
-        //      cell_set_t<cell_t<1>>, ...,
-        //      cell_set_t<cell_t<N>>
-        using cell_tuple_t = typename cell_tuple<>::type;
-
+        using cell_family_t = typename cellT::resource_t::cell_family_t<I>;
+        // typedef for geometry type
         using geometry_t = mito::geometry::geometry_t<D>;
+        // typedef for a collection of cells
+        using cells_t = element_set_t<cell_t>;
 
       public:
         // default constructor
-        inline Mesh(geometry_t & geometry) : _geometry(geometry), _cells() {};
+        inline Mesh(geometry_t & geometry)
+        requires(N <= D)
+            : _geometry(geometry), _cells() {};
 
         inline ~Mesh() {}
 
@@ -62,13 +48,11 @@ namespace mito::mesh {
 #if 0
             // print summary
             std::cout << "Mesh composition: " << std::endl;
-            std::cout << "0: " << std::get<0>(_cells).size() << " cells " << std::endl;
-            std::cout << "1: " << std::get<1>(_cells).size() << " cells " << std::endl;
-            std::cout << "2: " << std::get<2>(_cells).size() << " cells " << std::endl;
+            std::cout << _cells.size() << " cells embedded in " << D << " dimension " << std::endl;
 #endif
 
             // sanity check: each cell is self-consistent
-            for (const auto & cell : std::get<N>(_cells)) {
+            for (const auto & cell : _cells) {
                 if (!cell->sanityCheck()) {
                     return false;
                 }
@@ -77,19 +61,17 @@ namespace mito::mesh {
             return true;
         }
 
-        template <int I = N>
         inline auto nCells() const -> int
-        requires(I <= N)
         {
             // all done
-            return std::get<I>(_cells).size();
+            return _cells.size();
         }
 
-        template <int I = N>
-        inline auto cells() const -> const auto & requires(I <= N) {
-                                                      // all done
-                                                      return std::get<I>(_cells);
-                                                  }
+        inline auto cells() const -> const auto &
+        {
+            // all done
+            return _cells;
+        }
 
         // TOFIX: let {Mesh} answer the question for now, although this is not a
         // question for {Mesh}, but a question for {Geometry}
@@ -107,12 +89,10 @@ namespace mito::mesh {
             return _geometry.point(vertex);
         }
 
-        template <int I>
-        inline auto erase(const cell_t<I> & cell) -> void
-        requires(I > 0 && I <= N)
+        inline auto erase(const cell_t & cell) -> void
         {
             // erase the cell from the mesh
-            std::get<I>(_cells).erase(cell);
+            _cells.erase(cell);
 
             // TOFIX: is this the only reason that {_geometry} cannot be a const reference?
             // erase cell from topology
@@ -126,14 +106,14 @@ namespace mito::mesh {
          * @brief Returns a mesh with all boundary cells of dimension I
          */
         template <int I = N - 1>
-        inline auto boundary() -> Mesh<D, cellT, I>
+        inline auto boundary() -> Mesh<cell_family_t<I>, D>
         requires(I == N - 1)
         {
             // instantiate a new mesh for the boundary elements
-            Mesh<D, cellT, I> boundary_mesh(_geometry);
+            Mesh<cell_family_t<I>, D> boundary_mesh(_geometry);
 
             // loop on the (I+1) dimensional cells
-            for (const auto & cell : cells<I + 1>()) {
+            for (const auto & cell : cells()) {
                 // loop on the subcells of {cell}
                 for (const auto & subcell : cell->composition()) {
                     // if {subcell} does not have a counterpart in {topology} with opposite
@@ -150,12 +130,10 @@ namespace mito::mesh {
         }
 
       public:
-        template <int I>
-        inline auto insert(const cell_t<I> & cell) -> void
-        requires(I >= 0 && I <= N)
+        inline auto insert(const cell_t & cell) -> void
         {
             // add the cell to the set of cells with same dimension
-            std::get<I>(_cells).insert(cell);
+            _cells.insert(cell);
 
             // all done
             return;
@@ -166,11 +144,11 @@ namespace mito::mesh {
         auto geometry() -> geometry_t & { return _geometry; }
 
       private:
-        // a reference to the geometry
+        // a reference to the geometry where the cells are embedded
         geometry_t & _geometry;
 
-        // container to store N+1 containers of d dimensional cells with d = 0, ..., N
-        cell_tuple_t _cells;
+        // container to store the mesh cells
+        cells_t _cells;
     };
 
 }    // namespace mito
