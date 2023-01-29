@@ -34,13 +34,16 @@ namespace mito::geometry {
             return *ret.first;
         }
 
-        inline auto node(vector_t<D> && coord) -> auto
+        // instantiate a new vertex and a new point at {coord} and bind them into a node
+        inline auto node(vector_t<D> && coord) -> const node_t<D> &
         {
             // ask the topology for a new vertex
             auto & vertex = _topology.vertex();
 
             // ask the point cloud for a point with coordinates {coord}
-            auto & point = _point_cloud.point(coord);
+            // TOFIX: will this be as follows when we implement points as singletons?
+            // auto & point = _point_cloud.point(std::move(coord));
+            auto point = _point_cloud.point(std::move(coord));
 
             // return a reference to the newly emplaced node
             return node(vertex, point);
