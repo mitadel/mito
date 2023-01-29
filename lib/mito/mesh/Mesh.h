@@ -161,6 +161,10 @@ namespace mito::mesh {
             return;
         }
 
+      public:
+        // accessor to geometry
+        auto geometry() -> geometry_t & { return _geometry; }
+
       private:
         // a reference to the geometry
         geometry_t & _geometry;
