@@ -25,6 +25,7 @@ namespace mito::geometry {
         ~Geometry() {}
 
       public:
+        // register {vertex}-{point} relation as a new node
         inline auto node(const vertex_t & vertex, const point_t<D> & point) -> const node_t<D> &
         {
             // register the node with the geometry
