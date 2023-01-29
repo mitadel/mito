@@ -113,6 +113,11 @@ namespace mito::topology {
         inline auto _erase(const simplex_t<D> & simplex) -> void
         requires(D > 0)
         {
+            // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
+            //          declared mutable. Should we call reset here and make the handle mutable or
+            //          should we accept that {element} points to an invalid resource after call to
+            //          {erase}?
+
             // sanity check
             assert(simplex.references() > 0);
 
