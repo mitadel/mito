@@ -15,6 +15,7 @@
 // classes implementation
 #include "Point.h"
 #include "PointCloud.h"
+#include "Geometry.h"
 
 // factories implementation
 #include "factories.h"
