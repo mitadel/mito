@@ -46,6 +46,18 @@ namespace mito::geometry {
             return node(vertex, point);
         }
 
+        // accessor to the collection of nodes
+        inline auto nodes() const -> const auto & { return _nodes; }
+
+        // get the point in space associated to this vertex
+        inline auto point(const vertex_t & vertex) const -> const point_t<D> &
+        {
+            return _nodes.find(vertex)->second;
+        }
+
+        // TOFIX: should this be const?
+        inline auto topology() -> topology_t & { return _topology; }
+
       private:
         // the collection of nodes
         nodes_t<D> _nodes;
