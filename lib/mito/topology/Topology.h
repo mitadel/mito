@@ -71,6 +71,15 @@ namespace mito::topology {
                                 segment({ vertices[1], vertices[2] }),
                                 segment({ vertices[2], vertices[0] }) });
         }
+
+        // returns whether the oriented simplex exists in the factory
+        template <int D>
+        inline auto exists(const simplex_t<D> & simplex) const -> bool
+        {
+            return std::get<D>(_factories)
+                .existsOrientedSimplex(simplex->footprint(), simplex->orientation());
+        }
+
         // returns whether there exists the flipped oriented simplex in the factory
         template <int D>
         inline auto exists_flipped(const simplex_t<D> & simplex) const -> bool
