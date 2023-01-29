@@ -8,9 +8,6 @@ namespace mito::geometry {
     template <int D>
     class Geometry {
       public:
-        // typedef for a collection of nodes
-        // TOFIX: should this be {unordered_set} instead?
-        using nodes_t = std::set<node_t<D>>;
         // typedef for a topology
         using topology_t = topology::topology_t;
         // typedef for a vertex
@@ -51,7 +48,7 @@ namespace mito::geometry {
 
       private:
         // the collection of nodes
-        nodes_t _nodes;
+        nodes_t<D> _nodes;
 
         // a reference to the topology
         topology_t & _topology;

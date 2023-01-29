@@ -40,6 +40,24 @@ namespace mito::geometry {
     // a node is a pair of a vertex and a point
     template <int D>
     using node_t = Node<D>;
+
+    // hash function for {nodeT}
+    template <class nodeT>
+    struct node_hash {
+        size_t operator()(const nodeT & node) const
+        {
+            // reinterpret the address of the pointed handle as a {size_t} and return it
+            return reinterpret_cast<mito::topology::unoriented_simplex_id_t>(
+                static_cast<mito::topology::vertex_t::handle_t>(node.vertex().handle()));
+        }
+    };
+
+    // mapping from vertices to points
+    // TOFIX: remove eventually. This typedef should not leak from {Geometry}
+    // TOFIX: is this going to be an {unordered_multiset} when we do DG (i.e. when we have
+    // different nodes for the same vertex and same point)
+    template <int D>
+    using nodes_t = std::unordered_set<node_t<D>, node_hash<node_t<D>>>;
 }
 
 
