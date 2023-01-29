@@ -39,7 +39,7 @@ namespace mito::geometry {
         auto size() -> int { return _cloud.size(); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(vector_t<D> && coord) -> auto
+        auto point(vector_t<D> && coord) -> const point_t<2> &
         {
             // helper function to convert vector_t to variadic template argument
             auto _emplace_point = [this]<size_t... I>(
