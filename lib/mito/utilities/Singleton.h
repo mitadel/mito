@@ -12,10 +12,11 @@ namespace mito::utilities {
         using resource_t = RESOURCE_T;
 
       public:
-        static auto GetInstance() -> resource_t &
+        template <class... Args>
+        static auto GetInstance(Args &&... args) -> resource_t &
         {
             if (!resource) {
-                resource = new resource_t();
+                resource = new resource_t(args...);
                 return *resource;
             }
 
