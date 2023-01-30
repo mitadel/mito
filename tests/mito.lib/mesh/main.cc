@@ -26,8 +26,11 @@ TEST(Mesh, BuildMesh)
     // an empty cloud of points
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
+    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
     // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>(topology, point_cloud);
+    auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     auto point0 = point_cloud.point({ 0.0, 0.0 });
     auto point1 = point_cloud.point({ 1.0, 0.0 });
@@ -41,11 +44,12 @@ TEST(Mesh, BuildMesh)
     auto & vertex3 = topology.vertex();
     auto & vertex4 = topology.vertex();
 
-    mesh.insert(vertex0, point0);
-    mesh.insert(vertex1, point1);
-    mesh.insert(vertex2, point2);
-    mesh.insert(vertex3, point3);
-    mesh.insert(vertex4, point4);
+    // add nodes to geometry
+    geometry.node(vertex0, point0);
+    geometry.node(vertex1, point1);
+    geometry.node(vertex2, point2);
+    geometry.node(vertex3, point3);
+    geometry.node(vertex4, point4);
 
     auto & segment0 = topology.segment({ vertex0, vertex1 });
     auto & segment1 = topology.segment({ vertex1, vertex3 });
@@ -73,7 +77,7 @@ TEST(Mesh, BuildMesh)
     mesh.insert(cell3);
 
     // assert you read 4 cells
-    EXPECT_EQ(mesh.nCells<2>(), 4);
+    EXPECT_EQ(mesh.nCells(), 4);
 
     return;
 }
@@ -86,12 +90,15 @@ TEST(Mesh, LoadSummitMesh2D)
     // an empty cloud of points
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
+    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
     clock_t t;
 
     //
     t = clock();
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::mesh::summit<2, mito::topology::simplex_t>(fileStream, topology, point_cloud);
+    auto mesh = mito::mesh::summit<mito::topology::simplex_t<2>>(fileStream, geometry);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
@@ -107,11 +114,14 @@ TEST(Mesh, LoadSummitMesh3D)
     // an empty cloud of points
     auto & point_cloud = mito::geometry::point_cloud<3>();
 
+    // a 3D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
     clock_t t;
 
     //
     t = clock();
     std::ifstream fileStream("cube.summit");
-    auto mesh = mito::mesh::summit<3, mito::topology::simplex_t>(fileStream, topology, point_cloud);
+    auto mesh = mito::mesh::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 }
