@@ -22,10 +22,10 @@ namespace mito::mesh {
             }
 
             // instantiate a new node at {coordinates}
-            const auto & node = geometry.node(std::move(coordinates));
+            const auto & vertex = geometry.node(std::move(coordinates));
 
             // add vertex to {vertices}
-            vertices.push_back(node.vertex());
+            vertices.push_back(vertex);
         }
 
         // all done
