@@ -25,18 +25,19 @@ namespace mito::geometry {
         ~Geometry() {}
 
       public:
+        // TOFIX: not sure I like that this function returns a vertex and not a node
         // register {vertex}-{point} relation as a new node
-        inline auto node(const vertex_t & vertex, const point_t<D> & point) -> const node_t<D> &
+        inline auto node(const vertex_t & vertex, const point_t<D> & point) -> const vertex_t &
         {
             // register the node with the geometry
-            auto ret = _nodes.emplace(node_t<D>(vertex, point));
+            _nodes.emplace(node_t<D>(vertex, point));
 
             // return a reference to the newly emplaced node
-            return *ret.first;
+            return vertex;
         }
 
         // instantiate a new vertex and a new point at {coord} and bind them into a node
-        inline auto node(vector_t<D> && coord) -> const node_t<D> &
+        inline auto node(vector_t<D> && coord) -> const vertex_t &
         {
             // ask the topology for a new vertex
             auto & vertex = _topology.vertex();
