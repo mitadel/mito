@@ -58,7 +58,7 @@ template <int D, int N>
 auto
 flipDiagonal(
     const mito::topology::simplex_t<2> & simplex0, const mito::topology::simplex_t<2> & simplex1,
-    mito::mesh::mesh_t<D, mito::topology::simplex_t, N> & mesh) -> void
+    mito::mesh::mesh_t<mito::topology::simplex_t<N>, D> & mesh) -> void
 {
     // get the shared simplex between the two simplices
     const auto & shared_simplex = findSharedSimplex(simplex0, simplex1);
@@ -179,17 +179,20 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     // an empty cloud of points in 2D
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
+    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
     // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>(topology, point_cloud);
+    auto mesh = mito::mesh::mesh<mito::topology::triangle_t, 2>(geometry);
     mesh.insert(simplex0);
     mesh.insert(simplex1);
 
-    EXPECT_EQ(mesh.nCells<2>(), 2);
+    EXPECT_EQ(mesh.nCells(), 2);
 
     // flip the common edge of the two triangles
     flipDiagonal(simplex0, simplex1, mesh);
 
-    EXPECT_EQ(mesh.nCells<2>(), 2);
+    EXPECT_EQ(mesh.nCells(), 2);
 
     // assert that the original diagonal was erased
     EXPECT_EQ(segment_e.references(), 0);

@@ -106,6 +106,8 @@ TEST(Mesh, LoadSummitMesh2D)
     std::cout << "Fetched boundary in " << clock() - t << std::endl;
 }
 
+// TODO: add test on triangle in 3D
+
 TEST(Mesh, LoadSummitMesh3D)
 {
     // an empty topology

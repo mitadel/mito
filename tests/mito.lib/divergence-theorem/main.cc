@@ -66,26 +66,17 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     // an empty cloud of points in 2D
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
+    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
     // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>(topology, point_cloud);
+    auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
-    auto point0 = point_cloud.point({ 0.0, 0.0 });
-    auto point1 = point_cloud.point({ 1.0, 0.0 });
-    auto point2 = point_cloud.point({ 1.0, 1.0 });
-    auto point3 = point_cloud.point({ 0.5, 0.5 });
-    auto point4 = point_cloud.point({ 0.0, 1.0 });
-
-    auto & vertex0 = topology.vertex();
-    auto & vertex1 = topology.vertex();
-    auto & vertex2 = topology.vertex();
-    auto & vertex3 = topology.vertex();
-    auto & vertex4 = topology.vertex();
-
-    mesh.insert(vertex0, point0);
-    mesh.insert(vertex1, point1);
-    mesh.insert(vertex2, point2);
-    mesh.insert(vertex3, point3);
-    mesh.insert(vertex4, point4);
+    auto & vertex0 = geometry.node({ 0.0, 0.0 });
+    auto & vertex1 = geometry.node({ 1.0, 0.0 });
+    auto & vertex2 = geometry.node({ 1.0, 1.0 });
+    auto & vertex3 = geometry.node({ 0.5, 0.5 });
+    auto & vertex4 = geometry.node({ 0.0, 1.0 });
 
     auto & segment0 = topology.segment({ vertex0, vertex1 });
     auto & segment1 = topology.segment({ vertex1, vertex3 });
@@ -112,7 +103,7 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     mesh.insert(cell2);
     mesh.insert(cell3);
 
-    auto bodyManifold = mito::manifolds::manifold<2>(mesh);
+    auto bodyManifold = mito::manifolds::manifold(mesh);
     // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
