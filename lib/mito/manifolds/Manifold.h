@@ -13,20 +13,25 @@ namespace mito::manifolds {
 
     // TOFIX: distinguish between element family/class (simplicial) and element type (triangles)
 
-    template <
-        int I /* dimension of the manifold */, int D /* dimension of physical space */,
-        template <int> class elementT /* manifold element type */>
-    requires(I <= D)
+    template <class cellT /* the type of cell */, int D /* spatial dimension */>
     class Manifold {
 
       public:
-        using element_t = elementT<I>;
+        // typedef for cell type
+        using cell_t = cellT;
+        // get the order of the cell
+        static constexpr int N = cellT::resource_t::order;
+        // the dimension of the physical space
         static constexpr int dim = D;
+        // typedef for mesh type
+        using mesh_t = mito::mesh::mesh_t<cell_t, D>;
+        // typedef for vertex
+        using vertex_t = mito::topology::vertex_t;
 
       public:
-        inline Manifold(const mesh::mesh_t<D, elementT, I> & mesh) :
-            _elements(mesh.template cells<I>().begin(), mesh.template cells<I>().end()),
-            _vertices(mesh.vertices()),
+        inline Manifold(mesh_t & mesh) :
+            _elements(mesh.cells().begin(), mesh.cells().end()),
+            _vertices(mesh.geometry().nodes()),
             _jacobians(_elements.size(), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
@@ -67,14 +72,14 @@ namespace mito::manifolds {
         inline auto elements() const -> const auto & { return _elements; }
         inline auto nElements() const -> int { return _elements.size(); }
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
-        inline auto coordinatesVertex(const topology::vertex_t & v) const -> const auto &
+        inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
         }
 
       private:
-        inline auto _point(const topology::vertex_t & v) const -> const auto &
+        inline auto _point(const vertex_t & v) const -> const auto &
         {
             // look up the point attached to vertex {v}
             return _vertices.find(v)->second;
@@ -87,15 +92,15 @@ namespace mito::manifolds {
 
       private:
         // TOFIX: not sure I like that {_elements} is a copy while {_vertices} is a reference
-        const element_vector_t<element_t> _elements;
+        const element_vector_t<cell_t> _elements;
         // QUESTION: should the manifold hold directly a reference to the mesh?
         // the mapping of vertices to points
         const geometry::nodes_t<D> & _vertices;
         std::vector<real> _jacobians;
     };
 
-    template <int I, int D, template <int> class elementT>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<I, D, elementT> & manifold)
+    template <class cellT, int D>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, D> & manifold)
     {
         os << "Element set: " << std::endl;
 

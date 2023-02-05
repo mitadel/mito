@@ -6,14 +6,12 @@
 namespace mito::manifolds {
 
     // class manifold
-    template <int I, int D, template <int> class elementT>
-    requires(I <= D)
+    template <class cellT, int D>
     class Manifold;
 
     // manifold alias
-    template <int I, int D, template <int> class elementT>
-    requires(I <= D)
-    using manifold_t = Manifold<I, D, elementT>;
+    template <class cellT, int D>
+    using manifold_t = Manifold<cellT, D>;
 
     // TOFIX: remove this datastructure
     // element vector alias

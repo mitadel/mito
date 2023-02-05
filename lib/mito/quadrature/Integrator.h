@@ -13,11 +13,11 @@ namespace mito::quadrature {
     class Integrator {
         using quadrature_t = quadratureT;
         using manifold_t = manifoldT;
-        using element_t = typename manifold_t::element_t;
+        using cell_t = typename manifold_t::cell_t;
         static constexpr int D = manifold_t::dim;
 
-        // quadrature_t, element_t, and r identify a specific quadrature rule
-        using QuadratureRule = QuadratureRulesFactory<quadrature_t, element_t, r>;
+        // quadrature_t, cell_t, and r identify a specific quadrature rule
+        using QuadratureRule = QuadratureRulesFactory<quadrature_t, cell_t, r>;
 
       private:
         // QUESTION: Who should be in charge of computing the coordinates of the quadrature points
