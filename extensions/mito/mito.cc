@@ -99,22 +99,21 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito Mesh interface
-    mito::py::class_<mito::mesh::Mesh<2, mito::topology::simplex_t, 2>>(m, "SimplicialMesh2D")
+    mito::py::class_<mito::mesh::Mesh<mito::topology::triangle_t, 2>>(m, "SimplicialMesh2D")
         // the default constructor
         .def(
             // the implementation
-            mito::py::init<mito::topology::Topology &, mito::geometry::PointCloud<2> &>())
+            mito::py::init<mito::geometry::Geometry<2> &>())
         // accessors
         // the cells; read-only property
         .def_property_readonly(
-            "cells", &mito::mesh::mesh_t<2, mito::topology::simplex_t, 2>::cells<2>,
-            "the body cells")
+            "cells", &mito::mesh::mesh_t<mito::topology::triangle_t, 2>::cells, "the body cells")
         // done
         ;
 
 
     // the mito manifold interface
-    mito::py::class_<mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>>(
+    mito::py::class_<mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>(
         m, "ManifoldTriangle2D")
         // the constructor
         .def(
@@ -125,15 +124,16 @@ PYBIND11_MODULE(mito, m)
                 auto & topology = mito::topology::topology();
                 // an empty cloud of points in 2D
                 auto & point_cloud = mito::geometry::point_cloud<2>();
+                // an empty geometry binding {topology} and {point_cloud}
+                auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
                 // create an input stream
                 auto filestream = std::ifstream(filename);
                 // read the mesh
-                auto mesh =
-                    new mito::mesh::mesh_t(mito::mesh::summit<2, mito::topology::simplex_t, 2>(
-                        filestream, topology, point_cloud));
+                auto mesh = new mito::mesh::mesh_t(
+                    mito::mesh::summit<mito::topology::triangle_t, 2>(filestream, geometry));
                 // instantiate
-                return new mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>(*mesh);
+                return new mito::manifolds::manifold_t<mito::topology::triangle_t, 2>(*mesh);
             }))
         // done
         ;
@@ -142,12 +142,12 @@ PYBIND11_MODULE(mito, m)
     // the mito Integrator interface
     mito::py::class_<mito::quadrature::integrator_t<
         mito::quadrature::GAUSS, 2 /* degree of exactness */,
-        mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>>>(
+        mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>>(
         m, "GaussIntegrator2Triangle2D")
         // the constructor
         .def(
             // the implementation
-            mito::py::init<const mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t> &>())
+            mito::py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
         // interface
         // QUESTION: should this be called integrateScalarfield?
         // integrate a scalar field
@@ -156,8 +156,7 @@ PYBIND11_MODULE(mito, m)
             // the method;
             &mito::quadrature::integrator_t<
                 mito::quadrature::GAUSS, 2 /* degree of exactness */,
-                mito::manifolds::manifold_t<2, 2, mito::topology::simplex_t>>::
-                integrate<mito::real>,
+                mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>::integrate<mito::real>,
             // the docstring
             "integrate a field")
         // done
