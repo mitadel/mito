@@ -111,8 +111,6 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     real resultBody = bodyIntegrator.integrate(divergence);
     std::cout << "Result of body integration = " << resultBody << std::endl;
 
-    // TOFIX: fix this part once design of {Manifold} has improved
-#if 0
     // TOFIX: Include normal notion on the boundary element set, so that we can avoid hardcoding
     // the normals calculations (we might need std::inner_product to do the inner product)
     /*
@@ -120,26 +118,30 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
         mito::topology::element_vector_t<segment_t> { &segment0, &segment3, &segment6, &segment7 });
     */
     // integrator on the bottom boundary
-    auto boundaryBot =
-        mito::manifolds::manifold<2>(mito::topology::element_vector_t<segment_t> { segment0 });
+    auto meshBot = mito::mesh::mesh<mito::topology::segment_t>(geometry);
+    meshBot.insert(segment0);
+    auto boundaryBot = mito::manifolds::manifold(meshBot);
     auto boundaryBotIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryBot);
 
     // integrator on the right boundary
-    auto boundaryRight =
-        mito::manifolds::manifold<2>(mito::topology::element_vector_t<segment_t> { segment3 });
+    auto meshRight = mito::mesh::mesh<mito::topology::segment_t>(geometry);
+    meshRight.insert(segment3);
+    auto boundaryRight = mito::manifolds::manifold(meshRight);
     auto boundaryRightIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryRight);
 
     // integrator on the top boundary
-    auto boundaryTop =
-        mito::manifolds::manifold<2>(mito::topology::element_vector_t<segment_t> { segment6 });
+    auto meshTop = mito::mesh::mesh<mito::topology::segment_t>(geometry);
+    meshTop.insert(segment6);
+    auto boundaryTop = mito::manifolds::manifold(meshTop);
     auto boundaryTopIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryTop);
 
     // integrator on the left boundary
-    auto boundaryLeft =
-        mito::manifolds::manifold<2>(mito::topology::element_vector_t<segment_t> { segment9 });
+    auto meshLeft = mito::mesh::mesh<mito::topology::segment_t>(geometry);
+    meshLeft.insert(segment9);
+    auto boundaryLeft = mito::manifolds::manifold(meshLeft);
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
 
@@ -154,7 +156,6 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
 
     // assert divergence theorem
     EXPECT_NEAR(resultBody, resultBoundary, 1.e-15);
-#endif
 }
 
 // end of file
