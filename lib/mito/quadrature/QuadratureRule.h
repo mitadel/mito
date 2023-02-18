@@ -6,7 +6,7 @@
 namespace mito::quadrature {
 
     template <int D>
-    using quadrature_point_t = std::array<double, D>;
+    using quadrature_point_t = mito::manifolds::parametric_point_t<D>;
 
     template <class quadrature_t, class element_t, int r>
     struct QuadratureRulesFactory {
