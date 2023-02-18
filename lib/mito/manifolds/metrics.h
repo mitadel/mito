@@ -45,8 +45,10 @@ namespace mito::manifolds {
             }
 
             // compute the volume of the e-th element
-            volumes[e] =
-                std::fabs(pyre::algebra::determinant(pointsTensor)) / pyre::algebra::factorial<D>();
+            volumes[e] = ((element->orientation() == true) ? 1 : -1)
+                       * std::fabs(pyre::algebra::determinant(pointsTensor))
+                       / pyre::algebra::factorial<D>();
+
             // update elements counter
             ++e;
         }
@@ -105,9 +107,10 @@ namespace mito::manifolds {
             assert(element_vertices.size() == /*number of element vertices*/ 2);
 
             // store the geometry::distance between the two element vertices as the element length
-            length[e] = geometry::distance(
-                vertices.find(element_vertices[0])->second,
-                vertices.find(element_vertices[1])->second);
+            length[e] = ((element->orientation() == true) ? 1 : -1)
+                      * geometry::distance(
+                            vertices.find(element_vertices[0])->second,
+                            vertices.find(element_vertices[1])->second);
 
             // update elements counter
             ++e;
@@ -172,7 +175,8 @@ namespace mito::manifolds {
             real bpc = b + c;
 
             // compute area of element e
-            areas[e] = 0.25 * sqrt((a + bpc) * (c - amb) * (c + amb) * (a + bmc));
+            areas[e] = ((element->orientation() == true) ? 1 : -1) * 0.25
+                     * sqrt((a + bpc) * (c - amb) * (c + amb) * (a + bmc));
 
             // update elements counter
             ++e;
