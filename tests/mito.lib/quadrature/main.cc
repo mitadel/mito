@@ -228,19 +228,19 @@ TEST(Quadrature, FlipDomain)
     // an empty topology
     auto & topology = mito::topology::topology();
 
-    // an empty cloud of points in 2D
-    auto & point_cloud = mito::geometry::point_cloud<2>();
+    // an empty cloud of points in 3D
+    auto & point_cloud = mito::geometry::point_cloud<3>();
 
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // a segment
-    auto & vertex0 = geometry.node({ 0.0, 0.0 });
-    auto & vertex1 = geometry.node({ 1.0, 1.0 });
+    auto & vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
+    auto & vertex1 = geometry.node({ 1.0, 1.0, 1.0 });
     auto & segment0 = topology.segment({ vertex0, vertex1 });
 
     // the integrand
-    auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
+    auto f = mito::math::function([](const mito::vector_t<3> & x) { return cos(x[0] * x[1]); });
     auto f_cosine = mito::math::field(f);
 
     // integrate the integrand on {segment0}
