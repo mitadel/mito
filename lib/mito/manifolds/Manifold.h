@@ -21,6 +21,9 @@ namespace mito::manifolds {
         using cell_t = cellT;
         // get the order of the cell
         static constexpr int N = cellT::resource_t::order;
+        // a point in parametric coordinates
+        static constexpr int parametricDim = parametric_dim<cell_t>();
+        using parametric_point_t = mito::manifolds::parametric_point_t<parametricDim>;
         // the dimension of the physical space
         static constexpr int dim = D;
         // typedef for mesh type
@@ -76,6 +79,25 @@ namespace mito::manifolds {
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
+        }
+
+        inline auto parametrization(const cell_t & cell, const parametric_point_t & point) const
+            -> auto
+        {
+            // use a set to collect vertices without repeated entries
+            topology::vertex_set_t vertices;
+            cell->vertices(vertices);
+            vector_t<D> coordinates;
+            // loop on vertices
+            int v = 0;
+            for (const auto & vertex : vertices) {
+                const auto & vertexCoordinates = coordinatesVertex(vertex);
+                coordinates += point[v] * vertexCoordinates;
+
+                ++v;
+            }
+
+            return coordinates;
         }
 
       private:
