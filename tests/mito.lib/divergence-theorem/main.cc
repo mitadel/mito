@@ -145,12 +145,14 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
 
-    auto f0 = mito::math::field(f[0]);
-    auto f1 = mito::math::field(f[1]);
+    auto fbot = mito::math::field(-f[1]);
+    auto fright = mito::math::field(f[0]);
+    auto ftop = mito::math::field(f[1]);
+    auto fleft = mito::math::field(-f[0]);
 
     real resultBoundary =
-        -boundaryBotIntegrator.integrate(f1) + boundaryRightIntegrator.integrate(f0)
-        + boundaryTopIntegrator.integrate(f1) - boundaryLeftIntegrator.integrate(f0);
+        boundaryBotIntegrator.integrate(fbot) + boundaryRightIntegrator.integrate(fright)
+        + boundaryTopIntegrator.integrate(ftop) + boundaryLeftIntegrator.integrate(fleft);
 
     std::cout << "Result of boundary integration = " << resultBoundary << std::endl;
 
