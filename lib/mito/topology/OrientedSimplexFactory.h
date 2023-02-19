@@ -95,6 +95,7 @@ namespace mito::topology {
         // of equivalence of simplices with this composition)
         inline auto orientedSimplex(const simplex_composition_t<D> & composition)
             -> const oriented_simplex_ptr<D> &
+        requires(D > 0)
         {
             if (!isValid(composition)) {
                 pyre::journal::firewall_t firewall("topology::OrientedSimplexFactory");
@@ -109,6 +110,16 @@ namespace mito::topology {
 
             // compute the orientation of the current composition with respect to the representative
             bool orientation = _orientation(composition, simplex);
+
+            // return an oriented simplex riding on {simplex} with {orientation}
+            return orientedSimplex(simplex, orientation);
+        }
+
+        inline auto orientedSimplex(bool orientation) -> const oriented_simplex_ptr<0> &
+        requires(D == 0)
+        {
+            // get the representative of simplices with composition {composition} from the factory
+            const auto & simplex = _simplex_factory.simplex();
 
             // return an oriented simplex riding on {simplex} with {orientation}
             return orientedSimplex(simplex, orientation);
@@ -215,57 +226,6 @@ namespace mito::topology {
         return true;
     }
 
-    /*
-     * This class specializes OrientedSimplexFactory<D> for D = 0.
-     */
-    template <>
-    class OrientedSimplexFactory<0> {
-
-        // typedef for a collection of vertices
-        using vertex_collection_t = mito::utilities::segmented_t<oriented_simplex_t<0>>;
-
-      public:    // TOFIX: should be private but the default constructor of tuple needs it public
-        // default constructor
-        OrientedSimplexFactory() : _vertex_collection(100 /*segment size */), _vertex_set() {};
-
-        // destructor
-        ~OrientedSimplexFactory() {};
-
-      private:
-        // adds a new vertex to the vertex collection and returns it
-        inline auto orientedSimplex() -> const oriented_simplex_ptr<0> &
-        {
-            // emplace the new vertex in the vertex collection and return it
-            return *_vertex_set.insert(_vertex_collection.emplace()).first;
-        }
-
-        // erase a vertex from the factory (this method actually erases the vertex only
-        // if there is no one else using it, otherwise does nothing)
-        inline auto erase(const oriented_simplex_ptr<0> & vertex) -> void
-        {
-            // sanity check
-            assert(vertex.references() > 0);
-
-            // erase the vertex
-            vertex->_erase();
-
-            // erase the vertex from the vertex set
-            _vertex_set.erase(vertex);
-
-            // all done
-            return;
-        }
-
-      private:
-        // container to store the vertices
-        vertex_collection_t _vertex_collection;
-
-        // container for persistent storage of the shared pointers to vertices
-        vertex_set_t _vertex_set;
-
-        // private friendship with the topology
-        friend class Topology;
-    };
 }
 
 #endif    // mito_topology_OrientedSimplexFactory_h

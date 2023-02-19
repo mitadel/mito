@@ -7,7 +7,6 @@ namespace mito::topology {
 
     // class simplex
     template <int D>
-    requires(D > 0)
     class Simplex;
 
     // class oriented simplex
@@ -16,7 +15,6 @@ namespace mito::topology {
 
     // class simplex factory
     template <int D>
-    requires(D > 0)
     class SimplexFactory;
 
     // simplex factory alias
@@ -39,7 +37,6 @@ namespace mito::topology {
 
     // unoriented simplex alias
     template <int D>
-    requires(D > 0)
     using unoriented_simplex_t = Simplex<D>;
 
     // unoriented simplex pointer alias

@@ -19,7 +19,6 @@ namespace mito::topology {
     // TOFIX: rename this to UnorientedSimplexFactory
 
     template <int D>
-    requires(D > 0)
     class SimplexFactory {
 
       private:
@@ -156,6 +155,58 @@ namespace mito::topology {
         // all done
         return representative;
     }
+
+    template <>
+    class SimplexFactory<0> {
+
+      private:
+        // typedef for a collection of unoriented simplices
+        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<0>>;
+
+      private:
+        // default constructor
+        SimplexFactory() : _simplices(100 /*segment size */) {};
+
+        // destructor
+        ~SimplexFactory() {};
+
+        // return a simplex with composition {composition} (either create a new simplex if such
+        // simplex does not exist in the factory or return the existing representative of the class
+        // of equivalence of simplices with this composition)
+        inline auto simplex() -> const unoriented_simplex_ptr<0> &
+        {
+            // emplace the new vertex in the vertex collection and return it
+            return *_vertex_set.insert(_simplices.emplace()).first;
+        }
+
+        // erase a simplex from the factory (this method actually erases the simplex only if there
+        // is no one else using it, otherwise does nothing)
+        inline auto erase(const unoriented_simplex_ptr<0> & simplex) -> void
+        {
+
+            // sanity check
+            assert(simplex.references() > 0);
+
+            // erase the simplex
+            simplex->_erase();
+
+            // erase the vertex from the vertex set
+            _vertex_set.erase(simplex);
+
+            // all done
+            return;
+        }
+
+      private:
+        // container to store the unoriented simplices
+        simplex_collection_t _simplices;
+
+        // container for persistent storage of the shared pointers to vertices
+        element_set_t<unoriented_simplex_ptr<0>> _vertex_set;
+
+        // private friendship with the factory of oriented simplices
+        friend class OrientedSimplexFactory<0>;
+    };
 }
 
 #endif    // mito_topology_SimplexFactory_h

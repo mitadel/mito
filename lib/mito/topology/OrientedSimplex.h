@@ -110,63 +110,6 @@ namespace mito::topology {
         // private friendship with the factory of oriented simplices
         friend class OrientedSimplexFactory<D>;
     };
-
-    /*
-     * This class collapses OrientedSimplex<D> for D = 0.
-     *
-     * A simplex of order 0, like a vertex, is an empty object.
-     */
-
-    template <>
-    class OrientedSimplex<0> : public mito::utilities::Shareable {
-      public:    // TOFIX: should be private
-        // default constructor
-        constexpr OrientedSimplex() {}
-
-      public:
-        // empty destructor
-        constexpr ~OrientedSimplex() {}
-
-      private:
-        // delete copy constructor
-        OrientedSimplex(const OrientedSimplex &) = delete;
-
-        // delete move constructor
-        OrientedSimplex(const OrientedSimplex &&) = delete;
-
-        // delete assignment operator
-        const OrientedSimplex & operator=(const OrientedSimplex &) = delete;
-
-        // delete move assignment operator
-        const OrientedSimplex & operator=(const OrientedSimplex &&) = delete;
-
-      public:
-        // returns the (unoriented) footprint id
-        // Note: the footprint of a vertex is the vertex itself
-        inline auto footprint_id() const -> unoriented_simplex_id_t
-        {
-            // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t>(this);
-        }
-
-        // perform a sanity check
-        inline auto sanityCheck() const -> bool
-        {
-            // a simplex of order 0 has only 1 vertex (this one!)
-            return true;
-        }
-
-      private:
-        inline auto _erase() -> void
-        {
-            // all done
-            return;
-        }
-
-      private:
-        // friendship with the factory of oriented simplices
-        friend class OrientedSimplexFactory<0>;
-    };
 }
 #endif    // mito_topology_OrientedSimplex_h
 

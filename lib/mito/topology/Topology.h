@@ -40,7 +40,7 @@ namespace mito::topology {
         requires(D == 0)
         {
             // ask the factory of oriented simplices
-            return std::get<0>(_factories).orientedSimplex();
+            return std::get<0>(_factories).orientedSimplex(true);
         }
 
         // instantiate a vertex
