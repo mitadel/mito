@@ -5,6 +5,7 @@
 
 namespace mito::quadrature {
 
+    // quadrature point representation in parametric coordinates
     template <int D>
     using quadrature_point_t = mito::manifolds::parametric_point_t<D>;
 
