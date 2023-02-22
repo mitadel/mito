@@ -35,18 +35,6 @@ namespace mito::topology {
     // topology alias
     using topology_t = Topology;
 
-    // unoriented simplex alias
-    template <int D>
-    using unoriented_simplex_t = Simplex<D>;
-
-    // unoriented simplex pointer alias
-    template <int D>
-    using unoriented_simplex_ptr = mito::utilities::shared_ptr<unoriented_simplex_t<D>>;
-
-    // oriented simplex alias
-    template <int D>
-    using oriented_simplex_t = OrientedSimplex<D>;
-
     // id type of unoriented simplex
     using unoriented_simplex_id_t = std::uintptr_t;
 
@@ -76,13 +64,13 @@ namespace mito::topology {
     template <class cellT>
     using element_vector_t = std::vector<cellT>;
 
-    // oriented simplex pointer alias
+    // unoriented simplex alias
     template <int D>
-    using oriented_simplex_ptr = mito::utilities::shared_ptr<oriented_simplex_t<D>>;
+    using unoriented_simplex_t = mito::utilities::shared_ptr<Simplex<D>>;
 
-    // simplex alias
+    // oriented simplex alias
     template <int D>
-    using simplex_t = oriented_simplex_ptr<D>;
+    using oriented_simplex_t = mito::utilities::shared_ptr<OrientedSimplex<D>>;
 }
 
 

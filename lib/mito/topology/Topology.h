@@ -25,7 +25,7 @@ namespace mito::topology {
 
       public:
         template <int D>
-        inline auto simplex(const unoriented_simplex_ptr<D> & footprint, bool orientation)
+        inline auto simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
             -> const simplex_t<D> &
         {
             // ask the factory of oriented simplices
