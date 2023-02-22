@@ -47,8 +47,11 @@ namespace mito::geometry {
             // auto & point = _point_cloud.point(std::move(coord));
             auto point = _point_cloud.point(std::move(coord));
 
+            // register the node with the geometry
+            _nodes.emplace(node_t<D>(vertex, point));
+
             // return a reference to the newly emplaced node
-            return node(vertex, point);
+            return vertex;
         }
 
         // accessor to the collection of nodes
