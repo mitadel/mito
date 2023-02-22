@@ -21,12 +21,11 @@ namespace mito::topology {
     class OrientedSimplexFactory {
       private:
         // typedef for a collection of oriented simplices
-        using oriented_simplex_collection_t = mito::utilities::segmented_t<oriented_simplex_t<D>>;
+        using oriented_simplex_collection_t = mito::utilities::segmented_t<simplex_t<D>>;
 
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
-        using orientation_map_t =
-            std::map<std::tuple<unoriented_simplex_id_t, bool>, oriented_simplex_ptr<D>>;
+        using orientation_map_t = std::map<std::tuple<unoriented_simplex_id_t, bool>, simplex_t<D>>;
 
       public:    // TOFIX: should be private but the default constructor of tuple needs it public
         // default constructor

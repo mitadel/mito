@@ -32,7 +32,7 @@ namespace mito::utilities {
 
     // segmented container alias
     template <class T>
-    using segmented_t = SegmentedContainer<T>;
+    using segmented_t = SegmentedContainer<typename T::resource_t>;
 
     // segmented container iterator
     // equality

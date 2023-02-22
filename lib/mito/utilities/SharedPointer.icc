@@ -76,7 +76,7 @@ mito::utilities::SharedPointer<Resource>::SharedPointer() : _handle(nullptr), _c
 // the constructor
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer(
-    handle_t resource, segmented_t<resource_t> * container) :
+    handle_t resource, segmented_t<shared_ptr_t> * container) :
     _handle(resource),
     _container(container)
 {
