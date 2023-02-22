@@ -24,6 +24,14 @@ namespace mito::topology {
         ~Topology() {};
 
       public:
+        template <int D>
+        inline auto simplex(const unoriented_simplex_ptr<D> & footprint, bool orientation)
+            -> const simplex_t<D> &
+        {
+            // ask the factory of oriented simplices
+            return std::get<D>(_factories).orientedSimplex(footprint, orientation);
+        }
+
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
@@ -36,15 +44,19 @@ namespace mito::topology {
         }
 
         template <int D>
-        inline auto simplex() -> const simplex_t<0> &
+        inline auto simplex(bool orientation) -> const simplex_t<0> &
         requires(D == 0)
         {
             // ask the factory of oriented simplices
-            return std::get<0>(_factories).orientedSimplex(true);
+            return std::get<0>(_factories).orientedSimplex(orientation);
         }
 
         // instantiate a vertex
-        inline auto vertex() -> const simplex_t<0> & { return simplex<0>(); }
+        inline auto vertex() -> const vertex_t &
+        {
+            // ask the factory of oriented simplices
+            return simplex<0>(true)->footprint();
+        }
 
         // instantiate a segment
         inline auto segment(const simplex_composition_t<1> & simplices) -> const simplex_t<1> &
@@ -64,12 +76,21 @@ namespace mito::topology {
             return simplex<3>(simplices);
         }
 
-        // instantiate a triangle
-        inline auto triangle(const std::array<simplex_t<0>, 3> & vertices) -> const simplex_t<2> &
+        // instantiate a segment from unoriented vertices
+        inline auto segment(const vertex_simplex_composition_t<1> & simplices)
+            -> const simplex_t<1> &
         {
-            return simplex<2>({ segment({ vertices[0], vertices[1] }),
-                                segment({ vertices[1], vertices[2] }),
-                                segment({ vertices[2], vertices[0] }) });
+            return segment({ simplex(simplices[0], false), simplex(simplices[1], true) });
+        }
+
+        // instantiate a triangle
+        inline auto triangle(const vertex_simplex_composition_t<2> & vertices)
+            -> const simplex_t<2> &
+        {
+            return simplex<2>(
+                { segment({ simplex(vertices[0], false), simplex(vertices[1], true) }),
+                  segment({ simplex(vertices[1], false), simplex(vertices[2], true) }),
+                  segment({ simplex(vertices[2], false), simplex(vertices[0], true) }) });
         }
 
         // returns whether the oriented simplex exists in the factory

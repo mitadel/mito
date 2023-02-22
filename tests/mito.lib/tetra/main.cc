@@ -15,9 +15,9 @@ tetra(mito::mesh::mesh_t<cellT, D> & mesh, auto & geometry) -> mito::mesh::mesh_
         // get the three vertices
         const auto & edge_0 = cell->composition()[0];
         const auto & edge_1 = cell->composition()[1];
-        const auto & vertex_0 = edge_0->composition()[0];
-        const auto & vertex_1 = edge_0->composition()[1];
-        const auto & vertex_2 = edge_1->composition()[1];
+        const auto & vertex_0 = edge_0->composition()[0]->footprint();
+        const auto & vertex_1 = edge_0->composition()[1]->footprint();
+        const auto & vertex_2 = edge_1->composition()[1]->footprint();
 
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(

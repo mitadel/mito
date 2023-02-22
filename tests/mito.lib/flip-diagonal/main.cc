@@ -33,7 +33,7 @@ oppositeVertices(
     const auto & shared_simplex)
 {
     // need a regular set (not an unordered one) because set_difference works with ordered sets
-    using vertex_set_t = std::set<mito::topology::simplex_t<0>>;
+    using vertex_set_t = std::set<mito::topology::vertex_t>;
 
     vertex_set_t vertices;
     simplex0->vertices(vertices);

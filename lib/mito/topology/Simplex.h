@@ -67,8 +67,8 @@ namespace mito::topology {
         void vertices(VERTEX_COLLECTION_T & vertices) const
         requires(D == 1)
         {
-            vertices.insert(_simplices[0]);
-            vertices.insert(_simplices[1]);
+            vertices.insert(_simplices[0]->footprint());
+            vertices.insert(_simplices[1]->footprint());
         }
 
         // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
@@ -186,6 +186,12 @@ namespace mito::topology {
         return os;
     }
 
+    // overload operator<< for vertices
+    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_ptr<0> & s)
+    {
+        os << "vertex: " << &s << std::endl;
+        return os;
+    }
 
 }    // namespace mito
 

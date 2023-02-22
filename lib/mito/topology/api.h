@@ -6,7 +6,7 @@
 namespace mito::topology {
 
     // vertex alias
-    using vertex_t = simplex_t<0>;
+    using vertex_t = unoriented_simplex_ptr<0>;
 
     // segment alias
     using segment_t = simplex_t<1>;

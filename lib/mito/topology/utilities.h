@@ -16,29 +16,21 @@ namespace mito::topology {
         return os;
     }
 
-    // overload operator<< specialization for simplices with D = 0 (vertices)
-    template <>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
-    {
-        os << s->footprint_id();
-        return os;
-    }
-
     auto tail(const simplex_t<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->composition()[0];
+            return oriented_simplex->composition()[0]->footprint();
         } else {
-            return oriented_simplex->composition()[1];
+            return oriented_simplex->composition()[1]->footprint();
         }
     }
 
     auto head(const simplex_t<1> & oriented_simplex)
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->composition()[1];
+            return oriented_simplex->composition()[1]->footprint();
         } else {
-            return oriented_simplex->composition()[0];
+            return oriented_simplex->composition()[0]->footprint();
         }
     }
 
@@ -69,14 +61,19 @@ namespace mito::topology {
         return false;
     }
 
-    // a segment is valid if the two vertices are not the same
     auto isValid(const simplex_composition_t<1> & composition) -> bool
     {
-        if (composition[0] != composition[1]) {
-            return true;
+        // a segment is not valid if the two vertices coincide
+        if (composition[0]->footprint() == composition[1]->footprint()) {
+            return false;
         }
 
-        return false;
+        // a segment is not valid if the two vertices have same orientation
+        if (composition[0]->orientation() == composition[1]->orientation()) {
+            return false;
+        }
+
+        return true;
     }
 }
 
