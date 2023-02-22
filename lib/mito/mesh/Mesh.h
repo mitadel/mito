@@ -20,6 +20,10 @@ namespace mito::mesh {
         using geometry_t = mito::geometry::geometry_t<D>;
         // typedef for a collection of cells
         using cells_t = element_set_t<cell_t>;
+        // this map maps a simplex id to a tuple of two integers counting how many times a simplex
+        // appears with - or + orientation
+        using orientation_map_t =
+            std::unordered_map<topology::unoriented_simplex_id_t, std::array<int, 2>>;
 
       public:
         // default constructor
@@ -91,6 +95,20 @@ namespace mito::mesh {
 
         inline auto erase(const cell_t & cell) -> void
         {
+
+            // loop on the subcells of {cell}
+            for (const auto & subcell : cell->composition()) {
+                // decrement the orientations count for this cell footprint id, depending on the
+                // orientation
+                (subcell->orientation() ? _orientations[subcell->footprint()->id()][0] -= 1 :
+                                          _orientations[subcell->footprint()->id()][1] -= 1);
+
+                // cleanup orientation map
+                if (_orientations[subcell->footprint()->id()] == std::array<int, 2> { 0, 0 }) {
+                    _orientations.erase(subcell->footprint()->id());
+                }
+            }
+
             // erase the cell from the mesh
             _cells.erase(cell);
 
@@ -100,6 +118,22 @@ namespace mito::mesh {
 
             // all done
             return;
+        }
+
+        inline auto isOnBoundary(const cell_family_t<D - 1> & cell) -> bool
+        {
+            // count how many times this oriented cell occurs in the mesh with opposite orientation
+            int count = 0;
+            (!cell->orientation() ? count = _orientations[cell->footprint()->id()][0] :
+                                    count = _orientations[cell->footprint()->id()][1]);
+
+            // the cell is on the boundary if it never occurs in the mesh with opposite
+            // orientation
+            if (count == 0) {
+                return true;
+            }
+
+            return false;
         }
 
         /**
@@ -118,7 +152,7 @@ namespace mito::mesh {
                 for (const auto & subcell : cell->composition()) {
                     // if {subcell} does not have a counterpart in {topology} with opposite
                     // orientation
-                    if (!_geometry.topology().exists_flipped(subcell)) {
+                    if (isOnBoundary(subcell)) {
                         // add {subcell} to the boundary mesh
                         boundary_mesh.insert(subcell);
                     }
@@ -135,6 +169,14 @@ namespace mito::mesh {
             // add the cell to the set of cells with same dimension
             _cells.insert(cell);
 
+            // loop on the subcells of {cell}
+            for (const auto & subcell : cell->composition()) {
+                // increment the orientations count for this cell footprint id, depending on the
+                // orientation
+                (subcell->orientation() ? _orientations[subcell->footprint()->id()][0] += 1 :
+                                          _orientations[subcell->footprint()->id()][1] += 1);
+            }
+
             // all done
             return;
         }
@@ -149,6 +191,9 @@ namespace mito::mesh {
 
         // container to store the mesh cells
         cells_t _cells;
+
+        // container to store how many times a simplex appears with a given orientation
+        orientation_map_t _orientations;
     };
 
 }    // namespace mito
