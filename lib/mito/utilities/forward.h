@@ -14,7 +14,7 @@ namespace mito::utilities {
 
     // class shared pointer based on a reference counted resource
     template <class Resource>
-    requires ReferenceCountedObject<Resource>
+    // requires ReferenceCountedObject<Resource>
     class SharedPointer;
 
     // shared pointer alias
@@ -23,7 +23,7 @@ namespace mito::utilities {
 
     // class segmented container
     template <class Resource>
-    requires ReferenceCountedObject<Resource>
+    // requires ReferenceCountedObject<Resource>
     class SegmentedContainer;
 
     // and its iterator
