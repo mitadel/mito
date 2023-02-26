@@ -32,7 +32,38 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D>
+    template <int D>
+    auto readSegment(
+        std::ifstream & fileStream, mesh_t<topology::segment_t, D> & mesh,
+        const std::vector<vertex_t> & vertices) -> void
+    {
+        auto & topology = mesh.geometry().topology();
+
+        int index0 = 0;
+        fileStream >> index0;
+        --index0;
+
+        int index1 = 0;
+        fileStream >> index1;
+        --index1;
+
+        const auto & vertex0 = vertices[index0];
+        const auto & vertex1 = vertices[index1];
+
+        const auto & segment = topology.segment({ vertex0, vertex1 });
+        mesh.insert(segment);
+
+        // QUESTION: Can the label be more than one?
+        // read label for cell
+        // TOFIX: Ignored for now
+        std::string cell_label;
+        fileStream >> cell_label;
+
+        // all done
+        return;
+    }
+
+    template <int D>
     auto readTriangle(
         std::ifstream & fileStream, mesh_t<topology::triangle_t, D> & mesh,
         const std::vector<vertex_t> & vertices) -> void
@@ -133,7 +164,26 @@ namespace mito::mesh {
         return;
     }
 
-    // TODO: add read segment
+    template <int D>
+    auto readSegments(
+        std::ifstream & fileStream, mesh_t<topology::segment_t, D> & mesh, int N_cells,
+        const std::vector<vertex_t> & vertices) -> void
+    {
+        for (int i = 0; i < N_cells; ++i) {
+            int cell_type = 0;
+            fileStream >> cell_type;
+
+            // TODO: add read segment
+            if (cell_type == 2) {
+                readSegment(fileStream, mesh, vertices);
+            } else {
+                std::cout << "Not a segment, skipping element..." << std::endl;
+            }
+        }
+
+        // all done
+        return;
+    }
 
     template <int D>
     auto readTriangles(
@@ -180,6 +230,14 @@ namespace mito::mesh {
     auto readElements(
         std::ifstream & fileStream, mesh_t<topology::simplex_t<N>, D> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices) -> void;
+
+    template <int D>
+    auto readElements(
+        std::ifstream & fileStream, mesh_t<topology::segment_t, D> & mesh, int N_cells,
+        const std::vector<vertex_t> & vertices) -> void
+    {
+        return readSegments(fileStream, mesh, N_cells, vertices);
+    }
 
     template <int D>
     auto readElements(

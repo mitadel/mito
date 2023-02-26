@@ -82,6 +82,24 @@ TEST(Mesh, BuildMesh)
     return;
 }
 
+TEST(Mesh, LoadSummitSegmentsMesh3D)
+{
+    // an empty topology
+    auto & topology = mito::topology::topology();
+
+    // an empty cloud of points
+    auto & point_cloud = mito::geometry::point_cloud<3>();
+
+    // a 3D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
+    std::ifstream fileStream("segments.summit");
+    auto mesh = mito::mesh::summit<mito::topology::segment_t>(fileStream, geometry);
+
+    // assert you read 10 cells
+    EXPECT_EQ(mesh.nCells(), 10);
+}
+
 TEST(Mesh, LoadSummitMesh2D)
 {
     // an empty topology
