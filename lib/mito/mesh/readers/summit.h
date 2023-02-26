@@ -34,9 +34,8 @@ namespace mito::mesh {
 
     template <class cellT, int D>
     auto readTriangle(
-        std::ifstream & fileStream, mesh_t<cellT, D> & mesh, const std::vector<vertex_t> & vertices)
-        -> void
-    // requires(D == 2 || D == 3)
+        std::ifstream & fileStream, mesh_t<topology::triangle_t, D> & mesh,
+        const std::vector<vertex_t> & vertices) -> void
     {
         auto & topology = mesh.geometry().topology();
 
@@ -73,11 +72,10 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D>
+    template <int D>
     auto readTetrahedron(
-        std::ifstream & fileStream, mesh_t<cellT, D> & mesh, const std::vector<vertex_t> & vertices)
-        -> void
-    // requires(D == 3)
+        std::ifstream & fileStream, mesh_t<topology::tetrahedron_t, D> & mesh,
+        const std::vector<vertex_t> & vertices) -> void
     {
         auto & topology = mesh.geometry().topology();
 
@@ -135,14 +133,11 @@ namespace mito::mesh {
         return;
     }
 
-    template <int N, int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh_t<topology::simplex_t<N>, D> & mesh, int N_cells,
-        const std::vector<vertex_t> & vertices) -> void;
+    // TODO: add read segment
 
-    template <int N>
-    auto readElements(
-        std::ifstream & fileStream, mesh_t<topology::simplex_t<N>, 2> & mesh, int N_cells,
+    template <int D>
+    auto readTriangles(
+        std::ifstream & fileStream, mesh_t<topology::triangle_t, D> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices) -> void
     {
         for (int i = 0; i < N_cells; ++i) {
@@ -153,7 +148,7 @@ namespace mito::mesh {
             if (cell_type == 3) {
                 readTriangle(fileStream, mesh, vertices);
             } else {
-                std::cout << "Error: Unknown cell type" << std::endl;
+                std::cout << "Not a triangle, skipping element..." << std::endl;
             }
         }
 
@@ -161,40 +156,45 @@ namespace mito::mesh {
         return;
     }
 
-    // TODO: add read segment
-
-    template <>
-    auto readElements(
-        std::ifstream & fileStream, mesh_t<topology::simplex_t<2>, 3> & mesh, int N_cells,
+    template <int D>
+    auto readTetrahedra(
+        std::ifstream & fileStream, mesh_t<topology::tetrahedron_t, D> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices) -> void
     {
         for (int i = 0; i < N_cells; ++i) {
             int cell_type = 0;
             fileStream >> cell_type;
 
-            assert(cell_type == 3);
-            readTriangle(fileStream, mesh, vertices);
+            if (cell_type == 4) {
+                readTetrahedron(fileStream, mesh, vertices);
+            } else {
+                std::cout << "Not a tetrahedron, skipping element..." << std::endl;
+            }
         }
 
         // all done
         return;
     }
 
-    template <int N>
+    template <int N, int D>
     auto readElements(
-        std::ifstream & fileStream, mesh_t<topology::simplex_t<N>, 3> & mesh, int N_cells,
+        std::ifstream & fileStream, mesh_t<topology::simplex_t<N>, D> & mesh, int N_cells,
+        const std::vector<vertex_t> & vertices) -> void;
+
+    template <int D>
+    auto readElements(
+        std::ifstream & fileStream, mesh_t<topology::tetrahedron_t, D> & mesh, int N_cells,
         const std::vector<vertex_t> & vertices) -> void
     {
-        for (int i = 0; i < N_cells; ++i) {
-            int cell_type = 0;
-            fileStream >> cell_type;
+        return readTetrahedra(fileStream, mesh, N_cells, vertices);
+    }
 
-            assert(cell_type == 4);
-            readTetrahedron(fileStream, mesh, vertices);
-        }
-
-        // all done
-        return;
+    template <int D>
+    auto readElements(
+        std::ifstream & fileStream, mesh_t<topology::triangle_t, D> & mesh, int N_cells,
+        const std::vector<vertex_t> & vertices) -> void
+    {
+        return readTriangles(fileStream, mesh, N_cells, vertices);
     }
 
     template <class cellT, int D>
