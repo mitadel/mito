@@ -5,7 +5,7 @@
 #include <fstream>
 
 namespace mito::mesh {
-    template <int N, int D>
+    template <int D, int N>
     auto readVertices(
         std::ifstream & fileStream, mesh_t<topology::simplex_t<N>, D> & mesh, int N_vertices,
         std::vector<vertex_t> & vertices) -> void
