@@ -120,7 +120,7 @@ namespace mito::mesh {
             return;
         }
 
-        inline auto isOnBoundary(const cell_family_t<D - 1> & cell) -> bool
+        inline auto isOnBoundary(const cell_family_t<N - 1> & cell) -> bool
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
