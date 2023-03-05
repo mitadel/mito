@@ -96,10 +96,6 @@ namespace mito::mesh {
             // erase the cell from the mesh
             _cells.erase(cell);
 
-            // TOFIX: is this the only reason that {_geometry} cannot be a const reference?
-            // erase cell from topology
-            _geometry.topology().erase(cell);
-
             // all done
             return;
         }

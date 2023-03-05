@@ -68,6 +68,7 @@ TEST(EraseElement, TestEraseElementMesh)
     // erase a simplex
     std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(cell0);
+    topology.erase(cell0);
 
     // std::cout << "After erase: " << std::endl;
     // for (const auto & simplex : mesh.cells<2>()) {
@@ -87,6 +88,7 @@ TEST(EraseElement, TestEraseElementMesh)
     // }
 
     mesh.erase(cell1);
+    topology.erase(cell1);
 
     // assert the mesh has now 2 cells
     EXPECT_EQ(mesh.nCells(), 2);

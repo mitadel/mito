@@ -101,6 +101,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
             new_simplex_composition_0[1] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            topology.erase(subsimplex);
             break;
         }
     }
@@ -110,6 +111,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
             new_simplex_composition_0[2] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            topology.erase(subsimplex);
             break;
         }
     }
@@ -124,6 +126,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_1[0], subsimplex)) {
             new_simplex_composition_1[1] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            topology.erase(subsimplex);
             break;
         }
     }
@@ -133,6 +136,7 @@ flipDiagonal(
         if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
             new_simplex_composition_1[2] = subsimplex;
             boundary_simplices.erase(subsimplex);
+            topology.erase(subsimplex);
             break;
         }
     }
@@ -145,9 +149,12 @@ flipDiagonal(
     auto & new_simplex1 = topology.triangle(new_simplex_composition_1);
 
     mesh.insert(new_simplex0);
-    mesh.insert(new_simplex1);
     mesh.erase(simplex0);
+    topology.erase(simplex0);
+
+    mesh.insert(new_simplex1);
     mesh.erase(simplex1);
+    topology.erase(simplex1);
 
     // all done
     return;
