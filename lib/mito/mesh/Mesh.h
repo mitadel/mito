@@ -146,7 +146,7 @@ namespace mito::mesh {
             // instantiate a new mesh for the boundary elements
             Mesh<cell_family_t<I>, D> boundary_mesh(_geometry);
 
-            // loop on the (I+1) dimensional cells
+            // loop on the (N-1)-dimensional cells
             for (const auto & cell : cells()) {
                 // loop on the subcells of {cell}
                 for (const auto & subcell : cell->composition()) {
