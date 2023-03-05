@@ -19,6 +19,9 @@
 // factories implementation
 #include "factories.h"
 
+// mesh utilities
+#include "utilities.h"
+
 
 #endif
 
