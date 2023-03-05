@@ -44,7 +44,6 @@ namespace mito::geometry {
     using node_t = std::pair<topology::vertex_t, point_t<D>>;
 
     // mapping from vertices to points
-    // TOFIX: remove eventually. This typedef should not leak from {Geometry}
     // TOFIX: is this going to be an {unordered_multimap} when we do DG (i.e. when we have
     // different nodes for the same vertex and same point)
     template <int D>
