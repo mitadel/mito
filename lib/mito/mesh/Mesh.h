@@ -77,22 +77,6 @@ namespace mito::mesh {
             return _cells;
         }
 
-        // TOFIX: let {Mesh} answer the question for now, although this is not a
-        // question for {Mesh}, but a question for {Geometry}
-        inline auto nodes() const -> const auto &
-        {
-            // return the collection of nodes
-            return _geometry.nodes();
-        }
-
-        // TOFIX: let {Mesh} answer the question for now, although this is not a
-        // question for {Mesh}, but a question for {Geometry}
-        auto point(const vertex_t & vertex) -> const point_t<D> &
-        {
-            // return the point corresponding to vertex {vertex}
-            return _geometry.point(vertex);
-        }
-
         inline auto erase(const cell_t & cell) -> void
         {
 

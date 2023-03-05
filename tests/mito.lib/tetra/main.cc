@@ -21,15 +21,18 @@ tetra(mito::mesh::mesh_t<cellT, D> & mesh, auto & geometry) -> mito::mesh::mesh_
 
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(
-            0.5 * (mesh.point(vertex_0)->coordinates() + mesh.point(vertex_1)->coordinates()));
+            0.5
+            * (geometry.point(vertex_0)->coordinates() + geometry.point(vertex_1)->coordinates()));
 
         // compute the middle point of the segment 1->2
         auto & vertex_12 = geometry.node(
-            0.5 * (mesh.point(vertex_1)->coordinates() + mesh.point(vertex_2)->coordinates()));
+            0.5
+            * (geometry.point(vertex_1)->coordinates() + geometry.point(vertex_2)->coordinates()));
 
         // compute the middle point of the segment 2->0
         auto & vertex_20 = geometry.node(
-            0.5 * (mesh.point(vertex_2)->coordinates() + mesh.point(vertex_0)->coordinates()));
+            0.5
+            * (geometry.point(vertex_2)->coordinates() + geometry.point(vertex_0)->coordinates()));
 
         // instantiate new cells
         auto & new_cell_0 = geometry.topology().triangle({ vertex_0, vertex_01, vertex_20 });
