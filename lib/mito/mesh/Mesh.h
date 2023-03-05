@@ -27,7 +27,7 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        inline Mesh(geometry_t & geometry)
+        inline Mesh(const geometry_t & geometry)
         requires(N <= D)
             : _geometry(geometry), _cells() {};
 
@@ -176,11 +176,11 @@ namespace mito::mesh {
 
       public:
         // accessor to geometry
-        auto geometry() -> geometry_t & { return _geometry; }
+        auto geometry() -> const geometry_t & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded
-        geometry_t & _geometry;
+        const geometry_t & _geometry;
 
         // container to store the mesh cells
         cells_t _cells;
