@@ -165,6 +165,7 @@ namespace mito::mesh {
 
       public:
         inline auto insert(const cell_t & cell) -> void
+        requires(N >= 1)
         {
             // add the cell to the set of cells with same dimension
             _cells.insert(cell);
@@ -176,6 +177,18 @@ namespace mito::mesh {
                 (subcell->orientation() ? _orientations[subcell->footprint()->id()][0] += 1 :
                                           _orientations[subcell->footprint()->id()][1] += 1);
             }
+
+            // all done
+            return;
+        }
+
+        // QUESTION: specialization of method {insert} for a mesh of vertices
+        //           not sure if supporting meshes of 0-simplices makes sense...
+        inline auto insert(const cell_t & cell) -> void
+        requires(N == 0)
+        {
+            // add the cell to the set of cells with same dimension
+            _cells.insert(cell);
 
             // all done
             return;

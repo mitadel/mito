@@ -98,6 +98,35 @@ TEST(Mesh, LoadSummitSegmentsMesh3D)
 
     // assert you read 10 cells
     EXPECT_EQ(mesh.nCells(), 10);
+
+    // assert you found 2 cells (vertices) on the boundary
+    {
+        auto boundary_mesh = mesh.boundary();
+        EXPECT_EQ(boundary_mesh.nCells(), 2);
+    }
+
+    // show me the cells
+    std::cout << "Initial mesh: " << std::endl;
+    int count = 0;
+    mito::topology::segment_t segment;
+    for (const auto & simplex : mesh.cells()) {
+        ++count;
+        if (count == 5) {
+            segment = simplex;
+        }
+    }
+
+    // erase a simplex
+    mesh.erase(segment);
+
+    // assert you read 9 cells
+    EXPECT_EQ(mesh.nCells(), 9);
+
+    // assert you found 4 cells (vertices) on the boundary
+    {
+        auto boundary_mesh = mesh.boundary();
+        EXPECT_EQ(boundary_mesh.nCells(), 4);
+    }
 }
 
 TEST(Mesh, LoadSummitMesh2D)
