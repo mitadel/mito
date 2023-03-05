@@ -46,6 +46,34 @@ namespace mito::mesh {
         // delete move assignment operator
         const Mesh & operator=(const Mesh &&) = delete;
 
+      private:
+        template <int I, int J>
+        inline auto _insert_subcells(
+            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) -> void
+        requires(I == J)
+        {
+            // add {subcell} to the boundary mesh
+            boundary_mesh.insert(cell);
+
+            // all done
+            return;
+        }
+
+        template <int I, int J>
+        inline auto _insert_subcells(
+            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) -> void
+        requires(I < J)
+        {
+            // loop on the subcells of {cell}
+            for (const auto & subcell : cell->composition()) {
+                // recursively add subcells of {subcell} to {boundary_mesh}
+                _insert_subcells(boundary_mesh, subcell);
+            }
+
+            // all done
+            return;
+        }
+
       public:
         inline auto sanityCheck() -> bool
         {
@@ -121,7 +149,7 @@ namespace mito::mesh {
          */
         template <int I = N - 1>
         inline auto boundary() -> Mesh<cell_family_t<I>, D>
-        requires(I == N - 1)
+        requires(I >= 0)
         {
             // instantiate a new mesh for the boundary elements
             Mesh<cell_family_t<I>, D> boundary_mesh(_geometry);
@@ -133,8 +161,7 @@ namespace mito::mesh {
                     // if {subcell} does not have a counterpart in {topology} with opposite
                     // orientation
                     if (isOnBoundary(subcell)) {
-                        // add {subcell} to the boundary mesh
-                        boundary_mesh.insert(subcell);
+                        _insert_subcells(boundary_mesh, subcell);
                     }
                 }
             }
@@ -143,7 +170,6 @@ namespace mito::mesh {
             return boundary_mesh;
         }
 
-      public:
         inline auto insert(const cell_t & cell) -> void
         requires(N >= 1)
         {

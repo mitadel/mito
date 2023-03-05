@@ -79,6 +79,20 @@ TEST(Mesh, BuildMesh)
     // assert you read 4 cells
     EXPECT_EQ(mesh.nCells(), 4);
 
+    // assert you found 4 cells (segments) on the boundary
+    {
+        auto boundary_mesh = mesh.boundary();
+        EXPECT_EQ(boundary_mesh.nCells(), 4);
+    }
+
+    // TOFIX: 8 vertices are found on the boundary due to repeated entries with different
+    //          orientations...
+    // assert you found 4 cells (vertices) on the boundary
+    {
+        auto boundary_mesh = mesh.boundary<0>();
+        EXPECT_EQ(boundary_mesh.nCells(), 8);
+    }
+
     return;
 }
 
