@@ -94,9 +94,7 @@ namespace mito::utilities {
             _end(_begin),
             _end_allocation(_begin),
             _n_segments(0),
-            _n_elements(0),
-            _first_available_location(nullptr),
-            _last_available_location(nullptr)
+            _n_elements(0)
         {}
 
         // destructor
@@ -166,25 +164,17 @@ namespace mito::utilities {
         auto _next_available_location() -> T *
         {
             // if there are available locations to spare
-            if (_first_available_location != nullptr) {
-                // make a copy of the pointed position by {_first_available_location}
-                T * temp = _first_available_location;
-                // if there is more than one available location to spare
-                if (_first_available_location != _last_available_location) {
-                    // reinterpret {_first_available_location} as a pointer to pointer
-                    T ** tail = reinterpret_cast<T **>(_first_available_location);
-                    // update the {_first_available_location} with the value pointed by
-                    // {_first_available_location}
-                    _first_available_location = *tail;
-                } else {
-                    // if {_first_available_location} is also the last, reset
-                    // {_first_available_location} and {_last_available_location} to nullptr
-                    _first_available_location = nullptr;
-                    _last_available_location = nullptr;
-                }
-                // return the original {_first_available_location}, i.e. the value before the update
-                // done in the lines above
-                return temp;
+            if (!_available_locations.empty()) {
+                // get an available location from the queue
+                T * location = _available_locations.front();
+
+                // remove the next available location from the queue
+                // (TOFIX: what if the next available location is then not used?
+                // Maybe we should not pop here)
+                _available_locations.pop();
+
+                // return the available location from the queue
+                return location;
             }
 
             // if the container is all filled up (note that this case also includes the case that
@@ -240,22 +230,8 @@ namespace mito::utilities {
             // decrement the number of elements
             --_n_elements;
 
-            // if there are not yet available locations to spare
-            if (_first_available_location == nullptr) {
-                // write the address of the newly-erased element in {_first_available_location}
-                _first_available_location = element.handle();
-                // point the last available location to the first
-                _last_available_location = _first_available_location;
-            } else {
-                // reinterpret the {_last_available_location} as a pointer to pointer
-                T ** temp = reinterpret_cast<T **>(_last_available_location);
-                // leave behind in the location pointed to by {_last_available_location} a pointer
-                // to the newly-erased element
-                *temp = element.handle();
-                // update the {_last_available_location} with the address of the newly-erased
-                // element
-                _last_available_location = element.handle();
-            }
+            // add the address of the element to the queue of the available locations for write
+            _available_locations.push(element.handle());
 
             // all done
             return;
@@ -316,10 +292,8 @@ namespace mito::utilities {
         int _n_segments;
         // the number of elements stored in the container
         int _n_elements;
-        // first available location for (over)writing
-        T * _first_available_location;
-        // last available location for (over)writing
-        T * _last_available_location;
+        // a queue with the available locations for writing
+        std::queue<T *> _available_locations;
 
       private:
         // non-const iterator
