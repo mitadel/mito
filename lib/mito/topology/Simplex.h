@@ -174,18 +174,6 @@ namespace mito::topology {
         friend class SimplexFactory<0>;
     };
 
-    // overload operator<< for simplices
-    template <int D>
-    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<D> & s)
-    requires(D > 0)
-    {
-        os << s.handle() << " composed of:" << std::endl;
-        for (const auto & simplex : s->composition()) {
-            std::cout << "\t" << simplex << std::endl;
-        }
-        return os;
-    }
-
 }    // namespace mito
 
 
