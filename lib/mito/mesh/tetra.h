@@ -65,15 +65,12 @@ namespace mito::mesh {
         // loop on the cells of the mesh
         for (const auto & cell : mesh.cells()) {
 
-            // get the three vertices
-            const auto & edge_0 = cell->composition()[0];
-            const auto & edge_1 = cell->composition()[1];
-            const auto & vertex_0 = edge_0->composition()[0]->footprint();
-            const auto & vertex_1 = edge_0->composition()[1]->footprint();
-            const auto & vertex_2 = edge_1->composition()[1]->footprint();
+            // get the vertices of the cell in the order dictated by the orientation
+            auto vertices = mito::topology::vertices(cell);
 
             // recursively subdivide the cell identified by these three vertices
-            subdivide(vertex_0, vertex_1, vertex_2, geometry, subdivided_mesh, n_refinements);
+            subdivide(
+                vertices[0], vertices[1], vertices[2], geometry, subdivided_mesh, n_refinements);
         }
 
         return subdivided_mesh;
