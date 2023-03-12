@@ -244,17 +244,30 @@ TEST(Tetra, MeshRectangle)
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
     auto mesh = mito::mesh::summit<mito::topology::triangle_t>(fileStream, geometry);
 
+    // count the cells of the mesh
     int cells = mesh.nCells();
 
+    // do one tetra mesh refinement
     auto tetra_mesh = tetra(mesh, geometry);
-
+    // assert that the refined mesh has 4 times more elements than the original one
     EXPECT_EQ(tetra_mesh.nCells(), 4 * cells);
+
+    // do two tetra mesh refinements on the original mesh
+    auto tetra_tetra_mesh_original = tetra(mesh, geometry, 2);
+    // assert that the refined mesh has 16 times more elements than the original one
+    EXPECT_EQ(tetra_tetra_mesh_original.nCells(), 16 * cells);
+
+    // do a tetra mesh refinement on the refined mesh
+    auto tetra_tetra_mesh_refined = tetra(tetra_mesh, geometry);
+    // assert that the refined mesh has 16 times more elements than the original one
+    EXPECT_EQ(tetra_tetra_mesh_refined.nCells(), 16 * cells);
 }
 
-TEST(Tetra, MeshRectangle2Subdivisions)
+TEST(Tetra, MeshRectangleArea)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -265,12 +278,36 @@ TEST(Tetra, MeshRectangle2Subdivisions)
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
     auto mesh = mito::mesh::summit<mito::topology::triangle_t>(fileStream, geometry);
 
+    // count the cells of the mesh
     int cells = mesh.nCells();
 
-    auto tetra_mesh = tetra(mesh, geometry, 2);
+    // do two tetra mesh refinements
+    auto tetra_mesh = tetra(mesh, geometry, 1);
 
-    EXPECT_EQ(tetra_mesh.nCells(), 16 * cells);
+    // compute the volume of the original mesh
+    auto volume_mesh = 0.0;
+    {
+        auto manifold = mito::manifolds::manifold(mesh);
+        auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
+        auto f = mito::math::function([](const mito::vector_t<2> & x) { return 1.0; });
+        auto field_one = mito::math::field(f);
+        volume_mesh = integrator.integrate(field_one);
+    }
+
+    // compute the volume of the refined mesh
+    auto volume_tetra_mesh = 0.0;
+    {
+        auto f = mito::math::function([](const mito::vector_t<2> & x) { return 1.0; });
+        auto field_one = mito::math::field(f);
+        auto manifold = mito::manifolds::manifold(tetra_mesh);
+        auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
+        volume_tetra_mesh = integrator.integrate(field_one);
+    }
+
+    // assert that the two volumes coincide
+    EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-15);
 }
