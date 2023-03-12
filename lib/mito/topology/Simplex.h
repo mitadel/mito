@@ -179,17 +179,10 @@ namespace mito::topology {
     std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<D> & s)
     requires(D > 0)
     {
-        os << &s << " composed of:" << std::endl;
+        os << s.handle() << " composed of:" << std::endl;
         for (const auto & simplex : s->composition()) {
             std::cout << "\t" << simplex << std::endl;
         }
-        return os;
-    }
-
-    // overload operator<< for vertices
-    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<0> & s)
-    {
-        os << "vertex: " << &s << std::endl;
         return os;
     }
 

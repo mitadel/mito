@@ -11,8 +11,16 @@ namespace mito::topology {
         // print orientation
         os << "orientation: " << s->orientation() << std::endl;
         // print footprint
-        os << "footprint: " << s->footprint().handle() << std::endl;
+        os << "footprint: " << s->footprint() << std::endl;
         // all done
+        return os;
+    }
+
+    // overload operator<< for oriented simplices
+    template <>
+    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
+    {
+        os << "vertex: " << s->footprint().handle() << std::endl;
         return os;
     }
 
