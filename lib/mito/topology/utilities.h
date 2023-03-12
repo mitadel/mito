@@ -75,6 +75,33 @@ namespace mito::topology {
 
         return true;
     }
+
+    // return the vertices of a triangle following the order dictated by the triangle's orientation
+    auto vertices(const triangle_t & triangle) -> vertex_simplex_composition_t<3>
+    {
+        // a container to store a collection of vertices
+        vertex_simplex_composition_t<3> vertices_collection;
+
+        // get the three vertices following the orientation of the simplex
+        const auto & edge_0 = triangle->composition()[0];
+        // the first two vertices come from the first edge
+        vertices_collection[0] = edge_0->orientation() ? edge_0->composition()[0]->footprint() :
+                                                         edge_0->composition()[1]->footprint();
+        vertices_collection[1] = edge_0->orientation() ? edge_0->composition()[1]->footprint() :
+                                                         edge_0->composition()[0]->footprint();
+        // the third vertex comes from the second edge
+        const auto & edge_1 = triangle->composition()[1];
+        vertices_collection[2] = edge_1->orientation() ? edge_1->composition()[1]->footprint() :
+                                                         edge_1->composition()[0]->footprint();
+
+        // assert that you found three distinct vertices
+        assert(vertices_collection[0] != vertices_collection[1]);
+        assert(vertices_collection[1] != vertices_collection[2]);
+        assert(vertices_collection[0] != vertices_collection[2]);
+
+        // all done
+        return vertices_collection;
+    }
 }
 
 
