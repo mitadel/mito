@@ -7,6 +7,7 @@ namespace mito::mesh {
 
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(const cellT & cell, auto & geometry, mesh_t<cellT, D> & subdivided_mesh) -> void
+    requires(std::is_same_v<cellT, mito::topology::triangle_t>)
     {
         // get the three vertices
         const auto & edge_0 = cell->composition()[0];
@@ -48,6 +49,7 @@ namespace mito::mesh {
 
     template <class cellT, int D /*spatial dimension*/>
     auto tetra(mesh_t<cellT, D> & mesh, auto & geometry) -> mesh_t<cellT, D>
+    requires(std::is_same_v<cellT, mito::topology::triangle_t>)
     {
         // instantiate a new (empty) mesh for the refined mesh
         mesh_t<cellT, D> subdivided_mesh(geometry);
