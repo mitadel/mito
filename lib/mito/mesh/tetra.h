@@ -8,7 +8,8 @@ namespace mito::mesh {
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
         const vertex_t & vertex_0, const vertex_t & vertex_1, const vertex_t & vertex_2,
-        auto & geometry, mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
+        mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
+        int n_refinements) -> void
     requires(std::is_same_v<cellT, mito::topology::triangle_t>)
     {
         // compute the middle point of the segment 0->1
@@ -56,7 +57,9 @@ namespace mito::mesh {
     }
 
     template <class cellT, int D /*spatial dimension*/>
-    auto tetra(mesh_t<cellT, D> & mesh, auto & geometry, int n_refinements = 1) -> mesh_t<cellT, D>
+    auto tetra(
+        mesh_t<cellT, D> & mesh, mito::geometry::geometry_t<D> & geometry, int n_refinements = 1)
+        -> mesh_t<cellT, D>
     requires(std::is_same_v<cellT, mito::topology::triangle_t>)
     {
         // instantiate a new (empty) mesh for the refined mesh
