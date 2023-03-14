@@ -282,9 +282,6 @@ TEST(Tetra, MeshRectangleArea)
     std::ifstream fileStream("rectangle.summit");
     auto mesh = mito::mesh::summit<mito::topology::triangle_t>(fileStream, geometry);
 
-    // count the cells of the mesh
-    int cells = mesh.nCells();
-
     // do two tetra mesh refinements
     auto tetra_mesh = tetra(mesh, geometry, 1);
 
@@ -293,7 +290,7 @@ TEST(Tetra, MeshRectangleArea)
     {
         auto manifold = mito::manifolds::manifold(mesh);
         auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
-        auto f = mito::math::function([](const mito::vector_t<2> & x) { return 1.0; });
+        auto f = mito::math::function([](const mito::vector_t<2> &) { return 1.0; });
         auto field_one = mito::math::field(f);
         volume_mesh = integrator.integrate(field_one);
     }
@@ -301,7 +298,7 @@ TEST(Tetra, MeshRectangleArea)
     // compute the volume of the refined mesh
     auto volume_tetra_mesh = 0.0;
     {
-        auto f = mito::math::function([](const mito::vector_t<2> & x) { return 1.0; });
+        auto f = mito::math::function([](const mito::vector_t<2> &) { return 1.0; });
         auto field_one = mito::math::field(f);
         auto manifold = mito::manifolds::manifold(tetra_mesh);
         auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
