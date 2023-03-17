@@ -79,7 +79,7 @@ namespace mito::topology {
             else {
                 // create a new oriented simplex riding on simplex {simplex} with orientation
                 // {orientation}
-                auto oriented_simplex = _oriented_simplices.emplace(simplex, orientation);
+                auto oriented_simplex = _emplace_simplex(simplex, orientation);
 
                 // register it in the map
                 auto ret = _orientations.insert(std::make_pair(tuple, oriented_simplex));
@@ -161,6 +161,19 @@ namespace mito::topology {
         // {simplex}
         inline bool _orientation(
             const simplex_composition_t<D> & composition, const unoriented_simplex_t<D> & simplex);
+
+        inline auto _emplace_simplex(const unoriented_simplex_t<D> & simplex, bool orientation)
+            -> simplex_t<D>
+        {
+            // get from {_simplices} the location where to place the new simplex
+            auto location = _oriented_simplices.location_for_placement();
+
+            // create a new simplex at location {location} with placement new
+            OrientedSimplex<D> * resource = new (location) OrientedSimplex<D>(simplex, orientation);
+
+            // wrap the new simplex in a shared pointer and return it
+            return mito::utilities::shared_ptr<OrientedSimplex<D>>(resource, &_oriented_simplices);
+        }
 
       private:
         // factory for simplices

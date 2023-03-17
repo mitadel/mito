@@ -64,8 +64,8 @@ namespace mito::topology {
             }
             // otherwise
             else {
-                // create a new simplex with composition {composition}
-                auto simplex = _simplices.emplace(composition);
+                // emplace simplex in {_simplices}
+                auto simplex = _emplace_simplex(composition);
 
                 // register it in the compositions map
                 auto ret = _compositions.insert(std::make_pair(representative, simplex));
@@ -98,6 +98,19 @@ namespace mito::topology {
       private:
         // equivalence class relation for a simplex
         inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
+
+        inline auto _emplace_simplex(const simplex_composition_t<D> & composition)
+            -> unoriented_simplex_t<D>
+        {
+            // get from {_simplices} the location where to place the new simplex
+            auto location = _simplices.location_for_placement();
+
+            // create a new simplex at location {location} with placement new
+            Simplex<D> * resource = new (location) Simplex<D>(composition);
+
+            // wrap the new simplex in a shared pointer and return it
+            return mito::utilities::shared_ptr<Simplex<D>>(resource, &_simplices);
+        }
 
       private:
         // container to store the unoriented simplices
@@ -176,7 +189,7 @@ namespace mito::topology {
         inline auto simplex() -> const unoriented_simplex_t<0> &
         {
             // emplace the new vertex in the vertex collection and return it
-            return *_vertex_set.insert(_simplices.emplace()).first;
+            return *_vertex_set.insert(_emplace_simplex()).first;
         }
 
         // erase a simplex from the factory (this method actually erases the simplex only if there
@@ -195,6 +208,19 @@ namespace mito::topology {
 
             // all done
             return;
+        }
+
+      private:
+        inline auto _emplace_simplex() -> unoriented_simplex_t<0>
+        {
+            // get from {_simplices} the location where to place the new simplex
+            auto location = _simplices.location_for_placement();
+
+            // create a new simplex at location {location} with placement new
+            Simplex<0> * resource = new (location) Simplex<0>();
+
+            // wrap the new simplex in a shared pointer and return it
+            return mito::utilities::shared_ptr<Simplex<0>>(resource, &_simplices);
         }
 
       private:

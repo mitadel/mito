@@ -169,8 +169,9 @@ namespace mito::utilities {
                 T * location = _available_locations.front();
 
                 // remove the next available location from the queue
-                // (TOFIX: what if the next available location is then not used?
-                // Maybe we should not pop here)
+                // NOTE: for simplicity we make the assumption that the location returned by this
+                //      method then is actually used to construct a new element. That is why we
+                //      remove the item from the {_available_locations} container here.
                 _available_locations.pop();
 
                 // return the available location from the queue
@@ -191,8 +192,7 @@ namespace mito::utilities {
       public:
         auto segment_size() const -> int { return _segment_size; }
 
-        template <class... Args>
-        auto emplace(Args &&... args) -> shared_ptr<T>
+        auto location_for_placement() -> T *
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
@@ -203,12 +203,10 @@ namespace mito::utilities {
                 location = _allocate_new_segment();
             }
 
-            // create a new instance of T at {location} with placement new
-            T * resource = new (location) T(args...);
-            // and assign it to a new pointer
-            mito::utilities::shared_ptr<T> pointer(resource, this);
-
             // increment the size of the container
+            // NOTE: for simplicity we make the assumption that the location returned by this method
+            //      then is actually used to construct a new element. That is why we increment the
+            //      number of elements here
             ++_n_elements;
 
             // if we have written past the last element
@@ -216,6 +214,22 @@ namespace mito::utilities {
                 // move the end of the container
                 ++_end;
             }
+
+            // all done
+            return location;
+        }
+
+        template <class... Args>
+        auto emplace(Args &&... args) -> shared_ptr<T>
+        {
+            // get a spare location for the placement of the new resource
+            auto location = location_for_placement();
+
+            // create a new instance of T at location {location} with placement new
+            T * resource = new (location) T(args...);
+
+            // and assign it to a new pointer
+            mito::utilities::shared_ptr<T> pointer(resource, this);
 
             // all done
             return pointer;
