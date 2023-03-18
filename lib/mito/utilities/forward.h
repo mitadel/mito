@@ -47,6 +47,17 @@ namespace mito::utilities {
     constexpr auto operator!=(
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool;
+
+    // hash function for shared pointers
+    // Note that two pointers pointing to the same cell collapse on the same hashed value
+    template <class sharedPointerT>
+    struct hash_function {
+        size_t operator()(const sharedPointerT & item) const
+        {
+            // reinterpret the address of the pointed handle as a {size_t} and return it
+            return reinterpret_cast<size_t>(item.handle());
+        }
+    };
 }
 
 

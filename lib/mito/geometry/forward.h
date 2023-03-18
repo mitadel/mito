@@ -48,7 +48,8 @@ namespace mito::geometry {
     // different nodes for the same vertex and same point)
     template <int D>
     using nodes_t = std::unordered_map<
-        mito::topology::vertex_t, point_t<D>, mito::topology::cell_hash<mito::topology::vertex_t>>;
+        mito::topology::vertex_t, point_t<D>,
+        mito::utilities::hash_function<mito::topology::vertex_t>>;
 }
 
 
