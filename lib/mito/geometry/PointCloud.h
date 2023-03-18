@@ -8,9 +8,11 @@ namespace mito::geometry {
     class PointCloud {
       private:
         using cloud_t = mito::geometry::cloud_t<D>;
+        // TOFIX: make this unordered?
+        using point_compositions_t = std::map<vector_t<D>, point_t<D>>;
 
       private:
-        PointCloud() : _cloud(100 /*segment size */) {}
+        PointCloud() : _cloud(100 /*segment size */), _compositions() {}
 
         // delete copy constructor
         PointCloud(const PointCloud<D> &) = delete;
@@ -39,7 +41,7 @@ namespace mito::geometry {
         auto size() -> int { return _cloud.size(); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(vector_t<D> && coord) -> point_t<D>
+        auto point(vector_t<D> && coord) -> const point_t<D> &
         {
             // helper function to convert vector_t to variadic template argument
             auto _emplace_point = [this]<size_t... I>(
@@ -56,12 +58,22 @@ namespace mito::geometry {
                 return mito::utilities::shared_ptr<Point<D>>(resource, &_cloud);
             };
 
+            // emplace point in {_cloud}
+            auto point = _emplace_point(coord, std::make_index_sequence<D> {});
+
+            // register it in the compositions map
+            auto ret = _compositions.insert(std::make_pair(point->coordinates(), point));
+
             // return the newly added point
-            return _emplace_point(coord, std::make_index_sequence<D> {});
+            return ret.first->second;
         }
 
       private:
+        // the cloud of points
         cloud_t _cloud;
+
+        // the container mapping the composition of points to the points themselves
+        point_compositions_t _compositions;
 
         // friendship with the singleton
         using PointCloudSingleton = mito::utilities::Singleton<PointCloud<D>>;

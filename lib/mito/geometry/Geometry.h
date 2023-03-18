@@ -43,9 +43,7 @@ namespace mito::geometry {
             auto & vertex = _topology.vertex();
 
             // ask the point cloud for a point with coordinates {coord}
-            // TOFIX: will this be as follows when we implement points as singletons?
-            // auto & point = _point_cloud.point(std::move(coord));
-            auto point = _point_cloud.point(std::move(coord));
+            auto & point = _point_cloud.point(std::move(coord));
 
             // register the node with the geometry
             _nodes.emplace(node_t<D>(vertex, point));
