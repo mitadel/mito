@@ -286,24 +286,10 @@ TEST(Tetra, MeshRectangleArea)
     auto tetra_mesh = tetra(mesh, geometry, 1);
 
     // compute the volume of the original mesh
-    auto volume_mesh = 0.0;
-    {
-        auto manifold = mito::manifolds::manifold(mesh);
-        auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
-        auto f = mito::math::function([](const mito::vector_t<2> &) { return 1.0; });
-        auto field_one = mito::math::field(f);
-        volume_mesh = integrator.integrate(field_one);
-    }
+    auto volume_mesh = mito::quadrature::volume(mito::manifolds::manifold(mesh));
 
     // compute the volume of the refined mesh
-    auto volume_tetra_mesh = 0.0;
-    {
-        auto f = mito::math::function([](const mito::vector_t<2> &) { return 1.0; });
-        auto field_one = mito::math::field(f);
-        auto manifold = mito::manifolds::manifold(tetra_mesh);
-        auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
-        volume_tetra_mesh = integrator.integrate(field_one);
-    }
+    auto volume_tetra_mesh = mito::quadrature::volume(mito::manifolds::manifold(tetra_mesh));
 
     // assert that the two volumes coincide
     EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-15);
