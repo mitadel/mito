@@ -10,6 +10,41 @@ using mito::real;
 using mito::quadrature::GAUSS;
 using mito::topology::triangle_t;
 
+
+TEST(Quadrature, IntegralsOnIntervals)
+{
+    // an empty topology
+    auto & topology = mito::topology::topology();
+
+    // an empty cloud of points
+    auto & point_cloud = mito::geometry::point_cloud<1>();
+
+    // a 1D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
+    // an empty mesh of simplicial topology in 1D
+    auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
+
+    // a mesh of the segment (0, 1)
+    auto & vertex0 = geometry.node({ 0.0 });
+    auto & vertex1 = geometry.node({ 1.0 });
+    auto & segment0 = topology.segment({ vertex0, vertex1 });
+    mesh.insert(segment0);
+
+    // an integrator with degree of exactness 2 on segment (0, 1)
+    auto manifold = mito::manifolds::manifold(mesh);
+    auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
+
+    // a scalar function
+    auto x_square = mito::math::field(mito::math::function(
+        [](const mito::vector_t<1> & x) -> mito::scalar_t { return x[0] * x[0]; }));
+
+    // integrate x^2 on (0, 1)
+    auto integral = integrator.integrate(x_square);
+    EXPECT_NEAR(integral, 1.0 / 3.0, 1.e-16);
+}
+
+
 TEST(Quadrature, QuadratureBuildMesh)
 {
     /**
