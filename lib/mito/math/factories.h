@@ -5,6 +5,20 @@
 
 namespace mito::math {
 
+    // factory returning a constant function
+    template <class X, real c>
+    constexpr auto constant()
+    {
+        return function([](const X &) { return c; });
+    }
+
+    // factory returning the function {f(x) = 1.0}
+    template <class X>
+    constexpr auto one()
+    {
+        return constant<X, 1.0>();
+    }
+
     // factories for function
     // make function from pointer to function
     template <class X, class Y>
