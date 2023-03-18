@@ -39,16 +39,23 @@ namespace mito::geometry {
         auto size() -> int { return _cloud.size(); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(vector_t<D> && coord) -> auto
+        auto point(vector_t<D> && coord) -> point_t<D>
         {
             // helper function to convert vector_t to variadic template argument
             auto _emplace_point = [this]<size_t... I>(
                                       const vector_t<D> & coord, std::index_sequence<I...>)
-                                      ->auto
+                                      ->point_t<D>
             {
-                // return the newly added point
-                return _cloud.emplace(coord[I]...);
+                // get from {_cloud} the location where to place the new point
+                auto location = _cloud.location_for_placement();
+
+                // create a new point at location {location} with placement new
+                Point<D> * resource = new (location) Point<D>(coord[I]...);
+
+                // wrap the new point in a shared pointer and return it
+                return mito::utilities::shared_ptr<Point<D>>(resource, &_cloud);
             };
+
             // return the newly added point
             return _emplace_point(coord, std::make_index_sequence<D> {});
         }
