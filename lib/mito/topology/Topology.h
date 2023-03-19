@@ -92,6 +92,16 @@ namespace mito::topology {
                                 segment({ vertices[2], vertices[0] }) });
         }
 
+        // instantiate a tetrahedron
+        inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices)
+            -> const simplex_t<3> &
+        {
+            return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[3] }),
+                                triangle({ vertices[1], vertices[2], vertices[3] }),
+                                triangle({ vertices[2], vertices[0], vertices[3] }),
+                                triangle({ vertices[0], vertices[2], vertices[1] }) });
+        }
+
         // returns whether the oriented simplex exists in the factory
         template <int D>
         inline auto exists(const simplex_t<D> & simplex) const -> bool
