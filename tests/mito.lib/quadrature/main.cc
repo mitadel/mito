@@ -30,18 +30,19 @@ TEST(Quadrature, IntegralsOnIntervals)
     auto & vertex1 = geometry.node({ 1.0 });
     auto & segment0 = topology.segment({ vertex0, vertex1 });
     mesh.insert(segment0);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 12);
 
     // an integrator with degree of exactness 2 on segment (0, 1)
-    auto manifold = mito::manifolds::manifold(mesh);
+    auto manifold = mito::manifolds::manifold(tetra_mesh);
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
     // a scalar function
-    auto x_square = mito::math::field(mito::math::function(
-        [](const mito::vector_t<1> & x) -> mito::scalar_t { return x[0] * x[0]; }));
+    auto f_exp = mito::math::field(mito::math::function(
+        [](const mito::vector_t<1> & x) -> mito::scalar_t { return exp(-x[0]); }));
 
-    // integrate x^2 on (0, 1)
-    auto integral = integrator.integrate(x_square);
-    EXPECT_NEAR(integral, 1.0 / 3.0, 1.e-16);
+    // integrate exp(-x) on (0, 1)
+    auto integral = integrator.integrate(f_exp);
+    EXPECT_NEAR(integral, (exp(1) - 1) / exp(1), 1.e-15);
 }
 
 
