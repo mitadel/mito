@@ -122,6 +122,46 @@ namespace mito::topology {
         // all done
         return vertices_collection;
     }
+
+    // return the vertices of a tetrahedron following the order dictated by the tetrahedron's
+    // orientation
+    auto vertices(const tetrahedron_t & tetrahedron) -> vertex_simplex_composition_t<3>
+    {
+        // get the vertices of the first face of the tetrahedron
+        auto vertices_triangle_0 = vertices(tetrahedron->composition()[0]);
+
+        // copy the vertices to the vertices collection of the tetrahedron
+        vertex_simplex_composition_t<3> vertices_collection;
+        vertices_collection[0] = vertices_triangle_0[0];
+        vertices_collection[1] = vertices_triangle_0[1];
+        vertices_collection[3] = vertices_triangle_0[2];
+
+        // get the vertices of the second face of the tetrahedron
+        auto vertices_triangle_1 = vertices(tetrahedron->composition()[1]);
+
+        // TOFIX: for sure there is a better way to find the last vertex
+        // get the remaining vertex
+        vertices_collection[2] = (vertices_triangle_1[0] != vertices_collection[0]
+                                  && vertices_triangle_1[0] != vertices_collection[1]
+                                  && vertices_triangle_1[0] != vertices_collection[3]) ?
+                                     vertices_triangle_1[0] :
+                                     ((vertices_triangle_1[1] != vertices_collection[0]
+                                       && vertices_triangle_1[1] != vertices_collection[1]
+                                       && vertices_triangle_1[1] != vertices_collection[3]) ?
+                                          vertices_triangle_1[1] :
+                                          vertices_triangle_1[2]);
+
+        // assert that you found four distinct vertices
+        assert(vertices_collection[0] != vertices_collection[1]);
+        assert(vertices_collection[0] != vertices_collection[2]);
+        assert(vertices_collection[0] != vertices_collection[3]);
+        assert(vertices_collection[1] != vertices_collection[2]);
+        assert(vertices_collection[1] != vertices_collection[3]);
+        assert(vertices_collection[2] != vertices_collection[3]);
+
+        // all done
+        return vertices_collection;
+    }
 }
 
 
