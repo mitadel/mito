@@ -96,7 +96,27 @@ namespace mito::topology {
         return true;
     }
 
-    // return the vertices of a triangle following the order dictated by the triangle's orientation
+    // return the vertices of a segment following the order dictated by the segment's orientation
+    auto vertices(const segment_t & segment) -> vertex_simplex_composition_t<1>
+    {
+        // a container to store a collection of vertices
+        vertex_simplex_composition_t<1> vertices_collection;
+
+        // the first two vertices come from the first edge
+        vertices_collection[0] = segment->orientation() ? segment->composition()[0]->footprint() :
+                                                          segment->composition()[1]->footprint();
+        vertices_collection[1] = segment->orientation() ? segment->composition()[1]->footprint() :
+                                                          segment->composition()[0]->footprint();
+
+        // assert that you found two distinct vertices
+        assert(vertices_collection[0] != vertices_collection[1]);
+
+        // all done
+        return vertices_collection;
+    }
+
+    // return the vertices of a triangle following the order dictated by the triangle's
+    // orientation
     auto vertices(const triangle_t & triangle) -> vertex_simplex_composition_t<2>
     {
         // a container to store a collection of vertices

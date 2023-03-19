@@ -7,6 +7,41 @@ namespace mito::mesh {
 
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
+        const vertex_t & vertex_0, const vertex_t & vertex_1,
+        mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
+        int n_refinements) -> void
+    requires(std::is_same_v<cellT, mito::topology::segment_t>)
+    {
+        // compute the middle point of the segment 0->1
+        auto & vertex_01 = geometry.node(
+            0.5
+            * (geometry.point(vertex_0)->coordinates() + geometry.point(vertex_1)->coordinates()));
+
+        // if there are no more refinements to be made
+        if (n_refinements == 1) {
+
+            // instantiate new cells
+            auto & new_cell_0 = geometry.topology().segment({ vertex_0, vertex_01 });
+            auto & new_cell_1 = geometry.topology().segment({ vertex_01, vertex_1 });
+
+            // insert new cells in new mesh
+            subdivided_mesh.insert(new_cell_0);
+            subdivided_mesh.insert(new_cell_1);
+
+            // all done
+            return;
+        }
+
+        // otherwise recursively subdivide the four cells
+        subdivide(vertex_0, vertex_01, geometry, subdivided_mesh, n_refinements - 1);
+        subdivide(vertex_01, vertex_1, geometry, subdivided_mesh, n_refinements - 1);
+
+        // all done
+        return;
+    }
+
+    template <class cellT, int D /*spatial dimension*/>
+    auto subdivide(
         const vertex_t & vertex_0, const vertex_t & vertex_1, const vertex_t & vertex_2,
         mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
         int n_refinements) -> void
