@@ -85,11 +85,7 @@ namespace mito::mesh {
         const auto & vertex1 = vertices[index1];
         const auto & vertex2 = vertices[index2];
 
-        const auto & segment0 = topology.segment({ vertex0, vertex1 });
-        const auto & segment1 = topology.segment({ vertex1, vertex2 });
-        const auto & segment2 = topology.segment({ vertex2, vertex0 });
-
-        const auto & cell = topology.triangle({ segment0, segment1, segment2 });
+        const auto & cell = topology.triangle({ vertex0, vertex1, vertex2 });
         mesh.insert(cell);
 
         // QUESTION: Can the label be more than one?
@@ -130,34 +126,14 @@ namespace mito::mesh {
         const auto & vertex2 = vertices[index2];
         const auto & vertex3 = vertices[index3];
 
-        const auto & segment0 = topology.segment({ vertex0, vertex1 });
-        const auto & segment1 = topology.segment({ vertex1, vertex3 });
-        const auto & segment2 = topology.segment({ vertex3, vertex0 });
-        const auto & triangle0 = topology.triangle({ segment0, segment1, segment2 });
-
-        const auto & segment3 = topology.segment({ vertex1, vertex2 });
-        const auto & segment4 = topology.segment({ vertex2, vertex3 });
-        const auto & segment5 = topology.segment({ vertex3, vertex1 });
-        const auto & triangle1 = topology.triangle({ segment3, segment4, segment5 });
-
-        const auto & segment6 = topology.segment({ vertex2, vertex0 });
-        const auto & segment7 = topology.segment({ vertex0, vertex3 });
-        const auto & segment8 = topology.segment({ vertex3, vertex2 });
-        const auto & triangle2 = topology.triangle({ segment6, segment7, segment8 });
-
-        const auto & segment9 = topology.segment({ vertex0, vertex2 });
-        const auto & segment10 = topology.segment({ vertex2, vertex1 });
-        const auto & segment11 = topology.segment({ vertex1, vertex0 });
-        const auto & triangle3 = topology.triangle({ segment9, segment10, segment11 });
+        const auto & cell = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
+        mesh.insert(cell);
 
         // QUESTION: Can the label be more than one?
         // read label for cell
         // TOFIX: Ignored for now
         std::string cell_set_id;
         fileStream >> cell_set_id;
-
-        const auto & cell = topology.tetrahedron({ triangle0, triangle1, triangle2, triangle3 });
-        mesh.insert(cell);
 
         // all done
         return;
