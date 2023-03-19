@@ -60,7 +60,6 @@ namespace mito::mesh {
     auto tetra(
         mesh_t<cellT, D> & mesh, mito::geometry::geometry_t<D> & geometry, int n_refinements = 1)
         -> mesh_t<cellT, D>
-    requires(std::is_same_v<cellT, mito::topology::triangle_t>)
     {
         // instantiate a new (empty) mesh for the refined mesh
         mesh_t<cellT, D> subdivided_mesh(geometry);
@@ -71,9 +70,20 @@ namespace mito::mesh {
             // get the vertices of the cell in the order dictated by the orientation
             auto vertices = mito::topology::vertices(cell);
 
-            // recursively subdivide the cell identified by these three vertices
-            subdivide(
-                vertices[0], vertices[1], vertices[2], geometry, subdivided_mesh, n_refinements);
+            // helper function to expand array to parameter pack
+            constexpr auto _subdivide = []<size_t... J>(
+                const mito::topology::vertex_simplex_composition_t<cellT::resource_t::order> &
+                    vertices,
+                mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
+                int n_refinements, std::index_sequence<J...>)
+            {
+                return subdivide(vertices[J]..., geometry, subdivided_mesh, n_refinements);
+            };
+
+            // recursively subdivide the cell identified by these vertices
+            _subdivide(
+                vertices, geometry, subdivided_mesh, n_refinements,
+                std::make_index_sequence<cellT::resource_t::order + 1> {});
         }
 
         return subdivided_mesh;
