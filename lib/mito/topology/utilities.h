@@ -97,10 +97,10 @@ namespace mito::topology {
     }
 
     // return the vertices of a triangle following the order dictated by the triangle's orientation
-    auto vertices(const triangle_t & triangle) -> vertex_simplex_composition_t<3>
+    auto vertices(const triangle_t & triangle) -> vertex_simplex_composition_t<2>
     {
         // a container to store a collection of vertices
-        vertex_simplex_composition_t<3> vertices_collection;
+        vertex_simplex_composition_t<2> vertices_collection;
 
         // get the three vertices following the orientation of the simplex
         const auto & edge_0 = triangle->composition()[0];
