@@ -87,10 +87,9 @@ namespace mito::topology {
         inline auto triangle(const vertex_simplex_composition_t<2> & vertices)
             -> const simplex_t<2> &
         {
-            return simplex<2>(
-                { segment({ simplex(vertices[0], false), simplex(vertices[1], true) }),
-                  segment({ simplex(vertices[1], false), simplex(vertices[2], true) }),
-                  segment({ simplex(vertices[2], false), simplex(vertices[0], true) }) });
+            return simplex<2>({ segment({ vertices[0], vertices[1] }),
+                                segment({ vertices[1], vertices[2] }),
+                                segment({ vertices[2], vertices[0] }) });
         }
 
         // returns whether the oriented simplex exists in the factory
