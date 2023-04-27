@@ -39,17 +39,24 @@ f_I(F && f)
 // constexpr for loop calling function f(i, j) for each i,j in (Start, End)x(Start, End)
 template <int End1, int End2, int Index1 = 0, class F>
 constexpr void
-constexpr_for_2(F && f)
+_constexpr_for_2(F && f)
 {
     if constexpr (Index1 < End1) {
         constexpr_for_1<End2>(f_I<Index1>(f));
-        constexpr_for_2<End1, End2, Index1 + 1>(f);
+        _constexpr_for_2<End1, End2, Index1 + 1>(f);
     }
 
     // the above expands to the following for Start=0, End=3:
     // constexpr_for_1<Start, End>(f_I<0>(f));
     // constexpr_for_1<Start, End>(f_I<1>(f));
     // constexpr_for_1<Start, End>(f_I<2>(f));
+}
+
+template <int End1, int End2, class F>
+constexpr void
+constexpr_for_2(F && f)
+{
+    _constexpr_for_2<End1, End2, 0>(f);
 }
 
 // take f(i, j, k) and return f_IJ(k) := f(I, J, k) for I, J fixed
@@ -65,12 +72,19 @@ f_IJ(F && f)
 // constexpr for loop calling function f(i, j, j) for each i,j,k in (Start, End)x(Start, End)
 template <int End1, int End2, int End3, int Index1 = 0, int Index2 = 0, class F>
 constexpr void
-constexpr_for_3(F && f)
+_constexpr_for_3(F && f)
 {
     if constexpr (Index1 < End1) {
         constexpr_for_2<End2, End3>(f_IJ<Index1>(f));
-        constexpr_for_3<End1, End2, End3, Index1 + 1, Index2>(f);
+        _constexpr_for_3<End1, End2, End3, Index1 + 1, Index2>(f);
     }
+}
+
+template <int End1, int End2, int End3, class F>
+constexpr void
+constexpr_for_3(F && f)
+{
+    _constexpr_for_3<End1, End2, End3, 0, 0>(f);
 }
 
 // main program
