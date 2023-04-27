@@ -18,11 +18,11 @@ using namespace pyre::tensor;
 // constexpr for loop calling function f(i) for each i in (Start, End)
 template <int Start, int End, class F>
 constexpr void
-constexpr_for(F && f)
+constexpr_for_1(F && f)
 {
     if constexpr (Start < End) {
         f.template operator()<Start>();
-        return constexpr_for<Start + 1, End>(f);
+        return constexpr_for_1<Start + 1, End>(f);
     }
 }
 
@@ -39,17 +39,17 @@ f_I(F && f)
 // constexpr for loop calling function f(i, j) for each i,j in (Start, End)x(Start, End)
 template <int Start1, int End1, int Start2, int End2, int Index1 = Start1, class F>
 constexpr void
-constexpr_for_tensor(F && f)
+constexpr_for_2(F && f)
 {
     if constexpr (Index1 < End1) {
-        constexpr_for<Start2, End2>(f_I<Index1>(f));
-        constexpr_for_tensor<Start1, End1, Start2, End2, Index1 + 1>(f);
+        constexpr_for_1<Start2, End2>(f_I<Index1>(f));
+        constexpr_for_2<Start1, End1, Start2, End2, Index1 + 1>(f);
     }
 
     // the above expands to the following for Start=0, End=3:
-    // constexpr_for<Start, End>(f_I<0>(f));
-    // constexpr_for<Start, End>(f_I<1>(f));
-    // constexpr_for<Start, End>(f_I<2>(f));
+    // constexpr_for_1<Start, End>(f_I<0>(f));
+    // constexpr_for_1<Start, End>(f_I<1>(f));
+    // constexpr_for_1<Start, End>(f_I<2>(f));
 }
 
 // take f(i, j, k) and return f_IJ(k) := f(I, J, k) for I, J fixed
@@ -70,7 +70,7 @@ constexpr void
 constexpr_for_3(F && f)
 {
     if constexpr (Index1 < End1) {
-        constexpr_for_tensor<Start2, End2, Start3, End3>(f_IJ<Index1>(f));
+        constexpr_for_2<Start2, End2, Start3, End3>(f_IJ<Index1>(f));
         constexpr_for_3<Start1, End1, Start2, End2, Start3, End3, Index1 + 1, Index2>(f);
     }
 }
@@ -84,7 +84,7 @@ main(int argc, char * argv[])
     constexpr vector_t<3> x { 1, 1, 1 };
 
     // assert all components of the vector are equal to 1
-    constexpr_for<0, vector_t<3>::size>([x]<int i>() {
+    constexpr_for_1<0, vector_t<3>::size>([x]<int i>() {
         // std::cout << i << std::endl;
         static_assert(x[i] == 1);
     });
@@ -93,7 +93,7 @@ main(int argc, char * argv[])
     constexpr matrix_t<3, 3> A { 2, 2, 2, 2, 2, 2, 2, 2, 2 };
 
     // assert all components of the matrix are equal to 2
-    constexpr_for_tensor<0, 3, 0, 3>([A]<int i, int j>() {
+    constexpr_for_2<0, 3, 0, 3>([A]<int i, int j>() {
         // std::cout << i << "\t" << j << std::endl;
         static_assert(A[{ i, j }] == 2);
     });
@@ -102,7 +102,7 @@ main(int argc, char * argv[])
     constexpr matrix_t<3, 3> A_sym { 1, 2, 3, 2, 1, 2, 3, 2, 1 };
 
     // assert all components of the matrix are equal to 2
-    constexpr_for_tensor<0, 3, 0, 3>([A_sym]<int i, int j>() {
+    constexpr_for_2<0, 3, 0, 3>([A_sym]<int i, int j>() {
         // std::cout << i << "\t" << j << std::endl;
         static_assert(A_sym[{ i, j }] == pyre::tensor::transpose(A_sym)[{ i, j }]);
     });
