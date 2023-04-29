@@ -7,7 +7,10 @@
 #include <array>
 #include <vector>
 #include <iostream>
-#include <pyre/algebra.h>
+
+#define HAVE_TENSOR
+#define HAVE_COMPACT_PACKINGS
+#include <pyre/tensor.h>
 
 #endif
 
