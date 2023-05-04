@@ -46,8 +46,8 @@ namespace mito::manifolds {
 
             // compute the volume of the e-th element
             volumes[e] = ((element->orientation() == true) ? 1 : -1)
-                       * std::fabs(pyre::algebra::determinant(pointsTensor))
-                       / pyre::algebra::factorial<D>();
+                       * std::fabs(pyre::tensor::determinant(pointsTensor))
+                       / pyre::tensor::factorial<D>();
 
             // update elements counter
             ++e;

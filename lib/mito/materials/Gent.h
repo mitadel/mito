@@ -32,10 +32,10 @@ namespace mito::materials {
         matrix_t<D> F = Du;
 
         // inverse of deformation gradient
-        matrix_t<D> invF = pyre::algebra::inverse(F);
+        matrix_t<D> invF = pyre::tensor::inverse(F);
 
         // J = det F
-        real detF = pyre::algebra::determinant(F);
+        real detF = pyre::tensor::determinant(F);
 
         // precompute useful quantities
         // J^2 - 1

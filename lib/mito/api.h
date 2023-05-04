@@ -14,16 +14,16 @@ namespace mito {
     using scalar_t = real;
     // typedef for vectors
     template <int D, typename T = real>
-    using vector_t = pyre::algebra::vector_t<D, T>;
+    using vector_t = pyre::tensor::vector_t<D, T>;
     // typedef for matrices
     template <int D1, int D2 = D1, typename T = real>
-    using matrix_t = pyre::algebra::matrix_t<D1, D2, T>;
+    using matrix_t = pyre::tensor::matrix_t<D1, D2, T>;
     // typedef for symmetric matrices
     template <int D, typename T = real>
-    using symmetric_matrix_t = pyre::algebra::symmetric_matrix_t<D, T>;
+    using symmetric_matrix_t = pyre::tensor::symmetric_matrix_t<D, T>;
     // typedef for diagonal matrices
     template <int D, typename T = real>
-    using diagonal_matrix_t = pyre::algebra::diagonal_matrix_t<D, T>;
+    using diagonal_matrix_t = pyre::tensor::diagonal_matrix_t<D, T>;
 
     template <typename X>
     std::ostream & operator<<(std::ostream & os, const std::vector<X> & x)
