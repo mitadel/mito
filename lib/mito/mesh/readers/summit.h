@@ -240,8 +240,11 @@ namespace mito::mesh {
     template <class cellT, int D>
     auto summit(std::ifstream & fileStream, mito::geometry::geometry_t<D> & geometry) -> auto
     {
+        if (!fileStream.is_open()) {
+            throw std::runtime_error("summit: Mesh file could not be opened");
+        }
+
         std::cout << "Loading summit mesh..." << std::endl;
-        assert(fileStream.is_open());
 
         // read dimension of physical space
         int dim = 0;
