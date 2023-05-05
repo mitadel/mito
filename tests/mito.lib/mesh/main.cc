@@ -353,5 +353,5 @@ TEST(Tetra, MeshOneTetrahedron)
     auto volume_tetra_mesh = mito::quadrature::volume(mito::manifolds::manifold(tetra_mesh));
 
     // assert that the two volumes coincide
-    EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-14);
+    EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-13);
 }

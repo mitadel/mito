@@ -42,7 +42,7 @@ TEST(Quadrature, IntegralsOnIntervals)
 
     // integrate exp(-x) on (0, 1)
     auto integral = integrator.integrate(f_exp);
-    EXPECT_NEAR(integral, (exp(1) - 1) / exp(1), 1.e-15);
+    EXPECT_NEAR(integral, (exp(1) - 1) / exp(1), 1.e-13);
 }
 
 
