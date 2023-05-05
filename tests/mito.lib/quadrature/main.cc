@@ -147,7 +147,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
               << std::endl;
     // check the result
-    EXPECT_NEAR(result, 1.0, 1.e-16);
+    EXPECT_DOUBLE_EQ(result, 1.0);
 
     // a scalar function
     auto f_linear = mito::math::function([](const vector_t<2> & x) -> real { return x[0]; });
@@ -159,7 +159,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     std::cout << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
               << std::endl;
     // check the result
-    EXPECT_NEAR(result, 0.5, 1.e-16);
+    EXPECT_DOUBLE_EQ(result, 0.5);
 
     // a scalar function
     auto f_xy = mito::math::function([](const vector_t<2> & x) -> real { return x[0] * x[1]; });
@@ -171,7 +171,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     std::cout << "Integration of x*y: Result = " << result
               << ", Error = " << std::fabs(result - 0.25) << std::endl;
     // check the result
-    EXPECT_NEAR(result, 0.25, 1.e-16);
+    EXPECT_DOUBLE_EQ(result, 0.25);
 
     // a scalar function
     auto f_xx = mito::math::function([](const vector_t<2> & x) -> real { return x[0] * x[0]; });
@@ -183,7 +183,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     std::cout << "Integration of x*x: Result = " << result
               << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
     // check the result
-    EXPECT_NEAR(result, 1.0 / 3.0, 1.e-16);
+    EXPECT_DOUBLE_EQ(result, 1.0 / 3.0);
 
     // attach different coordinates (3D coordinates to the same points as above)
     // an empty cloud of points in 3D
@@ -222,7 +222,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     std::cout << "Integration of x*y in 3D: Result = " << result
               << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;
     // check the result
-    EXPECT_NEAR(result, 0.35355339059327384, 1.e-15);
+    EXPECT_DOUBLE_EQ(result, 0.35355339059327384);
 }
 
 TEST(Quadrature, QuadratureLoadMesh)
@@ -297,7 +297,7 @@ TEST(Quadrature, FlipDomain)
     std::cout << "Integration of cos(x*y): Result flipped = " << result_flip << std::endl;
 
     // expect to obtain a minus sign
-    EXPECT_NEAR(result, -result_flip, 1.e-16);
+    EXPECT_DOUBLE_EQ(result, -result_flip);
 }
 
 // end of file

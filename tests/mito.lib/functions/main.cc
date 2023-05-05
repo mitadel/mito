@@ -5,7 +5,6 @@
 using mito::math::function_t;
 
 static const mito::real PI = 4.0 * atan(1.0);
-static const mito::real TOL = 1.e-16;
 
 //
 // mito::real
@@ -38,27 +37,27 @@ TEST(Functions, TestFunctions)
 
     auto function4 = function3 + function3 + function3;
     auto function5 = 3.0 * function3;
-    EXPECT_NEAR(function4(x), function5(x), TOL);
+    EXPECT_DOUBLE_EQ(function4(x), function5(x));
 
     auto function6 = function4 - function3;
     auto function7 = function5 - function3;
-    EXPECT_NEAR(function6(x), function7(x), TOL);
+    EXPECT_DOUBLE_EQ(function6(x), function7(x));
 
     auto function8 = (function7 * 0.5) / 0.5;
-    EXPECT_NEAR(function7(x), function8(x), TOL);
+    EXPECT_DOUBLE_EQ(function7(x), function8(x));
 
     auto function9 = (0.5 / function7) * function7;
-    EXPECT_NEAR(function9(x), 0.5, TOL);
+    EXPECT_DOUBLE_EQ(function9(x), 0.5);
 
     auto function10 = (PI + function7) - function7;
-    EXPECT_NEAR(function10(x), PI, TOL);
+    EXPECT_DOUBLE_EQ(function10(x), PI);
 
     auto function11 = PI + function7 - 2.0 * PI;
-    EXPECT_NEAR(function11(x), function7(x) - PI, TOL);
+    EXPECT_DOUBLE_EQ(function11(x), function7(x) - PI);
 
     // (cos(xy) + 5) / cos(xy)
     auto function12 = (function1 + function2) / function1;
-    EXPECT_NEAR((function1(x) + function2(x)) / function1(x), function12(x), TOL);
+    EXPECT_DOUBLE_EQ((function1(x) + function2(x)) / function1(x), function12(x));
 
     auto function13 = mito::math::function(my_function);
     auto function14 = function13 + function1;

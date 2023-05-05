@@ -157,7 +157,7 @@ TEST(DivergenceTheorem, TestDivergenceTheorem)
     std::cout << "Result of boundary integration = " << resultBoundary << std::endl;
 
     // assert divergence theorem
-    EXPECT_NEAR(resultBody, resultBoundary, 1.e-15);
+    EXPECT_DOUBLE_EQ(resultBody, resultBoundary);
 }
 
 // end of file
