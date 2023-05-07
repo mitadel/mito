@@ -68,10 +68,10 @@ namespace mito::topology {
                 auto simplex = _emplace_simplex(composition);
 
                 // register it in the compositions map
-                auto ret = _compositions.insert(std::make_pair(representative, simplex));
+                auto it = _compositions.insert(std::make_pair(representative, simplex));
 
                 // and return it
-                return ret.first->second;
+                return it.first->second;
             }
         }
 

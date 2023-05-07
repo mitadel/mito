@@ -45,9 +45,8 @@ namespace mito::geometry {
         {
             // helper function to convert vector_t to variadic template argument
             auto _emplace_point = [this]<size_t... I>(
-                                      const vector_t<D> & coord, std::index_sequence<I...>)
-                                      ->point_t<D>
-            {
+                                      const vector_t<D> & coord,
+                                      std::index_sequence<I...>) -> point_t<D> {
                 // get from {_cloud} the location where to place the new point
                 auto location = _cloud.location_for_placement();
 
@@ -62,10 +61,10 @@ namespace mito::geometry {
             auto point = _emplace_point(coord, std::make_index_sequence<D> {});
 
             // register it in the compositions map
-            auto ret = _compositions.insert(std::make_pair(point->coordinates(), point));
+            auto it = _compositions.insert(std::make_pair(point->coordinates(), point));
 
             // return the newly added point
-            return ret.first->second;
+            return it.first->second;
         }
 
       private:
