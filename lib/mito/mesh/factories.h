@@ -6,10 +6,10 @@
 namespace mito::mesh {
 
     // mesh factory
-    template <int D, template <int> class cellT>
-    auto mesh() -> mesh_t<D, cellT>
+    template <class cellT, int D>
+    auto mesh(mito::geometry::geometry_t<D> & geometry) -> mesh_t<cellT, D>
     {
-        return mesh_t<D, cellT>();
+        return mesh_t<cellT, D>(geometry);
     }
 
 }

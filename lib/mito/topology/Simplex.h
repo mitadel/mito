@@ -8,15 +8,14 @@ namespace mito::topology {
      * This class represents a Simplex of order D > 0.
      *
      * Simplex<D> is represented recursively as a collection of D+1 subsimplices of type
-     * OrientedSimplex<D-1>.
+     * Simplex<D-1>.
      */
 
     template <int D>
-    requires(D > 0)
     class Simplex : public mito::utilities::Shareable {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
-      public:    // TOFIX: should be private
+      private:
         // constructor for a simplex based on its composition in terms of subsimplices
         constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
 
@@ -68,8 +67,8 @@ namespace mito::topology {
         void vertices(VERTEX_COLLECTION_T & vertices) const
         requires(D == 1)
         {
-            vertices.insert(_simplices[0]);
-            vertices.insert(_simplices[1]);
+            vertices.insert(_simplices[0]->footprint());
+            vertices.insert(_simplices[1]->footprint());
         }
 
         // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
@@ -119,18 +118,61 @@ namespace mito::topology {
         friend class SimplexFactory<D>;
     };
 
-    // overload operator<< for simplices
-    template <int D>
-    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_ptr<D> & s)
-    requires(D > 0)
-    {
-        os << &s << " composed of:" << std::endl;
-        for (const auto & simplex : s->composition()) {
-            std::cout << "\t" << simplex << std::endl;
-        }
-        return os;
-    }
+    /*
+     * This class collapses Simplex<D> for D = 0.
+     *
+     * A simplex of order 0, like a vertex, is an empty object.
+     */
 
+    template <>
+    class Simplex<0> : public mito::utilities::Shareable {
+      private:
+        // default constructor
+        constexpr Simplex() {}
+
+      public:
+        // empty destructor
+        constexpr ~Simplex() {}
+
+      private:
+        // delete copy constructor
+        Simplex(const Simplex &) = delete;
+
+        // delete move constructor
+        Simplex(const Simplex &&) = delete;
+
+        // delete assignment operator
+        const Simplex & operator=(const Simplex &) = delete;
+
+        // delete move assignment operator
+        const Simplex & operator=(const Simplex &&) = delete;
+
+      public:
+        // returns the simplex id
+        inline auto id() const -> unoriented_simplex_id_t
+        {
+            // the id is the (immutable) address of this object
+            return reinterpret_cast<unoriented_simplex_id_t>(this);
+        }
+
+        // perform a sanity check
+        inline auto sanityCheck() const -> bool
+        {
+            // a simplex of order 0 has only 1 vertex (this one!)
+            return true;
+        }
+
+      private:
+        inline auto _erase() -> void
+        {
+            // all done
+            return;
+        }
+
+      private:
+        // friendship with the factory of simplices
+        friend class SimplexFactory<0>;
+    };
 
 }    // namespace mito
 

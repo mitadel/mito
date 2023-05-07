@@ -8,6 +8,8 @@
 
 // get the forward declarations
 #include "forward1.h"
+// published type factories; this is the file you are looking for...
+#include "api.h"
 // class {OrientedSimplex} needs to be complete for the following forward declarations
 // (the concept {ReferenceCountedObject} requires to see full class header file)
 #include "OrientedSimplex.h"
@@ -20,9 +22,6 @@
 #include "SimplexFactory.h"
 #include "OrientedSimplexFactory.h"
 #include "Topology.h"
-
-// published type factories; this is the file you are looking for...
-#include "api.h"
 
 // factories implementation
 #include "factories.h"

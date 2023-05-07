@@ -5,6 +5,7 @@
 
 // externals
 #include <vector>
+#include <array>
 
 // support
 #include "../mesh.h"

@@ -7,6 +7,7 @@
 
 // support
 #include "../utilities.h"
+#include "../topology.h"
 
 #endif
 

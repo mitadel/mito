@@ -8,29 +8,23 @@ TEST(EraseElement, TestEraseElementMesh)
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
-    // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<2, mito::topology::simplex_t>();
+    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
-    auto point0 = point_cloud.point({ 0.0, 0.0 });
-    auto point1 = point_cloud.point({ 1.0, 0.0 });
-    auto point2 = point_cloud.point({ 1.0, 1.0 });
-    auto point3 = point_cloud.point({ 0.5, 0.5 });
-    auto point4 = point_cloud.point({ 0.0, 1.0 });
+    // ask the geometry for new nodes (this instantiates a new vertex and attaches it to the point)
+    auto & vertex0 = geometry.node({ 0.0, 0.0 });
+    // or equivalently
+    // auto & vertex0 = topology.vertex();
+    // auto point0 = point_cloud.point({ 0.0, 0.0 });
+    // geometry.node(vertex0, point0);
+    auto & vertex1 = geometry.node({ 1.0, 0.0 });
+    auto & vertex2 = geometry.node({ 1.0, 1.0 });
+    auto & vertex3 = geometry.node({ 0.5, 0.5 });
+    auto & vertex4 = geometry.node({ 0.0, 1.0 });
 
-    auto & vertex0 = topology.vertex();
-    auto & vertex1 = topology.vertex();
-    auto & vertex2 = topology.vertex();
-    auto & vertex3 = topology.vertex();
-    auto & vertex4 = topology.vertex();
-
-    mesh.insert(vertex0, point0);
-    mesh.insert(vertex1, point1);
-    mesh.insert(vertex2, point2);
-    mesh.insert(vertex3, point3);
-    mesh.insert(vertex4, point4);
-
+    // ask the topology for segments connecting the vertices of the nodes above
     auto & segment0 = topology.segment({ vertex0, vertex1 });
     auto & segment1 = topology.segment({ vertex1, vertex3 });
     auto & segment2 = topology.segment({ vertex3, vertex0 });
@@ -51,16 +45,18 @@ TEST(EraseElement, TestEraseElementMesh)
     auto & segment11 = topology.segment({ vertex3, vertex4 });
     auto & cell3 = topology.triangle({ segment9, segment10, segment11 });
 
+    // an empty mesh of triangles in 2D
+    auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
     mesh.insert(cell0);
     mesh.insert(cell1);
     mesh.insert(cell2);
     mesh.insert(cell3);
 
     // assert you read 4 cells
-    EXPECT_EQ(mesh.nCells<2>(), 4);
+    EXPECT_EQ(mesh.nCells(), 4);
 
     // assert the boundary is made of 4 cells
-    EXPECT_EQ(mesh.boundary().nCells<1>(), 4);
+    EXPECT_EQ(mesh.boundary().nCells(), 4);
 
     // show me the cells
     // std::cout << "Initial mesh: " << std::endl;
@@ -72,6 +68,7 @@ TEST(EraseElement, TestEraseElementMesh)
     // erase a simplex
     std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(cell0);
+    topology.erase(cell0);
 
     // std::cout << "After erase: " << std::endl;
     // for (const auto & simplex : mesh.cells<2>()) {
@@ -79,10 +76,10 @@ TEST(EraseElement, TestEraseElementMesh)
     // }
 
     // assert the mesh has now 3 cells
-    EXPECT_EQ(mesh.nCells<2>(), 3);
+    EXPECT_EQ(mesh.nCells(), 3);
 
     // assert the boundary is now made of 5 cells
-    EXPECT_EQ(mesh.boundary().nCells<1>(), 5);
+    EXPECT_EQ(mesh.boundary().nCells(), 5);
 
     // show me the boundary cells
     // std::cout << "Boundary: " << std::endl;
@@ -91,12 +88,13 @@ TEST(EraseElement, TestEraseElementMesh)
     // }
 
     mesh.erase(cell1);
+    topology.erase(cell1);
 
     // assert the mesh has now 2 cells
-    EXPECT_EQ(mesh.nCells<2>(), 2);
+    EXPECT_EQ(mesh.nCells(), 2);
 
     // assert the boundary is now made of 4 cells
-    EXPECT_EQ(mesh.boundary().nCells<1>(), 4);
+    EXPECT_EQ(mesh.boundary().nCells(), 4);
 }
 
 #if 0

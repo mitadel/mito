@@ -19,7 +19,6 @@ namespace mito::topology {
     // TOFIX: rename this to UnorientedSimplexFactory
 
     template <int D>
-    requires(D > 0)
     class SimplexFactory {
 
       private:
@@ -31,13 +30,13 @@ namespace mito::topology {
         //      2 pointers to nodes into a pointer to edge,
         //      3 pointers to edges into a pointer to face, ...
         // edges composition
-        // std::map<std::array<unoriented_simplex_id_t, 2>, unoriented_simplex_ptr<1>>
+        // std::map<std::array<unoriented_simplex_id_t, 2>, unoriented_simplex_t<1>>
         // faces compositions
-        // std::map<std::array<unoriented_simplex_id_t, 3>, unoriented_simplex_ptr<2>>
+        // std::map<std::array<unoriented_simplex_id_t, 3>, unoriented_simplex_t<2>>
         // volumes compositions
-        // std::map<std::array<unoriented_simplex_id_t, 4>, unoriented_simplex_ptr<3>>
+        // std::map<std::array<unoriented_simplex_id_t, 4>, unoriented_simplex_t<3>>
         using composition_t = std::array<unoriented_simplex_id_t, D + 1>;
-        using composition_map_t = std::map<composition_t, unoriented_simplex_ptr<D>>;
+        using composition_map_t = std::map<composition_t, unoriented_simplex_t<D>>;
 
       private:
         // default constructor
@@ -50,7 +49,7 @@ namespace mito::topology {
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
         inline auto simplex(const simplex_composition_t<D> & composition)
-            -> const unoriented_simplex_ptr<D> &
+            -> const unoriented_simplex_t<D> &
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
@@ -65,20 +64,20 @@ namespace mito::topology {
             }
             // otherwise
             else {
-                // create a new simplex with composition {composition}
-                auto simplex = _simplices.emplace(composition);
+                // emplace simplex in {_simplices}
+                auto simplex = _emplace_simplex(composition);
 
                 // register it in the compositions map
-                auto ret = _compositions.insert(std::make_pair(representative, simplex));
+                auto it = _compositions.insert(std::make_pair(representative, simplex));
 
                 // and return it
-                return ret.first->second;
+                return it.first->second;
             }
         }
 
         // erase a simplex from the factory (this method actually erases the simplex only if there
         // is no one else using it, otherwise does nothing)
-        inline auto erase(const unoriented_simplex_ptr<D> & simplex) -> void
+        inline auto erase(const unoriented_simplex_t<D> & simplex) -> void
         {
             // sanity check
             assert(simplex.references() > 0);
@@ -99,6 +98,19 @@ namespace mito::topology {
       private:
         // equivalence class relation for a simplex
         inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
+
+        inline auto _emplace_simplex(const simplex_composition_t<D> & composition)
+            -> unoriented_simplex_t<D>
+        {
+            // get from {_simplices} the location where to place the new simplex
+            auto location = _simplices.location_for_placement();
+
+            // create a new simplex at location {location} with placement new
+            Simplex<D> * resource = new (location) Simplex<D>(composition);
+
+            // wrap the new simplex in a shared pointer and return it
+            return mito::utilities::shared_ptr<Simplex<D>>(resource, &_simplices);
+        }
 
       private:
         // container to store the unoriented simplices
@@ -156,6 +168,71 @@ namespace mito::topology {
         // all done
         return representative;
     }
+
+    template <>
+    class SimplexFactory<0> {
+
+      private:
+        // typedef for a collection of unoriented simplices
+        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<0>>;
+
+      private:
+        // default constructor
+        SimplexFactory() : _simplices(100 /*segment size */) {};
+
+        // destructor
+        ~SimplexFactory() {};
+
+        // return a simplex with composition {composition} (either create a new simplex if such
+        // simplex does not exist in the factory or return the existing representative of the class
+        // of equivalence of simplices with this composition)
+        inline auto simplex() -> const unoriented_simplex_t<0> &
+        {
+            // emplace the new vertex in the vertex collection and return it
+            return *_vertex_set.insert(_emplace_simplex()).first;
+        }
+
+        // erase a simplex from the factory (this method actually erases the simplex only if there
+        // is no one else using it, otherwise does nothing)
+        inline auto erase(const unoriented_simplex_t<0> & simplex) -> void
+        {
+
+            // sanity check
+            assert(simplex.references() > 0);
+
+            // erase the simplex
+            simplex->_erase();
+
+            // erase the vertex from the vertex set
+            _vertex_set.erase(simplex);
+
+            // all done
+            return;
+        }
+
+      private:
+        inline auto _emplace_simplex() -> unoriented_simplex_t<0>
+        {
+            // get from {_simplices} the location where to place the new simplex
+            auto location = _simplices.location_for_placement();
+
+            // create a new simplex at location {location} with placement new
+            Simplex<0> * resource = new (location) Simplex<0>();
+
+            // wrap the new simplex in a shared pointer and return it
+            return mito::utilities::shared_ptr<Simplex<0>>(resource, &_simplices);
+        }
+
+      private:
+        // container to store the unoriented simplices
+        simplex_collection_t _simplices;
+
+        // container for persistent storage of the shared pointers to vertices
+        element_set_t<unoriented_simplex_t<0>> _vertex_set;
+
+        // private friendship with the factory of oriented simplices
+        friend class OrientedSimplexFactory<0>;
+    };
 }
 
 #endif    // mito_topology_SimplexFactory_h

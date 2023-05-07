@@ -24,6 +24,14 @@ namespace mito::topology {
         ~Topology() {};
 
       public:
+        template <int D>
+        inline auto simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
+            -> const simplex_t<D> &
+        {
+            // ask the factory of oriented simplices
+            return std::get<D>(_factories).orientedSimplex(footprint, orientation);
+        }
+
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
@@ -36,15 +44,19 @@ namespace mito::topology {
         }
 
         template <int D>
-        inline auto simplex() -> const simplex_t<0> &
+        inline auto simplex(bool orientation) -> const simplex_t<0> &
         requires(D == 0)
         {
             // ask the factory of oriented simplices
-            return std::get<0>(_factories).orientedSimplex();
+            return std::get<0>(_factories).orientedSimplex(orientation);
         }
 
         // instantiate a vertex
-        inline auto vertex() -> const simplex_t<0> & { return simplex<0>(); }
+        inline auto vertex() -> const vertex_t &
+        {
+            // ask the factory of oriented simplices
+            return simplex<0>(true)->footprint();
+        }
 
         // instantiate a segment
         inline auto segment(const simplex_composition_t<1> & simplices) -> const simplex_t<1> &
@@ -62,6 +74,40 @@ namespace mito::topology {
         inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> const simplex_t<3> &
         {
             return simplex<3>(simplices);
+        }
+
+        // instantiate a segment from unoriented vertices
+        inline auto segment(const vertex_simplex_composition_t<1> & simplices)
+            -> const simplex_t<1> &
+        {
+            return segment({ simplex(simplices[0], false), simplex(simplices[1], true) });
+        }
+
+        // instantiate a triangle
+        inline auto triangle(const vertex_simplex_composition_t<2> & vertices)
+            -> const simplex_t<2> &
+        {
+            return simplex<2>({ segment({ vertices[0], vertices[1] }),
+                                segment({ vertices[1], vertices[2] }),
+                                segment({ vertices[2], vertices[0] }) });
+        }
+
+        // instantiate a tetrahedron
+        inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices)
+            -> const simplex_t<3> &
+        {
+            return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[3] }),
+                                triangle({ vertices[1], vertices[2], vertices[3] }),
+                                triangle({ vertices[2], vertices[0], vertices[3] }),
+                                triangle({ vertices[0], vertices[2], vertices[1] }) });
+        }
+
+        // returns whether the oriented simplex exists in the factory
+        template <int D>
+        inline auto exists(const simplex_t<D> & simplex) const -> bool
+        {
+            return std::get<D>(_factories)
+                .existsOrientedSimplex(simplex->footprint(), simplex->orientation());
         }
 
         // returns whether there exists the flipped oriented simplex in the factory
@@ -97,6 +143,11 @@ namespace mito::topology {
         inline auto _erase(const simplex_t<D> & simplex) -> void
         requires(D > 0)
         {
+            // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
+            //          declared mutable. Should we call reset here and make the handle mutable or
+            //          should we accept that {element} points to an invalid resource after call to
+            //          {erase}?
+
             // sanity check
             assert(simplex.references() > 0);
 
@@ -140,30 +191,10 @@ namespace mito::topology {
             oriented_simplex_factory_t<2>, oriented_simplex_factory_t<3>>
             _factories;
 
-        // friendship with the singleton class
-        friend class TopologySingleton;
+        // friendship with the singleton
+        using TopologySingleton = mito::utilities::Singleton<Topology>;
+        friend TopologySingleton;
     };
-
-    class TopologySingleton {
-
-      public:
-        static auto GetInstance() -> Topology &
-        {
-            if (!topology) {
-                topology = new Topology();
-                return *topology;
-            }
-
-            return *topology;
-        }
-
-      private:
-        // the singleton
-        static Topology * topology;
-    };
-
-    // initialization of static member
-    mito::topology::Topology * mito::topology::TopologySingleton::topology = nullptr;
 }
 
 

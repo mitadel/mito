@@ -21,9 +21,35 @@ namespace mito::geometry {
     template <int D>
     using point_cloud_t = PointCloud<D>;
 
+    // class geometry
     template <int D>
-    using cloud_t = mito::utilities::segmented_t<typename point_t<D>::resource_t>;
+    class Geometry;
 
+    // geometry alias
+    template <int D>
+    using geometry_t = Geometry<D>;
+
+    // a cloud of points
+    template <int D>
+    using cloud_t = mito::utilities::segmented_t<point_t<D>>;
+
+    // class node
+    template <int D>
+    class Node;
+
+    // a node is a pair of a vertex and a point
+    // template <int D>
+    // using node_t = Node<D>;
+    template <int D>
+    using node_t = std::pair<topology::vertex_t, point_t<D>>;
+
+    // mapping from vertices to points
+    // TOFIX: is this going to be an {unordered_multimap} when we do DG (i.e. when we have
+    // different nodes for the same vertex and same point)
+    template <int D>
+    using nodes_t = std::unordered_map<
+        mito::topology::vertex_t, point_t<D>,
+        mito::utilities::hash_function<mito::topology::vertex_t>>;
 }
 
 

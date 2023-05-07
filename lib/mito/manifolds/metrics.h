@@ -8,7 +8,7 @@ namespace mito::manifolds {
     template <int D>
     auto computeSimplicesVolume(
         const element_vector_t<topology::simplex_t<D>> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<D> & vertices, std::vector<real> & volumes) -> void
     {
         // number of element vertices
         constexpr int V = D + 1;
@@ -45,8 +45,10 @@ namespace mito::manifolds {
             }
 
             // compute the volume of the e-th element
-            volumes[e] =
-                std::fabs(pyre::tensor::determinant(pointsTensor)) / pyre::tensor::factorial<D>();
+            volumes[e] = ((element->orientation() == true) ? 1 : -1)
+                       * std::fabs(pyre::tensor::determinant(pointsTensor))
+                       / pyre::tensor::factorial<D>();
+
             // update elements counter
             ++e;
         }
@@ -57,13 +59,13 @@ namespace mito::manifolds {
 
     template <class element_t, int D>
     auto computeElementsVolume(
-        const element_vector_t<element_t> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & volumes) -> void;
+        const element_vector_t<element_t> & elements, const geometry::nodes_t<D> & vertices,
+        std::vector<real> & volumes) -> void;
 
     template <>
     auto computeElementsVolume<topology::triangle_t, 2>(
         const element_vector_t<topology::triangle_t> & elements,
-        const mesh::vertex_point_table_t<2> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<2> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<2>(elements, vertices, volumes);
     }
@@ -71,7 +73,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::tetrahedron_t, 3>(
         const element_vector_t<topology::tetrahedron_t> & elements,
-        const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<3>(elements, vertices, volumes);
     }
@@ -79,7 +81,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::segment_t, 1>(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<1> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<1> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSimplicesVolume<1>(elements, vertices, volumes);
     }
@@ -87,7 +89,7 @@ namespace mito::manifolds {
     template <int D>
     auto computeSegmentsLength(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & length) -> void
+        const geometry::nodes_t<D> & vertices, std::vector<real> & length) -> void
     {
         // assert memory allocation is consistent
         assert(length.size() == elements.size());
@@ -105,9 +107,10 @@ namespace mito::manifolds {
             assert(element_vertices.size() == /*number of element vertices*/ 2);
 
             // store the geometry::distance between the two element vertices as the element length
-            length[e] = geometry::distance(
-                vertices.find(element_vertices[0])->second,
-                vertices.find(element_vertices[1])->second);
+            length[e] = ((element->orientation() == true) ? 1 : -1)
+                      * geometry::distance(
+                            vertices.find(element_vertices[0])->second,
+                            vertices.find(element_vertices[1])->second);
 
             // update elements counter
             ++e;
@@ -120,7 +123,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::segment_t, 2>(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<2> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<2> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<2>(elements, vertices, volumes);
     }
@@ -128,7 +131,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::segment_t, 3>(
         const element_vector_t<topology::segment_t> & elements,
-        const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeSegmentsLength<3>(elements, vertices, volumes);
     }
@@ -137,7 +140,7 @@ namespace mito::manifolds {
     template <int D = 3>
     auto computeTriangleArea(
         const element_vector_t<topology::triangle_t> & elements,
-        const mesh::vertex_point_table_t<D> & vertices, std::vector<real> & areas) -> void
+        const geometry::nodes_t<D> & vertices, std::vector<real> & areas) -> void
     {
         // loop on elements
         int e = 0;
@@ -172,7 +175,8 @@ namespace mito::manifolds {
             real bpc = b + c;
 
             // compute area of element e
-            areas[e] = 0.25 * sqrt((a + bpc) * (c - amb) * (c + amb) * (a + bmc));
+            areas[e] = ((element->orientation() == true) ? 1 : -1) * 0.25
+                     * sqrt((a + bpc) * (c - amb) * (c + amb) * (a + bmc));
 
             // update elements counter
             ++e;
@@ -185,7 +189,7 @@ namespace mito::manifolds {
     template <>
     auto computeElementsVolume<topology::triangle_t, 3>(
         const element_vector_t<topology::triangle_t> & elements,
-        const mesh::vertex_point_table_t<3> & vertices, std::vector<real> & volumes) -> void
+        const geometry::nodes_t<3> & vertices, std::vector<real> & volumes) -> void
     {
         return computeTriangleArea(elements, vertices, volumes);
     }

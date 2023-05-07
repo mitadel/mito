@@ -14,7 +14,7 @@ namespace mito::utilities {
 
     // class shared pointer based on a reference counted resource
     template <class Resource>
-    requires ReferenceCountedObject<Resource>
+    // requires ReferenceCountedObject<Resource>
     class SharedPointer;
 
     // shared pointer alias
@@ -23,7 +23,7 @@ namespace mito::utilities {
 
     // class segmented container
     template <class Resource>
-    requires ReferenceCountedObject<Resource>
+    // requires ReferenceCountedObject<Resource>
     class SegmentedContainer;
 
     // and its iterator
@@ -32,7 +32,7 @@ namespace mito::utilities {
 
     // segmented container alias
     template <class T>
-    using segmented_t = SegmentedContainer<T>;
+    using segmented_t = SegmentedContainer<typename T::resource_t>;
 
     // segmented container iterator
     // equality
@@ -47,6 +47,17 @@ namespace mito::utilities {
     constexpr auto operator!=(
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool;
+
+    // hash function for shared pointers
+    // Note that two pointers pointing to the same cell collapse on the same hashed value
+    template <class sharedPointerT>
+    struct hash_function {
+        size_t operator()(const sharedPointerT & item) const
+        {
+            // reinterpret the address of the pointed handle as a {size_t} and return it
+            return reinterpret_cast<size_t>(item.handle());
+        }
+    };
 }
 
 

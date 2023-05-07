@@ -12,10 +12,12 @@ class Simplex : public mito::utilities::Shareable {
     int _foo;
 };
 
+using simplex_t = mito::utilities::SharedPointer<Simplex>;
+
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
     // instantiate a segmented container
-    mito::utilities::segmented_t<Simplex> collection(3 /*segment size */);
+    mito::utilities::segmented_t<simplex_t> collection(3 /*segment size */);
 
     // assert that the container is empty and with no capacity
     EXPECT_EQ(collection.capacity(), 0);

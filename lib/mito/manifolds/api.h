@@ -6,9 +6,12 @@
 namespace mito::manifolds {
 
     // factory manifolds
-    template <int I, int D, template <int> class elementT>
-    requires(I <= D)
-    constexpr auto manifold(const mesh::mesh_t<D, elementT> & mesh);
+    template <class cellT, int D>
+    constexpr auto manifold(mesh::mesh_t<cellT, D> & mesh);
+
+    // a point in parametric coordinates
+    template <int D>
+    using parametric_point_t = std::array<double, D>;
 
 }
 

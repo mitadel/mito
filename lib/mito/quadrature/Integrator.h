@@ -13,41 +13,28 @@ namespace mito::quadrature {
     class Integrator {
         using quadrature_t = quadratureT;
         using manifold_t = manifoldT;
-        using element_t = typename manifold_t::element_t;
+        using cell_t = typename manifold_t::cell_t;
         static constexpr int D = manifold_t::dim;
 
-        // quadrature_t, element_t, and r identify a specific quadrature rule
-        using QuadratureRule = QuadratureRulesFactory<quadrature_t, element_t, r>;
+        // quadrature_t, cell_t, and r identify a specific quadrature rule
+        using QuadratureRule = QuadratureRulesFactory<quadrature_t, cell_t, r>;
 
       private:
         // QUESTION: Who should be in charge of computing the coordinates of the quadrature points
         //           in the elements? The quadrature rule has the coordinates of the quadrature
-        //           points on the reference element, the elements have the coordinate of the
+        //           points on the canonical element, the elements have the coordinate of the
         //           vertices.
         auto _computeQuadPointCoordinates() -> void
         {
-            // TOFIX: We should avoid the 4 nested for loops
-            // QUESTION: 3 out 4 of these loops can be unrolled as Q and D are template parameters
-            //           Is there anything we can do about it?
-
             // loop on elements
             int e = 0;
             for (const auto & element : _manifold.elements()) {
-                // use a set to collect vertices without repeated entries
-                topology::vertex_set_t vertices;
-                element->vertices(vertices);
-                // loop on vertices
-                int v = 0;
-                for (const auto & vertex : vertices) {
-                    // loop on quadrature point
-                    for (int q = 0; q < Q; ++q) {
-                        for (int d = 0; d < D; ++d) {
-                            const auto & vertexCoordinates = _manifold.coordinatesVertex(vertex);
-                            _coordinates[{ e, q }][d] +=
-                                _quadratureRule.getPoint(q)[v] * vertexCoordinates[d];
-                        }
-                    }
-                    ++v;
+                // loop on quadrature point
+                for (int q = 0; q < Q; ++q) {
+                    // use manifold parametrization to map the position of quadrature points in
+                    // the canonical element to the coordinate of the quadrature point
+                    _coordinates[{ e, q }] =
+                        _manifold.parametrization(element, _quadratureRule.getPoint(q));
                 }
                 ++e;
             }

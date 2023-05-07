@@ -5,8 +5,9 @@
 
 namespace mito::quadrature {
 
+    // quadrature point representation in parametric coordinates
     template <int D>
-    using quadrature_point_t = std::array<double, D>;
+    using quadrature_point_t = mito::manifolds::parametric_point_t<D>;
 
     template <class quadrature_t, class element_t, int r>
     struct QuadratureRulesFactory {
@@ -127,7 +128,7 @@ namespace mito::quadrature {
             { /*{point}, weight*/
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0 }),
-                  1.0 / 6.0) });
+                  1.0) });
     }
 
     template <>
@@ -140,19 +141,19 @@ namespace mito::quadrature {
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 0.5854101966249685e0, 0.1381966011250105e0,
                                                       0.1381966011250105e0, 0.1381966011250105e0 }),
-                  1.0 / 24.0),
+                  1.0 / 4.0),
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 0.1381966011250105e0, 0.5854101966249685e0,
                                                       0.1381966011250105e0, 0.1381966011250105e0 }),
-                  1.0 / 24.0),
+                  1.0 / 4.0),
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 0.1381966011250105e0, 0.1381966011250105e0,
                                                       0.5854101966249685e0, 0.1381966011250105e0 }),
-                  1.0 / 24.0),
+                  1.0 / 4.0),
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 0.1381966011250105e0, 0.1381966011250105e0,
                                                       0.1381966011250105e0, 0.5854101966249685e0 }),
-                  1.0 / 24.0) });
+                  1.0 / 4.0) });
     }
 
 }    // namespace mito

@@ -7,20 +7,23 @@ namespace mito::geometry {
 
     template <int D>
     class Point : public mito::utilities::Shareable {
-      public:    // TOFIX: should be private (do not allow to instantiate points outside of a point
-                 // cloud)
+      private:
         template <class... Args>
         Point(Args &&... args)
         requires(sizeof...(Args) == D)
-            : _coodinates(args...)
+            : _coordinates(args...)
         {}
 
       public:
         // get the coordinates of the point
-        auto coordinates() const -> const vector_t<D> & { return _coodinates; }
+        auto coordinates() const -> const vector_t<D> & { return _coordinates; }
 
       private:
-        vector_t<D> _coodinates;
+        // the coordinates of the point
+        vector_t<D> _coordinates;
+
+        // private friendship with the point cloud
+        friend class PointCloud<D>;
     };
 
     template <int D>

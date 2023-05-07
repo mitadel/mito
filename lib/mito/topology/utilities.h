@@ -11,34 +11,46 @@ namespace mito::topology {
         // print orientation
         os << "orientation: " << s->orientation() << std::endl;
         // print footprint
-        os << "footprint: " << s->footprint().handle() << std::endl;
+        os << "footprint: " << s->footprint() << std::endl;
         // all done
         return os;
     }
 
-    // overload operator<< specialization for simplices with D = 0 (vertices)
-    template <>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
+    // overload operator<< for simplices
+    template <int D>
+    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<D> & s)
+    requires(D > 0)
     {
-        os << s->footprint_id();
+        os << s.handle() << " composed of:" << std::endl;
+        for (const auto & simplex : s->composition()) {
+            std::cout << "\t" << simplex << std::endl;
+        }
         return os;
     }
 
-    auto tail(const simplex_t<1> & oriented_simplex)
+    // overload operator<< for oriented simplices
+    template <>
+    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
+    {
+        os << "vertex: " << s->footprint().handle() << std::endl;
+        return os;
+    }
+
+    auto tail(const simplex_t<1> & oriented_simplex) -> vertex_t
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->composition()[0];
+            return oriented_simplex->composition()[0]->footprint();
         } else {
-            return oriented_simplex->composition()[1];
+            return oriented_simplex->composition()[1]->footprint();
         }
     }
 
-    auto head(const simplex_t<1> & oriented_simplex)
+    auto head(const simplex_t<1> & oriented_simplex) -> vertex_t
     {
         if (oriented_simplex->orientation()) {
-            return oriented_simplex->composition()[1];
+            return oriented_simplex->composition()[1]->footprint();
         } else {
-            return oriented_simplex->composition()[0];
+            return oriented_simplex->composition()[0]->footprint();
         }
     }
 
@@ -69,14 +81,106 @@ namespace mito::topology {
         return false;
     }
 
-    // a segment is valid if the two vertices are not the same
     auto isValid(const simplex_composition_t<1> & composition) -> bool
     {
-        if (composition[0] != composition[1]) {
-            return true;
+        // a segment is not valid if the two vertices coincide
+        if (composition[0]->footprint() == composition[1]->footprint()) {
+            return false;
         }
 
-        return false;
+        // a segment is not valid if the two vertices have same orientation
+        if (composition[0]->orientation() == composition[1]->orientation()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // return the vertices of a segment following the order dictated by the segment's orientation
+    auto vertices(const segment_t & segment) -> vertex_simplex_composition_t<1>
+    {
+        // a container to store a collection of vertices
+        vertex_simplex_composition_t<1> vertices_collection;
+
+        // the first two vertices come from the first edge
+        vertices_collection[0] = segment->orientation() ? segment->composition()[0]->footprint() :
+                                                          segment->composition()[1]->footprint();
+        vertices_collection[1] = segment->orientation() ? segment->composition()[1]->footprint() :
+                                                          segment->composition()[0]->footprint();
+
+        // assert that you found two distinct vertices
+        assert(vertices_collection[0] != vertices_collection[1]);
+
+        // all done
+        return vertices_collection;
+    }
+
+    // return the vertices of a triangle following the order dictated by the triangle's
+    // orientation
+    auto vertices(const triangle_t & triangle) -> vertex_simplex_composition_t<2>
+    {
+        // a container to store a collection of vertices
+        vertex_simplex_composition_t<2> vertices_collection;
+
+        // get the three vertices following the orientation of the simplex
+        const auto & edge_0 = triangle->composition()[0];
+        // the first two vertices come from the first edge
+        vertices_collection[0] = edge_0->orientation() ? edge_0->composition()[0]->footprint() :
+                                                         edge_0->composition()[1]->footprint();
+        vertices_collection[1] = edge_0->orientation() ? edge_0->composition()[1]->footprint() :
+                                                         edge_0->composition()[0]->footprint();
+        // the third vertex comes from the second edge
+        const auto & edge_1 = triangle->composition()[1];
+        vertices_collection[2] = edge_1->orientation() ? edge_1->composition()[1]->footprint() :
+                                                         edge_1->composition()[0]->footprint();
+
+        // assert that you found three distinct vertices
+        assert(vertices_collection[0] != vertices_collection[1]);
+        assert(vertices_collection[1] != vertices_collection[2]);
+        assert(vertices_collection[0] != vertices_collection[2]);
+
+        // all done
+        return vertices_collection;
+    }
+
+    // return the vertices of a tetrahedron following the order dictated by the tetrahedron's
+    // orientation
+    auto vertices(const tetrahedron_t & tetrahedron) -> vertex_simplex_composition_t<3>
+    {
+        // get the vertices of the first face of the tetrahedron
+        auto vertices_triangle_0 = vertices(tetrahedron->composition()[0]);
+
+        // copy the vertices to the vertices collection of the tetrahedron
+        vertex_simplex_composition_t<3> vertices_collection;
+        vertices_collection[0] = vertices_triangle_0[0];
+        vertices_collection[1] = vertices_triangle_0[1];
+        vertices_collection[3] = vertices_triangle_0[2];
+
+        // get the vertices of the second face of the tetrahedron
+        auto vertices_triangle_1 = vertices(tetrahedron->composition()[1]);
+
+        // TOFIX: for sure there is a better way to find the last vertex
+        // get the remaining vertex
+        vertices_collection[2] = (vertices_triangle_1[0] != vertices_collection[0]
+                                  && vertices_triangle_1[0] != vertices_collection[1]
+                                  && vertices_triangle_1[0] != vertices_collection[3]) ?
+                                     vertices_triangle_1[0] :
+                                     ((vertices_triangle_1[1] != vertices_collection[0]
+                                       && vertices_triangle_1[1] != vertices_collection[1]
+                                       && vertices_triangle_1[1] != vertices_collection[3]) ?
+                                          vertices_triangle_1[1] :
+                                          vertices_triangle_1[2]);
+
+        // assert that you found four distinct vertices
+        assert(vertices_collection[0] != vertices_collection[1]);
+        assert(vertices_collection[0] != vertices_collection[2]);
+        assert(vertices_collection[0] != vertices_collection[3]);
+        assert(vertices_collection[1] != vertices_collection[2]);
+        assert(vertices_collection[1] != vertices_collection[3]);
+        assert(vertices_collection[2] != vertices_collection[3]);
+
+        // all done
+        return vertices_collection;
     }
 }
 

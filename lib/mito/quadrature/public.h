@@ -19,6 +19,9 @@
 // factories implementation
 #include "factories.h"
 
+// quadrature utilities
+#include "utilities.h"
+
 
 #endif
 

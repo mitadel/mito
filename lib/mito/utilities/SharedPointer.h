@@ -11,10 +11,11 @@ namespace mito::utilities {
 
     // declaration
     template <class Resource>
-    requires ReferenceCountedObject<Resource>
+    // requires ReferenceCountedObject<Resource>
     class SharedPointer {
         // types
       public:
+        using shared_ptr_t = SharedPointer<Resource>;
         using resource_t = Resource;
         using handle_t = Resource *;
 
@@ -44,7 +45,7 @@ namespace mito::utilities {
         inline SharedPointer();
 
         // constructor
-        inline SharedPointer(handle_t, segmented_t<resource_t> *);
+        inline SharedPointer(handle_t, segmented_t<shared_ptr_t> *);
 
         // copy constructor
         inline SharedPointer(const SharedPointer<Resource> &);
@@ -69,7 +70,7 @@ namespace mito::utilities {
         // handle to the resource
         handle_t _handle;
         // reference to the segmented container, which owns the memory
-        segmented_t<resource_t> * _container;
+        segmented_t<shared_ptr_t> * _container;
 
       private:
         // friendship with SegmentedContainer
