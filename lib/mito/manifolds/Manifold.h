@@ -126,13 +126,13 @@ namespace mito::manifolds {
     {
         os << "Element set: " << std::endl;
 
-        for (const auto e : manifold.elements()) {
+        for (const auto & e : manifold.elements()) {
             os << "Composition: " << std::endl;
-            os << *e;
+            os << e;
             os << "Vertices: " << std::endl;
             topology::vertex_set_t vertices;
             e->vertices(vertices);
-            for (const auto v : vertices) {
+            for (const auto & v : vertices) {
                 os << manifold.coordinatesVertex(v) << std::endl;
             }
             os << std::endl;
