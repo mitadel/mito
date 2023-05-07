@@ -12,6 +12,15 @@ namespace mito::mesh {
         int n_refinements) -> void
     requires(std::is_same_v<cellT, mito::topology::segment_t>)
     {
+        if (n_refinements == 0) {
+            auto & new_cell = geometry.topology().segment({ vertex_0, vertex_1 });
+
+            // insert new cells in new mesh
+            subdivided_mesh.insert(new_cell);
+
+            return;
+        }
+
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(
             0.5
@@ -47,6 +56,15 @@ namespace mito::mesh {
         int n_refinements) -> void
     requires(std::is_same_v<cellT, mito::topology::triangle_t>)
     {
+        if (n_refinements == 0) {
+            auto & new_cell = geometry.topology().triangle({ vertex_0, vertex_1, vertex_2 });
+
+            // insert new cells in new mesh
+            subdivided_mesh.insert(new_cell);
+
+            return;
+        }
+
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(
             0.5
@@ -98,6 +116,16 @@ namespace mito::mesh {
         mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
     requires(std::is_same_v<cellT, mito::topology::tetrahedron_t>)
     {
+        if (n_refinements == 0) {
+            auto & new_cell =
+                geometry.topology().tetrahedron({ vertex_0, vertex_1, vertex_2, vertex_3 });
+
+            // insert new cells in new mesh
+            subdivided_mesh.insert(new_cell);
+
+            return;
+        }
+
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(
             0.5
@@ -208,14 +236,14 @@ namespace mito::mesh {
             auto vertices = mito::topology::vertices(cell);
 
             // helper function to expand array to parameter pack
-            constexpr auto _subdivide = []<size_t... J>(
-                const mito::topology::vertex_simplex_composition_t<cellT::resource_t::order> &
-                    vertices,
-                mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
-                int n_refinements, std::index_sequence<J...>)
-            {
-                return subdivide(vertices[J]..., geometry, subdivided_mesh, n_refinements);
-            };
+            constexpr auto _subdivide =
+                []<size_t... J>(
+                    const mito::topology::vertex_simplex_composition_t<cellT::resource_t::order> &
+                        vertices,
+                    mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
+                    int n_refinements, std::index_sequence<J...>) {
+                    return subdivide(vertices[J]..., geometry, subdivided_mesh, n_refinements);
+                };
 
             // recursively subdivide the cell identified by these vertices
             _subdivide(
