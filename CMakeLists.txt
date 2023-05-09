@@ -43,6 +43,10 @@ if(pybind11_VERSION VERSION_LESS 2.5 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(pybind11::module INTERFACE -fsized-deallocation)
 endif()
 
+if(WITH_VTK)
+    find_package(VTK REQUIRED COMPONENTS CommonCore CommonDataModel IOXML)
+endif()
+
 # set up c++
 mito_cxxInit()
 
@@ -81,18 +85,15 @@ if(MITO_BUILD_TESTING)
 
     # add the mito extensions testsuite to the pile
     include(mito_tests_mito_ext)
-
-endif(MITO_BUILD_TESTING)
+endif()
 
 # if we are building the benchmarks
 if(MITO_BUILD_BENCHMARKS)
+    # get my functions
+    include(mito_benchmarks)
 
-  # get my functions
-  include(mito_benchmarks)
-
-  # add the benchmarks to the pile
-  include(mito_benchmarks_mito_lib)
+    # add the benchmarks to the pile
+    include(mito_benchmarks_mito_lib)
 endif()
-
 
 # end of file

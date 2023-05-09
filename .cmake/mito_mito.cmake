@@ -36,6 +36,10 @@ function(mito_mitoLib)
         $<INSTALL_INTERFACE:${MITO_DEST_INCLUDE}>
     )
 
+    if(WITH_VTK)
+        target_include_directories(mito PUBLIC ${VTK_INCLUDE_DIRS})
+    endif()
+
     # add the sources
     target_sources(mito
         PRIVATE
@@ -48,6 +52,10 @@ function(mito_mitoLib)
         pyre::pyre
         pyre::journal
     )
+
+    if(WITH_VTK)
+        target_link_libraries(mito ${VTK_LIBRARIES})
+    endif()
 
     # request c++20
     set_property(TARGET mito PROPERTY CXX_STANDARD 20)
@@ -70,18 +78,21 @@ function(mito_mitoLib)
     # all done
 endfunction(mito_mitoLib)
 
-
 # build the mito extension modules
 function(mito_mitoModule)
     # the mito bindings
     Python_add_library(mitomodule MODULE)
+
     # adjust the name to match what python expects
     set_target_properties(mitomodule PROPERTIES LIBRARY_OUTPUT_NAME mito)
     set_target_properties(mitomodule PROPERTIES SUFFIX ${PYTHON3_SUFFIX})
+
     # specify the directory for the module compilation products
     mito_library_directory(mitomodule extensions)
+
     # set the libraries to link against
     target_link_libraries(mitomodule PRIVATE mito pybind11::module)
+
     # add the sources
     target_sources(mitomodule PRIVATE
         extensions/mito/mito.cc
@@ -94,7 +105,6 @@ function(mito_mitoModule)
         DESTINATION ${MITO_DEST_EXTENSIONS}
     )
 endfunction(mito_mitoModule)
-
 
 # generate a unique target name based on the file name
 function(mito_target_name targetname filename)
@@ -111,44 +121,41 @@ function(mito_target_name targetname filename)
     # all done
 endfunction()
 
-
 # specify the directory for the target compilation products
 function(mito_target_directory target directory)
-  # set output directory for this target to subdirectory {directory} of the build directory
-  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-    ${CMAKE_CURRENT_BINARY_DIR}/${directory}
-  )
-# all done
-endfunction()
+    # set output directory for this target to subdirectory {directory} of the build directory
+    set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY
+        ${CMAKE_CURRENT_BINARY_DIR}/${directory}
+    )
 
+    # all done
+endfunction()
 
 # specify the directory for the module
 function(mito_library_directory library directory)
-  # set output directory for this library to subdirectory {directory} of the build directory
-  set_target_properties(${library} PROPERTIES LIBRARY_OUTPUT_DIRECTORY
-    ${CMAKE_CURRENT_BINARY_DIR}/${directory}
-  )
-# all done
-endfunction()
+    # set output directory for this library to subdirectory {directory} of the build directory
+    set_target_properties(${library} PROPERTIES LIBRARY_OUTPUT_DIRECTORY
+        ${CMAKE_CURRENT_BINARY_DIR}/${directory}
+    )
 
+    # all done
+endfunction()
 
 # add definitions to compilation of file
 function(mito_add_definitions driverfile)
-  
-  # the argument list is the list of definitions
-  set(definitions ${ARGN})
+    # the argument list is the list of definitions
+    set(definitions ${ARGN})
 
-  # generate the name of the target
-  mito_target(target ${driverfile})
+    # generate the name of the target
+    mito_target(target ${driverfile})
 
-  # for each definition requested
-  foreach(definition IN LISTS definitions)
-    # apply the definition to the target
-    target_compile_definitions(${target} PRIVATE ${definition})
-  endforeach()
+    # for each definition requested
+    foreach(definition IN LISTS definitions)
+        # apply the definition to the target
+        target_compile_definitions(${target} PRIVATE ${definition})
+    endforeach()
 
-# all done
+    # all done
 endfunction()
-
 
 # end of file

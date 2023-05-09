@@ -18,6 +18,8 @@ function(mito_optionsInit)
             "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
     endif(NOT CMAKE_BUILD_TYPE)
 
+    option(WITH_VTK "Enable support for VTK" OFF)
+
     # all done
 endfunction(mito_optionsInit)
 
@@ -36,13 +38,15 @@ endfunction(mito_cxxInit)
 function(mito_destinationInit)
     # create variables to hold the roots in the install directory
     set(MITO_DEST_INCLUDE ${CMAKE_INSTALL_INCLUDEDIR} PARENT_SCOPE)
+
     if(NOT DEFINED MITO_DEST_EXTENSIONS)
         set(MITO_DEST_EXTENSIONS extensions CACHE STRING
             "Python package install location, absolute or relative to install prefix")
     endif()
+
     # Translate to unconditional absolute path
     get_filename_component(MITO_DEST_FULL_EXTENSIONS ${MITO_DEST_EXTENSIONS} ABSOLUTE
-                           BASE_DIR ${CMAKE_CURRENT_BINARY_DIR})
+        BASE_DIR ${CMAKE_CURRENT_BINARY_DIR})
     set(MITO_DEST_FULL_EXTENSIONS ${MITO_DEST_FULL_EXTENSIONS} PARENT_SCOPE)
 endfunction(mito_destinationInit)
 
@@ -136,13 +140,16 @@ function(mito_pythonInit)
     # ask the executable for the module suffix
     execute_process(
         COMMAND ${Python_EXECUTABLE} -c
-            "from sysconfig import *; print(get_config_var('EXT_SUFFIX'))"
+        "from sysconfig import *; print(get_config_var('EXT_SUFFIX'))"
         RESULT_VARIABLE PYTHON3_SUFFIX_STATUS
         OUTPUT_VARIABLE PYTHON3_SUFFIX
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+
     # export
     set(PYTHON3_SUFFIX ${PYTHON3_SUFFIX} PARENT_SCOPE)
+
     # all done
 endfunction(mito_pythonInit)
+
 # end of file
