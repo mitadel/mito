@@ -40,12 +40,7 @@ namespace mito::materials {
         // log(J)
         real logJ = log(detF);
         // tr(C)
-        real trC = 0.0;
-        for (int i = 0; i < D; i++) {
-            for (int J = 0; J < D; J++) {
-                trC += F[i * D + J] * F[i * D + J];
-            }
-        }
+        real trC = pyre::tensor::trace(pyre::tensor::transpose(F) * F);
         // (J^2 -1)/2 - log(J)
         real A = 0.5 * Jsq_minus_1 - logJ;
         // Jm - trC + D /*dim*/
@@ -54,12 +49,8 @@ namespace mito::materials {
         real B = _Jm / C;
 
         // fill the first Piola stress tensor
-        for (int i = 0; i < D; i++) {
-            for (int J = 0; J < D; J++) {
-                P[i * D + J] = _mu * B * F[i * D + J]
-                             + (2. * _kappa * A * A * A * Jsq_minus_1 - _mu) * invF[J * D + i];
-            }
-        }
+        P = (_mu * B) * F
+          + (2. * _kappa * A * A * A * Jsq_minus_1 - _mu) * pyre::tensor::transpose(invF);
 
         return;
     }
