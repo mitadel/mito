@@ -16,32 +16,48 @@ namespace mito::mesh {
     template <class cellT, int D>
     auto vtk_writer(std::string fileName, mito::mesh::mesh_t<cellT, D> & mesh) -> void
     {
-        // Create some points.
-        vtkSmartPointer<vtkPoints> pointsVtk = vtkSmartPointer<vtkPoints>::New();
+        std::unordered_map<
+            mito::geometry::point_t<D>, int,
+            mito::utilities::hash_function<mito::geometry::point_t<D>>>
+            mapPoints;
+        auto pointVtkId = 0;
 
-        for (const auto & node : mesh.geometry().nodes()) {
-            const auto & point = *node.second.handle();
-            std::cout << point << std::endl;
-            const auto & coordinates = point.coordinates();
-            pointsVtk->InsertNextPoint(coordinates[0], coordinates[1], coordinates[2]);
+        // create vtk points
+        vtkSmartPointer<vtkPoints> pointsVtk = vtkSmartPointer<vtkPoints>::New();
+        // create tetra from the points
+        vtkSmartPointer<vtkCellArray> cellsVtk = vtkSmartPointer<vtkCellArray>::New();
+
+        // loop over all cells
+        for (const auto & cell : mesh.cells()) {
+            // retrieve vertices of the cell
+            topology::vertex_set_t vertices;
+            cell->vertices(vertices);
+
+            vtkSmartPointer<vtkTetra> tetrahedron = vtkSmartPointer<vtkTetra>::New();
+            auto localVtkId = 0;
+            for (const auto & vertex : vertices) {
+                const auto pPoint = mesh.geometry().point(vertex);
+
+                if (mapPoints.count(pPoint) == 0) {
+                    const auto & coordinates = pPoint.handle()->coordinates();
+                    pointsVtk->InsertNextPoint(coordinates[0], coordinates[1], coordinates[2]);
+                    mapPoints[pPoint] = pointVtkId;
+                    ++pointVtkId;
+                }
+
+                tetrahedron->GetPointIds()->SetId(localVtkId, mapPoints[pPoint]);
+
+                ++localVtkId;
+            }
+            cellsVtk->InsertNextCell(tetrahedron);
         }
 
-        // Create a tetrahedron from the points.
-        vtkSmartPointer<vtkCellArray> cells = vtkSmartPointer<vtkCellArray>::New();
-        vtkSmartPointer<vtkTetra> tetra = vtkSmartPointer<vtkTetra>::New();
-
-        tetra->GetPointIds()->SetId(0, 0);
-        tetra->GetPointIds()->SetId(1, 1);
-        tetra->GetPointIds()->SetId(2, 2);
-        tetra->GetPointIds()->SetId(3, 3);
-        cells->InsertNextCell(tetra);
-
-        // Create an unstructured grid and set the points and cells.
+        // create an unstructured grid and set the points and cells.
         vtkSmartPointer<vtkUnstructuredGrid> grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
         grid->SetPoints(pointsVtk);
-        grid->SetCells(VTK_TETRA, cells);
+        grid->SetCells(VTK_TETRA, cellsVtk);
 
-        // Write the grid to a VTK XML file.
+        // write the grid to a file.
         vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer =
             vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
         writer->SetFileName((fileName + ".vtk").c_str());

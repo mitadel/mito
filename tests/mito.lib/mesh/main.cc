@@ -313,7 +313,7 @@ TEST(Tetra, MeshRectangleArea)
     std::ifstream fileStream("rectangle.summit");
     auto mesh = mito::mesh::summit<mito::topology::triangle_t>(fileStream, geometry);
 
-    // do two tetra mesh refinements
+    // do tetra mesh refinements
     auto tetra_mesh = tetra(mesh, geometry, 1);
 
     // compute the volume of the original mesh
@@ -341,7 +341,7 @@ TEST(Tetra, CubeVolume)
     std::ifstream fileStream("cube.summit");
     auto mesh = mito::mesh::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
 
-    // do one tetra mesh refinement
+    // do tetra mesh refinement
     const auto subdivisions = 2;
     auto tetra_mesh = tetra(mesh, geometry, subdivisions);
     // assert that the refined mesh has 8 times more elements than the original one
@@ -392,7 +392,7 @@ TEST(Tetra, ZeroSubdivisions)
         ::testing::ExitedWithCode(0), ".*");
 }
 
-TEST(Mesh, VtkWriter)
+TEST(Mesh, TetraMeshVtkWriter)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -418,5 +418,28 @@ TEST(Mesh, VtkWriter)
     // insert cell in the mesh
     mesh.insert(cell);
 
+    // use tetra
+    auto tetra_mesh = tetra(mesh, geometry);
+
+    // write mesh to vtk file
+    mito::mesh::vtk_writer("output", tetra_mesh);
+}
+
+TEST(Mesh, SummitMeshVtkWriter)
+{
+    // an empty topology
+    auto & topology = mito::topology::topology();
+
+    // an empty cloud of points
+    auto & point_cloud = mito::geometry::point_cloud<3>();
+
+    // a 3D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
+    // read summit mesh
+    std::ifstream fileStream("cube.summit");
+    auto mesh = mito::mesh::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
+
+    // write mesh to vtk file
     mito::mesh::vtk_writer("output", mesh);
 }
