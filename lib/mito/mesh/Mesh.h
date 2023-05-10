@@ -202,7 +202,7 @@ namespace mito::mesh {
 
       public:
         // accessor to geometry
-        auto geometry() -> const geometry_t & { return _geometry; }
+        auto geometry() const -> const geometry_t & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded

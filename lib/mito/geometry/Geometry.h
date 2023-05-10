@@ -53,7 +53,7 @@ namespace mito::geometry {
         }
 
         // accessor to the collection of nodes
-        inline auto nodes() const -> const auto & { return _nodes; }
+        inline auto nodes() const -> const nodes_t<D> & { return _nodes; }
 
         // get the point in space associated to this vertex
         inline auto point(const vertex_t & vertex) const -> const point_t<D> &
@@ -62,7 +62,7 @@ namespace mito::geometry {
         }
 
         // TOFIX: should this be const?
-        inline auto topology() -> topology_t & { return _topology; }
+        inline auto topology() const -> topology_t & { return _topology; }
 
       private:
         // the collection of nodes

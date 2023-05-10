@@ -275,7 +275,7 @@ namespace mito::mesh {
         assert(N_cell_types == 1);
 
         // read the vertices
-        readVertices<D>(fileStream, geometry, N_vertices, vertices);
+        readVertices(fileStream, geometry, N_vertices, vertices);
 
         // read the cells
         readElements(fileStream, mesh, geometry, N_cells, vertices);
