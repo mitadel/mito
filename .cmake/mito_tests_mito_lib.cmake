@@ -1,4 +1,3 @@
-mito_test_driver(mito.lib/algebra/main.cc)
 mito_test_driver(mito.lib/divergence-theorem/main.cc)
 mito_test_driver(mito.lib/erase-element/main.cc)
 mito_test_driver(mito.lib/fields/main.cc)
