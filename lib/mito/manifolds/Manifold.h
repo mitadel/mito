@@ -100,6 +100,26 @@ namespace mito::manifolds {
             return coordinates;
         }
 
+        inline auto print() const -> void
+        {
+            // print the element set of the manifold
+            std::cout << "Element set: " << std::endl;
+
+            for (const auto & e : elements()) {
+                // print the elemental composition
+                std::cout << "Composition: " << std::endl;
+                std::cout << e;
+                // and the coordinates of the vertices
+                std::cout << "Vertices: " << std::endl;
+                topology::vertex_set_t vertices;
+                e->vertices(vertices);
+                for (const auto & v : vertices) {
+                    std::cout << coordinatesVertex(v) << std::endl;
+                }
+                std::cout << std::endl;
+            }
+        }
+
       private:
         inline auto _point(const vertex_t & v) const -> const auto &
         {
@@ -124,20 +144,10 @@ namespace mito::manifolds {
     template <class cellT, int D>
     std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, D> & manifold)
     {
-        os << "Element set: " << std::endl;
+        // print the manifold
+        manifold.print();
 
-        for (const auto & e : manifold.elements()) {
-            os << "Composition: " << std::endl;
-            os << e;
-            os << "Vertices: " << std::endl;
-            topology::vertex_set_t vertices;
-            e->vertices(vertices);
-            for (const auto & v : vertices) {
-                os << manifold.coordinatesVertex(v) << std::endl;
-            }
-            os << std::endl;
-        }
-
+        // all done
         return os;
     }
 
