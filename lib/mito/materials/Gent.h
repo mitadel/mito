@@ -26,11 +26,8 @@ namespace mito::materials {
 
     template <int D /*dim*/>
     constexpr auto Gent::Constitutive(
-        const vector_t<D> & /*u*/, const matrix_t<D> & Du, matrix_t<D> & P) -> void
+        const vector_t<D> & /*u*/, const matrix_t<D> & F, matrix_t<D> & P) -> void
     {
-        // deformation gradient
-        matrix_t<D> F = Du;
-
         // inverse of deformation gradient
         matrix_t<D> invF = pyre::tensor::inverse(F);
 
