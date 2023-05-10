@@ -18,6 +18,15 @@ namespace mito::geometry {
         // get the coordinates of the point
         auto coordinates() const -> const vector_t<D> & { return _coordinates; }
 
+        auto print() const -> void
+        {
+            // print the coordinates of the point
+            std::cout << "Point: " << coordinates() << std::endl;
+
+            // all done
+            return;
+        }
+
       private:
         // the coordinates of the point
         vector_t<D> _coordinates;
@@ -32,6 +41,16 @@ namespace mito::geometry {
         // return the distance between the two points
         auto dist = pointA->coordinates() - pointB->coordinates();
         return sqrt(dist * dist);
+    }
+
+    template <int D>
+    std::ostream & operator<<(std::ostream & os, const Point<D> & point)
+    {
+        // print the point
+        point.print();
+
+        // all done
+        return os;
     }
 
 }    // namespace mito
