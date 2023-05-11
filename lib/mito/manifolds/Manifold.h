@@ -72,17 +72,17 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline auto elements() const -> const auto & { return _elements; }
+        inline auto elements() const -> const element_vector_t<cell_t> & { return _elements; }
         inline auto nElements() const -> int { return _elements.size(); }
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
-        inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
+        inline auto coordinatesVertex(const vertex_t & v) const -> const vector_t<D> &
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
         }
 
         inline auto parametrization(const cell_t & cell, const parametric_point_t & point) const
-            -> auto
+            -> vector_t<D>
         {
             // use a set to collect vertices without repeated entries
             topology::vertex_set_t vertices;
@@ -121,7 +121,7 @@ namespace mito::manifolds {
         }
 
       private:
-        inline auto _point(const vertex_t & v) const -> const auto &
+        inline auto _point(const vertex_t & v) const -> const geometry::point_t<D> &
         {
             // look up the point attached to vertex {v}
             return _vertices.find(v)->second;

@@ -99,7 +99,7 @@ namespace mito::mesh {
             return _cells.size();
         }
 
-        inline auto cells() const -> const auto &
+        inline auto cells() const -> const cells_t &
         {
             // all done
             return _cells;

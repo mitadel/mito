@@ -27,15 +27,15 @@ namespace mito::mesh {
         auto indexPointVtk = 0;
 
         // create vtk points
-        vtkSmartPointer<vtkPoints> pointsVtk = vtkSmartPointer<vtkPoints>::New();
+        auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
 
         // create vtk cells from the points
-        vtkSmartPointer<vtkCellArray> cellsVtk = vtkSmartPointer<vtkCellArray>::New();
+        auto cellsVtk = vtkSmartPointer<vtkCellArray>::New();
 
         // loop over the cells
         for (const auto & cell : mesh.cells()) {
             // create vtk cell
-            vtkSmartPointer<vtkTetra> tetrahedron = vtkSmartPointer<vtkTetra>::New();
+            auto cellVtk = vtkSmartPointer<vtkTetra>::New();
 
             // local index for the points of the cell
             auto indexLocalPointVtk = 0;
@@ -55,37 +55,38 @@ namespace mito::mesh {
                     const auto & coordinates = pPoint.handle()->coordinates();
                     // insert the new vtk point
                     pointsVtk->InsertNextPoint(coordinates[0], coordinates[1], coordinates[2]);
-                    // and add the point to the map with its global index
+                    // add the point to the map with its global index
                     mapPoints[pPoint] = indexPointVtk;
                     // update global index for the vtk point
                     ++indexPointVtk;
                 }
 
                 // set the id of the point
-                tetrahedron->GetPointIds()->SetId(indexLocalPointVtk, mapPoints[pPoint]);
+                cellVtk->GetPointIds()->SetId(indexLocalPointVtk, mapPoints[pPoint]);
 
                 // update local index for the points in the cell
                 ++indexLocalPointVtk;
             }
 
             // insert the new cell
-            cellsVtk->InsertNextCell(tetrahedron);
+            cellsVtk->InsertNextCell(cellVtk);
         }
 
         // create an unstructured grid and set the points and cells
-        vtkSmartPointer<vtkUnstructuredGrid> grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
+        auto grid = vtkSmartPointer<vtkUnstructuredGrid>::New();
         grid->SetPoints(pointsVtk);
         grid->SetCells(VTK_TETRA, cellsVtk);
 
-        // write the grid to a file
-        vtkSmartPointer<vtkXMLUnstructuredGridWriter> writer =
-            vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+        // write the grid to file
+        auto writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
         writer->SetFileName((fileName + ".vtk").c_str());
+
 #if VTK_MAJOR_VERSION <= 8
         writer->SetInput(grid);
 #else
         writer->SetInputData(grid);
 #endif
+
         writer->Write();
     }
 

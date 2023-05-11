@@ -10,7 +10,6 @@ namespace mito::mesh {
         std::ifstream & fileStream, mito::geometry::geometry_t<D> & geometry, int N_vertices,
         std::vector<vertex_t> & vertices) -> void
     {
-
         // fill in vertices
         for (int n = 0; n < N_vertices; ++n) {
             // instantiate new point
@@ -204,12 +203,6 @@ namespace mito::mesh {
         return;
     }
 
-    template <int N, int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh_t<topology::simplex_t<N>, D> & mesh,
-        mito::geometry::geometry_t<D> & geometry, int N_cells,
-        const std::vector<vertex_t> & vertices) -> void;
-
     template <int D>
     auto readElements(
         std::ifstream & fileStream, mesh_t<topology::segment_t, D> & mesh,
@@ -238,7 +231,8 @@ namespace mito::mesh {
     }
 
     template <class cellT, int D>
-    auto summit(std::ifstream & fileStream, mito::geometry::geometry_t<D> & geometry) -> auto
+    auto summit(std::ifstream & fileStream, mito::geometry::geometry_t<D> & geometry)
+        -> mesh_t<cellT, D>
     {
         if (!fileStream.is_open()) {
             throw std::runtime_error("summit: Mesh file could not be opened");
@@ -278,7 +272,10 @@ namespace mito::mesh {
         readVertices(fileStream, geometry, N_vertices, vertices);
 
         // read the cells
-        readElements(fileStream, mesh, geometry, N_cells, vertices);
+        readElements(
+            fileStream, mesh, geometry, N_cells,
+            vertices);    // TOASK: is it possible that a mesh has multiple type of elements? (e.g.
+                          // tetrahedra and triangles). In that case, this will not work
 
         // sanity check: the number of vertices in the map is N_vertices
         vertices.shrink_to_fit();

@@ -45,10 +45,8 @@ namespace mito::quadrature {
             QuadratureRulesFactory<quadrature_t, element_t, r>::GetQuadratureRule();
 
         // lambda function to compute the sum of Q quadrature weights at compile time
-        constexpr auto sum = [quadrature_rule]<int Q>() consteval->double
-        {
-            constexpr auto sum_impl = [quadrature_rule]<int q>(auto & sum_ref) consteval->double
-            {
+        constexpr auto sum = [quadrature_rule]<int Q>() consteval -> double {
+            constexpr auto sum_impl = [quadrature_rule]<int q>(auto & sum_ref) consteval -> double {
                 if constexpr (q == -1) {
                     return 0.0;
                 } else {

@@ -10,13 +10,13 @@
 #include "forward1.h"
 // published type factories; this is the file you are looking for...
 #include "api.h"
-// class {OrientedSimplex} needs to be complete for the following forward declarations
-// (the concept {ReferenceCountedObject} requires to see full class header file)
-#include "OrientedSimplex.h"
 // get more forward declarations
 #include "forward2.h"
 // other classes implementation
 #include "Simplex.h"
+// class {OrientedSimplex} needs to be complete for the following forward declarations
+// (the concept {ReferenceCountedObject} requires to see full class header file)
+#include "OrientedSimplex.h"
 // simplex utilities
 #include "utilities.h"
 #include "SimplexFactory.h"

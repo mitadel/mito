@@ -44,7 +44,7 @@ namespace mito::topology {
 
       public:
         // accessor for the subsimplices
-        inline auto composition() const -> const auto & { return _simplices; }
+        inline auto composition() const -> const simplex_composition_t<D> & { return _simplices; }
 
         // returns the simplex id
         inline auto id() const -> unoriented_simplex_id_t
