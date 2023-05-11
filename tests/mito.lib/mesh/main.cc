@@ -422,7 +422,7 @@ TEST(Mesh, TetraMeshVtkWriter)
     auto tetra_mesh = tetra(mesh, geometry);
 
     // write mesh to vtk file
-    mito::mesh::vtk_writer("output", tetra_mesh);
+    mito::mesh::vtkWriter("output", tetra_mesh);
 }
 
 TEST(Mesh, SummitMeshVtkWriter)
@@ -441,5 +441,5 @@ TEST(Mesh, SummitMeshVtkWriter)
     auto mesh = mito::mesh::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
 
     // write mesh to vtk file
-    mito::mesh::vtk_writer("output", mesh);
+    mito::mesh::vtkWriter("output", mesh);
 }
