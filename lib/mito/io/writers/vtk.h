@@ -1,9 +1,9 @@
 // code guard
-#if !defined(mito_io_vtk_writer_h)
-#define mito_io_vtk_writer_h
+#if !defined(mito_io_writer_vtk_h)
+#define mito_io_writer_vtk_h
 
 
-namespace mito::mesh {
+namespace mito::writer {
     template <int D>
     auto vtkCellPointer(const mesh::mesh_t<topology::tetrahedron_t, D> &)
         -> vtkSmartPointer<vtkTetra>
@@ -115,7 +115,7 @@ namespace mito::mesh {
     }
 
     template <class cellT, int D>
-    auto vtkWriter(std::string fileName, const mesh::mesh_t<cellT, D> & mesh) -> void
+    auto vtk(std::string fileName, const mesh::mesh_t<cellT, D> & mesh) -> void
     {
         // create vtk points and cells from the given mesh
         const auto [pointsVtk, cellsVtk] = createVtkPointsAndCells(mesh);
@@ -138,4 +138,4 @@ namespace mito::mesh {
 
 }    // namespace mito::mesh
 
-#endif    // mito_io_vtk_writer_h
+#endif    // mito_io_writer_vtk_h
