@@ -76,8 +76,12 @@ if(MITO_BUILD_TESTING)
     # set up the test suite
     mito_testsInit()
 
-    # add the testsuite to the pile
-    add_subdirectory(tests)
+    # add the mito lib testsuite to the pile
+    include(mito_tests_mito_lib)
+
+    # add the mito extensions testsuite to the pile
+    include(mito_tests_mito_ext)
+
 endif(MITO_BUILD_TESTING)
 
 # end of file
