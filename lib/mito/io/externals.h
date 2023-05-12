@@ -6,6 +6,7 @@
 #include <fstream>
 #include <unordered_map>
 
+#ifdef WITH_VTK
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
 #include <vtkLine.h>
@@ -16,6 +17,7 @@
 #include <vtkTriangle.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridWriter.h>
+#endif    // WITH_VTK
 
 // support
 #include "../geometry.h"

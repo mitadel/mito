@@ -45,6 +45,8 @@ endif()
 
 if(WITH_VTK)
     find_package(VTK REQUIRED COMPONENTS CommonCore CommonDataModel IOXML)
+    message(STATUS "Enable VTK support")
+    add_definitions(-DWITH_VTK)
 endif()
 
 # set up c++

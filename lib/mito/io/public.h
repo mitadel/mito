@@ -8,8 +8,9 @@
 
 // classes implementation
 #include "readers/summit.h"
+#ifdef WITH_VTK
 #include "writers/vtk.h"
-
+#endif    // WITH_VTK
 
 #endif
 

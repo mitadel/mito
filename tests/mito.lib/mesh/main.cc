@@ -421,8 +421,10 @@ TEST(Mesh, TetraMeshVtkWriter)
     // use tetra
     auto tetra_mesh = tetra(mesh, geometry);
 
+#ifdef WITH_VTK
     // write mesh to vtk file
     mito::writer::vtk("output", tetra_mesh);
+#endif
 }
 
 TEST(Mesh, SummitMeshVtkWriter)
@@ -440,6 +442,8 @@ TEST(Mesh, SummitMeshVtkWriter)
     std::ifstream fileStream("cube.summit");
     auto mesh = mito::reader::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
 
+#ifdef WITH_VTK
     // write mesh to vtk file
     mito::writer::vtk("output", mesh);
+#endif
 }
