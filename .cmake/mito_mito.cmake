@@ -4,39 +4,42 @@
 function(mito_mitoLib)
     # build the libmito version file
     configure_file(
-        mito/version.h.in mito/version.h
+        lib/mito/version.h.in lib/mito/version.h
         @ONLY
     )
     configure_file(
-        mito/version.cc.in mito/version.cc
+        lib/mito/version.cc.in lib/mito/version.cc
         @ONLY
     )
 
     # copy the mito headers over to the staging area
     file(GLOB_RECURSE files
-        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/mito
+        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/lib/mito
         CONFIGURE_DEPENDS
-        *.h *.icc
+        lib/mito/*.h lib/mito/*.icc
     )
 
     foreach(file ${files})
-        configure_file(mito/${file} mito/${file} COPYONLY)
+        configure_file(lib/mito/${file} lib/mito/${file} COPYONLY)
     endforeach()
 
     # the libmito target
     add_library(mito SHARED)
 
+    # specify the directory for the library compilation products
+    mito_library_directory(mito lib)
+
     # set the include directories
     target_include_directories(
         mito PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/lib>
         $<INSTALL_INTERFACE:${MITO_DEST_INCLUDE}>
     )
 
     # add the sources
     target_sources(mito
         PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/mito/version.cc
+        ${CMAKE_CURRENT_BINARY_DIR}/lib/mito/version.cc
     )
 
     # and the link dependencies
@@ -51,7 +54,7 @@ function(mito_mitoLib)
 
     # install all the mito headers
     install(
-        DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mito
+        DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib/mito
         DESTINATION ${MITO_DEST_INCLUDE}
         FILES_MATCHING PATTERN *.h PATTERN *.icc
         PATTERN version.cc
