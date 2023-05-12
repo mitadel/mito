@@ -2,17 +2,6 @@
 #if !defined(mito_io_vtk_writer_h)
 #define mito_io_vtk_writer_h
 
-#include <vtkCellArray.h>
-#include <vtkFloatArray.h>
-#include <vtkLine.h>
-#include <vtkPoints.h>
-#include <vtkPointData.h>
-#include <vtkSmartPointer.h>
-#include <vtkTriangle.h>
-#include <vtkTetra.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkXMLUnstructuredGridWriter.h>
-
 
 namespace mito::mesh {
     template <int D>

@@ -2,7 +2,6 @@
 #if !defined(mito_io_summit_h)
 #define mito_io_summit_h
 
-#include <fstream>
 
 namespace mito::mesh {
     template <int D>
