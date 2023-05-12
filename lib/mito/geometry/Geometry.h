@@ -76,7 +76,7 @@ namespace mito::geometry {
         point_cloud_t<D> & _point_cloud;
 
         // friendship with the singleton
-        using GeometrySingleton = mito::utilities::Singleton<Geometry>;
+        using GeometrySingleton = utilities::Singleton<Geometry>;
         friend GeometrySingleton;
     };
 

@@ -7,12 +7,12 @@ namespace mito::quadrature {
 
     // quadrature point representation in parametric coordinates
     template <int D>
-    using quadrature_point_t = mito::manifolds::parametric_point_t<D>;
+    using quadrature_point_t = manifolds::parametric_point_t<D>;
 
     template <class quadrature_t, class element_t, int r>
     struct QuadratureRulesFactory {
         static constexpr auto degreeExactness = r;
-        static constexpr int parametricDim = mito::manifolds::parametric_dim<element_t>();
+        static constexpr int parametricDim = manifolds::parametric_dim<element_t>();
         static constexpr auto Get() -> auto;
 
       private:

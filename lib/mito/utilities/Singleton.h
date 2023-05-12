@@ -30,7 +30,7 @@ namespace mito::utilities {
 
     // initialization of static member
     template <class RESOURCE_T>
-    RESOURCE_T * mito::utilities::Singleton<RESOURCE_T>::resource = nullptr;
+    RESOURCE_T * utilities::Singleton<RESOURCE_T>::resource = nullptr;
 
 }    // namespace mito
 

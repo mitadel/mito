@@ -23,13 +23,13 @@ namespace mito::manifolds {
         static constexpr int N = cellT::resource_t::order;
         // a point in parametric coordinates
         static constexpr int parametricDim = parametric_dim<cell_t>();
-        using parametric_point_t = mito::manifolds::parametric_point_t<parametricDim>;
+        using parametric_point_t = manifolds::parametric_point_t<parametricDim>;
         // the dimension of the physical space
         static constexpr int dim = D;
         // typedef for mesh type
-        using mesh_t = mito::mesh::mesh_t<cell_t, D>;
+        using mesh_t = mesh::mesh_t<cell_t, D>;
         // typedef for vertex
-        using vertex_t = mito::topology::vertex_t;
+        using vertex_t = topology::vertex_t;
 
       public:
         inline Manifold(mesh_t & mesh) :

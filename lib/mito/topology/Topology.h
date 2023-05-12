@@ -192,7 +192,7 @@ namespace mito::topology {
             _factories;
 
         // friendship with the singleton
-        using TopologySingleton = mito::utilities::Singleton<Topology>;
+        using TopologySingleton = utilities::Singleton<Topology>;
         friend TopologySingleton;
     };
 }

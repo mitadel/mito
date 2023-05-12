@@ -7,7 +7,7 @@ namespace mito::geometry {
     template <int D>
     class PointCloud {
       private:
-        using cloud_t = mito::geometry::cloud_t<D>;
+        using cloud_t = geometry::cloud_t<D>;
         // TOFIX: make this unordered?
         using point_compositions_t = std::map<vector_t<D>, point_t<D>>;
 
@@ -54,7 +54,7 @@ namespace mito::geometry {
                 Point<D> * resource = new (location) Point<D>(coord[I]...);
 
                 // wrap the new point in a shared pointer and return it
-                return mito::utilities::shared_ptr<Point<D>>(resource, &_cloud);
+                return utilities::shared_ptr<Point<D>>(resource, &_cloud);
             };
 
             // emplace point in {_cloud}
@@ -75,7 +75,7 @@ namespace mito::geometry {
         point_compositions_t _compositions;
 
         // friendship with the singleton
-        using PointCloudSingleton = mito::utilities::Singleton<PointCloud<D>>;
+        using PointCloudSingleton = utilities::Singleton<PointCloud<D>>;
         friend PointCloudSingleton;
     };
 

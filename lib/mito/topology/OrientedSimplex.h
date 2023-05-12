@@ -18,7 +18,7 @@
 namespace mito::topology {
 
     template <int D>
-    class OrientedSimplex : public mito::utilities::Shareable {
+    class OrientedSimplex : public utilities::Shareable {
       public:
         // typedef for order of simplex
         static constexpr int order = D;

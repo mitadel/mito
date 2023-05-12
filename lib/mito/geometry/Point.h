@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     template <int D>
-    class Point : public mito::utilities::Shareable {
+    class Point : public utilities::Shareable {
       private:
         template <class... Args>
         Point(Args &&... args)

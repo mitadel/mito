@@ -290,6 +290,6 @@ namespace mito::reader {
         return mesh;
     }
 
-}    // namespace mito::mesh
+}    // namespace mito::reader
 
 #endif    // mito_io_reader_summit_h

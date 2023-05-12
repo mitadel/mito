@@ -21,7 +21,7 @@ namespace mito::topology {
     class OrientedSimplexFactory {
       private:
         // typedef for a collection of oriented simplices
-        using oriented_simplex_collection_t = mito::utilities::segmented_t<simplex_t<D>>;
+        using oriented_simplex_collection_t = utilities::segmented_t<simplex_t<D>>;
 
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
@@ -172,7 +172,7 @@ namespace mito::topology {
             OrientedSimplex<D> * resource = new (location) OrientedSimplex<D>(simplex, orientation);
 
             // wrap the new simplex in a shared pointer and return it
-            return mito::utilities::shared_ptr<OrientedSimplex<D>>(resource, &_oriented_simplices);
+            return utilities::shared_ptr<OrientedSimplex<D>>(resource, &_oriented_simplices);
         }
 
       private:

@@ -12,7 +12,7 @@ namespace mito::topology {
      */
 
     template <int D>
-    class Simplex : public mito::utilities::Shareable {
+    class Simplex : public utilities::Shareable {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
@@ -125,7 +125,7 @@ namespace mito::topology {
      */
 
     template <>
-    class Simplex<0> : public mito::utilities::Shareable {
+    class Simplex<0> : public utilities::Shareable {
       private:
         // default constructor
         constexpr Simplex() {}

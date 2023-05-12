@@ -55,8 +55,7 @@ namespace mito::writer {
         // map mesh points to the index of the vtk points. Points that are shared among
         // multiple elements have the same index.
         std::unordered_map<
-            mito::geometry::point_t<D>, int,
-            mito::utilities::hash_function<mito::geometry::point_t<D>>>
+            geometry::point_t<D>, int, utilities::hash_function<geometry::point_t<D>>>
             mapPoints;
 
         // global index assigned to each vtk point
@@ -136,6 +135,6 @@ namespace mito::writer {
         writer->Write();
     }
 
-}    // namespace mito::mesh
+}    // namespace mito::writer
 
 #endif    // mito_io_writer_vtk_h

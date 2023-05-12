@@ -23,7 +23,7 @@ namespace mito::topology {
 
       private:
         // typedef for a collection of unoriented simplices
-        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<D>>;
+        using simplex_collection_t = utilities::segmented_t<unoriented_simplex_t<D>>;
 
         // typedef for a composition map of simplices:
         // these maps map:
@@ -109,7 +109,7 @@ namespace mito::topology {
             Simplex<D> * resource = new (location) Simplex<D>(composition);
 
             // wrap the new simplex in a shared pointer and return it
-            return mito::utilities::shared_ptr<Simplex<D>>(resource, &_simplices);
+            return utilities::shared_ptr<Simplex<D>>(resource, &_simplices);
         }
 
       private:
@@ -177,7 +177,7 @@ namespace mito::topology {
 
       private:
         // typedef for a collection of unoriented simplices
-        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<0>>;
+        using simplex_collection_t = utilities::segmented_t<unoriented_simplex_t<0>>;
 
       private:
         // default constructor
@@ -223,7 +223,7 @@ namespace mito::topology {
             Simplex<0> * resource = new (location) Simplex<0>();
 
             // wrap the new simplex in a shared pointer and return it
-            return mito::utilities::shared_ptr<Simplex<0>>(resource, &_simplices);
+            return utilities::shared_ptr<Simplex<0>>(resource, &_simplices);
         }
 
       private:

@@ -17,7 +17,7 @@ namespace mito::mesh {
         template <int I>
         using cell_family_t = typename cellT::resource_t::cell_family_t<I>;
         // typedef for geometry type
-        using geometry_t = mito::geometry::geometry_t<D>;
+        using geometry_t = geometry::geometry_t<D>;
         // typedef for a collection of cells
         using cells_t = element_set_t<cell_t>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
