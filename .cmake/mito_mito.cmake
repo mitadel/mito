@@ -81,7 +81,7 @@ function(mito_mitoModule)
     target_link_libraries(mitomodule PRIVATE mito pybind11::module)
     # add the sources
     target_sources(mitomodule PRIVATE
-        mito/mito.cc
+        extensions/mito/mito.cc
     )
 
     # install the mito extensions
