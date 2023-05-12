@@ -14,8 +14,6 @@
 
 // classes implementation
 #include "Mesh.h"
-#include "readers/summit.h"
-#include "writers/vtk_writer.h"
 
 // factories implementation
 #include "factories.h"

@@ -5,6 +5,7 @@
 // support
 #include "base.h"
 #include "fem.h"
+#include "io.h"
 #include "materials.h"
 #include "math.h"
 #include "topology.h"

@@ -1,6 +1,6 @@
 // code guard
-#if !defined(mito_mesh_vtk_writer_h)
-#define mito_mesh_vtk_writer_h
+#if !defined(mito_io_vtk_writer_h)
+#define mito_io_vtk_writer_h
 
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
@@ -149,4 +149,4 @@ namespace mito::mesh {
 
 }    // namespace mito::mesh
 
-#endif    // mito_mesh_vtk_writer_h
+#endif    // mito_io_vtk_writer_h
