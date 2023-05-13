@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-11]
-        target: [Debug, Release, RelWithDebInfo]
+        target: [Debug, Release]
         python: ["3.11"]
         suite: [gcc]
         suiteVersion: ["11"]
