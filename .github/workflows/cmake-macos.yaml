@@ -33,7 +33,7 @@ jobs:
       - name: ${{matrix.os}} refresh
         run: |
           echo " -- install our dependencies"
-          brew install make cmake
+          brew install make cmake vtk
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -150,7 +150,7 @@ jobs:
           mkdir build
           cd build
           echo " -- configuring the build"
-          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest ${{github.workspace}}/mito
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest -DWITH_VTK=ON ${{github.workspace}}/mito
           echo " -- building mito"
           make -j 2 install
         env:
