@@ -7,8 +7,6 @@
 #include <unordered_map>
 
 #ifdef WITH_VTK
-#include <vtkCellArray.h>
-#include <vtkFloatArray.h>
 #include <vtkLine.h>
 #include <vtkPointData.h>
 #include <vtkPoints.h>
