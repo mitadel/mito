@@ -105,6 +105,8 @@ jobs:
         run: |
           echo " -- gtest"
           sudo dpkg-query -L libgtest-dev
+          echo " -- vtk"
+          sudo dpkg-query -L libvtk9-dev
 
       - name: locations of python packages
         run: |
