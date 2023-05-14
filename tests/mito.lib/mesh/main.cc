@@ -183,7 +183,7 @@ TEST(Tetra, MeshRectangle)
 
     // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::reader::summit<mito::topology::triangle_t>(fileStream, geometry);
+    auto mesh = mito::io::mesh::reader<mito::topology::triangle_t>(fileStream, geometry);
 
     // count the cells of the mesh
     int cells = mesh.nCells();
@@ -217,7 +217,7 @@ TEST(Tetra, MeshRectangleArea)
 
     // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::reader::summit<mito::topology::triangle_t>(fileStream, geometry);
+    auto mesh = mito::io::mesh::reader<mito::topology::triangle_t>(fileStream, geometry);
 
     // do tetra mesh refinements
     auto tetra_mesh = tetra(mesh, geometry, 1);
@@ -245,7 +245,7 @@ TEST(Tetra, CubeVolume)
 
     // read the cube mesh
     std::ifstream fileStream("cube.summit");
-    auto mesh = mito::reader::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
+    auto mesh = mito::io::mesh::reader<mito::topology::simplex_t<3>>(fileStream, geometry);
 
     // do tetra mesh refinement
     const auto subdivisions = 2;

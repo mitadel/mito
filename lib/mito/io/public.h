@@ -7,9 +7,9 @@
 #include "externals.h"
 
 // classes implementation
-#include "readers/summit.h"
+#include "mesh/reader.h"
 #ifdef WITH_VTK
-#include "writers/vtk.h"
+#include "mesh/writer.h"
 #endif    // WITH_VTK
 
 #endif

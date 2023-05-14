@@ -1,25 +1,26 @@
 // code guard
-#if !defined(mito_io_writer_vtk_h)
-#define mito_io_writer_vtk_h
+#if !defined(mito_io_mesh_writer_h)
+#define mito_io_mesh_writer_h
 
 
-namespace mito::writer {
+namespace mito::io::mesh {
     template <int D>
-    auto vtkCellPointer(const mesh::mesh_t<topology::tetrahedron_t, D> &)
+    auto vtkCellPointer(const mito::mesh::mesh_t<topology::tetrahedron_t, D> &)
         -> vtkSmartPointer<vtkTetra>
     {
         return vtkSmartPointer<vtkTetra>::New();
     }
 
     template <int D>
-    auto vtkCellPointer(const mesh::mesh_t<topology::triangle_t, D> &)
+    auto vtkCellPointer(const mito::mesh::mesh_t<topology::triangle_t, D> &)
         -> vtkSmartPointer<vtkTriangle>
     {
         return vtkSmartPointer<vtkTriangle>::New();
     }
 
     template <int D>
-    auto vtkCellPointer(const mesh::mesh_t<topology::segment_t, D> &) -> vtkSmartPointer<vtkLine>
+    auto vtkCellPointer(const mito::mesh::mesh_t<topology::segment_t, D> &)
+        -> vtkSmartPointer<vtkLine>
     {
         return vtkSmartPointer<vtkLine>::New();
     }
@@ -45,7 +46,7 @@ namespace mito::writer {
     }
 
     template <class cellT, int D>
-    auto createVtkUnstructuredGrid(const mesh::mesh_t<cellT, D> & mesh)
+    auto createVtkUnstructuredGrid(const mito::mesh::mesh_t<cellT, D> & mesh)
         -> vtkSmartPointer<vtkUnstructuredGrid>
     {
         // vtk unstructured grid
@@ -104,7 +105,7 @@ namespace mito::writer {
     }
 
     template <class cellT, int D>
-    auto vtk(std::string fileName, const mesh::mesh_t<cellT, D> & mesh) -> void
+    auto writer(std::string fileName, const mito::mesh::mesh_t<cellT, D> & mesh) -> void
     {
         // create vtk unstructured grid
         const auto gridVtk = createVtkUnstructuredGrid(mesh);
@@ -124,4 +125,4 @@ namespace mito::writer {
 
 }    // namespace mito::writer
 
-#endif    // mito_io_writer_vtk_h
+#endif    // mito_io_mesh_writer_h

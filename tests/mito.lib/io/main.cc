@@ -14,7 +14,7 @@ TEST(MeshReader, LoadSummitSegmentsMesh3D)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     std::ifstream fileStream("segments.summit");
-    auto mesh = mito::reader::summit<mito::topology::segment_t>(fileStream, geometry);
+    auto mesh = mito::io::mesh::reader<mito::topology::segment_t>(fileStream, geometry);
 
     // assert you read 10 cells
     EXPECT_EQ(mesh.nCells(), 10);
@@ -66,7 +66,7 @@ TEST(MeshReader, LoadSummitMesh2D)
     //
     t = clock();
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::reader::summit<mito::topology::simplex_t<2>>(fileStream, geometry);
+    auto mesh = mito::io::mesh::reader<mito::topology::simplex_t<2>>(fileStream, geometry);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
@@ -92,7 +92,7 @@ TEST(MeshReader, LoadSummitMesh3D)
     //
     t = clock();
     std::ifstream fileStream("cube.summit");
-    auto mesh = mito::reader::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
+    auto mesh = mito::io::mesh::reader<mito::topology::simplex_t<3>>(fileStream, geometry);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 }
 
@@ -127,7 +127,7 @@ TEST(MeshWriter, Vtk)
     auto tetra_mesh = tetra(mesh, geometry);
 
     // write mesh to vtk file
-    mito::writer::vtk("output", tetra_mesh);
+    mito::io::mesh::writer("output", tetra_mesh);
 }
 
 TEST(MeshWriter, SummitMeshToVtk)
@@ -143,9 +143,9 @@ TEST(MeshWriter, SummitMeshToVtk)
 
     // read summit mesh
     std::ifstream fileStream("cube.summit");
-    auto mesh = mito::reader::summit<mito::topology::simplex_t<3>>(fileStream, geometry);
+    auto mesh = mito::io::mesh::reader<mito::topology::simplex_t<3>>(fileStream, geometry);
 
     // write mesh to vtk file
-    mito::writer::vtk("output", mesh);
+    mito::io::mesh::writer("output", mesh);
 }
 #endif
