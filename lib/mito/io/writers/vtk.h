@@ -45,12 +45,13 @@ namespace mito::writer {
     }
 
     template <class cellT, int D>
-    auto createVtkPointsAndCells(const mesh::mesh_t<cellT, D> & mesh)
-        -> std::pair<vtkSmartPointer<vtkPoints>, vtkSmartPointer<vtkCellArray>>
+    auto createVtkUnstructuredGrid(const mesh::mesh_t<cellT, D> & mesh)
+        -> vtkSmartPointer<vtkUnstructuredGrid>
     {
+        // vtk unstructured grid
+        auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
         // vtk points and cells
         auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
-        auto cellsVtk = vtkSmartPointer<vtkCellArray>::New();
 
         // map mesh points to the index of the vtk points. Points that are shared among
         // multiple elements have the same index.
@@ -93,22 +94,11 @@ namespace mito::writer {
             }
 
             // insert the new cell
-            cellsVtk->InsertNextCell(cellVtk);
+            gridVtk->InsertNextCell(cellVtk->GetCellType(), cellVtk->GetPointIds());
         }
 
-        return { pointsVtk, cellsVtk };
-    }
-
-    auto createVtkUnstructuredGrid(
-        const vtkSmartPointer<vtkPoints> & pointsVtk,
-        const vtkSmartPointer<vtkCellArray> & cellsVtk) -> vtkSmartPointer<vtkUnstructuredGrid>
-    {
-        // vtk unstructured grid
-        auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
-
-        // add vtk points and cells to the grid
+        // set the grid points
         gridVtk->SetPoints(pointsVtk);
-        gridVtk->SetCells(VTK_TETRA, cellsVtk);
 
         return gridVtk;
     }
@@ -116,11 +106,8 @@ namespace mito::writer {
     template <class cellT, int D>
     auto vtk(std::string fileName, const mesh::mesh_t<cellT, D> & mesh) -> void
     {
-        // create vtk points and cells from the given mesh
-        const auto [pointsVtk, cellsVtk] = createVtkPointsAndCells(mesh);
-
         // create vtk unstructured grid
-        const auto gridVtk = createVtkUnstructuredGrid(pointsVtk, cellsVtk);
+        const auto gridVtk = createVtkUnstructuredGrid(mesh);
 
         // write the grid to file
         auto writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
