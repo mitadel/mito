@@ -19,11 +19,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-11]
+        os: [macos-12]
         target: [Debug, Release]
         python: ["3.11"]
         suite: [gcc]
-        suiteVersion: ["11"]
+        suiteVersion: ["12"]
         include:
           - suite: gcc
             cc: gcc
@@ -33,7 +33,9 @@ jobs:
       - name: ${{matrix.os}} refresh
         run: |
           echo " -- install our dependencies"
-          brew install make cmake vtk
+          brew install make cmake
+          curl https://raw.githubusercontent.com/Homebrew/homebrew-core/67b277e6d1faee20d2aa4fc8b2dc229a241fa807/Formula/vtk.rb > vtk.rb
+          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install vtk.rb
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
