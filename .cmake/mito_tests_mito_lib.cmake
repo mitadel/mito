@@ -18,7 +18,7 @@ mito_test_driver(tests/mito.lib/traits/main.cc)
 
 if(WITH_VTK)
     add_test(NAME tests.mito.lib.io.pytest
-        COMMAND ${BASH_PROGRAM} -c "python3 ${CMAKE_SOURCE_DIR}/tests/mito.lib/io/check_output_vtk.py"
+        COMMAND ${BASH_PROGRAM} -c "pytest -v ${CMAKE_SOURCE_DIR}/tests/mito.lib/io/check_output_vtk.py"
     )
 
     # some tests require cleanup
