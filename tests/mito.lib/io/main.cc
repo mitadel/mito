@@ -148,4 +148,17 @@ TEST(MeshWriter, SummitMeshToVtk)
     // write mesh to vtk file
     mito::io::mesh::writer("output", mesh);
 }
+
+TEST(MeshWriter, PointCloudToVtk)
+{
+    // an empty point cloud
+    auto & cloud = mito::geometry::point_cloud<2>();
+
+    // add points to the point cloud
+    const auto point_a = cloud.point({ 0.0, 0.0 });
+    const auto point_b = cloud.point({ 1.0, 1.0 });
+
+    // print the point cloud
+    mito::io::mesh::writer("output", cloud);
+}
 #endif

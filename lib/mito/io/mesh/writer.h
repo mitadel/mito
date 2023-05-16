@@ -104,12 +104,9 @@ namespace mito::io::mesh {
         return gridVtk;
     }
 
-    template <class cellT, int D>
-    auto writer(std::string fileName, const mito::mesh::mesh_t<cellT, D> & mesh) -> void
+    inline auto write(std::string fileName, const vtkSmartPointer<vtkUnstructuredGrid> & gridVtk)
+        -> void
     {
-        // create vtk unstructured grid
-        const auto gridVtk = createVtkUnstructuredGrid(mesh);
-
         // write the grid to file
         auto writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
         writer->SetFileName((fileName + ".vtk").c_str());
@@ -121,6 +118,40 @@ namespace mito::io::mesh {
 #endif
 
         writer->Write();
+    }
+
+    template <class cellT, int D>
+    auto writer(std::string fileName, const mito::mesh::mesh_t<cellT, D> & mesh) -> void
+    {
+        // create vtk unstructured grid
+        const auto gridVtk = createVtkUnstructuredGrid(mesh);
+
+        // write grid to file
+        write(fileName, gridVtk);
+    }
+
+
+    template <int D>
+    auto writer(std::string fileName, const geometry::point_cloud_t<D> & cloud) -> void
+    {
+        // get point cloud compositions
+        const auto & compositions = cloud.getCompositions();
+
+        // vtk unstructured grid
+        auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
+        // vtk points and cells
+        auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
+
+        // iterate on points
+        for (const auto & pPointMap : compositions) {
+            insertVtkPoint(pPointMap.second, pointsVtk);
+        }
+
+        // set the grid points
+        gridVtk->SetPoints(pointsVtk);
+
+        // write grid to file
+        write(fileName, gridVtk);
     }
 
 }    // namespace mito::writer
