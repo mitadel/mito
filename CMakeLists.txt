@@ -24,6 +24,9 @@ include(GNUInstallDirs)
 # additional compilation flags
 set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -Wall -Wextra -pedantic -Werror")
 
+# programs
+find_program(BASH_PROGRAM bash)
+
 # packages
 # pyre
 find_package(pyre REQUIRED)

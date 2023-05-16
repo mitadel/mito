@@ -15,3 +15,22 @@ mito_test_driver(tests/mito.lib/segmented-container-iterator/main.cc)
 mito_test_driver(tests/mito.lib/shared-pointer/main.cc)
 mito_test_driver(tests/mito.lib/simplices/main.cc)
 mito_test_driver(tests/mito.lib/traits/main.cc)
+
+if(WITH_VTK)
+    add_test(NAME tests.mito.lib.io.pytest
+        COMMAND ${BASH_PROGRAM} -c "python3 ${CMAKE_SOURCE_DIR}/tests/mito.lib/io/check_output_vtk.py"
+    )
+
+    # some tests require cleanup
+    add_test(NAME tests.mito.lib.io.cleanup
+        COMMAND ${BASH_PROGRAM} -c "rm ${CMAKE_SOURCE_DIR}/tests/mito.lib/io/*.vtk"
+    )
+
+    # some tests must happen in a specific order
+    set_property(TEST tests.mito.lib.io.pytest PROPERTY
+        DEPENDS mito.lib.io.main.cc
+    )
+    set_property(TEST tests.mito.lib.io.cleanup PROPERTY
+        DEPENDS tests.mito.lib.io.pytest
+    )
+endif()
