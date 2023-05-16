@@ -26,9 +26,10 @@ namespace mito::geometry {
       public:
         auto print() const -> void
         {
-            // iterate on map
-            for (auto item : _cloud) {
-                std::cout << "Point: " << *item << std::endl;
+            // iterate on points
+            std::cout << "Point cloud:" << std::endl;
+            for (const auto & pPointMap : _compositions) {
+                std::cout << *pPointMap.second.handle() << std::endl;
             }
             // all done
             return;
@@ -66,6 +67,8 @@ namespace mito::geometry {
             // return the newly added point
             return it.first->second;
         }
+
+        auto getCompositions() const -> const point_compositions_t & { return _compositions; }
 
       private:
         // the cloud of points

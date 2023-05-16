@@ -11,4 +11,7 @@ TEST(Point, TestPoint)
 
     auto point_b = cloud.point({ 1.0, 1.0 });
     EXPECT_EQ(mito::geometry::distance(point_a, point_b), std::sqrt(2.0));
+
+    // print point cloud
+    std::cout << cloud << std::endl;
 }
