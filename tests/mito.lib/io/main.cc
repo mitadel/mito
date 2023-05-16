@@ -97,7 +97,7 @@ TEST(MeshReader, LoadSummitMesh3D)
 }
 
 #ifdef WITH_VTK
-TEST(MeshWriter, Vtk)
+TEST(MeshWriter, TetraToVtk)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -127,7 +127,7 @@ TEST(MeshWriter, Vtk)
     auto tetra_mesh = tetra(mesh, geometry);
 
     // write mesh to vtk file
-    mito::io::mesh::writer("output", tetra_mesh);
+    mito::io::mesh::writer("tetra_output", tetra_mesh);
 }
 
 TEST(MeshWriter, SummitMeshToVtk)
@@ -146,7 +146,7 @@ TEST(MeshWriter, SummitMeshToVtk)
     auto mesh = mito::io::mesh::reader<mito::topology::simplex_t<3>>(fileStream, geometry);
 
     // write mesh to vtk file
-    mito::io::mesh::writer("output", mesh);
+    mito::io::mesh::writer("cube_output", mesh);
 }
 
 TEST(MeshWriter, PointCloudToVtk)
@@ -159,6 +159,6 @@ TEST(MeshWriter, PointCloudToVtk)
     const auto point_b = cloud.point({ 1.0, 1.0 });
 
     // print the point cloud
-    mito::io::mesh::writer("output", cloud);
+    mito::io::mesh::writer("point_cloud_output", cloud);
 }
 #endif
