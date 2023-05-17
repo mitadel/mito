@@ -5,12 +5,11 @@ class IoTest : public ::testing::Test {
   protected:
     void TearDown() override
     {
+        // clean up all the singletons at the end of each test
         mito::geometry::Geometry<3>::DestroyInstance();
         mito::geometry::PointCloud<3>::DestroyInstance();
-
         mito::geometry::Geometry<2>::DestroyInstance();
         mito::geometry::PointCloud<2>::DestroyInstance();
-
         mito::topology::Topology::DestroyInstance();
     }
 };
