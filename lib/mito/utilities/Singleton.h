@@ -15,13 +15,19 @@ namespace mito::utilities {
         static auto GetInstance(Args &&... args) -> resource_t &
         {
             if (!resource) {
-                resource = std::unique_ptr<resource_t>(new resource_t(args...));
+                resource = new resource_t(args...);
             }
 
             return *resource;
         }
 
-        static auto DestroyInstance() -> void { resource.reset(); }
+        static auto DestroyInstance() -> void
+        {
+            if (resource) {
+                delete resource;
+                resource = nullptr;
+            }
+        }
 
       protected:
         Singleton() {}
@@ -31,11 +37,11 @@ namespace mito::utilities {
         Singleton & operator=(const Singleton &) = delete;
 
       private:
-        static std::unique_ptr<resource_t> resource;
+        static resource_t * resource;
     };
 
     template <class RESOURCE_T>
-    std::unique_ptr<RESOURCE_T> utilities::Singleton<RESOURCE_T>::resource = nullptr;
+    RESOURCE_T * utilities::Singleton<RESOURCE_T>::resource = nullptr;
 
 }    // namespace mito
 

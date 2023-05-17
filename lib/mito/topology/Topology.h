@@ -20,7 +20,6 @@ namespace mito::topology {
         // delete assignment operator
         void operator=(const Topology &) = delete;
 
-      public:
         // destructor
         ~Topology() override {};
 

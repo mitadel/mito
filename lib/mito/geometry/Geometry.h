@@ -21,7 +21,6 @@ namespace mito::geometry {
             _point_cloud(point_cloud)
         {}
 
-      public:
         // destructor
         ~Geometry() override {}
 

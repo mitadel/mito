@@ -20,7 +20,6 @@ namespace mito::geometry {
         // delete assignment operator
         void operator=(const PointCloud<D> &) = delete;
 
-      public:
         // destructor
         ~PointCloud() override {}
 
