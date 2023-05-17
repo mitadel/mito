@@ -21,8 +21,9 @@ namespace mito::geometry {
             _point_cloud(point_cloud)
         {}
 
+      public:
         // destructor
-        ~Geometry() {}
+        ~Geometry() override {}
 
       public:
         // TOFIX: not sure I like that this function returns a vertex and not a node
