@@ -15,6 +15,7 @@ def load_mesh(filename):
     reader.Update()
     return reader.GetOutput()
 
+
 def test_TetraToVtk():
     # get the loaded mesh
     mesh = load_mesh("tetra_output.vtk")
@@ -23,6 +24,13 @@ def test_TetraToVtk():
     num_tetrahedra = mesh.GetNumberOfCells()
     print("Number of tetrahedra:", num_tetrahedra)
     assert num_tetrahedra == 8
+    
+    # check points of the mesh
+    points = mesh.GetPoints()
+    num_points = points.GetNumberOfPoints()
+    print("Number of points:", num_points)
+    assert num_points == 10
+
 
 def test_SummitMeshToVtk():
     # get the loaded mesh
@@ -33,6 +41,13 @@ def test_SummitMeshToVtk():
     print("Number of tetrahedra:", num_tetrahedra)
     assert num_tetrahedra == 368
 
+    # check points of the mesh
+    points = mesh.GetPoints()
+    num_points = points.GetNumberOfPoints()
+    print("Number of points:", num_points)
+    assert num_points == 139
+
+
 def test_PointCloudToVtk():
     # get the loaded mesh
     mesh = load_mesh("point_cloud_output.vtk")
@@ -41,3 +56,9 @@ def test_PointCloudToVtk():
     num_tetrahedra = mesh.GetNumberOfCells()
     print("Number of tetrahedra:", num_tetrahedra)
     assert num_tetrahedra == 0
+
+    # check points of the mesh
+    points = mesh.GetPoints()
+    num_points = points.GetNumberOfPoints()
+    print("Number of points:", num_points)
+    assert num_points == 3
