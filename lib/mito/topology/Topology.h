@@ -9,7 +9,7 @@ namespace mito::topology {
      *
      */
 
-    class Topology {
+    class Topology : public utilities::Singleton<Topology> {
       private:
         // default constructor
         Topology() : _factories() {};

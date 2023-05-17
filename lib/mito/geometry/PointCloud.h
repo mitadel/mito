@@ -5,7 +5,7 @@
 namespace mito::geometry {
 
     template <int D>
-    class PointCloud {
+    class PointCloud : public utilities::Singleton<PointCloud<D>> {
       private:
         using cloud_t = geometry::cloud_t<D>;
         // TOFIX: make this unordered?

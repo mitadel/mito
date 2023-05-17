@@ -5,32 +5,28 @@
 
 namespace mito::utilities {
 
-    template <class RESOURCE_T>
+    template <class resource_t>
     class Singleton {
-
-        // my template parameter
-        using resource_t = RESOURCE_T;
 
       public:
         template <class... Args>
-        static auto GetInstance(Args &&... args) -> resource_t &
+        static resource_t & GetInstance(Args &&... args)
         {
-            if (!resource) {
-                resource = new resource_t(args...);
-                return *resource;
-            }
-
-            return *resource;
+            static resource_t instance(args...);
+            return instance;
         }
 
-      private:
-        // the singleton
-        static resource_t * resource;
-    };
+      protected:
+        Singleton()
+        {
+            std::cout << "Singleton constructor" << std::endl;
+            return;
+        }
+        ~Singleton() { std::cout << "Singleton destructor" << std::endl; }
 
-    // initialization of static member
-    template <class RESOURCE_T>
-    RESOURCE_T * utilities::Singleton<RESOURCE_T>::resource = nullptr;
+        Singleton(const Singleton &) = delete;
+        Singleton & operator=(const Singleton &) = delete;
+    };
 
 }    // namespace mito
 

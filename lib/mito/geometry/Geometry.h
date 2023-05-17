@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     template <int D>
-    class Geometry {
+    class Geometry : public utilities::Singleton<Geometry<D>> {
       public:
         // typedef for a topology
         using topology_t = topology::topology_t;
@@ -76,7 +76,7 @@ namespace mito::geometry {
         point_cloud_t<D> & _point_cloud;
 
         // friendship with the singleton
-        using GeometrySingleton = utilities::Singleton<Geometry>;
+        using GeometrySingleton = utilities::Singleton<Geometry<D>>;
         friend GeometrySingleton;
     };
 
