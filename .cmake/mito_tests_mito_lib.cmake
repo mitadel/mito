@@ -9,7 +9,7 @@ mito_test_driver(tests/mito.lib/io/loadSummitMesh3D.cc)
 mito_test_driver(tests/mito.lib/io/loadSummitSegmentMesh3D.cc)
 
 if(WITH_VTK)
-    mito_test_driver(tests/mito.lib/io/main.cc)
+    mito_test_driver(tests/mito.lib/io/pointCloudToVtk.cc)
     mito_test_driver(tests/mito.lib/io/summitMeshToVtk.cc)
     mito_test_driver(tests/mito.lib/io/tetraToVtk.cc)
 endif()
