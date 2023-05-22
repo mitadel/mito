@@ -45,7 +45,7 @@ jobs:
       - name: install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install distro numpy pybind11
+          pip3 install distro numpy pybind11 pytest vtk
       
       - name: install gtest
         run: |
@@ -130,6 +130,10 @@ jobs:
           pip3 show pybind11
           echo " -- its headers"
           find ${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11
+          echo " -- pytest"
+          pip3 show pytest
+          echo " -- vtk"
+          pip3 show vtk
         env:
           pythonVersion: ${{matrix.python}}
 
