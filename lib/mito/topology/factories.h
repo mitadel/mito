@@ -8,7 +8,7 @@ namespace mito::topology {
     // topology factory
     auto topology() -> topology_t &
     {
-        return topology_t::GetInstance();
+        return utilities::Singleton<topology_t>::GetInstance();
     }
 }
 

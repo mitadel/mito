@@ -14,34 +14,16 @@ namespace mito::utilities {
         template <class... Args>
         static auto GetInstance(Args &&... args) -> resource_t &
         {
-            if (!resource) {
-                resource = new resource_t(args...);
-            }
-
-            return *resource;
+            static resource_t resource(args...);
+            return resource;
         }
 
-        static auto DestroyInstance() -> void
-        {
-            if (resource) {
-                delete resource;
-                resource = nullptr;
-            }
-        }
-
-      protected:
-        Singleton() {}
-        virtual ~Singleton() {}
-
+        // delete metamethods
+        Singleton() = delete;
+        ~Singleton() = delete;
         Singleton(const Singleton &) = delete;
         Singleton & operator=(const Singleton &) = delete;
-
-      private:
-        static resource_t * resource;
     };
-
-    template <class RESOURCE_T>
-    RESOURCE_T * utilities::Singleton<RESOURCE_T>::resource = nullptr;
 
 }    // namespace mito
 

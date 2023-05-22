@@ -1,21 +1,8 @@
 #include <gtest/gtest.h>
 #include <mito/mito.h>
 
-class IoTest : public ::testing::Test {
-  protected:
-    void TearDown() override
-    {
-        // clean up all the singletons at the end of each test
-        mito::geometry::Geometry<3>::DestroyInstance();
-        mito::geometry::PointCloud<3>::DestroyInstance();
-        mito::geometry::Geometry<2>::DestroyInstance();
-        mito::geometry::PointCloud<2>::DestroyInstance();
-        mito::topology::Topology::DestroyInstance();
-    }
-};
 
-
-TEST_F(IoTest, LoadSummitSegmentsMesh3D)
+TEST(MeshReader, LoadSummitSegmentsMesh3D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -63,7 +50,7 @@ TEST_F(IoTest, LoadSummitSegmentsMesh3D)
     }
 }
 
-TEST_F(IoTest, LoadSummitMesh2D)
+TEST(MeshReader, LoadSummitMesh2D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -89,7 +76,7 @@ TEST_F(IoTest, LoadSummitMesh2D)
 
 // TODO: add test on triangle in 3D
 
-TEST_F(IoTest, LoadSummitMesh3D)
+TEST(MeshReader, LoadSummitMesh3D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -110,7 +97,7 @@ TEST_F(IoTest, LoadSummitMesh3D)
 }
 
 #ifdef WITH_VTK
-TEST_F(IoTest, TetraToVtk)
+TEST(MeshWriter, TetraToVtk)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -143,7 +130,7 @@ TEST_F(IoTest, TetraToVtk)
     mito::io::mesh::writer("tetra_output", tetra_mesh);
 }
 
-TEST_F(IoTest, SummitMeshToVtk)
+TEST(MeshWriter, SummitMeshToVtk)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -162,7 +149,7 @@ TEST_F(IoTest, SummitMeshToVtk)
     mito::io::mesh::writer("cube_output", mesh);
 }
 
-TEST_F(IoTest, PointCloudToVtk)
+TEST(MeshWriter, PointCloudToVtk)
 {
     // an empty point cloud
     auto & cloud = mito::geometry::point_cloud<3>();

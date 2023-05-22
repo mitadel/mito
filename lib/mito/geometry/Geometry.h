@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     template <int D>
-    class Geometry : public utilities::Singleton<Geometry<D>> {
+    class Geometry {
       public:
         // typedef for a topology
         using topology_t = topology::topology_t;
@@ -22,7 +22,7 @@ namespace mito::geometry {
         {}
 
         // destructor
-        ~Geometry() override {}
+        ~Geometry() {}
 
       public:
         // TOFIX: not sure I like that this function returns a vertex and not a node

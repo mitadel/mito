@@ -9,7 +9,7 @@ namespace mito::geometry {
     template <int D>
     auto point_cloud() -> point_cloud_t<D> &
     {
-        return point_cloud_t<D>::GetInstance();
+        return utilities::Singleton<point_cloud_t<D>>::GetInstance();
     }
 
     // geometry factory
@@ -17,7 +17,7 @@ namespace mito::geometry {
     auto geometry(topology::topology_t & topology, point_cloud_t<D> & point_cloud)
         -> geometry_t<D> &
     {
-        return geometry_t<D>::GetInstance(topology, point_cloud);
+        return utilities::Singleton<geometry_t<D>>::GetInstance(topology, point_cloud);
     }
 }
 

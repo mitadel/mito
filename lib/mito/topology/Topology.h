@@ -9,7 +9,7 @@ namespace mito::topology {
      *
      */
 
-    class Topology : public utilities::Singleton<Topology> {
+    class Topology {
       private:
         // default constructor
         Topology() : _factories() {};
@@ -21,7 +21,7 @@ namespace mito::topology {
         void operator=(const Topology &) = delete;
 
         // destructor
-        ~Topology() override {};
+        ~Topology() {};
 
       public:
         template <int D>

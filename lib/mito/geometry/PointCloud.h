@@ -5,7 +5,7 @@
 namespace mito::geometry {
 
     template <int D>
-    class PointCloud : public utilities::Singleton<PointCloud<D>> {
+    class PointCloud {
       private:
         using cloud_t = geometry::cloud_t<D>;
         // TOFIX: make this unordered?
@@ -21,7 +21,7 @@ namespace mito::geometry {
         void operator=(const PointCloud<D> &) = delete;
 
         // destructor
-        ~PointCloud() override {}
+        ~PointCloud() {}
 
       public:
         auto print() const -> void
