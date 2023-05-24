@@ -16,8 +16,8 @@ def load_mesh(filename):
     return reader.GetOutput()
 
 
-def test_WritePointCloudToVtk():
-    filename = "point_cloud_output.vtk"
+def test_WriteTetraMeshToVtk():
+    filename = "tetra_output.vtk"
 
     # get the loaded mesh
     mesh = load_mesh(filename)
@@ -25,13 +25,13 @@ def test_WritePointCloudToVtk():
     # check the number of cells (tetrahedra)
     num_tetrahedra = mesh.GetNumberOfCells()
     print("Number of tetrahedra:", num_tetrahedra)
-    assert num_tetrahedra == 0
-
+    assert num_tetrahedra == 8
+    
     # check points of the mesh
     points = mesh.GetPoints()
     num_points = points.GetNumberOfPoints()
     print("Number of points:", num_points)
-    assert num_points == 3
+    assert num_points == 10
 
     # cleanup
     os.remove(filename)

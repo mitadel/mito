@@ -32,7 +32,6 @@ function(mito_test_testcase testcase testfile)
     # all done
 endfunction()
 
-
 # generate a unique test target name
 function(mito_test_output_target targetout target)
     # build the target and return it
@@ -40,7 +39,6 @@ function(mito_test_output_target targetout target)
 
     # all done
 endfunction()
-
 
 # register a test case based on a compiled driver
 function(mito_test_driver testfile)
@@ -96,6 +94,35 @@ function(mito_test_driver testfile)
     # all done
 endfunction(mito_test_driver)
 
+# register a test case based on a compiled driver which produces some output and another test
+# case based on pytest to check the generated output
+function(mito_test_driver_pytest_check testfile)
+    # register the test
+    mito_test_driver(${testfile})
+
+    # generate the name of the target for the test
+    mito_target_name(targetTest ${testfile})
+
+    # generate the name of the target for checking the output
+    string(APPEND targetScript "${targetTest}.pytest")
+
+    # get the filename
+    get_filename_component(fileName ${testfile} NAME_WE)
+
+    # get the test directory
+    get_filename_component(path ${testfile} DIRECTORY)
+    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})
+
+    # make a test case that checks the output
+    add_test(NAME ${targetScript}
+        COMMAND ${BASH_PROGRAM} -c "pytest -v ${fileName}.py" WORKING_DIRECTORY ${test_workdir}
+    )
+
+    # specify the order of execution
+    set_property(TEST ${targetScript} PROPERTY
+        DEPENDS ${targetTest}
+    )
+endfunction(mito_test_driver_pytest_check)
 
 # register a python script as a test case; use a path relative to {PROJECT_SOURCE_DIR}
 function(mito_test_python_testcase testfile)
@@ -104,23 +131,25 @@ function(mito_test_python_testcase testfile)
 
     # we run the test cases in their local directory, so we need the base name
     get_filename_component(base ${testfile} NAME)
+
     # get the relative path to the test case local directory so we can set the working dir
     get_filename_component(dir ${testfile} DIRECTORY)
 
     # set up the harness
     add_test(NAME ${testname}
-      COMMAND ${Python_EXECUTABLE} ./${base} ${ARGN})
+        COMMAND ${Python_EXECUTABLE} ./${base} ${ARGN})
+
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
-      PYTHONPATH=${MITO_DEST_FULL_EXTENSIONS}
+        PYTHONPATH=${MITO_DEST_FULL_EXTENSIONS}
     )
+
     # launch from the location of the testcase
     set_property(TEST ${testname} PROPERTY
-      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/${dir}
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/${dir}
     )
 
     # all done
 endfunction()
-
 
 # end of file

@@ -9,9 +9,9 @@ mito_test_driver(tests/mito.lib/io/load-summit-mesh-3D.cc)
 mito_test_driver(tests/mito.lib/io/load-summit-segment-mesh-3D.cc)
 
 if(WITH_VTK)
-    mito_test_driver(tests/mito.lib/io/write-point-cloud-to-vtk.cc)
-    mito_test_driver(tests/mito.lib/io/write-summit-mesh-to-vtk.cc)
-    mito_test_driver(tests/mito.lib/io/write-tetra-mesh-to-vtk.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/write-point-cloud-to-vtk.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/write-summit-mesh-to-vtk.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/write-tetra-mesh-to-vtk.cc)
 endif()
 
 mito_test_driver(tests/mito.lib/mesh/main.cc)
@@ -24,22 +24,3 @@ mito_test_driver(tests/mito.lib/segmented-container-iterator/main.cc)
 mito_test_driver(tests/mito.lib/shared-pointer/main.cc)
 mito_test_driver(tests/mito.lib/simplices/main.cc)
 mito_test_driver(tests/mito.lib/traits/main.cc)
-
-if(WITH_VTK)
-    add_test(NAME tests.mito.lib.io.pytest
-        COMMAND ${BASH_PROGRAM} -c "pytest -v ${CMAKE_SOURCE_DIR}/tests/mito.lib/io/check_output_vtk.py"
-    )
-
-    # some tests require cleanup
-    add_test(NAME tests.mito.lib.io.cleanup
-        COMMAND ${BASH_PROGRAM} -c "rm ${CMAKE_SOURCE_DIR}/tests/mito.lib/io/*.vtk"
-    )
-
-    # some tests must happen in a specific order
-    set_property(TEST tests.mito.lib.io.pytest PROPERTY
-        DEPENDS mito.lib.io.main.cc
-    )
-    set_property(TEST tests.mito.lib.io.cleanup PROPERTY
-        DEPENDS tests.mito.lib.io.pytest
-    )
-endif()
