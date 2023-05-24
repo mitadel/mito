@@ -7,9 +7,9 @@
 #include "externals.h"
 
 // classes implementation
-#include "summit/reader.h"
+#include "summit/public.h"
 #ifdef WITH_VTK
-#include "vtk/writer.h"
+#include "vtk/public.h"
 #endif    // WITH_VTK
 
 #endif
