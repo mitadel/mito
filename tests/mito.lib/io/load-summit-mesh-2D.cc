@@ -2,7 +2,7 @@
 #include <mito/mito.h>
 
 
-TEST(MeshReader, LoadSummitMesh2D)
+TEST(SummitReader, LoadSummitMesh2D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();

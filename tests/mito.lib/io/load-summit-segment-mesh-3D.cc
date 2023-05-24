@@ -2,7 +2,7 @@
 #include <mito/mito.h>
 
 
-TEST(MeshReader, LoadSummitSegmentsMesh3D)
+TEST(SummitReader, LoadSummitSegmentsMesh3D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();

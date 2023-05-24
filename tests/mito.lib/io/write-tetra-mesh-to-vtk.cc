@@ -2,7 +2,7 @@
 #include <mito/mito.h>
 
 
-TEST(MeshWriter, TetraToVtk)
+TEST(VtkWriter, WriteTetraMeshToVtk)
 {
     // an empty topology
     auto & topology = mito::topology::topology();

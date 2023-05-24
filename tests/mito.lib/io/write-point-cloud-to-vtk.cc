@@ -2,7 +2,7 @@
 #include <mito/mito.h>
 
 
-TEST(MeshWriter, PointCloudToVtk)
+TEST(VtkWriter, WritePointCloudToVtk)
 {
     // an empty point cloud
     auto & cloud = mito::geometry::point_cloud<3>();
