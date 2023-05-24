@@ -84,4 +84,15 @@ if(MITO_BUILD_TESTING)
 
 endif(MITO_BUILD_TESTING)
 
+# if we are building the benchmarks
+if(MITO_BUILD_BENCHMARKS)
+
+  # get my functions
+  include(mito_benchmarks)
+
+  # add the benchmarks to the pile
+  include(mito_benchmarks_mito_lib)
+endif()
+
+
 # end of file
