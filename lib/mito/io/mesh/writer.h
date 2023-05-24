@@ -135,7 +135,7 @@ namespace mito::io::mesh {
     auto writer(std::string fileName, const geometry::point_cloud_t<D> & cloud) -> void
     {
         // get point cloud compositions
-        const auto & compositions = cloud.getCompositions();
+        const auto & compositions = cloud.compositions();
 
         // vtk unstructured grid
         auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();

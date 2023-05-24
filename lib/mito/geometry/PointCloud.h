@@ -68,7 +68,7 @@ namespace mito::geometry {
             return it.first->second;
         }
 
-        auto getCompositions() const -> const point_compositions_t & { return _compositions; }
+        auto compositions() const -> const point_compositions_t & { return _compositions; }
 
       private:
         // the cloud of points
