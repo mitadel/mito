@@ -1,9 +1,9 @@
 // code guard
-#if !defined(mito_io_mesh_writer_h)
-#define mito_io_mesh_writer_h
+#if !defined(mito_io_vtk_writer_h)
+#define mito_io_vtk_writer_h
 
 
-namespace mito::io::mesh {
+namespace mito::io::vtk {
     template <int D>
     auto vtkCellPointer(const mito::mesh::mesh_t<topology::tetrahedron_t, D> &)
         -> vtkSmartPointer<vtkTetra>
@@ -154,6 +154,6 @@ namespace mito::io::mesh {
         write(fileName, gridVtk);
     }
 
-}    // namespace mito::writer
+}    // namespace mito::io::vtk
 
-#endif    // mito_io_mesh_writer_h
+#endif    // mito_io_vtk_writer_h

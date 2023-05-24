@@ -18,7 +18,7 @@ TEST(MeshReader, LoadSummitMesh2D)
     //
     t = clock();
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::io::mesh::reader<mito::topology::simplex_t<2>>(fileStream, geometry);
+    auto mesh = mito::io::summit::reader<mito::topology::simplex_t<2>>(fileStream, geometry);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();

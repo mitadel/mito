@@ -14,7 +14,7 @@ TEST(MeshReader, LoadSummitSegmentsMesh3D)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     std::ifstream fileStream("segments.summit");
-    auto mesh = mito::io::mesh::reader<mito::topology::segment_t>(fileStream, geometry);
+    auto mesh = mito::io::summit::reader<mito::topology::segment_t>(fileStream, geometry);
 
     // assert you read 10 cells
     EXPECT_EQ(mesh.nCells(), 10);

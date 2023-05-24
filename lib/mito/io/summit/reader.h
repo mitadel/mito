@@ -1,9 +1,9 @@
 // code guard
-#if !defined(mito_io_mesh_reader_h)
-#define mito_io_mesh_reader_h
+#if !defined(mito_io_summit_reader_h)
+#define mito_io_summit_reader_h
 
 
-namespace mito::io::mesh {
+namespace mito::io::summit {
     template <int D>
     auto readVertices(
         std::ifstream & fileStream, geometry::geometry_t<D> & geometry, int N_vertices,
@@ -290,6 +290,6 @@ namespace mito::io::mesh {
         return mesh;
     }
 
-}    // namespace mito::reader
+}    // namespace mito::io::summit
 
-#endif    // mito_io_mesh_reader_h
+#endif    // mito_io_summit_reader_h

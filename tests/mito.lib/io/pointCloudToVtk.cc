@@ -13,5 +13,5 @@ TEST(MeshWriter, PointCloudToVtk)
     const auto point_c = cloud.point({ 0.0, 1.0, 1.0 });
 
     // print the point cloud
-    mito::io::mesh::writer("point_cloud_output", cloud);
+    mito::io::vtk::writer("point_cloud_output", cloud);
 }

@@ -20,6 +20,6 @@ TEST(MeshReader, LoadSummitMesh3D)
     //
     t = clock();
     std::ifstream fileStream("cube.summit");
-    auto mesh = mito::io::mesh::reader<mito::topology::simplex_t<3>>(fileStream, geometry);
+    auto mesh = mito::io::summit::reader<mito::topology::simplex_t<3>>(fileStream, geometry);
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 }
