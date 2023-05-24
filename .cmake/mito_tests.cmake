@@ -2,10 +2,6 @@
 
 # setup the test suite
 function(mito_testsInit)
-    # create a variable to hold the root in the test directory
-    set(MITO_TESTSUITE_DIR ${CMAKE_SOURCE_DIR}/tests PARENT_SCOPE)
-    set(MITO_TESTSUITE_TMPDIR ${CMAKE_BINARY_DIR}/tmp PARENT_SCOPE)
-
     # enable test target
     enable_testing()
 
@@ -36,20 +32,6 @@ function(mito_test_testcase testcase testfile)
     # all done
 endfunction()
 
-# generate a unique test target name
-function(mito_test_target target testfile)
-    # split
-    get_filename_component(path ${testfile} DIRECTORY)
-    get_filename_component(base ${testfile} NAME_WE)
-
-    # replace path separators with dots
-    string(REPLACE "/" "." stem ${path})
-
-    # build the target and return it
-    set(${target} "tests.${stem}.${base}" PARENT_SCOPE)
-
-    # all done
-endfunction()
 
 # generate a unique test target name
 function(mito_test_output_target targetout target)
@@ -59,13 +41,14 @@ function(mito_test_output_target targetout target)
     # all done
 endfunction()
 
+
 # register a test case based on a compiled driver
 function(mito_test_driver testfile)
     # generate the name of the testcase
     mito_test_testcase(testname ${testfile} ${ARGN})
 
     # generate the name of the target
-    mito_test_target(target ${testfile})
+    mito_target_name(target ${testfile})
 
     # generate the name of the output target
     mito_test_output_target(targetout ${target})
@@ -85,7 +68,7 @@ function(mito_test_driver testfile)
     # link against pyre
     target_link_libraries(${target} PUBLIC pyre::journal)
 
-    #link against gtest
+    # link against gtest
     target_link_libraries(${target} PUBLIC GTest::gtest_main)
 
     #  setup the test working directory
@@ -94,6 +77,9 @@ function(mito_test_driver testfile)
 
     # make it a test case
     add_test(NAME ${testname} COMMAND ${target} ${ARGN} WORKING_DIRECTORY ${test_workdir})
+
+    # specify the directory for the target compilation products
+    mito_target_directory(${target} tests)
 
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
@@ -110,7 +96,8 @@ function(mito_test_driver testfile)
     # all done
 endfunction(mito_test_driver)
 
-# register a python script as a test case; use a path relative to {MITO_TESTSUITE_DIR}
+
+# register a python script as a test case; use a path relative to {PROJECT_SOURCE_DIR}
 function(mito_test_python_testcase testfile)
     # generate the name of the testcase
     mito_test_testcase(testname ${testfile} ${ARGN})
@@ -129,10 +116,11 @@ function(mito_test_python_testcase testfile)
     )
     # launch from the location of the testcase
     set_property(TEST ${testname} PROPERTY
-      WORKING_DIRECTORY ${MITO_TESTSUITE_DIR}/${dir}
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/${dir}
     )
 
     # all done
 endfunction()
+
 
 # end of file

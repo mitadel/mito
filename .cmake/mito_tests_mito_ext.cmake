@@ -1,1 +1,1 @@
-mito_test_python_testcase(mito.ext/main.py)
+mito_test_python_testcase(tests/mito.ext/main.py)

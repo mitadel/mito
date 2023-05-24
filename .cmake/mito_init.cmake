@@ -5,6 +5,9 @@ function(mito_optionsInit)
     # disable build of test suite by default
     option(MITO_BUILD_TESTING "Build the MiTo test suite" OFF)
 
+    # disable build of the benchmarks by defaults
+    option(MITO_BUILD_BENCHMARKS "Build MiTo benchmarks" OFF)
+
     # list possible types of build
     set(CMAKE_BUILD_TYPES Debug Release RelWithDebInfo)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_BUILD_TYPES})
