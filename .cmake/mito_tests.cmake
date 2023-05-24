@@ -68,7 +68,7 @@ function(mito_test_driver testfile)
     # link against pyre
     target_link_libraries(${target} PUBLIC pyre::journal)
 
-    #link against gtest
+    # link against gtest
     target_link_libraries(${target} PUBLIC GTest::gtest_main)
 
     #  setup the test working directory
@@ -80,7 +80,7 @@ function(mito_test_driver testfile)
 
     # specify the directory for the target compilation products
     mito_target_directory(${target} tests)
-    
+
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
         LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
