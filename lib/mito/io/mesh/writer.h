@@ -142,7 +142,7 @@ namespace mito::io::mesh {
         // vtk points and cells
         auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
 
-        // iterate on points
+        // iterate over the points
         for (const auto & pPointMap : compositions) {
             insertVtkPoint(pPointMap.second, pointsVtk);
         }
