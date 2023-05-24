@@ -62,7 +62,7 @@ namespace mito::geometry {
         }
 
         // TOFIX: should this be const?
-        inline auto topology() const -> topology_t & { return _topology; }
+        inline auto topology() -> topology_t & { return _topology; }
 
       private:
         // the collection of nodes
