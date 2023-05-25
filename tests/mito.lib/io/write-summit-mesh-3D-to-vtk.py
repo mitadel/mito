@@ -23,9 +23,9 @@ def test_SummitMeshToVtk():
     mesh = load_mesh(filename)
 
     # check the number of cells (tetrahedra)
-    num_tetrahedra = mesh.GetNumberOfCells()
-    print("Number of tetrahedra:", num_tetrahedra)
-    assert num_tetrahedra == 368
+    num_cells = mesh.GetNumberOfCells()
+    print("Number of tetrahedra:", num_cells)
+    assert num_cells == 368
 
     # check points of the mesh
     points = mesh.GetPoints()
