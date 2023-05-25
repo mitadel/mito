@@ -14,7 +14,7 @@ using process_timer_t = pyre::timers::process_timer_t;
 
 
 void
-gent_constitutive(int N)
+gent_constitutive_array(int N, double kappa, double mu, double Jm, double epsilon)
 {
     // make a channel
     pyre::journal::info_t channel("tests.timer.gent");
@@ -22,26 +22,12 @@ gent_constitutive(int N)
     // make a timer
     process_timer_t t("tests.timer");
 
-    channel << "Computing " << N << " gent constitutive updates" << pyre::journal::endl;
-
-
-    // material parameters
-    double rho = 1.0;
-    double kappa = 1.0;
-    double mu = 1.0;
-    double Jm = 1.0;
-
-
-    // Generate a random number between -0.01 and 0.01
-    double random_num = 0.01 * ((std::rand() % 20001 / 10000.0) - 1.0);
-
 
     // ARRAY
 
     // array tensor
-    std::array<double, 9> F_array { 1.0 + random_num, random_num,       random_num,
-                                    random_num,       1.0 + random_num, random_num,
-                                    random_num,       random_num,       1.0 + random_num };
+    std::array<double, 9> F_array { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                                    epsilon,       epsilon, epsilon, 1.0 + epsilon };
     std::array<double, 9> P_array { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
     std::array<double, 9> P_array_result { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
@@ -125,6 +111,19 @@ gent_constitutive(int N)
             << P_array_result[8] << pyre::journal::newline << "process time = " << t.ms() << " ms "
             << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
 
+    // all done
+    return;
+}
+
+
+void
+gent_constitutive_mito(int N, double rho, double kappa, double mu, double Jm, double epsilon)
+{
+    // make a channel
+    pyre::journal::info_t channel("tests.timer.gent");
+
+    // make a timer
+    process_timer_t t("tests.timer");
 
     // MITO
 
@@ -132,9 +131,8 @@ gent_constitutive(int N)
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
     mito::vector_t<3> u = mito::vector_t<3>::zero;
-    mito::matrix_t<3> Du = { 1.0 + random_num, random_num,       random_num,
-                             random_num,       1.0 + random_num, random_num,
-                             random_num,       random_num,       1.0 + random_num };
+    mito::matrix_t<3> F = { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                            epsilon,       epsilon, epsilon, 1.0 + epsilon };
     mito::matrix_t<3> P;
     mito::matrix_t<3> P_result;
 
@@ -146,7 +144,7 @@ gent_constitutive(int N)
     // perform calculation N times
     for (int n = 0; n < N; ++n) {
         // evaluate constitutive update
-        material.Constitutive(u, Du, P);
+        material.Constitutive(u, F, P);
         // accumulate result
         P_result += P;
     }
@@ -171,8 +169,25 @@ main()
     // number of times to do operation
     int N = 1 << 25;
 
+    // make a channel
+    pyre::journal::info_t channel("tests.timer.gent");
+
+    channel << "Computing " << N << " gent constitutive updates" << pyre::journal::endl;
+
+    // material parameters
+    double rho = 1.0;
+    double kappa = 1.0;
+    double mu = 1.0;
+    double Jm = 1.0;
+
+    // Generate a random number between -0.01 and 0.01
+    double epsilon = 0.01 * ((std::rand() % 20001 / 10000.0) - 1.0);
+
     // gent constitutive update
-    gent_constitutive(N);
+    gent_constitutive_array(N, kappa, mu, Jm, epsilon);
+
+    // gent constitutive update
+    gent_constitutive_mito(N, rho, kappa, mu, Jm, epsilon);
 
     // all done
     return 0;
