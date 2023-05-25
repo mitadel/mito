@@ -221,7 +221,8 @@ namespace mito::mesh {
     }
 
     template <class cellT, int D /*spatial dimension*/>
-    auto tetra(mesh_t<cellT, D> & mesh, geometry::geometry_t<D> & geometry, int n_refinements = 1)
+    auto tetra(
+        const mesh_t<cellT, D> & mesh, geometry::geometry_t<D> & geometry, int n_refinements = 1)
         -> mesh_t<cellT, D>
     {
         // instantiate a new (empty) mesh for the refined mesh
