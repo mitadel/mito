@@ -55,7 +55,7 @@ namespace mito::utilities {
         // of the Shareable instance)
         template <class T>
         // requires ReferenceCountedObject<T>
-        friend class mito::utilities::SharedPointer;
+        friend class utilities::SharedPointer;
     };
 }
 

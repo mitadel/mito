@@ -23,7 +23,7 @@ namespace mito::topology {
 
       private:
         // typedef for a collection of unoriented simplices
-        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<D>>;
+        using simplex_collection_t = utilities::segmented_t<unoriented_simplex_t<D>>;
 
         // typedef for a composition map of simplices:
         // these maps map:
@@ -97,7 +97,7 @@ namespace mito::topology {
 
       private:
         // equivalence class relation for a simplex
-        inline auto _representative(const simplex_composition_t<D> & composition) -> auto;
+        inline auto _representative(const simplex_composition_t<D> & composition) -> composition_t;
 
         inline auto _emplace_simplex(const simplex_composition_t<D> & composition)
             -> unoriented_simplex_t<D>
@@ -109,7 +109,7 @@ namespace mito::topology {
             Simplex<D> * resource = new (location) Simplex<D>(composition);
 
             // wrap the new simplex in a shared pointer and return it
-            return mito::utilities::shared_ptr<Simplex<D>>(resource, &_simplices);
+            return utilities::shared_ptr<Simplex<D>>(resource, &_simplices);
         }
 
       private:
@@ -125,7 +125,8 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 1D
     template <>
-    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition) -> auto
+    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition)
+        -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
         composition_t representative { composition[0]->footprint_id(),
@@ -138,7 +139,8 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 2D
     template <>
-    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition) -> auto
+    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition)
+        -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
         composition_t representative { composition[0]->footprint_id(),
@@ -154,7 +156,8 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 3D
     template <>
-    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition) -> auto
+    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition)
+        -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
         composition_t representative { composition[0]->footprint_id(),
@@ -174,7 +177,7 @@ namespace mito::topology {
 
       private:
         // typedef for a collection of unoriented simplices
-        using simplex_collection_t = mito::utilities::segmented_t<unoriented_simplex_t<0>>;
+        using simplex_collection_t = utilities::segmented_t<unoriented_simplex_t<0>>;
 
       private:
         // default constructor
@@ -220,7 +223,7 @@ namespace mito::topology {
             Simplex<0> * resource = new (location) Simplex<0>();
 
             // wrap the new simplex in a shared pointer and return it
-            return mito::utilities::shared_ptr<Simplex<0>>(resource, &_simplices);
+            return utilities::shared_ptr<Simplex<0>>(resource, &_simplices);
         }
 
       private:

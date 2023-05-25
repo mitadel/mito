@@ -7,12 +7,12 @@ namespace mito::quadrature {
 
     // quadrature point representation in parametric coordinates
     template <int D>
-    using quadrature_point_t = mito::manifolds::parametric_point_t<D>;
+    using quadrature_point_t = manifolds::parametric_point_t<D>;
 
     template <class quadrature_t, class element_t, int r>
     struct QuadratureRulesFactory {
         static constexpr auto degreeExactness = r;
-        static constexpr int parametricDim = mito::manifolds::parametric_dim<element_t>();
+        static constexpr int parametricDim = manifolds::parametric_dim<element_t>();
         static constexpr auto Get() -> auto;
 
       private:
@@ -45,10 +45,8 @@ namespace mito::quadrature {
             QuadratureRulesFactory<quadrature_t, element_t, r>::GetQuadratureRule();
 
         // lambda function to compute the sum of Q quadrature weights at compile time
-        constexpr auto sum = [quadrature_rule]<int Q>() consteval->double
-        {
-            constexpr auto sum_impl = [quadrature_rule]<int q>(auto & sum_ref) consteval->double
-            {
+        constexpr auto sum = [quadrature_rule]<int Q>() consteval -> double {
+            constexpr auto sum_impl = [quadrature_rule]<int q>(auto & sum_ref) consteval -> double {
                 if constexpr (q == -1) {
                     return 0.0;
                 } else {

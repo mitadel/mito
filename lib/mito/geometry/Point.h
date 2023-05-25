@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     template <int D>
-    class Point : public mito::utilities::Shareable {
+    class Point : public utilities::Shareable {
       private:
         template <class... Args>
         Point(Args &&... args)
@@ -17,6 +17,15 @@ namespace mito::geometry {
       public:
         // get the coordinates of the point
         auto coordinates() const -> const vector_t<D> & { return _coordinates; }
+
+        auto print() const -> void
+        {
+            // print the coordinates of the point
+            std::cout << "Point: " << coordinates() << std::endl;
+
+            // all done
+            return;
+        }
 
       private:
         // the coordinates of the point
@@ -32,6 +41,16 @@ namespace mito::geometry {
         // return the distance between the two points
         auto dist = pointA->coordinates() - pointB->coordinates();
         return sqrt(dist * dist);
+    }
+
+    template <int D>
+    std::ostream & operator<<(std::ostream & os, const Point<D> & point)
+    {
+        // print the point
+        point.print();
+
+        // all done
+        return os;
     }
 
 }    // namespace mito

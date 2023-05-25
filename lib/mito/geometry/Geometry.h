@@ -53,7 +53,7 @@ namespace mito::geometry {
         }
 
         // accessor to the collection of nodes
-        inline auto nodes() const -> const auto & { return _nodes; }
+        inline auto nodes() const -> const nodes_t<D> & { return _nodes; }
 
         // get the point in space associated to this vertex
         inline auto point(const vertex_t & vertex) const -> const point_t<D> &
@@ -76,7 +76,7 @@ namespace mito::geometry {
         point_cloud_t<D> & _point_cloud;
 
         // friendship with the singleton
-        using GeometrySingleton = mito::utilities::Singleton<Geometry>;
+        using GeometrySingleton = utilities::Singleton<Geometry<D>>;
         friend GeometrySingleton;
     };
 

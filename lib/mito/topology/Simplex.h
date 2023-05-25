@@ -12,7 +12,7 @@ namespace mito::topology {
      */
 
     template <int D>
-    class Simplex : public mito::utilities::Shareable {
+    class Simplex : public utilities::Shareable {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
@@ -44,7 +44,7 @@ namespace mito::topology {
 
       public:
         // accessor for the subsimplices
-        inline auto composition() const -> const auto & { return _simplices; }
+        inline auto composition() const -> const simplex_composition_t<D> & { return _simplices; }
 
         // returns the simplex id
         inline auto id() const -> unoriented_simplex_id_t
@@ -125,7 +125,7 @@ namespace mito::topology {
      */
 
     template <>
-    class Simplex<0> : public mito::utilities::Shareable {
+    class Simplex<0> : public utilities::Shareable {
       private:
         // default constructor
         constexpr Simplex() {}

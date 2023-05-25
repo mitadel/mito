@@ -8,8 +8,8 @@ namespace mito::geometry {
     template <int D>
     class Node {
       public:
-        using vertex_t = mito::topology::vertex_t;
-        using point_t = mito::geometry::point_t<D>;
+        using vertex_t = topology::vertex_t;
+        using point_t = geometry::point_t<D>;
 
       public:
         // get the coordinates of the point

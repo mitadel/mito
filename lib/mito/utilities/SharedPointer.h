@@ -74,7 +74,7 @@ namespace mito::utilities {
 
       private:
         // friendship with SegmentedContainer
-        friend class mito::utilities::SegmentedContainer<resource_t>;
+        friend class utilities::SegmentedContainer<resource_t>;
     };
 
     template <class Resource>

@@ -131,7 +131,7 @@ PYBIND11_MODULE(mito, m)
                 auto filestream = std::ifstream(filename);
                 // read the mesh
                 auto mesh = new mito::mesh::mesh_t(
-                    mito::mesh::summit<mito::topology::triangle_t, 2>(filestream, geometry));
+                    mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
                 // instantiate
                 return new mito::manifolds::manifold_t<mito::topology::triangle_t, 2>(*mesh);
             }))

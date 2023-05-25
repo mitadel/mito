@@ -18,7 +18,7 @@
 namespace mito::topology {
 
     template <int D>
-    class OrientedSimplex : public mito::utilities::Shareable {
+    class OrientedSimplex : public utilities::Shareable {
       public:
         // typedef for order of simplex
         static constexpr int order = D;
@@ -63,10 +63,13 @@ namespace mito::topology {
         // returns the orientation of this simplex
         // (true: oriented simplex is oriented as the footprint,
         //  false: oriented simplex is oriented opposite to the footprint)
-        inline bool orientation() const { return _orientation; }
+        inline auto orientation() const -> bool { return _orientation; }
 
         // returns the array of subsimplices
-        inline auto composition() const -> const auto & { return _footprint->composition(); }
+        inline auto composition() const -> const simplex_composition_t<D> &
+        {
+            return _footprint->composition();
+        }
 
         // returns the id of this (oriented) simplex
         inline auto id() const -> oriented_simplex_id_t

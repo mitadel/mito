@@ -14,7 +14,6 @@
 
 // classes implementation
 #include "Mesh.h"
-#include "readers/summit.h"
 
 // factories implementation
 #include "factories.h"

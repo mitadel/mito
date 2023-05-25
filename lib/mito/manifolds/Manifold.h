@@ -23,13 +23,13 @@ namespace mito::manifolds {
         static constexpr int N = cellT::resource_t::order;
         // a point in parametric coordinates
         static constexpr int parametricDim = parametric_dim<cell_t>();
-        using parametric_point_t = mito::manifolds::parametric_point_t<parametricDim>;
+        using parametric_point_t = manifolds::parametric_point_t<parametricDim>;
         // the dimension of the physical space
         static constexpr int dim = D;
         // typedef for mesh type
-        using mesh_t = mito::mesh::mesh_t<cell_t, D>;
+        using mesh_t = mesh::mesh_t<cell_t, D>;
         // typedef for vertex
-        using vertex_t = mito::topology::vertex_t;
+        using vertex_t = topology::vertex_t;
 
       public:
         inline Manifold(mesh_t & mesh) :
@@ -72,17 +72,17 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline auto elements() const -> const auto & { return _elements; }
+        inline auto elements() const -> const element_vector_t<cell_t> & { return _elements; }
         inline auto nElements() const -> int { return _elements.size(); }
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
-        inline auto coordinatesVertex(const vertex_t & v) const -> const auto &
+        inline auto coordinatesVertex(const vertex_t & v) const -> const vector_t<D> &
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
         }
 
         inline auto parametrization(const cell_t & cell, const parametric_point_t & point) const
-            -> auto
+            -> vector_t<D>
         {
             // use a set to collect vertices without repeated entries
             topology::vertex_set_t vertices;
@@ -100,8 +100,28 @@ namespace mito::manifolds {
             return coordinates;
         }
 
+        inline auto print() const -> void
+        {
+            // print the element set of the manifold
+            std::cout << "Element set: " << std::endl;
+
+            for (const auto & e : elements()) {
+                // print the elemental composition
+                std::cout << "Composition: " << std::endl;
+                std::cout << e;
+                // and the coordinates of the vertices
+                std::cout << "Vertices: " << std::endl;
+                topology::vertex_set_t vertices;
+                e->vertices(vertices);
+                for (const auto & v : vertices) {
+                    std::cout << coordinatesVertex(v) << std::endl;
+                }
+                std::cout << std::endl;
+            }
+        }
+
       private:
-        inline auto _point(const vertex_t & v) const -> const auto &
+        inline auto _point(const vertex_t & v) const -> const geometry::point_t<D> &
         {
             // look up the point attached to vertex {v}
             return _vertices.find(v)->second;
@@ -124,20 +144,10 @@ namespace mito::manifolds {
     template <class cellT, int D>
     std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, D> & manifold)
     {
-        os << "Element set: " << std::endl;
+        // print the manifold
+        manifold.print();
 
-        for (const auto & e : manifold.elements()) {
-            os << "Composition: " << std::endl;
-            os << e;
-            os << "Vertices: " << std::endl;
-            topology::vertex_set_t vertices;
-            e->vertices(vertices);
-            for (const auto & v : vertices) {
-                os << manifold.coordinatesVertex(v) << std::endl;
-            }
-            os << std::endl;
-        }
-
+        // all done
         return os;
     }
 

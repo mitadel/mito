@@ -17,7 +17,7 @@ namespace mito::mesh {
         template <int I>
         using cell_family_t = typename cellT::resource_t::cell_family_t<I>;
         // typedef for geometry type
-        using geometry_t = mito::geometry::geometry_t<D>;
+        using geometry_t = geometry::geometry_t<D>;
         // typedef for a collection of cells
         using cells_t = element_set_t<cell_t>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
@@ -99,7 +99,7 @@ namespace mito::mesh {
             return _cells.size();
         }
 
-        inline auto cells() const -> const auto &
+        inline auto cells() const -> const cells_t &
         {
             // all done
             return _cells;
@@ -202,7 +202,7 @@ namespace mito::mesh {
 
       public:
         // accessor to geometry
-        auto geometry() -> const geometry_t & { return _geometry; }
+        auto geometry() const -> const geometry_t & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded

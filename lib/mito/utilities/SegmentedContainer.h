@@ -229,14 +229,14 @@ namespace mito::utilities {
             T * resource = new (location) T(args...);
 
             // and assign it to a new pointer
-            mito::utilities::shared_ptr<T> pointer(resource, this);
+            utilities::shared_ptr<T> pointer(resource, this);
 
             // all done
             return pointer;
         }
 
         // This method is called by {shared_ptr::_release}
-        auto erase(const mito::utilities::shared_ptr<T> & element) -> void
+        auto erase(const utilities::shared_ptr<T> & element) -> void
         {
             // assert that the resource is invalid
             assert(element->is_valid() == 0);

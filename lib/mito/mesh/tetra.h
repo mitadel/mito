@@ -7,10 +7,9 @@ namespace mito::mesh {
 
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
-        const vertex_t & vertex_0, const vertex_t & vertex_1,
-        mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
-        int n_refinements) -> void
-    requires(std::is_same_v<cellT, mito::topology::segment_t>)
+        const vertex_t & vertex_0, const vertex_t & vertex_1, geometry::geometry_t<D> & geometry,
+        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
+    requires(std::is_same_v<cellT, topology::segment_t>)
     {
         if (n_refinements == 0) {
             auto & new_cell = geometry.topology().segment({ vertex_0, vertex_1 });
@@ -52,9 +51,9 @@ namespace mito::mesh {
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
         const vertex_t & vertex_0, const vertex_t & vertex_1, const vertex_t & vertex_2,
-        mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
-        int n_refinements) -> void
-    requires(std::is_same_v<cellT, mito::topology::triangle_t>)
+        geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh, int n_refinements)
+        -> void
+    requires(std::is_same_v<cellT, topology::triangle_t>)
     {
         if (n_refinements == 0) {
             auto & new_cell = geometry.topology().triangle({ vertex_0, vertex_1, vertex_2 });
@@ -112,9 +111,9 @@ namespace mito::mesh {
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
         const vertex_t & vertex_0, const vertex_t & vertex_1, const vertex_t & vertex_2,
-        const vertex_t & vertex_3, mito::geometry::geometry_t<D> & geometry,
+        const vertex_t & vertex_3, geometry::geometry_t<D> & geometry,
         mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
-    requires(std::is_same_v<cellT, mito::topology::tetrahedron_t>)
+    requires(std::is_same_v<cellT, topology::tetrahedron_t>)
     {
         if (n_refinements == 0) {
             auto & new_cell =
@@ -222,8 +221,7 @@ namespace mito::mesh {
     }
 
     template <class cellT, int D /*spatial dimension*/>
-    auto tetra(
-        mesh_t<cellT, D> & mesh, mito::geometry::geometry_t<D> & geometry, int n_refinements = 1)
+    auto tetra(mesh_t<cellT, D> & mesh, geometry::geometry_t<D> & geometry, int n_refinements = 1)
         -> mesh_t<cellT, D>
     {
         // instantiate a new (empty) mesh for the refined mesh
@@ -233,14 +231,14 @@ namespace mito::mesh {
         for (const auto & cell : mesh.cells()) {
 
             // get the vertices of the cell in the order dictated by the orientation
-            auto vertices = mito::topology::vertices(cell);
+            auto vertices = topology::vertices(cell);
 
             // helper function to expand array to parameter pack
             constexpr auto _subdivide =
                 []<size_t... J>(
-                    const mito::topology::vertex_simplex_composition_t<cellT::resource_t::order> &
+                    const topology::vertex_simplex_composition_t<cellT::resource_t::order> &
                         vertices,
-                    mito::geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
+                    geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
                     int n_refinements, std::index_sequence<J...>) {
                     return subdivide(vertices[J]..., geometry, subdivided_mesh, n_refinements);
                 };

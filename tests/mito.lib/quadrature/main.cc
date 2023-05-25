@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
+#include <mito/io.h>
 #include <mito/math.h>
 #include <mito/mesh.h>
 #include <mito/manifolds.h>
@@ -238,7 +239,7 @@ TEST(Quadrature, QuadratureLoadMesh)
 
     // load mesh
     std::ifstream fileStream("square.summit");
-    auto mesh = mito::mesh::summit<mito::topology::triangle_t, 2>(fileStream, geometry);
+    auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
     // TOFIX: is it better that the cells and vertices are first fetched from mesh and then
     //  used to build the manifold?
     // instantiate a cell set as a collection of simplices and vertices.
