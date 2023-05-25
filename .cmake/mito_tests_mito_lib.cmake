@@ -10,7 +10,7 @@ mito_test_driver(tests/mito.lib/io/load-summit-segment-mesh-3D.cc)
 
 if(WITH_VTK)
     mito_test_driver_pytest_check(tests/mito.lib/io/write-point-cloud-to-vtk.cc)
-    mito_test_driver_pytest_check(tests/mito.lib/io/write-summit-mesh-to-vtk.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/write-summit-mesh-3D-to-vtk.cc)
     mito_test_driver_pytest_check(tests/mito.lib/io/write-summit-mesh-2D-to-vtk.cc)
     mito_test_driver_pytest_check(tests/mito.lib/io/write-tetra-mesh-to-vtk.cc)
 endif()
