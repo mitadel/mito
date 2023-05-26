@@ -116,8 +116,6 @@ TEST(Simplices, TestSimplices)
 
     // sanity check
     for (const auto & e : { cell0, cell1 }) {
-        if (!e->sanityCheck()) {
-            std::cout << "Failed sanity check for cell " << e << std::endl;
-        }
+        EXPECT_TRUE(e->sanityCheck()) << "Failed sanity check for cell " << e;
     }
 }
