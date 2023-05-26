@@ -14,8 +14,14 @@ using simplex_t = mito::utilities::SharedPointer<Simplex>;
 
 TEST(SegmentedContainer, TestSegmentedContainer)
 {
+    // segment size
+    const auto segmentSize = 3;
+
     // instantiate a segmented container
-    mito::utilities::segmented_t<simplex_t> collection(3 /*segment size */);
+    mito::utilities::segmented_t<simplex_t> collection(segmentSize);
+
+    // check segment size
+    EXPECT_EQ(collection.segment_size(), segmentSize);
 
     // assert that the container is empty and with no capacity
     EXPECT_EQ(collection.capacity(), 0);
