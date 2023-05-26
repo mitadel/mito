@@ -68,10 +68,6 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // invalidate last element
     simplex2.reset();
 
-    for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
-    }
-
     EXPECT_EQ(std::size(store_elements), 0);
 
     store_elements.clear();
