@@ -14,7 +14,9 @@ using process_timer_t = pyre::timers::process_timer_t;
 
 
 void
-gent_constitutive_array(int N, double kappa, double mu, double Jm, double epsilon)
+gent_constitutive_array(
+    int N, double kappa, double mu, double Jm, double epsilon,
+    std::array<double, 9> & P_array_result)
 {
     // make a channel
     pyre::journal::info_t channel("tests.timer.gent");
@@ -28,7 +30,6 @@ gent_constitutive_array(int N, double kappa, double mu, double Jm, double epsilo
     // array tensor
     std::array<double, 9> F_array { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
                                     epsilon,       epsilon, epsilon, 1.0 + epsilon };
-    std::array<double, 9> P_array_result { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
     // reset timer
     t.reset();
@@ -141,8 +142,10 @@ gent_constitutive_array(int N, double kappa, double mu, double Jm, double epsilo
 }
 
 
-void
-gent_constitutive_mito(int N, double rho, double kappa, double mu, double Jm, double epsilon)
+auto
+gent_constitutive_mito(
+    int N, double rho, double kappa, double mu, double Jm, double epsilon,
+    mito::matrix_t<3> & P_result)
 {
     // make a channel
     pyre::journal::info_t channel("tests.timer.gent");
@@ -159,7 +162,6 @@ gent_constitutive_mito(int N, double rho, double kappa, double mu, double Jm, do
     mito::matrix_t<3> F { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
                           epsilon,       epsilon, epsilon, 1.0 + epsilon };
     mito::matrix_t<3> P;
-    mito::matrix_t<3> P_result;
 
     // reset timer
     t.reset();
@@ -209,10 +211,12 @@ main()
     double epsilon = 0.01 * ((std::rand() % 20001 / 10000.0) - 1.0);
 
     // gent constitutive update
-    gent_constitutive_array(N, kappa, mu, Jm, epsilon);
+    std::array<double, 9> P_array_result { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    gent_constitutive_array(N, kappa, mu, Jm, epsilon, P_array_result);
 
     // gent constitutive update
-    gent_constitutive_mito(N, rho, kappa, mu, Jm, epsilon);
+    mito::matrix_t<3> P_result;
+    gent_constitutive_mito(N, rho, kappa, mu, Jm, epsilon, P_result);
 
     // all done
     return 0;
