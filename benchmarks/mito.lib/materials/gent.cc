@@ -28,7 +28,6 @@ gent_constitutive_array(int N, double kappa, double mu, double Jm, double epsilo
     // array tensor
     std::array<double, 9> F_array { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
                                     epsilon,       epsilon, epsilon, 1.0 + epsilon };
-    std::array<double, 9> P_array { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
     std::array<double, 9> P_array_result { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
     // reset timer
@@ -69,12 +68,17 @@ gent_constitutive_array(int N, double kappa, double mu, double Jm, double epsilo
         double logJ = log(detF);
 
         // tr(C) - Cauchy-Green
-        double trC = 0.0;
-        for (int i = 0; i < 3; i++) {
-            for (int J = 0; J < 3; J++) {
-                trC += F_array[i * 3 + J] * F_array[i * 3 + J];
-            }
-        }
+        // double trC = 0.0;
+        // for (int i = 0; i < 3; i++) {
+        //     for (int J = 0; J < 3; J++) {
+        //         trC += F_array[i * 3 + J] * F_array[i * 3 + J];
+        //     }
+        // }
+
+        // this is equivalent to the above commented out for-loop
+        double trC = F_array[0] * F_array[0] + F_array[1] * F_array[1] + F_array[2] * F_array[2]
+                   + F_array[3] * F_array[3] + F_array[4] * F_array[4] + F_array[5] * F_array[5]
+                   + F_array[6] * F_array[6] + F_array[7] * F_array[7] + F_array[8] * F_array[8];
 
         // (J^2 -1)/2 - log(J)
         double A = 0.5 * Jsq_minus_1 - logJ;
@@ -84,20 +88,41 @@ gent_constitutive_array(int N, double kappa, double mu, double Jm, double epsilo
         double B = Jm / C;
 
         // compute the Piola stress tensor
-        for (int i = 0; i < 3; i++) {
-            for (int J = 0; J < 3; J++) {
-                P_array[i * 3 + J] =
-                    mu * B * F_array[i * 3 + J]
-                    + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[J * 3 + i];
-            }
-        }
+        // std::array<double, 9> P_array { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+        // for (int i = 0; i < 3; i++) {
+        //     for (int J = 0; J < 3; J++) {
+        //         P_array[i * 3 + J] =
+        //             mu * B * F_array[i * 3 + J]
+        //             + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[J * 3 + i];
+        //     }
+        // }
 
         // accumulate result
-        for (int i = 0; i < 3; i++) {
-            for (int J = 0; J < 3; J++) {
-                P_array_result[i * 3 + J] += P_array[i * 3 + J];
-            }
-        }
+        // for (int i = 0; i < 3; i++) {
+        //     for (int J = 0; J < 3; J++) {
+        //         P_array_result[i * 3 + J] += P_array[i * 3 + J];
+        //     }
+        // }
+
+        // this is equivalent to the above commented out for-loops
+        P_array_result[0] +=
+            mu * B * F_array[0] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[0];
+        P_array_result[1] +=
+            mu * B * F_array[1] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[3];
+        P_array_result[2] +=
+            mu * B * F_array[2] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[6];
+        P_array_result[3] +=
+            mu * B * F_array[3] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[1];
+        P_array_result[4] +=
+            mu * B * F_array[4] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[4];
+        P_array_result[5] +=
+            mu * B * F_array[5] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[7];
+        P_array_result[6] +=
+            mu * B * F_array[6] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[2];
+        P_array_result[7] +=
+            mu * B * F_array[7] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[5];
+        P_array_result[8] +=
+            mu * B * F_array[8] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[8];
     }
 
     // stop the timer
