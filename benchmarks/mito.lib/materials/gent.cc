@@ -130,9 +130,9 @@ gent_constitutive_mito(int N, double rho, double kappa, double mu, double Jm, do
     // mito gent material
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
-    mito::vector_t<3> u = mito::vector_t<3>::zero;
-    mito::matrix_t<3> F = { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
-                            epsilon,       epsilon, epsilon, 1.0 + epsilon };
+    mito::vector_t<3> u { 0.0, 0.0, 0.0 };
+    mito::matrix_t<3> F { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                          epsilon,       epsilon, epsilon, 1.0 + epsilon };
     mito::matrix_t<3> P;
     mito::matrix_t<3> P_result;
 
