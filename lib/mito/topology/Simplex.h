@@ -24,7 +24,7 @@ namespace mito::topology {
 
       public:
         // destructor
-        constexpr ~Simplex() {}
+        constexpr ~Simplex() override {}
 
       private:
         // delete default constructor
@@ -132,7 +132,7 @@ namespace mito::topology {
 
       public:
         // empty destructor
-        constexpr ~Simplex() {}
+        constexpr ~Simplex() override {}
 
       private:
         // delete copy constructor

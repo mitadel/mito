@@ -38,7 +38,7 @@ namespace mito::topology {
 
       public:
         // destructor
-        constexpr ~OrientedSimplex() {}
+        constexpr ~OrientedSimplex() override {}
 
       private:
         // delete default constructor

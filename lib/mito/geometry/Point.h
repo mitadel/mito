@@ -14,6 +14,8 @@ namespace mito::geometry {
             : _coordinates(args...)
         {}
 
+        ~Point() override {}
+
       public:
         // get the coordinates of the point
         auto coordinates() const -> const vector_t<D> & { return _coordinates; }

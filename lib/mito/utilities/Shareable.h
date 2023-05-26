@@ -19,7 +19,7 @@ namespace mito::utilities {
         // meta methods
       public:
         // destructor
-        constexpr inline ~Shareable();
+        constexpr inline virtual ~Shareable();
 
         // default constructor
         constexpr inline Shareable();
