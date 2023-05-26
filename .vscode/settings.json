@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "*.cppm": "cpp"
+        "*.cppm": "cpp",
+        "*.icc": "cpp"
     },
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
