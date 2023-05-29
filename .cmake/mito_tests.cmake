@@ -60,12 +60,6 @@ function(mito_test_driver testfile)
     # link against my libraries
     target_link_libraries(${target} PUBLIC mito)
 
-    # link against pyre
-    target_link_libraries(${target} PUBLIC pyre::pyre)
-
-    # link against pyre
-    target_link_libraries(${target} PUBLIC pyre::journal)
-
     # link against gtest
     target_link_libraries(${target} PUBLIC GTest::gtest_main)
 

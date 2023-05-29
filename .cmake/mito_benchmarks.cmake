@@ -19,12 +19,6 @@ function(mito_benchmark_driver benchmarkfile)
     # link against my libraries
     target_link_libraries(${target} PUBLIC mito)
 
-    # link against pyre
-    target_link_libraries(${target} PUBLIC pyre::pyre)
-
-    # link against pyre
-    target_link_libraries(${target} PUBLIC pyre::journal)
-
     # specify the directory for the target compilation products
     mito_target_directory(${target} benchmarks)
 
