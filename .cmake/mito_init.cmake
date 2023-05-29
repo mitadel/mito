@@ -18,8 +18,6 @@ function(mito_optionsInit)
             "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
     endif(NOT CMAKE_BUILD_TYPE)
 
-    option(WITH_VTK "Enable support for VTK" OFF)
-
     # all done
 endfunction(mito_optionsInit)
 

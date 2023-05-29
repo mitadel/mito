@@ -36,10 +36,6 @@ function(mito_mitoLib)
         $<INSTALL_INTERFACE:${MITO_DEST_INCLUDE}>
     )
 
-    if(WITH_VTK)
-        target_include_directories(mito PUBLIC ${VTK_INCLUDE_DIRS})
-    endif()
-
     # add the sources
     target_sources(mito
         PRIVATE
@@ -52,10 +48,6 @@ function(mito_mitoLib)
         pyre::pyre
         pyre::journal
     )
-
-    if(WITH_VTK)
-        target_link_libraries(mito ${VTK_LIBRARIES})
-    endif()
 
     # request c++20
     set_property(TARGET mito PROPERTY CXX_STANDARD 20)

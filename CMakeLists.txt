@@ -46,12 +46,6 @@ if(pybind11_VERSION VERSION_LESS 2.5 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(pybind11::module INTERFACE -fsized-deallocation)
 endif()
 
-if(WITH_VTK)
-    find_package(VTK REQUIRED COMPONENTS CommonCore CommonDataModel IOXML)
-    message(STATUS "Enable VTK support")
-    add_definitions(-DWITH_VTK)
-endif()
-
 # set up c++
 mito_cxxInit()
 
@@ -67,6 +61,9 @@ mito_destinationInit()
 # visit subdirectories
 include(mito_lib)
 include(mito_extensions)
+
+# vtk support
+include(mito_vtk)
 
 # configure mito as a cmake package (so that mito can be found by cmake with find_package(mito))
 mito_shareCmakePackage()
