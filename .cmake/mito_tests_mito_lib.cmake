@@ -16,6 +16,11 @@ if(WITH_VTK)
 endif()
 
 mito_test_driver(tests/mito.lib/mesh/main.cc)
+
+if(WITH_METIS)
+    mito_test_driver(tests/mito.lib/mesh/metis_partitioner.cc)
+endif()
+
 mito_test_driver(tests/mito.lib/oriented-simplex/main.cc)
 mito_test_driver(tests/mito.lib/point/main.cc)
 mito_test_driver(tests/mito.lib/pyre-grids/main.cc)
