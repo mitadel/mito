@@ -65,6 +65,9 @@ include(mito_extensions)
 # vtk support
 include(mito_vtk)
 
+# metis support
+include(mito_metis)
+
 # configure mito as a cmake package (so that mito can be found by cmake with find_package(mito))
 mito_shareCmakePackage()
 
