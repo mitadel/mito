@@ -1,14 +1,14 @@
 # -*- yaml -*-
 
 name: cmake-ubuntu
-on: 
+on:
   push:
     branches:
       - 'main'
   pull_request:
   workflow_dispatch:
 
-  
+
 jobs:
   # build and test the ref that launched this action
   build:
@@ -99,7 +99,7 @@ jobs:
           ${{matrix.suite}}-${{matrix.suiteVersion}} --version
         env:
           pythonVersion: ${{matrix.python}}
-      
+
       - name: external dependencies
         run: |
           echo " -- gtest"
