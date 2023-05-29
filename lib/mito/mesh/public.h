@@ -21,6 +21,9 @@
 // mesh utilities
 #include "utilities.h"
 
+#ifdef WITH_METIS
+#include "metis/public.h"
+#endif
 
 #endif
 
