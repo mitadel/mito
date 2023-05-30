@@ -66,7 +66,7 @@ gent_constitutive_array(
         // J^2 - 1
         double Jsq_minus_1 = detF * detF - 1.;
         // log(J)
-        double logJ = log(detF);
+        double logJ = std::log(detF);
 
         // tr(C) - Cauchy-Green
         // double trC = 0.0;

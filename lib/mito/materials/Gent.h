@@ -38,7 +38,7 @@ namespace mito::materials {
         // J^2 - 1
         real Jsq_minus_1 = detF * detF - 1.;
         // log(J)
-        real logJ = log(detF);
+        real logJ = std::log(detF);
         // tr(C)
         real trC = pyre::tensor::trace(pyre::tensor::transpose(F) * F);
         // (J^2 -1)/2 - log(J)
