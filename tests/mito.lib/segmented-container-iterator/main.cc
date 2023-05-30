@@ -72,6 +72,13 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
+    // emplace 5 reusing the slot of the first erased simplex (1)
+    auto simplex5 = collection.emplace(5);
+    // emplace 6 reusing the slot of the first erased simplex (0)
+    auto simplex6 = collection.emplace(6);
+    // emplace 7 reusing the slot of the first erased simplex (2)
+    auto simplex7 = collection.emplace(7);
+
     // emplace another simplex (trigger allocation of new segment)
     auto simplex4 = collection.emplace(4);
 
@@ -79,6 +86,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
         store_elements.emplace_back(el->foo());
     }
 
-    EXPECT_EQ(store_elements[0], 4);
-    EXPECT_EQ(std::size(store_elements), 1);
+    // the order of the values depends on the order elimination of the previous simplices
+    EXPECT_EQ(store_elements[0], 6);
+    EXPECT_EQ(store_elements[1], 5);
+    EXPECT_EQ(store_elements[2], 7);
+    EXPECT_EQ(store_elements[3], 4);
+    EXPECT_EQ(std::size(store_elements), 4);
 }
