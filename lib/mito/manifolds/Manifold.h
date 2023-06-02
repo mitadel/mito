@@ -51,13 +51,13 @@ namespace mito::manifolds {
         Manifold(const Manifold &) = delete;
 
         // delete move constructor
-        Manifold(const Manifold &&) = delete;
+        Manifold(Manifold &&) = delete;
 
         // delete assignment operator
-        const Manifold & operator=(const Manifold &) = delete;
+        Manifold & operator=(const Manifold &) = delete;
 
         // delete move assignment operator
-        const Manifold & operator=(const Manifold &&) = delete;
+        Manifold & operator=(Manifold &&) = delete;
 
       public:
         inline auto sanityCheck() -> bool

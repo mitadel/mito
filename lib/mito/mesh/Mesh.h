@@ -41,10 +41,10 @@ namespace mito::mesh {
         Mesh(const Mesh &) = delete;
 
         // delete assignment operator
-        const Mesh & operator=(const Mesh &) = delete;
+        Mesh & operator=(const Mesh &) = delete;
 
         // delete move assignment operator
-        const Mesh & operator=(const Mesh &&) = delete;
+        Mesh & operator=(Mesh &&) = delete;
 
       private:
         template <int I, int J>
@@ -107,7 +107,6 @@ namespace mito::mesh {
 
         inline auto erase(const cell_t & cell) -> void
         {
-
             // loop on the subcells of {cell}
             for (const auto & subcell : cell->composition()) {
                 // decrement the orientations count for this cell footprint id, depending on the

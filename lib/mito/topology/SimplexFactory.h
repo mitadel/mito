@@ -199,7 +199,6 @@ namespace mito::topology {
         // is no one else using it, otherwise does nothing)
         inline auto erase(const unoriented_simplex_t<0> & simplex) -> void
         {
-
             // sanity check
             assert(simplex.references() > 0);
 
