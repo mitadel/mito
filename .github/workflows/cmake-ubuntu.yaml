@@ -55,10 +55,6 @@ jobs:
         run: |
           echo " -- cloning pyre"
           git clone https://github.com/pyre/pyre
-          echo " -- switching to the pyre home directory"
-          cd pyre
-          echo " -- checking out the correct ref"
-          git checkout ft-tensor
 
       - name: build pyre
         run: |
