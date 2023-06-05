@@ -12,7 +12,11 @@ namespace mito::topology {
     class Topology {
       private:
         // default constructor
-        Topology() : _factories() {};
+        Topology() :
+            _vertex_factory(),
+            _segment_factory(),
+            _triangle_factory(),
+            _tetrahedron_factory() {};
 
         // delete copy constructor
         Topology(const Topology &) = delete;
@@ -29,7 +33,7 @@ namespace mito::topology {
             -> const simplex_t<D> &
         {
             // ask the factory of oriented simplices
-            return std::get<D>(_factories).orientedSimplex(footprint, orientation);
+            return _get_factory<D>().orientedSimplex(footprint, orientation);
         }
 
         // return a simplex with composition {composition} (either create a new simplex if such
@@ -40,7 +44,7 @@ namespace mito::topology {
         requires(D > 0)
         {
             // ask the factory of oriented simplices
-            return std::get<D>(_factories).orientedSimplex(composition);
+            return _get_factory<D>().orientedSimplex(composition);
         }
 
         template <int D>
@@ -48,7 +52,7 @@ namespace mito::topology {
         requires(D == 0)
         {
             // ask the factory of oriented simplices
-            return std::get<0>(_factories).orientedSimplex(orientation);
+            return _get_factory<0>().orientedSimplex(orientation);
         }
 
         // instantiate a vertex
@@ -106,16 +110,16 @@ namespace mito::topology {
         template <int D>
         inline auto exists(const simplex_t<D> & simplex) const -> bool
         {
-            return std::get<D>(_factories)
-                .existsOrientedSimplex(simplex->footprint(), simplex->orientation());
+            return _get_factory<D>().existsOrientedSimplex(
+                simplex->footprint(), simplex->orientation());
         }
 
         // returns whether there exists the flipped oriented simplex in the factory
         template <int D>
         inline auto exists_flipped(const simplex_t<D> & simplex) const -> bool
         {
-            return std::get<D>(_factories)
-                .existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
+            return _get_factory<D>().existsOrientedSimplex(
+                simplex->footprint(), !simplex->orientation());
         }
 
         // returns the simplex with opposite orientation
@@ -123,8 +127,7 @@ namespace mito::topology {
         inline auto flip(const simplex_t<D> & simplex) -> const simplex_t<D> &
         {
             // ask the factory of oriented simplices
-            return std::get<D>(_factories)
-                .orientedSimplex(simplex->footprint(), !simplex->orientation());
+            return _get_factory<D>().orientedSimplex(simplex->footprint(), !simplex->orientation());
         }
 
       private:
@@ -133,7 +136,7 @@ namespace mito::topology {
         requires(D == 0)
         {
             // erase the vertex from the factory
-            std::get<D>(_factories).erase(simplex);
+            _get_factory<D>().erase(simplex);
 
             // all done
             return;
@@ -155,7 +158,7 @@ namespace mito::topology {
             auto composition = simplex->composition();
 
             // cleanup the oriented factory around {simplex}
-            std::get<D>(_factories).erase(simplex);
+            _get_factory<D>().erase(simplex);
 
             // loop on subsimplices
             for (const auto & subsimplex : composition) {
@@ -170,6 +173,14 @@ namespace mito::topology {
             // all done
             return;
         }
+
+        // mutator for the simplex factory of dimension D
+        template <int D>
+        inline auto _get_factory() -> oriented_simplex_factory_t<D> &;
+
+        // accessor for the simplex factory of dimension D
+        template <int D>
+        inline auto _get_factory() const -> const oriented_simplex_factory_t<D> &;
 
       public:
         template <int D>
@@ -186,10 +197,17 @@ namespace mito::topology {
         }
 
       private:
-        std::tuple<
-            oriented_simplex_factory_t<0>, oriented_simplex_factory_t<1>,
-            oriented_simplex_factory_t<2>, oriented_simplex_factory_t<3>>
-            _factories;
+        // factory for vertices
+        oriented_simplex_factory_t<0> _vertex_factory;
+
+        // factory for segments
+        oriented_simplex_factory_t<1> _segment_factory;
+
+        // factory for triangles
+        oriented_simplex_factory_t<2> _triangle_factory;
+
+        // factory for tetrahedra
+        oriented_simplex_factory_t<3> _tetrahedron_factory;
 
         // friendship with the singleton
         using TopologySingleton = utilities::Singleton<Topology>;
@@ -197,6 +215,62 @@ namespace mito::topology {
     };
 }
 
+// TOFIX: split header into {Topology.h} and {Topology.icc} so these can be moved to the icc file
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() -> oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() -> oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() -> oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() -> oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() const -> const oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() const -> const oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() const -> const oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
 
 #endif    // mito_topology_Topology_h
 
