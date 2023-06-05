@@ -43,7 +43,14 @@ namespace mito::topology {
         SimplexFactory() : _simplices(100 /*segment size */), _compositions() {};
 
         // destructor
-        ~SimplexFactory() {};
+        ~SimplexFactory()
+        {
+            if (_simplices.size() > 0) {
+                for (const auto & simplex : _simplices) {
+                    simplex->~Simplex<D>();
+                }
+            }
+        }
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
@@ -184,7 +191,14 @@ namespace mito::topology {
         SimplexFactory() : _simplices(100 /*segment size */) {};
 
         // destructor
-        ~SimplexFactory() {};
+        ~SimplexFactory()
+        {
+            if (_simplices.size() > 0) {
+                for (const auto & simplex : _simplices) {
+                    simplex->~Simplex<0>();
+                }
+            }
+        }
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class

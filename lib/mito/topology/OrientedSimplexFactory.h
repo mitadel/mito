@@ -35,7 +35,14 @@ namespace mito::topology {
             _orientations() {};
 
         // destructor
-        ~OrientedSimplexFactory() {};
+        ~OrientedSimplexFactory()
+        {
+            if (_oriented_simplices.size() > 0) {
+                for (const auto & oriented_simplex : _oriented_simplices) {
+                    oriented_simplex->~OrientedSimplex<D>();
+                }
+            }
+        };
 
       private:
         inline auto existsOrientedSimplex(
