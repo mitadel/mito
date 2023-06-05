@@ -85,11 +85,9 @@ namespace mito::topology {
             // otherwise
             else {
                 // create a new oriented simplex riding on simplex {simplex} with orientation
-                // {orientation}
-                auto oriented_simplex = _emplace_simplex(simplex, orientation);
-
-                // register it in the map
-                auto it = _orientations.insert(std::make_pair(tuple, oriented_simplex));
+                // {orientation} and register it in the map
+                auto it = _orientations.insert(
+                    std::make_pair(tuple, _emplace_simplex(simplex, orientation)));
 
                 // and return it
                 return it.first->second;

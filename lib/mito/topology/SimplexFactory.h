@@ -71,11 +71,9 @@ namespace mito::topology {
             }
             // otherwise
             else {
-                // emplace simplex in {_simplices}
-                auto simplex = _emplace_simplex(composition);
-
-                // register it in the compositions map
-                auto it = _compositions.insert(std::make_pair(representative, simplex));
+                // emplace simplex in {_simplices} and register it in the compositions map
+                auto it = _compositions.insert(
+                    std::make_pair(representative, _emplace_simplex(composition)));
 
                 // and return it
                 return it.first->second;
