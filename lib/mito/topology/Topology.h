@@ -56,11 +56,7 @@ namespace mito::topology {
         }
 
         // instantiate a vertex
-        inline auto vertex() -> const vertex_t &
-        {
-            // ask the factory of oriented simplices
-            return simplex<0>(true)->footprint();
-        }
+        inline auto vertex() -> const vertex_t &;
 
         // instantiate a segment
         inline auto segment(const simplex_composition_t<1> & simplices) -> const simplex_t<1> &
@@ -270,6 +266,14 @@ inline auto
 mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
 {
     return _tetrahedron_factory;
+}
+
+// instantiate a vertex
+inline auto
+mito::topology::Topology::vertex() -> const vertex_t &
+{
+    // ask the factory of vertices for an unoriented vertex
+    return _get_factory<0>().vertex();
 }
 
 #endif    // mito_topology_Topology_h

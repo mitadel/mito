@@ -129,6 +129,14 @@ namespace mito::topology {
             return orientedSimplex(simplex, orientation);
         }
 
+        // instantiate a vertex
+        inline auto vertex() -> const vertex_t &
+        requires(D == 0)
+        {
+            // ask the factory of unoriented vertices for an unoriented vertex
+            return _simplex_factory.simplex();
+        }
+
         // erase an oriented simplex from the factory (this method actually erases the simplex only
         // if there is no one else using it, otherwise does nothing)
         inline auto erase(const simplex_t<D> & oriented_simplex) -> void
