@@ -158,7 +158,7 @@ namespace mito::topology {
             std::get<D>(_factories).erase(simplex);
 
             // loop on subsimplices
-            for (auto & subsimplex : composition) {
+            for (const auto & subsimplex : composition) {
                 // if this simplex is the last one using the subsimplex (other than the copy we just
                 // did)
                 if (subsimplex.references() == 2) {
