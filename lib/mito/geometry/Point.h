@@ -16,6 +16,18 @@ namespace mito::geometry {
 
         ~Point() override {}
 
+        // delete copy constructor
+        Point(const Point &) = delete;
+
+        // delete move constructor
+        Point(Point &&) = delete;
+
+        // delete assignment operator
+        Point & operator=(const Point &) = delete;
+
+        // delete move assignment operator
+        Point & operator=(Point &&) = delete;
+
       public:
         // get the coordinates of the point
         auto coordinates() const -> const vector_t<D> & { return _coordinates; }
