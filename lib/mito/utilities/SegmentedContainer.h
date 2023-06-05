@@ -293,6 +293,18 @@ namespace mito::utilities {
         }
 
       private:
+        // delete copy constructor
+        SegmentedContainer(const SegmentedContainer &) = delete;
+
+        // delete move constructor
+        SegmentedContainer(SegmentedContainer &&) = delete;
+
+        // delete assignment operator
+        SegmentedContainer & operator=(const SegmentedContainer &) = delete;
+
+        // delete move assignment operator
+        SegmentedContainer & operator=(SegmentedContainer &&) = delete;
+
         // the segment size
         const int _segment_size;
         // the beginning of the container
