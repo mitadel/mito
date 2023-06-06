@@ -6,8 +6,9 @@
 namespace mito::mesh {
 
 
-    const auto & findSharedSimplex(
+    auto findSharedSimplex(
         const topology::simplex_t<2> & simplex0, const topology::simplex_t<2> & simplex1)
+        -> const topology::unoriented_simplex_t<1> &
     {
         // loop on lower-dimensional simplices to find the edge shared by the two simplices
         for (const auto & subsimplex0 : simplex0->composition()) {
@@ -30,9 +31,9 @@ namespace mito::mesh {
     }
 
 
-    topology::vertex_vector_t oppositeVertices(
+    auto oppositeVertices(
         const topology::simplex_t<2> & simplex0, const topology::simplex_t<2> & simplex1,
-        const auto & shared_simplex)
+        const auto & shared_simplex) -> topology::vertex_vector_t
     {
         // need a regular set (not an unordered one) because set_difference works with ordered sets
         using vertex_set_t = std::set<topology::vertex_t>;
@@ -162,8 +163,6 @@ namespace mito::mesh {
         // all done
         return;
     }
-
-
 }
 
 
