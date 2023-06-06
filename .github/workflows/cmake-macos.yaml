@@ -168,5 +168,13 @@ jobs:
           cd ${{runner.temp}}/build
           echo " -- testing mito"
           ctest --output-on-failure -E postgres.ext
+      
+      - name: create artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: mito_build_${{matrix.target}}
+          path: ${{runner.temp}}/build
+          retention-days: 7
 
 # end of file
