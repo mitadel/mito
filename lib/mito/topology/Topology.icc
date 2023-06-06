@@ -1,0 +1,236 @@
+// -*- C++ -*-
+//
+
+#if !defined(mito_topology_Topology_icc)
+#error This header file contains implementation details of class mito::topology::Topology
+#else
+
+mito::topology::Topology::Topology() :
+    _vertex_factory(),
+    _segment_factory(),
+    _triangle_factory(),
+    _tetrahedron_factory() {};
+
+mito::topology::Topology::~Topology() {};
+
+template <int D>
+inline auto
+mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
+    -> const simplex_t<D> &
+{
+    // ask the factory of oriented simplices
+    return _get_factory<D>().orientedSimplex(footprint, orientation);
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::simplex(const simplex_composition_t<D> & composition)
+    -> const simplex_t<D> &
+requires(D > 0)
+{
+    // ask the factory of oriented simplices
+    return _get_factory<D>().orientedSimplex(composition);
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::simplex(bool orientation) -> const simplex_t<0> &
+requires(D == 0)
+{
+    // ask the factory of oriented simplices
+    return _get_factory<0>().orientedSimplex(orientation);
+}
+
+inline auto
+mito::topology::Topology::segment(const simplex_composition_t<1> & simplices)
+    -> const simplex_t<1> &
+{
+    return simplex<1>(simplices);
+}
+
+inline auto
+mito::topology::Topology::triangle(const simplex_composition_t<2> & simplices)
+    -> const simplex_t<2> &
+{
+    return simplex<2>(simplices);
+}
+
+inline auto
+mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices)
+    -> const simplex_t<3> &
+{
+    return simplex<3>(simplices);
+}
+
+inline auto
+mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & simplices)
+    -> const simplex_t<1> &
+{
+    return segment({ simplex(simplices[0], false), simplex(simplices[1], true) });
+}
+
+inline auto
+mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & vertices)
+    -> const simplex_t<2> &
+{
+    return simplex<2>({ segment({ vertices[0], vertices[1] }),
+                        segment({ vertices[1], vertices[2] }),
+                        segment({ vertices[2], vertices[0] }) });
+}
+
+inline auto
+mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & vertices)
+    -> const simplex_t<3> &
+{
+    return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[3] }),
+                        triangle({ vertices[1], vertices[2], vertices[3] }),
+                        triangle({ vertices[2], vertices[0], vertices[3] }),
+                        triangle({ vertices[0], vertices[2], vertices[1] }) });
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::exists(const simplex_t<D> & simplex) const -> bool
+{
+    return _get_factory<D>().existsOrientedSimplex(simplex->footprint(), simplex->orientation());
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::exists_flipped(const simplex_t<D> & simplex) const -> bool
+{
+    return _get_factory<D>().existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::flip(const simplex_t<D> & simplex) -> const simplex_t<D> &
+{
+    // ask the factory of oriented simplices
+    return _get_factory<D>().orientedSimplex(simplex->footprint(), !simplex->orientation());
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::_erase(const simplex_t<D> & simplex) -> void
+requires(D == 0)
+{
+    // erase the vertex from the factory
+    _get_factory<D>().erase(simplex);
+
+    // all done
+    return;
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::_erase(const simplex_t<D> & simplex) -> void
+requires(D > 0)
+{
+    // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
+    //          declared mutable. Should we call reset here and make the handle mutable or
+    //          should we accept that {element} points to an invalid resource after call to
+    //          {erase}?
+
+    // sanity check
+    assert(simplex.references() > 0);
+
+    // grab a copy of the composition
+    auto composition = simplex->composition();
+
+    // cleanup the oriented factory around {simplex}
+    _get_factory<D>().erase(simplex);
+
+    // loop on subsimplices
+    for (const auto & subsimplex : composition) {
+        // if this simplex is the last one using the subsimplex (other than the copy we just
+        // did)
+        if (subsimplex.references() == 2) {
+            // recursively erase the subsimplices
+            _erase(subsimplex);
+        }
+    }
+
+    // all done
+    return;
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::erase(const simplex_t<D> & simplex) -> void
+{
+    // if someone else (other than the topology) is still using this resource
+    if (simplex.references() > 1) {
+        // do nothing
+        return;
+    }
+
+    // otherwise, erase the simplex
+    return _erase(simplex);
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() -> oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() -> oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() -> oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() -> oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() const -> const oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() const -> const oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() const -> const oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
+
+inline auto
+mito::topology::Topology::vertex() -> const vertex_t &
+{
+    // ask the factory of vertices for an unoriented vertex
+    return _get_factory<0>().vertex();
+}
+
+#endif    // mito_topology_Topology_icc
+// end of file
