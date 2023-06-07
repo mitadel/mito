@@ -101,24 +101,27 @@ namespace mito::mesh {
         topology::simplex_composition_t<2> new_simplex_composition_0;
         new_simplex_composition_0[0] = diagonal_segment;
 
+        topology::simplex_t<1> subsimplex_to_erase = *boundary_simplices.begin();
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
                 new_simplex_composition_0[1] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 3);
 
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
                 new_simplex_composition_0[2] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 2);
 
         assert(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
@@ -129,21 +132,23 @@ namespace mito::mesh {
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_1[0], subsimplex)) {
                 new_simplex_composition_1[1] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 1);
 
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
                 new_simplex_composition_1[2] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 0);
 
         assert(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
