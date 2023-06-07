@@ -65,8 +65,8 @@ namespace mito::topology {
 
         // return an oriented simplex riding on footprint {simplex} and with orientation
         // {orientation} (either create a new oriented simplex if such oriented simplex does not
-        // exist in the factory or return the existing representative of the class of equivalence of
-        // oriented simplices with footprint {simplex} orientation {orientation}
+        // exist in the factory or return the existing representative of the class of
+        // equivalence of oriented simplices with footprint {simplex} orientation {orientation}
         inline auto orientedSimplex(const unoriented_simplex_t<D> & simplex, bool orientation)
             -> const simplex_t<D> &
         {
@@ -95,8 +95,8 @@ namespace mito::topology {
         }
 
         // return a simplex with composition {composition} (either create a new simplex if such
-        // simplex does not exist in the factory or return the existing representative of the class
-        // of equivalence of simplices with this composition)
+        // simplex does not exist in the factory or return the existing representative of the
+        // class of equivalence of simplices with this composition)
         inline auto orientedSimplex(const simplex_composition_t<D> & composition)
             -> const simplex_t<D> &
         requires(D > 0)
@@ -109,10 +109,12 @@ namespace mito::topology {
                 assert(false);
             }
 
-            // get the representative of simplices with composition {composition} from the factory
+            // get the representative of simplices with composition {composition} from the
+            // factory
             const auto & simplex = _simplex_factory.simplex(composition);
 
-            // compute the orientation of the current composition with respect to the representative
+            // compute the orientation of the current composition with respect to the
+            // representative
             bool orientation = _orientation(composition, simplex);
 
             // return an oriented simplex riding on {simplex} with {orientation}
@@ -122,7 +124,8 @@ namespace mito::topology {
         inline auto orientedSimplex(bool orientation) -> const simplex_t<0> &
         requires(D == 0)
         {
-            // get the representative of simplices with composition {composition} from the factory
+            // get the representative of simplices with composition {composition} from the
+            // factory
             const auto & simplex = _simplex_factory.simplex();
 
             // return an oriented simplex riding on {simplex} with {orientation}
@@ -137,8 +140,8 @@ namespace mito::topology {
             return _simplex_factory.simplex();
         }
 
-        // erase an oriented simplex from the factory (this method actually erases the simplex only
-        // if there is no one else using it, otherwise does nothing)
+        // erase an oriented simplex from the factory (this method actually erases the simplex
+        // only if there is no one else using it, otherwise does nothing)
         inline auto erase(const simplex_t<D> & oriented_simplex) -> void
         {
             // sanity check
@@ -159,7 +162,8 @@ namespace mito::topology {
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);
 
-            // if this simplex is the last one using the footprint (other than the copy we just did)
+            // if this simplex is the last one using the footprint (other than the copy we just
+            // did)
             if (footprint.references() == 2) {
                 // cleanup the unoriented factory around {footprint}
                 _simplex_factory.erase(footprint);

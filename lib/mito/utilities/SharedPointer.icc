@@ -159,7 +159,7 @@ template <class Resource>
 auto
 mito::utilities::SharedPointer<Resource>::_acquire() const -> void
 {
-    // acquire resource
+    // acquire resource (increment reference count)
     _handle->_acquire();
     // all done
     return;
@@ -171,10 +171,12 @@ mito::utilities::SharedPointer<Resource>::_release() const -> void
 {
     // if the handle is in valid state
     if (_handle != nullptr) {
-        // release my current handle
+        // release my current handle (decreases reference count by one)
+        const auto reference_count = _handle->_release();
         // if the resource is now unused
-        if (_handle->_release() == 0 && _container != nullptr) {
-            // erase it from the container
+        if (reference_count == 0 && _container != nullptr) {
+            // erase it from the container (decrement the number of elements and add the address of
+            // the element to the queue of the available locations for reuse)
             return _container->erase(*this);
         }
 
