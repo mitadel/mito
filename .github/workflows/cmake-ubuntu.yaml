@@ -52,10 +52,12 @@ jobs:
           python3 -m pip install --upgrade pip
           pip3 install distro numpy pybind11 pytest vtk
 
-      - name: pyre setup
-        run: |
-          echo " -- cloning pyre"
-          git clone https://github.com/pyre/pyre
+      - name: checkout pyre
+        uses: actions/checkout@v3
+        with:
+          repository: pyre/pyre
+          fetch-depth: 0
+          path: pyre
 
       - name: build pyre
         run: |
@@ -124,18 +126,12 @@ jobs:
 
         env:
           pythonVersion: ${{matrix.python}}
-      
-      - name: clone mito
-        run: |
-          echo " -- cloning mito"
-          git clone https://github.com/mitadel/mito
 
       - name: checkout mito
-        run: |
-          echo " -- switching to the mito home directory"
-          cd mito
-          echo " -- checking out the correct ref"
-          git checkout ${{github.event.pull_request.head.sha}}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{github.event.pull_request.head.sha}}
+          path: mito
 
       - name: build mito
         run: |
