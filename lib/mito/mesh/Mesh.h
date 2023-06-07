@@ -15,7 +15,7 @@ namespace mito::mesh {
         static constexpr int N = cellT::resource_t::order;
         // get the family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_family_t = typename cellT::resource_t::cell_family_t<I>;
+        using cell_family_t = typename cellT::resource_t::template cell_family_t<I>;
         // typedef for geometry type
         using geometry_t = geometry::geometry_t<D>;
         // typedef for a collection of cells
