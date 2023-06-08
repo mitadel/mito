@@ -90,13 +90,6 @@ mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & ve
 
 template <int D>
 inline auto
-mito::topology::Topology::exists(const simplex_t<D> & simplex) const -> bool
-{
-    return _get_factory<D>().existsOrientedSimplex(simplex->footprint(), simplex->orientation());
-}
-
-template <int D>
-inline auto
 mito::topology::Topology::exists_flipped(const simplex_t<D> & simplex) const -> bool
 {
     return _get_factory<D>().existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
@@ -230,6 +223,32 @@ mito::topology::Topology::vertex() -> const vertex_t &
 {
     // ask the factory of vertices for an unoriented vertex
     return _get_factory<0>().vertex();
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::exists(const simplex_composition_t<D> & simplices) const -> bool
+{
+    return _get_factory<D>().existsOrientedSimplex(simplices);
+}
+
+inline auto
+mito::topology::Topology::exists(const vertex_simplex_composition_t<1> & vertices) const -> bool
+{
+    // find left and right tip simplices
+    auto simplex_left_tip = _get_factory<0>().findOrientedSimplex(vertices[0], false);
+    auto simplex_right_tip = _get_factory<0>().findOrientedSimplex(vertices[1], true);
+
+    // if both are are found
+    if (simplex_left_tip && simplex_right_tip) {
+        // check if the oriented exists
+        return _get_factory<1>().existsOrientedSimplex({ *simplex_left_tip, *simplex_right_tip });
+    } else
+    // if the tips do not exists
+    {
+        // all done
+        return false;
+    }
 }
 
 #endif    // mito_topology_Topology_icc

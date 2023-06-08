@@ -46,8 +46,42 @@ namespace mito::topology {
         };
 
       private:
+        inline auto existsOrientedSimplex(const simplex_composition_t<D> & composition) const
+            -> bool
+        {
+            // find the representative of simplices with composition {composition} from the
+            // factory
+            auto simplex = _simplex_factory.findSimplex(composition);
+
+            // if the footprint exists, then check if the oriented simplex exists
+            if (simplex) {
+                // compute the orientation of the current composition with respect to the
+                // representative
+                bool orientation = _orientation(composition, *simplex);
+
+                // check if the simplex exists with the orientation associated with this composition
+                return existsOrientedSimplex(*simplex, orientation);
+            }
+            // if the footprint does not exist, then the oriented simplex cannot exist
+            else {
+                // all done
+                return false;
+            }
+        }
+
         inline auto existsOrientedSimplex(
             const unoriented_simplex_t<D> & simplex, bool orientation) const -> bool
+        {
+            // find oriented simplex with the given footprint and orientation
+            auto orientedSimplex = findOrientedSimplex(simplex, orientation);
+
+            // if there exists an oriented simplex riding on {simplex} with orientation
+            // {orientation}
+            return orientedSimplex ? true : false;
+        }
+
+        inline auto findOrientedSimplex(
+            const unoriented_simplex_t<D> & simplex, bool orientation) const -> const simplex_t<D> *
         {
             // bind the footprint and the orientation in a tuple
             auto tuple = std::make_tuple(simplex.id(), orientation);
@@ -58,9 +92,13 @@ namespace mito::topology {
             // if there exists an oriented simplex riding on {simplex} with orientation
             // {orientation}
             if (it_find != _orientations.end()) {
-                return true;
-            } else {
-                return false;
+                // return it
+                return &(it_find->second);
+            }
+            // if not found
+            else {
+                // all done
+                return nullptr;
             }
         }
 
@@ -71,20 +109,20 @@ namespace mito::topology {
         inline auto orientedSimplex(const unoriented_simplex_t<D> & simplex, bool orientation)
             -> const simplex_t<D> &
         {
-            // bind the footprint and the orientation in a tuple
-            auto tuple = std::make_tuple(simplex.id(), orientation);
-
-            // look up the tuple in the orientation map
-            auto it_find = _orientations.find(tuple);
+            // find oriented simplex with the given footprint and orientation
+            auto orientedSimplex = findOrientedSimplex(simplex, orientation);
 
             // if an oriented simplex riding on simplex {simplex} with orientation {orientation}
             // is already registered in the map
-            if (it_find != _orientations.end()) {
+            if (orientedSimplex) {
                 // then return it
-                return it_find->second;
+                return *orientedSimplex;
             }
             // otherwise
             else {
+                // bind the footprint and the orientation in a tuple
+                auto tuple = std::make_tuple(simplex.id(), orientation);
+
                 // create a new oriented simplex riding on simplex {simplex} with orientation
                 // {orientation} and register it in the map
                 auto it = _orientations.insert(
@@ -178,7 +216,8 @@ namespace mito::topology {
         // compute the orientation of the {composition} with respect to the orientation of
         // {simplex}
         inline bool _orientation(
-            const simplex_composition_t<D> & composition, const unoriented_simplex_t<D> & simplex);
+            const simplex_composition_t<D> & composition,
+            const unoriented_simplex_t<D> & simplex) const;
 
         inline auto _emplace_simplex(const unoriented_simplex_t<D> & simplex, bool orientation)
             -> simplex_t<D>
@@ -210,7 +249,7 @@ namespace mito::topology {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<1>::_orientation(
-        const simplex_composition_t<1> & composition, const unoriented_simplex_t<1> & simplex)
+        const simplex_composition_t<1> & composition, const unoriented_simplex_t<1> & simplex) const
     {
         if (composition == simplex->composition()) {
             return true;
@@ -239,7 +278,7 @@ namespace mito::topology {
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
     bool OrientedSimplexFactory<2>::_orientation(
-        const simplex_composition_t<2> & composition, const unoriented_simplex_t<2> & simplex)
+        const simplex_composition_t<2> & composition, const unoriented_simplex_t<2> & simplex) const
     {
         if (_rotate(composition) == _rotate(simplex->composition())) {
             return true;
@@ -250,11 +289,10 @@ namespace mito::topology {
     template <>    // TODO: implement
     bool OrientedSimplexFactory<3>::_orientation(
         const simplex_composition_t<3> & /*composition*/,
-        const unoriented_simplex_t<3> & /*simplex*/)
+        const unoriented_simplex_t<3> & /*simplex*/) const
     {
         return true;
     }
-
 }
 
 #endif    // mito_topology_OrientedSimplexFactory_h

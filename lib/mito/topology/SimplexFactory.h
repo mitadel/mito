@@ -52,11 +52,8 @@ namespace mito::topology {
             }
         }
 
-        // return a simplex with composition {composition} (either create a new simplex if such
-        // simplex does not exist in the factory or return the existing representative of the class
-        // of equivalence of simplices with this composition)
-        inline auto simplex(const simplex_composition_t<D> & composition)
-            -> const unoriented_simplex_t<D> &
+        inline auto findSimplex(const simplex_composition_t<D> & composition) const
+            -> const unoriented_simplex_t<D> *
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
@@ -66,11 +63,34 @@ namespace mito::topology {
 
             // if a representative simplex with this composition is already registered in the map
             if (it_find != _compositions.end()) {
+                // return it
+                return &(it_find->second);
+            }
+            // if not found
+            else {
+                // all done
+                return nullptr;
+            }
+        }
+
+        // return a simplex with composition {composition} (either create a new simplex if such
+        // simplex does not exist in the factory or return the existing representative of the class
+        // of equivalence of simplices with this composition)
+        inline auto simplex(const simplex_composition_t<D> & composition)
+            -> const unoriented_simplex_t<D> &
+        {
+            // find the representative simplex with this composition
+            auto simplex = findSimplex(composition);
+
+            // if a representative simplex with this composition is already registered in the map
+            if (simplex) {
                 // then return it
-                return it_find->second;
+                return *simplex;
             }
             // otherwise
             else {
+                // pick a representative (factor out equivalence relation)
+                auto representative = _representative(composition);
                 // emplace simplex in {_simplices} and register it in the compositions map
                 auto it = _compositions.insert(
                     std::make_pair(representative, _emplace_simplex(composition)));
@@ -102,7 +122,8 @@ namespace mito::topology {
 
       private:
         // equivalence class relation for a simplex
-        inline auto _representative(const simplex_composition_t<D> & composition) -> composition_t;
+        inline auto _representative(const simplex_composition_t<D> & composition) const
+            -> composition_t;
 
         inline auto _emplace_simplex(const simplex_composition_t<D> & composition)
             -> unoriented_simplex_t<D>
@@ -130,7 +151,7 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 1D
     template <>
-    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition)
+    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition) const
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
@@ -144,7 +165,7 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 2D
     template <>
-    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition)
+    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition) const
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
@@ -161,7 +182,7 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 3D
     template <>
-    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition)
+    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition) const
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition

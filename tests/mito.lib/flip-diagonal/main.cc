@@ -43,11 +43,13 @@ TEST(FlipDiagonal, TestFlipDiagonal)
 
     EXPECT_EQ(mesh.nCells(), 2);
 
-    // assert that the original diagonal was erased
-    // TOFIX: accessing to a deleted ref cause undefined behavior.
-    // re-enable when methods {exist} and {find} are in place
-    // EXPECT_EQ(segment_e.references(), 0);
-    // EXPECT_EQ(segment_e_flip.references(), 0);
+    // assert that {segment_e} and {segment_e_flip} have been deleted
+    EXPECT_FALSE(topology.exists({ vertex0, vertex2 }));
+    EXPECT_FALSE(topology.exists({ vertex2, vertex0 }));
+
+    // assert that new flipped segments have been created
+    EXPECT_TRUE(topology.exists({ vertex1, vertex3 }));
+    EXPECT_TRUE(topology.exists({ vertex3, vertex1 }));
 
     // assert that the new diagonal is now in use (by the factory and by the two triangles)
     auto & segment_f = topology.segment({ vertex1, vertex3 });
