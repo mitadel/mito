@@ -80,6 +80,29 @@ namespace mito::topology {
             return orientedSimplex ? true : false;
         }
 
+        inline auto findOrientedSimplex(const simplex_composition_t<D> & composition) const
+            -> const simplex_t<D> *
+        {
+            // find the representative of simplices with composition {composition} from the
+            // factory
+            auto simplex = _simplex_factory.findSimplex(composition);
+
+            // if the footprint is found, then find the oriented simplex that uses it
+            if (simplex) {
+                // compute the orientation of the current composition with respect to the
+                // representative
+                bool orientation = _orientation(composition, *simplex);
+
+                // find oriented simplex with the given footprint and orientation
+                return findOrientedSimplex(*simplex, orientation);
+            }
+            // if the footprint is not found, then there is no oriented simplex
+            else {
+                // all done
+                return nullptr;
+            }
+        }
+
         inline auto findOrientedSimplex(
             const unoriented_simplex_t<D> & simplex, bool orientation) const -> const simplex_t<D> *
         {
