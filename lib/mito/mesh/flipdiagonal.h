@@ -6,8 +6,9 @@
 namespace mito::mesh {
 
 
-    const auto & findSharedSimplex(
+    auto findSharedSimplex(
         const topology::simplex_t<2> & simplex0, const topology::simplex_t<2> & simplex1)
+        -> const topology::unoriented_simplex_t<1> &
     {
         // loop on lower-dimensional simplices to find the edge shared by the two simplices
         for (const auto & subsimplex0 : simplex0->composition()) {
@@ -30,9 +31,9 @@ namespace mito::mesh {
     }
 
 
-    topology::vertex_vector_t oppositeVertices(
+    auto oppositeVertices(
         const topology::simplex_t<2> & simplex0, const topology::simplex_t<2> & simplex1,
-        const auto & shared_simplex)
+        const auto & shared_simplex) -> topology::vertex_vector_t
     {
         // need a regular set (not an unordered one) because set_difference works with ordered sets
         using vertex_set_t = std::set<topology::vertex_t>;
@@ -100,24 +101,27 @@ namespace mito::mesh {
         topology::simplex_composition_t<2> new_simplex_composition_0;
         new_simplex_composition_0[0] = diagonal_segment;
 
+        topology::simplex_t<1> subsimplex_to_erase = *boundary_simplices.begin();
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
                 new_simplex_composition_0[1] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 3);
 
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
                 new_simplex_composition_0[2] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 2);
 
         assert(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
@@ -128,21 +132,23 @@ namespace mito::mesh {
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_1[0], subsimplex)) {
                 new_simplex_composition_1[1] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 1);
 
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
                 new_simplex_composition_1[2] = subsimplex;
-                boundary_simplices.erase(subsimplex);
-                topology.erase(subsimplex);
+                subsimplex_to_erase = subsimplex;
                 break;
             }
         }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase(subsimplex_to_erase);
         assert(boundary_simplices.size() == 0);
 
         assert(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
@@ -162,8 +168,6 @@ namespace mito::mesh {
         // all done
         return;
     }
-
-
 }
 
 

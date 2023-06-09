@@ -11,7 +11,8 @@ namespace mito::materials {
             _rho(rho),
             _kappa(kappa),
             _mu(mu),
-            _Jm(Jm) {};
+            _Jm(Jm)
+        {}
 
         template <int D /*dim*/>
         constexpr auto Constitutive(const vector_t<D> & u, const matrix_t<D> & Du, matrix_t<D> & P)

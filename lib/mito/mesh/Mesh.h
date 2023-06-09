@@ -15,7 +15,7 @@ namespace mito::mesh {
         static constexpr int N = cellT::resource_t::order;
         // get the family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_family_t = typename cellT::resource_t::cell_family_t<I>;
+        using cell_family_t = typename cellT::resource_t::template cell_family_t<I>;
         // typedef for geometry type
         using geometry_t = geometry::geometry_t<D>;
         // typedef for a collection of cells
@@ -41,10 +41,10 @@ namespace mito::mesh {
         Mesh(const Mesh &) = delete;
 
         // delete assignment operator
-        const Mesh & operator=(const Mesh &) = delete;
+        Mesh & operator=(const Mesh &) = delete;
 
         // delete move assignment operator
-        const Mesh & operator=(const Mesh &&) = delete;
+        Mesh & operator=(Mesh &&) = delete;
 
       private:
         template <int I, int J>
@@ -107,7 +107,6 @@ namespace mito::mesh {
 
         inline auto erase(const cell_t & cell) -> void
         {
-
             // loop on the subcells of {cell}
             for (const auto & subcell : cell->composition()) {
                 // decrement the orientations count for this cell footprint id, depending on the

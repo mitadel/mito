@@ -21,7 +21,14 @@ namespace mito::geometry {
         void operator=(const PointCloud<D> &) = delete;
 
         // destructor
-        ~PointCloud() {}
+        ~PointCloud()
+        {
+            if (_cloud.size() > 0) {
+                for (const auto & point : _cloud) {
+                    point->~Point<D>();
+                }
+            }
+        }
 
       public:
         auto print() const -> void

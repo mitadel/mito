@@ -43,7 +43,14 @@ namespace mito::topology {
         SimplexFactory() : _simplices(100 /*segment size */), _compositions() {};
 
         // destructor
-        ~SimplexFactory() {};
+        ~SimplexFactory()
+        {
+            if (_simplices.size() > 0) {
+                for (const auto & simplex : _simplices) {
+                    simplex->~Simplex<D>();
+                }
+            }
+        }
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
@@ -64,11 +71,9 @@ namespace mito::topology {
             }
             // otherwise
             else {
-                // emplace simplex in {_simplices}
-                auto simplex = _emplace_simplex(composition);
-
-                // register it in the compositions map
-                auto it = _compositions.insert(std::make_pair(representative, simplex));
+                // emplace simplex in {_simplices} and register it in the compositions map
+                auto it = _compositions.insert(
+                    std::make_pair(representative, _emplace_simplex(composition)));
 
                 // and return it
                 return it.first->second;
@@ -184,7 +189,14 @@ namespace mito::topology {
         SimplexFactory() : _simplices(100 /*segment size */) {};
 
         // destructor
-        ~SimplexFactory() {};
+        ~SimplexFactory()
+        {
+            if (_simplices.size() > 0) {
+                for (const auto & simplex : _simplices) {
+                    simplex->~Simplex<0>();
+                }
+            }
+        }
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
@@ -199,7 +211,6 @@ namespace mito::topology {
         // is no one else using it, otherwise does nothing)
         inline auto erase(const unoriented_simplex_t<0> & simplex) -> void
         {
-
             // sanity check
             assert(simplex.references() > 0);
 
