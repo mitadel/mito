@@ -30,7 +30,7 @@ namespace mito::io::vtk {
         -> void
     {
         // retrieve the coordinates of the point
-        const auto & coordinates = pPoint.handle()->coordinates();
+        const auto & coordinates = pPoint->coordinates();
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coordinates[0], coordinates[1], coordinates[2]);
     }
@@ -40,7 +40,7 @@ namespace mito::io::vtk {
         -> void
     {
         // retrieve the coordinates of the point
-        const auto & coordinates = pPoint.handle()->coordinates();
+        const auto & coordinates = pPoint->coordinates();
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coordinates[0], coordinates[1], 0.);
     }
