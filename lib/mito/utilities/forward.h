@@ -21,6 +21,9 @@ namespace mito::utilities {
     template <class Resource>
     using shared_ptr = SharedPointer<Resource>;
 
+    template <class Resource>
+    using index_t = std::uintptr_t;
+
     // class segmented container
     template <class Resource>
     // requires ReferenceCountedObject<Resource>
