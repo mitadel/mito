@@ -46,13 +46,6 @@ namespace mito::topology {
         // accessor for the subsimplices
         inline auto composition() const -> const simplex_composition_t<D> & { return _simplices; }
 
-        // returns the simplex id
-        inline auto id() const -> unoriented_simplex_id_t
-        {
-            // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t>(this);
-        }
-
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const
@@ -148,13 +141,6 @@ namespace mito::topology {
         Simplex & operator=(Simplex &&) = delete;
 
       public:
-        // returns the simplex id
-        inline auto id() const -> unoriented_simplex_id_t
-        {
-            // the id is the (immutable) address of this object
-            return reinterpret_cast<unoriented_simplex_id_t>(this);
-        }
-
         // perform a sanity check
         inline auto sanityCheck() const -> bool
         {

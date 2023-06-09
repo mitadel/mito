@@ -21,6 +21,9 @@ namespace mito::utilities {
     template <class Resource>
     using shared_ptr = SharedPointer<Resource>;
 
+    template <class Resource>
+    using index_t = std::uintptr_t;
+
     // class segmented container
     template <class Resource>
     // requires ReferenceCountedObject<Resource>
@@ -55,7 +58,7 @@ namespace mito::utilities {
         size_t operator()(const sharedPointerT & item) const
         {
             // reinterpret the address of the pointed handle as a {size_t} and return it
-            return reinterpret_cast<size_t>(item.handle());
+            return reinterpret_cast<size_t>(item.id());
         }
     };
 }

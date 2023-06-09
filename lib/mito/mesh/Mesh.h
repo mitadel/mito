@@ -23,7 +23,7 @@ namespace mito::mesh {
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
         // appears with - or + orientation
         using orientation_map_t =
-            std::unordered_map<topology::unoriented_simplex_id_t, std::array<int, 2>>;
+            std::unordered_map<topology::unoriented_simplex_id_t<D>, std::array<int, 2>>;
 
       public:
         // default constructor
@@ -111,12 +111,12 @@ namespace mito::mesh {
             for (const auto & subcell : cell->composition()) {
                 // decrement the orientations count for this cell footprint id, depending on the
                 // orientation
-                (subcell->orientation() ? _orientations[subcell->footprint()->id()][0] -= 1 :
-                                          _orientations[subcell->footprint()->id()][1] -= 1);
+                (subcell->orientation() ? _orientations[subcell->footprint().id()][0] -= 1 :
+                                          _orientations[subcell->footprint().id()][1] -= 1);
 
                 // cleanup orientation map
-                if (_orientations[subcell->footprint()->id()] == std::array<int, 2> { 0, 0 }) {
-                    _orientations.erase(subcell->footprint()->id());
+                if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
+                    _orientations.erase(subcell->footprint().id());
                 }
             }
 
@@ -131,8 +131,8 @@ namespace mito::mesh {
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
-            (!cell->orientation() ? count = _orientations[cell->footprint()->id()][0] :
-                                    count = _orientations[cell->footprint()->id()][1]);
+            (!cell->orientation() ? count = _orientations[cell->footprint().id()][0] :
+                                    count = _orientations[cell->footprint().id()][1]);
 
             // the cell is on the boundary if it never occurs in the mesh with opposite
             // orientation
@@ -179,8 +179,8 @@ namespace mito::mesh {
             for (const auto & subcell : cell->composition()) {
                 // increment the orientations count for this cell footprint id, depending on the
                 // orientation
-                (subcell->orientation() ? _orientations[subcell->footprint()->id()][0] += 1 :
-                                          _orientations[subcell->footprint()->id()][1] += 1);
+                (subcell->orientation() ? _orientations[subcell->footprint().id()][0] += 1 :
+                                          _orientations[subcell->footprint().id()][1] += 1);
             }
 
             // all done

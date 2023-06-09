@@ -14,7 +14,7 @@ namespace mito::mesh {
         for (const auto & subsimplex0 : simplex0->composition()) {
             for (const auto & subsimplex1 : simplex1->composition()) {
                 // if you found it
-                if (subsimplex0->footprint_id() == subsimplex1->footprint_id()) {
+                if (subsimplex0->footprint().id() == subsimplex1->footprint().id()) {
                     // report
                     std::cout << "Found it!" << std::endl;
                     // return
@@ -68,7 +68,7 @@ namespace mito::mesh {
         const auto & shared_simplex = findSharedSimplex(simplex0, simplex1);
 
         // assert you could find it
-        assert(shared_simplex.handle() != nullptr);
+        assert(!shared_simplex.is_nullptr());
 
         // show me
         // std::cout << "shared simplex: " << *shared_simplex << std::endl;
@@ -84,7 +84,7 @@ namespace mito::mesh {
         // get boundary simplices of simplex0 (all except diagonal)
         for (const auto & subsimplex : simplex0->composition()) {
             // if it is not the shared simplex
-            if (subsimplex->footprint_id() != shared_simplex->id()) {
+            if (subsimplex->footprint().id() != shared_simplex.id()) {
                 boundary_simplices.insert(subsimplex);
             }
         }
@@ -92,7 +92,7 @@ namespace mito::mesh {
         // get boundary simplices of simplex1 (all except diagonal)
         for (const auto & subsimplex : simplex1->composition()) {
             // if it is not the shared simplex
-            if (subsimplex->footprint_id() != shared_simplex->id()) {
+            if (subsimplex->footprint().id() != shared_simplex.id()) {
                 boundary_simplices.insert(subsimplex);
             }
         }

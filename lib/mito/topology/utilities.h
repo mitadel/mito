@@ -21,7 +21,7 @@ namespace mito::topology {
     std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<D> & s)
     requires(D > 0)
     {
-        os << s.handle() << " composed of:" << std::endl;
+        os << s.id() << " composed of:" << std::endl;
         for (const auto & simplex : s->composition()) {
             std::cout << "\t" << simplex << std::endl;
         }
@@ -32,7 +32,7 @@ namespace mito::topology {
     template <>
     std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
     {
-        os << "vertex: " << s->footprint().handle() << std::endl;
+        os << "vertex: " << s->footprint().id() << std::endl;
         return os;
     }
 
