@@ -30,6 +30,9 @@ namespace mito::utilities {
         // reset the shared pointer
         inline auto reset() -> void;
 
+        // check if the handle is the null pointer
+        inline auto is_nullptr() const -> bool;
+
         // operator->
         auto operator->() const -> handle_t;
 

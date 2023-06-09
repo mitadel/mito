@@ -40,6 +40,14 @@ mito::utilities::SharedPointer<Resource>::reset() -> void
     return;
 }
 
+template <class Resource>
+auto
+mito::utilities::SharedPointer<Resource>::is_nullptr() const -> bool
+{
+    // all done
+    return _handle == nullptr;
+}
+
 // operator->
 template <class Resource>
 auto

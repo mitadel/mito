@@ -68,7 +68,7 @@ namespace mito::mesh {
         const auto & shared_simplex = findSharedSimplex(simplex0, simplex1);
 
         // assert you could find it
-        assert(shared_simplex.handle() != nullptr);
+        assert(!shared_simplex.is_nullptr());
 
         // show me
         // std::cout << "shared simplex: " << *shared_simplex << std::endl;
