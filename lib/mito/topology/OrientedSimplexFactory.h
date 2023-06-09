@@ -50,7 +50,7 @@ namespace mito::topology {
             const unoriented_simplex_t<D> & simplex, bool orientation) const -> bool
         {
             // bind the footprint and the orientation in a tuple
-            auto tuple = std::make_tuple(simplex->id(), orientation);
+            auto tuple = std::make_tuple(simplex.id(), orientation);
 
             // look up the tuple in the orientation map
             auto it_find = _orientations.find(tuple);
@@ -72,7 +72,7 @@ namespace mito::topology {
             -> const simplex_t<D> &
         {
             // bind the footprint and the orientation in a tuple
-            auto tuple = std::make_tuple(simplex->id(), orientation);
+            auto tuple = std::make_tuple(simplex.id(), orientation);
 
             // look up the tuple in the orientation map
             auto it_find = _orientations.find(tuple);
@@ -152,7 +152,7 @@ namespace mito::topology {
             auto footprint = oriented_simplex->footprint();
 
             // get footprint of the oriented simplex
-            unoriented_simplex_id_t<D> id = oriented_simplex->footprint_id();
+            unoriented_simplex_id_t<D> id = oriented_simplex->footprint().id();
 
             // get the key to this oriented simplex
             auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
@@ -226,8 +226,8 @@ namespace mito::topology {
 
             // get the oriented simplices from the shared pointers
             auto composition_copy =
-                oriented_simplex_array_t { composition[0]->id(), composition[1]->id(),
-                                           composition[2]->id() };
+                oriented_simplex_array_t { composition[0].id(), composition[1].id(),
+                                           composition[2].id() };
             auto first_simplex = std::min_element(composition_copy.begin(), composition_copy.end());
             std::rotate(composition_copy.begin(), first_simplex, composition_copy.end());
 

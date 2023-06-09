@@ -134,8 +134,8 @@ namespace mito::topology {
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { composition[0]->footprint_id(),
-                                       composition[1]->footprint_id() };
+        composition_t representative { composition[0]->footprint().id(),
+                                       composition[1]->footprint().id() };
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
         // all done
@@ -148,9 +148,9 @@ namespace mito::topology {
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { composition[0]->footprint_id(),
-                                       composition[1]->footprint_id(),
-                                       composition[2]->footprint_id() };
+        composition_t representative { composition[0]->footprint().id(),
+                                       composition[1]->footprint().id(),
+                                       composition[2]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
@@ -165,10 +165,10 @@ namespace mito::topology {
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { composition[0]->footprint_id(),
-                                       composition[1]->footprint_id(),
-                                       composition[2]->footprint_id(),
-                                       composition[3]->footprint_id() };
+        composition_t representative { composition[0]->footprint().id(),
+                                       composition[1]->footprint().id(),
+                                       composition[2]->footprint().id(),
+                                       composition[3]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
         std::sort(representative.begin(), representative.end());
