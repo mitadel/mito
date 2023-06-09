@@ -36,7 +36,7 @@ namespace mito::geometry {
             // iterate on points
             std::cout << "Point cloud:" << std::endl;
             for (const auto & pPointMap : _compositions) {
-                std::cout << *pPointMap.second.handle() << std::endl;
+                std::cout << pPointMap.second->coordinates() << std::endl;
             }
             // all done
             return;
