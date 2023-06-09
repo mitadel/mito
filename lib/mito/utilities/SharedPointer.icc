@@ -5,6 +5,14 @@
 #error This header file contains implementation details of class mito::utilities::SharedPointer
 #else
 
+template <class Resource>
+auto
+mito::utilities::SharedPointer<Resource>::id() const -> index_t<Resource>
+{
+    // the id is the (immutable) address of this object
+    return reinterpret_cast<index_t<Resource>>(_handle);
+}
+
 // interface
 template <class Resource>
 auto

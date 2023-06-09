@@ -24,6 +24,9 @@ namespace mito::utilities {
         // accessor for {handle}
         inline auto handle() const -> handle_t;
 
+        // returns the id of this (oriented) simplex
+        inline auto id() const -> index_t<Resource>;
+
         // accessor for the number of outstanding references
         inline auto references() const -> int;
 
