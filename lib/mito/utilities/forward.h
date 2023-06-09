@@ -58,7 +58,7 @@ namespace mito::utilities {
         size_t operator()(const sharedPointerT & item) const
         {
             // reinterpret the address of the pointed handle as a {size_t} and return it
-            return reinterpret_cast<size_t>(item.handle());
+            return reinterpret_cast<size_t>(item.id());
         }
     };
 }

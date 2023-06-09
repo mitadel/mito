@@ -21,9 +21,6 @@ namespace mito::utilities {
 
         // interface
       public:
-        // accessor for {handle}
-        inline auto handle() const -> handle_t;
-
         // returns the id of this (oriented) simplex
         inline auto id() const -> index_t<Resource>;
 
@@ -66,6 +63,9 @@ namespace mito::utilities {
         inline SharedPointer & operator=(SharedPointer<Resource> &&);
 
       private:
+        // accessor for {handle}
+        inline auto handle() const -> handle_t;
+
         // increment the reference count
         inline auto _acquire() const -> void;
         // decrement the reference count
@@ -86,13 +86,13 @@ namespace mito::utilities {
     template <class Resource>
     inline bool operator==(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
     {
-        return lhs.handle() == rhs.handle();
+        return lhs.id() == rhs.id();
     }
 
     template <class Resource>
     inline bool operator<(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
     {
-        return lhs.handle() < rhs.handle();
+        return lhs.id() < rhs.id();
     }
 }
 
