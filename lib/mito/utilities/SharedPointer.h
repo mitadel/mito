@@ -66,6 +66,9 @@ namespace mito::utilities {
         // accessor for {handle}
         inline auto handle() const -> handle_t;
 
+        // returns the resource corresponding to this resource id
+        static inline auto resource(index_t<Resource>) -> handle_t;
+
         // increment the reference count
         inline auto _acquire() const -> void;
         // decrement the reference count

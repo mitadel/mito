@@ -13,6 +13,14 @@ mito::utilities::SharedPointer<Resource>::id() const -> index_t<Resource>
     return reinterpret_cast<index_t<Resource>>(_handle);
 }
 
+template <class Resource>
+auto
+mito::utilities::SharedPointer<Resource>::resource(index_t<Resource> index) -> handle_t
+{
+    // the id is the (immutable) address of this object
+    return reinterpret_cast<handle_t>(index);
+}
+
 // interface
 template <class Resource>
 auto

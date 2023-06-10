@@ -251,6 +251,15 @@ namespace mito::utilities {
             return;
         }
 
+        // QUESTION: should this be const?
+        auto resource(index_t<T> index) -> shared_ptr<T>
+        {
+            // fetch the resource based on the index
+            auto resource = utilities::shared_ptr<T>::resource(index);
+            // wrap the resource in a shared pointer
+            return utilities::shared_ptr<T>(resource, this);
+        }
+
         /**
          * iterators
          */
