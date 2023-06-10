@@ -71,7 +71,6 @@ namespace mito::geometry {
         topology_t & _topology;
 
         // a reference to the point cloud
-        // QUESTION: should this point cloud be owned by {Geometry}?
         point_cloud_t<D> & _point_cloud;
 
         // friendship with the singleton
