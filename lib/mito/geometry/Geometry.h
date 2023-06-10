@@ -60,8 +60,11 @@ namespace mito::geometry {
             return _nodes.find(vertex)->second;
         }
 
-        // TOFIX: should this be const?
+        // accessor for topology
         inline auto topology() -> topology_t & { return _topology; }
+
+        // const accessor for topology
+        inline auto topology() const -> const topology_t & { return _topology; }
 
       private:
         // the collection of nodes
