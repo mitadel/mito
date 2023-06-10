@@ -238,7 +238,7 @@ namespace mito::utilities {
         // This method is called by {shared_ptr::_release}
         auto erase(const utilities::shared_ptr<T> & element) -> void
         {
-            // assert that the resource is invalid
+            // assert that the resource is in valid state
             assert(element->is_valid() == 0);
 
             // decrement the number of elements
@@ -249,6 +249,15 @@ namespace mito::utilities {
 
             // all done
             return;
+        }
+
+        // QUESTION: should this be const?
+        auto resource(index_t<T> index) -> shared_ptr<T>
+        {
+            // fetch the resource based on the index
+            auto resource = utilities::shared_ptr<T>::resource(index);
+            // wrap the resource in a shared pointer
+            return utilities::shared_ptr<T>(resource, this);
         }
 
         /**

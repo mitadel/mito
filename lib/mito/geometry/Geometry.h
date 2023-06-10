@@ -60,8 +60,11 @@ namespace mito::geometry {
             return _nodes.find(vertex)->second;
         }
 
-        // TOFIX: should this be const?
+        // accessor for topology
         inline auto topology() -> topology_t & { return _topology; }
+
+        // const accessor for topology
+        inline auto topology() const -> const topology_t & { return _topology; }
 
       private:
         // the collection of nodes
@@ -71,7 +74,6 @@ namespace mito::geometry {
         topology_t & _topology;
 
         // a reference to the point cloud
-        // QUESTION: should this point cloud be owned by {Geometry}?
         point_cloud_t<D> & _point_cloud;
 
         // friendship with the singleton

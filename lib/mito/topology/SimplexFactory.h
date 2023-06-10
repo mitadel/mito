@@ -52,6 +52,27 @@ namespace mito::topology {
             }
         }
 
+        inline auto findSimplex(const simplex_composition_t<D> & composition) const
+            -> unoriented_simplex_t<D>
+        {
+            // pick a representative (factor out equivalence relation)
+            auto representative = _representative(composition);
+
+            // look up for this representative in the compositions map
+            auto it_find = _compositions.find(representative);
+
+            // if a representative simplex with this composition is already registered in the map
+            if (it_find != _compositions.end()) {
+                // return it
+                return it_find->second;
+            }
+            // if not found
+            else {
+                // return a shared pointer wrapper around {nullptr}
+                return unoriented_simplex_t<D>();
+            }
+        }
+
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
@@ -102,7 +123,8 @@ namespace mito::topology {
 
       private:
         // equivalence class relation for a simplex
-        inline auto _representative(const simplex_composition_t<D> & composition) -> composition_t;
+        inline auto _representative(const simplex_composition_t<D> & composition) const
+            -> composition_t;
 
         inline auto _emplace_simplex(const simplex_composition_t<D> & composition)
             -> unoriented_simplex_t<D>
@@ -130,7 +152,7 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 1D
     template <>
-    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition)
+    auto SimplexFactory<1>::_representative(const simplex_composition_t<1> & composition) const
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
@@ -144,7 +166,7 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 2D
     template <>
-    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition)
+    auto SimplexFactory<2>::_representative(const simplex_composition_t<2> & composition) const
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
@@ -161,7 +183,7 @@ namespace mito::topology {
 
     // equivalence class relation for a simplex in 3D
     template <>
-    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition)
+    auto SimplexFactory<3>::_representative(const simplex_composition_t<3> & composition) const
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition

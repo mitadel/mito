@@ -28,10 +28,10 @@ TEST(Simplices, TestSimplices)
         (0,0)             (1,0)
     */
 
-    auto & vertex0 = topology.vertex();
-    auto & vertex1 = topology.vertex();
-    auto & vertex2 = topology.vertex();
-    auto & vertex3 = topology.vertex();
+    auto vertex0 = topology.vertex();
+    auto vertex1 = topology.vertex();
+    auto vertex2 = topology.vertex();
+    auto vertex3 = topology.vertex();
 
     // build a segment connecting {vertex0} and {vertex1}
     auto segment0 = topology.segment({ vertex0, vertex1 });

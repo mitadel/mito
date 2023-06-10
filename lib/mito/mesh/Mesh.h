@@ -27,7 +27,7 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        inline Mesh(const geometry_t & geometry)
+        inline Mesh(geometry_t & geometry)
         requires(N <= D)
             : _geometry(geometry), _cells() {};
 
@@ -123,6 +123,9 @@ namespace mito::mesh {
             // erase the cell from the mesh
             _cells.erase(cell);
 
+            // ask the topology to erase the cell
+            _geometry.topology().template erase<D>(cell.id());
+
             // all done
             return;
         }
@@ -205,7 +208,7 @@ namespace mito::mesh {
 
       private:
         // a reference to the geometry where the cells are embedded
-        const geometry_t & _geometry;
+        geometry_t & _geometry;
 
         // container to store the mesh cells
         cells_t _cells;

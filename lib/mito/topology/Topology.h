@@ -65,7 +65,10 @@ namespace mito::topology {
 
         // returns whether the oriented simplex exists in the factory
         template <int D>
-        inline auto exists(const simplex_t<D> & simplex) const -> bool;
+        inline auto exists(const simplex_composition_t<D> & simplices) const -> bool;
+
+        // returns whether the segment exists in the factory
+        inline auto exists(const vertex_simplex_composition_t<1> & vertices) const -> bool;
 
         // returns whether there exists the flipped oriented simplex in the factory
         template <int D>
@@ -94,7 +97,7 @@ namespace mito::topology {
 
       public:
         template <int D>
-        inline auto erase(const simplex_t<D> & simplex) -> void;
+        inline auto erase(oriented_simplex_id_t<D> simplex_id) -> void;
 
       private:
         // factory for vertices

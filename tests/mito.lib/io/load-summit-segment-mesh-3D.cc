@@ -38,7 +38,6 @@ TEST(SummitReader, LoadSummitSegmentsMesh3D)
 
     // erase a simplex
     mesh.erase(segment);
-    topology.erase(segment);
 
     // assert you read 9 cells
     EXPECT_EQ(mesh.nCells(), 9);

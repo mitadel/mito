@@ -13,6 +13,62 @@ mito::topology::Topology::Topology() :
 
 mito::topology::Topology::~Topology() {};
 
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() -> oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() -> oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() -> oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() -> oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() const -> const oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() const -> const oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() const -> const oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
+
 template <int D>
 inline auto
 mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
@@ -90,13 +146,6 @@ mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & ve
 
 template <int D>
 inline auto
-mito::topology::Topology::exists(const simplex_t<D> & simplex) const -> bool
-{
-    return _get_factory<D>().existsOrientedSimplex(simplex->footprint(), simplex->orientation());
-}
-
-template <int D>
-inline auto
 mito::topology::Topology::exists_flipped(const simplex_t<D> & simplex) const -> bool
 {
     return _get_factory<D>().existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
@@ -157,10 +206,14 @@ requires(D > 0)
 
 template <int D>
 inline auto
-mito::topology::Topology::erase(const simplex_t<D> & simplex) -> void
+mito::topology::Topology::erase(oriented_simplex_id_t<D> simplex_id) -> void
 {
-    // if someone else (other than the topology) is still using this resource
-    if (simplex.references() > 1) {
+    // fetch the simplex from the id
+    auto simplex = _get_factory<D>().orientedSimplex(simplex_id);
+
+    // if someone else (other than the topology and the copy we just fetched) is still using this
+    // resource
+    if (simplex.references() > 2) {
         // do nothing
         return;
     }
@@ -169,67 +222,37 @@ mito::topology::Topology::erase(const simplex_t<D> & simplex) -> void
     return _erase(simplex);
 }
 
-template <>
-inline auto
-mito::topology::Topology::_get_factory<0>() -> oriented_simplex_factory_t<0> &
-{
-    return _vertex_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<1>() -> oriented_simplex_factory_t<1> &
-{
-    return _segment_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<2>() -> oriented_simplex_factory_t<2> &
-{
-    return _triangle_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<3>() -> oriented_simplex_factory_t<3> &
-{
-    return _tetrahedron_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<0>() const -> const oriented_simplex_factory_t<0> &
-{
-    return _vertex_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<1>() const -> const oriented_simplex_factory_t<1> &
-{
-    return _segment_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<2>() const -> const oriented_simplex_factory_t<2> &
-{
-    return _triangle_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
-{
-    return _tetrahedron_factory;
-}
-
 inline auto
 mito::topology::Topology::vertex() -> const vertex_t &
 {
     // ask the factory of vertices for an unoriented vertex
     return _get_factory<0>().vertex();
+}
+
+template <int D>
+inline auto
+mito::topology::Topology::exists(const simplex_composition_t<D> & simplices) const -> bool
+{
+    return _get_factory<D>().existsOrientedSimplex(simplices);
+}
+
+inline auto
+mito::topology::Topology::exists(const vertex_simplex_composition_t<1> & vertices) const -> bool
+{
+    // find left and right tip simplices
+    auto simplex_left_tip = _get_factory<0>().findOrientedSimplex(vertices[0], false);
+    auto simplex_right_tip = _get_factory<0>().findOrientedSimplex(vertices[1], true);
+
+    // if both are are found
+    if (!simplex_left_tip.is_nullptr() && !simplex_right_tip.is_nullptr()) {
+        // check if the oriented exists
+        return _get_factory<1>().existsOrientedSimplex({ simplex_left_tip, simplex_right_tip });
+    }
+    // if the tips do not exist
+    else {
+        // all done
+        return false;
+    }
 }
 
 #endif    // mito_topology_Topology_icc
