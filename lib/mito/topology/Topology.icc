@@ -150,10 +150,14 @@ requires(D > 0)
 
 template <int D>
 inline auto
-mito::topology::Topology::erase(const simplex_t<D> & simplex) -> void
+mito::topology::Topology::erase(oriented_simplex_id_t<D> simplex_id) -> void
 {
-    // if someone else (other than the topology) is still using this resource
-    if (simplex.references() > 1) {
+    // fetch the simplex from the id
+    auto simplex = _get_factory<D>().orientedSimplex(simplex_id);
+
+    // if someone else (other than the topology and the copy we just fetched) is still using this
+    // resource
+    if (simplex.references() > 2) {
         // do nothing
         return;
     }

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
+#include <stack>
 
 TEST(EraseElement, TestEraseElementMesh)
 {
@@ -399,47 +400,57 @@ TEST(EraseElement, TestEraseElementTopology)
     const auto & vertex_3 = topology.vertex();
     const auto & vertex_4 = topology.vertex();
 
-    const auto & segment_0 = topology.segment({ vertex_0, vertex_1 });
-    const auto & segment_1 = topology.segment({ vertex_1, vertex_3 });
-    const auto & segment_2 = topology.segment({ vertex_3, vertex_0 });
-    const auto & cell_0 = topology.triangle({ segment_0, segment_1, segment_2 });
+    // the pile of ids of cells to be erased
+    std::stack<mito::topology::triangle_id_t> pile;
+    {
+        const auto & segment_0 = topology.segment({ vertex_0, vertex_1 });
+        const auto & segment_1 = topology.segment({ vertex_1, vertex_3 });
+        const auto & segment_2 = topology.segment({ vertex_3, vertex_0 });
+        const auto & cell_0 = topology.triangle({ segment_0, segment_1, segment_2 });
 
-    const auto & segment_3 = topology.segment({ vertex_1, vertex_2 });
-    const auto & segment_4 = topology.segment({ vertex_2, vertex_3 });
-    const auto & segment_5 = topology.segment({ vertex_3, vertex_1 });
-    const auto & cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
+        const auto & segment_3 = topology.segment({ vertex_1, vertex_2 });
+        const auto & segment_4 = topology.segment({ vertex_2, vertex_3 });
+        const auto & segment_5 = topology.segment({ vertex_3, vertex_1 });
+        const auto & cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
 
-    const auto & segment_6 = topology.segment({ vertex_2, vertex_4 });
-    const auto & segment_7 = topology.segment({ vertex_4, vertex_3 });
-    const auto & segment_8 = topology.segment({ vertex_3, vertex_2 });
-    [[maybe_unused]] const auto & cell_2 = topology.triangle({ segment_6, segment_7, segment_8 });
+        const auto & segment_6 = topology.segment({ vertex_2, vertex_4 });
+        const auto & segment_7 = topology.segment({ vertex_4, vertex_3 });
+        const auto & segment_8 = topology.segment({ vertex_3, vertex_2 });
+        topology.triangle({ segment_6, segment_7, segment_8 });
 
-    const auto & segment_9 = topology.segment({ vertex_4, vertex_0 });
-    const auto & segment_10 = topology.segment({ vertex_0, vertex_3 });
-    const auto & segment_11 = topology.segment({ vertex_3, vertex_4 });
-    [[maybe_unused]] const auto & cell_3 = topology.triangle({ segment_9, segment_10, segment_11 });
+        const auto & segment_9 = topology.segment({ vertex_4, vertex_0 });
+        const auto & segment_10 = topology.segment({ vertex_0, vertex_3 });
+        const auto & segment_11 = topology.segment({ vertex_3, vertex_4 });
+        topology.triangle({ segment_9, segment_10, segment_11 });
 
-    // assert that {segment_5} (which is the flipped counterpart of {segment_1}) has a flipped
-    // counterpart in the topology (namely, {segment_1})
-    EXPECT_EQ(topology.exists_flipped(segment_5), true);
-    // idem for {segment_10} (which is the flipped counterpart of newly deleted {segment_2})
-    EXPECT_EQ(topology.exists_flipped(segment_10), true);
-    // idem for {segment_8} (which is the flipped counterpart of newly deleted {segment_4})
-    EXPECT_EQ(topology.exists_flipped(segment_8), true);
+        // push the id cells {cell_1} and {cell_0} to the pile of cells to be erased
+        pile.push(cell_1.id());
+        pile.push(cell_0.id());
+    }
+    // assert that a segment connecting vertex 1 and 3 exists in the topology (namely, {segment_1})
+    EXPECT_TRUE(topology.exists({ vertex_1, vertex_3 }));
+    // assert that a segment connecting vertex 3 and 0 exists in the topology (namely, {segment_2})
+    EXPECT_TRUE(topology.exists({ vertex_3, vertex_0 }));
+    // assert that a segment connecting vertex 2 and 3 exists in the topology (namely, {segment_4})
+    EXPECT_TRUE(topology.exists({ vertex_2, vertex_3 }));
 
-    // erase the cell with edges {segment_0, segment_1, segment_2}
-    topology.erase(cell_0);
+    // erase the top cell of the pile (namely, the cell with {segment_0, segment_1, segment_2})
+    topology.erase<2>(pile.top());
+    // pop the erased cell id
+    pile.pop();
 
-    // assert that {segment_5} (which is the flipped counterpart of newly deleted {segment_1}) does
-    // not have a flipped counterpart in the topology any longer
-    EXPECT_EQ(topology.exists_flipped(segment_5), false);
-    // idem for {segment_10} (which is the flipped counterpart of newly deleted {segment_2})
-    EXPECT_EQ(topology.exists_flipped(segment_10), false);
+    // assert that a segment connecting vertex 1 and 3 no longer exists in the topology
+    // ({segment_1} was erased because it is unused after erasing {cell_0})
+    EXPECT_FALSE(topology.exists({ vertex_1, vertex_3 }));
+    // assert that a segment connecting vertex 3 and 0 no longer exists in the topology
+    // ({segment_2} was also erased because unused after erasing {cell_0})
+    EXPECT_FALSE(topology.exists({ vertex_3, vertex_0 }));
 
-    // erase the cell with edges {segment_3, segment_4, segment_5}, which used to share the
-    // footprint of {segment_5} with {segment_1} of {cell_0}
-    topology.erase(cell_1);
-    // assert that {segment_8} (which is the flipped counterpart of newly deleted {segment_4}) does
-    // not have a flipped counterpart in the topology any longer
-    EXPECT_EQ(topology.exists_flipped(segment_8), false);
+    // erase the top cell of the pile (namely, the cell with {segment_0, segment_1, segment_2})
+    topology.erase<2>(pile.top());
+    // pop the erased cell id
+    pile.pop();
+    // assert that a segment connecting vertex 2 and 3 no longer exists in the topology
+    // ({segment_4} was erased because it is unused after erasing {cell_1})
+    EXPECT_FALSE(topology.exists({ vertex_2, vertex_3 }));
 }

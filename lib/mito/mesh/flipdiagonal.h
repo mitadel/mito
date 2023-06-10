@@ -110,7 +110,7 @@ namespace mito::mesh {
             }
         }
         boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase(subsimplex_to_erase);
+        topology.erase<D>(subsimplex_to_erase.id());
         assert(boundary_simplices.size() == 3);
 
         for (const auto & subsimplex : boundary_simplices) {
@@ -121,7 +121,7 @@ namespace mito::mesh {
             }
         }
         boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase(subsimplex_to_erase);
+        topology.erase<D>(subsimplex_to_erase.id());
         assert(boundary_simplices.size() == 2);
 
         assert(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
@@ -137,7 +137,7 @@ namespace mito::mesh {
             }
         }
         boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase(subsimplex_to_erase);
+        topology.erase<D>(subsimplex_to_erase.id());
         assert(boundary_simplices.size() == 1);
 
         for (const auto & subsimplex : boundary_simplices) {
@@ -148,7 +148,7 @@ namespace mito::mesh {
             }
         }
         boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase(subsimplex_to_erase);
+        topology.erase<D>(subsimplex_to_erase.id());
         assert(boundary_simplices.size() == 0);
 
         assert(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
@@ -159,11 +159,11 @@ namespace mito::mesh {
 
         mesh.insert(new_simplex0);
         mesh.erase(simplex0);
-        topology.erase(simplex0);
+        topology.erase<D>(simplex0.id());
 
         mesh.insert(new_simplex1);
         mesh.erase(simplex1);
-        topology.erase(simplex1);
+        topology.erase<D>(simplex1.id());
 
         // all done
         return;
