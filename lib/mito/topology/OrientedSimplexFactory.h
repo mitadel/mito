@@ -194,6 +194,13 @@ namespace mito::topology {
             return orientedSimplex(simplex, orientation);
         }
 
+        // get the oriented simplex corresponding to the id {simplex_id}
+        inline auto orientedSimplex(oriented_simplex_id_t<D> simplex_id) -> simplex_t<D>
+        {
+            // ask the simplices container for the resource corresponding to this id
+            return _oriented_simplices.resource(simplex_id);
+        }
+
         // instantiate a vertex
         inline auto vertex() -> const vertex_t &
         requires(D == 0)
