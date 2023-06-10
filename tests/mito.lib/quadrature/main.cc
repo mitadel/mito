@@ -27,9 +27,9 @@ TEST(Quadrature, IntegralsOnIntervals)
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
 
     // a mesh of the segment (0, 1)
-    auto & vertex0 = geometry.node({ 0.0 });
-    auto & vertex1 = geometry.node({ 1.0 });
-    auto & segment0 = topology.segment({ vertex0, vertex1 });
+    auto vertex0 = geometry.node({ 0.0 });
+    auto vertex1 = geometry.node({ 1.0 });
+    auto segment0 = topology.segment({ vertex0, vertex1 });
     mesh.insert(segment0);
     auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 12);
 
@@ -78,31 +78,31 @@ TEST(Quadrature, QuadratureBuildMesh)
     // an empty mesh of simplicial topology in 2D
     auto mesh_2D = mito::mesh::mesh<mito::topology::triangle_t, 2>(geometry);
 
-    auto & vertex0 = geometry.node({ 0.0, 0.0 });
-    auto & vertex1 = geometry.node({ 1.0, 0.0 });
-    auto & vertex2 = geometry.node({ 1.0, 1.0 });
-    auto & vertex3 = geometry.node({ 0.5, 0.5 });
-    auto & vertex4 = geometry.node({ 0.0, 1.0 });
+    auto vertex0 = geometry.node({ 0.0, 0.0 });
+    auto vertex1 = geometry.node({ 1.0, 0.0 });
+    auto vertex2 = geometry.node({ 1.0, 1.0 });
+    auto vertex3 = geometry.node({ 0.5, 0.5 });
+    auto vertex4 = geometry.node({ 0.0, 1.0 });
 
-    auto & segment0 = topology.segment({ vertex0, vertex1 });
-    auto & segment1 = topology.segment({ vertex1, vertex3 });
-    auto & segment2 = topology.segment({ vertex3, vertex0 });
-    auto & cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto segment0 = topology.segment({ vertex0, vertex1 });
+    auto segment1 = topology.segment({ vertex1, vertex3 });
+    auto segment2 = topology.segment({ vertex3, vertex0 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
 
-    auto & segment3 = topology.segment({ vertex1, vertex2 });
-    auto & segment4 = topology.segment({ vertex2, vertex3 });
-    auto & segment5 = topology.segment({ vertex3, vertex1 });
-    auto & cell1 = topology.triangle({ segment3, segment4, segment5 });
+    auto segment3 = topology.segment({ vertex1, vertex2 });
+    auto segment4 = topology.segment({ vertex2, vertex3 });
+    auto segment5 = topology.segment({ vertex3, vertex1 });
+    auto cell1 = topology.triangle({ segment3, segment4, segment5 });
 
-    auto & segment6 = topology.segment({ vertex2, vertex4 });
-    auto & segment7 = topology.segment({ vertex4, vertex3 });
-    auto & segment8 = topology.segment({ vertex3, vertex2 });
-    auto & cell2 = topology.triangle({ segment6, segment7, segment8 });
+    auto segment6 = topology.segment({ vertex2, vertex4 });
+    auto segment7 = topology.segment({ vertex4, vertex3 });
+    auto segment8 = topology.segment({ vertex3, vertex2 });
+    auto cell2 = topology.triangle({ segment6, segment7, segment8 });
 
-    auto & segment9 = topology.segment({ vertex4, vertex0 });
-    auto & segment10 = topology.segment({ vertex0, vertex3 });
-    auto & segment11 = topology.segment({ vertex3, vertex4 });
-    auto & cell3 = topology.triangle({ segment9, segment10, segment11 });
+    auto segment9 = topology.segment({ vertex4, vertex0 });
+    auto segment10 = topology.segment({ vertex0, vertex3 });
+    auto segment11 = topology.segment({ vertex3, vertex4 });
+    auto cell3 = topology.triangle({ segment9, segment10, segment11 });
 
     mesh_2D.insert(cell0);
     mesh_2D.insert(cell1);
@@ -272,9 +272,9 @@ TEST(Quadrature, FlipDomain)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // a segment
-    auto & vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto & vertex1 = geometry.node({ 1.0, 1.0, 1.0 });
-    auto & segment0 = topology.segment({ vertex0, vertex1 });
+    auto vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
+    auto vertex1 = geometry.node({ 1.0, 1.0, 1.0 });
+    auto segment0 = topology.segment({ vertex0, vertex1 });
 
     // the integrand
     auto f = mito::math::function([](const mito::vector_t<3> & x) { return cos(x[0] * x[1]); });

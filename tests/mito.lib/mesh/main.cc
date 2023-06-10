@@ -38,11 +38,11 @@ TEST(Mesh, BuildMesh)
     auto point3 = point_cloud.point({ 0.5, 0.5 });
     auto point4 = point_cloud.point({ 0.0, 1.0 });
 
-    auto & vertex0 = topology.vertex();
-    auto & vertex1 = topology.vertex();
-    auto & vertex2 = topology.vertex();
-    auto & vertex3 = topology.vertex();
-    auto & vertex4 = topology.vertex();
+    auto vertex0 = topology.vertex();
+    auto vertex1 = topology.vertex();
+    auto vertex2 = topology.vertex();
+    auto vertex3 = topology.vertex();
+    auto vertex4 = topology.vertex();
 
     // add nodes to geometry
     geometry.node(vertex0, point0);
@@ -51,25 +51,25 @@ TEST(Mesh, BuildMesh)
     geometry.node(vertex3, point3);
     geometry.node(vertex4, point4);
 
-    auto & segment0 = topology.segment({ vertex0, vertex1 });
-    auto & segment1 = topology.segment({ vertex1, vertex3 });
-    auto & segment2 = topology.segment({ vertex3, vertex0 });
-    auto & cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto segment0 = topology.segment({ vertex0, vertex1 });
+    auto segment1 = topology.segment({ vertex1, vertex3 });
+    auto segment2 = topology.segment({ vertex3, vertex0 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
 
-    auto & segment3 = topology.segment({ vertex1, vertex2 });
-    auto & segment4 = topology.segment({ vertex2, vertex3 });
-    auto & segment5 = topology.segment({ vertex3, vertex1 });
-    auto & cell1 = topology.triangle({ segment3, segment4, segment5 });
+    auto segment3 = topology.segment({ vertex1, vertex2 });
+    auto segment4 = topology.segment({ vertex2, vertex3 });
+    auto segment5 = topology.segment({ vertex3, vertex1 });
+    auto cell1 = topology.triangle({ segment3, segment4, segment5 });
 
-    auto & segment6 = topology.segment({ vertex2, vertex4 });
-    auto & segment7 = topology.segment({ vertex4, vertex3 });
-    auto & segment8 = topology.segment({ vertex3, vertex2 });
-    auto & cell2 = topology.triangle({ segment6, segment7, segment8 });
+    auto segment6 = topology.segment({ vertex2, vertex4 });
+    auto segment7 = topology.segment({ vertex4, vertex3 });
+    auto segment8 = topology.segment({ vertex3, vertex2 });
+    auto cell2 = topology.triangle({ segment6, segment7, segment8 });
 
-    auto & segment9 = topology.segment({ vertex4, vertex0 });
-    auto & segment10 = topology.segment({ vertex0, vertex3 });
-    auto & segment11 = topology.segment({ vertex3, vertex4 });
-    auto & cell3 = topology.triangle({ segment9, segment10, segment11 });
+    auto segment9 = topology.segment({ vertex4, vertex0 });
+    auto segment10 = topology.segment({ vertex0, vertex3 });
+    auto segment11 = topology.segment({ vertex3, vertex4 });
+    auto cell3 = topology.triangle({ segment9, segment10, segment11 });
 
     mesh.insert(cell0);
     mesh.insert(cell1);
@@ -111,11 +111,11 @@ TEST(Tetra, MeshSegment)
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
 
     // build nodes
-    auto & vertex0 = geometry.node({ 0.0 });
-    auto & vertex1 = geometry.node({ 1.0 });
+    auto vertex0 = geometry.node({ 0.0 });
+    auto vertex1 = geometry.node({ 1.0 });
 
     // build segment
-    auto & segment_a = topology.segment({ vertex0, vertex1 });
+    auto segment_a = topology.segment({ vertex0, vertex1 });
 
     // insert cells in the mesh
     mesh.insert(segment_a);
@@ -142,22 +142,22 @@ TEST(Tetra, MeshTwoTriangles)
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // build nodes
-    auto & vertex0 = geometry.node({ 0.0, 0.0 });
-    auto & vertex1 = geometry.node({ 1.0, 0.0 });
-    auto & vertex2 = geometry.node({ 1.0, 1.0 });
-    auto & vertex3 = geometry.node({ 0.0, 1.0 });
+    auto vertex0 = geometry.node({ 0.0, 0.0 });
+    auto vertex1 = geometry.node({ 1.0, 0.0 });
+    auto vertex2 = geometry.node({ 1.0, 1.0 });
+    auto vertex3 = geometry.node({ 0.0, 1.0 });
 
     // build segments
-    auto & segment_a = topology.segment({ vertex0, vertex1 });
-    auto & segment_b = topology.segment({ vertex1, vertex2 });
-    auto & segment_c = topology.segment({ vertex2, vertex3 });
-    auto & segment_d = topology.segment({ vertex3, vertex0 });
-    auto & segment_e = topology.segment({ vertex0, vertex2 });
-    auto & segment_e_flip = topology.flip(segment_e);
+    auto segment_a = topology.segment({ vertex0, vertex1 });
+    auto segment_b = topology.segment({ vertex1, vertex2 });
+    auto segment_c = topology.segment({ vertex2, vertex3 });
+    auto segment_d = topology.segment({ vertex3, vertex0 });
+    auto segment_e = topology.segment({ vertex0, vertex2 });
+    auto segment_e_flip = topology.flip(segment_e);
 
     // build triangles
-    auto & simplex0 = topology.triangle({ segment_a, segment_b, segment_e_flip });
-    auto & simplex1 = topology.triangle({ segment_e, segment_c, segment_d });
+    auto simplex0 = topology.triangle({ segment_a, segment_b, segment_e_flip });
+    auto simplex1 = topology.triangle({ segment_e, segment_c, segment_d });
 
     // insert cells in the mesh
     mesh.insert(simplex0);
@@ -278,13 +278,13 @@ TEST(Tetra, ZeroSubdivisions)
     auto mesh = mito::mesh::mesh<mito::topology::tetrahedron_t>(geometry);
 
     // vertices for one single tetrahedron
-    auto & vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto & vertex1 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto & vertex2 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto & vertex3 = geometry.node({ 0.0, 0.0, 1.0 });
+    auto vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
+    auto vertex1 = geometry.node({ 1.0, 0.0, 0.0 });
+    auto vertex2 = geometry.node({ 0.0, 1.0, 0.0 });
+    auto vertex3 = geometry.node({ 0.0, 0.0, 1.0 });
 
     // build the tetrahedron
-    const auto & cell = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
+    const auto cell = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
 
     // insert cell in the mesh
     mesh.insert(cell);

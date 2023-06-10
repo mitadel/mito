@@ -15,36 +15,36 @@ TEST(EraseElement, TestEraseElementMesh)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // ask the geometry for new nodes (this instantiates a new vertex and attaches it to the point)
-    auto & vertex0 = geometry.node({ 0.0, 0.0 });
+    auto vertex0 = geometry.node({ 0.0, 0.0 });
     // or equivalently
     // auto & vertex0 = topology.vertex();
     // auto point0 = point_cloud.point({ 0.0, 0.0 });
     // geometry.node(vertex0, point0);
-    auto & vertex1 = geometry.node({ 1.0, 0.0 });
-    auto & vertex2 = geometry.node({ 1.0, 1.0 });
-    auto & vertex3 = geometry.node({ 0.5, 0.5 });
-    auto & vertex4 = geometry.node({ 0.0, 1.0 });
+    auto vertex1 = geometry.node({ 1.0, 0.0 });
+    auto vertex2 = geometry.node({ 1.0, 1.0 });
+    auto vertex3 = geometry.node({ 0.5, 0.5 });
+    auto vertex4 = geometry.node({ 0.0, 1.0 });
 
     // ask the topology for segments connecting the vertices of the nodes above
-    auto & segment0 = topology.segment({ vertex0, vertex1 });
-    auto & segment1 = topology.segment({ vertex1, vertex3 });
-    auto & segment2 = topology.segment({ vertex3, vertex0 });
-    auto & cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto segment0 = topology.segment({ vertex0, vertex1 });
+    auto segment1 = topology.segment({ vertex1, vertex3 });
+    auto segment2 = topology.segment({ vertex3, vertex0 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
 
-    auto & segment3 = topology.segment({ vertex1, vertex2 });
-    auto & segment4 = topology.segment({ vertex2, vertex3 });
-    auto & segment5 = topology.segment({ vertex3, vertex1 });
-    auto & cell1 = topology.triangle({ segment3, segment4, segment5 });
+    auto segment3 = topology.segment({ vertex1, vertex2 });
+    auto segment4 = topology.segment({ vertex2, vertex3 });
+    auto segment5 = topology.segment({ vertex3, vertex1 });
+    auto cell1 = topology.triangle({ segment3, segment4, segment5 });
 
-    auto & segment6 = topology.segment({ vertex2, vertex4 });
-    auto & segment7 = topology.segment({ vertex4, vertex3 });
-    auto & segment8 = topology.segment({ vertex3, vertex2 });
-    auto & cell2 = topology.triangle({ segment6, segment7, segment8 });
+    auto segment6 = topology.segment({ vertex2, vertex4 });
+    auto segment7 = topology.segment({ vertex4, vertex3 });
+    auto segment8 = topology.segment({ vertex3, vertex2 });
+    auto cell2 = topology.triangle({ segment6, segment7, segment8 });
 
-    auto & segment9 = topology.segment({ vertex4, vertex0 });
-    auto & segment10 = topology.segment({ vertex0, vertex3 });
-    auto & segment11 = topology.segment({ vertex3, vertex4 });
-    auto & cell3 = topology.triangle({ segment9, segment10, segment11 });
+    auto segment9 = topology.segment({ vertex4, vertex0 });
+    auto segment10 = topology.segment({ vertex0, vertex3 });
+    auto segment11 = topology.segment({ vertex3, vertex4 });
+    auto cell3 = topology.triangle({ segment9, segment10, segment11 });
 
     // an empty mesh of triangles in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
@@ -118,33 +118,33 @@ TEST(EraseElement, TestEraseElementTopology)
     // an empty topology
     auto & topology = mito::topology::topology();
 
-    const auto & vertex_0 = topology.vertex();
-    const auto & vertex_1 = topology.vertex();
-    const auto & vertex_2 = topology.vertex();
-    const auto & vertex_3 = topology.vertex();
-    const auto & vertex_4 = topology.vertex();
+    auto vertex_0 = topology.vertex();
+    auto vertex_1 = topology.vertex();
+    auto vertex_2 = topology.vertex();
+    auto vertex_3 = topology.vertex();
+    auto vertex_4 = topology.vertex();
 
     // the pile of ids of cells to be erased
     std::stack<mito::topology::triangle_id_t> pile;
     {
-        const auto & segment_0 = topology.segment({ vertex_0, vertex_1 });
-        const auto & segment_1 = topology.segment({ vertex_1, vertex_3 });
-        const auto & segment_2 = topology.segment({ vertex_3, vertex_0 });
-        const auto & cell_0 = topology.triangle({ segment_0, segment_1, segment_2 });
+        auto segment_0 = topology.segment({ vertex_0, vertex_1 });
+        auto segment_1 = topology.segment({ vertex_1, vertex_3 });
+        auto segment_2 = topology.segment({ vertex_3, vertex_0 });
+        auto cell_0 = topology.triangle({ segment_0, segment_1, segment_2 });
 
-        const auto & segment_3 = topology.segment({ vertex_1, vertex_2 });
-        const auto & segment_4 = topology.segment({ vertex_2, vertex_3 });
-        const auto & segment_5 = topology.segment({ vertex_3, vertex_1 });
-        const auto & cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
+        auto segment_3 = topology.segment({ vertex_1, vertex_2 });
+        auto segment_4 = topology.segment({ vertex_2, vertex_3 });
+        auto segment_5 = topology.segment({ vertex_3, vertex_1 });
+        auto cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
 
-        const auto & segment_6 = topology.segment({ vertex_2, vertex_4 });
-        const auto & segment_7 = topology.segment({ vertex_4, vertex_3 });
-        const auto & segment_8 = topology.segment({ vertex_3, vertex_2 });
+        auto segment_6 = topology.segment({ vertex_2, vertex_4 });
+        auto segment_7 = topology.segment({ vertex_4, vertex_3 });
+        auto segment_8 = topology.segment({ vertex_3, vertex_2 });
         topology.triangle({ segment_6, segment_7, segment_8 });
 
-        const auto & segment_9 = topology.segment({ vertex_4, vertex_0 });
-        const auto & segment_10 = topology.segment({ vertex_0, vertex_3 });
-        const auto & segment_11 = topology.segment({ vertex_3, vertex_4 });
+        auto segment_9 = topology.segment({ vertex_4, vertex_0 });
+        auto segment_10 = topology.segment({ vertex_0, vertex_3 });
+        auto segment_11 = topology.segment({ vertex_3, vertex_4 });
         topology.triangle({ segment_9, segment_10, segment_11 });
 
         // push the id cells {cell_1} and {cell_0} to the pile of cells to be erased
