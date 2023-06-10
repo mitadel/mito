@@ -54,13 +54,13 @@ namespace mito::topology {
             auto simplex = _simplex_factory.findSimplex(composition);
 
             // if the footprint exists, then check if the oriented simplex exists
-            if (simplex) {
+            if (!simplex.is_nullptr()) {
                 // compute the orientation of the current composition with respect to the
                 // representative
-                bool orientation = _orientation(composition, *simplex);
+                bool orientation = _orientation(composition, simplex);
 
                 // check if the simplex exists with the orientation associated with this composition
-                return existsOrientedSimplex(*simplex, orientation);
+                return existsOrientedSimplex(simplex, orientation);
             }
             // if the footprint does not exist, then the oriented simplex cannot exist
             else {
@@ -77,34 +77,34 @@ namespace mito::topology {
 
             // if there exists an oriented simplex riding on {simplex} with orientation
             // {orientation}
-            return orientedSimplex ? true : false;
+            return orientedSimplex.is_nullptr() ? false : true;
         }
 
         inline auto findOrientedSimplex(const simplex_composition_t<D> & composition) const
-            -> const simplex_t<D> *
+            -> simplex_t<D>
         {
             // find the representative of simplices with composition {composition} from the
             // factory
             auto simplex = _simplex_factory.findSimplex(composition);
 
             // if the footprint is found, then find the oriented simplex that uses it
-            if (simplex) {
+            if (!simplex.is_nullptr()) {
                 // compute the orientation of the current composition with respect to the
                 // representative
-                bool orientation = _orientation(composition, *simplex);
+                bool orientation = _orientation(composition, simplex);
 
                 // find oriented simplex with the given footprint and orientation
-                return findOrientedSimplex(*simplex, orientation);
+                return findOrientedSimplex(simplex, orientation);
             }
             // if the footprint is not found, then there is no oriented simplex
             else {
-                // all done
-                return nullptr;
+                // return a shared pointer wrapper around {nullptr}
+                return simplex_t<D>();
             }
         }
 
         inline auto findOrientedSimplex(
-            const unoriented_simplex_t<D> & simplex, bool orientation) const -> const simplex_t<D> *
+            const unoriented_simplex_t<D> & simplex, bool orientation) const -> simplex_t<D>
         {
             // bind the footprint and the orientation in a tuple
             auto tuple = std::make_tuple(simplex.id(), orientation);
@@ -116,12 +116,12 @@ namespace mito::topology {
             // {orientation}
             if (it_find != _orientations.end()) {
                 // return it
-                return &(it_find->second);
+                return it_find->second;
             }
             // if not found
             else {
-                // all done
-                return nullptr;
+                // return a shared pointer wrapper around {nullptr}
+                return simplex_t<D>();
             }
         }
 
@@ -132,20 +132,20 @@ namespace mito::topology {
         inline auto orientedSimplex(const unoriented_simplex_t<D> & simplex, bool orientation)
             -> const simplex_t<D> &
         {
-            // find oriented simplex with the given footprint and orientation
-            auto orientedSimplex = findOrientedSimplex(simplex, orientation);
+            // bind the footprint and the orientation in a tuple
+            auto tuple = std::make_tuple(simplex.id(), orientation);
+
+            // look up the tuple in the orientation map
+            auto it_find = _orientations.find(tuple);
 
             // if an oriented simplex riding on simplex {simplex} with orientation {orientation}
             // is already registered in the map
-            if (orientedSimplex) {
+            if (it_find != _orientations.end()) {
                 // then return it
-                return *orientedSimplex;
+                return it_find->second;
             }
             // otherwise
             else {
-                // bind the footprint and the orientation in a tuple
-                auto tuple = std::make_tuple(simplex.id(), orientation);
-
                 // create a new oriented simplex riding on simplex {simplex} with orientation
                 // {orientation} and register it in the map
                 auto it = _orientations.insert(

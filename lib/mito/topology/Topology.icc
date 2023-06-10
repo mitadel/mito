@@ -244,12 +244,12 @@ mito::topology::Topology::exists(const vertex_simplex_composition_t<1> & vertice
     auto simplex_right_tip = _get_factory<0>().findOrientedSimplex(vertices[1], true);
 
     // if both are are found
-    if (simplex_left_tip && simplex_right_tip) {
+    if (!simplex_left_tip.is_nullptr() && !simplex_right_tip.is_nullptr()) {
         // check if the oriented exists
-        return _get_factory<1>().existsOrientedSimplex({ *simplex_left_tip, *simplex_right_tip });
-    } else
-    // if the tips do not exists
-    {
+        return _get_factory<1>().existsOrientedSimplex({ simplex_left_tip, simplex_right_tip });
+    }
+    // if the tips do not exist
+    else {
         // all done
         return false;
     }
