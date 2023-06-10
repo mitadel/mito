@@ -13,6 +13,62 @@ mito::topology::Topology::Topology() :
 
 mito::topology::Topology::~Topology() {};
 
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() -> oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() -> oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() -> oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() -> oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<0>() const -> const oriented_simplex_factory_t<0> &
+{
+    return _vertex_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<1>() const -> const oriented_simplex_factory_t<1> &
+{
+    return _segment_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<2>() const -> const oriented_simplex_factory_t<2> &
+{
+    return _triangle_factory;
+}
+
+template <>
+inline auto
+mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
+{
+    return _tetrahedron_factory;
+}
+
 template <int D>
 inline auto
 mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
@@ -164,62 +220,6 @@ mito::topology::Topology::erase(oriented_simplex_id_t<D> simplex_id) -> void
 
     // otherwise, erase the simplex
     return _erase(simplex);
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<0>() -> oriented_simplex_factory_t<0> &
-{
-    return _vertex_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<1>() -> oriented_simplex_factory_t<1> &
-{
-    return _segment_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<2>() -> oriented_simplex_factory_t<2> &
-{
-    return _triangle_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<3>() -> oriented_simplex_factory_t<3> &
-{
-    return _tetrahedron_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<0>() const -> const oriented_simplex_factory_t<0> &
-{
-    return _vertex_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<1>() const -> const oriented_simplex_factory_t<1> &
-{
-    return _segment_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<2>() const -> const oriented_simplex_factory_t<2> &
-{
-    return _triangle_factory;
-}
-
-template <>
-inline auto
-mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
-{
-    return _tetrahedron_factory;
 }
 
 inline auto
