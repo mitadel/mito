@@ -159,11 +159,9 @@ namespace mito::mesh {
 
         mesh.insert(new_simplex0);
         mesh.erase(simplex0);
-        topology.erase<D>(simplex0.id());
 
         mesh.insert(new_simplex1);
         mesh.erase(simplex1);
-        topology.erase<D>(simplex1.id());
 
         // all done
         return;
