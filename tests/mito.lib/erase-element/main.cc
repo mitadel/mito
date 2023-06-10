@@ -101,17 +101,17 @@ TEST(EraseElement, TestEraseElementTopology)
     /**
      * Mesh with four cells:
     (0,1)           (1,1)
-      4               2
+      4       6       2
       +---------------+
-      | .           . |
-      |   .       .   |
+      | .     2     . |
+      | 11.7     8.4  |
       |     .   .     |
-      |       . 3     |
+    9 |  3    +3   1  | 3
       |     .   .     |
-      |   .       .   |
-      | .           . |
+      | 10.2     1.5  |
+      | .     0     . |
       +---------------+
-      0               1
+      0       0       1
     (0,0)           (1,0)
     */
 
@@ -151,6 +151,8 @@ TEST(EraseElement, TestEraseElementTopology)
         pile.push(cell_1.id());
         pile.push(cell_0.id());
     }
+    // assert that a segment connecting vertex 0 and 1 exists in the topology  (namely, {segment_0})
+    EXPECT_TRUE(topology.exists({ vertex_0, vertex_1 }));
     // assert that a segment connecting vertex 1 and 3 exists in the topology (namely, {segment_1})
     EXPECT_TRUE(topology.exists({ vertex_1, vertex_3 }));
     // assert that a segment connecting vertex 3 and 0 exists in the topology (namely, {segment_2})
@@ -163,6 +165,9 @@ TEST(EraseElement, TestEraseElementTopology)
     // pop the erased cell id
     pile.pop();
 
+    // assert that a segment connecting vertex 0 and 1 no longer exists in the topology
+    // ({segment_0} was erased because it is unused after erasing {cell_0})
+    EXPECT_FALSE(topology.exists({ vertex_0, vertex_1 }));
     // assert that a segment connecting vertex 1 and 3 no longer exists in the topology
     // ({segment_1} was erased because it is unused after erasing {cell_0})
     EXPECT_FALSE(topology.exists({ vertex_1, vertex_3 }));
@@ -170,10 +175,17 @@ TEST(EraseElement, TestEraseElementTopology)
     // ({segment_2} was also erased because unused after erasing {cell_0})
     EXPECT_FALSE(topology.exists({ vertex_3, vertex_0 }));
 
-    // erase the top cell of the pile (namely, the cell with {segment_0, segment_1, segment_2})
+    // erase the top cell of the pile (namely, the cell with {segment_3, segment_4, segment_5})
     topology.erase<2>(pile.top());
     // pop the erased cell id
     pile.pop();
+
+    // assert that a segment connecting vertex 1 and 2 no longer exists in the topology
+    // ({segment_3} was erased because it is unused after erasing {cell_1})
+    EXPECT_FALSE(topology.exists({ vertex_1, vertex_2 }));
+    // assert that a segment connecting vertex 3 and 1 no longer exists in the topology
+    // ({segment_5} was erased because it is unused after erasing {cell_1})
+    EXPECT_FALSE(topology.exists({ vertex_3, vertex_1 }));
     // assert that a segment connecting vertex 2 and 3 no longer exists in the topology
     // ({segment_4} was erased because it is unused after erasing {cell_1})
     EXPECT_FALSE(topology.exists({ vertex_2, vertex_3 }));
