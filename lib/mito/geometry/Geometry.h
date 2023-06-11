@@ -66,6 +66,12 @@ namespace mito::geometry {
         // const accessor for topology
         inline auto topology() const -> const topology_t & { return _topology; }
 
+        // accessor for point cloud
+        inline auto point_cloud() -> point_cloud_t<D> & { return _point_cloud; }
+
+        // const accessor for point cloud
+        inline auto point_cloud() const -> const point_cloud_t<D> & { return _point_cloud; }
+
       private:
         // the collection of nodes
         nodes_t<D> _nodes;
