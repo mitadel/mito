@@ -150,7 +150,35 @@ namespace mito::mesh {
          * @brief Returns a mesh with all boundary cells of dimension I
          */
         template <int I = N - 1>
-        inline auto boundary() -> Mesh<cell_family_t<I>, D>
+        inline auto boundary_size() const -> int
+        requires(I >= 0)
+        {
+            // number of boundary cells
+            int count = 0;
+
+            // loop on the (N-1)-dimensional cells
+            for (const auto & cell : cells()) {
+                // loop on the subcells of {cell}
+                for (const auto & subcell : cell->composition()) {
+                    // if {subcell} does not have a counterpart in {topology} with opposite
+                    // orientation
+                    if (isOnBoundary(subcell)) {
+                        // increment counter for boundary cells
+                        ++count;
+                    }
+                }
+            }
+
+            // return the count of boundary cells
+            return count;
+        }
+
+        /**
+         * @brief Returns a mesh with all boundary cells of dimension I
+         */
+        // TOFIX: should this be const?
+        template <int I = N - 1>
+        inline auto boundary() const -> Mesh<cell_family_t<I>, D>
         requires(I >= 0)
         {
             // instantiate a new mesh for the boundary elements
