@@ -49,7 +49,7 @@ namespace mito::mesh {
       private:
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) -> void
+            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
         requires(I == J)
         {
             // add {subcell} to the boundary mesh
@@ -61,7 +61,7 @@ namespace mito::mesh {
 
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) -> void
+            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
         requires(I < J)
         {
             // loop on the subcells of {cell}
@@ -75,7 +75,7 @@ namespace mito::mesh {
         }
 
       public:
-        inline auto sanityCheck() -> bool
+        inline auto sanityCheck() const -> bool
         {
 #if 0
             // print summary
@@ -130,12 +130,12 @@ namespace mito::mesh {
             return;
         }
 
-        inline auto isOnBoundary(const cell_family_t<N - 1> & cell) -> bool
+        inline auto isOnBoundary(const cell_family_t<N - 1> & cell) const -> bool
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
-            (!cell->orientation() ? count = _orientations[cell->footprint().id()][0] :
-                                    count = _orientations[cell->footprint().id()][1]);
+            (!cell->orientation() ? count = _orientations.at(cell->footprint().id())[0] :
+                                    count = _orientations.at(cell->footprint().id())[1]);
 
             // the cell is on the boundary if it never occurs in the mesh with opposite
             // orientation

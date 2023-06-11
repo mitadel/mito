@@ -46,7 +46,7 @@ namespace mito::geometry {
         inline auto begin() -> const auto & { return _cloud.cbegin(); }
         inline auto end() -> const auto & { return _cloud.cend(); }
 
-        auto size() -> int { return _cloud.size(); }
+        auto size() const -> int { return _cloud.size(); }
 
         // example use: cloud.point({0.0, ..., 0.0})
         auto point(vector_t<D> && coord) -> const point_t<D> &
