@@ -40,7 +40,7 @@ jobs:
           echo " -- upgrade"
           sudo apt dist-upgrade
           echo " -- install our dependencies"
-          sudo apt install -y make cmake libgtest-dev libvtk9-dev
+          sudo apt install -y make cmake libgtest-dev libvtk9-dev valgrind
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -155,6 +155,14 @@ jobs:
           ctest --output-on-failure -E postgres.ext
         working-directory: ${{runner.temp}}/build
       
+      - name: run valgrind
+        run: |
+          echo " -- run valgrind on benchmark test"
+          valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --xml=yes --xml-file=memcheck.xml --leak-resolution=high --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes --log-file='valgrind.txt' -v ./benchmarks/benchmarks.mito.lib.integration.integration
+          echo " -- check valgrind output"
+          python3 ${{github.workspace}}/mito/benchmarks/mito.lib/integration/check_valgrind.py
+        working-directory: ${{runner.temp}}/build
+
       - name: create artifact
         if: always()
         uses: actions/upload-artifact@v3
