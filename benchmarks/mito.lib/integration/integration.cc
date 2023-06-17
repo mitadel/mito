@@ -1,4 +1,3 @@
-
 #include <mito/mito.h>
 
 int
