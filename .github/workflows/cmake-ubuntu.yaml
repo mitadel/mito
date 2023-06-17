@@ -160,7 +160,7 @@ jobs:
           echo " -- run valgrind on benchmark test"
           valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --xml=yes --xml-file=memcheck.xml --leak-resolution=high --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes --log-file='valgrind.txt' -v ./benchmarks/benchmarks.mito.lib.integration.integration
           echo " -- check valgrind output"
-          python3 ${{github.workspace}}/mito/benchmarks/mito.lib/integration/check_valgrind.py
+          python3 ${{github.workspace}}/mito/scripts/check_valgrind.py
         working-directory: ${{runner.temp}}/build
 
       - name: create artifact
