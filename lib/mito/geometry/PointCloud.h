@@ -43,8 +43,8 @@ namespace mito::geometry {
         }
 
         // support for ranged for loops (wrapping grid)
-        inline auto begin() -> const auto & { return _cloud.cbegin(); }
-        inline auto end() -> const auto & { return _cloud.cend(); }
+        inline auto begin() -> const auto & { return std::cbegin(_cloud); }
+        inline auto end() -> const auto & { return std::cend(_cloud); }
 
         auto size() -> int { return std::size(_cloud); }
 

@@ -101,7 +101,8 @@ namespace mito::manifolds {
             // collect vertices
             topology::vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
+            topology::vertex_vector_t element_vertices(
+                std::begin(vertices_set), std::end(vertices_set));
 
             // assert the size of vertices container is equal to the number of element vertices
             assert(std::size(element_vertices) == /*number of element vertices*/ 2);
@@ -149,7 +150,8 @@ namespace mito::manifolds {
             // collect vertices
             topology::vertex_set_t vertices_set;
             element->vertices(vertices_set);
-            topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
+            topology::vertex_vector_t element_vertices(
+                std::begin(vertices_set), std::end(vertices_set));
 
             // compute lengths of three edges
             std::array<real, 3> edges_lengths;
@@ -164,7 +166,7 @@ namespace mito::manifolds {
                 vertices.find(element_vertices[2])->second);
 
             // sort edges lengths in ascending order
-            std::sort(edges_lengths.begin(), edges_lengths.end());
+            std::sort(std::begin(edges_lengths), std::end(edges_lengths));
 
             // a >= b >= c
             real a = edges_lengths[2];

@@ -91,7 +91,7 @@ namespace mito::topology {
 
             // if there exists an oriented simplex riding on {simplex} with orientation
             // {orientation}
-            if (it_find != _orientations.end()) {
+            if (it_find != std::end(_orientations)) {
                 // return it
                 return it_find->second;
             }
@@ -117,7 +117,7 @@ namespace mito::topology {
 
             // if an oriented simplex riding on simplex {simplex} with orientation {orientation}
             // is already registered in the map
-            if (it_find != _orientations.end()) {
+            if (it_find != std::end(_orientations)) {
                 // then return it
                 return it_find->second;
             }
@@ -274,8 +274,9 @@ namespace mito::topology {
             auto composition_copy =
                 oriented_simplex_array_t { composition[0].id(), composition[1].id(),
                                            composition[2].id() };
-            auto first_simplex = std::min_element(composition_copy.begin(), composition_copy.end());
-            std::rotate(composition_copy.begin(), first_simplex, composition_copy.end());
+            auto first_simplex =
+                std::min_element(std::begin(composition_copy), std::end(composition_copy));
+            std::rotate(std::begin(composition_copy), first_simplex, std::end(composition_copy));
 
             // return rotated composition
             return composition_copy;

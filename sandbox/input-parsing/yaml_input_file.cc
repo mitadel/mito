@@ -64,7 +64,7 @@ YAMLInputFile::Display() const
     std::cout << "------------------------------------------------------------" << std::endl;
 
     // loop on file
-    for (YAML::const_iterator it = _file.begin(); it != _file.end(); ++it) {
+    for (YAML::const_iterator it = std::begin(_file); it != std::end(_file); ++it) {
         try {
             it->second.as<real>();
         } catch (...) {

@@ -33,7 +33,7 @@ namespace mito::manifolds {
 
       public:
         inline Manifold(mesh_t & mesh) :
-            _elements(mesh.cells().begin(), mesh.cells().end()),
+            _elements(std::begin(mesh.cells()), std::end(mesh.cells())),
             _vertices(mesh.geometry().nodes()),
             _jacobians(std::size(_elements), 0.0)
         {

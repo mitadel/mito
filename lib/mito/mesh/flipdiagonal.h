@@ -47,12 +47,12 @@ namespace mito::mesh {
 
         vertex_set_t opposite_vertices;
         std::set_difference(
-            vertices.begin(), vertices.end(), shared_simplex_vertices.begin(),
-            shared_simplex_vertices.end(),
-            std::inserter(opposite_vertices, opposite_vertices.end()));
+            std::begin(vertices), std::end(vertices), std::begin(shared_simplex_vertices),
+            std::end(shared_simplex_vertices),
+            std::inserter(opposite_vertices, std::end(opposite_vertices)));
 
         topology::vertex_vector_t opposite_vertices_vector(
-            opposite_vertices.begin(), opposite_vertices.end());
+            std::begin(opposite_vertices), std::end(opposite_vertices));
         assert(std::size(opposite_vertices) == 2);
 
         return opposite_vertices_vector;
@@ -101,7 +101,7 @@ namespace mito::mesh {
         topology::simplex_composition_t<2> new_simplex_composition_0;
         new_simplex_composition_0[0] = diagonal_segment;
 
-        topology::simplex_t<1> subsimplex_to_erase = *boundary_simplices.begin();
+        topology::simplex_t<1> subsimplex_to_erase = *std::begin(boundary_simplices);
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
                 new_simplex_composition_0[1] = subsimplex;
