@@ -1,4 +1,3 @@
-
 // get array
 #include <array>
 #include <cstdlib>
