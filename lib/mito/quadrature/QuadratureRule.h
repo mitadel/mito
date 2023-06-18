@@ -58,7 +58,7 @@ namespace mito::quadrature {
         };
 
         // the number of quadrature weights
-        constexpr auto Q = quadrature_rule.size();
+        constexpr auto Q = std::size(quadrature_rule);
         // have the compiler compute the sum of the quadrature weights
         constexpr double weightsSum = sum.template operator()<Q>();
         // assert the quadrature weights are a partition of unity

@@ -35,7 +35,7 @@ namespace mito::manifolds {
         inline Manifold(mesh_t & mesh) :
             _elements(mesh.cells().begin(), mesh.cells().end()),
             _vertices(mesh.geometry().nodes()),
-            _jacobians(_elements.size(), 0.0)
+            _jacobians(std::size(_elements), 0.0)
         {
             // compute the jacobians of the map from reference to current element for each element
             _computeJacobians();
@@ -73,7 +73,7 @@ namespace mito::manifolds {
         }
 
         inline auto elements() const -> const element_vector_t<cell_t> & { return _elements; }
-        inline auto nElements() const -> int { return _elements.size(); }
+        inline auto nElements() const -> int { return std::size(_elements); }
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
         inline auto coordinatesVertex(const vertex_t & v) const -> const vector_t<D> &
         {

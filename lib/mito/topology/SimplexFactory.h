@@ -45,7 +45,7 @@ namespace mito::topology {
         // destructor
         ~SimplexFactory()
         {
-            if (_simplices.size() > 0) {
+            if (std::size(_simplices) > 0) {
                 for (const auto & simplex : _simplices) {
                     simplex->~Simplex<D>();
                 }
@@ -213,7 +213,7 @@ namespace mito::topology {
         // destructor
         ~SimplexFactory()
         {
-            if (_simplices.size() > 0) {
+            if (std::size(_simplices) > 0) {
                 for (const auto & simplex : _simplices) {
                     simplex->~Simplex<0>();
                 }

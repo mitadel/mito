@@ -23,7 +23,7 @@ namespace mito::geometry {
         // destructor
         ~PointCloud()
         {
-            if (_cloud.size() > 0) {
+            if (std::size(_cloud) > 0) {
                 for (const auto & point : _cloud) {
                     point->~Point<D>();
                 }
@@ -46,7 +46,7 @@ namespace mito::geometry {
         inline auto begin() -> const auto & { return _cloud.cbegin(); }
         inline auto end() -> const auto & { return _cloud.cend(); }
 
-        auto size() -> int { return _cloud.size(); }
+        auto size() -> int { return std::size(_cloud); }
 
         // example use: cloud.point({0.0, ..., 0.0})
         auto point(vector_t<D> && coord) -> const point_t<D> &

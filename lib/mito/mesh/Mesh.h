@@ -80,7 +80,7 @@ namespace mito::mesh {
 #if 0
             // print summary
             std::cout << "Mesh composition: " << std::endl;
-            std::cout << _cells.size() << " cells embedded in " << D << " dimension " << std::endl;
+            std::cout << std::size(_cells) << " cells embedded in " << D << " dimension " << std::endl;
 #endif
 
             // sanity check: each cell is self-consistent
@@ -96,7 +96,7 @@ namespace mito::mesh {
         inline auto nCells() const -> int
         {
             // all done
-            return _cells.size();
+            return std::size(_cells);
         }
 
         inline auto cells() const -> const cells_t &

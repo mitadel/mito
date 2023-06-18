@@ -278,7 +278,7 @@ namespace mito::io::summit {
 
         // sanity check: the number of vertices in the map is N_vertices
         vertices.shrink_to_fit();
-        assert(vertices.size() == static_cast<size_t>(N_vertices));
+        assert(std::size(vertices) == static_cast<size_t>(N_vertices));
 
         // sanity check: the number of cells of highest dimension in the map is N_cells
         assert(mesh.nCells() == N_cells);

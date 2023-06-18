@@ -53,7 +53,7 @@ namespace mito::mesh {
 
         topology::vertex_vector_t opposite_vertices_vector(
             opposite_vertices.begin(), opposite_vertices.end());
-        assert(opposite_vertices.size() == 2);
+        assert(std::size(opposite_vertices) == 2);
 
         return opposite_vertices_vector;
     }
@@ -88,7 +88,7 @@ namespace mito::mesh {
                 boundary_simplices.insert(subsimplex);
             }
         }
-        assert(boundary_simplices.size() == 2);
+        assert(std::size(boundary_simplices) == 2);
         // get boundary simplices of simplex1 (all except diagonal)
         for (const auto & subsimplex : simplex1->composition()) {
             // if it is not the shared simplex
@@ -96,7 +96,7 @@ namespace mito::mesh {
                 boundary_simplices.insert(subsimplex);
             }
         }
-        assert(boundary_simplices.size() == 4);
+        assert(std::size(boundary_simplices) == 4);
 
         topology::simplex_composition_t<2> new_simplex_composition_0;
         new_simplex_composition_0[0] = diagonal_segment;
@@ -111,7 +111,7 @@ namespace mito::mesh {
         }
         boundary_simplices.erase(subsimplex_to_erase);
         topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 3);
+        assert(std::size(boundary_simplices) == 3);
 
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
@@ -122,7 +122,7 @@ namespace mito::mesh {
         }
         boundary_simplices.erase(subsimplex_to_erase);
         topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 2);
+        assert(std::size(boundary_simplices) == 2);
 
         assert(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
 
@@ -138,7 +138,7 @@ namespace mito::mesh {
         }
         boundary_simplices.erase(subsimplex_to_erase);
         topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 1);
+        assert(std::size(boundary_simplices) == 1);
 
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
@@ -149,7 +149,7 @@ namespace mito::mesh {
         }
         boundary_simplices.erase(subsimplex_to_erase);
         topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 0);
+        assert(std::size(boundary_simplices) == 0);
 
         assert(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
 

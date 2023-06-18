@@ -82,7 +82,7 @@ namespace mito::fem {
 
         os << "Nodal field \"" << nodalField.name() << "\" : ";
 
-        if (nodalField.size() == 0) {
+        if (std::size(nodalField) == 0) {
             os << "[]";
             return os;
         }

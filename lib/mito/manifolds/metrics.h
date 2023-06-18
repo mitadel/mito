@@ -17,7 +17,7 @@ namespace mito::manifolds {
         matrix_t<V> pointsTensor;
 
         // assert memory allocation is consistent
-        assert(volumes.size() == elements.size());
+        assert(std::size(volumes) == std::size(elements));
 
         // loop on elements
         int e = 0;
@@ -30,7 +30,7 @@ namespace mito::manifolds {
             topology::vertex_set_t element_vertices;
             element->vertices(element_vertices);
             // assert you found V element vertices
-            assert(V == element_vertices.size());
+            assert(V == std::size(element_vertices));
 
             // loop on element vertices
             int v = 0;
@@ -92,7 +92,7 @@ namespace mito::manifolds {
         const geometry::nodes_t<D> & vertices, std::vector<real> & length) -> void
     {
         // assert memory allocation is consistent
-        assert(length.size() == elements.size());
+        assert(std::size(length) == std::size(elements));
 
         // loop on elements
         int e = 0;
@@ -104,7 +104,7 @@ namespace mito::manifolds {
             topology::vertex_vector_t element_vertices(vertices_set.begin(), vertices_set.end());
 
             // assert the size of vertices container is equal to the number of element vertices
-            assert(element_vertices.size() == /*number of element vertices*/ 2);
+            assert(std::size(element_vertices) == /*number of element vertices*/ 2);
 
             // store the geometry::distance between the two element vertices as the element length
             length[e] = ((element->orientation() == true) ? 1 : -1)

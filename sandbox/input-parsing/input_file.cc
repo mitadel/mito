@@ -159,7 +159,7 @@ InputFile::_readFile(std::string inputFileName)
             // record it is a string
             isString = true;
             // assert you were able to find (match) a value and a key
-            assert(match.size() == 3);
+            assert(std::size(match) == 3);
             // second group matched is the key
             std::string key = trim(match[2].str());
             // first group matched is the value
@@ -178,7 +178,7 @@ InputFile::_readFile(std::string inputFileName)
             // record it is a number
             isNumber = true;
             // assert you were able to find (match) a value and a key
-            assert(match.size() == 3);
+            assert(std::size(match) == 3);
             // second group matched is the key
             std::string key = trim(match[2].str());
             // first group matched is the value

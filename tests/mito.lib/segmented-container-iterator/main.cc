@@ -21,7 +21,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     // assert that the container is empty and with no capacity
     EXPECT_EQ(collection.capacity(), 0);
-    EXPECT_EQ(collection.size(), 0);
+    EXPECT_EQ(std::size(collection), 0);
 
     // emplace three simplices in the container
     auto simplex0 = collection.emplace(0);

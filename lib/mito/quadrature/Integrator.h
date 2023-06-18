@@ -71,7 +71,7 @@ namespace mito::quadrature {
         // the quadrature rule
         static constexpr auto _quadratureRule = QuadratureRule::Get();
         // the number of quadrature points
-        static constexpr int Q = _quadratureRule.size();
+        static constexpr int Q = std::size(_quadratureRule);
         // the domain of integration
         const manifold_t & _manifold;
         // the coordinates of the quadrature points in the domain of integration

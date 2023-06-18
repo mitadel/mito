@@ -38,7 +38,7 @@ namespace mito::topology {
         // destructor
         ~OrientedSimplexFactory()
         {
-            if (_oriented_simplices.size() > 0) {
+            if (std::size(_oriented_simplices) > 0) {
                 for (const auto & oriented_simplex : _oriented_simplices) {
                     oriented_simplex->~OrientedSimplex<D>();
                 }

@@ -55,7 +55,7 @@ namespace mito::math {
         constexpr const auto & Df(int i) const
         {
             // assert there exists the i-th partial derivative
-            assert(i < (int) _Df.size());
+            assert(i < (int) std::size(_Df));
             // return the i-th partial derivative
             return _Df[i];
         }
@@ -75,8 +75,8 @@ namespace mito::math {
 
         // helper function to sum the derivatives of fieldA and fieldB
         constexpr auto _dSum = []<size_t... I>(
-            const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB, std::index_sequence<I...>)
-        {
+                                   const field_t<X, Y> & fieldA, const field_t<X, Y> & fieldB,
+                                   std::index_sequence<I...>) {
             std::array<function_t<X, Y>, D> Df = { (fieldA.Df(I) + fieldB.Df(I))... };
             return Df;
         };
@@ -92,11 +92,9 @@ namespace mito::math {
     {
         // helper function to compute the gradient of a vector field with respect to the reference
         // configuration (template with index sequence)
-        constexpr auto _grad =
-            []<size_t... I>(
-                const scalar_field_t<D> & field, const vector_t<D> & x, std::index_sequence<I...>)
-                ->vector_t<D>
-        {
+        constexpr auto _grad = []<size_t... I>(
+                                   const scalar_field_t<D> & field, const vector_t<D> & x,
+                                   std::index_sequence<I...>) -> vector_t<D> {
             return vector_t<D> { field.Df(I)(x)... };
         };
 
@@ -110,10 +108,9 @@ namespace mito::math {
     {
         // helper function to compute the gradient of a vector field with respect to the reference
         // configuration (template with index sequence)
-        constexpr auto _grad =
-            []<size_t... I>(const scalar_field_t<D> & field, std::index_sequence<I...>)
-                ->vector_field_t<D, D>
-        {
+        constexpr auto _grad = []<size_t... I>(
+                                   const scalar_field_t<D> & field,
+                                   std::index_sequence<I...>) -> vector_field_t<D, D> {
             return vector_field_t<D, D>(function_t<vector_t<D>, vector_t<D>>(
                 [field](const vector_t<D> & x) { return vector_t<D> { field.Df(I)(x)... }; }));
         };
@@ -139,10 +136,9 @@ namespace mito::math {
     {
         // helper function to compute the divergence of a vector field with respect to the reference
         // configuration at point X (template with index sequence)
-        constexpr auto _div =
-            []<size_t... I>(const vector_field_t<D, D> & field, std::index_sequence<I...>)
-                ->scalar_field_t<D>
-        {
+        constexpr auto _div = []<size_t... I>(
+                                  const vector_field_t<D, D> & field,
+                                  std::index_sequence<I...>) -> scalar_field_t<D> {
             return scalar_field_t<D>(function_t<vector_t<D>>(
                 [field](const vector_t<D> & x) { return (field.Df(I)(x)[I] + ...); }));
         };

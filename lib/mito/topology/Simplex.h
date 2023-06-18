@@ -82,7 +82,7 @@ namespace mito::topology {
             this->vertices(vertices);
 
             // if this simplex does not have D+1 vertices, something went wrong
-            if (vertices.size() != int(D) + 1) {
+            if (std::size(vertices) != int(D) + 1) {
                 // all done
                 return false;
             }
