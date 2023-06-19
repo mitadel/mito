@@ -34,7 +34,7 @@ namespace mito::mesh {
         inline ~Mesh() {}
 
         // move constructor
-        inline Mesh(Mesh &&) = default;
+        inline Mesh(Mesh &&) noexcept = default;
 
       private:
         // delete copy constructor

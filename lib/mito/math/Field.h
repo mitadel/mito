@@ -24,10 +24,10 @@ namespace mito::math {
         {}
 
         // default move constructor
-        constexpr Field(Field &&) = default;
+        constexpr Field(Field &&) noexcept = default;
 
         // default move operator=
-        constexpr Field & operator=(Field &&) = default;
+        constexpr Field & operator=(Field &&) noexcept = default;
 
         // default copy constructor
         constexpr Field(const Field &) = default;

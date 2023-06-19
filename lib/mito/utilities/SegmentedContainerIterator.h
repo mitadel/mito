@@ -145,10 +145,11 @@ namespace mito::utilities {
         ~SegmentedContainerIterator() = default;
         // let the compiler write the rest
         constexpr SegmentedContainerIterator(const SegmentedContainerIterator &) = default;
-        constexpr SegmentedContainerIterator(SegmentedContainerIterator &&) = default;
+        constexpr SegmentedContainerIterator(SegmentedContainerIterator &&) noexcept = default;
         constexpr SegmentedContainerIterator & operator=(const SegmentedContainerIterator &) =
             default;
-        constexpr SegmentedContainerIterator & operator=(SegmentedContainerIterator &&) = default;
+        constexpr SegmentedContainerIterator & operator=(SegmentedContainerIterator &&) noexcept =
+            default;
     };
 
     // the global operators
