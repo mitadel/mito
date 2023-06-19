@@ -58,6 +58,23 @@ namespace mito::mesh {
         return opposite_vertices_vector;
     }
 
+    template <int D>
+    auto erase_subsimplex(
+        mito::topology::topology_t & topology,
+        std::set<topology::simplex_t<1>> & boundary_simplices,
+        topology::simplex_composition_t<2> & new_simplex_composition,
+        topology::simplex_t<1> & subsimplex_to_erase, size_t i) -> void
+    {
+        for (const auto & subsimplex : boundary_simplices) {
+            if (headTailConnected(new_simplex_composition[i], subsimplex)) {
+                new_simplex_composition[i + 1] = subsimplex;
+                subsimplex_to_erase = subsimplex;
+                break;
+            }
+        }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase<D>(subsimplex_to_erase.id());
+    }
 
     template <int D, int N>
     auto flipDiagonal(
@@ -102,55 +119,24 @@ namespace mito::mesh {
         new_simplex_composition_0[0] = diagonal_segment;
 
         topology::simplex_t<1> subsimplex_to_erase = *std::begin(boundary_simplices);
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
-                new_simplex_composition_0[1] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
-        }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
-        assert(std::size(boundary_simplices) == 3);
 
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
-                new_simplex_composition_0[2] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
+        for (size_t i = 0; i < 2; ++i) {
+            erase_subsimplex<D>(
+                topology, boundary_simplices, new_simplex_composition_0, subsimplex_to_erase, i);
         }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
+
         assert(std::size(boundary_simplices) == 2);
-
         assert(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
 
         topology::simplex_composition_t<2> new_simplex_composition_1;
         new_simplex_composition_1[0] = opposite_diagonal_segment;
 
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_1[0], subsimplex)) {
-                new_simplex_composition_1[1] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
+        for (size_t i = 0; i < 2; ++i) {
+            erase_subsimplex<D>(
+                topology, boundary_simplices, new_simplex_composition_1, subsimplex_to_erase, i);
         }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
-        assert(std::size(boundary_simplices) == 1);
 
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
-                new_simplex_composition_1[2] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
-        }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
         assert(std::size(boundary_simplices) == 0);
-
         assert(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
 
         // build new simplices
