@@ -49,7 +49,7 @@ namespace mito::math {
 
       public:
         // accessor for function
-        constexpr const auto & f() const { return _f; }
+        constexpr const auto & f() const noexcept { return _f; }
 
         // accessor for function partial derivatives
         constexpr const auto & Df(int i) const

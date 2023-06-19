@@ -31,7 +31,7 @@ namespace mito::geometry {
         }
 
       public:
-        auto print() const -> void
+        auto print() const noexcept -> void
         {
             // iterate on points
             std::cout << "Point cloud:" << std::endl;
@@ -46,7 +46,7 @@ namespace mito::geometry {
         inline auto begin() -> const auto & { return std::cbegin(_cloud); }
         inline auto end() -> const auto & { return std::cend(_cloud); }
 
-        auto size() -> int { return std::size(_cloud); }
+        auto size() const noexcept -> int { return std::size(_cloud); }
 
         // example use: cloud.point({0.0, ..., 0.0})
         auto point(vector_t<D> && coord) -> const point_t<D> &
@@ -75,7 +75,7 @@ namespace mito::geometry {
             return it.first->second;
         }
 
-        auto compositions() const -> const point_compositions_t & { return _compositions; }
+        auto compositions() const noexcept -> const point_compositions_t & { return _compositions; }
 
       private:
         // the cloud of points
@@ -90,7 +90,7 @@ namespace mito::geometry {
     };
 
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud)
+    std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud) noexcept
     {
         // print the cloud
         cloud.print();

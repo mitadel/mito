@@ -15,56 +15,56 @@ mito::topology::Topology::~Topology() {};
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<0>() -> oriented_simplex_factory_t<0> &
+mito::topology::Topology::_get_factory<0>() noexcept -> oriented_simplex_factory_t<0> &
 {
     return _vertex_factory;
 }
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<1>() -> oriented_simplex_factory_t<1> &
+mito::topology::Topology::_get_factory<1>() noexcept -> oriented_simplex_factory_t<1> &
 {
     return _segment_factory;
 }
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<2>() -> oriented_simplex_factory_t<2> &
+mito::topology::Topology::_get_factory<2>() noexcept -> oriented_simplex_factory_t<2> &
 {
     return _triangle_factory;
 }
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<3>() -> oriented_simplex_factory_t<3> &
+mito::topology::Topology::_get_factory<3>() noexcept -> oriented_simplex_factory_t<3> &
 {
     return _tetrahedron_factory;
 }
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<0>() const -> const oriented_simplex_factory_t<0> &
+mito::topology::Topology::_get_factory<0>() const noexcept -> const oriented_simplex_factory_t<0> &
 {
     return _vertex_factory;
 }
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<1>() const -> const oriented_simplex_factory_t<1> &
+mito::topology::Topology::_get_factory<1>() const noexcept -> const oriented_simplex_factory_t<1> &
 {
     return _segment_factory;
 }
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<2>() const -> const oriented_simplex_factory_t<2> &
+mito::topology::Topology::_get_factory<2>() const noexcept -> const oriented_simplex_factory_t<2> &
 {
     return _triangle_factory;
 }
 
 template <>
 inline auto
-mito::topology::Topology::_get_factory<3>() const -> const oriented_simplex_factory_t<3> &
+mito::topology::Topology::_get_factory<3>() const noexcept -> const oriented_simplex_factory_t<3> &
 {
     return _tetrahedron_factory;
 }

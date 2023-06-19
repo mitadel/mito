@@ -58,15 +58,18 @@ namespace mito::topology {
 
       public:
         // accessor for the unoriented footprint
-        inline auto footprint() const -> const unoriented_simplex_t<D> & { return _footprint; }
+        inline auto footprint() const noexcept -> const unoriented_simplex_t<D> &
+        {
+            return _footprint;
+        }
 
         // returns the orientation of this simplex
         // (true: oriented simplex is oriented as the footprint,
         //  false: oriented simplex is oriented opposite to the footprint)
-        inline auto orientation() const -> bool { return _orientation; }
+        inline auto orientation() const noexcept -> bool { return _orientation; }
 
         // returns the array of subsimplices
-        inline auto composition() const -> const simplex_composition_t<D> &
+        inline auto composition() const noexcept -> const simplex_composition_t<D> &
         {
             return _footprint->composition();
         }

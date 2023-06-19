@@ -93,13 +93,13 @@ namespace mito::mesh {
             return true;
         }
 
-        inline auto nCells() const -> int
+        inline auto nCells() const noexcept -> int
         {
             // all done
             return std::size(_cells);
         }
 
-        inline auto cells() const -> const cells_t &
+        inline auto cells() const noexcept -> const cells_t &
         {
             // all done
             return _cells;
@@ -204,7 +204,7 @@ namespace mito::mesh {
 
       public:
         // accessor to geometry
-        auto geometry() const -> const geometry_t & { return _geometry; }
+        auto geometry() const noexcept -> const geometry_t & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded

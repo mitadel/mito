@@ -31,10 +31,10 @@ namespace mito::utilities {
         inline auto reset() -> void;
 
         // check if the handle is the null pointer
-        inline auto is_nullptr() const -> bool;
+        inline auto is_nullptr() const noexcept -> bool;
 
         // operator->
-        auto operator->() const -> handle_t;
+        auto operator->() const noexcept -> handle_t;
 
         // // operator*
         // auto operator*() const -> const resource_t &;
@@ -54,7 +54,7 @@ namespace mito::utilities {
         inline SharedPointer(const SharedPointer<Resource> &);
 
         // move constructor
-        inline SharedPointer(SharedPointer<Resource> &&);
+        inline SharedPointer(SharedPointer<Resource> &&) noexcept;
 
         // assignment operator
         inline SharedPointer & operator=(const SharedPointer<Resource> &);
@@ -64,7 +64,7 @@ namespace mito::utilities {
 
       private:
         // accessor for {handle}
-        inline auto handle() const -> handle_t;
+        inline auto handle() const noexcept -> handle_t;
 
         // returns the resource corresponding to this resource id
         static inline auto resource(index_t<Resource>) -> handle_t;

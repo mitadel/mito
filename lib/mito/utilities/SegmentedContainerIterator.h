@@ -64,14 +64,14 @@ namespace mito::utilities {
         }
 
         // accessors
-        constexpr auto ptr() const -> pointer
+        constexpr auto ptr() const noexcept -> pointer
         {
             // easy enough
             return _ptr;
         }
 
         // operator->
-        constexpr auto operator->() const -> pointer
+        constexpr auto operator->() const noexcept -> pointer
         {
             // return the pointer
             return ptr();
@@ -157,7 +157,7 @@ namespace mito::utilities {
     template <class SegmentedContainerT, bool isConst>
     constexpr auto operator==(
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool
     {
         // iterators are equal if they point to the same segmented container
         return it1.ptr() == it2.ptr();
@@ -167,7 +167,7 @@ namespace mito::utilities {
     template <class SegmentedContainerT, bool isConst>
     constexpr auto operator!=(
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool
     {
         // iterators are unequal iff they are not equal
         return !(it1 == it2);

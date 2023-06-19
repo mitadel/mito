@@ -44,7 +44,10 @@ namespace mito::topology {
 
       public:
         // accessor for the subsimplices
-        inline auto composition() const -> const simplex_composition_t<D> & { return _simplices; }
+        inline auto composition() const noexcept -> const simplex_composition_t<D> &
+        {
+            return _simplices;
+        }
 
         // add the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
@@ -142,7 +145,7 @@ namespace mito::topology {
 
       public:
         // perform a sanity check
-        inline auto sanityCheck() const -> bool
+        inline auto sanityCheck() const noexcept -> bool
         {
             // a simplex of order 0 has only 1 vertex (this one!)
             return true;
