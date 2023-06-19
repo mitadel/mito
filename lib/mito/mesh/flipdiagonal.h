@@ -15,8 +15,6 @@ namespace mito::mesh {
             for (const auto & subsimplex1 : simplex1->composition()) {
                 // if you found it
                 if (subsimplex0->footprint().id() == subsimplex1->footprint().id()) {
-                    // report
-                    std::cout << "Found it!" << std::endl;
                     // return
                     return subsimplex0->footprint();
                 }
