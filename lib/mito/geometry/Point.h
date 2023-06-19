@@ -54,7 +54,7 @@ namespace mito::geometry {
     {
         // return the distance between the two points
         auto dist = pointA->coordinates() - pointB->coordinates();
-        return sqrt(dist * dist);
+        return std::sqrt(dist * dist);
     }
 
     template <int D>
