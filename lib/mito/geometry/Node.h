@@ -17,10 +17,10 @@ namespace mito::geometry {
 
       public:
         // accessor for the underlying vertex
-        auto vertex() const -> const vertex_t & { return _vertex; }
+        auto vertex() const noexcept -> const vertex_t & { return _vertex; }
 
         // accessor for the underlying point
-        auto point() const -> const point_t & { return _point; }
+        auto point() const noexcept -> const point_t & { return _point; }
 
       private:
         // the vertex that this node is attached to
@@ -30,7 +30,7 @@ namespace mito::geometry {
     };
 
     template <int D>
-    inline bool operator==(const Node<D> & lhs, const Node<D> & rhs)
+    inline bool operator==(const Node<D> & lhs, const Node<D> & rhs) noexcept
     {
         return lhs.vertex() == rhs.vertex() && lhs.point() == rhs.point();
     }

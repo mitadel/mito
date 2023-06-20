@@ -15,8 +15,6 @@ namespace mito::mesh {
             for (const auto & subsimplex1 : simplex1->composition()) {
                 // if you found it
                 if (subsimplex0->footprint().id() == subsimplex1->footprint().id()) {
-                    // report
-                    std::cout << "Found it!" << std::endl;
                     // return
                     return subsimplex0->footprint();
                 }
@@ -47,17 +45,34 @@ namespace mito::mesh {
 
         vertex_set_t opposite_vertices;
         std::set_difference(
-            vertices.begin(), vertices.end(), shared_simplex_vertices.begin(),
-            shared_simplex_vertices.end(),
-            std::inserter(opposite_vertices, opposite_vertices.end()));
+            std::begin(vertices), std::end(vertices), std::begin(shared_simplex_vertices),
+            std::end(shared_simplex_vertices),
+            std::inserter(opposite_vertices, std::end(opposite_vertices)));
 
         topology::vertex_vector_t opposite_vertices_vector(
-            opposite_vertices.begin(), opposite_vertices.end());
-        assert(opposite_vertices.size() == 2);
+            std::begin(opposite_vertices), std::end(opposite_vertices));
+        assert(std::size(opposite_vertices) == 2);
 
         return opposite_vertices_vector;
     }
 
+    template <int D>
+    auto erase_subsimplex(
+        mito::topology::topology_t & topology,
+        std::set<topology::simplex_t<1>> & boundary_simplices,
+        topology::simplex_composition_t<2> & new_simplex_composition,
+        topology::simplex_t<1> & subsimplex_to_erase, size_t i) -> void
+    {
+        for (const auto & subsimplex : boundary_simplices) {
+            if (headTailConnected(new_simplex_composition[i], subsimplex)) {
+                new_simplex_composition[i + 1] = subsimplex;
+                subsimplex_to_erase = subsimplex;
+                break;
+            }
+        }
+        boundary_simplices.erase(subsimplex_to_erase);
+        topology.erase<D>(subsimplex_to_erase.id());
+    }
 
     template <int D, int N>
     auto flipDiagonal(
@@ -88,7 +103,7 @@ namespace mito::mesh {
                 boundary_simplices.insert(subsimplex);
             }
         }
-        assert(boundary_simplices.size() == 2);
+        assert(std::size(boundary_simplices) == 2);
         // get boundary simplices of simplex1 (all except diagonal)
         for (const auto & subsimplex : simplex1->composition()) {
             // if it is not the shared simplex
@@ -96,61 +111,30 @@ namespace mito::mesh {
                 boundary_simplices.insert(subsimplex);
             }
         }
-        assert(boundary_simplices.size() == 4);
+        assert(std::size(boundary_simplices) == 4);
 
         topology::simplex_composition_t<2> new_simplex_composition_0;
         new_simplex_composition_0[0] = diagonal_segment;
 
-        topology::simplex_t<1> subsimplex_to_erase = *boundary_simplices.begin();
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_0[0], subsimplex)) {
-                new_simplex_composition_0[1] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
-        }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 3);
+        topology::simplex_t<1> subsimplex_to_erase = *std::begin(boundary_simplices);
 
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_0[1], subsimplex)) {
-                new_simplex_composition_0[2] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
+        for (size_t i = 0; i < 2; ++i) {
+            erase_subsimplex<D>(
+                topology, boundary_simplices, new_simplex_composition_0, subsimplex_to_erase, i);
         }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 2);
 
+        assert(std::size(boundary_simplices) == 2);
         assert(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
 
         topology::simplex_composition_t<2> new_simplex_composition_1;
         new_simplex_composition_1[0] = opposite_diagonal_segment;
 
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_1[0], subsimplex)) {
-                new_simplex_composition_1[1] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
+        for (size_t i = 0; i < 2; ++i) {
+            erase_subsimplex<D>(
+                topology, boundary_simplices, new_simplex_composition_1, subsimplex_to_erase, i);
         }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 1);
 
-        for (const auto & subsimplex : boundary_simplices) {
-            if (headTailConnected(new_simplex_composition_1[1], subsimplex)) {
-                new_simplex_composition_1[2] = subsimplex;
-                subsimplex_to_erase = subsimplex;
-                break;
-            }
-        }
-        boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
-        assert(boundary_simplices.size() == 0);
-
+        assert(std::size(boundary_simplices) == 0);
         assert(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
 
         // build new simplices

@@ -45,7 +45,7 @@ namespace mito::topology {
         // destructor
         ~SimplexFactory()
         {
-            if (_simplices.size() > 0) {
+            if (std::size(_simplices) > 0) {
                 for (const auto & simplex : _simplices) {
                     simplex->~Simplex<D>();
                 }
@@ -62,7 +62,7 @@ namespace mito::topology {
             auto it_find = _compositions.find(representative);
 
             // if a representative simplex with this composition is already registered in the map
-            if (it_find != _compositions.end()) {
+            if (it_find != std::end(_compositions)) {
                 // return it
                 return it_find->second;
             }
@@ -86,7 +86,7 @@ namespace mito::topology {
             auto it_find = _compositions.find(representative);
 
             // if a representative simplex with this composition is already registered in the map
-            if (it_find != _compositions.end()) {
+            if (it_find != std::end(_compositions)) {
                 // then return it
                 return it_find->second;
             }
@@ -159,7 +159,7 @@ namespace mito::topology {
         composition_t representative { composition[0]->footprint().id(),
                                        composition[1]->footprint().id() };
         // pick a representative (factor out equivalence relation)
-        std::sort(representative.begin(), representative.end());
+        std::sort(std::begin(representative), std::end(representative));
         // all done
         return representative;
     }
@@ -175,7 +175,7 @@ namespace mito::topology {
                                        composition[2]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
-        std::sort(representative.begin(), representative.end());
+        std::sort(std::begin(representative), std::end(representative));
 
         // all done
         return representative;
@@ -193,7 +193,7 @@ namespace mito::topology {
                                        composition[3]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
-        std::sort(representative.begin(), representative.end());
+        std::sort(std::begin(representative), std::end(representative));
 
         // all done
         return representative;
@@ -213,7 +213,7 @@ namespace mito::topology {
         // destructor
         ~SimplexFactory()
         {
-            if (_simplices.size() > 0) {
+            if (std::size(_simplices) > 0) {
                 for (const auto & simplex : _simplices) {
                     simplex->~Simplex<0>();
                 }

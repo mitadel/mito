@@ -34,7 +34,7 @@ namespace mito::mesh {
         inline ~Mesh() {}
 
         // move constructor
-        inline Mesh(Mesh &&) = default;
+        inline Mesh(Mesh &&) noexcept = default;
 
       private:
         // delete copy constructor
@@ -80,7 +80,7 @@ namespace mito::mesh {
 #if 0
             // print summary
             std::cout << "Mesh composition: " << std::endl;
-            std::cout << _cells.size() << " cells embedded in " << D << " dimension " << std::endl;
+            std::cout << std::size(_cells) << " cells embedded in " << D << " dimension " << std::endl;
 #endif
 
             // sanity check: each cell is self-consistent
@@ -93,13 +93,13 @@ namespace mito::mesh {
             return true;
         }
 
-        inline auto nCells() const -> int
+        inline auto nCells() const noexcept -> int
         {
             // all done
-            return _cells.size();
+            return std::size(_cells);
         }
 
-        inline auto cells() const -> const cells_t &
+        inline auto cells() const noexcept -> const cells_t &
         {
             // all done
             return _cells;
@@ -232,7 +232,7 @@ namespace mito::mesh {
 
       public:
         // accessor to geometry
-        auto geometry() const -> const geometry_t & { return _geometry; }
+        auto geometry() const noexcept -> const geometry_t & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded

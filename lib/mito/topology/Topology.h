@@ -89,11 +89,11 @@ namespace mito::topology {
 
         // mutator for the simplex factory of dimension D
         template <int D>
-        inline auto _get_factory() -> oriented_simplex_factory_t<D> &;
+        inline auto _get_factory() noexcept -> oriented_simplex_factory_t<D> &;
 
         // accessor for the simplex factory of dimension D
         template <int D>
-        inline auto _get_factory() const -> const oriented_simplex_factory_t<D> &;
+        inline auto _get_factory() const noexcept -> const oriented_simplex_factory_t<D> &;
 
       public:
         template <int D>

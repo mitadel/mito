@@ -84,27 +84,27 @@ namespace mito::fem {
          * accessor for the number of quadrature points per element
          * @return the number of quadrature point per element
          */
-        inline constexpr int n_quad_points() const { return Q; }
+        inline constexpr int n_quad_points() const noexcept { return Q; }
 
         /**
          * const accessor for name
          */
-        inline std::string name() const { return _name; }
+        inline std::string name() const noexcept { return _name; }
 
         /**
          * setter method for name
          */
-        inline void name(std::string name)
+        inline void name(std::string name) noexcept
         {
             _name = name;
             return;
         }
 
         // support for ranged for loops (wrapping grid)
-        inline auto begin() const { return _grid.cbegin(); }
-        inline auto end() const { return _grid.cend(); }
-        inline auto begin() { return _grid.begin(); }
-        inline auto end() { return _grid.end(); }
+        inline auto begin() const { return std::cbegin(_grid); }
+        inline auto end() const { return std::cend(_grid); }
+        inline auto begin() { return std::begin(_grid); }
+        inline auto end() { return std::end(_grid); }
 
       private:
         // instantiate the grid

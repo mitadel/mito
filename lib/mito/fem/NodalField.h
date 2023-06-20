@@ -35,29 +35,29 @@ namespace mito::fem {
         /**
          * Iterators
          */
-        typename std::vector<T>::iterator begin() { return _nodalField.begin(); }
+        typename std::vector<T>::iterator begin() { return std::begin(_nodalField); }
 
-        typename std::vector<T>::iterator end() { return _nodalField.end(); }
+        typename std::vector<T>::iterator end() { return std::end(_nodalField); }
 
-        typename std::vector<T>::const_iterator begin() const { return _nodalField.begin(); }
+        typename std::vector<T>::const_iterator begin() const { return std::cbegin(_nodalField); }
 
-        typename std::vector<T>::const_iterator end() const { return _nodalField.end(); }
+        typename std::vector<T>::const_iterator end() const { return std::cend(_nodalField); }
 
         /**
          * Accessors
          */
-        inline const std::string & name() const { return _name; }
+        inline const std::string & name() const noexcept { return _name; }
 
-        inline int dim() const { return D; }
+        inline int dim() const noexcept { return D; }
 
-        inline int nodes() const { return _nodes; }
+        inline int nodes() const noexcept { return _nodes; }
 
-        inline int size() const { return _nodes * D; }
+        inline int size() const noexcept { return _nodes * D; }
 
         /**
          * Set the field to zero.
          */
-        inline void init() { std::fill(_nodalField.begin(), _nodalField.end(), 0.0); }
+        inline void init() { std::fill(std::begin(_nodalField), std::end(_nodalField), 0.0); }
 
       private:
         /**
@@ -82,7 +82,7 @@ namespace mito::fem {
 
         os << "Nodal field \"" << nodalField.name() << "\" : ";
 
-        if (nodalField.size() == 0) {
+        if (std::size(nodalField) == 0) {
             os << "[]";
             return os;
         }

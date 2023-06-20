@@ -29,14 +29,14 @@ namespace mito {
     std::ostream & operator<<(std::ostream & os, const std::vector<X> & x)
     {
 
-        if (x.size() == 0) {
+        if (std::size(x) == 0) {
             os << "[]";
             return os;
         }
 
         os << "[" << x[0];
 
-        for (auto i = 1; i < x.size(); ++i) {
+        for (auto i = 1; i < std::size(x); ++i) {
             os << ", " << x[i];
         }
 

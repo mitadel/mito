@@ -40,7 +40,7 @@ jobs:
           echo " -- upgrade"
           sudo apt dist-upgrade
           echo " -- install our dependencies"
-          sudo apt install -y make cmake libgtest-dev libvtk9-dev libmetis-dev
+          sudo apt install -y make cmake libgtest-dev libvtk9-dev libmetis-dev valgrind
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -62,7 +62,6 @@ jobs:
       - name: build pyre
         run: |
           echo " -- switching to the build directory"
-          cd ${{runner.temp}}
           mkdir build
           cd build
           echo " -- configuring the build"
@@ -78,6 +77,7 @@ jobs:
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
           pythonVersion: ${{matrix.python}}
+        working-directory: ${{runner.temp}}
 
       - name: list system packages
         run: |
@@ -125,7 +125,6 @@ jobs:
           pip3 show pytest
           echo " -- vtk"
           pip3 show vtk
-
         env:
           pythonVersion: ${{matrix.python}}
 
@@ -138,11 +137,10 @@ jobs:
       - name: build mito
         run: |
           echo " -- switching to the build directory"
-          cd ${{runner.temp}}
           mkdir build
           cd build
           echo " -- configuring the build"
-          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DWITH_VTK=ON  -DWITH_METIS=ON ${{github.workspace}}/mito
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -DMITO_BUILD_BENCHMARKS=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DWITH_VTK=ON  -DWITH_METIS=ON ${{github.workspace}}/mito
           echo " -- building mito"
           make -j 2 install
         env:
@@ -151,14 +149,22 @@ jobs:
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
           pythonVersion: ${{matrix.python}}
+        working-directory: ${{runner.temp}}
 
       - name: test mito
         run: |
-          echo " -- switching to the build directory"
-          cd ${{runner.temp}}/build
           echo " -- testing mito"
           ctest --output-on-failure -E postgres.ext
+        working-directory: ${{runner.temp}}/build
       
+      - name: run valgrind
+        run: |
+          echo " -- run valgrind on benchmark test"
+          valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --xml=yes --xml-file=memcheck.xml --leak-resolution=high --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes --log-file='valgrind.txt' -v ./benchmarks/benchmarks.mito.lib.integration.integration
+          echo " -- check valgrind output"
+          python3 ${{github.workspace}}/mito/scripts/check_valgrind.py
+        working-directory: ${{runner.temp}}/build
+
       - name: create artifact
         if: always()
         uses: actions/upload-artifact@v3

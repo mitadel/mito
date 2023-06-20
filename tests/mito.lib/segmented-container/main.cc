@@ -25,7 +25,7 @@ TEST(SegmentedContainer, TestSegmentedContainer)
 
     // assert that the container is empty and with no capacity
     EXPECT_EQ(collection.capacity(), 0);
-    EXPECT_EQ(collection.size(), 0);
+    EXPECT_EQ(std::size(collection), 0);
 
     // emplace three simplices in the container
     auto simplex0 = collection.emplace(0);
@@ -33,7 +33,7 @@ TEST(SegmentedContainer, TestSegmentedContainer)
 
     // assert that the container has 2 elements and its capacity is 3
     EXPECT_EQ(collection.capacity(), 3);
-    EXPECT_EQ(collection.size(), 2);
+    EXPECT_EQ(std::size(collection), 2);
 
     {
         // emplace one simplex
@@ -41,12 +41,12 @@ TEST(SegmentedContainer, TestSegmentedContainer)
 
         // assert that the container has 3 elements and its capacity is 3
         EXPECT_EQ(collection.capacity(), 3);
-        EXPECT_EQ(collection.size(), 3);
+        EXPECT_EQ(std::size(collection), 3);
     }
 
     // assert that the container has 2 elements and its capacity is still 3
     EXPECT_EQ(collection.capacity(), 3);
-    EXPECT_EQ(collection.size(), 2);
+    EXPECT_EQ(std::size(collection), 2);
 
     {
         // emplace one simplex
@@ -54,7 +54,7 @@ TEST(SegmentedContainer, TestSegmentedContainer)
 
         // assert that the container has again 3 elements and its capacity is 3
         EXPECT_EQ(collection.capacity(), 3);
-        EXPECT_EQ(collection.size(), 3);
+        EXPECT_EQ(std::size(collection), 3);
 
         // emplace another simplex (trigger allocation of new segment)
         auto simplex4 = collection.emplace(4);
@@ -62,10 +62,10 @@ TEST(SegmentedContainer, TestSegmentedContainer)
         // assert that the container has now 4 elements and its capacity is 6
         // (new memory allocation was in fact triggered)
         EXPECT_EQ(collection.capacity(), 6);
-        EXPECT_EQ(collection.size(), 4);
+        EXPECT_EQ(std::size(collection), 4);
     }
 
     // assert that the container has now 2 elements but has still capacity of 6
     EXPECT_EQ(collection.capacity(), 6);
-    EXPECT_EQ(collection.size(), 2);
+    EXPECT_EQ(std::size(collection), 2);
 }

@@ -56,7 +56,6 @@ jobs:
       - name: install gtest
         run: |
           echo " -- switching to the build directory"
-          cd ${{runner.temp}}
           mkdir build
           cd build
           echo " -- configuring the build"
@@ -71,6 +70,7 @@ jobs:
           target: Release
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
+        working-directory: ${{runner.temp}}
       
       - name: checkout pyre
         uses: actions/checkout@v3
@@ -82,7 +82,6 @@ jobs:
       - name: build pyre
         run: |
           echo " -- switching to the build directory"
-          cd ${{runner.temp}}
           mkdir build
           cd build
           echo " -- configuring the build"
@@ -98,6 +97,7 @@ jobs:
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
           pythonVersion: ${{matrix.python}}
+        working-directory: ${{runner.temp}}
       
       - name: list system packages
         run: |
@@ -148,7 +148,6 @@ jobs:
       - name: build mito
         run: |
           echo " -- switching to the build directory"
-          cd ${{runner.temp}}
           mkdir build
           cd build
           echo " -- configuring the build"
@@ -161,13 +160,13 @@ jobs:
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
           pythonVersion: ${{matrix.python}}
+        working-directory: ${{runner.temp}}
 
       - name: test mito
         run: |
-          echo " -- switching to the build directory"
-          cd ${{runner.temp}}/build
           echo " -- testing mito"
           ctest --output-on-failure -E postgres.ext
+        working-directory: ${{runner.temp}}/build
       
       - name: create artifact
         if: always()

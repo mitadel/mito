@@ -52,11 +52,10 @@ constexpr int
 offsetN(index_t<N> index)
 {
     // sort the index
-    std::sort(index.begin(), index.end());
+    std::sort(std::begin(index), std::end(index));
 
     // helper function to shift the indices (i, j, k, ...) into (i, j - i, k - j, ...)
-    auto _shiftIndices = []<size_t... I>(index_t<N> & idx, std::index_sequence<I...>)
-    {
+    auto _shiftIndices = []<size_t... I>(index_t<N> & idx, std::index_sequence<I...>) {
         // iterate in reverse order to avoid overwriting entries before using them
         ((idx[(N - 2 - I) + 1] -= idx[N - 2 - I]), ...);
         // all done
@@ -67,8 +66,7 @@ offsetN(index_t<N> index)
     _shiftIndices(index, std::make_index_sequence<N - 1> {});
 
     // helper function needed to expand the array in a parameter pack
-    auto _getOffset = []<size_t... I>(index_t<N> idx, std::index_sequence<I...>)
-    {
+    auto _getOffset = []<size_t... I>(index_t<N> idx, std::index_sequence<I...>) {
         return offset<N>(D, idx[I]...);
     };
 
