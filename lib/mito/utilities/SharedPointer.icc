@@ -24,7 +24,7 @@ mito::utilities::SharedPointer<Resource>::resource(index_t<Resource> index) -> h
 // interface
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::handle() const
+mito::utilities::SharedPointer<Resource>::handle() const noexcept
     -> mito::utilities::SharedPointer<Resource>::handle_t
 {
     // return the handle
@@ -58,7 +58,7 @@ mito::utilities::SharedPointer<Resource>::reset() -> void
 
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::is_nullptr() const -> bool
+mito::utilities::SharedPointer<Resource>::is_nullptr() const noexcept -> bool
 {
     // all done
     return _handle == nullptr;
@@ -67,7 +67,7 @@ mito::utilities::SharedPointer<Resource>::is_nullptr() const -> bool
 // operator->
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::operator->() const
+mito::utilities::SharedPointer<Resource>::operator->() const noexcept
     -> mito::utilities::SharedPointer<Resource>::handle_t
 {
     // return the handle
@@ -122,7 +122,7 @@ mito::utilities::SharedPointer<Resource>::SharedPointer(
 // the move constructor
 template <class Resource>
 mito::utilities::SharedPointer<Resource>::SharedPointer(
-    mito::utilities::SharedPointer<Resource> && other) :
+    mito::utilities::SharedPointer<Resource> && other) noexcept :
     _handle(other._handle),
     _container(other._container)
 {

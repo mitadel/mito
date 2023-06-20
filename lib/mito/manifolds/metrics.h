@@ -178,7 +178,7 @@ namespace mito::manifolds {
 
             // compute area of element e
             areas[e] = ((element->orientation() == true) ? 1 : -1) * 0.25
-                     * sqrt((a + bpc) * (c - amb) * (c + amb) * (a + bmc));
+                     * std::sqrt((a + bpc) * (c - amb) * (c + amb) * (a + bmc));
 
             // update elements counter
             ++e;

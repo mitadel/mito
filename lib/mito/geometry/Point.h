@@ -30,9 +30,9 @@ namespace mito::geometry {
 
       public:
         // get the coordinates of the point
-        auto coordinates() const -> const vector_t<D> & { return _coordinates; }
+        auto coordinates() const noexcept -> const vector_t<D> & { return _coordinates; }
 
-        auto print() const -> void
+        auto print() const noexcept -> void
         {
             // print the coordinates of the point
             std::cout << "Point: " << coordinates() << std::endl;
@@ -50,15 +50,15 @@ namespace mito::geometry {
     };
 
     template <int D>
-    auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
+    auto distance(const point_t<D> & pointA, const point_t<D> & pointB) noexcept -> real
     {
         // return the distance between the two points
         auto dist = pointA->coordinates() - pointB->coordinates();
-        return sqrt(dist * dist);
+        return std::sqrt(dist * dist);
     }
 
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const Point<D> & point)
+    std::ostream & operator<<(std::ostream & os, const Point<D> & point) noexcept
     {
         // print the point
         point.print();

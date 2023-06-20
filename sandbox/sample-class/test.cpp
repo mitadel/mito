@@ -11,7 +11,7 @@ class Simplex {
     // inline Simplex(const Simplex &) = delete;
 
     // move constructor
-    inline Simplex(Simplex &&) = default;
+    inline Simplex(Simplex &&) noexcept = default;
     // inline Simplex(const Simplex &&) = delete;
 
     // assignment operator
@@ -19,7 +19,7 @@ class Simplex {
     // inline const Simplex & operator=(const Simplex &) = delete;
 
     // move operator=
-    inline Simplex & operator=(Simplex &&) = default;
+    inline Simplex & operator=(Simplex &&) noexcept = default;
     // inline const Simplex & operator=(const Simplex &&) = delete;
 };
 

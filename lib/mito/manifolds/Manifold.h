@@ -72,8 +72,11 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline auto elements() const -> const element_vector_t<cell_t> & { return _elements; }
-        inline auto nElements() const -> int { return std::size(_elements); }
+        inline auto elements() const noexcept -> const element_vector_t<cell_t> &
+        {
+            return _elements;
+        }
+        inline auto nElements() const noexcept -> int { return std::size(_elements); }
         inline auto jacobian(int e) const -> real { return _jacobians[e]; }
         inline auto coordinatesVertex(const vertex_t & v) const -> const vector_t<D> &
         {

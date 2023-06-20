@@ -46,13 +46,13 @@ namespace mito::fem {
         /**
          * Accessors
          */
-        inline const std::string & name() const { return _name; }
+        inline const std::string & name() const noexcept { return _name; }
 
-        inline int dim() const { return D; }
+        inline int dim() const noexcept { return D; }
 
-        inline int nodes() const { return _nodes; }
+        inline int nodes() const noexcept { return _nodes; }
 
-        inline int size() const { return _nodes * D; }
+        inline int size() const noexcept { return _nodes * D; }
 
         /**
          * Set the field to zero.

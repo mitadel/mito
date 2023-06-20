@@ -14,7 +14,7 @@ namespace mito::utilities {
         // interface
       public:
         // whether the resource is valid or not
-        inline auto is_valid() const -> bool;
+        inline auto is_valid() const noexcept -> bool;
 
         // meta methods
       public:
@@ -40,11 +40,11 @@ namespace mito::utilities {
 
       private:
         // accessor for the number of outstanding references
-        inline auto _references() const -> int;
+        inline auto _references() const noexcept -> int;
         // increment the reference count
-        inline auto _acquire() const -> int;
+        inline auto _acquire() const noexcept -> int;
         // decrement the reference count
-        inline auto _release() const -> int;
+        inline auto _release() const noexcept -> int;
 
         // data members
       private:

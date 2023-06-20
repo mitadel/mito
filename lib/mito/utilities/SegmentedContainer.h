@@ -190,7 +190,7 @@ namespace mito::utilities {
         }
 
       public:
-        auto segment_size() const -> int { return _segment_size; }
+        auto segment_size() const noexcept -> int { return _segment_size; }
 
         auto location_for_placement() -> T *
         {

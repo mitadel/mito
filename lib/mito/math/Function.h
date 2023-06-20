@@ -23,13 +23,13 @@ namespace mito::math {
         // copy constructor
         constexpr Function(const Function &) = default;
         // move constructor
-        constexpr Function(Function &&) = default;
+        constexpr Function(Function &&) noexcept = default;
         // destructor
         constexpr ~Function() {};
         // assignment operator
         constexpr Function & operator=(const Function &) = default;
         // move operator=
-        constexpr Function & operator=(Function &&) = default;
+        constexpr Function & operator=(Function &&) noexcept = default;
 
         constexpr auto operator()(const X & x) const
         {

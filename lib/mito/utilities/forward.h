@@ -42,14 +42,14 @@ namespace mito::utilities {
     template <class SegmentedContainerT, bool isConst>
     constexpr auto operator==(
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool;
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool;
 
 
     // and not
     template <class SegmentedContainerT, bool isConst>
     constexpr auto operator!=(
         const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) -> bool;
+        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool;
 
     // hash function for shared pointers
     // Note that two pointers pointing to the same cell collapse on the same hashed value
