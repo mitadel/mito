@@ -51,6 +51,13 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install distro numpy pybind11 pytest vtk
+      
+      - name: cache pyre
+        id: cache-pyre
+        uses: actions/cache@v3
+        with:
+          path: ${{runner.temp}}/pyre_install
+          key: ${{runner.os}}-pyre
 
       - name: checkout pyre
         uses: actions/checkout@v3
@@ -60,6 +67,7 @@ jobs:
           path: pyre
 
       - name: build pyre
+        if: steps.cache-pyre.outputs.cache-hit != 'true'
         run: |
           echo " -- switching to the build directory"
           mkdir build
