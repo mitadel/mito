@@ -9,7 +9,7 @@ using mito::topology::triangle_t;
 TEST(Simplices, TestSimplices)
 {
     // an empty topology
-    auto & topology = mito::topology::topology();
+    auto topology = mito::topology::topology();
 
     /**
      * Mesh with four cells:

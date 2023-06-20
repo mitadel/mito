@@ -13,7 +13,7 @@ namespace mito::geometry {
         // typedef for a vertex
         using vertex_t = topology::vertex_t;
 
-      private:
+      public:
         // constructor
         Geometry(topology_t & topology, point_cloud_t<D> & point_cloud) :
             _nodes(),
@@ -81,10 +81,6 @@ namespace mito::geometry {
 
         // a reference to the point cloud
         point_cloud_t<D> & _point_cloud;
-
-        // friendship with the singleton
-        using GeometrySingleton = utilities::Singleton<Geometry<D>>;
-        friend GeometrySingleton;
     };
 
 }    // namespace mito

@@ -15,13 +15,13 @@ using mito::topology::triangle_t;
 TEST(Quadrature, IntegralsOnIntervals)
 {
     // an empty topology
-    auto & topology = mito::topology::topology();
+    auto topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<1>();
+    auto point_cloud = mito::geometry::point_cloud<1>();
 
     // a 1D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+    auto geometry = mito::geometry::geometry(topology, point_cloud);
 
     // an empty mesh of simplicial topology in 1D
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
@@ -67,13 +67,13 @@ TEST(Quadrature, QuadratureBuildMesh)
     */
 
     // an empty topology
-    auto & topology = mito::topology::topology();
+    auto topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
-    auto & point_cloud_2D = mito::geometry::point_cloud<2>();
+    auto point_cloud_2D = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud_2D);
+    auto geometry = mito::geometry::geometry(topology, point_cloud_2D);
 
     // an empty mesh of simplicial topology in 2D
     auto mesh_2D = mito::mesh::mesh<mito::topology::triangle_t, 2>(geometry);
@@ -188,10 +188,10 @@ TEST(Quadrature, QuadratureBuildMesh)
 
     // attach different coordinates (3D coordinates to the same points as above)
     // an empty cloud of points in 3D
-    auto & point_cloud_3D = mito::geometry::point_cloud<3>();
+    auto point_cloud_3D = mito::geometry::point_cloud<3>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry_3D = mito::geometry::geometry(topology, point_cloud_3D);
+    auto geometry_3D = mito::geometry::geometry(topology, point_cloud_3D);
 
     geometry_3D.node(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
     geometry_3D.node(vertex1, point_cloud_3D.point({ 1.0, 0.0, 1.0 }));
@@ -229,13 +229,13 @@ TEST(Quadrature, QuadratureBuildMesh)
 TEST(Quadrature, QuadratureLoadMesh)
 {
     // an empty topology
-    auto & topology = mito::topology::topology();
+    auto topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<2>();
+    auto point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+    auto geometry = mito::geometry::geometry(topology, point_cloud);
 
     // load mesh
     std::ifstream fileStream("square.summit");
@@ -263,13 +263,13 @@ TEST(Quadrature, QuadratureLoadMesh)
 TEST(Quadrature, FlipDomain)
 {
     // an empty topology
-    auto & topology = mito::topology::topology();
+    auto topology = mito::topology::topology();
 
     // an empty cloud of points in 3D
-    auto & point_cloud = mito::geometry::point_cloud<3>();
+    auto point_cloud = mito::geometry::point_cloud<3>();
 
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+    auto geometry = mito::geometry::geometry(topology, point_cloud);
 
     // a segment
     auto vertex0 = geometry.node({ 0.0, 0.0, 0.0 });

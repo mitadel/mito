@@ -232,6 +232,9 @@ namespace mito::mesh {
 
       public:
         // accessor to geometry
+        auto geometry() noexcept -> geometry_t & { return _geometry; }
+
+        // const accessor to geometry
         auto geometry() const noexcept -> const geometry_t & { return _geometry; }
 
       private:

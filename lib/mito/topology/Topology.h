@@ -10,7 +10,7 @@ namespace mito::topology {
      */
 
     class Topology {
-      private:
+      public:
         // default constructor
         Topology();
 
@@ -111,10 +111,6 @@ namespace mito::topology {
 
         // factory for tetrahedra
         oriented_simplex_factory_t<3> _tetrahedron_factory;
-
-        // friendship with the singleton
-        using TopologySingleton = utilities::Singleton<Topology>;
-        friend TopologySingleton;
     };
 }
 

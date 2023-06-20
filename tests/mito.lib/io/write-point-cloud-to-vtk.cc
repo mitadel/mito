@@ -5,7 +5,7 @@
 TEST(VtkWriter, WritePointCloudToVtk)
 {
     // an empty point cloud
-    auto & cloud = mito::geometry::point_cloud<3>();
+    auto cloud = mito::geometry::point_cloud<3>();
 
     // add points to the point cloud
     const auto point_a = cloud.point({ 0.0, 0.0, 0.0 });

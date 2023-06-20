@@ -89,7 +89,7 @@ namespace mito::mesh {
         // std::cout << "shared simplex: " << *shared_simplex << std::endl;
         auto opposite_vertices = oppositeVertices(simplex0, simplex1, shared_simplex);
 
-        auto & topology = topology::topology();
+        auto & topology = mesh.geometry().topology();
 
         auto diagonal_segment = topology.segment({ opposite_vertices[0], opposite_vertices[1] });
         auto opposite_diagonal_segment =

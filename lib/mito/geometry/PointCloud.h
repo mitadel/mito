@@ -6,12 +6,12 @@ namespace mito::geometry {
 
     template <int D>
     class PointCloud {
-      private:
+      public:
         using cloud_t = geometry::cloud_t<D>;
         // TOFIX: make this unordered?
         using point_compositions_t = std::map<vector_t<D>, point_t<D>>;
 
-      private:
+      public:
         PointCloud() : _cloud(100 /*segment size */), _compositions() {}
 
         // delete copy constructor
@@ -83,10 +83,6 @@ namespace mito::geometry {
 
         // the container mapping the composition of points to the points themselves
         point_compositions_t _compositions;
-
-        // friendship with the singleton
-        using PointCloudSingleton = utilities::Singleton<PointCloud<D>>;
-        friend PointCloudSingleton;
     };
 
     template <int D>

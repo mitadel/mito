@@ -5,7 +5,7 @@
 TEST(FlipDiagonal, TestFlipDiagonal)
 {
     // an empty topology
-    auto & topology = mito::topology::topology();
+    auto topology = mito::topology::topology();
 
     // build vertices
     auto vertex0 = topology.vertex();
@@ -26,10 +26,10 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     auto simplex1 = topology.triangle({ segment_e, segment_c, segment_d });
 
     // an empty cloud of points in 2D
-    auto & point_cloud = mito::geometry::point_cloud<2>();
+    auto point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+    auto geometry = mito::geometry::geometry(topology, point_cloud);
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t, 2>(geometry);

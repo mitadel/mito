@@ -7,13 +7,13 @@
 TEST(SummitReader, LoadSummitMesh3D)
 {
     // an empty topology
-    auto & topology = mito::topology::topology();
+    auto topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<3>();
+    auto point_cloud = mito::geometry::point_cloud<3>();
 
     // a 3D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
+    auto geometry = mito::geometry::geometry(topology, point_cloud);
 
     clock_t t;
 

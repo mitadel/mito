@@ -4,10 +4,6 @@
 
 
 namespace mito::geometry {
-
-    // point cloud factory
-    template <int D>
-    auto point_cloud() -> geometry::point_cloud_t<D> &;
 }
 
 

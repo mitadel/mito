@@ -8,7 +8,7 @@ namespace mito::manifolds {
     // TOFIX
     // factory manifolds
     template <class cellT, int D>
-    constexpr auto manifold(mesh::mesh_t<cellT, D> & mesh)
+    constexpr auto manifold(mesh::mesh_t<cellT, D> & mesh) -> manifold_t<cellT, D>
     {
         return manifold_t<cellT, D>(mesh);
     }
