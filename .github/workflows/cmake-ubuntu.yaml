@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{runner.temp}}/pyre_install
-          key: ${{matrix.os}}-pyre-${{steps.pyre-sha.outputs.PYRE-SHA}}
+          key: pyre-${{steps.pyre-sha.outputs.PYRE-SHA}}-${{matrix.os}}+python-${{matrix.python}}+${{matrix.suite}}-${{matrix.suiteVersion}}
 
       - if: steps.cache-pyre.outputs.cache-hit != 'true'
         name: build pyre
