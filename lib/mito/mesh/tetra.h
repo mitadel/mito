@@ -11,15 +11,6 @@ namespace mito::mesh {
         mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
     requires(std::is_same_v<cellT, topology::segment_t>)
     {
-        if (n_refinements == 0) {
-            auto & new_cell = geometry.topology().segment({ vertex_0, vertex_1 });
-
-            // insert new cells in new mesh
-            subdivided_mesh.insert(new_cell);
-
-            return;
-        }
-
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(
             0.5
@@ -55,15 +46,6 @@ namespace mito::mesh {
         -> void
     requires(std::is_same_v<cellT, topology::triangle_t>)
     {
-        if (n_refinements == 0) {
-            auto & new_cell = geometry.topology().triangle({ vertex_0, vertex_1, vertex_2 });
-
-            // insert new cells in new mesh
-            subdivided_mesh.insert(new_cell);
-
-            return;
-        }
-
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(
             0.5
@@ -115,16 +97,6 @@ namespace mito::mesh {
         mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
     requires(std::is_same_v<cellT, topology::tetrahedron_t>)
     {
-        if (n_refinements == 0) {
-            auto & new_cell =
-                geometry.topology().tetrahedron({ vertex_0, vertex_1, vertex_2, vertex_3 });
-
-            // insert new cells in new mesh
-            subdivided_mesh.insert(new_cell);
-
-            return;
-        }
-
         // compute the middle point of the segment 0->1
         auto & vertex_01 = geometry.node(
             0.5
@@ -228,6 +200,20 @@ namespace mito::mesh {
         // instantiate a new (empty) mesh for the refined mesh
         mesh_t<cellT, D> subdivided_mesh(geometry);
 
+        // trivial case (just return a copy of the original mesh)
+        if (n_refinements == 0) {
+
+            // loop on the cells of the mesh
+            for (const auto & cell : mesh.cells()) {
+
+                // insert new cells in new mesh
+                subdivided_mesh.insert(cell);
+
+                // all done
+                return subdivided_mesh;
+            }
+        }
+
         // loop on the cells of the mesh
         for (const auto & cell : mesh.cells()) {
 
@@ -249,6 +235,7 @@ namespace mito::mesh {
                 std::make_index_sequence<cellT::resource_t::order + 1> {});
         }
 
+        // return the refined mesh
         return subdivided_mesh;
     }
 
