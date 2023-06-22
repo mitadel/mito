@@ -11,6 +11,7 @@
 #define HAVE_TENSOR
 #define HAVE_COMPACT_PACKINGS
 #include <pyre/tensor.h>
+#include <pyre/journal.h>
 
 #endif
 
