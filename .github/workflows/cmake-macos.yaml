@@ -184,7 +184,7 @@ jobs:
         working-directory: ${{runner.temp}}/build
       
       - name: create artifact
-        if: always()
+        if: ${{!cancelled()}}
         uses: actions/upload-artifact@v3
         with:
           name: mito_build_${{matrix.target}}
