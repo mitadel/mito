@@ -57,7 +57,7 @@ jobs:
         with:
           repository: pyre/pyre
           fetch-depth: 0
-          path: pyre
+          path: ${{github.workspace}}/pyre
 
       - name: retrieve pyre commit SHA
         id: pyre-sha
