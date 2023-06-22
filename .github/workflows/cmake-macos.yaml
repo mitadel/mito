@@ -80,7 +80,7 @@ jobs:
           fetch-depth: 0
           path: pyre
 
-      - name: retrieve pyre SHA commit
+      - name: retrieve pyre commit SHA
         id: pyre-sha
         run: |
           echo "PYRE-SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
