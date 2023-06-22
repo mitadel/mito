@@ -28,6 +28,9 @@ namespace mito::topology {
         using orientation_map_t =
             std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, simplex_t<D>>;
 
+        // typedef for a bad simplex
+        using bad_simplex_t = BadSimplex<D>;
+
       public:    // TOFIX: should be private but the default constructor of tuple needs it public
         // default constructor
         OrientedSimplexFactory() :
@@ -248,6 +251,10 @@ namespace mito::topology {
 
         // container to store the relation (simplex, orientation) -> oriented simplex
         orientation_map_t _orientations;
+
+        // instantiate a bad simplex
+        // (this is the unique instance that all bad simplices will point to)
+        bad_simplex_t _bad_simplex;
 
         // private friendship with the topology
         friend class Topology;
