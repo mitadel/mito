@@ -8,7 +8,6 @@
 #include <array>
 #include <map>
 #include <unordered_set>
-#include <pyre/journal.h>
 
 // support
 #include "../utilities.h"
