@@ -238,7 +238,7 @@ namespace mito::utilities {
         // This method is called by {shared_ptr::_release}
         auto erase(const utilities::shared_ptr<T> & element) -> void
         {
-            // assert that the resource is in valid state
+            // assert that the resource is invalid
             assert(element->is_valid() == 0);
 
             // decrement the number of elements
