@@ -40,11 +40,10 @@ namespace mito::topology {
         // destructor
         constexpr ~OrientedSimplex() override {}
 
-      protected:
-        // default constructor
-        constexpr OrientedSimplex() {}
-
       private:
+        // delete default constructor
+        OrientedSimplex() = delete;
+
         // delete copy constructor
         OrientedSimplex(const OrientedSimplex &) = delete;
 
@@ -98,9 +97,9 @@ namespace mito::topology {
 
       private:
         // the shared pointer to the footprint
-        unoriented_simplex_t<D> _footprint;
+        unoriented_simplex_t<D> _footprint;    // TOFIX: should this be {const}?
         // the orientation
-        bool _orientation;
+        const bool _orientation;
         // private friendship with the factory of oriented simplices
         friend class OrientedSimplexFactory<D>;
     };
