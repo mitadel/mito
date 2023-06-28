@@ -17,8 +17,6 @@
 // class {OrientedSimplex} needs to be complete for the following forward declarations
 // (the concept {ReferenceCountedObject} requires to see full class header file)
 #include "OrientedSimplex.h"
-// sentinel class for bad simplex
-#include "BadSimplex.h"
 // simplex utilities
 #include "utilities.h"
 #include "SimplexFactory.h"
