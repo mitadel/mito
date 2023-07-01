@@ -69,6 +69,7 @@ TEST(EraseElement, TestEraseElementMesh)
     // erase a simplex
     std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(cell0);
+    // mesh.erase(cell0);
 
     // std::cout << "After erase: " << std::endl;
     // for (const auto & simplex : mesh.cells<2>()) {
