@@ -126,9 +126,12 @@ mito::utilities::SharedPointer<Resource>::SharedPointer(
     _handle(other._handle),
     _container(other._container)
 {
-    // invalidate other
-    other._handle = nullptr;
-    other._container = nullptr;
+    // and grab a reference to the new shareable
+    _acquire();
+
+    // invalidate {other} with the bad item of the segmented container
+    auto bad_item = segmented_t<shared_ptr_t>::bad_item();
+    other = bad_item;
 }
 
 // assignment operator
@@ -165,14 +168,16 @@ mito::utilities::SharedPointer<Resource>::operator=(
         _release();
         // adopt the new shareable
         _handle = other._handle;
+        // and grab a reference to it
+        _acquire();
         // grab the container handle
         _container = other._container;
     }
 
     // QUESTION: should this go here or in the if statement?
-    // invalidate {other}
-    other._handle = nullptr;
-    other._container = nullptr;
+    // invalidate {other} with the bad item of the segmented container
+    auto bad_item = segmented_t<shared_ptr_t>::bad_item();
+    other = bad_item;
 
     // all done
     return *this;
@@ -183,8 +188,12 @@ template <class Resource>
 auto
 mito::utilities::SharedPointer<Resource>::_acquire() const -> void
 {
-    // acquire resource (increment reference count)
-    _handle->_acquire();
+    // if the handle is in valid state
+    if (_handle != nullptr) {
+        // acquire resource (increment reference count)
+        _handle->_acquire();
+    }
+
     // all done
     return;
 }
