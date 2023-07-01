@@ -260,6 +260,11 @@ namespace mito::utilities {
             return utilities::shared_ptr<T>(resource, this);
         }
 
+        static auto bad_item() -> bad_item_t<T>
+        {
+            return _bad_item;
+        }
+
         /**
          * iterators
          */
@@ -329,6 +334,8 @@ namespace mito::utilities {
         int _n_elements;
         // a queue with the available locations for writing
         std::queue<T *> _available_locations;
+        // the bad item instance
+        static bad_item_t<T> _bad_item;
 
       private:
         // non-const iterator
@@ -336,6 +343,9 @@ namespace mito::utilities {
         // const iterator
         friend const_iterator;
     };
+
+    template <class T>
+    bad_item_t<T> SegmentedContainer<T>::_bad_item = bad_item_t<T>();
 }
 
 
