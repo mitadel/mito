@@ -68,7 +68,7 @@ TEST(EraseElement, TestEraseElementMesh)
 
     // erase a simplex
     std::cout << "Erasing simplex..." << std::endl;
-    mesh.erase(cell0);
+    mesh.erase(std::move(cell0));
     // mesh.erase(cell0);
 
     // std::cout << "After erase: " << std::endl;
@@ -88,7 +88,7 @@ TEST(EraseElement, TestEraseElementMesh)
     //     std::cout << simplex << std::endl;
     // }
 
-    mesh.erase(cell1);
+    mesh.erase(std::move(cell1));
 
     // assert the mesh has now 2 cells
     EXPECT_EQ(mesh.nCells(), 2);

@@ -142,10 +142,10 @@ namespace mito::mesh {
         auto & new_simplex1 = topology.triangle(new_simplex_composition_1);
 
         mesh.insert(new_simplex0);
-        mesh.erase(simplex0);
+        mesh.erase(std::move(simplex0));
 
         mesh.insert(new_simplex1);
-        mesh.erase(simplex1);
+        mesh.erase(std::move(simplex1));
 
         // all done
         return;
