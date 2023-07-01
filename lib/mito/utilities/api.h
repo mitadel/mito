@@ -9,6 +9,10 @@ namespace mito::utilities {
     template <class Resource>
     using shared_ptr = SharedPointer<Resource>;
 
+    // bad item alias
+    template <class Resource>
+    using bad_item_t = BadItem<Resource>;
+
     // index type alias
     template <class Resource>
     using index_t = std::uintptr_t;

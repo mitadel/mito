@@ -67,7 +67,7 @@ mito::utilities::SharedPointer<Resource>::is_nullptr() const noexcept -> bool
 // operator->
 template <class Resource>
 auto
-mito::utilities::SharedPointer<Resource>::operator->() const noexcept
+mito::utilities::SharedPointer<Resource>::operator->() const
     -> mito::utilities::SharedPointer<Resource>::handle_t
 {
     // return the handle

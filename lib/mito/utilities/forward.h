@@ -17,6 +17,11 @@ namespace mito::utilities {
     // requires ReferenceCountedObject<Resource>
     class SharedPointer;
 
+    // class bad item based on a reference counted resource
+    template <class Resource>
+    // requires ReferenceCountedObject<Resource>
+    class BadItem;
+
     // class segmented container
     template <class Resource>
     // requires ReferenceCountedObject<Resource>

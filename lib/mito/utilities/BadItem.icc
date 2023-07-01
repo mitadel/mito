@@ -1,0 +1,45 @@
+// -*- C++ -*-
+//
+
+#if !defined(mito_utilities_BadItem_icc)
+#error This header file contains implementation details of class mito::utilities::BadItem
+#else
+
+// operator->
+template <class Resource>
+auto
+mito::utilities::BadItem<Resource>::operator->() const
+    -> mito::utilities::BadItem<Resource>::handle_t
+{
+    // throw
+    pyre::journal::error_t error("BadItem");
+    error << "Bad Item!" << pyre::journal::endl;
+    throw std::runtime_error("Bad Item");
+}
+
+// // operator*
+// template <class Resource>
+// auto
+// mito::utilities::BadItem<Resource>::operator*() const
+//     -> const mito::utilities::BadItem<Resource>::resource_t &
+// {
+// }
+
+// destructor
+template <class Resource>
+mito::utilities::BadItem<Resource>::~BadItem()
+{}
+
+// default constructor
+template <class Resource>
+mito::utilities::BadItem<Resource>::BadItem()
+{}
+
+// copy constructor
+template <class Resource>
+mito::utilities::BadItem<Resource>::BadItem(const BadItem<Resource> & item) :
+    SharedPointer<Resource>(item)
+{}
+
+#endif
+// end of file

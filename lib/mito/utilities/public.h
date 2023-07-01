@@ -16,6 +16,7 @@
 #include "Singleton.h"
 #include "Shareable.h"
 #include "SharedPointer.h"
+#include "BadItem.h"
 #include "SegmentedContainer.h"
 #include "SegmentedContainerIterator.h"
 

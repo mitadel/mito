@@ -34,7 +34,7 @@ namespace mito::utilities {
         inline auto is_nullptr() const noexcept -> bool;
 
         // operator->
-        auto operator->() const noexcept -> handle_t;
+        virtual auto operator->() const -> handle_t;
 
         // // operator*
         // auto operator*() const -> const resource_t &;
