@@ -124,7 +124,7 @@ namespace mito::mesh {
             _cells.erase(cell);
 
             // ask the topology to erase the cell
-            _geometry.topology().template erase<D>(cell.id());
+            _geometry.topology().erase(std::move(cell));
 
             // all done
             return;

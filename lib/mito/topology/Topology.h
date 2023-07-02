@@ -97,7 +97,7 @@ namespace mito::topology {
 
       public:
         template <int D>
-        inline auto erase(oriented_simplex_id_t<D> simplex_id) -> void;
+        inline auto erase(simplex_t<D> && simplex) -> void;
 
       private:
         // factory for vertices
