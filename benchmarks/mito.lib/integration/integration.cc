@@ -65,7 +65,7 @@ main()
     mesh.insert(cell1);
 
     // flip the common edge of the two triangles
-    auto simplex_pair = mito::mesh::flipDiagonal(std::make_pair(cell0, cell1));
+    auto simplex_pair = mito::topology::flipDiagonal(std::make_pair(cell0, cell1));
 
     mesh.insert(simplex_pair.first);
     mesh.erase(cell0);
