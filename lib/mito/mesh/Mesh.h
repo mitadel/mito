@@ -105,7 +105,7 @@ namespace mito::mesh {
             return _cells;
         }
 
-        inline auto erase(const cell_t && cell) -> void
+        inline auto erase(cell_t & cell) -> void
         {
             // loop on the subcells of {cell}
             for (const auto & subcell : cell->composition()) {

@@ -68,10 +68,10 @@ main()
     auto simplex_pair = mito::mesh::flipDiagonal(std::make_pair(cell0, cell1));
 
     mesh.insert(simplex_pair.first);
-    mesh.erase(std::move(cell0));
+    mesh.erase(cell0);
 
     mesh.insert(simplex_pair.second);
-    mesh.erase(std::move(cell1));
+    mesh.erase(cell1);
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
