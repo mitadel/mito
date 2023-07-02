@@ -13,17 +13,9 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     auto vertex2 = topology.vertex();
     auto vertex3 = topology.vertex();
 
-    // build segments
-    auto segment_a = topology.segment({ vertex0, vertex1 });
-    auto segment_b = topology.segment({ vertex1, vertex2 });
-    auto segment_c = topology.segment({ vertex2, vertex3 });
-    auto segment_d = topology.segment({ vertex3, vertex0 });
-    auto segment_e = topology.segment({ vertex0, vertex2 });
-    auto segment_e_flip = topology.flip(segment_e);
-
     // build triangles
-    auto simplex0 = topology.triangle({ segment_a, segment_b, segment_e_flip });
-    auto simplex1 = topology.triangle({ segment_e, segment_c, segment_d });
+    auto simplex0 = topology.triangle({ vertex0, vertex1, vertex2 });
+    auto simplex1 = topology.triangle({ vertex0, vertex2, vertex3 });
 
     // build the two triangles obtained by flipping the common edge of the two triangles
     [[maybe_unused]] auto simplex_pair =
