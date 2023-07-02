@@ -1,14 +1,13 @@
 // code guard
-#if !defined(mito_mesh_flipdiagonal_h)
-#define mito_mesh_flipdiagonal_h
+#if !defined(mito_topology_flipdiagonal_h)
+#define mito_topology_flipdiagonal_h
 
 
-namespace mito::mesh {
+namespace mito::topology {
 
 
-    auto findSharedSimplex(
-        const topology::simplex_t<2> & simplex0, const topology::simplex_t<2> & simplex1)
-        -> const topology::unoriented_simplex_t<1> &
+    auto findSharedSimplex(const simplex_t<2> & simplex0, const simplex_t<2> & simplex1)
+        -> const unoriented_simplex_t<1> &
     {
         // loop on lower-dimensional simplices to find the edge shared by the two simplices
         for (const auto & subsimplex0 : simplex0->composition()) {
@@ -30,11 +29,11 @@ namespace mito::mesh {
 
 
     auto oppositeVertices(
-        const topology::simplex_t<2> & simplex0, const topology::simplex_t<2> & simplex1,
-        const auto & shared_simplex) -> topology::vertex_vector_t
+        const simplex_t<2> & simplex0, const simplex_t<2> & simplex1, const auto & shared_simplex)
+        -> vertex_vector_t
     {
         // need a regular set (not an unordered one) because set_difference works with ordered sets
-        using vertex_set_t = std::set<topology::vertex_t>;
+        using vertex_set_t = std::set<vertex_t>;
 
         vertex_set_t vertices;
         simplex0->vertices(vertices);
@@ -49,17 +48,18 @@ namespace mito::mesh {
             std::end(shared_simplex_vertices),
             std::inserter(opposite_vertices, std::end(opposite_vertices)));
 
-        topology::vertex_vector_t opposite_vertices_vector(
+        vertex_vector_t opposite_vertices_vector(
             std::begin(opposite_vertices), std::end(opposite_vertices));
         assert(std::size(opposite_vertices) == 2);
 
         return opposite_vertices_vector;
     }
 
+
     auto erase_subsimplex(
-        std::set<topology::simplex_t<1>> & boundary_simplices,
-        topology::simplex_composition_t<2> & new_simplex_composition,
-        topology::simplex_t<1> & subsimplex_to_erase, size_t i) -> void
+        std::set<simplex_t<1>> & boundary_simplices,
+        simplex_composition_t<2> & new_simplex_composition, simplex_t<1> & subsimplex_to_erase,
+        size_t i) -> void
     {
         for (const auto & subsimplex : boundary_simplices) {
             if (headTailConnected(new_simplex_composition[i], subsimplex)) {
@@ -71,8 +71,7 @@ namespace mito::mesh {
         boundary_simplices.erase(subsimplex_to_erase);
     }
 
-    auto flipDiagonal(std::pair<topology::simplex_t<2>, topology::simplex_t<2>> simplex_pair)
-        -> auto
+    auto flipDiagonal(std::pair<simplex_t<2>, simplex_t<2>> simplex_pair) -> auto
     {
         const auto & simplex0 = simplex_pair.first;
         const auto & simplex1 = simplex_pair.second;
@@ -93,7 +92,7 @@ namespace mito::mesh {
         auto opposite_diagonal_segment =
             topology.segment({ opposite_vertices[1], opposite_vertices[0] });
 
-        std::set<topology::simplex_t<1>> boundary_simplices;
+        std::set<simplex_t<1>> boundary_simplices;
         // get boundary simplices of simplex0 (all except diagonal)
         for (const auto & subsimplex : simplex0->composition()) {
             // if it is not the shared simplex
@@ -111,10 +110,10 @@ namespace mito::mesh {
         }
         assert(std::size(boundary_simplices) == 4);
 
-        topology::simplex_composition_t<2> new_simplex_composition_0;
+        simplex_composition_t<2> new_simplex_composition_0;
         new_simplex_composition_0[0] = diagonal_segment;
 
-        topology::simplex_t<1> subsimplex_to_erase = *std::begin(boundary_simplices);
+        simplex_t<1> subsimplex_to_erase = *std::begin(boundary_simplices);
 
         for (size_t i = 0; i < 2; ++i) {
             erase_subsimplex(boundary_simplices, new_simplex_composition_0, subsimplex_to_erase, i);
@@ -123,7 +122,7 @@ namespace mito::mesh {
         assert(std::size(boundary_simplices) == 2);
         assert(headTailConnected(new_simplex_composition_0[2], new_simplex_composition_0[0]));
 
-        topology::simplex_composition_t<2> new_simplex_composition_1;
+        simplex_composition_t<2> new_simplex_composition_1;
         new_simplex_composition_1[0] = opposite_diagonal_segment;
 
         for (size_t i = 0; i < 2; ++i) {

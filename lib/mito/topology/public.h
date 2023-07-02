@@ -26,6 +26,9 @@
 // factories implementation
 #include "factories.h"
 
+// support for flip diagonal
+#include "flipdiagonal.h"
+
 #endif
 
 // end of file
