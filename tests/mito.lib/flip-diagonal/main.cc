@@ -27,4 +27,11 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     // assert that the new diagonal is now in use (by factory, driver, and two triangles)
     auto segment_f = topology.segment({ vertex1, vertex3 });
     EXPECT_EQ(segment_f->footprint().references(), 3);
+
+    // erase the old simplices
+    topology.erase(std::move(simplex0));
+    topology.erase(std::move(simplex1));
+    // assert that old diagonals have been erased
+    EXPECT_FALSE(topology.exists({ vertex0, vertex2 }));
+    EXPECT_FALSE(topology.exists({ vertex2, vertex0 }));
 }
