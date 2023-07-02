@@ -73,11 +73,12 @@ namespace mito::mesh {
         topology.erase<D>(subsimplex_to_erase.id());
     }
 
-    template <int D, int N>
-    auto flipDiagonal(
-        mesh_t<topology::simplex_t<N>, D> & mesh, const topology::simplex_t<2> & simplex0,
-        const topology::simplex_t<2> & simplex1) -> void
+    auto flipDiagonal(std::pair<topology::simplex_t<2>, topology::simplex_t<2>> simplex_pair)
+        -> auto
     {
+        const auto & simplex0 = simplex_pair.first;
+        const auto & simplex1 = simplex_pair.second;
+
         // get the shared simplex between the two simplices
         const auto & shared_simplex = findSharedSimplex(simplex0, simplex1);
 
@@ -140,14 +141,8 @@ namespace mito::mesh {
         auto & new_simplex0 = topology.triangle(new_simplex_composition_0);
         auto & new_simplex1 = topology.triangle(new_simplex_composition_1);
 
-        mesh.insert(new_simplex0);
-        mesh.erase(std::move(simplex0));
-
-        mesh.insert(new_simplex1);
-        mesh.erase(std::move(simplex1));
-
         // all done
-        return;
+        return std::make_pair(new_simplex0, new_simplex1);
     }
 }
 
