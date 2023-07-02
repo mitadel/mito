@@ -57,7 +57,6 @@ namespace mito::mesh {
     }
 
     auto erase_subsimplex(
-        mito::topology::topology_t & topology,
         std::set<topology::simplex_t<1>> & boundary_simplices,
         topology::simplex_composition_t<2> & new_simplex_composition,
         topology::simplex_t<1> & subsimplex_to_erase, size_t i) -> void
@@ -70,7 +69,6 @@ namespace mito::mesh {
             }
         }
         boundary_simplices.erase(subsimplex_to_erase);
-        topology.erase<D>(subsimplex_to_erase.id());
     }
 
     auto flipDiagonal(std::pair<topology::simplex_t<2>, topology::simplex_t<2>> simplex_pair)
@@ -119,8 +117,7 @@ namespace mito::mesh {
         topology::simplex_t<1> subsimplex_to_erase = *std::begin(boundary_simplices);
 
         for (size_t i = 0; i < 2; ++i) {
-            erase_subsimplex(
-                topology, boundary_simplices, new_simplex_composition_0, subsimplex_to_erase, i);
+            erase_subsimplex(boundary_simplices, new_simplex_composition_0, subsimplex_to_erase, i);
         }
 
         assert(std::size(boundary_simplices) == 2);
@@ -130,8 +127,7 @@ namespace mito::mesh {
         new_simplex_composition_1[0] = opposite_diagonal_segment;
 
         for (size_t i = 0; i < 2; ++i) {
-            erase_subsimplex(
-                topology, boundary_simplices, new_simplex_composition_1, subsimplex_to_erase, i);
+            erase_subsimplex(boundary_simplices, new_simplex_composition_1, subsimplex_to_erase, i);
         }
 
         assert(std::size(boundary_simplices) == 0);
