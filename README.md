@@ -3,10 +3,8 @@
 [![cmake ubuntu](https://github.com/mitadel/mito/actions/workflows/cmake-ubuntu.yaml/badge.svg)](https://github.com/mitadel/mito/actions/workflows/cmake-ubuntu.yaml)
 [![cmake macos](https://github.com/mitadel/mito/actions/workflows/cmake-macos.yaml/badge.svg)](https://github.com/mitadel/mito/actions/workflows/cmake-macos.yaml)
 
-C++ software library for high performance simulations of complex multi-physics problems.
+C++/Python framework for high performance computational modeling of general multi-physics phenomena.
 
-mito stands for **m**ath **i**nto **t**emplate **o**bjects: mathematical concepts are templatized 
-and guide the design of the library using the newest C++ standards (>= 20).
-
-Wherever possible the computation is resolved at compilation time, resulting in a very light and
-efficient runtime.
+The idea driving the design is to capture the relations of the several actors present in any
+computational physics formulation into a collection of template classes closely emulating the
+underlying mathematical structure, harnessing the power of modern C++.
