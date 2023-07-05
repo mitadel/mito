@@ -1,7 +1,7 @@
 # mito
 
-[![cmake ubuntu](https://github.com/mitadel/mito/actions/workflows/cmake-ubuntu.yml/badge.svg)](https://github.com/mitadel/mito/actions/workflows/cmake-ubuntu.yml)
-[![cmake macos](https://github.com/mitadel/mito/actions/workflows/cmake-macos.yml/badge.svg)](https://github.com/mitadel/mito/actions/workflows/cmake-macos.yml)
+[![cmake ubuntu](https://github.com/mitadel/mito/actions/workflows/cmake-ubuntu.yaml/badge.svg)](https://github.com/mitadel/mito/actions/workflows/cmake-ubuntu.yaml)
+[![cmake macos](https://github.com/mitadel/mito/actions/workflows/cmake-macos.yaml/badge.svg)](https://github.com/mitadel/mito/actions/workflows/cmake-macos.yaml)
 
 C++ software library for high performance simulations of complex multi-physics problems.
 
