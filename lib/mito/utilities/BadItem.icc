@@ -15,6 +15,8 @@ mito::utilities::BadItem<Resource>::operator->() const
     pyre::journal::error_t error("BadItem");
     error << "Bad Item!" << pyre::journal::endl;
     throw std::runtime_error("Bad Item");
+    // TODO: Michael will edit the {error_t} such that we can call:
+    // throw error.die();
 }
 
 // // operator*

@@ -43,6 +43,9 @@ template <class Resource>
 auto
 mito::utilities::SharedPointer<Resource>::reset() -> void
 {
+    // QUESTION:
+    // Perhaps this method should not exist, but the destructor of SharedPointer should be called
+    // instead and then the instance should be swapped for a bad item
     // release my current handle
     _release();
 
@@ -60,6 +63,7 @@ template <class Resource>
 auto
 mito::utilities::SharedPointer<Resource>::is_nullptr() const noexcept -> bool
 {
+    // QUESTION: perhaps this method should be removed?
     // all done
     return _handle == nullptr;
 }

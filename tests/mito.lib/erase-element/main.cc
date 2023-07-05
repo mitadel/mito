@@ -150,6 +150,8 @@ TEST(EraseElement, TestEraseElementTopology)
 
     // erase the cell with edges {segment_0, segment_1, segment_2}
     topology.erase(std::move(cell_0));
+    // TOFIX: enable exception handling in double erasion of a resource
+    // topology.erase(std::move(cell_0));
 
     // assert that a segment connecting vertex 0 and 1 no longer exists in the topology
     // ({segment_0} was erased because it is unused after erasing {cell_0})

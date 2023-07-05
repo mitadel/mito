@@ -90,6 +90,12 @@ namespace mito::topology {
         {
             // reset the footprint shared pointer
             _footprint.reset();
+            // TOFIX: the destructors of elements erased are never called with the consequence that
+            // the destructor for the items in {_available_locations} in the SegmentedContainer
+            // are not called. This is not a big deal in this case as there is no memory to free in
+            // the destructor and also the segmented container takes care of the memory deallocation.
+            // However, it is not general, so it needs fixing.
+            // _footprint->~unoriented_simplex_t<D>();
 
             // all done
             return;

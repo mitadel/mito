@@ -215,6 +215,10 @@ mito::topology::Topology::erase(simplex_t<D> && simplex) -> void
     }
 
     // invalidate simplex
+    // TOFIX: this does not do what it was meant to do. The idea was to somehow replace the simplex
+    // (taken by &&) with the bad item. However, what happens here is that the
+    // SharedPointer::operator= is called. Therefore, after the following line, simplex is simply
+    // a SharedPointer with nullptr {_handle}.
     simplex = oriented_simplex_factory_t<D>::oriented_simplex_collection_t::bad_item();
 
     // all done
