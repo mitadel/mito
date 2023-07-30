@@ -32,14 +32,6 @@ function(mito_test_testcase testcase testfile)
     # all done
 endfunction()
 
-# generate a unique test target name
-function(mito_test_output_target targetout target)
-    # build the target and return it
-    set(${targetout} "${target}.output" PARENT_SCOPE)
-
-    # all done
-endfunction()
-
 # register a test case based on a compiled driver
 function(mito_test_driver testfile)
     # generate the name of the testcase
@@ -47,9 +39,6 @@ function(mito_test_driver testfile)
 
     # generate the name of the target
     mito_target_name(target ${testfile})
-
-    # generate the name of the output target
-    mito_test_output_target(targetout ${target})
 
     # schedule it to be compiled
     add_executable(${target} ${testfile})
@@ -63,7 +52,7 @@ function(mito_test_driver testfile)
     # link against gtest
     target_link_libraries(${target} PUBLIC GTest::gtest_main)
 
-    #  setup the test working directory
+    # setup the test working directory
     get_filename_component(path ${testfile} DIRECTORY)
     set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})
 
@@ -80,10 +69,6 @@ function(mito_test_driver testfile)
 
     # request c++20
     set_property(TARGET ${target} PROPERTY CXX_STANDARD 20)
-
-    # make a target to run the test and get standard output
-    # (calling 'make output_<test_name>' will run the test out of the test suite and will not delete the output)
-    add_custom_target(${targetout} WORKING_DIRECTORY ${test_workdir} COMMAND sh -c "${CMAKE_CURRENT_BINARY_DIR}/${target} ${ARGN}")
 
     # all done
 endfunction(mito_test_driver)
