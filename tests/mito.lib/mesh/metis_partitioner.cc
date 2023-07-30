@@ -162,7 +162,7 @@ populate_adjacency_map(
 auto
 populate_metis_partition(
     int nVertices, int nEdges, int nPartitions, const std::map<int, std::set<int>> & adjacency_map)
-    -> void
+    -> std::vector<idx_t>
 {
     idx_t nVertices_metis = nVertices;
     idx_t nEdges_metis = nEdges;
@@ -213,13 +213,8 @@ populate_metis_partition(
     // assert metis ran correctly
     EXPECT_EQ(metisResult, 1);
 
-    std::cout << "partition" << std::endl;
-    for (unsigned part_i = 0; part_i < partitions.size(); part_i++) {
-        std::cout << part_i << " " << partitions[part_i] << std::endl;
-    }
-
     // all done
-    return;
+    return partitions;
 }
 
 auto
@@ -267,7 +262,12 @@ partition(const mesh_t & mesh, int nPartitions) -> void
     EXPECT_EQ(nEdges, 16);
 
     // call metis partitioner
-    populate_metis_partition(nVertices, nEdges, nPartitions, adjacency_map);
+    auto partitions = populate_metis_partition(nVertices, nEdges, nPartitions, adjacency_map);
+
+    std::cout << "partition" << std::endl;
+    for (unsigned part_i = 0; part_i < partitions.size(); part_i++) {
+        std::cout << part_i << " " << partitions[part_i] << std::endl;
+    }
 
     // all done
     return;
