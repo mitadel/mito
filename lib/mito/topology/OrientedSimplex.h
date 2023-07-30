@@ -81,6 +81,13 @@ namespace mito::topology {
             return _footprint->vertices(vertices);
         }
 
+        // append the edges of this simplex to a collection of edges
+        template <class EDGES_COLLECTION_T>
+        inline auto edges(EDGES_COLLECTION_T & edges) const -> void
+        {
+            return _footprint->edges(edges);
+        }
+
         // returns whether the simplex passes the sanity check
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 

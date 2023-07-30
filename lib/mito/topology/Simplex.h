@@ -68,6 +68,35 @@ namespace mito::topology {
             vertices.insert(_simplices[1]->footprint());
         }
 
+        // append the edges of this simplex to a collection of edges
+        template <class EDGES_COLLECTION_T>
+        inline auto edges(EDGES_COLLECTION_T & edges) const -> void
+        requires(D > 2)
+        {
+            // if D > 2, then recursively fetch the edges from the simplices in the composition
+            for (const auto & simplex : composition()) {
+                simplex->edges(edges);
+            }
+
+            // all done
+            return;
+        }
+
+        // append the edges of this simplex to a collection of edges
+        template <class EDGES_COLLECTION_T>
+        inline auto edges(EDGES_COLLECTION_T & edges) const -> void
+        requires(D == 2)
+        {
+            // if D == 2, then this simplex is a triangle and its composition already consists of
+            // edges
+            for (const auto & edge : composition()) {
+                edges.insert(edge);
+            }
+
+            // all done
+            return;
+        }
+
         // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
         inline auto sanityCheck() const -> bool
         {
