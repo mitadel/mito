@@ -5,6 +5,8 @@
 
 using geometry_t = mito::geometry::geometry_t<2>;
 using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
+using vertex_t = mito::topology::vertex_t;
+using edge_t = mito::topology::segment_t;
 using vertex_index_t = mito::utilities::index_t<mito::topology::vertex_t>;
 
 auto
@@ -82,25 +84,16 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
 }
 
 auto
-populate_collection_of_vertices(const mesh_t & mesh) -> std::set<vertex_index_t>
+populate_collection_of_vertices(const mesh_t & mesh) -> std::set<vertex_t>
 {
-    // a set collecting all the vertices ids (without repeated entries)
-    std::set<vertex_index_t> vertex_collection;
+    // a set collecting all the vertices (without repeated entries)
+    std::set<vertex_t> vertex_collection;
 
     // populate the {vertex_collection}
     // loop on cells in {mesh}
     for (const auto & cell : mesh.cells()) {
-        // loop on edges of {cell}
-        for (const auto & edge : cell->composition()) {
-
-            // get the ids of the two vertices
-            vertex_index_t vertex1 = edge->composition()[0]->footprint().id();
-            vertex_index_t vertex2 = edge->composition()[1]->footprint().id();
-
-            // add vertices ids to collection
-            vertex_collection.insert(vertex1);
-            vertex_collection.insert(vertex2);
-        }
+        // append vertices of current cell to {vertex_collection}
+        cell->vertices(vertex_collection);
     }
 
     // all done
@@ -108,8 +101,7 @@ populate_collection_of_vertices(const mesh_t & mesh) -> std::set<vertex_index_t>
 }
 
 auto
-populate_vertices_map(const std::set<vertex_index_t> & vertex_collection)
-    -> std::map<vertex_index_t, int>
+populate_vertices_map(const std::set<vertex_t> & vertex_collection) -> std::map<vertex_index_t, int>
 {
     // a map between the vertex index and an int id
     std::map<vertex_index_t, int> vertex_ids;
@@ -119,7 +111,7 @@ populate_vertices_map(const std::set<vertex_index_t> & vertex_collection)
 
     // populate the {vertex_ids} map
     for (const auto & vertex : vertex_collection) {
-        vertex_ids[vertex] = vertex_id++;
+        vertex_ids[vertex.id()] = vertex_id++;
     }
 
     // all done
@@ -127,23 +119,41 @@ populate_vertices_map(const std::set<vertex_index_t> & vertex_collection)
 }
 
 auto
-populate_adjacency_map(const mesh_t & mesh, const std::map<vertex_index_t, int> & vertex_ids)
+populate_collection_of_edges(const mesh_t & mesh) -> std::set<edge_t>
+{
+    // a set collecting all the edges (without repeated entries)
+    std::set<edge_t> edge_collection;
+
+    // populate the {edge_collection}
+    // loop on cells in {mesh}
+    for (const auto & cell : mesh.cells()) {
+        // append edges of current cell to {edge_collection}
+        cell->edges(edge_collection);
+    }
+
+    // all done
+    return edge_collection;
+}
+
+auto
+populate_adjacency_map(
+    const std::map<vertex_index_t, int> & vertex_ids, const std::set<edge_t> & edge_collection)
     -> std::map<int, std::set<int>>
 {
     // the adjacency map
     std::map<int, std::set<int>> adjacency_map;
 
-    // loop on cells of {mesh}
-    for (const auto & cell : mesh.cells()) {
-        // loop on edges of {cell}
-        for (const auto & edge : cell->composition()) {
-            // get the ids of the two vertices
-            vertex_index_t vertex1 = edge->composition()[0]->footprint().id();
-            vertex_index_t vertex2 = edge->composition()[1]->footprint().id();
+    // loop on all edges
+    // TOFIX: loop only on the unoriented edges. Here we are redundantly filling the {adjacency_map}
+    //      twice, once for each of the two edges orientations, because {edge_collection} contains
+    //      internal edges with both orientations
+    for (const auto & edge : edge_collection) {
+        // get the ids of the two vertices
+        vertex_index_t vertex1 = edge->composition()[0]->footprint().id();
+        vertex_index_t vertex2 = edge->composition()[1]->footprint().id();
 
-            adjacency_map[vertex_ids.at(vertex1)].insert(vertex_ids.at(vertex2));
-            adjacency_map[vertex_ids.at(vertex2)].insert(vertex_ids.at(vertex1));
-        }
+        adjacency_map[vertex_ids.at(vertex1)].insert(vertex_ids.at(vertex2));
+        adjacency_map[vertex_ids.at(vertex2)].insert(vertex_ids.at(vertex1));
     }
 
     // all done
@@ -216,15 +226,20 @@ populate_metis_partition(
 auto
 partition_mesh(const mesh_t & mesh) -> void
 {
-    // a set collecting all the vertices ids (without repeated entries)
-    std::set<vertex_index_t> vertex_collection = populate_collection_of_vertices(mesh);
+    // a collection of all the vertices (without repeated entries)
+    auto vertex_collection = populate_collection_of_vertices(mesh);
     // check that you found 5 vertices
     EXPECT_EQ(vertex_collection.size(), 5);
 
-    // a map between the vertex index and an int id
-    std::map<vertex_index_t, int> vertex_ids = populate_vertices_map(vertex_collection);
+    // a map between the vertices and an integer id
+    auto vertex_ids = populate_vertices_map(vertex_collection);
     // assert you assigned 5 labels
     EXPECT_EQ(vertex_ids.size(), 5);
+
+    // a collection of all the edges (without repeated entries)
+    auto edge_collection = populate_collection_of_edges(mesh);
+    // check that you found 12 edges
+    EXPECT_EQ(edge_collection.size(), 12);
 
     // std::cout << "vertex map" << std::endl;
     // for (const auto & vertex : vertex_ids) {
@@ -232,7 +247,8 @@ partition_mesh(const mesh_t & mesh) -> void
     // }
 
     // the adjacency map
-    std::map<int, std::set<int>> adjacency_map = populate_adjacency_map(mesh, vertex_ids);
+    std::map<int, std::set<int>> adjacency_map =
+        populate_adjacency_map(vertex_ids, edge_collection);
 
     // for (const auto & vertex : adjacency_map) {
     //     std::cout << vertex.first << std::endl;
