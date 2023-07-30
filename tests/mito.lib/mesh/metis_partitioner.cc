@@ -103,18 +103,18 @@ auto
 populate_vertices_map(const std::set<vertex_t> & vertex_collection) -> std::map<vertex_t, int>
 {
     // a map between a vertex and an integer id
-    std::map<vertex_t, int> vertex_ids;
+    std::map<vertex_t, int> vertex_to_id;
 
     // the smallest spare vertex id
     int vertex_id = 0;
 
-    // populate the {vertex_ids} map
+    // populate the {vertex_to_id} map
     for (const auto & vertex : vertex_collection) {
-        vertex_ids[vertex] = vertex_id++;
+        vertex_to_id[vertex] = vertex_id++;
     }
 
     // all done
-    return vertex_ids;
+    return vertex_to_id;
 }
 
 auto
@@ -136,7 +136,7 @@ populate_collection_of_edges(const mesh_t & mesh) -> std::set<edge_t>
 
 auto
 populate_adjacency_map(
-    const std::map<vertex_t, int> & vertex_ids, const std::set<edge_t> & edge_collection)
+    const std::map<vertex_t, int> & vertex_to_id, const std::set<edge_t> & edge_collection)
     -> std::map<int, std::set<int>>
 {
     // the adjacency map
@@ -151,8 +151,8 @@ populate_adjacency_map(
         vertex_t vertex1 = edge->composition()[0]->footprint();
         vertex_t vertex2 = edge->composition()[1]->footprint();
 
-        adjacency_map[vertex_ids.at(vertex1)].insert(vertex_ids.at(vertex2));
-        adjacency_map[vertex_ids.at(vertex2)].insert(vertex_ids.at(vertex1));
+        adjacency_map[vertex_to_id.at(vertex1)].insert(vertex_to_id.at(vertex2));
+        adjacency_map[vertex_to_id.at(vertex2)].insert(vertex_to_id.at(vertex1));
     }
 
     // all done
@@ -226,9 +226,9 @@ partition(const mesh_t & mesh, int nPartitions) -> void
     EXPECT_EQ(vertex_collection.size(), 5);
 
     // a map between the vertices and an integer id
-    auto vertex_ids = populate_vertices_map(vertex_collection);
+    auto vertex_to_id = populate_vertices_map(vertex_collection);
     // assert you assigned 5 labels
-    EXPECT_EQ(vertex_ids.size(), 5);
+    EXPECT_EQ(vertex_to_id.size(), 5);
 
     // a collection of all the edges (without repeated entries)
     auto edge_collection = populate_collection_of_edges(mesh);
@@ -236,13 +236,13 @@ partition(const mesh_t & mesh, int nPartitions) -> void
     EXPECT_EQ(edge_collection.size(), 12);
 
     // std::cout << "vertex map" << std::endl;
-    // for (const auto & vertex : vertex_ids) {
+    // for (const auto & vertex : vertex_to_id) {
     //     std::cout << vertex.first << "\t" << vertex.second << std::endl;
     // }
 
     // the adjacency map
     std::map<int, std::set<int>> adjacency_map =
-        populate_adjacency_map(vertex_ids, edge_collection);
+        populate_adjacency_map(vertex_to_id, edge_collection);
 
     // for (const auto & vertex : adjacency_map) {
     //     std::cout << vertex.first << std::endl;
