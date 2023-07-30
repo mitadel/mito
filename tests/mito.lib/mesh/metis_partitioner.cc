@@ -224,7 +224,7 @@ populate_metis_partition(
 }
 
 auto
-partition_mesh(const mesh_t & mesh) -> void
+partition(const mesh_t & mesh, int nPartitions) -> void
 {
     // a collection of all the vertices (without repeated entries)
     auto vertex_collection = populate_collection_of_vertices(mesh);
@@ -267,8 +267,6 @@ partition_mesh(const mesh_t & mesh) -> void
     int nEdges = mesh.cells().size() * 3 + mesh.boundary_size();
     EXPECT_EQ(nEdges, 16);
 
-    int nPartitions = 2;
-
     // call metis partitioner
     populate_metis_partition(nVertices, nEdges, nPartitions, adjacency_map);
 
@@ -293,8 +291,11 @@ TEST(MetisPartitioner, Base)
     // populate the mesh
     build_mesh(geometry, mesh);
 
+    // number of partitions
+    int n_partitions = 2;
+
     // partition the mesh
-    partition_mesh(mesh);
+    partition(mesh, n_partitions);
 
     // all done
     return;
