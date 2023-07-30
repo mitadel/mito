@@ -74,8 +74,7 @@ namespace mito::topology {
             return _footprint->composition();
         }
 
-
-        // returns the set of vertices
+        // append the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         inline auto vertices(VERTEX_COLLECTION_T & vertices) const -> void
         {

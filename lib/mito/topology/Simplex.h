@@ -49,7 +49,7 @@ namespace mito::topology {
             return _simplices;
         }
 
-        // add the vertices of this simplex to a collection of vertices
+        // append the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const
         requires(D > 1)
@@ -59,6 +59,7 @@ namespace mito::topology {
             }
         }
 
+        // append the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const
         requires(D == 1)
