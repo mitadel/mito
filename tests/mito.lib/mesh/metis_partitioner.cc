@@ -83,7 +83,7 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
 }
 
 auto
-populate_collection_of_vertices(const mesh_t & mesh) -> std::set<vertex_t>
+populate_collection_of_vertices(const mesh_t & mesh) -> std::vector<vertex_t>
 {
     // a set collecting all the vertices (without repeated entries)
     std::set<vertex_t> vertex_collection;
@@ -95,22 +95,22 @@ populate_collection_of_vertices(const mesh_t & mesh) -> std::set<vertex_t>
         cell->vertices(vertex_collection);
     }
 
+    // a vector with all vertices
+    std::vector<vertex_t> id_to_vertex(vertex_collection.begin(), vertex_collection.end());
+
     // all done
-    return vertex_collection;
+    return id_to_vertex;
 }
 
 auto
-populate_vertices_map(const std::set<vertex_t> & vertex_collection) -> std::map<vertex_t, int>
+populate_vertices_map(const std::vector<vertex_t> & id_to_vertex) -> std::map<vertex_t, int>
 {
     // a map between a vertex and an integer id
     std::map<vertex_t, int> vertex_to_id;
 
-    // the smallest spare vertex id
-    int vertex_id = 0;
-
     // populate the {vertex_to_id} map
-    for (const auto & vertex : vertex_collection) {
-        vertex_to_id[vertex] = vertex_id++;
+    for (size_t id = 0; id < id_to_vertex.size(); ++id) {
+        vertex_to_id[id_to_vertex[id]] = id;
     }
 
     // all done
@@ -220,13 +220,13 @@ populate_metis_partition(
 auto
 partition(const mesh_t & mesh, int nPartitions) -> void
 {
-    // a collection of all the vertices (without repeated entries)
-    auto vertex_collection = populate_collection_of_vertices(mesh);
+    // a collection of all the vertices
+    auto id_to_vertex = populate_collection_of_vertices(mesh);
     // check that you found 5 vertices
-    EXPECT_EQ(vertex_collection.size(), 5);
+    EXPECT_EQ(id_to_vertex.size(), 5);
 
     // a map between the vertices and an integer id
-    auto vertex_to_id = populate_vertices_map(vertex_collection);
+    auto vertex_to_id = populate_vertices_map(id_to_vertex);
     // assert you assigned 5 labels
     EXPECT_EQ(vertex_to_id.size(), 5);
 
