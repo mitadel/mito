@@ -7,7 +7,6 @@ using geometry_t = mito::geometry::geometry_t<2>;
 using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
 using vertex_t = mito::topology::vertex_t;
 using edge_t = mito::topology::segment_t;
-using vertex_index_t = mito::utilities::index_t<mito::topology::vertex_t>;
 
 auto
 build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
@@ -101,17 +100,17 @@ populate_collection_of_vertices(const mesh_t & mesh) -> std::set<vertex_t>
 }
 
 auto
-populate_vertices_map(const std::set<vertex_t> & vertex_collection) -> std::map<vertex_index_t, int>
+populate_vertices_map(const std::set<vertex_t> & vertex_collection) -> std::map<vertex_t, int>
 {
-    // a map between the vertex index and an int id
-    std::map<vertex_index_t, int> vertex_ids;
+    // a map between a vertex and an integer id
+    std::map<vertex_t, int> vertex_ids;
 
     // the smallest spare vertex id
     int vertex_id = 0;
 
     // populate the {vertex_ids} map
     for (const auto & vertex : vertex_collection) {
-        vertex_ids[vertex.id()] = vertex_id++;
+        vertex_ids[vertex] = vertex_id++;
     }
 
     // all done
@@ -137,7 +136,7 @@ populate_collection_of_edges(const mesh_t & mesh) -> std::set<edge_t>
 
 auto
 populate_adjacency_map(
-    const std::map<vertex_index_t, int> & vertex_ids, const std::set<edge_t> & edge_collection)
+    const std::map<vertex_t, int> & vertex_ids, const std::set<edge_t> & edge_collection)
     -> std::map<int, std::set<int>>
 {
     // the adjacency map
@@ -149,8 +148,8 @@ populate_adjacency_map(
     //      internal edges with both orientations
     for (const auto & edge : edge_collection) {
         // get the ids of the two vertices
-        vertex_index_t vertex1 = edge->composition()[0]->footprint().id();
-        vertex_index_t vertex2 = edge->composition()[1]->footprint().id();
+        vertex_t vertex1 = edge->composition()[0]->footprint();
+        vertex_t vertex2 = edge->composition()[1]->footprint();
 
         adjacency_map[vertex_ids.at(vertex1)].insert(vertex_ids.at(vertex2));
         adjacency_map[vertex_ids.at(vertex2)].insert(vertex_ids.at(vertex1));
