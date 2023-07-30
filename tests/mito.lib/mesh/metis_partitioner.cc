@@ -160,7 +160,7 @@ populate_adjacency_map(
 }
 
 auto
-populate_metis_partition(
+metis_paint_partition(
     int nVertices, int nEdges, int nPartitions, const std::map<int, std::set<int>> & adjacency_map)
     -> std::vector<idx_t>
 {
@@ -170,7 +170,7 @@ populate_metis_partition(
     idx_t nPartitions_metis = nPartitions;
 
     idx_t objval;
-    std::vector<idx_t> partitions(nVertices_metis, 0);
+    std::vector<idx_t> painting(nVertices_metis, 0);
 
     // Indexes of starting points in adjacent array
     std::vector<idx_t> xadjacency(nVertices_metis + 1);
@@ -208,13 +208,13 @@ populate_metis_partition(
 
     int metisResult = METIS_PartGraphKway(
         &nVertices_metis, &nWeights, xadjacency.data(), adjacency.data(), NULL, NULL, NULL,
-        &nPartitions_metis, NULL, NULL, options, &objval, partitions.data());
+        &nPartitions_metis, NULL, NULL, options, &objval, painting.data());
 
     // assert metis ran correctly
     EXPECT_EQ(metisResult, 1);
 
     // all done
-    return partitions;
+    return painting;
 }
 
 auto
@@ -262,11 +262,11 @@ partition(const mesh_t & mesh, int nPartitions) -> void
     EXPECT_EQ(nEdges, 16);
 
     // call metis partitioner
-    auto partitions = populate_metis_partition(nVertices, nEdges, nPartitions, adjacency_map);
+    auto painting = metis_paint_partition(nVertices, nEdges, nPartitions, adjacency_map);
 
     std::cout << "partition" << std::endl;
-    for (unsigned part_i = 0; part_i < partitions.size(); part_i++) {
-        std::cout << part_i << " " << partitions[part_i] << std::endl;
+    for (size_t part_i = 0; part_i < painting.size(); part_i++) {
+        std::cout << part_i << " " << painting[part_i] << std::endl;
     }
 
     // all done
