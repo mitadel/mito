@@ -62,6 +62,9 @@ mito_destinationInit()
 include(mito_lib)
 include(mito_extensions)
 
+# mpi support
+include(mito_mpi)
+
 # vtk support
 include(mito_vtk)
 
