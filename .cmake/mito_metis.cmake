@@ -6,7 +6,7 @@ option(WITH_METIS "Enable support for Metis" OFF)
 
 # if METIS is requested
 if(WITH_METIS)
-    # find VTK
+    # find METIS
     find_package(METIS REQUIRED)
     # report
     message(STATUS "Enable Metis support")
