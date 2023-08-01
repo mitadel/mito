@@ -5,7 +5,8 @@
 // helper functions
 namespace {
 
-    auto populate_collection_of_vertices(const mesh_t & mesh) -> std::vector<vertex_t>
+    template <class meshT>
+    auto populate_collection_of_vertices(const meshT & mesh) -> std::vector<vertex_t>
     {
         // a set collecting all the vertices (without repeated entries)
         std::set<vertex_t> vertex_collection;
@@ -39,7 +40,8 @@ namespace {
         return vertex_to_id;
     }
 
-    auto populate_collection_of_edges(const mesh_t & mesh) -> std::set<edge_t>
+    template <class meshT>
+    auto populate_collection_of_edges(const meshT & mesh) -> std::set<edge_t>
     {
         // a set collecting all the edges (without repeated entries)
         std::set<edge_t> edge_collection;
@@ -138,7 +140,8 @@ namespace {
 
 namespace mito::mesh {
 
-    auto partition(const mesh_t & mesh, int nPartitions) -> void
+    template <class meshT>
+    auto partition(const meshT & mesh, int nPartitions) -> void
     {
         // a collection of all the vertices
         auto id_to_vertex = populate_collection_of_vertices(mesh);
