@@ -12,6 +12,10 @@
 #define HAVE_COMPACT_PACKINGS
 #include <pyre/tensor.h>
 
+#ifdef WITH_MPI
+#include <mpi.h>
+#endif
+
 #endif
 
 // end of file
