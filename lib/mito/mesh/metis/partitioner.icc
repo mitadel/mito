@@ -1,9 +1,14 @@
 // code guard
-#if !defined(mito_mesh_metis_partitioner_h)
-#define mito_mesh_metis_partitioner_h
+#if !defined(mito_mesh_metis_partitioner_icc)
+#error this file contains implementation details for metis mesh partitioner
+#else
+
 
 // helper functions
 namespace {
+
+    using vertex_t = mito::topology::vertex_t;
+    using edge_t = mito::topology::segment_t;
 
     template <class meshT>
     auto populate_collection_of_vertices(const meshT & mesh) -> std::vector<vertex_t>
@@ -132,63 +137,64 @@ namespace {
             &nVertices_metis, &nWeights, xadjacency.data(), adjacency.data(), NULL, NULL, NULL,
             &nPartitions_metis, NULL, NULL, options, &objval, painting.data());
 
+        // assert that metis ran correctly
+        assert(metisResult == 1);
+
         // all done
         return painting;
     }
-
 }
 
-namespace mito::mesh {
 
-    template <class meshT>
-    auto partition(const meshT & mesh, int nPartitions) -> void
-    {
-        // a collection of all the vertices
-        auto id_to_vertex = populate_collection_of_vertices(mesh);
+template <class meshT>
+auto
+mito::mesh::metis::partition(const meshT & mesh, int nPartitions) -> void
+{
+    // a collection of all the vertices
+    auto id_to_vertex = populate_collection_of_vertices(mesh);
 
-        // a map between the vertices and an integer id
-        auto vertex_to_id = populate_vertices_map(id_to_vertex);
+    // a map between the vertices and an integer id
+    auto vertex_to_id = populate_vertices_map(id_to_vertex);
 
-        // a collection of all the edges (without repeated entries)
-        auto edge_collection = populate_collection_of_edges(mesh);
+    // a collection of all the edges (without repeated entries)
+    auto edge_collection = populate_collection_of_edges(mesh);
 
-        // std::cout << "vertex map" << std::endl;
-        // for (const auto & vertex : vertex_to_id) {
-        //     std::cout << vertex.first << "\t" << vertex.second << std::endl;
-        // }
+    // std::cout << "vertex map" << std::endl;
+    // for (const auto & vertex : vertex_to_id) {
+    //     std::cout << vertex.first << "\t" << vertex.second << std::endl;
+    // }
 
-        // the adjacency map
-        std::map<int, std::set<int>> adjacency_map =
-            populate_adjacency_map(vertex_to_id, edge_collection);
+    // the adjacency map
+    std::map<int, std::set<int>> adjacency_map =
+        populate_adjacency_map(vertex_to_id, edge_collection);
 
-        // for (const auto & vertex : adjacency_map) {
-        //     std::cout << vertex.first << std::endl;
+    // for (const auto & vertex : adjacency_map) {
+    //     std::cout << vertex.first << std::endl;
 
-        //     for (auto i : vertex.second) {
-        //         std::cout << i << " ";
-        //     }
+    //     for (auto i : vertex.second) {
+    //         std::cout << i << " ";
+    //     }
 
-        //     std::cout << std::endl;
-        //     std::cout << std::endl;
-        // }
+    //     std::cout << std::endl;
+    //     std::cout << std::endl;
+    // }
 
-        int nVertices = mesh.geometry().point_cloud().size();
+    int nVertices = mesh.geometry().point_cloud().size();
 
-        // compute the total number of edges (with repeated orientation)
-        // TOFIX: is this general?
-        int nEdges = mesh.cells().size() * 3 + mesh.boundary_size();
+    // compute the total number of edges (with repeated orientation)
+    // TOFIX: is this general?
+    int nEdges = mesh.cells().size() * 3 + mesh.boundary_size();
 
-        // call metis partitioner
-        auto painting = metis_paint_partition(nVertices, nEdges, nPartitions, adjacency_map);
+    // call metis partitioner
+    auto painting = metis_paint_partition(nVertices, nEdges, nPartitions, adjacency_map);
 
-        std::cout << "partition" << std::endl;
-        for (size_t part_i = 0; part_i < painting.size(); part_i++) {
-            std::cout << part_i << " " << painting[part_i] << std::endl;
-        }
-
-        // all done
-        return;
+    std::cout << "partition" << std::endl;
+    for (size_t part_i = 0; part_i < painting.size(); part_i++) {
+        std::cout << part_i << " " << painting[part_i] << std::endl;
     }
+
+    // all done
+    return;
 }
 
 
