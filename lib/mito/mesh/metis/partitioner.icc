@@ -165,8 +165,7 @@ mito::mesh::metis::partition(const meshT & mesh, int nPartitions) -> void
     // }
 
     // the adjacency map
-    std::map<int, std::set<int>> adjacency_map =
-        populate_adjacency_map(vertex_to_id, edge_collection);
+    auto adjacency_map = populate_adjacency_map(vertex_to_id, edge_collection);
 
     // for (const auto & vertex : adjacency_map) {
     //     std::cout << vertex.first << std::endl;
