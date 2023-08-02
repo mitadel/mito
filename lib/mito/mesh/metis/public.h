@@ -6,6 +6,9 @@
 // external packages
 #include "externals.h"
 
+// support for mesh partitioning
+#include "partitioner.h"
+
 
 #endif
 
