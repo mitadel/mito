@@ -23,6 +23,9 @@ namespace mito::topology {
         // order of simplex
         static constexpr int order = D;
 
+        // number of vertices of simplex
+        static constexpr int n_vertices = order + 1;
+
         // typedef for the cell family type (simplicial)
         template <int N>
         using cell_family_t = simplex_t<N>;
