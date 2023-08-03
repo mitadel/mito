@@ -182,9 +182,8 @@ namespace mito::mesh {
         /**
          * @brief Returns a mesh with all boundary cells of dimension I
          */
-        // TOFIX: should this be const?
         template <int I = N - 1>
-        inline auto boundary() const -> Mesh<cell_family_t<I>, D>
+        inline auto boundary() const -> Mesh<cell_family_t<I>, D> const
         requires(I >= 0)
         {
             // instantiate a new mesh for the boundary elements
