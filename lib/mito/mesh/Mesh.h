@@ -8,6 +8,12 @@ namespace mito::mesh {
     template <class cellT /* the type of cell */, int D /* spatial dimension */>
     class Mesh {
 
+      public:
+        // publish the order of the cell
+        static constexpr int order = cellT::resource_t::order;
+        // publish the number of vertices per element
+        static constexpr int n_vertices = cellT::resource_t::n_vertices;
+
       private:
         // typedef for cell type
         using cell_t = cellT;
