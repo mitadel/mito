@@ -129,9 +129,6 @@ namespace mito::mesh {
             // erase the cell from the mesh
             _cells.erase(cell);
 
-            // ask the topology to erase the cell
-            _geometry.topology().template erase<D>(cell.id());
-
             // all done
             return;
         }
