@@ -84,6 +84,33 @@ namespace mito::topology {
             return _footprint->vertices(vertices);
         }
 
+        // return the array of vertices of this simplex
+        inline auto vertices() const -> vertex_simplex_composition_t<D>
+        requires(D > 0)
+        {
+            // a set of vertices
+            vertex_set_t vertices_collection;
+
+            // fetch the vertices of this simplex
+            _footprint->vertices(vertices_collection);
+
+            // an array to store the composition of a D-simplex in terms of vertices
+            vertex_simplex_composition_t<D> vertices;
+
+            // assert that you found the correct number of vertices
+            assert(vertices_collection.size() == vertices.size());
+
+            // populate the array of vertices
+            int i = 0;
+            for (auto & vertex : vertices_collection) {
+                vertices[i] = vertex;
+                ++i;
+            }
+
+            // return the array of vertices
+            return vertices;
+        }
+
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void
