@@ -76,8 +76,8 @@ namespace mito::mesh {
 
     template <int D, int N>
     auto flipDiagonal(
-        mesh_t<topology::simplex_t<N>, D> & mesh, const topology::simplex_t<2> & simplex0,
-        const topology::simplex_t<2> & simplex1) -> void
+        mito::topology::topology_t & topology, mesh_t<topology::simplex_t<N>, D> & mesh,
+        const topology::simplex_t<2> & simplex0, const topology::simplex_t<2> & simplex1) -> void
     {
         // get the shared simplex between the two simplices
         const auto & shared_simplex = findSharedSimplex(simplex0, simplex1);
@@ -88,8 +88,6 @@ namespace mito::mesh {
         // show me
         // std::cout << "shared simplex: " << *shared_simplex << std::endl;
         auto opposite_vertices = oppositeVertices(simplex0, simplex1, shared_simplex);
-
-        auto & topology = mesh.geometry().topology();
 
         auto diagonal_segment = topology.segment({ opposite_vertices[0], opposite_vertices[1] });
         auto opposite_diagonal_segment =

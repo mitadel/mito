@@ -39,7 +39,7 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     EXPECT_EQ(mesh.nCells(), 2);
 
     // flip the common edge of the two triangles
-    mito::mesh::flipDiagonal(mesh, simplex0, simplex1);
+    mito::mesh::flipDiagonal(topology, mesh, simplex0, simplex1);
 
     EXPECT_EQ(mesh.nCells(), 2);
 
