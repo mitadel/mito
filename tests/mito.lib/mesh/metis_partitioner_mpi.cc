@@ -83,6 +83,7 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
 
 TEST(MetisPartitioner, ParallelMPI)
 {
+    // initialize MPI
     MPI_Init(nullptr, nullptr);
 
     int mpi_rank;
@@ -114,8 +115,14 @@ TEST(MetisPartitioner, ParallelMPI)
     int n_rank = mpi_rank;
 
     // partition the mesh
-    mito::mesh::metis::partition(mesh, n_partitions, n_rank);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
 
+    // expect that the mesh was partitioned equally
+    // (this check assumes that the number of cells of the original mesh is divisible by the number
+    //  of partitions requested)
+    EXPECT_EQ(mesh_partition.cells().size(), mesh.cells().size() / n_partitions);
+
+    // finalize MPI
     MPI_Finalize();
 
     // all done

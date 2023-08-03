@@ -105,7 +105,12 @@ TEST(MetisPartitioner, Base)
     int n_rank = 0;
 
     // partition the mesh
-    mito::mesh::metis::partition(mesh, n_partitions, n_rank);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
+
+    // expect that the mesh was partitioned equally
+    // (this check assumes that the number of cells of the original mesh is divisible by the number
+    //  of partitions requested)
+    EXPECT_EQ(mesh_partition.cells().size(), mesh.cells().size() / n_partitions);
 
     // all done
     return;
