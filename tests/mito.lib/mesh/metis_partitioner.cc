@@ -101,8 +101,11 @@ TEST(MetisPartitioner, Base)
     // number of partitions
     int n_partitions = 2;
 
+    // rank of the mesh to return
+    int n_rank = 0;
+
     // partition the mesh
-    mito::mesh::metis::partition(mesh, n_partitions);
+    mito::mesh::metis::partition(mesh, n_partitions, n_rank);
 
     // all done
     return;

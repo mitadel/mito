@@ -110,8 +110,11 @@ TEST(MetisPartitioner, ParallelMPI)
     // number of partitions
     int n_partitions = mpi_size;
 
+    // rank of the mesh to return
+    int n_rank = mpi_rank;
+
     // partition the mesh
-    mito::mesh::metis::partition(mesh, n_partitions);
+    mito::mesh::metis::partition(mesh, n_partitions, n_rank);
 
     MPI_Finalize();
 

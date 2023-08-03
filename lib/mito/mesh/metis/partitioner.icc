@@ -122,8 +122,11 @@ namespace {
 
 template <class meshT>
 auto
-mito::mesh::metis::partition(const meshT & mesh, int n_partitions) -> void
+mito::mesh::metis::partition(const meshT & mesh, int n_partitions, int n_rank) -> meshT
 {
+    // typedef mesh type
+    using mesh_t = meshT;
+
     // a collection of all the vertices
     auto id_to_vertex = populate_collection_of_vertices(mesh);
 
@@ -138,8 +141,24 @@ mito::mesh::metis::partition(const meshT & mesh, int n_partitions) -> void
         std::cout << part_i << " " << painting[part_i] << std::endl;
     }
 
+    // an empty mesh of same type of the original mesh
+    auto partitioned_mesh = mesh_t(mesh.geometry());
+
+    // cell counter
+    int e = 0;
+    // loop on cells in {mesh}
+    for (const auto & cell : mesh.cells()) {
+        //
+        if (painting[e] == n_rank)
+        {
+            partitioned_mesh.insert(cell);
+        }
+        // increment
+        ++e;
+    }
+
     // all done
-    return;
+    return partitioned_mesh;
 }
 
 

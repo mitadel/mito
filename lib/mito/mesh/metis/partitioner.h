@@ -6,7 +6,7 @@
 namespace mito::mesh::metis {
 
     template <class meshT>
-    auto partition(const meshT & mesh, int nPartitions) -> void;
+    auto partition(const meshT & mesh, int n_partitions, int n_rank) -> meshT;
 }
 
 
