@@ -20,7 +20,7 @@ namespace mito::topology {
     template <int D>
     class OrientedSimplex : public utilities::Shareable {
       public:
-        // typedef for order of simplex
+        // order of simplex
         static constexpr int order = D;
 
         // typedef for the cell family type (simplicial)
