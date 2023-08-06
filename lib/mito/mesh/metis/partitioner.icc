@@ -136,10 +136,11 @@ mito::mesh::metis::partition(const meshT & mesh, int n_partitions, int n_rank) -
     // call metis partitioner
     auto painting = metis_paint_partition(mesh, vertex_to_id, n_partitions);
 
-    std::cout << "partition" << std::endl;
-    for (size_t part_i = 0; part_i < painting.size(); part_i++) {
-        std::cout << part_i << " " << painting[part_i] << std::endl;
-    }
+    // debug
+    // std::cout << "partition" << std::endl;
+    // for (size_t part_i = 0; part_i < painting.size(); part_i++) {
+    //     std::cout << part_i << " " << painting[part_i] << std::endl;
+    // }
 
     // an empty mesh of same type of the original mesh
     auto partitioned_mesh = mesh_t(mesh.geometry());
