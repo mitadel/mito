@@ -19,6 +19,7 @@ mito_test_driver(tests/mito.lib/mesh/main.cc)
 
 if(WITH_METIS)
     mito_test_driver(tests/mito.lib/mesh/metis_partitioner.cc)
+    mito_test_driver(tests/mito.lib/mesh/metis_partitioner_load_mesh.cc)
     if(WITH_MPI)
         mito_test_driver_mpi(tests/mito.lib/mesh/metis_partitioner_mpi.cc 2)
     endif()
