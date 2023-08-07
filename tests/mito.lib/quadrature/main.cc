@@ -12,7 +12,7 @@ using mito::quadrature::GAUSS;
 using mito::topology::triangle_t;
 
 
-TEST(Quadrature, IntegralsOnIntervals)
+TEST(Quadrature, MeshSegment)
 {
     // an empty topology
     auto topology = mito::topology::topology();
@@ -47,7 +47,7 @@ TEST(Quadrature, IntegralsOnIntervals)
 }
 
 
-TEST(Quadrature, QuadratureBuildMesh)
+TEST(Quadrature, MeshTriangles)
 {
     /**
      * Mesh with four cells:
@@ -226,7 +226,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     EXPECT_DOUBLE_EQ(result, 0.35355339059327384);
 }
 
-TEST(Quadrature, QuadratureLoadMesh)
+TEST(Quadrature, LoadMeshTriangles)
 {
     // an empty topology
     auto topology = mito::topology::topology();
@@ -260,7 +260,7 @@ TEST(Quadrature, QuadratureLoadMesh)
     EXPECT_NEAR(result, 0.946083, 1.e-7);
 }
 
-TEST(Quadrature, FlipDomain)
+TEST(Quadrature, FlipSegment)
 {
     // an empty topology
     auto topology = mito::topology::topology();
