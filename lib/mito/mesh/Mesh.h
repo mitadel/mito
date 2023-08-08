@@ -13,6 +13,8 @@ namespace mito::mesh {
         static constexpr int order = cellT::resource_t::order;
         // publish the number of vertices per element
         static constexpr int n_vertices = cellT::resource_t::n_vertices;
+        // publish the dimension of physical space
+        static constexpr int dim = D;
         // typedef for cell type
         using cell_t = cellT;
 
