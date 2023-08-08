@@ -42,7 +42,7 @@ namespace {
     }
 
     template <class meshT>
-    auto order_mesh_cells(const meshT & mesh) -> auto
+    auto get_ordered_mesh_cells(const meshT & mesh) -> auto
     {
         // typedef mesh type
         using mesh_t = meshT;
@@ -187,7 +187,7 @@ mito::mesh::metis::partition(const meshT & mesh, int n_partitions, int n_rank) -
     auto vertex_to_id = populate_vertices_map(mesh);
 
     // get the mesh cells in with a lexicographic order on the barycenter
-    auto cells = order_mesh_cells(mesh);
+    auto cells = get_ordered_mesh_cells(mesh);
 
     // populate elements connectivity
     auto connectivity = populate_element_connectivity<mesh_t>(cells, vertex_to_id, mesh.geometry());
