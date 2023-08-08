@@ -49,9 +49,39 @@ namespace {
     }
 
     template <class meshT>
+    auto order_mesh_cells(const meshT & mesh) -> auto
+    {
+        // extract the geometric information from mesh
+        const auto & geometry = mesh.geometry();
+
+        // define operator< for cells, given a geometry
+        auto cell_compare = [&geometry](
+                                const typename meshT::cell_t & cell_a,
+                                const typename meshT::cell_t & cell_b) -> bool {
+            // get the barycenter of {cell_a}
+            auto barycenter_a = mito::geometry::barycenter(cell_a, geometry);
+            // get the barycenter of {cell_a}
+            auto barycenter_b = mito::geometry::barycenter(cell_b, geometry);
+            // return lexicographical comparison of the barycenters
+            return barycenter_a < barycenter_b;
+        };
+
+        // an ordered set of cells
+        std::set<typename meshT::cell_t, decltype(cell_compare)> cells(cell_compare);
+
+        // insert mesh cells in ordered set
+        for (const auto & cell : mesh.cells()) {
+            cells.insert(cell);
+        }
+
+        // return ordered set of cells
+        return cells;
+    }
+
+    template <class meshT>
     auto metis_paint_partition(
-        const meshT & mesh, const std::map<vertex_t, int> & vertex_to_id, int n_partitions)
-        -> std::vector<idx_t>
+        const meshT & mesh, const auto & cells, const std::map<vertex_t, int> & vertex_to_id,
+        int n_partitions) -> std::vector<idx_t>
     {
         // typedef mesh type
         using mesh_t = meshT;
@@ -66,7 +96,7 @@ namespace {
         std::vector<idx_t> painting(n_elements, 0);
 
         // METIS common nodes that two elements must share to be considered adjacent elements
-        // TOFIX: not general: n_common is equal to simplex order only in case of simplicial cells
+        // NOTE: not general: n_common is equal to simplex order only in case of simplicial cells
         int n_common = mesh_t::order;
 
         // number of vertices per element in this mesh type
@@ -75,18 +105,35 @@ namespace {
         // the element connectivity
         std::vector<int> element_connectivity(n_elements * n_vertices_per_element);
 
+        const auto & geometry = mesh.geometry();
+
+        auto cmp = [&geometry](const vertex_t & a, const vertex_t & b) -> bool {
+            auto position_a = geometry.point(a)->coordinates();
+            auto position_b = geometry.point(b)->coordinates();
+
+            return position_a < position_b;
+        };
+        std::set<vertex_t, decltype(cmp)> vertices(cmp);
+
         // cell counter
         int e = 0;
-        // loop on cells in {mesh}
-        for (const auto & cell : mesh.cells()) {
+        // loop on cells
+        for (const auto & cell : cells) {
+            // spatially order cell vertices
+            for (const auto & vertex : cell->vertices()) {
+                vertices.insert(vertex);
+            }
             // vertices counter
             int v = 0;
-            for (const auto & vertex : cell->vertices()) {
+            for (const auto & vertex : vertices) {
                 // populate element connectivity with the id of each of its vertices
                 element_connectivity[n_vertices_per_element * e + v] = vertex_to_id.at(vertex);
                 // increment
                 ++v;
             }
+            // clear cell vertices
+            vertices.clear();
+
             // increment
             ++e;
         }
@@ -128,13 +175,18 @@ mito::mesh::metis::partition(const meshT & mesh, int n_partitions, int n_rank) -
     using mesh_t = meshT;
 
     // a collection of all the vertices
+    // TOFIX: this container is not used, consider merging {populate_collection_of_vertices} and
+    //          {populate_vertices_map}
     auto id_to_vertex = populate_collection_of_vertices(mesh);
 
     // a map between the vertices and an integer id
     auto vertex_to_id = populate_vertices_map(id_to_vertex);
 
+    // get the mesh cells in with a lexicographic order on the barycenter
+    auto cells = order_mesh_cells(mesh);
+
     // call metis partitioner
-    auto painting = metis_paint_partition(mesh, vertex_to_id, n_partitions);
+    auto painting = metis_paint_partition(mesh, cells, vertex_to_id, n_partitions);
 
     // debug
     // std::cout << "partition" << std::endl;
@@ -147,11 +199,10 @@ mito::mesh::metis::partition(const meshT & mesh, int n_partitions, int n_rank) -
 
     // cell counter
     int e = 0;
-    // loop on cells in {mesh}
-    for (const auto & cell : mesh.cells()) {
+    // loop on cells
+    for (const auto & cell : cells) {
         //
-        if (painting[e] == n_rank)
-        {
+        if (painting[e] == n_rank) {
             partitioned_mesh.insert(cell);
         }
         // increment
