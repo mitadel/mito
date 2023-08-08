@@ -14,7 +14,7 @@ namespace {
 
     // QUESTION: should these methods belong to the interface of class {Mesh}?
     template <class meshT>
-    auto populate_collection_of_vertices(const meshT & mesh) -> std::vector<vertex_t>
+    auto populate_vertices_map(const meshT & mesh) -> auto
     {
         // a set collecting all the vertices (without repeated entries)
         std::set<vertex_t> vertex_collection;
@@ -29,13 +29,6 @@ namespace {
         // a vector with all vertices
         std::vector<vertex_t> id_to_vertex(vertex_collection.begin(), vertex_collection.end());
 
-        // all done
-        return id_to_vertex;
-    }
-
-    auto populate_vertices_map(const std::vector<vertex_t> & id_to_vertex)
-        -> std::map<vertex_t, int>
-    {
         // a map between a vertex and an integer id
         std::map<vertex_t, int> vertex_to_id;
 
@@ -190,13 +183,8 @@ mito::mesh::metis::partition(const meshT & mesh, int n_partitions, int n_rank) -
     // typedef mesh type
     using mesh_t = meshT;
 
-    // a collection of all the vertices
-    // TOFIX: this container is not used, consider merging {populate_collection_of_vertices} and
-    //          {populate_vertices_map}
-    auto id_to_vertex = populate_collection_of_vertices(mesh);
-
-    // a map between the vertices and an integer id
-    auto vertex_to_id = populate_vertices_map(id_to_vertex);
+    // populate a map between vertices and a continuous integer id = 0, ..., n_vertices - 1
+    auto vertex_to_id = populate_vertices_map(mesh);
 
     // get the mesh cells in with a lexicographic order on the barycenter
     auto cells = order_mesh_cells(mesh);
