@@ -21,13 +21,13 @@ TEST(MetisPartitioner, LoadMesh)
     auto geometry = mito::geometry::geometry(topology, point_cloud);
 
     // load mesh
-    std::ifstream fileStream("square.summit");
+    std::ifstream fileStream("rectangle.summit");
     auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
 
     // number of partitions
     int n_partitions = 2;
 
-    // partition the mesh in two and get the first partition 
+    // partition the mesh in two and get the first partition
     auto mesh_partition_0 = mito::mesh::metis::partition(mesh, n_partitions, 0 /* n_rank */);
 
     // partition the mesh in two and get the second partition
@@ -38,7 +38,7 @@ TEST(MetisPartitioner, LoadMesh)
     std::cout << "Partitioned mesh size 0 = " << mesh_partition_0.cells().size() << std::endl;
     std::cout << "Partitioned mesh size 1 = " << mesh_partition_1.cells().size() << std::endl;
 
-    // expect that the sum of the number of cells in the partitioned meshes equals that of the 
+    // expect that the sum of the number of cells in the partitioned meshes equals that of the
     // original mesh
     EXPECT_EQ(
         mesh_partition_0.cells().size() + mesh_partition_1.cells().size(), mesh.cells().size());
@@ -54,4 +54,3 @@ TEST(MetisPartitioner, LoadMesh)
 
 
 // end of file
- 
