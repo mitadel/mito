@@ -51,13 +51,16 @@ namespace {
     template <class meshT>
     auto order_mesh_cells(const meshT & mesh) -> auto
     {
+        // typedef mesh type
+        using mesh_t = meshT;
+
         // extract the geometric information from mesh
         const auto & geometry = mesh.geometry();
 
         // define operator< for cells, given a geometry
         auto cell_compare = [&geometry](
-                                const typename meshT::cell_t & cell_a,
-                                const typename meshT::cell_t & cell_b) -> bool {
+                                const typename mesh_t::cell_t & cell_a,
+                                const typename mesh_t::cell_t & cell_b) -> bool {
             // get the barycenter of {cell_a}
             auto barycenter_a = mito::geometry::barycenter(cell_a, geometry);
             // get the barycenter of {cell_a}
@@ -67,7 +70,7 @@ namespace {
         };
 
         // an ordered set of cells
-        std::set<typename meshT::cell_t, decltype(cell_compare)> cells(cell_compare);
+        std::set<typename mesh_t::cell_t, decltype(cell_compare)> cells(cell_compare);
 
         // insert mesh cells in ordered set
         for (const auto & cell : mesh.cells()) {
