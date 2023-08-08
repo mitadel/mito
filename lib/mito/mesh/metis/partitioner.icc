@@ -76,7 +76,7 @@ namespace {
 
     template <class meshT, int D>
     auto populate_element_connectivity(
-        const auto & cells, const std::map<vertex_t, int> & vertex_to_id,
+        const auto & cells, const auto & vertex_to_id,
         const mito::geometry::geometry_t<D> & geometry) -> auto
     {
         // typedef mesh type
