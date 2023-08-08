@@ -9,6 +9,8 @@
 // support for mesh partitioning
 #include "partitioner.h"
 
+// published types and functions
+#include "api.h"
 
 #endif
 
