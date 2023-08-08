@@ -78,26 +78,16 @@ namespace {
         return cells;
     }
 
-    template <class meshT>
-    auto metis_paint_partition(
-        const meshT & mesh, const auto & cells, const std::map<vertex_t, int> & vertex_to_id,
-        int n_partitions) -> std::vector<idx_t>
+    template <class meshT, int D>
+    auto populate_element_connectivity(
+        const auto & cells, const std::map<vertex_t, int> & vertex_to_id,
+        const mito::geometry::geometry_t<D> & geometry) -> auto
     {
         // typedef mesh type
         using mesh_t = meshT;
 
-        // get the total number of vertices in the mesh
-        int n_vertices = mesh.geometry().point_cloud().size();
-
         // get the total number of cells in the mesh
-        int n_elements = mesh.cells().size();
-
-        // idx_t objval;
-        std::vector<idx_t> painting(n_elements, 0);
-
-        // METIS common nodes that two elements must share to be considered adjacent elements
-        // NOTE: not general: n_common is equal to simplex order only in case of simplicial cells
-        int n_common = mesh_t::order;
+        int n_elements = cells.size();
 
         // number of vertices per element in this mesh type
         int n_vertices_per_element = mesh_t::n_vertices;
@@ -105,15 +95,16 @@ namespace {
         // the element connectivity
         std::vector<int> element_connectivity(n_elements * n_vertices_per_element);
 
-        const auto & geometry = mesh.geometry();
-
-        auto cmp = [&geometry](const vertex_t & a, const vertex_t & b) -> bool {
-            auto position_a = geometry.point(a)->coordinates();
-            auto position_b = geometry.point(b)->coordinates();
-
+        // define operator< for vertices, given a geometry
+        auto vertex_compare = [&geometry](
+                                  const vertex_t & vertex_a, const vertex_t & vertex_b) -> bool {
+            auto position_a = geometry.point(vertex_a)->coordinates();
+            auto position_b = geometry.point(vertex_b)->coordinates();
+            // return lexicographical comparison of the positions
             return position_a < position_b;
         };
-        std::set<vertex_t, decltype(cmp)> vertices(cmp);
+        // a set to store the (lexicographically ordered) vertices of a cell
+        std::set<vertex_t, decltype(vertex_compare)> vertices(vertex_compare);
 
         // cell counter
         int e = 0;
@@ -137,6 +128,28 @@ namespace {
             // increment
             ++e;
         }
+
+        // all done
+        return element_connectivity;
+    }
+
+    template <class meshT>
+    auto metis_paint_partition(
+        std::vector<int> & element_connectivity, int n_vertices, int n_elements, int n_partitions)
+        -> std::vector<idx_t>
+    {
+        // typedef mesh type
+        using mesh_t = meshT;
+
+        // idx_t objval;
+        std::vector<idx_t> painting(n_elements, 0);
+
+        // METIS common nodes that two elements must share to be considered adjacent elements
+        // NOTE: not general: n_common is equal to simplex order only in case of simplicial cells
+        int n_common = mesh_t::order;
+
+        // number of vertices per element in this mesh type
+        int n_vertices_per_element = mesh_t::n_vertices;
 
         std::vector<int> element_index(n_elements + 1, 0);
         int node_index = 0;
@@ -185,8 +198,18 @@ mito::mesh::metis::partition(const meshT & mesh, int n_partitions, int n_rank) -
     // get the mesh cells in with a lexicographic order on the barycenter
     auto cells = order_mesh_cells(mesh);
 
+    // populate elements connectivity
+    auto connectivity = populate_element_connectivity<mesh_t>(cells, vertex_to_id, mesh.geometry());
+
+    // get the total number of cells in the mesh
+    int n_elements = cells.size();
+
+    // get the total number of vertices in the mesh
+    int n_vertices = vertex_to_id.size();
+
     // call metis partitioner
-    auto painting = metis_paint_partition(mesh, cells, vertex_to_id, n_partitions);
+    auto painting =
+        metis_paint_partition<mesh_t>(connectivity, n_vertices, n_elements, n_partitions);
 
     // debug
     // std::cout << "partition" << std::endl;
