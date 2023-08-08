@@ -7,7 +7,7 @@
 #include "externals.h"
 
 // support for mesh partitioning
-#include "partitioner.h"
+#include "Partitioner.h"
 
 // published types and functions
 #include "api.h"
