@@ -21,13 +21,13 @@ TEST(Mesh, BuildMesh)
     */
 
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
@@ -99,13 +99,13 @@ TEST(Mesh, BuildMesh)
 TEST(Tetra, MeshSegment)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 1D
-    auto point_cloud = mito::geometry::point_cloud<1>();
+    auto & point_cloud = mito::geometry::point_cloud<1>();
 
     // a 1D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // an empty mesh of simplicial topology in 1D
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
@@ -130,13 +130,13 @@ TEST(Tetra, MeshSegment)
 TEST(Tetra, MeshTwoTriangles)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
@@ -173,13 +173,13 @@ TEST(Tetra, MeshTwoTriangles)
 TEST(Tetra, MeshRectangle)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
@@ -207,13 +207,13 @@ TEST(Tetra, MeshRectangle)
 TEST(Tetra, MeshRectangleArea)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
@@ -235,13 +235,13 @@ TEST(Tetra, MeshRectangleArea)
 TEST(Tetra, CubeVolume)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 3D
-    auto point_cloud = mito::geometry::point_cloud<3>();
+    auto & point_cloud = mito::geometry::point_cloud<3>();
 
     // a 3D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // read the cube mesh
     std::ifstream fileStream("cube.summit");
@@ -266,13 +266,13 @@ TEST(Tetra, CubeVolume)
 TEST(Tetra, ZeroSubdivisions)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<3>();
+    auto & point_cloud = mito::geometry::point_cloud<3>();
 
     // a 3D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // an empty mesh of simplicial topology in 3D
     auto mesh = mito::mesh::mesh<mito::topology::tetrahedron_t>(geometry);

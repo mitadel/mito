@@ -6,13 +6,13 @@
 TEST(EraseElement, TestEraseElementMesh)
 {
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // ask the geometry for new nodes (this instantiates a new vertex and attaches it to the point)
     auto vertex0 = geometry.node({ 0.0, 0.0 });
@@ -116,7 +116,7 @@ TEST(EraseElement, TestEraseElementTopology)
     */
 
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     auto vertex_0 = topology.vertex();
     auto vertex_1 = topology.vertex();

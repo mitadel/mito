@@ -121,17 +121,17 @@ PYBIND11_MODULE(mito, m)
             mito::py::init([](std::string filename) {
                 // TOFIX: who is going to delete?
                 // an empty topology
-                auto topology = new mito::topology::topology_t();
+                auto & topology = mito::topology::topology();
                 // an empty cloud of points in 2D
-                auto point_cloud = new mito::geometry::point_cloud_t<2>();
+                auto & point_cloud = mito::geometry::point_cloud<2>();
                 // an empty geometry binding {topology} and {point_cloud}
-                auto geometry = new mito::geometry::geometry_t<2>(*topology, *point_cloud);
+                auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
                 // create an input stream
                 auto filestream = std::ifstream(filename);
                 // read the mesh
                 auto mesh = new mito::mesh::mesh_t<mito::topology::triangle_t, 2>(
-                    mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, *geometry));
+                    mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
                 // instantiate
                 return new mito::manifolds::manifold_t<mito::topology::triangle_t, 2>(*mesh);
             }))

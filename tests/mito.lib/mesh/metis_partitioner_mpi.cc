@@ -96,13 +96,13 @@ TEST(MetisPartitionerMPI, Base)
     MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
 
     // an empty topology
-    auto topology = mito::topology::topology();
+    auto & topology = mito::topology::topology();
 
     // an empty cloud of points
-    auto point_cloud = mito::geometry::point_cloud<2>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto geometry = mito::geometry::geometry(topology, point_cloud);
+    auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
