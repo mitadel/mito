@@ -69,9 +69,11 @@ main()
 
     mesh.insert(simplex_pair.first);
     mesh.erase(cell0);
+    topology.erase(cell0);
 
     mesh.insert(simplex_pair.second);
     mesh.erase(cell1);
+    topology.erase(cell1);
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
