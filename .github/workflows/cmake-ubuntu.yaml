@@ -40,7 +40,7 @@ jobs:
           echo " -- upgrade"
           sudo apt dist-upgrade
           echo " -- install our dependencies"
-          sudo apt install -y make cmake libgtest-dev libvtk9-dev libmetis-dev valgrind
+          sudo apt install -y make cmake libgtest-dev libvtk9-dev libopenmpi-dev libmetis-dev valgrind
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
