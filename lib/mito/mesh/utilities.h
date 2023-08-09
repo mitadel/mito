@@ -4,7 +4,6 @@
 
 
 #include "tetra.h"
-#include "flipdiagonal.h"
 
 
 #endif

@@ -17,13 +17,6 @@ namespace mito::utilities {
     // requires ReferenceCountedObject<Resource>
     class SharedPointer;
 
-    // shared pointer alias
-    template <class Resource>
-    using shared_ptr = SharedPointer<Resource>;
-
-    template <class Resource>
-    using index_t = std::uintptr_t;
-
     // class segmented container
     template <class Resource>
     // requires ReferenceCountedObject<Resource>
@@ -32,10 +25,6 @@ namespace mito::utilities {
     // and its iterator
     template <class SegmentedContainerT, bool isConst>
     class SegmentedContainerIterator;
-
-    // segmented container alias
-    template <class T>
-    using segmented_t = SegmentedContainer<typename T::resource_t>;
 
     // segmented container iterator
     // equality

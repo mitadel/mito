@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <iostream>
+#include <mito/base.h>
 #include <mito/utilities.h>
 
 class Simplex : public mito::utilities::Shareable {

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include <mito/utilities.h>
-
 #include <memory>
+#include <mito/base.h>
+#include <mito/utilities.h>
 
 class Resource : public mito::utilities::Shareable {
   public:

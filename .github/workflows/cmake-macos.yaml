@@ -6,6 +6,7 @@ on:
     branches:
       - 'main'
   pull_request:
+  workflow_dispatch:
   
 
 jobs:
@@ -77,9 +78,23 @@ jobs:
         with:
           repository: pyre/pyre
           fetch-depth: 0
-          path: pyre
+          path: ${{github.workspace}}/pyre
 
-      - name: build pyre
+      - name: retrieve pyre commit SHA
+        id: pyre-sha
+        run: |
+          echo "PYRE-SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        working-directory: ${{github.workspace}}/pyre
+
+      - name: cache pyre
+        id: cache-pyre
+        uses: actions/cache@v3
+        with:
+          path: ${{runner.temp}}/pyre_install
+          key: pyre-${{steps.pyre-sha.outputs.PYRE-SHA}}-${{matrix.os}}+python-${{matrix.python}}+${{matrix.suite}}-${{matrix.suiteVersion}}
+
+      - if: steps.cache-pyre.outputs.cache-hit != 'true'
+        name: build pyre
         run: |
           echo " -- switching to the build directory"
           mkdir build
@@ -169,7 +184,7 @@ jobs:
         working-directory: ${{runner.temp}}/build
       
       - name: create artifact
-        if: always()
+        if: ${{!cancelled()}}
         uses: actions/upload-artifact@v3
         with:
           name: mito_build_${{matrix.target}}
