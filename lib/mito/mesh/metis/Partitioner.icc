@@ -150,7 +150,7 @@ mito::mesh::metis::Partitioner<meshT>::_metis_paint_partition(
     // create an array for the procId per node: NOT USEFUL
     int * npart = new int[n_vertices];
 
-    int metisResult = METIS_PartMeshDual(
+    [[maybe_unused]] int metisResult = METIS_PartMeshDual(
         &n_elements, &n_vertices, element_index.data(), element_connectivity.data(), NULL, NULL,
         &n_common, &n_partitions, NULL, options, &edgecut, painting.data(), npart);
 
