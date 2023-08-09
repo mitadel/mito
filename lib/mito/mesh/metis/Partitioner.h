@@ -39,7 +39,7 @@ namespace mito::mesh::metis {
 
 // get the inline definitions
 #define mito_mesh_metis_partitioner_icc
-#include "partitioner.icc"
+#include "Partitioner.icc"
 #undef mito_mesh_metis_partitioner_icc
 
 
