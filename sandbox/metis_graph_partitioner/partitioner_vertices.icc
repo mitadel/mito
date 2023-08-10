@@ -178,6 +178,8 @@ mito::mesh::metis::partition(const meshT & mesh, int nPartitions) -> void
     //     std::cout << std::endl;
     // }
 
+    // TOFIX: the number of points in the point cloud is not necessarily the number of vertices in
+    // the mesh
     int nVertices = std::size(mesh.geometry().point_cloud());
 
     // compute the total number of edges (with repeated orientation)
