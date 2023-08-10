@@ -32,13 +32,12 @@ function(mito_test_testcase testcase testfile)
     # all done
 endfunction()
 
-# register a test case based on a compiled driver
-function(mito_test_driver testfile)
-    # generate the name of the testcase
-    mito_test_testcase(testname ${testfile} ${ARGN})
-
+function(mito_test_target targetname filename)
     # generate the name of the target
     mito_target_name(target ${testfile})
+
+    # hand off {targetname} to parent scope
+    set(${targetname} "${target}" PARENT_SCOPE)
 
     # schedule it to be compiled
     add_executable(${target} ${testfile})
@@ -52,6 +51,22 @@ function(mito_test_driver testfile)
     # link against gtest
     target_link_libraries(${target} PUBLIC GTest::gtest_main)
 
+    # specify the directory for the target compilation products
+    mito_target_directory(${target} tests)
+
+    # request c++20
+    set_property(TARGET ${target} PROPERTY CXX_STANDARD 20)
+
+endfunction(mito_test_target)
+
+# register a test case based on a compiled driver
+function(mito_test_driver testfile)
+    # generate the name of the testcase
+    mito_test_testcase(testname ${testfile} ${ARGN})
+
+    # configure target for this test
+    mito_test_target(target ${testfile})
+
     # setup the test working directory
     get_filename_component(path ${testfile} DIRECTORY)
     set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})
@@ -59,16 +74,10 @@ function(mito_test_driver testfile)
     # make it a test case
     add_test(NAME ${testname} COMMAND ${target} ${ARGN} WORKING_DIRECTORY ${test_workdir})
 
-    # specify the directory for the target compilation products
-    mito_target_directory(${target} tests)
-
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
         LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     )
-
-    # request c++20
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 20)
 
     # all done
 endfunction(mito_test_driver)
@@ -78,20 +87,8 @@ function(mito_test_driver_mpi testfile slots)
     # generate the name of the testcase (append the number of MPI slots requested)
     mito_test_testcase(testname ${testfile} ${ARGN} ${slots})
 
-    # generate the name of the target
-    mito_target_name(target ${testfile})
-
-    # schedule it to be compiled
-    add_executable(${target} ${testfile})
-
-    # with some macros
-    target_compile_definitions(${target} PRIVATE MITO_CORE WITH_MPI)
-
-    # link against my libraries
-    target_link_libraries(${target} PUBLIC mito)
-
-    # link against gtest and MPI
-    target_link_libraries(${target} PUBLIC GTest::gtest_main)
+    # configure target for this test
+    mito_test_target(target ${testfile})
 
     # setup the test working directory
     get_filename_component(path ${testfile} DIRECTORY)
@@ -102,16 +99,10 @@ function(mito_test_driver_mpi testfile slots)
         ${MPIEXEC_PREFLAGS} $<TARGET_FILE:${target}> ${MPIEXEC_POSTFLAGS} ${ARGN}
         WORKING_DIRECTORY ${test_workdir})
 
-    # specify the directory for the target compilation products
-    mito_target_directory(${target} tests)
-
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
         LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     )
-
-    # request c++20
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 20)
 
   # all done
 endfunction()
