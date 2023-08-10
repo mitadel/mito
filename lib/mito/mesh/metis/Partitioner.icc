@@ -122,7 +122,7 @@ template <class meshT>
 auto
 mito::mesh::metis::Partitioner<meshT>::_metis_paint_partition(
     std::vector<int> & element_connectivity, int n_vertices, int n_elements, int n_partitions)
-    -> std::vector<idx_t>
+    -> auto
 {
     // idx_t objval;
     std::vector<idx_t> painting(n_elements, 0);

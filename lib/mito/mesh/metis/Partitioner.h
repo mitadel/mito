@@ -28,7 +28,7 @@ namespace mito::mesh::metis {
         // paint metis partition
         static auto _metis_paint_partition(
             std::vector<int> & element_connectivity, int n_vertices, int n_elements,
-            int n_partitions) -> std::vector<idx_t>;
+            int n_partitions) -> auto;
         // return a partitioned mesh with the painted partition
         static auto _create_partitioned_mesh(
             const mesh_t & mesh, const auto & cells, const auto & painting, int n_rank) -> mesh_t;
