@@ -120,6 +120,8 @@ jobs:
           sudo dpkg-query -L libgtest-dev
           echo " -- vtk"
           sudo dpkg-query -L libvtk9-dev
+          echo " -- openmpi"
+          sudo dpkg-query -L libopenmpi-dev
           echo " -- metis"
           sudo dpkg-query -L libmetis-dev
 
