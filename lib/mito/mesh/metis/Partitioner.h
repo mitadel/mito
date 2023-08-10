@@ -25,7 +25,7 @@ namespace mito::mesh::metis {
         static auto _populate_element_connectivity(
             const auto & cells, const auto & vertex_to_id,
             const mito::geometry::geometry_t<mesh_t::dim> & geometry) -> auto;
-        // paint metis metis partition
+        // paint metis partition
         static auto _metis_paint_partition(
             std::vector<int> & element_connectivity, int n_vertices, int n_elements,
             int n_partitions) -> std::vector<idx_t>;
