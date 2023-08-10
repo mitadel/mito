@@ -42,21 +42,21 @@ TEST(MetisPartitionerMPI, LoadMesh)
     auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
 
     // the number of cells in this partition
-    int local_ncells = mesh_partition.cells().size();
+    int local_ncells = mesh_partition.nCells();
     // the global (reduced) number of cells of all partitions
     int global_ncells = 0;
     MPI_Reduce(&local_ncells, &global_ncells, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     // report
     if (mpi_rank == 0) {
-        std::cout << "Initial mesh size = " << mesh.cells().size() << std::endl;
+        std::cout << "Initial mesh size = " << mesh.nCells() << std::endl;
         std::cout << "Partitioned mesh size = " << global_ncells << std::endl;
     }
 
     // expect that the sum of the number of cells in the partitioned meshes equals that of the
     // original mesh
     if (mpi_rank == 0) {
-        EXPECT_EQ(global_ncells, mesh.cells().size());
+        EXPECT_EQ(global_ncells, mesh.nCells());
     }
 
     // finalize MPI

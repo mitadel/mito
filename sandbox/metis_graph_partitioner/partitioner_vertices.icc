@@ -184,7 +184,7 @@ mito::mesh::metis::partition(const meshT & mesh, int nPartitions) -> void
 
     // compute the total number of edges (with repeated orientation)
     // TOFIX: is this general?
-    int nEdges = mesh.cells().size() * 3 + mesh.boundary_size();
+    int nEdges = mesh.nCells() * 3 + mesh.boundary_size();
 
     // call metis partitioner
     auto painting = metis_paint_partition(nVertices, nEdges, nPartitions, adjacency_map);

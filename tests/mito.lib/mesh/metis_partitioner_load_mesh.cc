@@ -34,19 +34,19 @@ TEST(MetisPartitioner, LoadMesh)
     auto mesh_partition_1 = mito::mesh::metis::partition(mesh, n_partitions, 1 /* n_rank */);
 
     // report
-    std::cout << "Initial mesh size = " << mesh.cells().size() << std::endl;
-    std::cout << "Partitioned mesh size 0 = " << mesh_partition_0.cells().size() << std::endl;
-    std::cout << "Partitioned mesh size 1 = " << mesh_partition_1.cells().size() << std::endl;
+    std::cout << "Initial mesh size = " << mesh.nCells() << std::endl;
+    std::cout << "Partitioned mesh size 0 = " << mesh_partition_0.nCells() << std::endl;
+    std::cout << "Partitioned mesh size 1 = " << mesh_partition_1.nCells() << std::endl;
 
     // expect that the sum of the number of cells in the partitioned meshes equals that of the
     // original mesh
     EXPECT_EQ(
-        mesh_partition_0.cells().size() + mesh_partition_1.cells().size(), mesh.cells().size());
+        mesh_partition_0.nCells() + mesh_partition_1.nCells(), mesh.nCells());
 
     // expect that the partition imbalance is a small fraction of the size of the full mesh
     EXPECT_LE(
-        std::abs((int) mesh_partition_0.cells().size() - (int) mesh_partition_1.cells().size()),
-        0.05 * mesh.cells().size());
+        std::abs((int) mesh_partition_0.nCells() - (int) mesh_partition_1.nCells()),
+        0.05 * mesh.nCells());
 
     // all done
     return;
