@@ -26,7 +26,7 @@ mito::mesh::metis::Partitioner<meshT>::_populate_vertices_map(const mesh_t & mes
     std::map<vertex_t, int> vertex_to_id;
 
     // populate the {vertex_to_id} map
-    for (size_t id = 0; id < id_to_vertex.size(); ++id) {
+    for (size_t id = 0; id < std::size(id_to_vertex); ++id) {
         vertex_to_id[id_to_vertex[id]] = id;
     }
 
@@ -72,7 +72,7 @@ mito::mesh::metis::Partitioner<meshT>::_populate_element_connectivity(
     const mito::geometry::geometry_t<mesh_t::dim> & geometry) -> auto
 {
     // get the total number of cells in the mesh
-    int n_elements = cells.size();
+    int n_elements = std::size(cells);
 
     // number of vertices per element in this mesh type
     int n_vertices_per_element = mesh_t::n_vertices;
@@ -136,7 +136,7 @@ mito::mesh::metis::Partitioner<meshT>::_metis_paint_partition(
 
     std::vector<int> element_index(n_elements + 1, 0);
     int node_index = 0;
-    for (size_t i = 0; i < element_index.size(); ++i, node_index += n_vertices_per_element) {
+    for (size_t i = 0; i < std::size(element_index); ++i, node_index += n_vertices_per_element) {
         element_index[i] = node_index;
     }
 
@@ -176,17 +176,17 @@ mito::mesh::metis::Partitioner<meshT>::partition(const mesh_t & mesh, int n_part
     auto connectivity = _populate_element_connectivity(cells, vertex_to_id, mesh.geometry());
 
     // get the total number of cells in the mesh
-    int n_elements = cells.size();
+    int n_elements = std::size(cells);
 
     // get the total number of vertices in the mesh
-    int n_vertices = vertex_to_id.size();
+    int n_vertices = std::size(vertex_to_id);
 
     // call metis partitioner
     auto painting = _metis_paint_partition(connectivity, n_vertices, n_elements, n_partitions);
 
     // debug
     // std::cout << "partition" << std::endl;
-    // for (size_t part_i = 0; part_i < painting.size(); part_i++) {
+    // for (size_t part_i = 0; part_i < std::size(painting); part_i++) {
     //     std::cout << part_i << " " << painting[part_i] << std::endl;
     // }
 

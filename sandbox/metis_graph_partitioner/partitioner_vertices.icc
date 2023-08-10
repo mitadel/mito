@@ -37,7 +37,7 @@ namespace {
         std::map<vertex_t, int> vertex_to_id;
 
         // populate the {vertex_to_id} map
-        for (size_t id = 0; id < id_to_vertex.size(); ++id) {
+        for (size_t id = 0; id < std::size(id_to_vertex); ++id) {
             vertex_to_id[id_to_vertex[id]] = id;
         }
 
@@ -110,7 +110,7 @@ namespace {
         for (const auto & vertex : adjacency_map) {
             auto vertex_id = vertex.first;
             auto vertex_adj = vertex.second;
-            xadjacency[vertex_id + 1] = xadjacency[vertex_id] + vertex_adj.size();
+            xadjacency[vertex_id + 1] = xadjacency[vertex_id] + std::size(vertex_adj);
 
             int count = 0;
             for (auto i : vertex_adj) {
@@ -120,12 +120,12 @@ namespace {
         }
 
         // std::cout << "xadjacency" << std::endl;
-        // for (size_t i = 0; i < xadjacency.size(); ++i) {
+        // for (size_t i = 0; i < std::size(xadjacency); ++i) {
         //     std::cout << xadjacency[i] << std::endl;
         // }
 
         // std::cout << "adjacency" << std::endl;
-        // for (size_t i = 0; i < adjacency.size(); ++i) {
+        // for (size_t i = 0; i < std::size(adjacency); ++i) {
         //     std::cout << adjacency[i] << std::endl;
         // }
 
@@ -178,7 +178,7 @@ mito::mesh::metis::partition(const meshT & mesh, int nPartitions) -> void
     //     std::cout << std::endl;
     // }
 
-    int nVertices = mesh.geometry().point_cloud().size();
+    int nVertices = std::size(mesh.geometry().point_cloud());
 
     // compute the total number of edges (with repeated orientation)
     // TOFIX: is this general?
@@ -188,7 +188,7 @@ mito::mesh::metis::partition(const meshT & mesh, int nPartitions) -> void
     auto painting = metis_paint_partition(nVertices, nEdges, nPartitions, adjacency_map);
 
     std::cout << "partition" << std::endl;
-    for (size_t part_i = 0; part_i < painting.size(); part_i++) {
+    for (size_t part_i = 0; part_i < std::size(painting); part_i++) {
         std::cout << part_i << " " << painting[part_i] << std::endl;
     }
 

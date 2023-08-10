@@ -98,7 +98,7 @@ namespace mito::topology {
             vertex_simplex_composition_t<D> vertices;
 
             // assert that you found the correct number of vertices
-            assert(vertices_collection.size() == vertices.size());
+            assert(std::size(vertices_collection) == std::size(vertices));
 
             // populate the array of vertices
             int i = 0;
