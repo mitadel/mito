@@ -163,6 +163,28 @@ mito::mesh::metis::Partitioner<meshT>::_metis_paint_partition(
 
 template <class meshT>
 auto
+mito::mesh::metis::Partitioner<meshT>::_create_partitioned_mesh(
+    const mesh_t & mesh, const auto & cells, const auto & painting, int n_rank) -> mesh_t
+{
+    // an empty mesh of same type of the original mesh
+    auto partitioned_mesh = mesh_t(mesh.geometry());
+
+    // fill in partitioned mesh with the element with painting {n_rank}
+    int e = 0;
+    for (const auto & cell : cells) {
+        // if the painting matches the {n_rank} requested
+        if (painting[e] == n_rank) {
+            partitioned_mesh.insert(cell);
+        }
+        ++e;
+    }
+
+    // returned partitioned mesh
+    return partitioned_mesh;
+}
+
+template <class meshT>
+auto
 mito::mesh::metis::Partitioner<meshT>::partition(const mesh_t & mesh, int n_partitions, int n_rank)
     -> mesh_t
 {
@@ -190,22 +212,8 @@ mito::mesh::metis::Partitioner<meshT>::partition(const mesh_t & mesh, int n_part
     //     std::cout << part_i << " " << painting[part_i] << std::endl;
     // }
 
-    // TOFIX: refactor this part too
-
-    // an empty mesh of same type of the original mesh
-    auto partitioned_mesh = mesh_t(mesh.geometry());
-
-    // cell counter
-    int e = 0;
-    // loop on cells
-    for (const auto & cell : cells) {
-        //
-        if (painting[e] == n_rank) {
-            partitioned_mesh.insert(cell);
-        }
-        // increment
-        ++e;
-    }
+    // create a subdivision of {mesh} with the computed {painting}
+    auto partitioned_mesh = _create_partitioned_mesh(mesh, cells, painting, n_rank);
 
     // all done
     return partitioned_mesh;
