@@ -102,7 +102,7 @@ namespace mito::topology {
 
             // populate the array of vertices
             int i = 0;
-            for (auto & vertex : vertices_collection) {
+            for (const auto & vertex : vertices_collection) {
                 vertices[i] = vertex;
                 ++i;
             }
