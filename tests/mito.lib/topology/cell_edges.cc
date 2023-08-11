@@ -12,7 +12,7 @@ TEST(CellEdges, Triangle)
     // an empty cloud of points
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // create three nodes
@@ -48,7 +48,7 @@ TEST(CellEdges, Tetrahedron)
     // an empty cloud of points
     auto & point_cloud = mito::geometry::point_cloud<3>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // create three nodes

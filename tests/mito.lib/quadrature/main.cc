@@ -72,7 +72,7 @@ TEST(Quadrature, MeshTriangles)
     // an empty cloud of points in 2D
     auto & point_cloud_2D = mito::geometry::point_cloud<2>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud_2D);
 
     // an empty mesh of simplicial topology in 2D
@@ -190,7 +190,7 @@ TEST(Quadrature, MeshTriangles)
     // an empty cloud of points in 3D
     auto & point_cloud_3D = mito::geometry::point_cloud<3>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry_3D = mito::geometry::geometry(topology, point_cloud_3D);
 
     geometry_3D.node(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
@@ -234,7 +234,7 @@ TEST(Quadrature, LoadMeshTriangles)
     // an empty cloud of points
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // load mesh
