@@ -54,9 +54,6 @@ function(mito_test_target targetname filename)
     # specify the directory for the target compilation products
     mito_target_directory(${target} tests)
 
-    # request c++20
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 20)
-
 endfunction(mito_test_target)
 
 # register a test case based on a compiled driver
