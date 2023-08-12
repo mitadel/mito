@@ -12,7 +12,7 @@ using mito::quadrature::GAUSS;
 using mito::topology::triangle_t;
 
 
-TEST(Quadrature, IntegralsOnIntervals)
+TEST(Quadrature, MeshSegment)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -47,7 +47,7 @@ TEST(Quadrature, IntegralsOnIntervals)
 }
 
 
-TEST(Quadrature, QuadratureBuildMesh)
+TEST(Quadrature, MeshTriangles)
 {
     /**
      * Mesh with four cells:
@@ -72,7 +72,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     // an empty cloud of points in 2D
     auto & point_cloud_2D = mito::geometry::point_cloud<2>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud_2D);
 
     // an empty mesh of simplicial topology in 2D
@@ -190,7 +190,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     // an empty cloud of points in 3D
     auto & point_cloud_3D = mito::geometry::point_cloud<3>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry_3D = mito::geometry::geometry(topology, point_cloud_3D);
 
     geometry_3D.node(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
@@ -226,7 +226,7 @@ TEST(Quadrature, QuadratureBuildMesh)
     EXPECT_DOUBLE_EQ(result, 0.35355339059327384);
 }
 
-TEST(Quadrature, QuadratureLoadMesh)
+TEST(Quadrature, LoadMeshTriangles)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -234,7 +234,7 @@ TEST(Quadrature, QuadratureLoadMesh)
     // an empty cloud of points
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
-    // a 2D geometry binding the topology {topology} on the cloud of points {point_cloud}
+    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // load mesh
@@ -260,7 +260,7 @@ TEST(Quadrature, QuadratureLoadMesh)
     EXPECT_NEAR(result, 0.946083, 1.e-7);
 }
 
-TEST(Quadrature, FlipDomain)
+TEST(Quadrature, FlipSegment)
 {
     // an empty topology
     auto & topology = mito::topology::topology();

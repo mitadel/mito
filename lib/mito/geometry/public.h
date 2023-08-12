@@ -21,6 +21,8 @@
 // factories implementation
 #include "factories.h"
 
+// geometry utilities
+#include "utilities.h"
 
 #endif
 

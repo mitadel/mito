@@ -62,8 +62,14 @@ mito_destinationInit()
 include(mito_lib)
 include(mito_extensions)
 
+# mpi support
+include(mito_mpi)
+
 # vtk support
 include(mito_vtk)
+
+# metis support
+include(mito_metis)
 
 # configure mito as a cmake package (so that mito can be found by cmake with find_package(mito))
 mito_shareCmakePackage()

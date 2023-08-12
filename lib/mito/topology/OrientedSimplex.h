@@ -20,8 +20,11 @@ namespace mito::topology {
     template <int D>
     class OrientedSimplex : public utilities::Shareable {
       public:
-        // typedef for order of simplex
+        // order of simplex
         static constexpr int order = D;
+
+        // number of vertices of simplex
+        static constexpr int n_vertices = order + 1;
 
         // typedef for the cell family type (simplicial)
         template <int N>
@@ -74,12 +77,45 @@ namespace mito::topology {
             return _footprint->composition();
         }
 
-
-        // returns the set of vertices
+        // append the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         inline auto vertices(VERTEX_COLLECTION_T & vertices) const -> void
         {
             return _footprint->vertices(vertices);
+        }
+
+        // return the array of vertices of this simplex
+        inline auto vertices() const -> vertex_simplex_composition_t<D>
+        requires(D > 0)
+        {
+            // a set of vertices
+            vertex_set_t vertices_collection;
+
+            // fetch the vertices of this simplex
+            _footprint->vertices(vertices_collection);
+
+            // an array to store the composition of a D-simplex in terms of vertices
+            vertex_simplex_composition_t<D> vertices;
+
+            // assert that you found the correct number of vertices
+            assert(std::size(vertices_collection) == std::size(vertices));
+
+            // populate the array of vertices
+            int i = 0;
+            for (const auto & vertex : vertices_collection) {
+                vertices[i] = vertex;
+                ++i;
+            }
+
+            // return the array of vertices
+            return vertices;
+        }
+
+        // append the edges of this simplex to a collection of edges
+        template <class EDGES_COLLECTION_T>
+        inline auto edges(EDGES_COLLECTION_T & edges) const -> void
+        {
+            return _footprint->edges(edges);
         }
 
         // returns whether the simplex passes the sanity check

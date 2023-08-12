@@ -1,14 +1,14 @@
 # -*- yaml -*-
 
 name: cmake-ubuntu
-on: 
+on:
   push:
     branches:
       - 'main'
   pull_request:
   workflow_dispatch:
 
-  
+
 jobs:
   # build and test the ref that launched this action
   build:
@@ -40,7 +40,7 @@ jobs:
           echo " -- upgrade"
           sudo apt dist-upgrade
           echo " -- install our dependencies"
-          sudo apt install -y make cmake libgtest-dev libvtk9-dev valgrind
+          sudo apt install -y make cmake libgtest-dev libvtk9-dev libopenmpi-dev libmetis-dev valgrind
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -113,13 +113,17 @@ jobs:
           ${{matrix.suite}}-${{matrix.suiteVersion}} --version
         env:
           pythonVersion: ${{matrix.python}}
-      
+
       - name: external dependencies
         run: |
           echo " -- gtest"
           sudo dpkg-query -L libgtest-dev
           echo " -- vtk"
           sudo dpkg-query -L libvtk9-dev
+          echo " -- openmpi"
+          sudo dpkg-query -L libopenmpi-dev
+          echo " -- metis"
+          sudo dpkg-query -L libmetis-dev
 
       - name: locations of python packages
         run: |
@@ -152,7 +156,7 @@ jobs:
           mkdir build
           cd build
           echo " -- configuring the build"
-          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -DMITO_BUILD_BENCHMARKS=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DWITH_VTK=ON ${{github.workspace}}/mito
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DPython_ROOT_DIR=${pythonLocation} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -DMITO_BUILD_BENCHMARKS=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DWITH_VTK=ON  -DWITH_METIS=ON ${{github.workspace}}/mito
           echo " -- building mito"
           make -j 2 install
         env:

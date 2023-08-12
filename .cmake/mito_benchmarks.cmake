@@ -27,9 +27,6 @@ function(mito_benchmark_driver benchmarkfile)
         LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     )
 
-    # request c++20
-    set_property(TARGET ${target} PROPERTY CXX_STANDARD 20)
-
   # all done
 endfunction()
 

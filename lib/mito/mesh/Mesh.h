@@ -8,9 +8,17 @@ namespace mito::mesh {
     template <class cellT /* the type of cell */, int D /* spatial dimension */>
     class Mesh {
 
-      private:
+      public:
+        // publish the order of the cell
+        static constexpr int order = cellT::resource_t::order;
+        // publish the number of vertices per element
+        static constexpr int n_vertices = cellT::resource_t::n_vertices;
+        // publish the dimension of physical space
+        static constexpr int dim = D;
         // typedef for cell type
         using cell_t = cellT;
+
+      private:
         // get the order of the cell
         static constexpr int N = cellT::resource_t::order;
         // get the family this cell type belongs to (e.g. simplicial cells)
@@ -27,7 +35,7 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        inline Mesh(geometry_t & geometry)
+        inline Mesh(const geometry_t & geometry)
         requires(N <= D)
             : _geometry(geometry), _cells() {};
 
@@ -49,7 +57,7 @@ namespace mito::mesh {
       private:
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) -> void
+            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
         requires(I == J)
         {
             // add {subcell} to the boundary mesh
@@ -61,7 +69,7 @@ namespace mito::mesh {
 
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) -> void
+            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
         requires(I < J)
         {
             // loop on the subcells of {cell}
@@ -75,7 +83,7 @@ namespace mito::mesh {
         }
 
       public:
-        inline auto sanityCheck() -> bool
+        inline auto sanityCheck() const -> bool
         {
 #if 0
             // print summary
@@ -123,19 +131,16 @@ namespace mito::mesh {
             // erase the cell from the mesh
             _cells.erase(cell);
 
-            // ask the topology to erase the cell
-            _geometry.topology().erase(cell);
-
             // all done
             return;
         }
 
-        inline auto isOnBoundary(const cell_family_t<N - 1> & cell) -> bool
+        inline auto isOnBoundary(const cell_family_t<N - 1> & cell) const -> bool
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
-            (!cell->orientation() ? count = _orientations[cell->footprint().id()][0] :
-                                    count = _orientations[cell->footprint().id()][1]);
+            (!cell->orientation() ? count = _orientations.at(cell->footprint().id())[0] :
+                                    count = _orientations.at(cell->footprint().id())[1]);
 
             // the cell is on the boundary if it never occurs in the mesh with opposite
             // orientation
@@ -150,7 +155,34 @@ namespace mito::mesh {
          * @brief Returns a mesh with all boundary cells of dimension I
          */
         template <int I = N - 1>
-        inline auto boundary() -> Mesh<cell_family_t<I>, D>
+        inline auto boundary_size() const -> int
+        requires(I >= 0)
+        {
+            // number of boundary cells
+            int count = 0;
+
+            // loop on the (N-1)-dimensional cells
+            for (const auto & cell : cells()) {
+                // loop on the subcells of {cell}
+                for (const auto & subcell : cell->composition()) {
+                    // if {subcell} does not have a counterpart in {topology} with opposite
+                    // orientation
+                    if (isOnBoundary(subcell)) {
+                        // increment counter for boundary cells
+                        ++count;
+                    }
+                }
+            }
+
+            // return the count of boundary cells
+            return count;
+        }
+
+        /**
+         * @brief Returns a mesh with all boundary cells of dimension I
+         */
+        template <int I = N - 1>
+        inline auto boundary() const -> Mesh<cell_family_t<I>, D> const
         requires(I >= 0)
         {
             // instantiate a new mesh for the boundary elements
@@ -203,12 +235,12 @@ namespace mito::mesh {
         }
 
       public:
-        // accessor to geometry
+        // const accessor to geometry
         auto geometry() const noexcept -> const geometry_t & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded
-        geometry_t & _geometry;
+        const geometry_t & _geometry;
 
         // container to store the mesh cells
         cells_t _cells;
