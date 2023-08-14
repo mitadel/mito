@@ -28,7 +28,7 @@ namespace mito::topology {
         using orientation_map_t =
             std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, simplex_t<D>>;
 
-      public:    // TOFIX: should be private but the default constructor of tuple needs it public
+      private:
         // default constructor
         OrientedSimplexFactory() :
             _simplex_factory(),
