@@ -9,12 +9,12 @@ namespace mito::geometry {
     class Point : public utilities::Shareable {
       private:
         template <class... Args>
-        Point(Args &&... args)
+        constexpr Point(Args &&... args)
         requires(sizeof...(Args) == D)
             : _coordinates(args...)
         {}
 
-        ~Point() override {}
+        constexpr ~Point() override {}
 
         // delete copy constructor
         Point(const Point &) = delete;
@@ -30,7 +30,7 @@ namespace mito::geometry {
 
       public:
         // get the coordinates of the point
-        auto coordinates() const noexcept -> const vector_t<D> & { return _coordinates; }
+        constexpr auto coordinates() const noexcept -> const vector_t<D> & { return _coordinates; }
 
         auto print() const noexcept -> void
         {
@@ -50,7 +50,7 @@ namespace mito::geometry {
     };
 
     template <int D>
-    auto distance(const point_t<D> & pointA, const point_t<D> & pointB) noexcept -> real
+    constexpr auto distance(const point_t<D> & pointA, const point_t<D> & pointB) noexcept -> real
     {
         // return the distance between the two points
         auto dist = pointA->coordinates() - pointB->coordinates();
