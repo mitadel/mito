@@ -202,8 +202,8 @@ namespace mito::topology {
             // get the key to this oriented simplex
             auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
 
-            // erase the simplex
-            oriented_simplex->_erase();
+            // destroy the simplex
+            oriented_simplex->~OrientedSimplex<D>();
 
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);

@@ -39,7 +39,6 @@ namespace mito::topology {
             _orientation(orientation)
         {}
 
-      public:
         // destructor
         constexpr ~OrientedSimplex() override {}
 
@@ -122,18 +121,8 @@ namespace mito::topology {
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
       private:
-        inline auto _erase() -> void
-        {
-            // reset the footprint shared pointer
-            _footprint.reset();
-
-            // all done
-            return;
-        }
-
-      private:
         // the shared pointer to the footprint
-        unoriented_simplex_t<D> _footprint;    // TOFIX: should this be {const}?
+        const unoriented_simplex_t<D> _footprint;
         // the orientation
         const bool _orientation;
         // private friendship with the factory of oriented simplices

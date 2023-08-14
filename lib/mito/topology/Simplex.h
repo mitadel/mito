@@ -22,7 +22,6 @@ namespace mito::topology {
         // constructor for a simplex based on its composition in terms of subsimplices
         constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
 
-      public:
         // destructor
         constexpr ~Simplex() override {}
 
@@ -125,20 +124,8 @@ namespace mito::topology {
         }
 
       private:
-        inline auto _erase() -> void
-        {
-            // reset the subsimplices shared pointers
-            for (auto & simplex : _simplices) {
-                simplex.reset();
-            }
-
-            // all done
-            return;
-        }
-
-      private:
         // the simplex composition in terms of subsimplices
-        simplex_composition_t<D> _simplices;    // TOFIX: should this be {const}?
+        const simplex_composition_t<D> _simplices;
 
         // private friendship with the factory of simplices
         friend class SimplexFactory<D>;
@@ -156,7 +143,6 @@ namespace mito::topology {
         // default constructor
         constexpr Simplex() {}
 
-      public:
         // empty destructor
         constexpr ~Simplex() override {}
 

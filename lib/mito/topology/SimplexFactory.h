@@ -111,8 +111,8 @@ namespace mito::topology {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(simplex->composition());
 
-            // erase it
-            simplex->_erase();
+            // destroy the simplex
+            simplex->~Simplex<D>();
 
             // erase this simplex from the compositions map
             _compositions.erase(representative);
@@ -236,8 +236,8 @@ namespace mito::topology {
             // sanity check
             assert(simplex.references() > 0);
 
-            // erase the simplex
-            simplex->_erase();
+            // destroy the simplex
+            simplex->~Simplex<0>();
 
             // erase the vertex from the vertex set
             _vertex_set.erase(simplex);
