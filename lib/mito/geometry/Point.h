@@ -43,7 +43,7 @@ namespace mito::geometry {
 
       private:
         // the coordinates of the point
-        vector_t<D> _coordinates;
+        const vector_t<D> _coordinates;
 
         // private friendship with the point cloud
         friend class PointCloud<D>;
