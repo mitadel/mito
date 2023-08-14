@@ -62,7 +62,7 @@ namespace mito::geometry {
                 Point<D> * resource = new (location) Point<D>(coord[I]...);
 
                 // wrap the new point in a shared pointer and return it
-                return utilities::shared_ptr<Point<D>>(resource, &_cloud);
+                return utilities::shared_ptr<Point<D>>(resource);
             };
 
             // emplace point in {_cloud}

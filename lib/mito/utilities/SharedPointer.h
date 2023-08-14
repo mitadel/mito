@@ -48,7 +48,7 @@ namespace mito::utilities {
         inline SharedPointer();
 
         // constructor
-        inline SharedPointer(handle_t, segmented_t<shared_ptr_t> *);
+        inline SharedPointer(handle_t);
 
         // copy constructor
         inline SharedPointer(const SharedPointer<Resource> &);
@@ -78,8 +78,6 @@ namespace mito::utilities {
       private:
         // handle to the resource
         handle_t _handle;
-        // reference to the segmented container, which owns the memory
-        segmented_t<shared_ptr_t> * _container;
 
       private:
         // friendship with SegmentedContainer

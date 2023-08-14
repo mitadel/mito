@@ -6,6 +6,7 @@
 #if !defined(mito_utilities_SegmentedContainer_h)
 #define mito_utilities_SegmentedContainer_h
 
+// TOFIX: update design notes with {Repository} actor
 // DESIGN NOTES
 
 // Class {SegmentedContainer} implements a data structure that is resizable, while also being stable
@@ -87,6 +88,7 @@ namespace mito::utilities {
         using const_iterator =
             SegmentedContainerIterator<segmented_container_type, true /* isConst */>;
 
+      private:
         // default constructor (empty data structure)
         SegmentedContainer(int segment_size) :
             _segment_size(segment_size),
@@ -126,6 +128,7 @@ namespace mito::utilities {
             return;
         }
 
+      public:
         inline auto capacity() const -> int
         {
             // the number of segments times the size of each segment
@@ -133,6 +136,18 @@ namespace mito::utilities {
         }
 
         inline auto size() const -> int { return _n_elements; }
+
+        inline auto segment_size() const noexcept -> int { return _segment_size; }
+
+        // QUESTION: should this be const?
+        // TOFIX: remove this method
+        auto resource(index_t<T> index) -> shared_ptr<T>
+        {
+            // fetch the resource based on the index
+            auto resource = utilities::shared_ptr<T>::resource(index);
+            // wrap the resource in a shared pointer
+            return utilities::shared_ptr<T>(resource);
+        }
 
       private:
         auto _allocate_new_segment() -> T *
@@ -189,10 +204,7 @@ namespace mito::utilities {
             return _end;
         }
 
-      public:
-        auto segment_size() const noexcept -> int { return _segment_size; }
-
-        auto location_for_placement() -> T *
+        auto _location_for_placement() -> T *
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
@@ -219,30 +231,11 @@ namespace mito::utilities {
             return location;
         }
 
-        template <class... Args>
-        auto emplace(Args &&... args) -> shared_ptr<T>
-        {
-            // get a spare location for the placement of the new resource
-            auto location = location_for_placement();
-
-            // create a new instance of T at location {location} with placement new
-            T * resource = new (location) T(args...);
-
-            // and assign it to a new pointer
-            utilities::shared_ptr<T> pointer(resource, this);
-
-            // all done
-            return pointer;
-        }
-
         // erase an element from the container
         // (decrement the number of elements and add the address of the element to the pile of the
         // available locations for reuse)
-        auto erase(const utilities::shared_ptr<T> & element) -> void
+        auto _erase(const shared_ptr<T> & element) -> void
         {
-            // assert that the resource is in valid state
-            assert(element->is_valid() == 0);
-
             // decrement the number of elements
             --_n_elements;
 
@@ -253,15 +246,7 @@ namespace mito::utilities {
             return;
         }
 
-        // QUESTION: should this be const?
-        auto resource(index_t<T> index) -> shared_ptr<T>
-        {
-            // fetch the resource based on the index
-            auto resource = utilities::shared_ptr<T>::resource(index);
-            // wrap the resource in a shared pointer
-            return utilities::shared_ptr<T>(resource, this);
-        }
-
+      public:
         /**
          * iterators
          */
@@ -337,6 +322,8 @@ namespace mito::utilities {
         friend iterator;
         // const iterator
         friend const_iterator;
+        // the repository
+        friend Repository<T>;
     };
 }
 

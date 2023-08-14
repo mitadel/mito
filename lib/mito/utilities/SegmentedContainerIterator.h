@@ -60,7 +60,7 @@ namespace mito::utilities {
         constexpr auto operator*() const -> shared_pointer
         {
             // wrap the resource in a shared pointer and return it
-            return shared_pointer(_ptr, &_container);
+            return shared_pointer(_ptr);
         }
 
         // accessors

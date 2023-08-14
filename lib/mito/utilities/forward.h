@@ -26,6 +26,11 @@ namespace mito::utilities {
     template <class SegmentedContainerT, bool isConst>
     class SegmentedContainerIterator;
 
+    // the repository
+    template <class resourceT>
+    class Repository;
+
+    // TOFIX: move these guys to a {utilities.h} header?
     // segmented container iterator
     // equality
     template <class SegmentedContainerT, bool isConst>

@@ -2,6 +2,7 @@
 #include <mito/base.h>
 #include <mito/utilities.h>
 
+// TOFIX: perhaps rename this to Resource to make it more general?
 class Simplex : public mito::utilities::Shareable {
   public:
     Simplex(int foo) : _foo(foo) {}
@@ -12,16 +13,15 @@ class Simplex : public mito::utilities::Shareable {
     int _foo;
 };
 
-using simplex_t = mito::utilities::SharedPointer<Simplex>;
 
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
-    // instantiate a segmented container
-    mito::utilities::segmented_t<simplex_t> collection(3 /*segment size */);
+    // instantiate a repository of {Simplex} resources
+    mito::utilities::repository_t<Simplex> collection(3 /*segment size */);
 
     // assert that the container is empty and with no capacity
-    EXPECT_EQ(collection.capacity(), 0);
-    EXPECT_EQ(std::size(collection), 0);
+    EXPECT_EQ(collection.resources().capacity(), 0);
+    EXPECT_EQ(std::size(collection.resources()), 0);
 
     // emplace three simplices in the container
     auto simplex0 = collection.emplace(0);
@@ -29,7 +29,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     auto simplex2 = collection.emplace(2);
 
     std::vector<int> store_elements;
-    for (const auto & el : collection) {
+    for (const auto & el : collection.resources()) {
         store_elements.emplace_back(el->foo());
     }
 
@@ -40,10 +40,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
-    // invalidate element in the middle
-    simplex1.reset();
+    // erase element in the middle
+    collection.erase(simplex1);
 
-    for (const auto & el : collection) {
+    for (const auto & el : collection.resources()) {
         store_elements.emplace_back(el->foo());
     }
 
@@ -53,10 +53,10 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
-    // invalidate first element
-    simplex0.reset();
+    // erase first element
+    collection.erase(simplex0);
 
-    for (const auto & el : collection) {
+    for (const auto & el : collection.resources()) {
         store_elements.emplace_back(el->foo());
     }
 
@@ -65,8 +65,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
-    // invalidate last element
-    simplex2.reset();
+    // erase last element
+    collection.erase(simplex2);
 
     EXPECT_EQ(std::size(store_elements), 0);
 
@@ -82,7 +82,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // emplace another simplex (trigger allocation of new segment)
     auto simplex4 = collection.emplace(4);
 
-    for (const auto & el : collection) {
+    for (const auto & el : collection.resources()) {
         store_elements.emplace_back(el->foo());
     }
 

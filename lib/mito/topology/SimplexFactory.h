@@ -139,7 +139,7 @@ namespace mito::topology {
             Simplex<D> * resource = new (location) Simplex<D>(composition);
 
             // wrap the new simplex in a shared pointer and return it
-            return utilities::shared_ptr<Simplex<D>>(resource, &_simplices);
+            return utilities::shared_ptr<Simplex<D>>(resource);
         }
 
       private:
@@ -262,7 +262,7 @@ namespace mito::topology {
             Simplex<0> * resource = new (location) Simplex<0>();
 
             // wrap the new simplex in a shared pointer and return it
-            return utilities::shared_ptr<Simplex<0>>(resource, &_simplices);
+            return utilities::shared_ptr<Simplex<0>>(resource);
         }
 
       private:

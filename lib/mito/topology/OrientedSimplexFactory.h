@@ -239,7 +239,7 @@ namespace mito::topology {
             OrientedSimplex<D> * resource = new (location) OrientedSimplex<D>(simplex, orientation);
 
             // wrap the new simplex in a shared pointer and return it
-            return utilities::shared_ptr<OrientedSimplex<D>>(resource, &_oriented_simplices);
+            return utilities::shared_ptr<OrientedSimplex<D>>(resource);
         }
 
       private:
