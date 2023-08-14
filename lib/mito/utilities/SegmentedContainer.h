@@ -235,7 +235,9 @@ namespace mito::utilities {
             return pointer;
         }
 
-        // This method is called by {shared_ptr::_release}
+        // erase an element from the container
+        // (decrement the number of elements and add the address of the element to the pile of the
+        // available locations for reuse)
         auto erase(const utilities::shared_ptr<T> & element) -> void
         {
             // assert that the resource is in valid state

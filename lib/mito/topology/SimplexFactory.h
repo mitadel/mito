@@ -117,6 +117,9 @@ namespace mito::topology {
             // erase this simplex from the compositions map
             _compositions.erase(representative);
 
+            // erase this simplex from the container
+            _simplices.erase(simplex);
+
             // all done
             return;
         }
@@ -241,6 +244,9 @@ namespace mito::topology {
 
             // erase the vertex from the vertex set
             _vertex_set.erase(simplex);
+
+            // erase this simplex from the container
+            _simplices.erase(simplex);
 
             // all done
             return;

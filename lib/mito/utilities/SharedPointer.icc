@@ -201,7 +201,7 @@ mito::utilities::SharedPointer<Resource>::_release() const -> void
         if (reference_count == 0 && _container != nullptr) {
             // erase it from the container (decrement the number of elements and add the address of
             // the element to the queue of the available locations for reuse)
-            return _container->erase(*this);
+            // return _container->erase(*this);
         }
 
         // all done
