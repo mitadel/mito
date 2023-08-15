@@ -66,6 +66,15 @@ namespace mito::utilities {
             return;
         }
 
+        // returns the resource corresponding to this resource id
+        static inline auto resource(index_t<resource_t> index) -> shared_ptr<resource_t>
+        {
+            // fetch the resource based on the index
+            auto resource = shared_ptr<resource_t>::resource(index);
+            // wrap the resource in a shared pointer
+            return shared_ptr<resource_t>(resource);
+        }
+
         inline auto resources() const -> const resource_collection_t &
         {
             // all done

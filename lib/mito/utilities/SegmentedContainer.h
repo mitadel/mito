@@ -139,16 +139,6 @@ namespace mito::utilities {
 
         inline auto segment_size() const noexcept -> int { return _segment_size; }
 
-        // QUESTION: should this be const?
-        // TOFIX: remove this method
-        auto resource(index_t<T> index) -> shared_ptr<T>
-        {
-            // fetch the resource based on the index
-            auto resource = utilities::shared_ptr<T>::resource(index);
-            // wrap the resource in a shared pointer
-            return utilities::shared_ptr<T>(resource);
-        }
-
       private:
         auto _allocate_new_segment() -> T *
         {
