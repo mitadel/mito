@@ -54,7 +54,7 @@ namespace mito::utilities {
             // if the resource is valid
             if (!resource.is_nullptr()) {
                 // remove this resource from the collection of resources
-                _resources._erase(resource.handle());
+                _resources.erase(resource.handle());
                 // destroy the resource
                 resource->~resource_t();
                 // QUESTION: to reset or not to reset?
