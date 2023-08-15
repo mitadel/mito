@@ -46,12 +46,11 @@ namespace mito::utilities {
       public:
         // constructor
         constexpr SegmentedContainerIterator(
-            pointer ptr, pointer segment_end, pointer end,
-            segmented_container_reference container) :
+            pointer ptr, pointer segment_end, int segment_size, pointer end) :
             _ptr(ptr),
             _segment_end(segment_end),
-            _end(end),
-            _container(container)
+            _segment_size(segment_size),
+            _end(end)
         {}
 
         // iterator protocol
@@ -93,7 +92,7 @@ namespace mito::utilities {
                     // by the segmented container right at the end of the current segment
                     _ptr = *(reinterpret_cast<const pointer *>(_ptr));
                     // store the start of the current segment
-                    _segment_end = _ptr + _container.segment_size();
+                    _segment_end = _ptr + _segment_size;
                 }
 
                 // if the element is valid
@@ -127,17 +126,12 @@ namespace mito::utilities {
         pointer _ptr;
         // pointer to the end of the current segment
         pointer _segment_end;
+        // the size of a segment
+        const int _segment_size;
         // pointer to the end of the segmented container
         // (this is necessary as the end of the container may not coincide with the end of the
         // allocated memory)
         pointer _end;
-        // TOFIX: Iterators should not need to have a reference to the container that they are
-        //  iterating on. However, this is necessary if we want to be able to hand to the shared
-        //  pointers a pointer to the container that owns the memory of the resource
-        //  Also, this reference cannot be const because the shared pointer might need to erase the
-        //  element in the destructor.
-        // a reference to the segmented container
-        segmented_container_reference _container;
 
         // default metamethods
       public:
