@@ -21,8 +21,7 @@ namespace mito::topology {
     class OrientedSimplexFactory {
       private:
         // typedef for a repository of oriented simplices
-        using oriented_simplex_repository_t =
-            utilities::repository_t<typename simplex_t<D>::resource_t>;
+        using oriented_simplex_repository_t = utilities::repository_t<simplex_t<D>>;
 
         // id type of unoriented simplex
         using unoriented_simplex_id_t = utilities::index_t<unoriented_simplex_t<D>>;

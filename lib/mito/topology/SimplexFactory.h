@@ -22,10 +22,8 @@ namespace mito::topology {
     class SimplexFactory {
 
       private:
-        // TOFIX: how do we rename this to
         // typedef for a repository of unoriented simplices
-        using simplex_repository_t =
-            utilities::repository_t<typename unoriented_simplex_t<D>::resource_t>;
+        using simplex_repository_t = utilities::repository_t<unoriented_simplex_t<D>>;
 
         // id type of oriented simplex
         using unoriented_simplex_id_t = utilities::index_t<simplex_t<D>>;
@@ -191,7 +189,7 @@ namespace mito::topology {
 
       private:
         // typedef for a collection of unoriented simplices
-        using simplex_repository_t = utilities::repository_t<unoriented_simplex_t<0>::resource_t>;
+        using simplex_repository_t = utilities::repository_t<unoriented_simplex_t<0>>;
 
       private:
         // default constructor

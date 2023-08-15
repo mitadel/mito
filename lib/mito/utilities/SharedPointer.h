@@ -81,7 +81,7 @@ namespace mito::utilities {
 
       private:
         // friendship with Repository
-        friend class utilities::Repository<resource_t>;
+        friend class Repository<shared_ptr_t>;
     };
 
     template <class Resource>

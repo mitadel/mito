@@ -128,7 +128,7 @@ namespace mito::topology {
         const simplex_composition_t<D> _simplices;
 
         // private friendship with the repository of simplices
-        friend class utilities::Repository<Simplex<D>>;
+        friend class utilities::Repository<unoriented_simplex_t<D>>;
     };
 
     /*
@@ -169,7 +169,7 @@ namespace mito::topology {
 
       private:
         // friendship with the repository of simplices
-        friend class utilities::Repository<Simplex<0>>;
+        friend class utilities::Repository<unoriented_simplex_t<0>>;
     };
 
 }    // namespace mito

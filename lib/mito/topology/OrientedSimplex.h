@@ -127,7 +127,7 @@ namespace mito::topology {
         // the orientation
         const bool _orientation;
         // private friendship with the repository of oriented simplices
-        friend class utilities::Repository<OrientedSimplex<D>>;
+        friend class utilities::Repository<oriented_simplex_t<D>>;
     };
 }
 #endif    // mito_topology_OrientedSimplex_h

@@ -46,7 +46,7 @@ namespace mito::geometry {
         const vector_t<D> _coordinates;
 
         // private friendship with the repository of points
-        friend class utilities::Repository<Point<D>>;
+        friend class utilities::Repository<point_t<D>>;
     };
 
     template <int D>

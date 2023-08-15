@@ -66,16 +66,16 @@
 // been explored so far.
 
 namespace mito::utilities {
-    template <class T>
-    // requires ReferenceCountedObject<T>
+    template <class sharedResourceT>
+    // requires ReferenceCountedObject<sharedResourceT::resource_t>
     class SegmentedContainer {
 
       public:
-        // aliases for my template parameters
-        using resource_type = T;
-
         // me
-        using segmented_container_type = SegmentedContainer<resource_type>;
+        using segmented_container_type = SegmentedContainer<sharedResourceT>;
+
+        // aliases for my resource type
+        using resource_type = typename sharedResourceT::resource_t;
 
         // my value
         using pointer = resource_type *;
@@ -322,7 +322,7 @@ namespace mito::utilities {
         // const iterator
         friend const_iterator;
         // the repository
-        friend Repository<resource_type>;
+        friend Repository<sharedResourceT>;
     };
 }
 

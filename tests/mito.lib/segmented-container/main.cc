@@ -11,14 +11,16 @@ class Simplex : public mito::utilities::Shareable {
     int _foo;
 };
 
+// the simplex type
+using simplex_t = mito::utilities::shared_ptr<Simplex>;
 
 TEST(SegmentedContainer, TestSegmentedContainer)
 {
     // segment size
     const auto segmentSize = 3;
 
-    // instantiate a repository of {Simplex} resources
-    mito::utilities::repository_t<Simplex> collection(segmentSize);
+    // instantiate a repository of {simplex_t} resources
+    mito::utilities::repository_t<simplex_t> collection(segmentSize);
 
     // check segment size
     EXPECT_EQ(collection.resources().segment_size(), segmentSize);

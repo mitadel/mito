@@ -13,11 +13,13 @@ class Simplex : public mito::utilities::Shareable {
     int _foo;
 };
 
+// the simplex type
+using simplex_t = mito::utilities::shared_ptr<Simplex>;
 
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
     // instantiate a repository of {Simplex} resources
-    mito::utilities::repository_t<Simplex> collection(3 /*segment size */);
+    mito::utilities::repository_t<simplex_t> collection(3 /*segment size */);
 
     // assert that the container is empty and with no capacity
     EXPECT_EQ(collection.resources().capacity(), 0);
