@@ -117,6 +117,7 @@ namespace mito::topology {
             return _footprint->edges(edges);
         }
 
+        // TOFIX: remove methods sanity check, a simplex does not need it
         // returns whether the simplex passes the sanity check
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
@@ -125,8 +126,8 @@ namespace mito::topology {
         const unoriented_simplex_t<D> _footprint;
         // the orientation
         const bool _orientation;
-        // private friendship with the factory of oriented simplices
-        friend class OrientedSimplexFactory<D>;
+        // private friendship with the repository of oriented simplices
+        friend class utilities::Repository<OrientedSimplex<D>>;
     };
 }
 #endif    // mito_topology_OrientedSimplex_h

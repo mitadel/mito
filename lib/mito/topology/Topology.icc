@@ -72,7 +72,7 @@ mito::topology::Topology::_get_factory<3>() const noexcept -> const oriented_sim
 template <int D>
 inline auto
 mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
-    -> const simplex_t<D> &
+    -> simplex_t<D> &
 {
     // ask the factory of oriented simplices
     return _get_factory<D>().orientedSimplex(footprint, orientation);
@@ -80,8 +80,7 @@ mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, boo
 
 template <int D>
 inline auto
-mito::topology::Topology::simplex(const simplex_composition_t<D> & composition)
-    -> const simplex_t<D> &
+mito::topology::Topology::simplex(const simplex_composition_t<D> & composition) -> simplex_t<D> &
 requires(D > 0)
 {
     // ask the factory of oriented simplices
@@ -90,7 +89,7 @@ requires(D > 0)
 
 template <int D>
 inline auto
-mito::topology::Topology::simplex(bool orientation) -> const simplex_t<0> &
+mito::topology::Topology::simplex(bool orientation) -> simplex_t<0> &
 requires(D == 0)
 {
     // ask the factory of oriented simplices
@@ -98,36 +97,33 @@ requires(D == 0)
 }
 
 inline auto
-mito::topology::Topology::segment(const simplex_composition_t<1> & simplices)
-    -> const simplex_t<1> &
+mito::topology::Topology::segment(const simplex_composition_t<1> & simplices) -> simplex_t<1> &
 {
     return simplex<1>(simplices);
 }
 
 inline auto
-mito::topology::Topology::triangle(const simplex_composition_t<2> & simplices)
-    -> const simplex_t<2> &
+mito::topology::Topology::triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2> &
 {
     return simplex<2>(simplices);
 }
 
 inline auto
-mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices)
-    -> const simplex_t<3> &
+mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3> &
 {
     return simplex<3>(simplices);
 }
 
 inline auto
 mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & simplices)
-    -> const simplex_t<1> &
+    -> simplex_t<1> &
 {
     return segment({ simplex(simplices[0], false), simplex(simplices[1], true) });
 }
 
 inline auto
 mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & vertices)
-    -> const simplex_t<2> &
+    -> simplex_t<2> &
 {
     return simplex<2>({ segment({ vertices[0], vertices[1] }),
                         segment({ vertices[1], vertices[2] }),
@@ -136,7 +132,7 @@ mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & verti
 
 inline auto
 mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & vertices)
-    -> const simplex_t<3> &
+    -> simplex_t<3> &
 {
     return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[3] }),
                         triangle({ vertices[1], vertices[2], vertices[3] }),
@@ -153,7 +149,7 @@ mito::topology::Topology::exists_flipped(const simplex_t<D> & simplex) const -> 
 
 template <int D>
 inline auto
-mito::topology::Topology::flip(const simplex_t<D> & simplex) -> const simplex_t<D> &
+mito::topology::Topology::flip(const simplex_t<D> & simplex) -> simplex_t<D> &
 {
     // ask the factory of oriented simplices
     return _get_factory<D>().orientedSimplex(simplex->footprint(), !simplex->orientation());
@@ -161,7 +157,7 @@ mito::topology::Topology::flip(const simplex_t<D> & simplex) -> const simplex_t<
 
 template <int D>
 inline auto
-mito::topology::Topology::_erase(const simplex_t<D> & simplex) -> void
+mito::topology::Topology::_erase(simplex_t<D> & simplex) -> void
 requires(D == 0)
 {
     // erase the vertex from the factory
@@ -173,7 +169,7 @@ requires(D == 0)
 
 template <int D>
 inline auto
-mito::topology::Topology::_erase(const simplex_t<D> & simplex) -> void
+mito::topology::Topology::_erase(simplex_t<D> & simplex) -> void
 requires(D > 0)
 {
     // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
@@ -191,7 +187,7 @@ requires(D > 0)
     _get_factory<D>().erase(simplex);
 
     // loop on subsimplices
-    for (const auto & subsimplex : composition) {
+    for (auto & subsimplex : composition) {
         // if this simplex is the last one using the subsimplex (other than the copy we just
         // did)
         if (subsimplex.references() == 2) {
@@ -206,7 +202,7 @@ requires(D > 0)
 
 template <int D>
 inline auto
-mito::topology::Topology::erase(const simplex_t<D> & simplex) -> void
+mito::topology::Topology::erase(simplex_t<D> & simplex) -> void
 {
     // if someone else (other than the topology) is still using this resource
     if (simplex.references() > 1) {

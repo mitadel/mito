@@ -21,14 +21,7 @@ namespace mito::geometry {
         void operator=(const PointCloud<D> &) = delete;
 
         // destructor
-        ~PointCloud()
-        {
-            if (std::size(_cloud) > 0) {
-                for (const auto & point : _cloud) {
-                    point->~Point<D>();
-                }
-            }
-        }
+        ~PointCloud() {}
 
       public:
         auto print() const noexcept -> void
@@ -43,26 +36,23 @@ namespace mito::geometry {
         }
 
         // support for ranged for loops (wrapping grid)
-        inline auto begin() -> const auto & { return std::cbegin(_cloud); }
-        inline auto end() -> const auto & { return std::cend(_cloud); }
+        // TOFIX: define iterators on {Repository} so we can return simply
+        // std::cbegin(_cloud), ...
+        inline auto begin() -> const auto & { return std::cbegin(_cloud.resources()); }
+        inline auto end() -> const auto & { return std::cend(_cloud.resources()); }
 
-        auto size() const noexcept -> int { return std::size(_cloud); }
+        auto size() const noexcept -> int { return std::size(_cloud.resources()); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(vector_t<D> && coord) -> const point_t<D> &
+        auto point(vector_t<D> && coord) -> point_t<D> &
         {
             // helper function to convert vector_t to variadic template argument
             auto _emplace_point = [this]<size_t... I>(
-                                      const vector_t<D> & coord,
-                                      std::index_sequence<I...>) -> point_t<D> {
-                // get from {_cloud} the location where to place the new point
-                auto location = _cloud.location_for_placement();
-
-                // create a new point at location {location} with placement new
-                Point<D> * resource = new (location) Point<D>(coord[I]...);
-
-                // wrap the new point in a shared pointer and return it
-                return utilities::shared_ptr<Point<D>>(resource);
+                                      const vector_t<D> & coord, std::index_sequence<I...>)
+                                      ->point_t<D>
+            {
+                // emplace a new point in the cloud and return it
+                return _cloud.emplace(coord[I]...);
             };
 
             // emplace point in {_cloud}

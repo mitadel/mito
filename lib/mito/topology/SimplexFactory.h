@@ -22,8 +22,10 @@ namespace mito::topology {
     class SimplexFactory {
 
       private:
-        // typedef for a collection of unoriented simplices
-        using simplex_collection_t = utilities::segmented_t<unoriented_simplex_t<D>>;
+        // TOFIX: how do we rename this to
+        // typedef for a repository of unoriented simplices
+        using simplex_repository_t =
+            utilities::repository_t<typename unoriented_simplex_t<D>::resource_t>;
 
         // typedef for a composition map of simplices:
         // these maps map:
@@ -43,14 +45,7 @@ namespace mito::topology {
         SimplexFactory() : _simplices(100 /*segment size */), _compositions() {};
 
         // destructor
-        ~SimplexFactory()
-        {
-            if (std::size(_simplices) > 0) {
-                for (const auto & simplex : _simplices) {
-                    simplex->~Simplex<D>();
-                }
-            }
-        }
+        ~SimplexFactory() {}
 
         inline auto findSimplex(const simplex_composition_t<D> & composition) const
             -> unoriented_simplex_t<D>
@@ -77,7 +72,7 @@ namespace mito::topology {
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
         inline auto simplex(const simplex_composition_t<D> & composition)
-            -> const unoriented_simplex_t<D> &
+            -> unoriented_simplex_t<D> &
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
@@ -94,7 +89,7 @@ namespace mito::topology {
             else {
                 // emplace simplex in {_simplices} and register it in the compositions map
                 auto it = _compositions.insert(
-                    std::make_pair(representative, _emplace_simplex(composition)));
+                    std::make_pair(representative, _simplices.emplace(composition)));
 
                 // and return it
                 return it.first->second;
@@ -103,7 +98,7 @@ namespace mito::topology {
 
         // erase a simplex from the factory (this method actually erases the simplex only if there
         // is no one else using it, otherwise does nothing)
-        inline auto erase(const unoriented_simplex_t<D> & simplex) -> void
+        inline auto erase(unoriented_simplex_t<D> & simplex) -> void
         {
             // sanity check
             assert(simplex.references() > 0);
@@ -111,13 +106,10 @@ namespace mito::topology {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(simplex->composition());
 
-            // destroy the simplex
-            simplex->~Simplex<D>();
-
             // erase this simplex from the compositions map
             _compositions.erase(representative);
 
-            // erase this simplex from the container
+            // erase this simplex from the repository
             _simplices.erase(simplex);
 
             // all done
@@ -129,22 +121,9 @@ namespace mito::topology {
         inline auto _representative(const simplex_composition_t<D> & composition) const
             -> composition_t;
 
-        inline auto _emplace_simplex(const simplex_composition_t<D> & composition)
-            -> unoriented_simplex_t<D>
-        {
-            // get from {_simplices} the location where to place the new simplex
-            auto location = _simplices.location_for_placement();
-
-            // create a new simplex at location {location} with placement new
-            Simplex<D> * resource = new (location) Simplex<D>(composition);
-
-            // wrap the new simplex in a shared pointer and return it
-            return utilities::shared_ptr<Simplex<D>>(resource);
-        }
-
       private:
-        // container to store the unoriented simplices
-        simplex_collection_t _simplices;
+        // repository to store the unoriented simplices
+        simplex_repository_t _simplices;
 
         // container to map simplex composition to simplices
         composition_map_t _compositions;
@@ -207,40 +186,32 @@ namespace mito::topology {
 
       private:
         // typedef for a collection of unoriented simplices
-        using simplex_collection_t = utilities::segmented_t<unoriented_simplex_t<0>>;
+        using simplex_repository_t = utilities::repository_t<unoriented_simplex_t<0>::resource_t>;
 
       private:
         // default constructor
         SimplexFactory() : _simplices(100 /*segment size */) {};
 
         // destructor
-        ~SimplexFactory()
-        {
-            if (std::size(_simplices) > 0) {
-                for (const auto & simplex : _simplices) {
-                    simplex->~Simplex<0>();
-                }
-            }
-        }
+        ~SimplexFactory() {}
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
+        // TOFIX: why do vertices need to be {const}, why are they different?
         inline auto simplex() -> const unoriented_simplex_t<0> &
         {
-            // emplace the new vertex in the vertex collection and return it
-            return *_vertex_set.insert(_emplace_simplex()).first;
+            // emplace the new vertex in the vertex repository, insert it in the element set, and
+            // return it
+            return *_vertex_set.insert(_simplices.emplace()).first;
         }
 
         // erase a simplex from the factory (this method actually erases the simplex only if there
         // is no one else using it, otherwise does nothing)
-        inline auto erase(const unoriented_simplex_t<0> & simplex) -> void
+        inline auto erase(unoriented_simplex_t<0> & simplex) -> void
         {
             // sanity check
             assert(simplex.references() > 0);
-
-            // destroy the simplex
-            simplex->~Simplex<0>();
 
             // erase the vertex from the vertex set
             _vertex_set.erase(simplex);
@@ -253,21 +224,8 @@ namespace mito::topology {
         }
 
       private:
-        inline auto _emplace_simplex() -> unoriented_simplex_t<0>
-        {
-            // get from {_simplices} the location where to place the new simplex
-            auto location = _simplices.location_for_placement();
-
-            // create a new simplex at location {location} with placement new
-            Simplex<0> * resource = new (location) Simplex<0>();
-
-            // wrap the new simplex in a shared pointer and return it
-            return utilities::shared_ptr<Simplex<0>>(resource);
-        }
-
-      private:
-        // container to store the unoriented simplices
-        simplex_collection_t _simplices;
+        // repository to store the unoriented simplices
+        simplex_repository_t _simplices;
 
         // container for persistent storage of the shared pointers to vertices
         element_set_t<unoriented_simplex_t<0>> _vertex_set;

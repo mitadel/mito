@@ -27,9 +27,6 @@ namespace mito::utilities {
         // accessor for the number of outstanding references
         inline auto references() const -> int;
 
-        // reset the shared pointer
-        inline auto reset() -> void;
-
         // check if the handle is the null pointer
         inline auto is_nullptr() const noexcept -> bool;
 
@@ -69,6 +66,9 @@ namespace mito::utilities {
         // returns the resource corresponding to this resource id
         static inline auto resource(index_t<Resource>) -> handle_t;
 
+        // reset the shared pointer
+        inline auto reset() -> void;
+
         // increment the reference count
         inline auto _acquire() const -> void;
         // decrement the reference count
@@ -80,8 +80,8 @@ namespace mito::utilities {
         handle_t _handle;
 
       private:
-        // friendship with SegmentedContainer
-        friend class utilities::SegmentedContainer<resource_t>;
+        // friendship with Repository
+        friend class utilities::Repository<resource_t>;
     };
 
     template <class Resource>

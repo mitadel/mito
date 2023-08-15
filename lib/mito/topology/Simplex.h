@@ -127,8 +127,8 @@ namespace mito::topology {
         // the simplex composition in terms of subsimplices
         const simplex_composition_t<D> _simplices;
 
-        // private friendship with the factory of simplices
-        friend class SimplexFactory<D>;
+        // private friendship with the repository of simplices
+        friend class utilities::Repository<Simplex<D>>;
     };
 
     /*
@@ -168,15 +168,8 @@ namespace mito::topology {
         }
 
       private:
-        inline auto _erase() -> void
-        {
-            // all done
-            return;
-        }
-
-      private:
-        // friendship with the factory of simplices
-        friend class SimplexFactory<0>;
+        // friendship with the repository of simplices
+        friend class utilities::Repository<Simplex<0>>;
     };
 
 }    // namespace mito

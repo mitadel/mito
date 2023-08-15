@@ -19,9 +19,11 @@ namespace mito::utilities {
         // destructor
         ~Repository()
         {
-            // destroy all resources
-            for (const auto & resource : _resources) {
-                resource->~resource_t();
+            if (std::size(_resources) > 0) {
+                // destroy all resources
+                for (const auto & resource : _resources) {
+                    resource->~resource_t();
+                }
             }
         }
 
@@ -48,16 +50,17 @@ namespace mito::utilities {
         // does nothing)
         inline auto erase(shared_ptr<resource_t> & resource) -> void
         {
-            // // if the repository is the last user of the resource
-            // if (resource.references() == 1) {
-            // remove this resource from the collection of resources
-            _resources._erase(resource);
-            // destroy the resource
-            resource->~resource_t();
-            // QUESTION: to reset or not to reset?
-            // reset the shared pointer to the resource
-            resource.reset();
-            // }
+            // TOFIX: capture exception of invalid resource (nullptr)
+            // if the resource is valid
+            if (!resource.is_nullptr()) {
+                // remove this resource from the collection of resources
+                _resources._erase(resource.handle());
+                // destroy the resource
+                resource->~resource_t();
+                // QUESTION: to reset or not to reset?
+                // reset the shared pointer to the resource
+                resource.reset();
+            }
 
             // all done
             return;

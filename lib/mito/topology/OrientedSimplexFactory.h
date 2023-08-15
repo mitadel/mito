@@ -20,8 +20,9 @@ namespace mito::topology {
     template <int D>
     class OrientedSimplexFactory {
       private:
-        // typedef for a collection of oriented simplices
-        using oriented_simplex_collection_t = utilities::segmented_t<simplex_t<D>>;
+        // typedef for a repository of oriented simplices
+        using oriented_simplex_repository_t =
+            utilities::repository_t<typename simplex_t<D>::resource_t>;
 
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
@@ -36,14 +37,7 @@ namespace mito::topology {
             _orientations() {};
 
         // destructor
-        ~OrientedSimplexFactory()
-        {
-            if (std::size(_oriented_simplices) > 0) {
-                for (const auto & oriented_simplex : _oriented_simplices) {
-                    oriented_simplex->~OrientedSimplex<D>();
-                }
-            }
-        };
+        ~OrientedSimplexFactory() {}
 
       private:
         inline auto existsOrientedSimplex(const simplex_composition_t<D> & composition) const
@@ -107,7 +101,7 @@ namespace mito::topology {
         // exist in the factory or return the existing representative of the class of
         // equivalence of oriented simplices with footprint {simplex} orientation {orientation}
         inline auto orientedSimplex(const unoriented_simplex_t<D> & simplex, bool orientation)
-            -> const simplex_t<D> &
+            -> simplex_t<D> &
         {
             // bind the footprint and the orientation in a tuple
             auto tuple = std::make_tuple(simplex.id(), orientation);
@@ -126,7 +120,7 @@ namespace mito::topology {
                 // create a new oriented simplex riding on simplex {simplex} with orientation
                 // {orientation} and register it in the map
                 auto it = _orientations.insert(
-                    std::make_pair(tuple, _emplace_simplex(simplex, orientation)));
+                    std::make_pair(tuple, _oriented_simplices.emplace(simplex, orientation)));
 
                 // and return it
                 return it.first->second;
@@ -136,8 +130,7 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the
         // class of equivalence of simplices with this composition)
-        inline auto orientedSimplex(const simplex_composition_t<D> & composition)
-            -> const simplex_t<D> &
+        inline auto orientedSimplex(const simplex_composition_t<D> & composition) -> simplex_t<D> &
         requires(D > 0)
         {
             if (!isValid(composition)) {
@@ -160,7 +153,7 @@ namespace mito::topology {
             return orientedSimplex(simplex, orientation);
         }
 
-        inline auto orientedSimplex(bool orientation) -> const simplex_t<0> &
+        inline auto orientedSimplex(bool orientation) -> simplex_t<0> &
         requires(D == 0)
         {
             // get the representative of simplices with composition {composition} from the
@@ -179,6 +172,7 @@ namespace mito::topology {
         }
 
         // instantiate a vertex
+        // TOFIX: inconsistency with const?
         inline auto vertex() -> const vertex_t &
         requires(D == 0)
         {
@@ -188,7 +182,7 @@ namespace mito::topology {
 
         // erase an oriented simplex from the factory (this method actually erases the simplex
         // only if there is no one else using it, otherwise does nothing)
-        inline auto erase(const simplex_t<D> & oriented_simplex) -> void
+        inline auto erase(simplex_t<D> & oriented_simplex) -> void
         {
             // sanity check
             assert(oriented_simplex.references() > 0);
@@ -201,9 +195,6 @@ namespace mito::topology {
 
             // get the key to this oriented simplex
             auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
-
-            // destroy the simplex
-            oriented_simplex->~OrientedSimplex<D>();
 
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);
@@ -229,25 +220,12 @@ namespace mito::topology {
             const simplex_composition_t<D> & composition,
             const unoriented_simplex_t<D> & simplex) const;
 
-        inline auto _emplace_simplex(const unoriented_simplex_t<D> & simplex, bool orientation)
-            -> simplex_t<D>
-        {
-            // get from {_simplices} the location where to place the new simplex
-            auto location = _oriented_simplices.location_for_placement();
-
-            // create a new simplex at location {location} with placement new
-            OrientedSimplex<D> * resource = new (location) OrientedSimplex<D>(simplex, orientation);
-
-            // wrap the new simplex in a shared pointer and return it
-            return utilities::shared_ptr<OrientedSimplex<D>>(resource);
-        }
-
       private:
         // factory for simplices
         simplex_factory_t<D> _simplex_factory;
 
         // container to store the oriented simplices
-        oriented_simplex_collection_t _oriented_simplices;
+        oriented_simplex_repository_t _oriented_simplices;
 
         // container to store the relation (simplex, orientation) -> oriented simplex
         orientation_map_t _orientations;

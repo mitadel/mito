@@ -26,42 +26,40 @@ namespace mito::topology {
       public:
         template <int D>
         inline auto simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
-            -> const simplex_t<D> &;
+            -> simplex_t<D> &;
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
         template <int D>
-        inline auto simplex(const simplex_composition_t<D> & composition) -> const simplex_t<D> &
+        inline auto simplex(const simplex_composition_t<D> & composition) -> simplex_t<D> &
         requires(D > 0);
 
         template <int D>
-        inline auto simplex(bool orientation) -> const simplex_t<0> &
+        inline auto simplex(bool orientation) -> simplex_t<0> &
         requires(D == 0);
 
         // instantiate a vertex
+        // TOFIX: inconsistency with consts?
         inline auto vertex() -> const vertex_t &;
 
         // instantiate a segment
-        inline auto segment(const simplex_composition_t<1> & simplices) -> const simplex_t<1> &;
+        inline auto segment(const simplex_composition_t<1> & simplices) -> simplex_t<1> &;
 
         // instantiate a triangle
-        inline auto triangle(const simplex_composition_t<2> & simplices) -> const simplex_t<2> &;
+        inline auto triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2> &;
 
         // instantiate a tetrahedron
-        inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> const simplex_t<3> &;
+        inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3> &;
 
         // instantiate a segment from unoriented vertices
-        inline auto segment(const vertex_simplex_composition_t<1> & simplices)
-            -> const simplex_t<1> &;
+        inline auto segment(const vertex_simplex_composition_t<1> & simplices) -> simplex_t<1> &;
 
         // instantiate a triangle
-        inline auto triangle(const vertex_simplex_composition_t<2> & vertices)
-            -> const simplex_t<2> &;
+        inline auto triangle(const vertex_simplex_composition_t<2> & vertices) -> simplex_t<2> &;
 
         // instantiate a tetrahedron
-        inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices)
-            -> const simplex_t<3> &;
+        inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices) -> simplex_t<3> &;
 
         // returns whether the oriented simplex exists in the factory
         template <int D>
@@ -76,15 +74,15 @@ namespace mito::topology {
 
         // returns the simplex with opposite orientation
         template <int D>
-        inline auto flip(const simplex_t<D> & simplex) -> const simplex_t<D> &;
+        inline auto flip(const simplex_t<D> & simplex) -> simplex_t<D> &;
 
       private:
         template <int D>
-        inline auto _erase(const simplex_t<D> & simplex) -> void
+        inline auto _erase(simplex_t<D> & simplex) -> void
         requires(D == 0);
 
         template <int D>
-        inline auto _erase(const simplex_t<D> & simplex) -> void
+        inline auto _erase(simplex_t<D> & simplex) -> void
         requires(D > 0);
 
         // mutator for the simplex factory of dimension D
@@ -97,7 +95,7 @@ namespace mito::topology {
 
       public:
         template <int D>
-        inline auto erase(const simplex_t<D> & simplex) -> void;
+        inline auto erase(simplex_t<D> & simplex) -> void;
 
       private:
         // factory for vertices

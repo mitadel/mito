@@ -231,16 +231,19 @@ namespace mito::utilities {
             return location;
         }
 
+        // TOFIX: adjust comments
+        // TOFIX: Segmented container should not know about shared pointers
+        // TOFIX: rename this function to {erase}
         // erase an element from the container
         // (decrement the number of elements and add the address of the element to the pile of the
         // available locations for reuse)
-        auto _erase(const shared_ptr<T> & element) -> void
+        auto _erase(T * element) -> void
         {
             // decrement the number of elements
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
-            _available_locations.push(element.handle());
+            _available_locations.push(element);
 
             // all done
             return;
