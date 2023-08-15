@@ -52,14 +52,6 @@ namespace mito::topology {
     // oriented simplex alias
     template <int D>
     using oriented_simplex_t = utilities::shared_ptr<OrientedSimplex<D>>;
-
-    // id type of unoriented simplex
-    template <int D>
-    using unoriented_simplex_id_t = utilities::index_t<unoriented_simplex_t<D>>;
-
-    // id type of unoriented simplex
-    template <int D>
-    using oriented_simplex_id_t = utilities::index_t<oriented_simplex_t<D>>;
 }
 
 

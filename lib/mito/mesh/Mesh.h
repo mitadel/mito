@@ -28,10 +28,11 @@ namespace mito::mesh {
         using geometry_t = geometry::geometry_t<D>;
         // typedef for a collection of cells
         using cells_t = element_set_t<cell_t>;
+        // id type of unoriented cell
+        using unoriented_cell_id_t = utilities::index_t<cell_t>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
         // appears with - or + orientation
-        using orientation_map_t =
-            std::unordered_map<topology::unoriented_simplex_id_t<D>, std::array<int, 2>>;
+        using orientation_map_t = std::unordered_map<unoriented_cell_id_t, std::array<int, 2>>;
 
       public:
         // default constructor

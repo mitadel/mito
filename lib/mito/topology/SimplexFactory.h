@@ -27,6 +27,9 @@ namespace mito::topology {
         using simplex_repository_t =
             utilities::repository_t<typename unoriented_simplex_t<D>::resource_t>;
 
+        // id type of oriented simplex
+        using unoriented_simplex_id_t = utilities::index_t<simplex_t<D>>;
+
         // typedef for a composition map of simplices:
         // these maps map:
         //      2 pointers to nodes into a pointer to edge,
@@ -37,8 +40,8 @@ namespace mito::topology {
         // std::map<std::array<unoriented_simplex_id_t<D>, 3>, unoriented_simplex_t<2>>
         // volumes compositions
         // std::map<std::array<unoriented_simplex_id_t<D>, 4>, unoriented_simplex_t<3>>
-        using composition_t = std::array<unoriented_simplex_id_t<D>, D + 1>;
-        using composition_map_t = std::map<composition_t, unoriented_simplex_id_t<D>>;
+        using composition_t = std::array<unoriented_simplex_id_t, D + 1>;
+        using composition_map_t = std::map<composition_t, unoriented_simplex_id_t>;
 
       private:
         // default constructor

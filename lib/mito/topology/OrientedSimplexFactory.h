@@ -24,10 +24,15 @@ namespace mito::topology {
         using oriented_simplex_repository_t =
             utilities::repository_t<typename simplex_t<D>::resource_t>;
 
+        // id type of unoriented simplex
+        using unoriented_simplex_id_t = utilities::index_t<unoriented_simplex_t<D>>;
+
+        // id type of oriented simplex
+        using simplex_id_t = utilities::index_t<simplex_t<D>>;
+
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
-        using orientation_map_t =
-            std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, simplex_id_t<D>>;
+        using orientation_map_t = std::map<std::tuple<unoriented_simplex_id_t, bool>, simplex_id_t>;
 
       private:
         // default constructor
@@ -185,7 +190,7 @@ namespace mito::topology {
             auto footprint = oriented_simplex->footprint();
 
             // get footprint of the oriented simplex
-            unoriented_simplex_id_t<D> id = oriented_simplex->footprint().id();
+            unoriented_simplex_id_t id = oriented_simplex->footprint().id();
 
             // get the key to this oriented simplex
             auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
@@ -214,6 +219,8 @@ namespace mito::topology {
             const simplex_composition_t<D> & composition,
             const unoriented_simplex_t<D> & simplex) const;
 
+        inline auto _rotate(const simplex_composition_t<D> & composition) const;
+
       private:
         // factory for simplices
         simplex_factory_t<D> _simplex_factory;
@@ -239,23 +246,22 @@ namespace mito::topology {
         return false;
     }
 
-    namespace {
-        inline auto _rotate(const simplex_composition_t<2> & composition)
-        {
-            // an array of oriented simplices ids
-            using oriented_simplex_array_t = std::array<oriented_simplex_id_t<2>, 3>;
+    template <>
+    inline auto OrientedSimplexFactory<2>::_rotate(
+        const simplex_composition_t<2> & composition) const
+    {
+        // an array of oriented simplices ids
+        using oriented_simplex_array_t = std::array<simplex_id_t, 3>;
 
-            // get the oriented simplices from the shared pointers
-            auto composition_copy =
-                oriented_simplex_array_t { composition[0].id(), composition[1].id(),
-                                           composition[2].id() };
-            auto first_simplex =
-                std::min_element(std::begin(composition_copy), std::end(composition_copy));
-            std::rotate(std::begin(composition_copy), first_simplex, std::end(composition_copy));
+        // get the oriented simplices from the shared pointers
+        auto composition_copy = oriented_simplex_array_t { composition[0].id(), composition[1].id(),
+                                                           composition[2].id() };
+        auto first_simplex =
+            std::min_element(std::begin(composition_copy), std::end(composition_copy));
+        std::rotate(std::begin(composition_copy), first_simplex, std::end(composition_copy));
 
-            // return rotated composition
-            return composition_copy;
-        }
+        // return rotated composition
+        return composition_copy;
     }
 
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
