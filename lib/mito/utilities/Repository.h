@@ -81,6 +81,34 @@ namespace mito::utilities {
             return _resources;
         }
 
+      public:
+        /**
+         * iterators
+         */
+        constexpr auto begin()
+        {
+            // delegate answer to {_resources}
+            return _resources.begin();
+        }
+
+        constexpr auto end()
+        {
+            // delegate answer to {_resources}
+            return _resources.end();
+        }
+
+        constexpr auto begin() const
+        {
+            // delegate answer to {_resources}
+            return _resources.begin();
+        }
+
+        constexpr auto end() const
+        {
+            // delegate answer to {_resources}
+            return _resources.end();
+        }
+
       private:
         // container to store the resources
         resource_collection_t _resources;

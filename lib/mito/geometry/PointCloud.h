@@ -38,12 +38,10 @@ namespace mito::geometry {
         }
 
         // support for ranged for loops (wrapping grid)
-        // TOFIX: define iterators on {Repository} so we can return simply
-        // std::cbegin(_cloud), ...
-        inline auto begin() -> const auto & { return std::cbegin(_cloud.resources()); }
-        inline auto end() -> const auto & { return std::cend(_cloud.resources()); }
+        inline auto begin() -> const auto & { return std::cbegin(_cloud); }
+        inline auto end() -> const auto & { return std::cend(_cloud); }
 
-        auto size() const noexcept -> int { return std::size(_cloud.resources()); }
+        auto size() const noexcept -> int { return std::size(_cloud); }
 
         // example use: cloud.point({0.0, ..., 0.0})
         auto point(vector_t<D> && coord) -> point_t<D>
