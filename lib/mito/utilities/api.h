@@ -5,14 +5,13 @@
 
 namespace mito::utilities {
 
-    // TOFIX: uniform notation Resource, ResourceT, resourceT, ...
     // shared pointer alias
-    template <class Resource>
-    using shared_ptr = SharedPointer<Resource>;
+    template <class resourceT>
+    using shared_ptr = SharedPointer<resourceT>;
 
     // TOFIX: perhaps eventually remove indices?
     // index type alias
-    template <class Resource>
+    template <class resourceT>
     using index_t = std::uintptr_t;
 
     // segmented container alias

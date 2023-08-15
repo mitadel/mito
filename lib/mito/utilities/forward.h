@@ -9,12 +9,12 @@ namespace mito::utilities {
     class Shareable;
 
     // concept for a reference counted object
-    template <typename T>
-    concept ReferenceCountedObject = std::is_base_of<Shareable, T>::value;
+    template <typename resourceT>
+    concept ReferenceCountedObject = std::is_base_of<Shareable, resourceT>::value;
 
     // class shared pointer based on a reference counted resource
-    template <class Resource>
-    // requires ReferenceCountedObject<Resource>
+    template <class resourceT>
+    // requires ReferenceCountedObject<resourceT>
     class SharedPointer;
 
     // class segmented container

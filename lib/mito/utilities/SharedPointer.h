@@ -10,19 +10,19 @@
 namespace mito::utilities {
 
     // declaration
-    template <class Resource>
-    // requires ReferenceCountedObject<Resource>
+    template <class resourceT>
+    // requires ReferenceCountedObject<resourceT>
     class SharedPointer {
         // types
       public:
-        using shared_ptr_t = SharedPointer<Resource>;
-        using resource_t = Resource;
-        using handle_t = Resource *;
+        using shared_ptr_t = SharedPointer<resourceT>;
+        using resource_t = resourceT;
+        using handle_t = resourceT *;
 
         // interface
       public:
         // returns the id of this (oriented) simplex
-        inline auto id() const -> index_t<Resource>;
+        inline auto id() const -> index_t<resource_t>;
 
         // accessor for the number of outstanding references
         inline auto references() const -> int;
@@ -48,23 +48,23 @@ namespace mito::utilities {
         inline SharedPointer(handle_t);
 
         // copy constructor
-        inline SharedPointer(const SharedPointer<Resource> &);
+        inline SharedPointer(const shared_ptr_t &);
 
         // move constructor
-        inline SharedPointer(SharedPointer<Resource> &&) noexcept;
+        inline SharedPointer(shared_ptr_t &&) noexcept;
 
         // assignment operator
-        inline SharedPointer & operator=(const SharedPointer<Resource> &);
+        inline shared_ptr_t & operator=(const shared_ptr_t &);
 
         // move assignment operator
-        inline SharedPointer & operator=(SharedPointer<Resource> &&);
+        inline shared_ptr_t & operator=(shared_ptr_t &&);
 
       private:
         // accessor for {handle}
         inline auto handle() const noexcept -> handle_t;
 
         // returns the resource corresponding to this resource id
-        static inline auto resource(index_t<Resource>) -> handle_t;
+        static inline auto resource(index_t<resource_t>) -> handle_t;
 
         // reset the shared pointer
         inline auto reset() -> void;
@@ -84,14 +84,16 @@ namespace mito::utilities {
         friend class Repository<shared_ptr_t>;
     };
 
-    template <class Resource>
-    inline bool operator==(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    template <class resourceT>
+    inline bool operator==(
+        const SharedPointer<resourceT> & lhs, const SharedPointer<resourceT> & rhs)
     {
         return lhs.id() == rhs.id();
     }
 
-    template <class Resource>
-    inline bool operator<(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    template <class resourceT>
+    inline bool operator<(
+        const SharedPointer<resourceT> & lhs, const SharedPointer<resourceT> & rhs)
     {
         return lhs.id() < rhs.id();
     }
