@@ -72,7 +72,7 @@ mito::topology::Topology::_get_factory<3>() const noexcept -> const oriented_sim
 template <int D>
 inline auto
 mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
-    -> simplex_t<D> &
+    -> simplex_t<D>
 {
     // ask the factory of oriented simplices
     return _get_factory<D>().orientedSimplex(footprint, orientation);
@@ -80,7 +80,7 @@ mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, boo
 
 template <int D>
 inline auto
-mito::topology::Topology::simplex(const simplex_composition_t<D> & composition) -> simplex_t<D> &
+mito::topology::Topology::simplex(const simplex_composition_t<D> & composition) -> simplex_t<D>
 requires(D > 0)
 {
     // ask the factory of oriented simplices
@@ -89,7 +89,7 @@ requires(D > 0)
 
 template <int D>
 inline auto
-mito::topology::Topology::simplex(bool orientation) -> simplex_t<0> &
+mito::topology::Topology::simplex(bool orientation) -> simplex_t<0>
 requires(D == 0)
 {
     // ask the factory of oriented simplices
@@ -97,33 +97,31 @@ requires(D == 0)
 }
 
 inline auto
-mito::topology::Topology::segment(const simplex_composition_t<1> & simplices) -> simplex_t<1> &
+mito::topology::Topology::segment(const simplex_composition_t<1> & simplices) -> simplex_t<1>
 {
     return simplex<1>(simplices);
 }
 
 inline auto
-mito::topology::Topology::triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2> &
+mito::topology::Topology::triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2>
 {
     return simplex<2>(simplices);
 }
 
 inline auto
-mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3> &
+mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3>
 {
     return simplex<3>(simplices);
 }
 
 inline auto
-mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & simplices)
-    -> simplex_t<1> &
+mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & simplices) -> simplex_t<1>
 {
     return segment({ simplex(simplices[0], false), simplex(simplices[1], true) });
 }
 
 inline auto
-mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & vertices)
-    -> simplex_t<2> &
+mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & vertices) -> simplex_t<2>
 {
     return simplex<2>({ segment({ vertices[0], vertices[1] }),
                         segment({ vertices[1], vertices[2] }),
@@ -132,7 +130,7 @@ mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & verti
 
 inline auto
 mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & vertices)
-    -> simplex_t<3> &
+    -> simplex_t<3>
 {
     return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[3] }),
                         triangle({ vertices[1], vertices[2], vertices[3] }),
@@ -149,7 +147,7 @@ mito::topology::Topology::exists_flipped(const simplex_t<D> & simplex) const -> 
 
 template <int D>
 inline auto
-mito::topology::Topology::flip(const simplex_t<D> & simplex) -> simplex_t<D> &
+mito::topology::Topology::flip(const simplex_t<D> & simplex) -> simplex_t<D>
 {
     // ask the factory of oriented simplices
     return _get_factory<D>().orientedSimplex(simplex->footprint(), !simplex->orientation());
@@ -215,7 +213,7 @@ mito::topology::Topology::erase(simplex_t<D> & simplex) -> void
 }
 
 inline auto
-mito::topology::Topology::vertex() -> const vertex_t &
+mito::topology::Topology::vertex() -> vertex_t
 {
     // ask the factory of vertices for an unoriented vertex
     return _get_factory<0>().vertex();

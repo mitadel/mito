@@ -27,7 +27,7 @@ namespace mito::topology {
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
         using orientation_map_t =
-            std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, simplex_t<D>>;
+            std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, simplex_id_t<D>>;
 
       private:
         // default constructor
@@ -87,7 +87,7 @@ namespace mito::topology {
             // {orientation}
             if (it_find != std::end(_orientations)) {
                 // return it
-                return it_find->second;
+                return _oriented_simplices.resource(it_find->second);
             }
             // if not found
             else {
@@ -101,7 +101,7 @@ namespace mito::topology {
         // exist in the factory or return the existing representative of the class of
         // equivalence of oriented simplices with footprint {simplex} orientation {orientation}
         inline auto orientedSimplex(const unoriented_simplex_t<D> & simplex, bool orientation)
-            -> simplex_t<D> &
+            -> simplex_t<D>
         {
             // bind the footprint and the orientation in a tuple
             auto tuple = std::make_tuple(simplex.id(), orientation);
@@ -113,24 +113,26 @@ namespace mito::topology {
             // is already registered in the map
             if (it_find != std::end(_orientations)) {
                 // then return it
-                return it_find->second;
+                return _oriented_simplices.resource(it_find->second);
             }
             // otherwise
             else {
                 // create a new oriented simplex riding on simplex {simplex} with orientation
-                // {orientation} and register it in the map
-                auto it = _orientations.insert(
-                    std::make_pair(tuple, _oriented_simplices.emplace(simplex, orientation)));
+                // {orientation}
+                auto oriented_simplex = _oriented_simplices.emplace(simplex, orientation);
+
+                // register it in the map
+                _orientations.insert(std::make_pair(tuple, oriented_simplex.id()));
 
                 // and return it
-                return it.first->second;
+                return oriented_simplex;
             }
         }
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the
         // class of equivalence of simplices with this composition)
-        inline auto orientedSimplex(const simplex_composition_t<D> & composition) -> simplex_t<D> &
+        inline auto orientedSimplex(const simplex_composition_t<D> & composition) -> simplex_t<D>
         requires(D > 0)
         {
             if (!isValid(composition)) {
@@ -153,7 +155,7 @@ namespace mito::topology {
             return orientedSimplex(simplex, orientation);
         }
 
-        inline auto orientedSimplex(bool orientation) -> simplex_t<0> &
+        inline auto orientedSimplex(bool orientation) -> simplex_t<0>
         requires(D == 0)
         {
             // get the representative of simplices with composition {composition} from the
@@ -172,8 +174,7 @@ namespace mito::topology {
         }
 
         // instantiate a vertex
-        // TOFIX: inconsistency with const?
-        inline auto vertex() -> const vertex_t &
+        inline auto vertex() -> vertex_t
         requires(D == 0)
         {
             // ask the factory of unoriented vertices for an unoriented vertex

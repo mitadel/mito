@@ -8,8 +8,10 @@ namespace mito::geometry {
     class PointCloud {
       private:
         using cloud_t = geometry::cloud_t<D>;
+        // id type of point
+        using point_id_t = utilities::index_t<point_t<D>>;
         // TOFIX: make this unordered?
-        using point_compositions_t = std::map<vector_t<D>, point_t<D>>;
+        using point_compositions_t = std::map<vector_t<D>, point_id_t>;
 
       private:
         PointCloud() : _cloud(100 /*segment size */), _compositions() {}
@@ -29,7 +31,7 @@ namespace mito::geometry {
             // iterate on points
             std::cout << "Point cloud:" << std::endl;
             for (const auto & pPointMap : _compositions) {
-                std::cout << pPointMap.second->coordinates() << std::endl;
+                std::cout << _cloud.resource(pPointMap.second)->coordinates() << std::endl;
             }
             // all done
             return;
@@ -44,7 +46,7 @@ namespace mito::geometry {
         auto size() const noexcept -> int { return std::size(_cloud.resources()); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(vector_t<D> && coord) -> point_t<D> &
+        auto point(vector_t<D> && coord) -> point_t<D>
         {
             // helper function to convert vector_t to variadic template argument
             auto _emplace_point = [this]<size_t... I>(
@@ -59,10 +61,10 @@ namespace mito::geometry {
             auto point = _emplace_point(coord, std::make_index_sequence<D> {});
 
             // register it in the compositions map
-            auto it = _compositions.insert(std::make_pair(point->coordinates(), point));
+            _compositions.insert(std::make_pair(point->coordinates(), point.id()));
 
             // return the newly added point
-            return it.first->second;
+            return point;
         }
 
         auto compositions() const noexcept -> const point_compositions_t & { return _compositions; }
@@ -71,6 +73,7 @@ namespace mito::geometry {
         // the cloud of points
         cloud_t _cloud;
 
+        // TOFIX: perhaps this container is unused?
         // the container mapping the composition of points to the points themselves
         point_compositions_t _compositions;
 

@@ -38,7 +38,7 @@ namespace mito::topology {
         // volumes compositions
         // std::map<std::array<unoriented_simplex_id_t<D>, 4>, unoriented_simplex_t<3>>
         using composition_t = std::array<unoriented_simplex_id_t<D>, D + 1>;
-        using composition_map_t = std::map<composition_t, unoriented_simplex_t<D>>;
+        using composition_map_t = std::map<composition_t, unoriented_simplex_id_t<D>>;
 
       private:
         // default constructor
@@ -59,7 +59,7 @@ namespace mito::topology {
             // if a representative simplex with this composition is already registered in the map
             if (it_find != std::end(_compositions)) {
                 // return it
-                return it_find->second;
+                return _simplices.resource(it_find->second);
             }
             // if not found
             else {
@@ -71,8 +71,7 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        inline auto simplex(const simplex_composition_t<D> & composition)
-            -> unoriented_simplex_t<D> &
+        inline auto simplex(const simplex_composition_t<D> & composition) -> unoriented_simplex_t<D>
         {
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(composition);
@@ -83,16 +82,19 @@ namespace mito::topology {
             // if a representative simplex with this composition is already registered in the map
             if (it_find != std::end(_compositions)) {
                 // then return it
-                return it_find->second;
+                return _simplices.resource(it_find->second);
             }
             // otherwise
             else {
-                // emplace simplex in {_simplices} and register it in the compositions map
-                auto it = _compositions.insert(
-                    std::make_pair(representative, _simplices.emplace(composition)));
+
+                // emplace simplex in {_simplices}
+                auto simplex = _simplices.emplace(composition);
+
+                // register the simplex in the compositions map
+                _compositions.insert(std::make_pair(representative, simplex.id()));
 
                 // and return it
-                return it.first->second;
+                return simplex;
             }
         }
 
@@ -198,12 +200,10 @@ namespace mito::topology {
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        // TOFIX: why do vertices need to be {const}, why are they different?
-        inline auto simplex() -> const unoriented_simplex_t<0> &
+        inline auto simplex() -> unoriented_simplex_t<0>
         {
-            // emplace the new vertex in the vertex repository, insert it in the element set, and
-            // return it
-            return *_vertex_set.insert(_simplices.emplace()).first;
+            // emplace the new vertex in the vertex repository and return it
+            return _simplices.emplace();
         }
 
         // erase a simplex from the factory (this method actually erases the simplex only if there
@@ -212,9 +212,6 @@ namespace mito::topology {
         {
             // sanity check
             assert(simplex.references() > 0);
-
-            // erase the vertex from the vertex set
-            _vertex_set.erase(simplex);
 
             // erase this simplex from the container
             _simplices.erase(simplex);
@@ -226,9 +223,6 @@ namespace mito::topology {
       private:
         // repository to store the unoriented simplices
         simplex_repository_t _simplices;
-
-        // container for persistent storage of the shared pointers to vertices
-        element_set_t<unoriented_simplex_t<0>> _vertex_set;
 
         // private friendship with the factory of oriented simplices
         friend class OrientedSimplexFactory<0>;
