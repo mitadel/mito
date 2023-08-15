@@ -78,10 +78,10 @@ namespace mito::utilities {
         using segmented_container_type = SegmentedContainer<resource_type>;
 
         // my value
-        using pointer = T *;
-        using const_pointer = const T *;
-        using reference = T &;
-        using const_reference = const T &;
+        using pointer = resource_type *;
+        using const_pointer = const resource_type *;
+        using reference = resource_type &;
+        using const_reference = const resource_type &;
 
         // iterators
         using iterator = SegmentedContainerIterator<segmented_container_type, false /* isConst */>;
@@ -106,13 +106,13 @@ namespace mito::utilities {
                 return;
 
             // start from the beginning of the first segment
-            T * ptr = _begin;
+            pointer ptr = _begin;
 
             // while the current segment is not the last segment
             while (ptr + _segment_size != _end_allocation) {
                 // retrieve the location of the next segment which is left behind
                 // by the segmented container right at the end of the current segment
-                T * next = *(reinterpret_cast<pointer *>(ptr + _segment_size));
+                pointer next = *(reinterpret_cast<pointer *>(ptr + _segment_size));
 
                 // delete the current segment
                 ::operator delete(ptr);
@@ -140,10 +140,11 @@ namespace mito::utilities {
         inline auto segment_size() const noexcept -> int { return _segment_size; }
 
       private:
-        auto _allocate_new_segment() -> T *
+        auto _allocate_new_segment() -> pointer
         {
             // allocate a new segment of memory
-            T * segment = static_cast<T *>(::operator new(_segment_size * sizeof(T) + sizeof(T *)));
+            pointer segment = static_cast<pointer>(
+                ::operator new(_segment_size * sizeof(resource_type) + sizeof(pointer)));
             // if it is the first segment
             if (_begin == _end) {
                 // point {_begin} to the beginning of the allocated memory
@@ -151,8 +152,8 @@ namespace mito::utilities {
             }
             // otherwise
             else {
-                // reinterpret the element after the last element in data as a T*
-                T ** tail = reinterpret_cast<T **>(_end_allocation);
+                // reinterpret the element after the last element in data as a {pointer} *
+                pointer * tail = reinterpret_cast<pointer *>(_end_allocation);
                 // leave behind a pointer with the location of the next segment
                 *tail = segment;
             }
@@ -166,12 +167,12 @@ namespace mito::utilities {
             return segment;
         }
 
-        auto _next_available_location() -> T *
+        auto _next_available_location() -> pointer
         {
             // if there are available locations to spare
             if (!_available_locations.empty()) {
                 // get an available location from the queue
-                T * location = _available_locations.front();
+                pointer location = _available_locations.front();
 
                 // remove the next available location from the queue
                 // NOTE: for simplicity we make the assumption that the location returned by this
@@ -194,7 +195,7 @@ namespace mito::utilities {
             return _end;
         }
 
-        auto _location_for_placement() -> T *
+        auto _location_for_placement() -> pointer
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
@@ -224,7 +225,7 @@ namespace mito::utilities {
         // erase an element from the container
         // (decrement the number of elements and add the address of the element to the pile of the
         // available locations for reuse)
-        auto erase(T * element) -> void
+        auto erase(pointer element) -> void
         {
             // decrement the number of elements
             --_n_elements;
@@ -302,18 +303,18 @@ namespace mito::utilities {
         // the segment size
         const int _segment_size;
         // the beginning of the container
-        T * _begin;
+        pointer _begin;
         // the end of the container (no element has been constructed so far after this point)
         // (it does not necessarily coincide with the end of the last allocated segment)
-        T * _end;
+        pointer _end;
         // points right after the last segment of allocated memory
-        T * _end_allocation;
+        pointer _end_allocation;
         // the number of segments stored in the container
         int _n_segments;
         // the number of elements stored in the container
         int _n_elements;
         // a queue with the available locations for writing
-        std::queue<T *> _available_locations;
+        std::queue<pointer> _available_locations;
 
       private:
         // non-const iterator
@@ -321,7 +322,7 @@ namespace mito::utilities {
         // const iterator
         friend const_iterator;
         // the repository
-        friend Repository<T>;
+        friend Repository<resource_type>;
     };
 }
 
