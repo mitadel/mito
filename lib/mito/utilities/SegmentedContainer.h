@@ -69,26 +69,30 @@ namespace mito::utilities {
     template <class sharedResourceT>
     // requires ReferenceCountedObject<sharedResourceT::resource_t>
     class SegmentedContainer {
-
       public:
         // me
         using segmented_container_type = SegmentedContainer<sharedResourceT>;
 
-        // aliases for my resource type
-        using resource_type =
-            typename std::remove_const<typename sharedResourceT::resource_t>::type;
+        // aliases for my shared pointer type
+        using shared_ptr_type = sharedResourceT;
+        // and my (cv qualified) resource type
+        using resource_type = typename sharedResourceT::resource_t;
+        // and my (cv qualified) handle type
         using handle_type = typename sharedResourceT::handle_t;
 
-        // my value
-        using pointer = resource_type *;
-        using const_pointer = const resource_type *;
-        using reference = resource_type &;
-        using const_reference = const resource_type &;
+        // unqualified resource type (for internal book-keeping)
+        using unqualified_resource_type = typename std::remove_const<resource_type>::type;
+        // raw pointer type to unqualified resource type
+        using pointer = unqualified_resource_type *;
+        // const raw pointer type to unqualified resource type
+        using const_pointer = const unqualified_resource_type *;
+        // raw reference type to unqualified resource type
+        using reference = unqualified_resource_type &;
+        // const raw reference type to unqualified resource type
+        using const_reference = const unqualified_resource_type &;
 
         // iterators
-        using iterator = SegmentedContainerIterator<segmented_container_type, false /* isConst */>;
-        using const_iterator =
-            SegmentedContainerIterator<segmented_container_type, true /* isConst */>;
+        using iterator = SegmentedContainerIterator<segmented_container_type>;
 
       private:
         // default constructor (empty data structure)
@@ -233,7 +237,7 @@ namespace mito::utilities {
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
-            _available_locations.push(const_cast<resource_type *>(element));
+            _available_locations.push(const_cast<pointer>(element));
 
             // all done
             return;
@@ -243,7 +247,7 @@ namespace mito::utilities {
         /**
          * iterators
          */
-        constexpr auto begin() -> iterator
+        constexpr auto begin() const -> iterator
         {
             // check that the container is not empty
             assert(_n_elements > 0);
@@ -257,35 +261,12 @@ namespace mito::utilities {
             return (it->is_valid() ? it : ++it);
         }
 
-        constexpr auto end() -> iterator
+        constexpr auto end() const -> iterator
         {
             // assert that {_end} is in the last allocated segment
             assert(_end_allocation - _end <= _segment_size);
             // make an {iterator} that points to the end of my segmented container
             return iterator(
-                _end /* ptr */, _end_allocation /* segment_end */, _segment_size, _end /* end */);
-        }
-
-        constexpr auto begin() const -> const_iterator
-        {
-            // check that the container is not empty
-            assert(_n_elements > 0);
-
-            // get an iterator to the first element
-            auto it = const_iterator(
-                _begin /* ptr */, _begin + _segment_size /* segment_end */, _segment_size,
-                _end /* end */);
-
-            // if the first element is valid, return it, else return the next valid element
-            return (it->is_valid() ? it : ++it);
-        }
-
-        constexpr auto end() const -> const_iterator
-        {
-            // assert that {_end} is in the last allocated segment
-            assert(_end_allocation - _end <= _segment_size);
-            // make an {iterator} that points to the end of my segmented container
-            return const_iterator(
                 _end /* ptr */, _end_allocation /* segment_end */, _segment_size, _end /* end */);
         }
 
@@ -321,8 +302,6 @@ namespace mito::utilities {
       private:
         // non-const iterator
         friend iterator;
-        // const iterator
-        friend const_iterator;
         // the repository
         friend Repository<sharedResourceT>;
     };

@@ -8,39 +8,20 @@
 
 
 namespace mito::utilities {
-    // polymorphic base class for building iterators
-    template <class containerT, bool isConst>
-    class iterator_base {
-      public:
-        using iterator_category = std::forward_iterator_tag;
-        using pointer = std::conditional_t<
-            isConst, typename containerT::const_pointer, typename containerT::pointer>;
-        using reference = std::conditional_t<
-            isConst, typename containerT::const_reference, typename containerT::reference>;
-    };
 
-    template <class SegmentedContainerT, bool isConst>
-    class SegmentedContainerIterator : public iterator_base<SegmentedContainerT, isConst> {
+    template <class SegmentedContainerT>
+    class SegmentedContainerIterator {
         // types
       public:
         // my template parameters
         using segmented_container_type = SegmentedContainerT;
-        using segmented_container_resource_type = typename SegmentedContainerT::resource_type;
         // me
-        using iterator = SegmentedContainerIterator<segmented_container_type, isConst>;
+        using iterator = SegmentedContainerIterator<segmented_container_type>;
         using iterator_reference = iterator &;
-        // my base class
-        using iterbase = iterator_base<segmented_container_type, isConst>;
-        // my parts
-        using segmented_container_reference = std::conditional_t<
-            isConst, const segmented_container_type &, segmented_container_type &>;
-        using segmented_container_const_reference = const segmented_container_type &;
-        // what i point to
-        using pointer = typename iterbase::pointer;
-        using shared_pointer = std::conditional_t<
-            isConst, shared_ptr<const segmented_container_resource_type>,
-            shared_ptr<segmented_container_resource_type>>;
-        using reference = typename iterbase::reference;
+        // what I point to
+        using pointer = typename SegmentedContainerT::pointer;
+        // what I hand out
+        using shared_pointer = typename segmented_container_type::shared_ptr_type;
 
         // metamethods
       public:
@@ -148,20 +129,20 @@ namespace mito::utilities {
 
     // the global operators
     // equality
-    template <class SegmentedContainerT, bool isConst>
+    template <class SegmentedContainerT>
     constexpr auto operator==(
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool
+        const SegmentedContainerIterator<SegmentedContainerT> & it1,
+        const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool
     {
         // iterators are equal if they point to the same segmented container
         return it1.ptr() == it2.ptr();
     }
 
     // and not
-    template <class SegmentedContainerT, bool isConst>
+    template <class SegmentedContainerT>
     constexpr auto operator!=(
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool
+        const SegmentedContainerIterator<SegmentedContainerT> & it1,
+        const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool
     {
         // iterators are unequal iff they are not equal
         return !(it1 == it2);
