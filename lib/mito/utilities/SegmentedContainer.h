@@ -75,7 +75,9 @@ namespace mito::utilities {
         using segmented_container_type = SegmentedContainer<sharedResourceT>;
 
         // aliases for my resource type
-        using resource_type = typename sharedResourceT::resource_t;
+        using resource_type =
+            typename std::remove_const<typename sharedResourceT::resource_t>::type;
+        using handle_type = typename sharedResourceT::handle_t;
 
         // my value
         using pointer = resource_type *;
@@ -225,13 +227,13 @@ namespace mito::utilities {
         // erase an element from the container
         // (decrement the number of elements and add the address of the element to the pile of the
         // available locations for reuse)
-        auto erase(pointer element) -> void
+        auto erase(handle_type element) -> void
         {
             // decrement the number of elements
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
-            _available_locations.push(element);
+            _available_locations.push(const_cast<resource_type *>(element));
 
             // all done
             return;

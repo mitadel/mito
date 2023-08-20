@@ -8,6 +8,7 @@ namespace mito::utilities {
     class Repository {
         // requires ReferenceCountedObject<sharedResourceT::resource_t>
       public:
+        using shared_ptr_t = sharedResourceT;
         // my resource type
         using resource_t = typename sharedResourceT::resource_t;
         // typedef for a collection of resources
@@ -31,7 +32,7 @@ namespace mito::utilities {
         // build a resource passing down {args...} to the resource constructor and store it in the
         // repository
         template <class... Args>
-        auto emplace(Args &&... args) -> shared_ptr<resource_t>
+        auto emplace(Args &&... args) -> shared_ptr_t
         {
             // get a spare location for the placement of the new resource
             auto location = _resources._location_for_placement();
@@ -40,7 +41,7 @@ namespace mito::utilities {
             resource_t * resource = new (location) resource_t(args...);
 
             // assign it to a new pointer
-            shared_ptr<resource_t> pointer(resource);
+            shared_ptr_t pointer(resource);
 
             // all done
             return pointer;
@@ -49,7 +50,7 @@ namespace mito::utilities {
         // erase a resource from the repository
         // (this method actually erases the simplex only if is no one else is using it, otherwise
         // does nothing)
-        inline auto erase(shared_ptr<resource_t> & resource) -> void
+        inline auto erase(shared_ptr_t & resource) -> void
         {
             // TOFIX: capture exception of invalid resource (nullptr)
             // if the resource is valid
@@ -68,12 +69,12 @@ namespace mito::utilities {
         }
 
         // returns the resource corresponding to this resource id
-        static inline auto resource(index_t<resource_t> index) -> shared_ptr<resource_t>
+        static inline auto resource(index_t<resource_t> index) -> shared_ptr_t
         {
             // fetch the resource based on the index
-            auto resource = shared_ptr<resource_t>::resource(index);
+            auto resource = shared_ptr_t::resource(index);
             // wrap the resource in a shared pointer
-            return shared_ptr<resource_t>(resource);
+            return shared_ptr_t(resource);
         }
 
         inline auto resources() const -> const resource_collection_t &

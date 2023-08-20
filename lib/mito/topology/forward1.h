@@ -47,11 +47,11 @@ namespace mito::topology {
 
     // unoriented simplex alias
     template <int D>
-    using unoriented_simplex_t = utilities::shared_ptr<Simplex<D>>;
+    using unoriented_simplex_t = utilities::shared_ptr<const Simplex<D>>;
 
     // oriented simplex alias
     template <int D>
-    using oriented_simplex_t = utilities::shared_ptr<OrientedSimplex<D>>;
+    using oriented_simplex_t = utilities::shared_ptr<const OrientedSimplex<D>>;
 }
 
 
