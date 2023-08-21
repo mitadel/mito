@@ -6,6 +6,9 @@
 namespace mito::simulation {
 
     // class simulation
+    class Context;
+
+    // class simulation
     class Simulation;
 
 }

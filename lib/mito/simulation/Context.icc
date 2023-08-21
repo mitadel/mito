@@ -1,0 +1,14 @@
+// -*- C++ -*-
+//
+
+#if !defined(mito_simulation_Context_icc)
+#error This header file contains implementation details of class mito::simulation::Context
+#else
+
+
+mito::simulation::Context::Context() {}
+
+
+#endif    // mito_simulation_Context_icc
+
+// end of file

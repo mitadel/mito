@@ -13,6 +13,7 @@
 #include "api.h"
 
 // classes implementation
+#include "Context.h"
 #include "Simulation.h"
 
 // factories implementation

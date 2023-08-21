@@ -10,6 +10,8 @@ namespace mito::simulation {
       public:
         // me
         using simulation_type = Simulation;
+        // the execution context type
+        using execution_context_type = context_t;
         // the clock type
         using clock_type = scalar_t;
 
@@ -34,6 +36,9 @@ namespace mito::simulation {
         Simulation & operator=(simulation_type &&) = delete;
 
       private:
+        // the simulation execution context
+        execution_context_type _execution_context;
+
         // the simulation clock
         clock_type _clock;
 

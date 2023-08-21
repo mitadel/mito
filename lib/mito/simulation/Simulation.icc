@@ -6,7 +6,7 @@
 #else
 
 
-mito::simulation::Simulation::Simulation() : _clock() {}
+mito::simulation::Simulation::Simulation() : _execution_context(), _clock() {}
 
 
 #endif    // mito_simulation_Simulation_icc

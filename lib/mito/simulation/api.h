@@ -5,6 +5,9 @@
 
 namespace mito::simulation {
 
+    // context alias
+    using context_t = Context;
+
     // simulation alias
     using simulation_t = Simulation;
 
