@@ -26,23 +26,17 @@ namespace mito::io::vtk {
     }
 
     template <int D>
-    auto insertVtkPoint(const geometry::point_t<D> & pPoint, vtkSmartPointer<vtkPoints> & pointsVtk)
-        -> void
+    auto insertVtkPoint(const vector_t<D> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
-        // retrieve the coordinates of the point
-        const auto & coordinates = pPoint->coordinates();
         // add the point as new vtk point
-        pointsVtk->InsertNextPoint(coordinates[0], coordinates[1], coordinates[2]);
+        pointsVtk->InsertNextPoint(coord[0], coord[1], coord[2]);
     }
 
     template <>
-    auto insertVtkPoint(const geometry::point_t<2> & pPoint, vtkSmartPointer<vtkPoints> & pointsVtk)
-        -> void
+    auto insertVtkPoint(const vector_t<2> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
-        // retrieve the coordinates of the point
-        const auto & coordinates = pPoint->coordinates();
         // add the point as new vtk point
-        pointsVtk->InsertNextPoint(coordinates[0], coordinates[1], 0.);
+        pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
     }
 
     template <class cellT, int D>
@@ -82,7 +76,7 @@ namespace mito::io::vtk {
                 // if the point is not present in the map
                 if (mapPoints.count(pPoint) == 0) {
                     // insert the new vtk point
-                    insertVtkPoint(pPoint, pointsVtk);
+                    insertVtkPoint(pPoint->coordinates(), pointsVtk);
                     // add the point to the map with its global index
                     mapPoints[pPoint] = indexPointVtk;
                     // update global index for the vtk point
@@ -144,7 +138,7 @@ namespace mito::io::vtk {
 
         // iterate over the points
         for (const auto & pPointMap : compositions) {
-            insertVtkPoint(pPointMap.second, pointsVtk);
+            insertVtkPoint(pPointMap.first, pointsVtk);
         }
 
         // set the grid points
