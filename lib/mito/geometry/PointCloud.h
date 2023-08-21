@@ -11,11 +11,9 @@ namespace mito::geometry {
         using cloud_t = utilities::repository_t<point_t<D>>;
         // id type of point
         using point_id_t = utilities::index_t<point_t<D>>;
-        // TOFIX: make this unordered?
-        using point_compositions_t = std::map<vector_t<D>, point_id_t>;
 
       private:
-        PointCloud() : _cloud(100 /*segment size */), _compositions() {}
+        PointCloud() : _cloud(100 /*segment size */) {}
 
         // delete copy constructor
         PointCloud(const PointCloud<D> &) = delete;
@@ -59,9 +57,6 @@ namespace mito::geometry {
             // emplace point in {_cloud}
             auto point = _emplace_point(coord, std::make_index_sequence<D> {});
 
-            // register it in the compositions map
-            _compositions.insert(std::make_pair(point->coordinates(), point.id()));
-
             // return the newly added point
             return point;
         }
@@ -72,10 +67,6 @@ namespace mito::geometry {
       private:
         // the cloud of points
         cloud_t _cloud;
-
-        // TOFIX: perhaps this container is unused?
-        // the container mapping the composition of points to the points themselves
-        point_compositions_t _compositions;
 
         // friendship with the singleton
         using PointCloudSingleton = utilities::Singleton<PointCloud<D>>;
