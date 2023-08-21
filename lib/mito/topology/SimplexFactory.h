@@ -103,8 +103,11 @@ namespace mito::topology {
         // is no one else using it, otherwise does nothing)
         inline auto erase(unoriented_simplex_t<N> & simplex) -> void
         {
-            // sanity check
-            assert(simplex.references() > 0);
+            // if the simplex is still being used
+            if (simplex.references() > 1) {
+                // do nothing
+                return;
+            }
 
             // pick a representative (factor out equivalence relation)
             auto representative = _representative(simplex->composition());
@@ -211,8 +214,11 @@ namespace mito::topology {
         // is no one else using it, otherwise does nothing)
         inline auto erase(unoriented_simplex_t<0> & simplex) -> void
         {
-            // sanity check
-            assert(simplex.references() > 0);
+            // if the simplex is still being used
+            if (simplex.references() > 1) {
+                // do nothing
+                return;
+            }
 
             // erase this simplex from the container
             _simplices.erase(simplex);

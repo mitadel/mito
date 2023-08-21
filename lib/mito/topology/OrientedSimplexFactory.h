@@ -203,11 +203,8 @@ namespace mito::topology {
             // erase this oriented simplex from the container
             _oriented_simplices.erase(oriented_simplex);
 
-            // if the copy I just made is the only remaining use the footprint
-            if (footprint.references() == 1) {
-                // cleanup the unoriented factory around {footprint}
-                _simplex_factory.erase(footprint);
-            }
+            // cleanup the unoriented factory around {footprint}
+            _simplex_factory.erase(footprint);
 
             // all done
             return;
