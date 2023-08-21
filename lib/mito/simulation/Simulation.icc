@@ -8,6 +8,18 @@
 
 mito::simulation::Simulation::Simulation() : _execution_context(), _clock() {}
 
+auto
+mito::simulation::Simulation::context() const -> const execution_context_type &
+{
+    return _execution_context;
+}
+
+auto
+mito::simulation::Simulation::clock() const -> const clock_type &
+{
+    return _clock;
+}
+
 
 #endif    // mito_simulation_Simulation_icc
 

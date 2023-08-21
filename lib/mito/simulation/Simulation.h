@@ -35,6 +35,13 @@ namespace mito::simulation {
         // delete move assignment operator
         Simulation & operator=(simulation_type &&) = delete;
 
+      public:
+        // accessor for the simulation execution context
+        auto context() const -> const execution_context_type &;
+
+        // accessor for the simulation clock time
+        auto clock() const -> const clock_type &;
+
       private:
         // the simulation execution context
         execution_context_type _execution_context;
