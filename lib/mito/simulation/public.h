@@ -12,6 +12,9 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
+// classes implementation
+#include "Simulation.h"
+
 // factories implementation
 #include "factories.h"
 

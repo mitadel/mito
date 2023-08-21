@@ -5,6 +5,11 @@
 
 namespace mito::simulation {
 
+    // simulation factory
+    auto simulation() -> simulation_t &
+    {
+        return utilities::Singleton<simulation_t>::GetInstance();
+    }
 
 }
 

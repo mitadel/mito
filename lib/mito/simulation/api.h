@@ -5,6 +5,8 @@
 
 namespace mito::simulation {
 
+    // simulation alias
+    using simulation_t = Simulation;
 
 }
 

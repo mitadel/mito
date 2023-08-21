@@ -1,0 +1,14 @@
+// -*- C++ -*-
+//
+
+#if !defined(mito_simulation_Simulation_icc)
+#error This header file contains implementation details of class mito::simulation::Simulation
+#else
+
+
+mito::simulation::Simulation::Simulation() : _clock() {}
+
+
+#endif    // mito_simulation_Simulation_icc
+
+// end of file
