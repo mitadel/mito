@@ -69,28 +69,28 @@ mito::topology::Topology::_get_factory<3>() const noexcept -> const oriented_sim
     return _tetrahedron_factory;
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
-    -> simplex_t<D>
+mito::topology::Topology::simplex(const unoriented_simplex_t<N> & footprint, bool orientation)
+    -> simplex_t<N>
 {
     // ask the factory of oriented simplices
-    return _get_factory<D>().orientedSimplex(footprint, orientation);
+    return _get_factory<N>().orientedSimplex(footprint, orientation);
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::simplex(const simplex_composition_t<D> & composition) -> simplex_t<D>
-requires(D > 0)
+mito::topology::Topology::simplex(const simplex_composition_t<N> & composition) -> simplex_t<N>
+requires(N > 0)
 {
     // ask the factory of oriented simplices
-    return _get_factory<D>().orientedSimplex(composition);
+    return _get_factory<N>().orientedSimplex(composition);
 }
 
-template <int D>
+template <int N>
 inline auto
 mito::topology::Topology::simplex(bool orientation) -> simplex_t<0>
-requires(D == 0)
+requires(N == 0)
 {
     // ask the factory of oriented simplices
     return _get_factory<0>().orientedSimplex(orientation);
@@ -138,37 +138,37 @@ mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & ve
                         triangle({ vertices[0], vertices[2], vertices[1] }) });
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::exists_flipped(const simplex_t<D> & simplex) const -> bool
+mito::topology::Topology::exists_flipped(const simplex_t<N> & simplex) const -> bool
 {
-    return _get_factory<D>().existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
+    return _get_factory<N>().existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::flip(const simplex_t<D> & simplex) -> simplex_t<D>
+mito::topology::Topology::flip(const simplex_t<N> & simplex) -> simplex_t<N>
 {
     // ask the factory of oriented simplices
-    return _get_factory<D>().orientedSimplex(simplex->footprint(), !simplex->orientation());
+    return _get_factory<N>().orientedSimplex(simplex->footprint(), !simplex->orientation());
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::_erase(simplex_t<D> & simplex) -> void
-requires(D == 0)
+mito::topology::Topology::_erase(simplex_t<N> & simplex) -> void
+requires(N == 0)
 {
     // erase the vertex from the factory
-    _get_factory<D>().erase(simplex);
+    _get_factory<N>().erase(simplex);
 
     // all done
     return;
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::_erase(simplex_t<D> & simplex) -> void
-requires(D > 0)
+mito::topology::Topology::_erase(simplex_t<N> & simplex) -> void
+requires(N > 0)
 {
     // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
     //          declared mutable. Should we call reset here and make the handle mutable or
@@ -182,7 +182,7 @@ requires(D > 0)
     auto composition = simplex->composition();
 
     // cleanup the oriented factory around {simplex}
-    _get_factory<D>().erase(simplex);
+    _get_factory<N>().erase(simplex);
 
     // loop on subsimplices
     for (auto & subsimplex : composition) {
@@ -198,9 +198,9 @@ requires(D > 0)
     return;
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::erase(simplex_t<D> & simplex) -> void
+mito::topology::Topology::erase(simplex_t<N> & simplex) -> void
 {
     // if someone else (other than the topology) is still using this resource
     if (simplex.references() > 1) {
@@ -219,11 +219,11 @@ mito::topology::Topology::vertex() -> vertex_t
     return _get_factory<0>().vertex();
 }
 
-template <int D>
+template <int N>
 inline auto
-mito::topology::Topology::exists(const simplex_composition_t<D> & simplices) const -> bool
+mito::topology::Topology::exists(const simplex_composition_t<N> & simplices) const -> bool
 {
-    return _get_factory<D>().existsOrientedSimplex(simplices);
+    return _get_factory<N>().existsOrientedSimplex(simplices);
 }
 
 inline auto

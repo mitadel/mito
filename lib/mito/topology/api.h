@@ -6,8 +6,8 @@
 namespace mito::topology {
 
     // simplex alias
-    template <int D>
-    using simplex_t = oriented_simplex_t<D>;
+    template <int N>
+    using simplex_t = oriented_simplex_t<N>;
 
     // vertex alias
     using vertex_t = unoriented_simplex_t<0>;

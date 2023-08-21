@@ -6,28 +6,28 @@
 namespace mito::topology {
 
     // class simplex
-    template <int D>
+    template <int N>
     class Simplex;
 
     // class oriented simplex
-    template <int D>
+    template <int N>
     class OrientedSimplex;
 
     // class simplex factory
-    template <int D>
+    template <int N>
     class SimplexFactory;
 
     // simplex factory alias
-    template <int D>
-    using simplex_factory_t = SimplexFactory<D>;
+    template <int N>
+    using simplex_factory_t = SimplexFactory<N>;
 
     // class oriented simplex factory
-    template <int D>
+    template <int N>
     class OrientedSimplexFactory;
 
     // oriented simplex factory alias
-    template <int D>
-    using oriented_simplex_factory_t = OrientedSimplexFactory<D>;
+    template <int N>
+    using oriented_simplex_factory_t = OrientedSimplexFactory<N>;
 
     // class topology
     class Topology;
@@ -46,12 +46,12 @@ namespace mito::topology {
     using element_vector_t = std::vector<cellT>;
 
     // unoriented simplex alias
-    template <int D>
-    using unoriented_simplex_t = utilities::shared_ptr<const Simplex<D>>;
+    template <int N>
+    using unoriented_simplex_t = utilities::shared_ptr<const Simplex<N>>;
 
     // oriented simplex alias
-    template <int D>
-    using oriented_simplex_t = utilities::shared_ptr<const OrientedSimplex<D>>;
+    template <int N>
+    using oriented_simplex_t = utilities::shared_ptr<const OrientedSimplex<N>>;
 }
 
 

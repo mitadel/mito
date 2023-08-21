@@ -24,20 +24,20 @@ namespace mito::topology {
         ~Topology();
 
       public:
-        template <int D>
-        inline auto simplex(const unoriented_simplex_t<D> & footprint, bool orientation)
-            -> simplex_t<D>;
+        template <int N>
+        inline auto simplex(const unoriented_simplex_t<N> & footprint, bool orientation)
+            -> simplex_t<N>;
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the class
         // of equivalence of simplices with this composition)
-        template <int D>
-        inline auto simplex(const simplex_composition_t<D> & composition) -> simplex_t<D>
-        requires(D > 0);
+        template <int N>
+        inline auto simplex(const simplex_composition_t<N> & composition) -> simplex_t<N>
+        requires(N > 0);
 
-        template <int D>
+        template <int N>
         inline auto simplex(bool orientation) -> simplex_t<0>
-        requires(D == 0);
+        requires(N == 0);
 
         // instantiate a vertex
         inline auto vertex() -> vertex_t;
@@ -61,40 +61,40 @@ namespace mito::topology {
         inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices) -> simplex_t<3>;
 
         // returns whether the oriented simplex exists in the factory
-        template <int D>
-        inline auto exists(const simplex_composition_t<D> & simplices) const -> bool;
+        template <int N>
+        inline auto exists(const simplex_composition_t<N> & simplices) const -> bool;
 
         // returns whether the segment exists in the factory
         inline auto exists(const vertex_simplex_composition_t<1> & vertices) const -> bool;
 
         // returns whether there exists the flipped oriented simplex in the factory
-        template <int D>
-        inline auto exists_flipped(const simplex_t<D> & simplex) const -> bool;
+        template <int N>
+        inline auto exists_flipped(const simplex_t<N> & simplex) const -> bool;
 
         // returns the simplex with opposite orientation
-        template <int D>
-        inline auto flip(const simplex_t<D> & simplex) -> simplex_t<D>;
+        template <int N>
+        inline auto flip(const simplex_t<N> & simplex) -> simplex_t<N>;
 
       private:
-        template <int D>
-        inline auto _erase(simplex_t<D> & simplex) -> void
-        requires(D == 0);
+        template <int N>
+        inline auto _erase(simplex_t<N> & simplex) -> void
+        requires(N == 0);
 
-        template <int D>
-        inline auto _erase(simplex_t<D> & simplex) -> void
-        requires(D > 0);
+        template <int N>
+        inline auto _erase(simplex_t<N> & simplex) -> void
+        requires(N > 0);
 
-        // mutator for the simplex factory of dimension D
-        template <int D>
-        inline auto _get_factory() noexcept -> oriented_simplex_factory_t<D> &;
+        // mutator for the simplex factory of dimension N
+        template <int N>
+        inline auto _get_factory() noexcept -> oriented_simplex_factory_t<N> &;
 
-        // accessor for the simplex factory of dimension D
-        template <int D>
-        inline auto _get_factory() const noexcept -> const oriented_simplex_factory_t<D> &;
+        // accessor for the simplex factory of dimension N
+        template <int N>
+        inline auto _get_factory() const noexcept -> const oriented_simplex_factory_t<N> &;
 
       public:
-        template <int D>
-        inline auto erase(simplex_t<D> & simplex) -> void;
+        template <int N>
+        inline auto erase(simplex_t<N> & simplex) -> void;
 
       private:
         // factory for vertices
