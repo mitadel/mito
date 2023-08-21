@@ -132,7 +132,7 @@ namespace mito::io::vtk {
     auto writer(std::string fileName, const geometry::point_cloud_t<D> & cloud) -> void
     {
         // get point cloud compositions
-        const auto & compositions = cloud.compositions();
+        const auto & points = cloud.points();
 
         // vtk unstructured grid
         auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -140,8 +140,8 @@ namespace mito::io::vtk {
         auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
 
         // iterate over the points
-        for (const auto & pPointMap : compositions) {
-            insertVtkPoint(pPointMap.first, pointsVtk);
+        for (const auto & point : points) {
+            insertVtkPoint(point->coordinates(), pointsVtk);
         }
 
         // set the grid points
