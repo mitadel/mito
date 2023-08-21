@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
-
+#include <mito/simulation.h>
 
 using geometry_t = mito::geometry::geometry_t<2>;
 using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
@@ -85,15 +85,8 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
 
 TEST(MetisPartitionerMPI, Base)
 {
-    // initialize MPI
-    MPI_Init(nullptr, nullptr);
-
-    int mpi_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-    std::cout << "mpi rank " << mpi_rank << std::endl;
-
-    int mpi_size;
-    MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
+    // the simulation representative
+    auto & simulation = mito::simulation::simulation();
 
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -111,10 +104,10 @@ TEST(MetisPartitionerMPI, Base)
     build_mesh(geometry, mesh);
 
     // number of partitions
-    int n_partitions = mpi_size;
+    int n_partitions = simulation.context().mpi_size();
 
     // rank of the mesh to return
-    int n_rank = mpi_rank;
+    int n_rank = simulation.context().mpi_rank();
 
     // partition the mesh
     auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
@@ -123,9 +116,6 @@ TEST(MetisPartitionerMPI, Base)
     // (this check assumes that the number of cells of the original mesh is divisible by the number
     //  of partitions requested)
     EXPECT_EQ(mesh_partition.nCells(), mesh.nCells() / n_partitions);
-
-    // finalize MPI
-    MPI_Finalize();
 
     // all done
     return;
