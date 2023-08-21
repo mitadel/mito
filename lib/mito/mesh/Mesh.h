@@ -23,20 +23,20 @@ namespace mito::mesh {
         static constexpr int N = order;
         // get the family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_family_t = typename topology::cell_family<cellT, I>;
+        using cell_family_type = typename topology::cell_family<cellT, I>;
         // typedef for geometry type
-        using geometry_t = geometry::geometry_t<D>;
+        using geometry_type = geometry::geometry_t<D>;
         // typedef for a collection of cells
-        using cells_t = element_set_t<cell_type>;
+        using cells_type = element_set_t<cell_type>;
         // id type of unoriented cell
-        using unoriented_cell_id_t = utilities::index_t<cell_type>;
+        using cell_id_type = utilities::index_t<cell_type>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
         // appears with - or + orientation
-        using orientation_map_t = std::unordered_map<unoriented_cell_id_t, std::array<int, 2>>;
+        using orientation_map_type = std::unordered_map<cell_id_type, std::array<int, 2>>;
 
       public:
         // default constructor
-        inline Mesh(const geometry_t & geometry)
+        inline Mesh(const geometry_type & geometry)
         requires(N <= D)
             : _geometry(geometry), _cells() {};
 
@@ -58,7 +58,8 @@ namespace mito::mesh {
       private:
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
+            Mesh<cell_family_type<I>, D> & boundary_mesh, const cell_family_type<J> & cell) const
+            -> void
         requires(I == J)
         {
             // add {subcell} to the boundary mesh
@@ -70,7 +71,8 @@ namespace mito::mesh {
 
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
+            Mesh<cell_family_type<I>, D> & boundary_mesh, const cell_family_type<J> & cell) const
+            -> void
         requires(I < J)
         {
             // loop on the subcells of {cell}
@@ -108,7 +110,7 @@ namespace mito::mesh {
             return std::size(_cells);
         }
 
-        inline auto cells() const noexcept -> const cells_t &
+        inline auto cells() const noexcept -> const cells_type &
         {
             // all done
             return _cells;
@@ -136,7 +138,7 @@ namespace mito::mesh {
             return;
         }
 
-        inline auto isOnBoundary(const cell_family_t<N - 1> & cell) const -> bool
+        inline auto isOnBoundary(const cell_family_type<N - 1> & cell) const -> bool
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
@@ -183,11 +185,11 @@ namespace mito::mesh {
          * @brief Returns a mesh with all boundary cells of dimension I
          */
         template <int I = N - 1>
-        inline auto boundary() const -> Mesh<cell_family_t<I>, D> const
+        inline auto boundary() const -> Mesh<cell_family_type<I>, D> const
         requires(I >= 0)
         {
             // instantiate a new mesh for the boundary elements
-            Mesh<cell_family_t<I>, D> boundary_mesh(_geometry);
+            Mesh<cell_family_type<I>, D> boundary_mesh(_geometry);
 
             // loop on the (N-1)-dimensional cells
             for (const auto & cell : cells()) {
@@ -237,17 +239,17 @@ namespace mito::mesh {
 
       public:
         // const accessor to geometry
-        auto geometry() const noexcept -> const geometry_t & { return _geometry; }
+        auto geometry() const noexcept -> const geometry_type & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded
-        const geometry_t & _geometry;
+        const geometry_type & _geometry;
 
         // container to store the mesh cells
-        cells_t _cells;
+        cells_type _cells;
 
         // container to store how many times a simplex appears with a given orientation
-        orientation_map_t _orientations;
+        orientation_map_type _orientations;
     };
 
 }    // namespace mito
