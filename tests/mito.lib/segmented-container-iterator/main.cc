@@ -2,10 +2,9 @@
 #include <mito/base.h>
 #include <mito/utilities.h>
 
-// TOFIX: perhaps rename this to Resource to make it more general?
-class Simplex : public mito::utilities::Shareable {
+class Resource : public mito::utilities::Shareable {
   public:
-    Simplex(int foo) : _foo(foo) {}
+    Resource(int foo) : _foo(foo) {}
 
     int foo() const { return _foo; }
 
@@ -13,13 +12,13 @@ class Simplex : public mito::utilities::Shareable {
     int _foo;
 };
 
-// the simplex type
-using simplex_t = mito::utilities::shared_ptr<Simplex>;
+// the resource type
+using resource_t = mito::utilities::shared_ptr<Resource>;
 
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
-    // instantiate a repository of {Simplex} resources
-    mito::utilities::repository_t<simplex_t> collection(3 /*segment size */);
+    // instantiate a repository of {Resource} resources
+    mito::utilities::repository_t<resource_t> collection(3 /*segment size */);
 
     // assert that the container is empty and with no capacity
     EXPECT_EQ(collection.resources().capacity(), 0);
