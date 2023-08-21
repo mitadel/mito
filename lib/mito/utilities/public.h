@@ -23,6 +23,8 @@
 // factories implementation
 #include "factories.h"
 
+// utilities
+#include "utilities.h"
 
 #endif
 
