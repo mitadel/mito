@@ -33,10 +33,6 @@ namespace mito::simulation {
 
       private:
         // attributes...
-
-        // friendship with the singleton
-        using ContextSingleton = utilities::Singleton<context_type>;
-        friend ContextSingleton;
     };
 
 }    // namespace mito
