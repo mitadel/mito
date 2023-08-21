@@ -29,11 +29,6 @@ namespace mito::geometry {
     template <int D>
     using geometry_t = Geometry<D>;
 
-    // TOFIX: do we need this typedef here?
-    // a cloud of points
-    template <int D>
-    using cloud_t = utilities::repository_t<point_t<D>>;
-
     // class node
     template <int D>
     class Node;

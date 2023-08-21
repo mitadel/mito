@@ -7,7 +7,8 @@ namespace mito::geometry {
     template <int D>
     class PointCloud {
       private:
-        using cloud_t = geometry::cloud_t<D>;
+        // a cloud of points
+        using cloud_t = utilities::repository_t<point_t<D>>;
         // id type of point
         using point_id_t = utilities::index_t<point_t<D>>;
         // TOFIX: make this unordered?
