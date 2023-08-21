@@ -15,17 +15,17 @@ mito::utilities::SharedPointer<resourceT>::id() const -> index_t<resourceT>
 
 template <class resourceT>
 auto
-mito::utilities::SharedPointer<resourceT>::resource(index_t<resourceT> index) -> handle_t
+mito::utilities::SharedPointer<resourceT>::resource(index_t<resourceT> index) -> handle_type
 {
     // the id is the (immutable) address of this object
-    return reinterpret_cast<handle_t>(index);
+    return reinterpret_cast<handle_type>(index);
 }
 
 // interface
 template <class resourceT>
 auto
 mito::utilities::SharedPointer<resourceT>::handle() const noexcept
-    -> mito::utilities::SharedPointer<resourceT>::handle_t
+    -> mito::utilities::SharedPointer<resourceT>::handle_type
 {
     // return the handle
     return _handle;
@@ -65,7 +65,7 @@ mito::utilities::SharedPointer<resourceT>::is_nullptr() const noexcept -> bool
 template <class resourceT>
 auto
 mito::utilities::SharedPointer<resourceT>::operator->() const noexcept
-    -> mito::utilities::SharedPointer<resourceT>::handle_t
+    -> mito::utilities::SharedPointer<resourceT>::handle_type
 {
     // return the handle
     return _handle;
@@ -75,7 +75,7 @@ mito::utilities::SharedPointer<resourceT>::operator->() const noexcept
 // template <class resourceT>
 // auto
 // mito::utilities::SharedPointer<resourceT>::operator*() const
-//     -> const mito::utilities::SharedPointer<resourceT>::resource_t &
+//     -> const mito::utilities::SharedPointer<resourceT>resource_type &
 // {
 //     // return the resource
 //     return *_handle;
@@ -96,7 +96,7 @@ mito::utilities::SharedPointer<resourceT>::SharedPointer() : _handle(nullptr)
 
 // the constructor
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT>::SharedPointer(handle_t resource) : _handle(resource)
+mito::utilities::SharedPointer<resourceT>::SharedPointer(handle_type resource) : _handle(resource)
 {
     // grab a reference to the shared handle
     _acquire();

@@ -6,11 +6,11 @@ namespace mito::utilities {
 
     template <class sharedResourceT>
     class Repository {
-        // requires ReferenceCountedObject<sharedResourceT::resource_t>
+        // requires ReferenceCountedObject<sharedResourceT::resource_type>
       public:
         using shared_ptr_t = sharedResourceT;
         // my resource type
-        using resource_t = typename sharedResourceT::resource_t;
+        using resource_t = typename sharedResourceT::resource_type;
         // typedef for a collection of resources
         using resource_collection_t = segmented_t<sharedResourceT>;
 

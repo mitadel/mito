@@ -10,9 +10,9 @@ namespace mito::mesh {
 
       public:
         // publish the order of the cell
-        static constexpr int order = cellT::resource_t::order;
+        static constexpr int order = cellT::resource_type::order;
         // publish the number of vertices per element
-        static constexpr int n_vertices = cellT::resource_t::n_vertices;
+        static constexpr int n_vertices = cellT::resource_type::n_vertices;
         // publish the dimension of physical space
         static constexpr int dim = D;
         // typedef for cell type
@@ -20,10 +20,10 @@ namespace mito::mesh {
 
       private:
         // get the order of the cell
-        static constexpr int N = cellT::resource_t::order;
+        static constexpr int N = cellT::resource_type::order;
         // get the family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_family_t = typename cellT::resource_t::template cell_family_t<I>;
+        using cell_family_t = typename cellT::resource_type::template cell_family_t<I>;
         // typedef for geometry type
         using geometry_t = geometry::geometry_t<D>;
         // typedef for a collection of cells

@@ -19,7 +19,7 @@ namespace mito::utilities {
 
     // class segmented container
     template <class sharedResourceT>
-    // requires ReferenceCountedObject<typename sharedResourceT::resource_t>
+    // requires ReferenceCountedObject<typename sharedResourceT::resource_type>
     class SegmentedContainer;
 
     // and its iterator
@@ -28,7 +28,7 @@ namespace mito::utilities {
 
     // the repository
     template <class sharedResourceT>
-    // requires ReferenceCountedObject<typename sharedResourceT::resource_t>
+    // requires ReferenceCountedObject<typename sharedResourceT::resource_type>
     class Repository;
 
     // TOFIX: move these guys to a {utilities.h} header?

@@ -67,7 +67,7 @@
 
 namespace mito::utilities {
     template <class sharedResourceT>
-    // requires ReferenceCountedObject<sharedResourceT::resource_t>
+    // requires ReferenceCountedObject<sharedResourceT::resource_type>
     class SegmentedContainer {
       public:
         // me
@@ -76,9 +76,9 @@ namespace mito::utilities {
         // aliases for my shared pointer type
         using shared_ptr_type = sharedResourceT;
         // and my (cv qualified) resource type
-        using resource_type = typename sharedResourceT::resource_t;
+        using resource_type = typename sharedResourceT::resource_type;
         // and my (cv qualified) handle type
-        using handle_type = typename sharedResourceT::handle_t;
+        using handle_type = typename sharedResourceT::handle_type;
 
         // unqualified resource type (for internal book-keeping)
         using unqualified_resource_type = typename std::remove_const<resource_type>::type;

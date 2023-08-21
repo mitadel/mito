@@ -15,14 +15,14 @@ namespace mito::utilities {
     class SharedPointer {
         // types
       public:
-        using shared_ptr_t = SharedPointer<resourceT>;
-        using resource_t = resourceT;
-        using handle_t = resourceT *;
+        using shared_ptr_type = SharedPointer<resourceT>;
+        using resource_type = resourceT;
+        using handle_type = resourceT *;
 
         // interface
       public:
         // returns the id of this (oriented) simplex
-        inline auto id() const -> index_t<resource_t>;
+        inline auto id() const -> index_t<resource_type>;
 
         // accessor for the number of outstanding references
         inline auto references() const -> int;
@@ -31,10 +31,10 @@ namespace mito::utilities {
         inline auto is_nullptr() const noexcept -> bool;
 
         // operator->
-        auto operator->() const noexcept -> handle_t;
+        auto operator->() const noexcept -> handle_type;
 
         // // operator*
-        // auto operator*() const -> const resource_t &;
+        // auto operator*() const -> const resource_type &;
 
         // meta methods
       public:
@@ -45,26 +45,26 @@ namespace mito::utilities {
         inline SharedPointer();
 
         // constructor
-        inline SharedPointer(handle_t);
+        inline SharedPointer(handle_type);
 
         // copy constructor
-        inline SharedPointer(const shared_ptr_t &);
+        inline SharedPointer(const shared_ptr_type &);
 
         // move constructor
-        inline SharedPointer(shared_ptr_t &&) noexcept;
+        inline SharedPointer(shared_ptr_type &&) noexcept;
 
         // assignment operator
-        inline shared_ptr_t & operator=(const shared_ptr_t &);
+        inline shared_ptr_type & operator=(const shared_ptr_type &);
 
         // move assignment operator
-        inline shared_ptr_t & operator=(shared_ptr_t &&);
+        inline shared_ptr_type & operator=(shared_ptr_type &&);
 
       private:
         // accessor for {handle}
-        inline auto handle() const noexcept -> handle_t;
+        inline auto handle() const noexcept -> handle_type;
 
         // returns the resource corresponding to this resource id
-        static inline auto resource(index_t<resource_t>) -> handle_t;
+        static inline auto resource(index_t<resource_type>) -> handle_type;
 
         // reset the shared pointer
         inline auto reset() -> void;
@@ -77,11 +77,11 @@ namespace mito::utilities {
         // data members
       private:
         // handle to the resource
-        handle_t _handle;
+        handle_type _handle;
 
       private:
         // friendship with Repository
-        friend class Repository<shared_ptr_t>;
+        friend class Repository<shared_ptr_type>;
     };
 
     template <class resourceT>
