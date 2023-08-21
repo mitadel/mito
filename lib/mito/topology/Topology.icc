@@ -158,6 +158,12 @@ inline auto
 mito::topology::Topology::_erase(simplex_t<N> & simplex) -> void
 requires(N == 0)
 {
+    // if this vertex is still being used
+    if (simplex.references() > 1) {
+        // do nothing
+        return;
+    }
+
     // erase the vertex from the factory
     _get_factory<N>().erase(simplex);
 
@@ -170,13 +176,11 @@ inline auto
 mito::topology::Topology::_erase(simplex_t<N> & simplex) -> void
 requires(N > 0)
 {
-    // QUESTION: method {reset} is not {const} unless the {_handle} of the shared pointer is
-    //          declared mutable. Should we call reset here and make the handle mutable or
-    //          should we accept that {element} points to an invalid resource after call to
-    //          {erase}?
-
-    // sanity check
-    assert(simplex.references() > 0);
+    // if this simplex is still being used
+    if (simplex.references() > 1) {
+        // do nothing
+        return;
+    }
 
     // grab a copy of the composition
     auto composition = simplex->composition();
@@ -186,11 +190,8 @@ requires(N > 0)
 
     // loop on subsimplices
     for (auto & subsimplex : composition) {
-        // if the copy I just made is the only remaining use of this simplex
-        if (subsimplex.references() == 1) {
-            // recursively erase the subsimplices
-            _erase(subsimplex);
-        }
+        // recursively erase the subsimplices
+        _erase(subsimplex);
     }
 
     // all done
@@ -201,11 +202,9 @@ template <int N>
 inline auto
 mito::topology::Topology::erase(simplex_t<N> & simplex) -> void
 {
-    // if someone else (other than the topology) is still using this resource
-    if (simplex.references() > 1) {
-        // do nothing
-        return;
-    }
+    // TOFIX: transform this into a nullptr check
+    // sanity check
+    assert(simplex.references() > 0);
 
     // otherwise, erase the simplex
     return _erase(simplex);
