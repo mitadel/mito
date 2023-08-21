@@ -200,9 +200,8 @@ namespace mito::topology {
             // erase this oriented simplex from the container
             _oriented_simplices.erase(oriented_simplex);
 
-            // if this simplex is the last one using the footprint (other than the copy we just
-            // did)
-            if (footprint.references() == 2) {
+            // if the copy I just made is the only remaining use the footprint
+            if (footprint.references() == 1) {
                 // cleanup the unoriented factory around {footprint}
                 _simplex_factory.erase(footprint);
             }

@@ -186,9 +186,8 @@ requires(N > 0)
 
     // loop on subsimplices
     for (auto & subsimplex : composition) {
-        // if this simplex is the last one using the subsimplex (other than the copy we just
-        // did)
-        if (subsimplex.references() == 2) {
+        // if the copy I just made is the only remaining use of this simplex
+        if (subsimplex.references() == 1) {
             // recursively erase the subsimplices
             _erase(subsimplex);
         }
