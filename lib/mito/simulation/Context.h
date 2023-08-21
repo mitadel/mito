@@ -16,7 +16,7 @@ namespace mito::simulation {
         Context();
 
         // destructor
-        ~Context() {}
+        ~Context();
 
       private:
         // delete move constructor
@@ -31,8 +31,19 @@ namespace mito::simulation {
         // delete move assignment operator
         Context & operator=(context_type &&) = delete;
 
+      public:
+        // accessor for my process' rank
+        auto mpi_rank() const -> int;
+
+        // accessor for the size of the job
+        auto mpi_size() const -> int;
+
       private:
-        // attributes...
+        // my process' rank
+        int _mpi_rank;
+
+        // the size of the job
+        int _mpi_size;
     };
 
 }    // namespace mito
