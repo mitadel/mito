@@ -158,12 +158,6 @@ inline auto
 mito::topology::Topology::_erase(simplex_t<N> & simplex) -> void
 requires(N == 0)
 {
-    // if this vertex is still being used
-    if (simplex.references() > 1) {
-        // do nothing
-        return;
-    }
-
     // erase the vertex from the factory
     _get_factory<N>().erase(simplex);
 
@@ -176,21 +170,14 @@ inline auto
 mito::topology::Topology::_erase(simplex_t<N> & simplex) -> void
 requires(N > 0)
 {
-    // if this simplex is still being used
-    if (simplex.references() > 1) {
-        // do nothing
-        return;
-    }
-
     // grab a copy of the composition
     auto composition = simplex->composition();
 
     // cleanup the oriented factory around {simplex}
     _get_factory<N>().erase(simplex);
 
-    // loop on subsimplices
+    // recursively erase the subsimplices
     for (auto & subsimplex : composition) {
-        // recursively erase the subsimplices
         _erase(subsimplex);
     }
 

@@ -182,8 +182,11 @@ namespace mito::topology {
         // only if there is no one else using it, otherwise does nothing)
         inline auto erase(simplex_t<N> & oriented_simplex) -> void
         {
-            // sanity check
-            assert(oriented_simplex.references() > 0);
+            // if this oriented simplex is still being used
+            if (oriented_simplex.references() > 1) {
+                // do nothing
+                return;
+            }
 
             // grab a copy of the footprint
             auto footprint = oriented_simplex->footprint();
