@@ -28,7 +28,7 @@ namespace mito::topology {
 
         // typedef for the cell family type (simplicial)
         template <int I>
-        using cell_family_t = simplex_t<I>;
+        using cell_family_type = simplex_t<I>;
 
         // private constructors: only the OrientedSimplexFactory has the right to instantiate
         // oriented simplices

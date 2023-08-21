@@ -222,7 +222,7 @@ namespace mito::mesh {
 
             // helper function to expand array to parameter pack
             constexpr auto _subdivide = []<size_t... J>(
-                const topology::vertex_simplex_composition_t<cellT::resource_type::order> & vertices,
+                const topology::vertex_simplex_composition_t<topology::order<cellT>()> & vertices,
                 geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
                 int n_refinements, std::index_sequence<J...>)
             {
@@ -232,7 +232,7 @@ namespace mito::mesh {
             // recursively subdivide the cell identified by these vertices
             _subdivide(
                 vertices, geometry, subdivided_mesh, n_refinements,
-                std::make_index_sequence<cellT::resource_type::order + 1> {});
+                std::make_index_sequence<topology::order<cellT>() + 1> {});
         }
 
         // return the refined mesh

@@ -20,7 +20,7 @@ namespace mito::manifolds {
         // typedef for cell type
         using cell_t = cellT;
         // get the order of the cell
-        static constexpr int N = cellT::resource_type::order;
+        static constexpr int N = topology::order<cellT>();
         // a point in parametric coordinates
         static constexpr int parametricDim = parametric_dim<cell_t>();
         using parametric_point_t = manifolds::parametric_point_t<parametricDim>;
