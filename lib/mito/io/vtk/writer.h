@@ -26,7 +26,10 @@ namespace mito::io::vtk {
     }
 
     template <int D>
-    auto insertVtkPoint(const vector_t<D> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+    auto insertVtkPoint(const vector_t<D> &, vtkSmartPointer<vtkPoints> &) -> void;
+
+    template <>
+    auto insertVtkPoint(const vector_t<3> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], coord[2]);
