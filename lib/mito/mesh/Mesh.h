@@ -16,7 +16,7 @@ namespace mito::mesh {
         // publish the dimension of physical space
         static constexpr int dim = D;
         // typedef for cell type
-        using cell_t = cellT;
+        using cell_type = cellT;
 
       private:
         // get the order of the cell
@@ -27,9 +27,9 @@ namespace mito::mesh {
         // typedef for geometry type
         using geometry_t = geometry::geometry_t<D>;
         // typedef for a collection of cells
-        using cells_t = element_set_t<cell_t>;
+        using cells_t = element_set_t<cell_type>;
         // id type of unoriented cell
-        using unoriented_cell_id_t = utilities::index_t<cell_t>;
+        using unoriented_cell_id_t = utilities::index_t<cell_type>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
         // appears with - or + orientation
         using orientation_map_t = std::unordered_map<unoriented_cell_id_t, std::array<int, 2>>;
@@ -114,7 +114,7 @@ namespace mito::mesh {
             return _cells;
         }
 
-        inline auto erase(const cell_t & cell) -> void
+        inline auto erase(const cell_type & cell) -> void
         {
             // loop on the subcells of {cell}
             for (const auto & subcell : cell->composition()) {
@@ -205,7 +205,7 @@ namespace mito::mesh {
             return boundary_mesh;
         }
 
-        inline auto insert(const cell_t & cell) -> void
+        inline auto insert(const cell_type & cell) -> void
         requires(N >= 1)
         {
             // add the cell to the set of cells with same dimension
@@ -225,7 +225,7 @@ namespace mito::mesh {
 
         // QUESTION: specialization of method {insert} for a mesh of vertices
         //           not sure if supporting meshes of 0-simplices makes sense...
-        inline auto insert(const cell_t & cell) -> void
+        inline auto insert(const cell_type & cell) -> void
         requires(N == 0)
         {
             // add the cell to the set of cells with same dimension

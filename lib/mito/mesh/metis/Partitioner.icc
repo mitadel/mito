@@ -43,8 +43,8 @@ mito::mesh::metis::Partitioner<meshT>::_get_ordered_mesh_cells(const mesh_t & me
 
     // define operator< for cells, given a geometry
     auto cell_compare = [&geometry](
-                            const typename mesh_t::cell_t & cell_a,
-                            const typename mesh_t::cell_t & cell_b) -> bool {
+                            const typename mesh_t::cell_type & cell_a,
+                            const typename mesh_t::cell_type & cell_b) -> bool {
         // get the barycenter of {cell_a}
         auto barycenter_a = mito::geometry::barycenter(cell_a, geometry);
         // get the barycenter of {cell_a}
@@ -54,7 +54,7 @@ mito::mesh::metis::Partitioner<meshT>::_get_ordered_mesh_cells(const mesh_t & me
     };
 
     // an ordered set of cells
-    std::set<typename mesh_t::cell_t, decltype(cell_compare)> cells(cell_compare);
+    std::set<typename mesh_t::cell_type, decltype(cell_compare)> cells(cell_compare);
 
     // insert mesh cells in ordered set
     for (const auto & cell : mesh.cells()) {
