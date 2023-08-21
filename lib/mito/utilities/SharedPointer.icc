@@ -156,7 +156,6 @@ mito::utilities::SharedPointer<resourceT>::operator=(
         _handle = other._handle;
     }
 
-    // QUESTION: should this go here or in the if statement?
     // invalidate {other}
     other._handle = nullptr;
 
