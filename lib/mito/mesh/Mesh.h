@@ -118,21 +118,23 @@ namespace mito::mesh {
 
         inline auto erase(const cell_type & cell) -> void
         {
-            // loop on the subcells of {cell}
-            for (const auto & subcell : cell->composition()) {
-                // decrement the orientations count for this cell footprint id, depending on the
-                // orientation
-                (subcell->orientation() ? _orientations[subcell->footprint().id()][0] -= 1 :
-                                          _orientations[subcell->footprint().id()][1] -= 1);
+            // erase the cell from the mesh
+            bool cell_was_erased = _cells.erase(cell);
+            // if the cell was in fact erased from the cell
+            if (cell_was_erased) {
+                // loop on the subcells of {cell}
+                for (const auto & subcell : cell->composition()) {
+                    // decrement the orientations count for this cell footprint id, depending on the
+                    // orientation
+                    (subcell->orientation() ? _orientations[subcell->footprint().id()][0] -= 1 :
+                                              _orientations[subcell->footprint().id()][1] -= 1);
 
-                // cleanup orientation map
-                if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
-                    _orientations.erase(subcell->footprint().id());
+                    // cleanup orientation map
+                    if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
+                        _orientations.erase(subcell->footprint().id());
+                    }
                 }
             }
-
-            // erase the cell from the mesh
-            _cells.erase(cell);
 
             // all done
             return;

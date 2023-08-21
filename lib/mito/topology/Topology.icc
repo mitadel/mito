@@ -189,9 +189,11 @@ template <int N>
 inline auto
 mito::topology::Topology::erase(simplex_t<N> & simplex) -> void
 {
-    // TOFIX: transform this into a nullptr check
-    // sanity check
-    assert(simplex.references() > 0);
+    // if the resource is not a valid one
+    if (simplex.is_nullptr()) {
+        // do nothing
+        return;
+    }
 
     // otherwise, erase the simplex
     return _erase(simplex);

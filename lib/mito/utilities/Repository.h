@@ -53,16 +53,14 @@ namespace mito::utilities {
         inline auto erase(shared_ptr_t & resource) -> void
         {
             // TOFIX: capture exception of invalid resource (nullptr)
-            // if the resource is valid
-            if (!resource.is_nullptr()) {
-                // remove this resource from the collection of resources
-                _resources.erase(resource.handle());
-                // destroy the resource
-                resource->~resource_t();
-                // QUESTION: to reset or not to reset?
-                // reset the shared pointer to the resource
-                resource.reset();
-            }
+            // sanity check
+            assert(!cell.is_nullptr());
+            // remove this resource from the collection of resources
+            _resources.erase(resource.handle());
+            // destroy the resource
+            resource->~resource_t();
+            // reset the shared pointer to the resource
+            resource.reset();
 
             // all done
             return;

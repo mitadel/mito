@@ -69,7 +69,9 @@ TEST(EraseElement, TestEraseElementMesh)
     std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(cell0);
     topology.erase(cell0);
-    // mesh.erase(cell0);
+    // check that erasing a cell twice does not result in an error
+    mesh.erase(cell0);
+    topology.erase(cell0);
 
     // std::cout << "After erase: " << std::endl;
     // for (const auto & simplex : mesh.cells<2>()) {
@@ -173,4 +175,7 @@ TEST(EraseElement, TestEraseElementTopology)
     // assert that a segment connecting vertex 2 and 3 no longer exists in the topology
     // ({segment_4} was erased because it is unused after erasing {cell_1})
     EXPECT_FALSE(topology.exists({ vertex_2, vertex_3 }));
+
+    // check that erasing a cell twice does not result in an error
+    topology.erase(cell_1);
 }
