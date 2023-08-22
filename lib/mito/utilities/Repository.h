@@ -30,7 +30,7 @@ namespace mito::utilities {
             if (std::size(_resources) > 0) {
                 // destroy all resources
                 for (const auto & resource : _resources) {
-                    resource->~resource_t();
+                    resource.~resource_t();
                 }
             }
         }

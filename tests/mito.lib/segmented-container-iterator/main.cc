@@ -31,7 +31,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     std::vector<int> store_elements;
     for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -45,7 +45,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     collection.erase(simplex1);
 
     for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -58,7 +58,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     collection.erase(simplex0);
 
     for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 2);
@@ -84,7 +84,7 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     auto simplex4 = collection.emplace(4);
 
     for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     // the order of the values depends on the order elimination of the previous simplices

@@ -20,6 +20,7 @@ namespace mito::utilities {
         using iterator_reference = iterator &;
         // what I point to
         using pointer = typename SegmentedContainerT::const_pointer;
+        using reference = typename SegmentedContainerT::const_reference;
 
         // metamethods
       public:
@@ -35,11 +36,10 @@ namespace mito::utilities {
         // iterator protocol
       public:
         // dereference
-        // TOFIX: should be const reference
-        constexpr auto operator*() const -> pointer
+        constexpr auto operator*() const -> reference
         {
             // easy enough
-            return ptr();
+            return *_ptr;
         }
 
         // accessors
