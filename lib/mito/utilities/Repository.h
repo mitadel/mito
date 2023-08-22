@@ -8,11 +8,17 @@ namespace mito::utilities {
     class Repository {
         // requires ReferenceCountedObject<sharedResourceT::resource_type>
       public:
+        // me
+        using repository_type = Repository<sharedResourceT>;
+        // the shared resource
         using shared_ptr_t = sharedResourceT;
         // my resource type
         using resource_t = typename sharedResourceT::resource_type;
         // typedef for a collection of resources
-        using resource_collection_t = segmented_t<sharedResourceT>;
+        using resource_collection_t = segmented_t<resource_t>;
+
+        // iterators
+        using iterator = RepositoryIterator<repository_type>;
 
       public:
         // default constructor
@@ -35,7 +41,7 @@ namespace mito::utilities {
         auto emplace(Args &&... args) -> shared_ptr_t
         {
             // get a spare location for the placement of the new resource
-            auto location = _resources._location_for_placement();
+            auto location = _resources.location_for_placement();
 
             // create a new instance of {resource_t} at location {location} with placement new
             resource_t * resource = new (location) resource_t(args...);
@@ -85,16 +91,16 @@ namespace mito::utilities {
         /**
          * iterators
          */
-        constexpr auto begin() const
+        constexpr auto begin() const -> iterator
         {
             // delegate answer to {_resources}
-            return _resources.begin();
+            return iterator(_resources.begin());
         }
 
-        constexpr auto end() const
+        constexpr auto end() const -> iterator
         {
             // delegate answer to {_resources}
-            return _resources.end();
+            return iterator(_resources.end());
         }
 
       private:

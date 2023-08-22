@@ -19,9 +19,7 @@ namespace mito::utilities {
         using iterator = SegmentedContainerIterator<segmented_container_type>;
         using iterator_reference = iterator &;
         // what I point to
-        using pointer = typename SegmentedContainerT::pointer;
-        // what I hand out
-        using shared_pointer = typename segmented_container_type::shared_ptr_type;
+        using pointer = typename SegmentedContainerT::const_pointer;
 
         // metamethods
       public:
@@ -37,10 +35,11 @@ namespace mito::utilities {
         // iterator protocol
       public:
         // dereference
-        constexpr auto operator*() const -> shared_pointer
+        // TOFIX: should be const reference
+        constexpr auto operator*() const -> pointer
         {
-            // wrap the resource in a shared pointer and return it
-            return shared_pointer(_ptr);
+            // easy enough
+            return ptr();
         }
 
         // accessors

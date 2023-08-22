@@ -15,8 +15,8 @@ namespace mito::utilities {
     using index_t = std::uintptr_t;
 
     // segmented container alias
-    template <class sharedResourceT>
-    using segmented_t = SegmentedContainer<sharedResourceT>;
+    template <class resourceT>
+    using segmented_t = SegmentedContainer<resourceT>;
 
     // the repository
     template <class sharedResourceT>

@@ -66,20 +66,14 @@
 // been explored so far.
 
 namespace mito::utilities {
-    template <class sharedResourceT>
-    // requires ReferenceCountedObject<sharedResourceT::resource_type>
+    template <class resourceT>
     class SegmentedContainer {
       public:
         // me
-        using segmented_container_type = SegmentedContainer<sharedResourceT>;
+        using segmented_container_type = SegmentedContainer<resourceT>;
 
-        // aliases for my shared pointer type
-        using shared_ptr_type = sharedResourceT;
-        // and my (cv qualified) resource type
-        using resource_type = typename sharedResourceT::resource_type;
-        // and my (cv qualified) handle type
-        using handle_type = typename sharedResourceT::handle_type;
-
+        // my template parameter
+        using resource_type = resourceT;
         // unqualified resource type (for internal book-keeping)
         using unqualified_resource_type = typename std::remove_const<resource_type>::type;
         // raw pointer type to unqualified resource type
@@ -93,8 +87,9 @@ namespace mito::utilities {
 
         // iterators
         using iterator = SegmentedContainerIterator<segmented_container_type>;
+        using iterator_const_reference = const iterator &;
 
-      private:
+      public:
         // default constructor (empty data structure)
         SegmentedContainer(int segment_size) :
             _segment_size(segment_size),
@@ -201,7 +196,8 @@ namespace mito::utilities {
             return _end;
         }
 
-        auto _location_for_placement() -> pointer
+      public:
+        auto location_for_placement() -> pointer
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
@@ -231,7 +227,7 @@ namespace mito::utilities {
         // erase an element from the container
         // (decrement the number of elements and add the address of the element to the pile of the
         // available locations for reuse)
-        auto erase(handle_type element) -> void
+        auto erase(resource_type * element) -> void
         {
             // decrement the number of elements
             --_n_elements;
@@ -302,8 +298,6 @@ namespace mito::utilities {
       private:
         // non-const iterator
         friend iterator;
-        // the repository
-        friend Repository<sharedResourceT>;
     };
 }
 

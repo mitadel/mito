@@ -18,8 +18,7 @@ namespace mito::utilities {
     class SharedPointer;
 
     // class segmented container
-    template <class sharedResourceT>
-    // requires ReferenceCountedObject<typename sharedResourceT::resource_type>
+    template <class resourceT>
     class SegmentedContainer;
 
     // and its iterator
@@ -31,6 +30,9 @@ namespace mito::utilities {
     // requires ReferenceCountedObject<typename sharedResourceT::resource_type>
     class Repository;
 
+    // and its iterator
+    template <class RepositoryT>
+    class RepositoryIterator;
 }
 
 
