@@ -60,13 +60,15 @@ namespace mito::utilities {
         {
             // TOFIX: capture exception of invalid resource (nullptr)
             // sanity check
-            assert(!cell.is_nullptr());
-            // remove this resource from the collection of resources
-            _resources.erase(resource.handle());
-            // destroy the resource
-            resource->~resource_t();
+            assert(!resource.is_nullptr());
+            // grab a copy of the pointed resource
+            auto handle = resource.handle();
             // reset the shared pointer to the resource
             resource.reset();
+            // remove this resource from the collection of resources
+            _resources.erase(handle);
+            // destroy the resource
+            handle->~resource_t();
 
             // all done
             return;
