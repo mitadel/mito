@@ -229,9 +229,6 @@ namespace mito::utilities {
         // available locations for reuse)
         auto erase(resource_type * element) -> void
         {
-            // assert that the element to be erased is invalid
-            assert(!element->is_valid());
-
             // decrement the number of elements
             --_n_elements;
 
