@@ -60,7 +60,7 @@ namespace mito::utilities {
         {
             // TOFIX: capture exception of invalid resource (nullptr)
             // sanity check
-            assert(!cell.is_nullptr());
+            assert(!resource.is_nullptr());
             // remove this resource from the collection of resources
             _resources.erase(resource.handle());
             // destroy the resource
