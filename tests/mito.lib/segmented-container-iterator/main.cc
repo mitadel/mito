@@ -15,6 +15,7 @@ class Resource : public mito::utilities::Shareable {
 // the resource type
 using resource_t = mito::utilities::shared_ptr<Resource>;
 
+// TOFIX: these tests now really test Repository. Rename the tests
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
     // instantiate a repository of {Resource} resources
@@ -30,8 +31,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     auto simplex2 = collection.emplace(2);
 
     std::vector<int> store_elements;
-    for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el.foo());
+    for (const auto & el : collection) {
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -44,8 +45,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // erase element in the middle
     collection.erase(simplex1);
 
-    for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el.foo());
+    for (const auto & el : collection) {
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -57,8 +58,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // erase first element
     collection.erase(simplex0);
 
-    for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el.foo());
+    for (const auto & el : collection) {
+        store_elements.emplace_back(el->foo());
     }
 
     EXPECT_EQ(store_elements[0], 2);
@@ -83,8 +84,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // emplace another simplex (trigger allocation of new segment)
     auto simplex4 = collection.emplace(4);
 
-    for (const auto & el : collection.resources()) {
-        store_elements.emplace_back(el.foo());
+    for (const auto & el : collection) {
+        store_elements.emplace_back(el->foo());
     }
 
     // the order of the values depends on the order elimination of the previous simplices
