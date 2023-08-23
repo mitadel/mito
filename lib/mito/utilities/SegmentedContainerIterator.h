@@ -19,8 +19,8 @@ namespace mito::utilities {
         using iterator = SegmentedContainerIterator<segmented_container_type>;
         using iterator_reference = iterator &;
         // what I point to
-        using pointer = typename SegmentedContainerT::const_pointer;
-        using reference = typename SegmentedContainerT::const_reference;
+        using pointer = typename SegmentedContainerT::pointer;
+        using reference = typename SegmentedContainerT::reference;
 
         // metamethods
       public:
