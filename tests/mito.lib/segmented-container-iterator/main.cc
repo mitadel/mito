@@ -70,6 +70,11 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
     // erase last element
     collection.erase(simplex2);
 
+    // loop on an empty repository
+    for (const auto & el : collection) {
+        store_elements.emplace_back(el->foo());
+    }
+
     EXPECT_EQ(std::size(store_elements), 0);
 
     store_elements.clear();

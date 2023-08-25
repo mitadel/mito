@@ -27,11 +27,9 @@ namespace mito::utilities {
         // destructor
         ~Repository()
         {
-            if (std::size(_resources) > 0) {
-                // destroy all resources
-                for (const auto & resource : _resources) {
-                    resource.~resource_t();
-                }
+            // destroy all resources
+            for (const auto & resource : _resources) {
+                resource.~resource_t();
             }
         }
 

@@ -245,9 +245,6 @@ namespace mito::utilities {
          */
         constexpr auto begin() const -> iterator
         {
-            // check that the container is not empty
-            assert(_n_elements > 0);
-
             // get an iterator to the first element
             return iterator(
                 _begin /* ptr */, _begin + _segment_size /* segment_end */, _segment_size,
