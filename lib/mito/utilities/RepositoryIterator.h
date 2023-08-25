@@ -9,6 +9,12 @@
 
 namespace mito::utilities {
 
+    // forward declaration of repository iterator equality
+    template <class RepositoryT>
+    constexpr auto operator==(
+        const RepositoryIterator<RepositoryT> & it1,
+        const RepositoryIterator<RepositoryT> & it2) noexcept -> bool;
+
     template <class RepositoryT>
     class RepositoryIterator {
         // types
@@ -71,6 +77,11 @@ namespace mito::utilities {
         // a segmented container iterator
         segmented_iterator_type _segmented_iterator;
 
+        // befriend operator==
+        friend constexpr auto operator==<RepositoryT>(
+            const RepositoryIterator<RepositoryT> & it1,
+            const RepositoryIterator<RepositoryT> & it2) noexcept -> bool;
+
         // default metamethods
       public:
         // destructor
@@ -90,7 +101,7 @@ namespace mito::utilities {
         const RepositoryIterator<RepositoryT> & it2) noexcept -> bool
     {
         // iterators are equal if they point to the same thing
-        return *it1 == *it2;
+        return it1._segmented_iterator == it2._segmented_iterator;
     }
 
     // and not
