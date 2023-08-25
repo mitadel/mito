@@ -49,6 +49,13 @@ namespace mito::utilities {
             return _ptr;
         }
 
+        // accessors
+        constexpr auto end() const noexcept -> pointer
+        {
+            // easy enough
+            return _end;
+        }
+
         // operator->
         constexpr auto operator->() const noexcept -> pointer
         {
@@ -59,31 +66,23 @@ namespace mito::utilities {
         // arithmetic: prefix
         constexpr auto operator++() -> iterator_reference
         {
-            // if not at the end of the segment
-            while (++_ptr) {
-                // end of the container
-                if (_ptr == _end) {
-                    return *this;
-                }
+            // move on to the next item
+            ++_ptr;
 
-                // end of the segment
-                if (_ptr == _segment_end) {
-                    // retrieve the location of the next segment which is left behind
-                    // by the segmented container right at the end of the current segment
-                    _ptr = *(reinterpret_cast<const pointer *>(_ptr));
-                    // store the start of the current segment
-                    _segment_end = _ptr + _segment_size;
-                }
-
-                // if the element is valid
-                if (_ptr->is_valid()) {
-                    // found it
-                    return *this;
-                }
+            // if you reached the end of the container
+            if (_ptr == _end) {
+                // return the end
+                return *this;
             }
 
-            // you should never end up here
-            assert(false);
+            // if you reached the end of the segment
+            if (_ptr == _segment_end) {
+                // retrieve the location of the next segment (which is left behind
+                // by the segmented container right at the end of the current segment)
+                _ptr = *(reinterpret_cast<const pointer *>(_ptr));
+                // take note of the end of the next segment
+                _segment_end = _ptr + _segment_size;
+            }
 
             // all done
             return *this;

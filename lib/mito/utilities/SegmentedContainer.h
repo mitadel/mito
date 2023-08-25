@@ -249,12 +249,9 @@ namespace mito::utilities {
             assert(_n_elements > 0);
 
             // get an iterator to the first element
-            auto it = iterator(
+            return iterator(
                 _begin /* ptr */, _begin + _segment_size /* segment_end */, _segment_size,
                 _end /* end */);
-
-            // if the first element is valid, return it, else return the next valid element
-            return (it->is_valid() ? it : ++it);
         }
 
         constexpr auto end() const -> iterator

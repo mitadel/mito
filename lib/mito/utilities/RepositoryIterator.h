@@ -40,7 +40,15 @@ namespace mito::utilities {
         // constructor
         constexpr RepositoryIterator(segmented_iterator_const_reference_type segmented_iterator) :
             _segmented_iterator(segmented_iterator)
-        {}
+        {
+            if (_segmented_iterator.ptr() != _segmented_iterator.end()) {
+                // if you found an invalid element
+                if (!_segmented_iterator->is_valid()) {
+                    // move on to the next one
+                    operator++();
+                }
+            }
+        }
 
         // iterator protocol
       public:
@@ -56,6 +64,16 @@ namespace mito::utilities {
         {
             // increment the iterator to the segmented container
             ++_segmented_iterator;
+
+            if (_segmented_iterator.ptr() == _segmented_iterator.end()) {
+                return *this;
+            }
+
+            // if you found an invalid element
+            if (!_segmented_iterator->is_valid()) {
+                // move on to the next one
+                return operator++();
+            }
 
             // all done
             return *this;
