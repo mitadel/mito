@@ -4,18 +4,6 @@
 
 
 namespace mito::utilities {
-    // segmented container iterator equality
-    template <class SegmentedContainerT>
-    constexpr auto operator==(
-        const SegmentedContainerIterator<SegmentedContainerT> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
-
-
-    // and inequality
-    template <class SegmentedContainerT>
-    constexpr auto operator!=(
-        const SegmentedContainerIterator<SegmentedContainerT> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
 
     // hash function for shared pointers
     // Note that two pointers pointing to the same cell collapse on the same hashed value
