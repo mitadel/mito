@@ -2,6 +2,44 @@
 #if !defined(mito_utilities_Repository_h)
 #define mito_utilities_Repository_h
 
+// DESIGN NOTES
+
+// A {Repository} is a data structure that is meant to store a collection of shareable resources of
+// uniform type {T} in a central location. The {Repository} data structure is responsible for
+// creating instances of resource {T} upon request of the client and erasing them when they are no
+// longer used.
+//
+// Resources can only be 'checked out' from the repository wrapped into shared pointers, which keep
+// track of the use of the resource through their lifetime. In fact, the {Repository} data structure
+// is meant to closely collaborate with a {SharedPointer} class, which provides the information of
+// resources being unused and therefore redundant. However, the {SharedPointer} class differs from
+// the {shared_ptr} offered by the C++ standard library in two respects:
+//      1) the {SharedPointer} does not have ownership of the resource and does not have privileges
+//          to allocate and deallocate memory for it. In fact, the allocation and deallocation of
+//          memory is entirely managed by the {Repository} class, which in turn delegates this to a
+//          {SegmentedContainer}, which allocates and deallocates resources collectively in chunks
+//          to optimize memory allocation/deallocation. In this respect, the role of the
+//          {SharedPointer} is only that of managing the book keeping on the count of references to
+//          the resources.
+//
+//      2) the {SharedPointer} does not store the reference count directly, but manages a reference
+//          count stored within the resource. This allows the {Repository} to synthesize a
+//          {SharedPointer} on the fly, upon request of a given resource by a given client, with the
+//          correct reference count.
+//
+// The only requirement of the {Repository} class on the template type {T} of its resources
+// stored is simply that the resource is a {ReferenceCountedObject}, which means that the
+// resource is able to provide the machinery needed by the {SharedPointer} to do the book
+// keeping. Specifically, this translates into the class of the resource inheriting from class
+// {Shareable}, which provides the minimal interface necessary to collaborate with
+// {SharedPointer} to perform reference counting. Ideally, the resource is otherwise immutable
+// (i.e. except from the reference count attribute). The use of {Repository} for a class
+// that is not immutable can be envisioned but has not been explored so far.
+// Class {Shareable} also implements a method {is_valid} that assesses, based on the reference
+// count, if the resource is being used or not. Unused resources are signed up to be overwritten
+// by the next resource inserted in the container. Iterators to a segmented container are smart
+// enough to skip the unused elements.
+
 namespace mito::utilities {
 
     template <class sharedResourceT>
