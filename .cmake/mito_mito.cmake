@@ -45,8 +45,6 @@ function(mito_mitoLib)
     # and the link dependencies
     target_link_libraries(
         mito
-        pyre::pyre
-        pyre::journal
     )
 
     # install all the mito headers

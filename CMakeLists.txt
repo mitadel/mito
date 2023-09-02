@@ -27,25 +27,6 @@ set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -Wall -Wextra -pedantic -Werror"
 # programs
 find_program(BASH_PROGRAM bash)
 
-# packages
-# pyre
-find_package(pyre REQUIRED)
-
-# python
-find_package(Python 3.10 COMPONENTS Interpreter Development NumPy)
-
-# pybind11
-set(PYBIND11_CPP_STANDARD -std=c++20)
-set(PYBIND11_PYTHON_VERSION ${Python_VERSION})
-set(PYBIND11_FINDPYTHON ON) # Use new FindPython if available
-find_package(pybind11)
-
-# pybind11 pre-2.5 C++17 compilation is broken under Clang
-# see https://github.com/pybind/pybind11/issues/1604#issuecomment-443385783
-if(pybind11_VERSION VERSION_LESS 2.5 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(pybind11::module INTERFACE -fsized-deallocation)
-endif()
-
 # set up c++
 mito_cxxInit()
 
@@ -64,6 +45,9 @@ include(mito_extensions)
 
 # mpi support
 include(mito_mpi)
+
+# pyre support
+include(mito_pyre)
 
 # vtk support
 include(mito_vtk)
