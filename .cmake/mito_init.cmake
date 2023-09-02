@@ -27,7 +27,8 @@ function(mito_cxxInit)
     include(CheckCXXCompilerFlag)
 
     # request c++20
-    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD 20 PARENT_SCOPE)
+    set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
 
     # all done
 endfunction(mito_cxxInit)
