@@ -30,6 +30,9 @@ function(mito_cxxInit)
     set(CMAKE_CXX_STANDARD 20 PARENT_SCOPE)
     set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
 
+    # additional compilation flags
+    set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -Wall -Wextra -pedantic -Werror" PARENT_SCOPE)
+
     # all done
 endfunction(mito_cxxInit)
 
