@@ -178,6 +178,12 @@ namespace mito::topology {
             return _simplex_factory.simplex();
         }
 
+        inline auto simplices() const -> const oriented_simplex_repository_t &
+        {
+            // return the collection of simplices
+            return _oriented_simplices;
+        }
+
         // erase an oriented simplex from the factory (this method actually erases the simplex
         // only if there is no one else using it, otherwise does nothing)
         inline auto erase(simplex_t<N> & oriented_simplex) -> void
