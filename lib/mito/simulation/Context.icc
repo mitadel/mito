@@ -1,0 +1,52 @@
+// -*- C++ -*-
+//
+
+#if !defined(mito_simulation_Context_icc)
+#error This header file contains implementation details of class mito::simulation::Context
+#else
+
+
+mito::simulation::Context::Context() : _task_id(0), _n_tasks(1)
+{
+#if (WITH_MPI)
+    // initialize MPI
+    MPI_Init(nullptr, nullptr);
+
+    // get my process' rank
+    MPI_Comm_rank(MPI_COMM_WORLD, &_task_id);
+
+    // get the size of the job
+    MPI_Comm_size(MPI_COMM_WORLD, &_n_tasks);
+#endif
+
+    // make a channel
+    pyre::journal::info_t channel("mito.simulation.context");
+
+    // report
+    channel << "Job partitioned in " << _n_tasks << " processes" << pyre::journal::endl;
+}
+
+mito::simulation::Context::~Context()
+{
+#if (WITH_MPI)
+    // finalize MPI
+    MPI_Finalize();
+#endif
+}
+
+auto
+mito::simulation::Context::task_id() const -> int
+{
+    return _task_id;
+}
+
+auto
+mito::simulation::Context::n_tasks() const -> int
+{
+    return _n_tasks;
+}
+
+
+#endif    // mito_simulation_Context_icc
+
+// end of file

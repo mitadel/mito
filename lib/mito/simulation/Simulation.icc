@@ -1,0 +1,26 @@
+// -*- C++ -*-
+//
+
+#if !defined(mito_simulation_Simulation_icc)
+#error This header file contains implementation details of class mito::simulation::Simulation
+#else
+
+
+mito::simulation::Simulation::Simulation() : _execution_context(), _clock() {}
+
+auto
+mito::simulation::Simulation::context() const -> const execution_context_type &
+{
+    return _execution_context;
+}
+
+auto
+mito::simulation::Simulation::clock() const -> const clock_type &
+{
+    return _clock;
+}
+
+
+#endif    // mito_simulation_Simulation_icc
+
+// end of file

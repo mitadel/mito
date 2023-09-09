@@ -5,6 +5,7 @@
 #include <mito/mesh.h>
 #include <mito/manifolds.h>
 #include <mito/quadrature.h>
+#include <mito/simulation.h>
 
 using mito::vector_t;
 using mito::quadrature::GAUSS;
@@ -13,15 +14,8 @@ using mito::topology::triangle_t;
 
 TEST(Quadrature, QuadratureLoadMeshParallel)
 {
-    // initialize MPI
-    MPI_Init(nullptr, nullptr);
-
-    int mpi_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-    std::cout << "mpi rank " << mpi_rank << std::endl;
-
-    int mpi_size;
-    MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
+    // the simulation representative
+    auto & simulation = mito::simulation::simulation();
 
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -36,8 +30,14 @@ TEST(Quadrature, QuadratureLoadMeshParallel)
     std::ifstream fileStream("square.summit");
     auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
 
+    // number of partitions
+    auto n_tasks = simulation.context().n_tasks();
+
+    // rank of the mesh to return
+    auto task_id = simulation.context().task_id();
+
     // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, mpi_size, mpi_rank);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, n_tasks, task_id);
 
     // build the manifold on the partitioned mesh
     auto manifold = mito::manifolds::manifold(mesh_partition);
@@ -54,15 +54,12 @@ TEST(Quadrature, QuadratureLoadMeshParallel)
     double global_result = 0.0;
     MPI_Reduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
 
-    if (mpi_rank == 0) {
+    if (task_id == 0) {
         std::cout << "Integration of cos(x*y): Result = " << global_result
                   << ", Error = " << std::fabs(global_result - 0.946083) << std::endl;
 
         EXPECT_NEAR(global_result, 0.946083, 1.e-7);
     }
-
-    // finalize MPI
-    MPI_Finalize();
 }
 
 // end of file

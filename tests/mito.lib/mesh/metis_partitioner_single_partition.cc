@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
-#include <mito/simulation.h>
+
 
 using geometry_t = mito::geometry::geometry_t<2>;
 using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
@@ -83,11 +83,8 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
 }
 
 
-TEST(MetisPartitionerMPI, Base)
+TEST(MetisPartitioner, Base)
 {
-    // the simulation representative
-    auto & simulation = mito::simulation::simulation();
-
     // an empty topology
     auto & topology = mito::topology::topology();
 
@@ -104,10 +101,10 @@ TEST(MetisPartitionerMPI, Base)
     build_mesh(geometry, mesh);
 
     // number of partitions
-    int n_partitions = simulation.context().n_tasks();
+    int n_partitions = 1;
 
     // rank of the mesh to return
-    int n_rank = simulation.context().task_id();
+    int n_rank = 0;
 
     // partition the mesh
     auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);

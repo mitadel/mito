@@ -2,6 +2,7 @@
 #include <mito/base.h>
 #include <mito/mesh.h>
 #include <mito/io.h>
+#include <mito/simulation.h>
 
 
 using geometry_t = mito::geometry::geometry_t<2>;
@@ -10,14 +11,8 @@ using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
 
 TEST(MetisPartitionerMPI, LoadMesh)
 {
-    // initialize MPI
-    MPI_Init(nullptr, nullptr);
-
-    int mpi_rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
-
-    int mpi_size;
-    MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
+    // the simulation representative
+    auto & simulation = mito::simulation::simulation();
 
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -33,10 +28,10 @@ TEST(MetisPartitionerMPI, LoadMesh)
     auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
 
     // number of partitions
-    int n_partitions = mpi_size;
+    int n_partitions = simulation.context().n_tasks();
 
     // rank of the mesh to return
-    int n_rank = mpi_rank;
+    int n_rank = simulation.context().task_id();
 
     // partition the mesh
     auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
@@ -48,19 +43,16 @@ TEST(MetisPartitionerMPI, LoadMesh)
     MPI_Reduce(&local_ncells, &global_ncells, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
     // report
-    if (mpi_rank == 0) {
+    if (n_rank == 0) {
         std::cout << "Initial mesh size = " << mesh.nCells() << std::endl;
         std::cout << "Partitioned mesh size = " << global_ncells << std::endl;
     }
 
     // expect that the sum of the number of cells in the partitioned meshes equals that of the
     // original mesh
-    if (mpi_rank == 0) {
+    if (n_rank == 0) {
         EXPECT_EQ(global_ncells, mesh.nCells());
     }
-
-    // finalize MPI
-    MPI_Finalize();
 
     // all done
     return;
