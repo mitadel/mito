@@ -148,11 +148,11 @@ mito::mesh::metis::Partitioner<meshT>::_metis_paint_partition(
     int edgecut = 0;
 
     // create an array for the procId per node: NOT USEFUL
-    int * npart = new int[n_vertices];
+    std::vector<int> npart(n_vertices, 0);
 
     [[maybe_unused]] int metisResult = METIS_PartMeshDual(
         &n_elements, &n_vertices, element_index.data(), element_connectivity.data(), NULL, NULL,
-        &n_common, &n_partitions, NULL, options, &edgecut, painting.data(), npart);
+        &n_common, &n_partitions, NULL, options, &edgecut, painting.data(), npart.data());
 
     // assert that metis ran correctly
     assert(metisResult == 1);
