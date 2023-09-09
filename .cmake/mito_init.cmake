@@ -165,6 +165,7 @@ function(mito_pythonInit)
 
     # export
     set(PYTHON3_SUFFIX ${PYTHON3_SUFFIX} PARENT_SCOPE)
+    set(Python_EXECUTABLE ${Python_EXECUTABLE} PARENT_SCOPE)
 
     # all done
 endfunction(mito_pythonInit)
