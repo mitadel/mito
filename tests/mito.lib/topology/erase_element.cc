@@ -45,8 +45,14 @@ TEST(Topology, EraseElement)
     // assert that a segment connecting vertex 2 and 3 exists in the topology (namely, {segment_4})
     EXPECT_TRUE(topology.exists({ vertex_2, vertex_3 }));
 
+    // assert that the topology now contains 4 simplices
+    EXPECT_EQ(std::size(topology.simplices<2>()), 4);
+
     // erase the cell with edges {segment_0, segment_1, segment_2}
     topology.erase(cell_0);
+
+    // assert that the topology now contains 3 simplices
+    EXPECT_EQ(std::size(topology.simplices<2>()), 3);
 
     // assert that a segment connecting vertex 0 and 1 no longer exists in the topology
     // ({segment_0} was erased because it is unused after erasing {cell_0})
@@ -60,6 +66,9 @@ TEST(Topology, EraseElement)
 
     // erase the top cell of the pile (namely, the cell with {segment_0, segment_1, segment_2})
     topology.erase(cell_1);
+
+    // assert that the topology now contains 2 simplices
+    EXPECT_EQ(std::size(topology.simplices<2>()), 2);
 
     // assert that a segment connecting vertex 1 and 2 no longer exists in the topology
     // ({segment_3} was erased because it is unused after erasing {cell_1})
