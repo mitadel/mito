@@ -30,6 +30,7 @@ mito_test_driver(tests/mito.lib/mesh/erase_element.cc)
 if(WITH_METIS)
     mito_test_driver(tests/mito.lib/mesh/metis_partitioner.cc)
     mito_test_driver(tests/mito.lib/mesh/metis_partitioner_load_mesh.cc)
+    mito_test_driver(tests/mito.lib/mesh/metis_partitioner_single_partition.cc)
     if(WITH_MPI)
         mito_test_driver_mpi(tests/mito.lib/mesh/metis_partitioner_mpi.cc 2)
         mito_test_driver_mpi(tests/mito.lib/mesh/metis_partitioner_mpi_load_mesh.cc 2)
@@ -55,9 +56,11 @@ mito_test_driver(tests/mito.lib/integration/quadrature_1D.cc)
 mito_test_driver(tests/mito.lib/integration/quadrature_2D.cc)
 mito_test_driver(tests/mito.lib/integration/quadrature_load_mesh_2D.cc)
 mito_test_driver(tests/mito.lib/integration/quadrature_flip_segment_3D.cc)
+
 if(${WITH_METIS} AND ${WITH_MPI})
     mito_test_driver_mpi(tests/mito.lib/integration/quadrature_load_mesh_2D_mpi.cc 2)
 endif()
+
 mito_test_driver_pytest_check(tests/mito.lib/integration/write_tetra_mesh_to_vtk.cc)
 
 # unsorted

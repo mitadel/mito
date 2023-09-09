@@ -13,9 +13,6 @@
 #include <pyre/tensor.h>
 #include <pyre/journal.h>
 
-#ifdef WITH_MPI
-#include <mpi.h>
-#endif
 
 #endif
 

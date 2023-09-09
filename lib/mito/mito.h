@@ -12,6 +12,7 @@
 #include "math.h"
 #include "mesh.h"
 #include "quadrature.h"
+#include "simulation.h"
 #include "topology.h"
 #include "utilities.h"
 
