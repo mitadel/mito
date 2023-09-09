@@ -16,7 +16,12 @@ if(WITH_VTK)
     mito_test_driver_pytest_check(tests/mito.lib/io/write-tetra-mesh-to-vtk.cc)
 endif()
 
-mito_test_driver(tests/mito.lib/mesh/main.cc)
+mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_1D.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_2D.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_3D.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_zero_subdivisions.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_multiple_subdivisions.cc)
 
 if(WITH_METIS)
     mito_test_driver(tests/mito.lib/mesh/metis_partitioner.cc)
