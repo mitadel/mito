@@ -16,7 +16,7 @@ namespace mito::geometry {
         for (const auto & vertex : cell->vertices()) {
             result += geometry.point(vertex)->coordinates();
         }
-        result /= cellT::resource_t::n_vertices;
+        result /= topology::n_vertices<cellT>();
 
         // all done
         return result;

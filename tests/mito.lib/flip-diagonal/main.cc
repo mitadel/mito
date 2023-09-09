@@ -14,8 +14,8 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     auto vertex3 = topology.vertex();
 
     // build triangles
-    auto & simplex0 = topology.triangle({ vertex0, vertex1, vertex2 });
-    auto & simplex1 = topology.triangle({ vertex0, vertex2, vertex3 });
+    auto simplex0 = topology.triangle({ vertex0, vertex1, vertex2 });
+    auto simplex1 = topology.triangle({ vertex0, vertex2, vertex3 });
 
     // build the two triangles obtained by flipping the common edge of the two triangles
     [[maybe_unused]] auto simplex_pair =
@@ -27,7 +27,7 @@ TEST(FlipDiagonal, TestFlipDiagonal)
 
     // assert that the new diagonal is now in use (by factory, driver, and two triangles)
     auto segment_f = topology.segment({ vertex1, vertex3 });
-    EXPECT_EQ(segment_f->footprint().references(), 3);
+    EXPECT_EQ(segment_f->footprint().references(), 2);
 
     // erase the old simplices
     topology.erase(simplex0);

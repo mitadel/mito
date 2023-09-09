@@ -28,12 +28,12 @@ TEST(EraseElement, TestEraseElementMesh)
     auto segment0 = topology.segment({ vertex0, vertex1 });
     auto segment1 = topology.segment({ vertex1, vertex3 });
     auto segment2 = topology.segment({ vertex3, vertex0 });
-    auto & cell0 = topology.triangle({ segment0, segment1, segment2 });
+    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
 
     auto segment3 = topology.segment({ vertex1, vertex2 });
     auto segment4 = topology.segment({ vertex2, vertex3 });
     auto segment5 = topology.segment({ vertex3, vertex1 });
-    auto & cell1 = topology.triangle({ segment3, segment4, segment5 });
+    auto cell1 = topology.triangle({ segment3, segment4, segment5 });
 
     auto segment6 = topology.segment({ vertex2, vertex4 });
     auto segment7 = topology.segment({ vertex4, vertex3 });
@@ -69,7 +69,9 @@ TEST(EraseElement, TestEraseElementMesh)
     std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(cell0);
     topology.erase(cell0);
-    // mesh.erase(cell0);
+    // check that erasing a cell twice does not result in an error
+    mesh.erase(cell0);
+    topology.erase(cell0);
 
     // std::cout << "After erase: " << std::endl;
     // for (const auto & simplex : mesh.cells<2>()) {
@@ -134,8 +136,8 @@ TEST(EraseElement, TestEraseElementTopology)
     auto vertex_3 = topology.vertex();
     auto vertex_4 = topology.vertex();
 
-    auto & cell_0 = topology.triangle({ vertex_0, vertex_1, vertex_3 });
-    auto & cell_1 = topology.triangle({ vertex_1, vertex_2, vertex_3 });
+    auto cell_0 = topology.triangle({ vertex_0, vertex_1, vertex_3 });
+    auto cell_1 = topology.triangle({ vertex_1, vertex_2, vertex_3 });
     topology.triangle({ vertex_2, vertex_4, vertex_3 });
     topology.triangle({ vertex_4, vertex_0, vertex_3 });
 
@@ -173,4 +175,7 @@ TEST(EraseElement, TestEraseElementTopology)
     // assert that a segment connecting vertex 2 and 3 no longer exists in the topology
     // ({segment_4} was erased because it is unused after erasing {cell_1})
     EXPECT_FALSE(topology.exists({ vertex_2, vertex_3 }));
+
+    // check that erasing a cell twice does not result in an error
+    topology.erase(cell_1);
 }

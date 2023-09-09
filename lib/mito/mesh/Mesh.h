@@ -10,32 +10,33 @@ namespace mito::mesh {
 
       public:
         // publish the order of the cell
-        static constexpr int order = cellT::resource_t::order;
+        static constexpr int order = topology::order<cellT>();
         // publish the number of vertices per element
-        static constexpr int n_vertices = cellT::resource_t::n_vertices;
+        static constexpr int n_vertices = topology::n_vertices<cellT>();
         // publish the dimension of physical space
         static constexpr int dim = D;
         // typedef for cell type
-        using cell_t = cellT;
+        using cell_type = cellT;
 
       private:
         // get the order of the cell
-        static constexpr int N = cellT::resource_t::order;
+        static constexpr int N = order;
         // get the family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_family_t = typename cellT::resource_t::template cell_family_t<I>;
+        using cell_family_type = typename topology::cell_family<cellT, I>;
         // typedef for geometry type
-        using geometry_t = geometry::geometry_t<D>;
+        using geometry_type = geometry::geometry_t<D>;
         // typedef for a collection of cells
-        using cells_t = element_set_t<cell_t>;
+        using cells_type = element_set_t<cell_type>;
+        // id type of unoriented cell
+        using cell_id_type = utilities::index_t<cell_type>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
         // appears with - or + orientation
-        using orientation_map_t =
-            std::unordered_map<topology::unoriented_simplex_id_t<D>, std::array<int, 2>>;
+        using orientation_map_type = std::unordered_map<cell_id_type, std::array<int, 2>>;
 
       public:
         // default constructor
-        inline Mesh(const geometry_t & geometry)
+        inline Mesh(const geometry_type & geometry)
         requires(N <= D)
             : _geometry(geometry), _cells() {};
 
@@ -57,7 +58,8 @@ namespace mito::mesh {
       private:
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
+            Mesh<cell_family_type<I>, D> & boundary_mesh, const cell_family_type<J> & cell) const
+            -> void
         requires(I == J)
         {
             // add {subcell} to the boundary mesh
@@ -69,7 +71,8 @@ namespace mito::mesh {
 
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_t<I>, D> & boundary_mesh, const cell_family_t<J> & cell) const -> void
+            Mesh<cell_family_type<I>, D> & boundary_mesh, const cell_family_type<J> & cell) const
+            -> void
         requires(I < J)
         {
             // loop on the subcells of {cell}
@@ -107,35 +110,37 @@ namespace mito::mesh {
             return std::size(_cells);
         }
 
-        inline auto cells() const noexcept -> const cells_t &
+        inline auto cells() const noexcept -> const cells_type &
         {
             // all done
             return _cells;
         }
 
-        inline auto erase(const cell_t & cell) -> void
+        inline auto erase(const cell_type & cell) -> void
         {
-            // loop on the subcells of {cell}
-            for (const auto & subcell : cell->composition()) {
-                // decrement the orientations count for this cell footprint id, depending on the
-                // orientation
-                (subcell->orientation() ? _orientations[subcell->footprint().id()][0] -= 1 :
-                                          _orientations[subcell->footprint().id()][1] -= 1);
+            // erase the cell from the mesh
+            bool cell_was_erased = _cells.erase(cell);
+            // if the cell was in fact erased from the cell
+            if (cell_was_erased) {
+                // loop on the subcells of {cell}
+                for (const auto & subcell : cell->composition()) {
+                    // decrement the orientations count for this cell footprint id, depending on the
+                    // orientation
+                    (subcell->orientation() ? _orientations[subcell->footprint().id()][0] -= 1 :
+                                              _orientations[subcell->footprint().id()][1] -= 1);
 
-                // cleanup orientation map
-                if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
-                    _orientations.erase(subcell->footprint().id());
+                    // cleanup orientation map
+                    if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
+                        _orientations.erase(subcell->footprint().id());
+                    }
                 }
             }
-
-            // erase the cell from the mesh
-            _cells.erase(cell);
 
             // all done
             return;
         }
 
-        inline auto isOnBoundary(const cell_family_t<N - 1> & cell) const -> bool
+        inline auto isOnBoundary(const cell_family_type<N - 1> & cell) const -> bool
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
@@ -182,11 +187,11 @@ namespace mito::mesh {
          * @brief Returns a mesh with all boundary cells of dimension I
          */
         template <int I = N - 1>
-        inline auto boundary() const -> Mesh<cell_family_t<I>, D> const
+        inline auto boundary() const -> Mesh<cell_family_type<I>, D> const
         requires(I >= 0)
         {
             // instantiate a new mesh for the boundary elements
-            Mesh<cell_family_t<I>, D> boundary_mesh(_geometry);
+            Mesh<cell_family_type<I>, D> boundary_mesh(_geometry);
 
             // loop on the (N-1)-dimensional cells
             for (const auto & cell : cells()) {
@@ -204,7 +209,7 @@ namespace mito::mesh {
             return boundary_mesh;
         }
 
-        inline auto insert(const cell_t & cell) -> void
+        inline auto insert(const cell_type & cell) -> void
         requires(N >= 1)
         {
             // add the cell to the set of cells with same dimension
@@ -224,7 +229,7 @@ namespace mito::mesh {
 
         // QUESTION: specialization of method {insert} for a mesh of vertices
         //           not sure if supporting meshes of 0-simplices makes sense...
-        inline auto insert(const cell_t & cell) -> void
+        inline auto insert(const cell_type & cell) -> void
         requires(N == 0)
         {
             // add the cell to the set of cells with same dimension
@@ -236,17 +241,17 @@ namespace mito::mesh {
 
       public:
         // const accessor to geometry
-        auto geometry() const noexcept -> const geometry_t & { return _geometry; }
+        auto geometry() const noexcept -> const geometry_type & { return _geometry; }
 
       private:
         // a reference to the geometry where the cells are embedded
-        const geometry_t & _geometry;
+        const geometry_type & _geometry;
 
         // container to store the mesh cells
-        cells_t _cells;
+        cells_type _cells;
 
         // container to store how many times a simplex appears with a given orientation
-        orientation_map_t _orientations;
+        orientation_map_type _orientations;
     };
 
 }    // namespace mito

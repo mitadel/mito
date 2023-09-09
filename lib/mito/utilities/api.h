@@ -6,16 +6,21 @@
 namespace mito::utilities {
 
     // shared pointer alias
-    template <class Resource>
-    using shared_ptr = SharedPointer<Resource>;
+    template <class resourceT>
+    using shared_ptr = SharedPointer<resourceT>;
 
+    // TOFIX: perhaps eventually remove indices?
     // index type alias
-    template <class Resource>
+    template <class resourceT>
     using index_t = std::uintptr_t;
 
     // segmented container alias
-    template <class T>
-    using segmented_t = SegmentedContainer<typename T::resource_t>;
+    template <class resourceT>
+    using segmented_t = SegmentedContainer<resourceT>;
+
+    // the repository
+    template <class sharedResourceT>
+    using repository_t = class Repository<sharedResourceT>;
 }
 
 

@@ -2,9 +2,9 @@
 #include <mito/base.h>
 #include <mito/utilities.h>
 
-class Simplex : public mito::utilities::Shareable {
+class Resource : public mito::utilities::Shareable {
   public:
-    Simplex(int foo) : _foo(foo) {}
+    Resource(int foo) : _foo(foo) {}
 
     int foo() const { return _foo; }
 
@@ -12,16 +12,18 @@ class Simplex : public mito::utilities::Shareable {
     int _foo;
 };
 
-using simplex_t = mito::utilities::SharedPointer<Simplex>;
+// the resource type
+using resource_t = mito::utilities::shared_ptr<Resource>;
 
+// TOFIX: these tests now really test Repository. Rename the tests
 TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 {
-    // instantiate a segmented container
-    mito::utilities::segmented_t<simplex_t> collection(3 /*segment size */);
+    // instantiate a repository of {Resource} resources
+    mito::utilities::repository_t<resource_t> collection(3 /*segment size */);
 
     // assert that the container is empty and with no capacity
-    EXPECT_EQ(collection.capacity(), 0);
-    EXPECT_EQ(std::size(collection), 0);
+    EXPECT_EQ(collection.resources().capacity(), 0);
+    EXPECT_EQ(std::size(collection.resources()), 0);
 
     // emplace three simplices in the container
     auto simplex0 = collection.emplace(0);
@@ -40,8 +42,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
-    // invalidate element in the middle
-    simplex1.reset();
+    // erase element in the middle
+    collection.erase(simplex1);
 
     for (const auto & el : collection) {
         store_elements.emplace_back(el->foo());
@@ -53,8 +55,8 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
-    // invalidate first element
-    simplex0.reset();
+    // erase first element
+    collection.erase(simplex0);
 
     for (const auto & el : collection) {
         store_elements.emplace_back(el->foo());
@@ -65,8 +67,13 @@ TEST(SegmentedContainerIterator, TestSegmentedContainerIterator)
 
     store_elements.clear();
 
-    // invalidate last element
-    simplex2.reset();
+    // erase last element
+    collection.erase(simplex2);
+
+    // loop on an empty repository
+    for (const auto & el : collection) {
+        store_elements.emplace_back(el->foo());
+    }
 
     EXPECT_EQ(std::size(store_elements), 0);
 

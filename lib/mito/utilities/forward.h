@@ -9,47 +9,30 @@ namespace mito::utilities {
     class Shareable;
 
     // concept for a reference counted object
-    template <typename T>
-    concept ReferenceCountedObject = std::is_base_of<Shareable, T>::value;
+    template <typename resourceT>
+    concept ReferenceCountedObject = std::is_base_of<Shareable, resourceT>::value;
 
     // class shared pointer based on a reference counted resource
-    template <class Resource>
-    // requires ReferenceCountedObject<Resource>
+    template <class resourceT>
+    // requires ReferenceCountedObject<resourceT>
     class SharedPointer;
 
     // class segmented container
-    template <class Resource>
-    // requires ReferenceCountedObject<Resource>
+    template <class resourceT>
     class SegmentedContainer;
 
     // and its iterator
-    template <class SegmentedContainerT, bool isConst>
+    template <class SegmentedContainerT>
     class SegmentedContainerIterator;
 
-    // segmented container iterator
-    // equality
-    template <class SegmentedContainerT, bool isConst>
-    constexpr auto operator==(
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool;
+    // the repository
+    template <class sharedResourceT>
+    // requires ReferenceCountedObject<typename sharedResourceT::resource_type>
+    class Repository;
 
-
-    // and not
-    template <class SegmentedContainerT, bool isConst>
-    constexpr auto operator!=(
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT, isConst> & it2) noexcept -> bool;
-
-    // hash function for shared pointers
-    // Note that two pointers pointing to the same cell collapse on the same hashed value
-    template <class sharedPointerT>
-    struct hash_function {
-        size_t operator()(const sharedPointerT & item) const
-        {
-            // reinterpret the address of the pointed handle as a {size_t} and return it
-            return reinterpret_cast<size_t>(item.id());
-        }
-    };
+    // and its iterator
+    template <class RepositoryT>
+    class RepositoryIterator;
 }
 
 

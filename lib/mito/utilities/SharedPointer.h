@@ -10,34 +10,31 @@
 namespace mito::utilities {
 
     // declaration
-    template <class Resource>
-    // requires ReferenceCountedObject<Resource>
+    template <class resourceT>
+    // requires ReferenceCountedObject<resourceT>
     class SharedPointer {
         // types
       public:
-        using shared_ptr_t = SharedPointer<Resource>;
-        using resource_t = Resource;
-        using handle_t = Resource *;
+        using shared_ptr_type = SharedPointer<resourceT>;
+        using resource_type = resourceT;
+        using handle_type = resourceT *;
 
         // interface
       public:
         // returns the id of this (oriented) simplex
-        inline auto id() const -> index_t<Resource>;
+        inline auto id() const -> index_t<resource_type>;
 
         // accessor for the number of outstanding references
         inline auto references() const -> int;
-
-        // reset the shared pointer
-        inline auto reset() -> void;
 
         // check if the handle is the null pointer
         inline auto is_nullptr() const noexcept -> bool;
 
         // operator->
-        auto operator->() const noexcept -> handle_t;
+        auto operator->() const noexcept -> handle_type;
 
         // // operator*
-        // auto operator*() const -> const resource_t &;
+        // auto operator*() const -> const resource_type &;
 
         // meta methods
       public:
@@ -48,26 +45,29 @@ namespace mito::utilities {
         inline SharedPointer();
 
         // constructor
-        inline SharedPointer(handle_t, segmented_t<shared_ptr_t> *);
+        inline SharedPointer(handle_type);
 
         // copy constructor
-        inline SharedPointer(const SharedPointer<Resource> &);
+        inline SharedPointer(const shared_ptr_type &);
 
         // move constructor
-        inline SharedPointer(SharedPointer<Resource> &&) noexcept;
+        inline SharedPointer(shared_ptr_type &&) noexcept;
 
         // assignment operator
-        inline SharedPointer & operator=(const SharedPointer<Resource> &);
+        inline shared_ptr_type & operator=(const shared_ptr_type &);
 
         // move assignment operator
-        inline SharedPointer & operator=(SharedPointer<Resource> &&);
+        inline shared_ptr_type & operator=(shared_ptr_type &&);
 
       private:
         // accessor for {handle}
-        inline auto handle() const noexcept -> handle_t;
+        inline auto handle() const noexcept -> handle_type;
 
         // returns the resource corresponding to this resource id
-        static inline auto resource(index_t<Resource>) -> handle_t;
+        static inline auto resource(index_t<resource_type>) -> handle_type;
+
+        // reset the shared pointer
+        inline auto reset() -> void;
 
         // increment the reference count
         inline auto _acquire() const -> void;
@@ -77,23 +77,23 @@ namespace mito::utilities {
         // data members
       private:
         // handle to the resource
-        handle_t _handle;
-        // reference to the segmented container, which owns the memory
-        segmented_t<shared_ptr_t> * _container;
+        handle_type _handle;
 
       private:
-        // friendship with SegmentedContainer
-        friend class utilities::SegmentedContainer<resource_t>;
+        // friendship with Repository
+        friend class Repository<shared_ptr_type>;
     };
 
-    template <class Resource>
-    inline bool operator==(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    template <class resourceT>
+    inline bool operator==(
+        const SharedPointer<resourceT> & lhs, const SharedPointer<resourceT> & rhs)
     {
         return lhs.id() == rhs.id();
     }
 
-    template <class Resource>
-    inline bool operator<(const SharedPointer<Resource> & lhs, const SharedPointer<Resource> & rhs)
+    template <class resourceT>
+    inline bool operator<(
+        const SharedPointer<resourceT> & lhs, const SharedPointer<resourceT> & rhs)
     {
         return lhs.id() < rhs.id();
     }

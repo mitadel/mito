@@ -4,9 +4,27 @@
 
 
 namespace mito::topology {
+    // order of simplex
+    template <class cellT>
+    constexpr auto order() -> int
+    {
+        return cellT::resource_type::order;
+    }
+
+    // number of vertices of simplex
+    template <class cellT>
+    constexpr auto n_vertices() -> int
+    {
+        return cellT::resource_type::n_vertices;
+    }
+
+    // cell family of simplex
+    template <class cellT, int I>
+    using cell_family = typename cellT::resource_type::template cell_family_type<I>;
+
     // overload operator<< for oriented simplices
-    template <int D>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<D> & s)
+    template <int N>
+    std::ostream & operator<<(std::ostream & os, const simplex_t<N> & s)
     {
         // print orientation
         os << "orientation: " << s->orientation() << std::endl;
@@ -17,9 +35,9 @@ namespace mito::topology {
     }
 
     // overload operator<< for simplices
-    template <int D>
-    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<D> & s)
-    requires(D > 0)
+    template <int N>
+    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<N> & s)
+    requires(N > 0)
     {
         os << s.id() << " composed of:" << std::endl;
         for (const auto & simplex : s->composition()) {

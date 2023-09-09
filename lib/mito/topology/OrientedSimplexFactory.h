@@ -6,29 +6,34 @@ namespace mito::topology {
 
     /**
      *
-     * This class represents a factory for oriented simplices of order D.
+     * This class represents a factory for oriented simplices of order N.
      *
-     * The factory class is aware of the class of equivalence for an OrientedSimplex of order D. In
-     * fact, being an instance of OrientedSimplex<D> identified by its D+1 subsimplices (through its
-     * footprint), there are (D+1)!/2 possible representations of the same oriented simplex. The
+     * The factory class is aware of the class of equivalence for an OrientedSimplex of order N. In
+     * fact, being an instance of OrientedSimplex<N> identified by its N+1 subsimplices (through its
+     * footprint), there are (N+1)!/2 possible representations of the same oriented simplex. The
      * factory makes sure that at any given time there is at most one OrientedSimplex for an
      * equivalence class, i.e. the representative of the class. The representative of the class of
      * equivalence is chosen by starting the composition with the subsimplex of smallest address and
      * by circularly rotating the other simplices in the composition array around the first simplex.
      */
 
-    template <int D>
+    template <int N>
     class OrientedSimplexFactory {
       private:
-        // typedef for a collection of oriented simplices
-        using oriented_simplex_collection_t = utilities::segmented_t<simplex_t<D>>;
+        // typedef for a repository of oriented simplices
+        using oriented_simplex_repository_t = utilities::repository_t<simplex_t<N>>;
+
+        // id type of unoriented simplex
+        using unoriented_simplex_id_t = utilities::index_t<unoriented_simplex_t<N>>;
+
+        // id type of oriented simplex
+        using simplex_id_t = utilities::index_t<simplex_t<N>>;
 
         // typedef for an orientation map of simplices:
         // this map maps a simplex pointer and a boolean to an oriented simplex pointer
-        using orientation_map_t =
-            std::map<std::tuple<unoriented_simplex_id_t<D>, bool>, simplex_t<D>>;
+        using orientation_map_t = std::map<std::tuple<unoriented_simplex_id_t, bool>, simplex_id_t>;
 
-      public:    // TOFIX: should be private but the default constructor of tuple needs it public
+      private:
         // default constructor
         OrientedSimplexFactory() :
             _simplex_factory(),
@@ -36,17 +41,10 @@ namespace mito::topology {
             _orientations() {};
 
         // destructor
-        ~OrientedSimplexFactory()
-        {
-            if (std::size(_oriented_simplices) > 0) {
-                for (const auto & oriented_simplex : _oriented_simplices) {
-                    oriented_simplex->~OrientedSimplex<D>();
-                }
-            }
-        };
+        ~OrientedSimplexFactory() {}
 
       private:
-        inline auto existsOrientedSimplex(const simplex_composition_t<D> & composition) const
+        inline auto existsOrientedSimplex(const simplex_composition_t<N> & composition) const
             -> bool
         {
             // find the representative of simplices with composition {composition} from the
@@ -70,7 +68,7 @@ namespace mito::topology {
         }
 
         inline auto existsOrientedSimplex(
-            const unoriented_simplex_t<D> & simplex, bool orientation) const -> bool
+            const unoriented_simplex_t<N> & simplex, bool orientation) const -> bool
         {
             // find oriented simplex with the given footprint and orientation
             auto orientedSimplex = findOrientedSimplex(simplex, orientation);
@@ -81,7 +79,7 @@ namespace mito::topology {
         }
 
         inline auto findOrientedSimplex(
-            const unoriented_simplex_t<D> & simplex, bool orientation) const -> simplex_t<D>
+            const unoriented_simplex_t<N> & simplex, bool orientation) const -> simplex_t<N>
         {
             // bind the footprint and the orientation in a tuple
             auto tuple = std::make_tuple(simplex.id(), orientation);
@@ -93,12 +91,12 @@ namespace mito::topology {
             // {orientation}
             if (it_find != std::end(_orientations)) {
                 // return it
-                return it_find->second;
+                return _oriented_simplices.resource(it_find->second);
             }
             // if not found
             else {
                 // return a shared pointer wrapper around {nullptr}
-                return simplex_t<D>();
+                return simplex_t<N>();
             }
         }
 
@@ -106,8 +104,8 @@ namespace mito::topology {
         // {orientation} (either create a new oriented simplex if such oriented simplex does not
         // exist in the factory or return the existing representative of the class of
         // equivalence of oriented simplices with footprint {simplex} orientation {orientation}
-        inline auto orientedSimplex(const unoriented_simplex_t<D> & simplex, bool orientation)
-            -> const simplex_t<D> &
+        inline auto orientedSimplex(const unoriented_simplex_t<N> & simplex, bool orientation)
+            -> simplex_t<N>
         {
             // bind the footprint and the orientation in a tuple
             auto tuple = std::make_tuple(simplex.id(), orientation);
@@ -119,26 +117,27 @@ namespace mito::topology {
             // is already registered in the map
             if (it_find != std::end(_orientations)) {
                 // then return it
-                return it_find->second;
+                return _oriented_simplices.resource(it_find->second);
             }
             // otherwise
             else {
                 // create a new oriented simplex riding on simplex {simplex} with orientation
-                // {orientation} and register it in the map
-                auto it = _orientations.insert(
-                    std::make_pair(tuple, _emplace_simplex(simplex, orientation)));
+                // {orientation}
+                auto oriented_simplex = _oriented_simplices.emplace(simplex, orientation);
+
+                // register it in the map
+                _orientations.insert(std::make_pair(tuple, oriented_simplex.id()));
 
                 // and return it
-                return it.first->second;
+                return oriented_simplex;
             }
         }
 
         // return a simplex with composition {composition} (either create a new simplex if such
         // simplex does not exist in the factory or return the existing representative of the
         // class of equivalence of simplices with this composition)
-        inline auto orientedSimplex(const simplex_composition_t<D> & composition)
-            -> const simplex_t<D> &
-        requires(D > 0)
+        inline auto orientedSimplex(const simplex_composition_t<N> & composition) -> simplex_t<N>
+        requires(N > 0)
         {
             if (!isValid(composition)) {
                 pyre::journal::firewall_t firewall("topology::OrientedSimplexFactory");
@@ -160,8 +159,8 @@ namespace mito::topology {
             return orientedSimplex(simplex, orientation);
         }
 
-        inline auto orientedSimplex(bool orientation) -> const simplex_t<0> &
-        requires(D == 0)
+        inline auto orientedSimplex(bool orientation) -> simplex_t<0>
+        requires(N == 0)
         {
             // get the representative of simplices with composition {composition} from the
             // factory
@@ -171,16 +170,9 @@ namespace mito::topology {
             return orientedSimplex(simplex, orientation);
         }
 
-        // get the oriented simplex corresponding to the id {simplex_id}
-        inline auto orientedSimplex(oriented_simplex_id_t<D> simplex_id) -> simplex_t<D>
-        {
-            // ask the simplices container for the resource corresponding to this id
-            return _oriented_simplices.resource(simplex_id);
-        }
-
         // instantiate a vertex
-        inline auto vertex() -> const vertex_t &
-        requires(D == 0)
+        inline auto vertex() -> vertex_t
+        requires(N == 0)
         {
             // ask the factory of unoriented vertices for an unoriented vertex
             return _simplex_factory.simplex();
@@ -188,32 +180,31 @@ namespace mito::topology {
 
         // erase an oriented simplex from the factory (this method actually erases the simplex
         // only if there is no one else using it, otherwise does nothing)
-        inline auto erase(const simplex_t<D> & oriented_simplex) -> void
+        inline auto erase(simplex_t<N> & oriented_simplex) -> void
         {
-            // sanity check
-            assert(oriented_simplex.references() > 0);
+            // if this oriented simplex is still being used
+            if (oriented_simplex.references() > 1) {
+                // do nothing
+                return;
+            }
 
             // grab a copy of the footprint
             auto footprint = oriented_simplex->footprint();
 
             // get footprint of the oriented simplex
-            unoriented_simplex_id_t<D> id = oriented_simplex->footprint().id();
+            unoriented_simplex_id_t id = oriented_simplex->footprint().id();
 
             // get the key to this oriented simplex
             auto mytuple = std::make_tuple(id, oriented_simplex->orientation());
 
-            // erase the simplex
-            oriented_simplex->_erase();
-
             // erase this oriented simplex from the oriented simplex factory
             _orientations.erase(mytuple);
 
-            // if this simplex is the last one using the footprint (other than the copy we just
-            // did)
-            if (footprint.references() == 2) {
-                // cleanup the unoriented factory around {footprint}
-                _simplex_factory.erase(footprint);
-            }
+            // erase this oriented simplex from the container
+            _oriented_simplices.erase(oriented_simplex);
+
+            // cleanup the unoriented factory around {footprint}
+            _simplex_factory.erase(footprint);
 
             // all done
             return;
@@ -223,28 +214,17 @@ namespace mito::topology {
         // compute the orientation of the {composition} with respect to the orientation of
         // {simplex}
         inline bool _orientation(
-            const simplex_composition_t<D> & composition,
-            const unoriented_simplex_t<D> & simplex) const;
+            const simplex_composition_t<N> & composition,
+            const unoriented_simplex_t<N> & simplex) const;
 
-        inline auto _emplace_simplex(const unoriented_simplex_t<D> & simplex, bool orientation)
-            -> simplex_t<D>
-        {
-            // get from {_simplices} the location where to place the new simplex
-            auto location = _oriented_simplices.location_for_placement();
-
-            // create a new simplex at location {location} with placement new
-            OrientedSimplex<D> * resource = new (location) OrientedSimplex<D>(simplex, orientation);
-
-            // wrap the new simplex in a shared pointer and return it
-            return utilities::shared_ptr<OrientedSimplex<D>>(resource, &_oriented_simplices);
-        }
+        inline auto _rotate(const simplex_composition_t<N> & composition) const;
 
       private:
         // factory for simplices
-        simplex_factory_t<D> _simplex_factory;
+        simplex_factory_t<N> _simplex_factory;
 
         // container to store the oriented simplices
-        oriented_simplex_collection_t _oriented_simplices;
+        oriented_simplex_repository_t _oriented_simplices;
 
         // container to store the relation (simplex, orientation) -> oriented simplex
         orientation_map_t _orientations;
@@ -264,23 +244,22 @@ namespace mito::topology {
         return false;
     }
 
-    namespace {
-        inline auto _rotate(const simplex_composition_t<2> & composition)
-        {
-            // an array of oriented simplices ids
-            using oriented_simplex_array_t = std::array<oriented_simplex_id_t<2>, 3>;
+    template <>
+    inline auto OrientedSimplexFactory<2>::_rotate(
+        const simplex_composition_t<2> & composition) const
+    {
+        // an array of oriented simplices ids
+        using oriented_simplex_array_t = std::array<simplex_id_t, 3>;
 
-            // get the oriented simplices from the shared pointers
-            auto composition_copy =
-                oriented_simplex_array_t { composition[0].id(), composition[1].id(),
-                                           composition[2].id() };
-            auto first_simplex =
-                std::min_element(std::begin(composition_copy), std::end(composition_copy));
-            std::rotate(std::begin(composition_copy), first_simplex, std::end(composition_copy));
+        // get the oriented simplices from the shared pointers
+        auto composition_copy = oriented_simplex_array_t { composition[0].id(), composition[1].id(),
+                                                           composition[2].id() };
+        auto first_simplex =
+            std::min_element(std::begin(composition_copy), std::end(composition_copy));
+        std::rotate(std::begin(composition_copy), first_simplex, std::end(composition_copy));
 
-            // return rotated composition
-            return composition_copy;
-        }
+        // return rotated composition
+        return composition_copy;
     }
 
     // compute the orientation of the {composition} with respect to the orientation of {simplex}

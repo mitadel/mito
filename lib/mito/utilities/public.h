@@ -18,10 +18,14 @@
 #include "SharedPointer.h"
 #include "SegmentedContainer.h"
 #include "SegmentedContainerIterator.h"
+#include "Repository.h"
+#include "RepositoryIterator.h"
 
 // factories implementation
 #include "factories.h"
 
+// utilities
+#include "utilities.h"
 
 #endif
 

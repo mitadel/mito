@@ -12,7 +12,7 @@ namespace mito::mesh {
     requires(std::is_same_v<cellT, topology::segment_t>)
     {
         // compute the middle point of the segment 0->1
-        auto & vertex_01 = geometry.node(
+        auto vertex_01 = geometry.node(
             0.5
             * (geometry.point(vertex_0)->coordinates() + geometry.point(vertex_1)->coordinates()));
 
@@ -20,8 +20,8 @@ namespace mito::mesh {
         if (n_refinements == 1) {
 
             // instantiate new cells
-            auto & new_cell_0 = geometry.topology().segment({ vertex_0, vertex_01 });
-            auto & new_cell_1 = geometry.topology().segment({ vertex_01, vertex_1 });
+            auto new_cell_0 = geometry.topology().segment({ vertex_0, vertex_01 });
+            auto new_cell_1 = geometry.topology().segment({ vertex_01, vertex_1 });
 
             // insert new cells in new mesh
             subdivided_mesh.insert(new_cell_0);
@@ -47,17 +47,17 @@ namespace mito::mesh {
     requires(std::is_same_v<cellT, topology::triangle_t>)
     {
         // compute the middle point of the segment 0->1
-        auto & vertex_01 = geometry.node(
+        auto vertex_01 = geometry.node(
             0.5
             * (geometry.point(vertex_0)->coordinates() + geometry.point(vertex_1)->coordinates()));
 
         // compute the middle point of the segment 1->2
-        auto & vertex_12 = geometry.node(
+        auto vertex_12 = geometry.node(
             0.5
             * (geometry.point(vertex_1)->coordinates() + geometry.point(vertex_2)->coordinates()));
 
         // compute the middle point of the segment 2->0
-        auto & vertex_20 = geometry.node(
+        auto vertex_20 = geometry.node(
             0.5
             * (geometry.point(vertex_2)->coordinates() + geometry.point(vertex_0)->coordinates()));
 
@@ -65,10 +65,10 @@ namespace mito::mesh {
         if (n_refinements == 1) {
 
             // instantiate new cells
-            auto & new_cell_0 = geometry.topology().triangle({ vertex_0, vertex_01, vertex_20 });
-            auto & new_cell_1 = geometry.topology().triangle({ vertex_01, vertex_1, vertex_12 });
-            auto & new_cell_2 = geometry.topology().triangle({ vertex_12, vertex_2, vertex_20 });
-            auto & new_cell_3 = geometry.topology().triangle({ vertex_20, vertex_01, vertex_12 });
+            auto new_cell_0 = geometry.topology().triangle({ vertex_0, vertex_01, vertex_20 });
+            auto new_cell_1 = geometry.topology().triangle({ vertex_01, vertex_1, vertex_12 });
+            auto new_cell_2 = geometry.topology().triangle({ vertex_12, vertex_2, vertex_20 });
+            auto new_cell_3 = geometry.topology().triangle({ vertex_20, vertex_01, vertex_12 });
 
             // insert new cells in new mesh
             subdivided_mesh.insert(new_cell_0);
@@ -98,32 +98,32 @@ namespace mito::mesh {
     requires(std::is_same_v<cellT, topology::tetrahedron_t>)
     {
         // compute the middle point of the segment 0->1
-        auto & vertex_01 = geometry.node(
+        auto vertex_01 = geometry.node(
             0.5
             * (geometry.point(vertex_0)->coordinates() + geometry.point(vertex_1)->coordinates()));
 
         // compute the middle point of the segment 0->2
-        auto & vertex_02 = geometry.node(
+        auto vertex_02 = geometry.node(
             0.5
             * (geometry.point(vertex_0)->coordinates() + geometry.point(vertex_2)->coordinates()));
 
         // compute the middle point of the segment 0->3
-        auto & vertex_03 = geometry.node(
+        auto vertex_03 = geometry.node(
             0.5
             * (geometry.point(vertex_0)->coordinates() + geometry.point(vertex_3)->coordinates()));
 
         // compute the middle point of the segment 1->2
-        auto & vertex_12 = geometry.node(
+        auto vertex_12 = geometry.node(
             0.5
             * (geometry.point(vertex_1)->coordinates() + geometry.point(vertex_2)->coordinates()));
 
         // compute the middle point of the segment 1->3
-        auto & vertex_13 = geometry.node(
+        auto vertex_13 = geometry.node(
             0.5
             * (geometry.point(vertex_1)->coordinates() + geometry.point(vertex_3)->coordinates()));
 
         // compute the middle point of the segment 2->3
-        auto & vertex_23 = geometry.node(
+        auto vertex_23 = geometry.node(
             0.5
             * (geometry.point(vertex_2)->coordinates() + geometry.point(vertex_3)->coordinates()));
 
@@ -131,21 +131,21 @@ namespace mito::mesh {
         if (n_refinements == 1) {
 
             // instantiate new cells
-            auto & new_cell_0 =
+            auto new_cell_0 =
                 geometry.topology().tetrahedron({ vertex_0, vertex_01, vertex_02, vertex_03 });
-            auto & new_cell_1 =
+            auto new_cell_1 =
                 geometry.topology().tetrahedron({ vertex_1, vertex_01, vertex_13, vertex_12 });
-            auto & new_cell_2 =
+            auto new_cell_2 =
                 geometry.topology().tetrahedron({ vertex_2, vertex_12, vertex_02, vertex_23 });
-            auto & new_cell_3 =
+            auto new_cell_3 =
                 geometry.topology().tetrahedron({ vertex_3, vertex_03, vertex_13, vertex_23 });
-            auto & new_cell_4 =
+            auto new_cell_4 =
                 geometry.topology().tetrahedron({ vertex_02, vertex_01, vertex_13, vertex_03 });
-            auto & new_cell_5 =
+            auto new_cell_5 =
                 geometry.topology().tetrahedron({ vertex_02, vertex_03, vertex_13, vertex_23 });
-            auto & new_cell_6 =
+            auto new_cell_6 =
                 geometry.topology().tetrahedron({ vertex_02, vertex_01, vertex_13, vertex_12 });
-            auto & new_cell_7 =
+            auto new_cell_7 =
                 geometry.topology().tetrahedron({ vertex_02, vertex_23, vertex_13, vertex_12 });
 
             // insert new cells in new mesh
@@ -222,7 +222,7 @@ namespace mito::mesh {
 
             // helper function to expand array to parameter pack
             constexpr auto _subdivide = []<size_t... J>(
-                const topology::vertex_simplex_composition_t<cellT::resource_t::order> & vertices,
+                const topology::vertex_simplex_composition_t<topology::order<cellT>()> & vertices,
                 geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
                 int n_refinements, std::index_sequence<J...>)
             {
@@ -232,7 +232,7 @@ namespace mito::mesh {
             // recursively subdivide the cell identified by these vertices
             _subdivide(
                 vertices, geometry, subdivided_mesh, n_refinements,
-                std::make_index_sequence<cellT::resource_t::order + 1> {});
+                std::make_index_sequence<topology::order<cellT>() + 1> {});
         }
 
         // return the refined mesh

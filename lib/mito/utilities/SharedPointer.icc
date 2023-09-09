@@ -5,43 +5,43 @@
 #error This header file contains implementation details of class mito::utilities::SharedPointer
 #else
 
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::id() const -> index_t<Resource>
+mito::utilities::SharedPointer<resourceT>::id() const -> index_t<resourceT>
 {
     // the id is the (immutable) address of this object
-    return reinterpret_cast<index_t<Resource>>(_handle);
+    return reinterpret_cast<index_t<resourceT>>(_handle);
 }
 
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::resource(index_t<Resource> index) -> handle_t
+mito::utilities::SharedPointer<resourceT>::resource(index_t<resourceT> index) -> handle_type
 {
     // the id is the (immutable) address of this object
-    return reinterpret_cast<handle_t>(index);
+    return reinterpret_cast<handle_type>(index);
 }
 
 // interface
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::handle() const noexcept
-    -> mito::utilities::SharedPointer<Resource>::handle_t
+mito::utilities::SharedPointer<resourceT>::handle() const noexcept
+    -> mito::utilities::SharedPointer<resourceT>::handle_type
 {
     // return the handle
     return _handle;
 }
 
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::references() const -> int
+mito::utilities::SharedPointer<resourceT>::references() const -> int
 {
     // return the count of outstanding references
     return _handle->_references();
 }
 
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::reset() -> void
+mito::utilities::SharedPointer<resourceT>::reset() -> void
 {
     // release my current handle
     _release();
@@ -49,93 +49,84 @@ mito::utilities::SharedPointer<Resource>::reset() -> void
     // invalidate handle to the resource
     _handle = nullptr;
 
-    // invalidate handle to the segmented container
-    _container = nullptr;
-
     // all done
     return;
 }
 
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::is_nullptr() const noexcept -> bool
+mito::utilities::SharedPointer<resourceT>::is_nullptr() const noexcept -> bool
 {
     // all done
     return _handle == nullptr;
 }
 
 // operator->
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::operator->() const noexcept
-    -> mito::utilities::SharedPointer<Resource>::handle_t
+mito::utilities::SharedPointer<resourceT>::operator->() const noexcept
+    -> mito::utilities::SharedPointer<resourceT>::handle_type
 {
     // return the handle
     return _handle;
 }
 
 // // operator*
-// template <class Resource>
+// template <class resourceT>
 // auto
-// mito::utilities::SharedPointer<Resource>::operator*() const
-//     -> const mito::utilities::SharedPointer<Resource>::resource_t &
+// mito::utilities::SharedPointer<resourceT>::operator*() const
+//     -> const mito::utilities::SharedPointer<resourceT>resource_type &
 // {
 //     // return the resource
 //     return *_handle;
 // }
 
 // destructor
-template <class Resource>
-mito::utilities::SharedPointer<Resource>::~SharedPointer()
+template <class resourceT>
+mito::utilities::SharedPointer<resourceT>::~SharedPointer()
 {
     // release my current handle
     _release();
 }
 
 // default constructor (invalid shared handle)
-template <class Resource>
-mito::utilities::SharedPointer<Resource>::SharedPointer() : _handle(nullptr), _container(nullptr)
+template <class resourceT>
+mito::utilities::SharedPointer<resourceT>::SharedPointer() : _handle(nullptr)
 {}
 
 // the constructor
-template <class Resource>
-mito::utilities::SharedPointer<Resource>::SharedPointer(
-    handle_t resource, segmented_t<shared_ptr_t> * container) :
-    _handle(resource),
-    _container(container)
+template <class resourceT>
+mito::utilities::SharedPointer<resourceT>::SharedPointer(handle_type resource) : _handle(resource)
 {
     // grab a reference to the shared handle
     _acquire();
 }
 
 // the copy constructor
-template <class Resource>
-mito::utilities::SharedPointer<Resource>::SharedPointer(
-    const mito::utilities::SharedPointer<Resource> & other) :
-    _handle(other._handle),
-    _container(other._container)
+template <class resourceT>
+mito::utilities::SharedPointer<resourceT>::SharedPointer(
+    const mito::utilities::SharedPointer<resourceT> & other) :
+    _handle(other._handle)
 {
     // grab a reference to the shared handle
     _acquire();
 }
 
 // the move constructor
-template <class Resource>
-mito::utilities::SharedPointer<Resource>::SharedPointer(
-    mito::utilities::SharedPointer<Resource> && other) noexcept :
-    _handle(other._handle),
-    _container(other._container)
+template <class resourceT>
+mito::utilities::SharedPointer<resourceT>::SharedPointer(
+    mito::utilities::SharedPointer<resourceT> && other) noexcept :
+    _handle(other._handle)
 {
     // invalidate other
     other._handle = nullptr;
-    other._container = nullptr;
 }
 
 // assignment operator
-template <class Resource>
-mito::utilities::SharedPointer<Resource> &
-mito::utilities::SharedPointer<Resource>::operator=(
-    const mito::utilities::SharedPointer<Resource> & other)
+template <class resourceT>
+mito::utilities::SharedPointer<resourceT> &
+mito::utilities::SharedPointer<resourceT>::operator=(
+    const mito::utilities::SharedPointer<resourceT> & other)
 {
     // if {other} and I point to different handles
     if (other._handle != _handle) {
@@ -145,8 +136,6 @@ mito::utilities::SharedPointer<Resource>::operator=(
         _handle = other._handle;
         // and grab a reference to it
         _acquire();
-        // grab the container handle
-        _container = other._container;
     }
 
     // all done
@@ -154,10 +143,10 @@ mito::utilities::SharedPointer<Resource>::operator=(
 }
 
 // move assignment operator
-template <class Resource>
-mito::utilities::SharedPointer<Resource> &
-mito::utilities::SharedPointer<Resource>::operator=(
-    mito::utilities::SharedPointer<Resource> && other)
+template <class resourceT>
+mito::utilities::SharedPointer<resourceT> &
+mito::utilities::SharedPointer<resourceT>::operator=(
+    mito::utilities::SharedPointer<resourceT> && other)
 {
     // if {other} and I point to different handles
     if (other._handle != _handle) {
@@ -165,23 +154,19 @@ mito::utilities::SharedPointer<Resource>::operator=(
         _release();
         // adopt the new shareable
         _handle = other._handle;
-        // grab the container handle
-        _container = other._container;
     }
 
-    // QUESTION: should this go here or in the if statement?
     // invalidate {other}
     other._handle = nullptr;
-    other._container = nullptr;
 
     // all done
     return *this;
 }
 
 // interface
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::_acquire() const -> void
+mito::utilities::SharedPointer<resourceT>::_acquire() const -> void
 {
     // acquire resource (increment reference count)
     _handle->_acquire();
@@ -189,20 +174,14 @@ mito::utilities::SharedPointer<Resource>::_acquire() const -> void
     return;
 }
 
-template <class Resource>
+template <class resourceT>
 auto
-mito::utilities::SharedPointer<Resource>::_release() const -> void
+mito::utilities::SharedPointer<resourceT>::_release() const -> void
 {
     // if the handle is in valid state
     if (_handle != nullptr) {
         // release my current handle (decreases reference count by one)
-        const auto reference_count = _handle->_release();
-        // if the resource is now unused
-        if (reference_count == 0 && _container != nullptr) {
-            // erase it from the container (decrement the number of elements and add the address of
-            // the element to the queue of the available locations for reuse)
-            return _container->erase(*this);
-        }
+        _handle->_release();
 
         // all done
         return;

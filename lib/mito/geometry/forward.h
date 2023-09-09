@@ -11,7 +11,7 @@ namespace mito::geometry {
 
     // point alias
     template <int D>
-    using point_t = utilities::shared_ptr<Point<D>>;
+    using point_t = utilities::shared_ptr<const Point<D>>;
 
     // class point cloud
     template <int D>
@@ -28,10 +28,6 @@ namespace mito::geometry {
     // geometry alias
     template <int D>
     using geometry_t = Geometry<D>;
-
-    // a cloud of points
-    template <int D>
-    using cloud_t = utilities::segmented_t<point_t<D>>;
 
     // class node
     template <int D>

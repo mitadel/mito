@@ -3,7 +3,7 @@
 #define mito_topology_OrientedSimplex_h
 
 /*
- * This class represents an OrientedSimplex of order D.
+ * This class represents an OrientedSimplex of order N.
  *
  * Each instance of OrientedSimplex consists of an underlying Simplex (the footprint) and an
  * orientation, which can be either zero or one. When the orientation is one, the OrientedSimplex
@@ -17,29 +17,28 @@
 
 namespace mito::topology {
 
-    template <int D>
+    template <int N>
     class OrientedSimplex : public utilities::Shareable {
       public:
         // order of simplex
-        static constexpr int order = D;
+        static constexpr int order = N;
 
         // number of vertices of simplex
         static constexpr int n_vertices = order + 1;
 
         // typedef for the cell family type (simplicial)
-        template <int N>
-        using cell_family_t = simplex_t<N>;
+        template <int I>
+        using cell_family_type = simplex_t<I>;
 
         // private constructors: only the OrientedSimplexFactory has the right to instantiate
         // oriented simplices
       private:
         // constructor with an existing shared pointer as footprint
-        constexpr OrientedSimplex(const unoriented_simplex_t<D> & footprint, bool orientation) :
+        constexpr OrientedSimplex(const unoriented_simplex_t<N> & footprint, bool orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
 
-      public:
         // destructor
         constexpr ~OrientedSimplex() override {}
 
@@ -61,7 +60,7 @@ namespace mito::topology {
 
       public:
         // accessor for the unoriented footprint
-        inline auto footprint() const noexcept -> const unoriented_simplex_t<D> &
+        inline auto footprint() const noexcept -> const unoriented_simplex_t<N> &
         {
             return _footprint;
         }
@@ -72,7 +71,7 @@ namespace mito::topology {
         inline auto orientation() const noexcept -> bool { return _orientation; }
 
         // returns the array of subsimplices
-        inline auto composition() const noexcept -> const simplex_composition_t<D> &
+        inline auto composition() const noexcept -> const simplex_composition_t<N> &
         {
             return _footprint->composition();
         }
@@ -85,8 +84,8 @@ namespace mito::topology {
         }
 
         // return the array of vertices of this simplex
-        inline auto vertices() const -> vertex_simplex_composition_t<D>
-        requires(D > 0)
+        inline auto vertices() const -> vertex_simplex_composition_t<N>
+        requires(N > 0)
         {
             // a set of vertices
             vertex_set_t vertices_collection;
@@ -94,8 +93,8 @@ namespace mito::topology {
             // fetch the vertices of this simplex
             _footprint->vertices(vertices_collection);
 
-            // an array to store the composition of a D-simplex in terms of vertices
-            vertex_simplex_composition_t<D> vertices;
+            // an array to store the composition of a N-simplex in terms of vertices
+            vertex_simplex_composition_t<N> vertices;
 
             // assert that you found the correct number of vertices
             assert(std::size(vertices_collection) == std::size(vertices));
@@ -118,26 +117,17 @@ namespace mito::topology {
             return _footprint->edges(edges);
         }
 
+        // TOFIX: remove methods sanity check, a simplex does not need it
         // returns whether the simplex passes the sanity check
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
       private:
-        inline auto _erase() -> void
-        {
-            // reset the footprint shared pointer
-            _footprint.reset();
-
-            // all done
-            return;
-        }
-
-      private:
         // the shared pointer to the footprint
-        unoriented_simplex_t<D> _footprint;    // TOFIX: should this be {const}?
+        const unoriented_simplex_t<N> _footprint;
         // the orientation
         const bool _orientation;
-        // private friendship with the factory of oriented simplices
-        friend class OrientedSimplexFactory<D>;
+        // private friendship with the repository of oriented simplices
+        friend class utilities::Repository<oriented_simplex_t<N>>;
     };
 }
 #endif    // mito_topology_OrientedSimplex_h

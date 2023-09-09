@@ -5,24 +5,23 @@
 namespace mito::topology {
 
     /*
-     * This class represents a Simplex of order D > 0.
+     * This class represents a Simplex of order N > 0.
      *
-     * Simplex<D> is represented recursively as a collection of D+1 subsimplices of type
-     * Simplex<D-1>.
+     * Simplex<N> is represented recursively as a collection of N+1 subsimplices of type
+     * Simplex<N-1>.
      */
 
-    template <int D>
+    template <int N>
     class Simplex : public utilities::Shareable {
 
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
         // constructor for a simplex based on its composition in terms of subsimplices
-        constexpr Simplex(const simplex_composition_t<D> & simplices) : _simplices(simplices) {}
+        constexpr Simplex(const simplex_composition_t<N> & simplices) : _simplices(simplices) {}
 
         // constructor for a simplex based on its composition in terms of subsimplices
-        constexpr Simplex(simplex_composition_t<D> && simplices) : _simplices(simplices) {}
+        constexpr Simplex(simplex_composition_t<N> && simplices) : _simplices(simplices) {}
 
-      public:
         // destructor
         constexpr ~Simplex() override {}
 
@@ -44,7 +43,7 @@ namespace mito::topology {
 
       public:
         // accessor for the subsimplices
-        inline auto composition() const noexcept -> const simplex_composition_t<D> &
+        inline auto composition() const noexcept -> const simplex_composition_t<N> &
         {
             return _simplices;
         }
@@ -52,7 +51,7 @@ namespace mito::topology {
         // append the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const
-        requires(D > 1)
+        requires(N > 1)
         {
             for (const auto & simplex : composition()) {
                 simplex->vertices(vertices);
@@ -62,7 +61,7 @@ namespace mito::topology {
         // append the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         void vertices(VERTEX_COLLECTION_T & vertices) const
-        requires(D == 1)
+        requires(N == 1)
         {
             vertices.insert(_simplices[0]->footprint());
             vertices.insert(_simplices[1]->footprint());
@@ -71,9 +70,9 @@ namespace mito::topology {
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void
-        requires(D > 2)
+        requires(N > 2)
         {
-            // if D > 2, then recursively fetch the edges from the simplices in the composition
+            // if N > 2, then recursively fetch the edges from the simplices in the composition
             for (const auto & simplex : composition()) {
                 simplex->edges(edges);
             }
@@ -85,9 +84,9 @@ namespace mito::topology {
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void
-        requires(D == 2)
+        requires(N == 2)
         {
-            // if D == 2, then this simplex is a triangle and its composition already consists of
+            // if N == 2, then this simplex is a triangle and its composition already consists of
             // edges
             for (const auto & edge : composition()) {
                 edges.insert(edge);
@@ -97,7 +96,7 @@ namespace mito::topology {
             return;
         }
 
-        // perform a sanity check (check that a simplex of order D has D+1 distinct vertices)
+        // perform a sanity check (check that a simplex of order N has N+1 distinct vertices)
         inline auto sanityCheck() const -> bool
         {
             // check the subsimplices
@@ -114,8 +113,8 @@ namespace mito::topology {
             // collect vertices of this simplex
             this->vertices(vertices);
 
-            // if this simplex does not have D+1 vertices, something went wrong
-            if (std::size(vertices) != int(D) + 1) {
+            // if this simplex does not have N+1 vertices, something went wrong
+            if (std::size(vertices) != int(N) + 1) {
                 // all done
                 return false;
             }
@@ -125,27 +124,15 @@ namespace mito::topology {
         }
 
       private:
-        inline auto _erase() -> void
-        {
-            // reset the subsimplices shared pointers
-            for (auto & simplex : _simplices) {
-                simplex.reset();
-            }
-
-            // all done
-            return;
-        }
-
-      private:
         // the simplex composition in terms of subsimplices
-        simplex_composition_t<D> _simplices;    // TOFIX: should this be {const}?
+        const simplex_composition_t<N> _simplices;
 
-        // private friendship with the factory of simplices
-        friend class SimplexFactory<D>;
+        // private friendship with the repository of simplices
+        friend class utilities::Repository<unoriented_simplex_t<N>>;
     };
 
     /*
-     * This class collapses Simplex<D> for D = 0.
+     * This class collapses Simplex<N> for N = 0.
      *
      * A simplex of order 0, like a vertex, is an empty object.
      */
@@ -156,7 +143,6 @@ namespace mito::topology {
         // default constructor
         constexpr Simplex() {}
 
-      public:
         // empty destructor
         constexpr ~Simplex() override {}
 
@@ -182,15 +168,8 @@ namespace mito::topology {
         }
 
       private:
-        inline auto _erase() -> void
-        {
-            // all done
-            return;
-        }
-
-      private:
-        // friendship with the factory of simplices
-        friend class SimplexFactory<0>;
+        // friendship with the repository of simplices
+        friend class utilities::Repository<unoriented_simplex_t<0>>;
     };
 
 }    // namespace mito

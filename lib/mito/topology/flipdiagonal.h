@@ -133,8 +133,8 @@ namespace mito::topology {
         assert(headTailConnected(new_simplex_composition_1[2], new_simplex_composition_1[0]));
 
         // build new simplices
-        auto & new_simplex0 = topology.triangle(new_simplex_composition_0);
-        auto & new_simplex1 = topology.triangle(new_simplex_composition_1);
+        auto new_simplex0 = topology.triangle(new_simplex_composition_0);
+        auto new_simplex1 = topology.triangle(new_simplex_composition_1);
 
         // all done
         return std::make_pair(new_simplex0, new_simplex1);
