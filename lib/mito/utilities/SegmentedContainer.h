@@ -147,12 +147,6 @@ namespace mito::utilities {
                 // get an available location from the queue
                 pointer location = _available_locations.front();
 
-                // remove the next available location from the queue
-                // NOTE: for simplicity we make the assumption that the location returned by this
-                //      method then is actually used to construct a new element. That is why we
-                //      remove the item from the {_available_locations} container here.
-                _available_locations.pop();
-
                 // return the available location from the queue
                 return location;
             }
@@ -180,12 +174,6 @@ namespace mito::utilities {
                 location = _allocate_new_segment();
             }
 
-            // increment the size of the container
-            // NOTE: for simplicity we make the assumption that the location returned by this method
-            //      then is actually used to construct a new element. That is why we increment the
-            //      number of elements here
-            ++_n_elements;
-
             // if we have written past the last element
             if (location == _end) {
                 // move the end of the container
@@ -194,6 +182,26 @@ namespace mito::utilities {
 
             // all done
             return location;
+        }
+
+        // insert an element in the container
+        // (increment the number of elements and remove the address of the element from the pile of
+        // the available locations for reuse)
+        auto insert([[maybe_unused]] resource_type * element) -> void
+        {
+            // increment the size of the container
+            ++_n_elements;
+
+            // if there are available locations to spare
+            if (!_available_locations.empty()) {
+                // assert that the newly inserted element was inserted at the front of the queue
+                assert(const_cast<pointer>(element) == _available_locations.front());
+                // remove the next available location from the queue
+                _available_locations.pop();
+            }
+
+            // all done
+            return;
         }
 
         // erase an element from the container

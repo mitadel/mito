@@ -82,6 +82,9 @@ namespace mito::utilities {
             // create a new instance of {resource_t} at location {location} with placement new
             resource_t * resource = new (location) resource_t(args...);
 
+            // add resource to the collection of resources
+            _resources.insert(resource);
+
             // assign it to a new pointer
             shared_ptr_t pointer(resource);
 
