@@ -11,7 +11,7 @@ using mito::quadrature::GAUSS;
 using mito::topology::triangle_t;
 
 
-TEST(Quadrature, QuadratureLoadMeshParallel)
+TEST(Quadrature, LoadMeshTrianglesMPI)
 {
     // initialize MPI
     MPI_Init(nullptr, nullptr);

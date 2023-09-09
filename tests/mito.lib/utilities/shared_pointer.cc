@@ -3,6 +3,7 @@
 #include <mito/base.h>
 #include <mito/utilities.h>
 
+
 class Resource : public mito::utilities::Shareable {
   public:
     Resource(int a) : _a(a) { std::cout << "Built resource " << _a << std::endl; }
@@ -15,6 +16,7 @@ class Resource : public mito::utilities::Shareable {
 // the type of resource to be stored
 using resource_t = Resource;
 using shared_ptr_t = mito::utilities::shared_ptr<resource_t>;
+
 
 TEST(SharedPointer, DefaultConstructor)
 {

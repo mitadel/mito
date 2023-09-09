@@ -2,6 +2,7 @@
 #include <mito/base.h>
 #include <mito/math.h>
 
+
 using mito::math::function_t;
 
 static const mito::real PI = 4.0 * atan(1.0);
@@ -14,7 +15,8 @@ my_function(const mito::vector_t<2> & x)
     return cos(x[0] * x[1]) + 1.0;
 }
 
-TEST(Functions, TestFunctions)
+
+TEST(Functions, Sanity)
 {
     // a scalar function
     auto function1 = mito::math::function(

@@ -2,6 +2,7 @@
 #include <mito/base.h>
 #include <mito/utilities.h>
 
+
 class Resource : public mito::utilities::Shareable {
   public:
     Resource(int foo) : _foo(foo) {}
@@ -13,7 +14,8 @@ class Resource : public mito::utilities::Shareable {
 // the resource type
 using resource_t = mito::utilities::shared_ptr<Resource>;
 
-TEST(SegmentedContainer, TestSegmentedContainer)
+
+TEST(Utilities, SegmentedContainer)
 {
     // segment size
     const auto segmentSize = 3;

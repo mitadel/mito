@@ -1,9 +1,6 @@
 #include <gtest/gtest.h>
-#include <mito/base.h>
-#include <mito/math.h>
-#include <mito/mesh.h>
-#include <mito/manifolds.h>
-#include <mito/quadrature.h>
+#include <mito/mito.h>
+
 
 using mito::math::function_t;
 using mito::vector_t;
@@ -12,7 +9,8 @@ using mito::quadrature::GAUSS;
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
-TEST(DivergenceTheorem, TestDivergenceTheorem)
+
+TEST(DivergenceTheorem, Mesh2D)
 {
     // a scalar function
     auto f = mito::math::function([](const vector_t<2> & x) -> vector_t<2> {

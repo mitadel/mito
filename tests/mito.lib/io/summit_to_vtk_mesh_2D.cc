@@ -2,7 +2,7 @@
 #include <mito/mito.h>
 
 
-TEST(VtkWriter, WriteSummitMesh2DToVtk)
+TEST(SummitToVTK, Mesh2D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();

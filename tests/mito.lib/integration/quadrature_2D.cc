@@ -1,10 +1,6 @@
 #include <gtest/gtest.h>
-#include <mito/base.h>
-#include <mito/io.h>
-#include <mito/math.h>
-#include <mito/mesh.h>
-#include <mito/manifolds.h>
-#include <mito/quadrature.h>
+#include <mito/mito.h>
+
 
 using mito::vector_t;
 using mito::real;
@@ -12,42 +8,7 @@ using mito::quadrature::GAUSS;
 using mito::topology::triangle_t;
 
 
-TEST(Quadrature, MeshSegment)
-{
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<1>();
-
-    // a 1D geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
-    // an empty mesh of simplicial topology in 1D
-    auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
-
-    // a mesh of the segment (0, 1)
-    auto vertex0 = geometry.node({ 0.0 });
-    auto vertex1 = geometry.node({ 1.0 });
-    auto segment0 = topology.segment({ vertex0, vertex1 });
-    mesh.insert(segment0);
-    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 12);
-
-    // an integrator with degree of exactness 2 on segment (0, 1)
-    auto manifold = mito::manifolds::manifold(tetra_mesh);
-    auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
-
-    // a scalar function
-    auto f_exp = mito::math::field(mito::math::function(
-        [](const mito::vector_t<1> & x) -> mito::scalar_t { return exp(-x[0]); }));
-
-    // integrate exp(-x) on (0, 1)
-    auto integral = integrator.integrate(f_exp);
-    EXPECT_NEAR(integral, (exp(1) - 1) / exp(1), 1.e-13);
-}
-
-
-TEST(Quadrature, MeshTriangles)
+TEST(Quadrature, Square)
 {
     /**
      * Mesh with four cells:
@@ -224,81 +185,6 @@ TEST(Quadrature, MeshTriangles)
               << ", Error = " << std::fabs(result - 0.35355339059327384) << std::endl;
     // check the result
     EXPECT_DOUBLE_EQ(result, 0.35355339059327384);
-}
-
-TEST(Quadrature, LoadMeshTriangles)
-{
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
-    // load mesh
-    std::ifstream fileStream("square.summit");
-    auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
-    // TOFIX: is it better that the cells and vertices are first fetched from mesh and then
-    //  used to build the manifold?
-    // instantiate a cell set as a collection of simplices and vertices.
-    // const auto & cells = mesh.cells<2>();    // TODO: region label to fetch cells
-    // auto manifold = mito::manifolds::manifold<2>(cells);
-    auto manifold = mito::manifolds::manifold(mesh);
-
-    // instantiate a scalar field
-    auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
-    auto f_cosine = mito::math::field(f);
-
-    // instantiate a GAUSS integrator with degree of exactness equal to 2
-    auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
-
-    auto result = integrator.integrate(f_cosine);
-    std::cout << "Integration of cos(x*y): Result = " << result
-              << ", Error = " << std::fabs(result - 0.946083) << std::endl;
-    EXPECT_NEAR(result, 0.946083, 1.e-7);
-}
-
-TEST(Quadrature, FlipSegment)
-{
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points in 3D
-    auto & point_cloud = mito::geometry::point_cloud<3>();
-
-    // a geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
-    // a segment
-    auto vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 1.0, 1.0 });
-    auto segment0 = topology.segment({ vertex0, vertex1 });
-
-    // the integrand
-    auto f = mito::math::function([](const mito::vector_t<3> & x) { return cos(x[0] * x[1]); });
-    auto f_cosine = mito::math::field(f);
-
-    // integrate the integrand on {segment0}
-    auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
-    mesh.insert(segment0);
-    auto manifold = mito::manifolds::manifold(mesh);
-    auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
-    auto result = integrator.integrate(f_cosine);
-
-    // integrate the integrand on the opposite of {segment0}
-    auto mesh_flip = mito::mesh::mesh<mito::topology::segment_t>(geometry);
-    mesh_flip.insert(topology.flip(segment0));
-    auto manifold_flip = mito::manifolds::manifold(mesh_flip);
-    auto integrator_flip = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold_flip);
-    auto result_flip = integrator_flip.integrate(f_cosine);
-
-    std::cout << "Integration of cos(x*y): Result = " << result << std::endl;
-    std::cout << "Integration of cos(x*y): Result flipped = " << result_flip << std::endl;
-
-    // expect to obtain a minus sign
-    EXPECT_DOUBLE_EQ(result, -result_flip);
 }
 
 // end of file

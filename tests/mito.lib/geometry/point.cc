@@ -2,6 +2,7 @@
 #include <mito/base.h>
 #include <mito/geometry.h>
 
+
 TEST(Point, TestPoint)
 {
     auto & cloud = mito::geometry::point_cloud<2>();

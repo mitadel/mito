@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/mesh.h>
+#include <mito/topology.h>
+
 
 TEST(FlipDiagonal, TestFlipDiagonal)
 {

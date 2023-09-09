@@ -2,10 +2,12 @@
 #include <mito/base.h>
 #include <mito/math.h>
 
+
 using mito::vector_t;
 using mito::real;
 
-TEST(Fields, TestFields)
+
+TEST(Fields, Sanity)
 {
     // a scalar function
     auto f = mito::math::function([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });

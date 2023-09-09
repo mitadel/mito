@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/mesh.h>
-#include <mito/manifolds.h>
+#include <mito/topology.h>
+
 
 using mito::topology::segment_t;
 using mito::topology::triangle_t;
 
-TEST(Simplices, TestSimplices)
+
+TEST(Simplices, Sanity)
 {
     // an empty topology
     auto & topology = mito::topology::topology();

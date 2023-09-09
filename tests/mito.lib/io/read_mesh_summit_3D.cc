@@ -4,7 +4,7 @@
 
 // TODO: add test on triangle in 3D
 
-TEST(SummitReader, LoadSummitMesh3D)
+TEST(SummitReader, LoadMesh3D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
