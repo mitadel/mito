@@ -28,8 +28,10 @@ mito::simulation::Context::Context() : _task_id(0), _n_tasks(1)
 
 mito::simulation::Context::~Context()
 {
+#if (WITH_MPI)
     // finalize MPI
     MPI_Finalize();
+#endif
 }
 
 auto
