@@ -65,9 +65,9 @@ namespace mito::utilities {
         // destructor
         ~Repository()
         {
-            // destroy all valid resources
-            for (const auto & resource : *this) {
-                resource->~resource_t();
+            // destroy all resources
+            for (const auto & resource : _resources) {
+                resource.~resource_t();
             }
         }
 
