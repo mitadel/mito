@@ -19,8 +19,6 @@ main()
               0               1
             (0,0)           (1,0)
         */
-    // the simulation representative
-    auto & simulation = mito::simulation::simulation();
 
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -76,17 +74,6 @@ main()
     mesh.insert(simplex_pair.second);
     mesh.erase(cell1);
     topology.erase(cell1);
-
-#if (WITH_METIS)
-    // number of partitions
-    int n_partitions = simulation.context().n_tasks();
-
-    // rank of the mesh to return
-    int n_rank = simulation.context().task_id();
-
-    // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
-#endif
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
