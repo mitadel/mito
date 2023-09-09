@@ -104,10 +104,10 @@ TEST(MetisPartitionerMPI, Base)
     build_mesh(geometry, mesh);
 
     // number of partitions
-    int n_partitions = simulation.context().mpi_size();
+    int n_partitions = simulation.context().n_tasks();
 
     // rank of the mesh to return
-    int n_rank = simulation.context().mpi_rank();
+    int n_rank = simulation.context().task_id();
 
     // partition the mesh
     auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
