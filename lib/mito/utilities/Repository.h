@@ -126,6 +126,12 @@ namespace mito::utilities {
             return _resources;
         }
 
+        inline auto size() const -> int
+        {
+            // all done
+            return std::size(_resources);
+        }
+
       public:
         /**
          * iterators
