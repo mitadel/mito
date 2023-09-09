@@ -32,7 +32,7 @@ function(mito_mitoLib)
     # set the include directories
     target_include_directories(
         mito PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/lib>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
         $<INSTALL_INTERFACE:${MITO_DEST_INCLUDE}>
     )
 
