@@ -33,17 +33,17 @@ namespace mito::simulation {
 
       public:
         // accessor for my process' rank
-        auto mpi_rank() const -> int;
+        auto task_id() const -> int;
 
         // accessor for the size of the job
-        auto mpi_size() const -> int;
+        auto n_tasks() const -> int;
 
       private:
         // my process' rank
-        int _mpi_rank;
+        int _task_id;
 
-        // the size of the job
-        int _mpi_size;
+        // the number of tasks
+        int _n_tasks;
     };
 
 }    // namespace mito
