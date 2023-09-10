@@ -132,6 +132,12 @@ function(mito_test_driver_pytest_check testfile)
     set_property(TEST ${targetScript} PROPERTY
         DEPENDS ${targetTest}
     )
+
+    # register the runtime environment requirements
+    set_property(TEST ${targetScript} PROPERTY ENVIRONMENT
+        PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/tests/scripts
+    )
+
 endfunction(mito_test_driver_pytest_check)
 
 # register a python script as a test case; use a path relative to {PROJECT_SOURCE_DIR}

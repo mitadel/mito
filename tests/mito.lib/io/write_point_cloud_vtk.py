@@ -1,6 +1,6 @@
 import pytest
 
-from helper import load_vtk_mesh, cleanup
+from utilities import load_vtk_mesh, cleanup
 
 
 def test_WritePointCloudToVtk():

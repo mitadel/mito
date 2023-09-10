@@ -1,6 +1,6 @@
 import pytest
 
-from helper import load_vtk_mesh, cleanup
+from utilities import load_vtk_mesh, cleanup
 
 
 def test_WriteTetraMeshToVtk():
@@ -13,7 +13,7 @@ def test_WriteTetraMeshToVtk():
     num_cells = mesh.GetNumberOfCells()
     print("Number of tetrahedra:", num_cells)
     assert num_cells == 8
-    
+
     # check points of the mesh
     points = mesh.GetPoints()
     num_points = points.GetNumberOfPoints()
