@@ -38,7 +38,8 @@ namespace mito::mesh {
         // default constructor
         inline Mesh(const geometry_type & geometry)
         requires(N <= D)
-            : _geometry(geometry), _cells() {};
+            : _geometry(geometry), _cells()
+        {}
 
         inline ~Mesh() {}
 

@@ -27,7 +27,11 @@ function(mito_cxxInit)
     include(CheckCXXCompilerFlag)
 
     # request c++20
-    set(CMAKE_CXX_STANDARD 20)
+    set(CMAKE_CXX_STANDARD 20 PARENT_SCOPE)
+    set(CMAKE_CXX_STANDARD_REQUIRED True PARENT_SCOPE)
+
+    # additional compilation flags
+    set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -Wall -Wextra -pedantic -Werror" PARENT_SCOPE)
 
     # all done
 endfunction(mito_cxxInit)
@@ -135,6 +139,21 @@ endfunction(mito_shareCmakePackage)
 
 # set up python
 function(mito_pythonInit)
+
+    # python
+    find_package(Python 3.10 COMPONENTS Interpreter Development NumPy)
+
+    # pybind11
+    set(PYBIND11_PYTHON_VERSION ${Python_VERSION})
+    set(PYBIND11_FINDPYTHON ON) # Use new FindPython if available
+    find_package(pybind11)
+
+    # pybind11 pre-2.5 C++17 compilation is broken under Clang
+    # see https://github.com/pybind/pybind11/issues/1604#issuecomment-443385783
+    if(pybind11_VERSION VERSION_LESS 2.5 AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_compile_options(pybind11::module INTERFACE -fsized-deallocation)
+    endif()
+
     # ask the executable for the module suffix
     execute_process(
         COMMAND ${Python_EXECUTABLE} -c
@@ -146,6 +165,7 @@ function(mito_pythonInit)
 
     # export
     set(PYTHON3_SUFFIX ${PYTHON3_SUFFIX} PARENT_SCOPE)
+    set(Python_EXECUTABLE ${Python_EXECUTABLE} PARENT_SCOPE)
 
     # all done
 endfunction(mito_pythonInit)

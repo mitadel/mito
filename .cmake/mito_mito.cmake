@@ -12,17 +12,6 @@ function(mito_mitoLib)
         @ONLY
     )
 
-    # copy the mito headers over to the staging area
-    file(GLOB_RECURSE files
-        RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/lib/mito
-        CONFIGURE_DEPENDS
-        lib/mito/*.h lib/mito/*.icc
-    )
-
-    foreach(file ${files})
-        configure_file(lib/mito/${file} lib/mito/${file} COPYONLY)
-    endforeach()
-
     # the libmito target
     add_library(mito SHARED)
 
@@ -32,7 +21,7 @@ function(mito_mitoLib)
     # set the include directories
     target_include_directories(
         mito PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/lib>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>
         $<INSTALL_INTERFACE:${MITO_DEST_INCLUDE}>
     )
 
@@ -45,13 +34,11 @@ function(mito_mitoLib)
     # and the link dependencies
     target_link_libraries(
         mito
-        pyre::pyre
-        pyre::journal
     )
 
     # install all the mito headers
     install(
-        DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib/mito
+        DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/mito
         DESTINATION ${MITO_DEST_INCLUDE}
         FILES_MATCHING PATTERN *.h PATTERN *.icc
         PATTERN version.cc

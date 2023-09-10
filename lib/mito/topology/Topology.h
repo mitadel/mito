@@ -60,6 +60,10 @@ namespace mito::topology {
         // instantiate a tetrahedron
         inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices) -> simplex_t<3>;
 
+        template <int D>
+        inline auto simplices() const
+            -> const oriented_simplex_factory_t<D>::oriented_simplex_repository_t &;
+
         // returns whether the oriented simplex exists in the factory
         template <int N>
         inline auto exists(const simplex_composition_t<N> & simplices) const -> bool;

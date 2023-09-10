@@ -65,8 +65,7 @@ function(mito_test_driver testfile)
     mito_test_target(target ${testfile})
 
     # setup the test working directory
-    get_filename_component(path ${testfile} DIRECTORY)
-    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})
+    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/tests/input)
 
     # make it a test case
     add_test(NAME ${testname} COMMAND ${target} ${ARGN} WORKING_DIRECTORY ${test_workdir})
@@ -88,8 +87,7 @@ function(mito_test_driver_mpi testfile slots)
     mito_test_target(target ${testfile})
 
     # setup the test working directory
-    get_filename_component(path ${testfile} DIRECTORY)
-    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})
+    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/tests/input)
 
     # make it a test case
     add_test(NAME ${testname} COMMAND ${MPIEXEC} ${MPIEXEC_NUMPROC_FLAG} ${slots}
@@ -116,22 +114,30 @@ function(mito_test_driver_pytest_check testfile)
     # generate the name of the target for checking the output
     string(APPEND targetScript "${targetTest}.pytest")
 
-    # get the filename
-    get_filename_component(fileName ${testfile} NAME_WE)
+    # assemble the full path to the python file that does the check
+    get_filename_component(dir ${testfile} DIRECTORY)
+    file(REAL_PATH ${dir} dir)
+    get_filename_component(file ${testfile} NAME_WE)
+    set(filepath "${dir}/${file}.py")
 
-    # get the test directory
-    get_filename_component(path ${testfile} DIRECTORY)
-    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/${path})
+    # setup the test working directory
+    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/tests/input)
 
     # make a test case that checks the output
     add_test(NAME ${targetScript}
-        COMMAND ${BASH_PROGRAM} -c "pytest -v ${fileName}.py" WORKING_DIRECTORY ${test_workdir}
+        COMMAND ${BASH_PROGRAM} -c "pytest -v ${filepath}" WORKING_DIRECTORY ${test_workdir}
     )
 
     # specify the order of execution
     set_property(TEST ${targetScript} PROPERTY
         DEPENDS ${targetTest}
     )
+
+    # register the runtime environment requirements
+    set_property(TEST ${targetScript} PROPERTY ENVIRONMENT
+        PYTHONPATH=${CMAKE_CURRENT_SOURCE_DIR}/tests/scripts
+    )
+
 endfunction(mito_test_driver_pytest_check)
 
 # register a python script as a test case; use a path relative to {PROJECT_SOURCE_DIR}
@@ -139,24 +145,19 @@ function(mito_test_python_testcase testfile)
     # generate the name of the testcase
     mito_test_testcase(testname ${testfile} ${ARGN})
 
-    # we run the test cases in their local directory, so we need the base name
-    get_filename_component(base ${testfile} NAME)
+    # get the absolute path to the file
+    file(REAL_PATH ${testfile} testfile)
 
-    # get the relative path to the test case local directory so we can set the working dir
-    get_filename_component(dir ${testfile} DIRECTORY)
+    # setup the test working directory
+    set(test_workdir ${CMAKE_CURRENT_SOURCE_DIR}/tests/input)
 
     # set up the harness
     add_test(NAME ${testname}
-        COMMAND ${Python_EXECUTABLE} ./${base} ${ARGN})
+        COMMAND ${Python_EXECUTABLE} ${testfile} ${ARGN} WORKING_DIRECTORY ${test_workdir})
 
     # register the runtime environment requirements
     set_property(TEST ${testname} PROPERTY ENVIRONMENT
         PYTHONPATH=${MITO_DEST_FULL_EXTENSIONS}
-    )
-
-    # launch from the location of the testcase
-    set_property(TEST ${testname} PROPERTY
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/${dir}
     )
 
     # all done
