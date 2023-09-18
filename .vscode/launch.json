@@ -12,24 +12,6 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "g++ - Build and debug active file",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "stopAtEntry": true,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "linux": {
-                "MIMode": "gdb",
-                "miDebuggerPath": "/usr/bin/gdb"
-            },
-            "osx": {
-                "MIMode": "lldb"
-            },
-            "preLaunchTask": "g++ build active file"
-        },
-        {
             "name": "Debug cmake target",
             "type": "cppdbg",
             "request": "launch",
