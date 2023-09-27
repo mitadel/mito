@@ -4,7 +4,7 @@ from utilities import load_vtk_mesh, cleanup
 
 
 def test_WritePointCloudToVtk():
-    filename = "point_cloud_output.vtk"
+    filename = "point_cloud_output.vtu"
 
     # get the loaded mesh
     mesh = load_vtk_mesh(filename)

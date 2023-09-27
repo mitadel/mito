@@ -4,7 +4,7 @@ from utilities import load_vtk_mesh, cleanup
 
 
 def test_WriteTetraMeshToVtk():
-    filename = "tetra_output.vtk"
+    filename = "tetra_output.vtu"
 
     # get the loaded mesh
     mesh = load_vtk_mesh(filename)

@@ -106,7 +106,7 @@ namespace mito::io::vtk {
     {
         // write the grid to file
         auto writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-        writer->SetFileName((fileName + ".vtk").c_str());
+        writer->SetFileName((fileName + ".vtu").c_str());
 
 #if VTK_MAJOR_VERSION <= 8
         writer->SetInput(gridVtk);
