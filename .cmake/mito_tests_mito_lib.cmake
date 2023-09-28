@@ -19,6 +19,7 @@ mito_test_driver(tests/mito.lib/materials/gent.cc)
 # math
 mito_test_driver(tests/mito.lib/math/fields.cc)
 mito_test_driver(tests/mito.lib/math/functions.cc)
+mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
