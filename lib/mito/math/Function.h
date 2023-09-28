@@ -71,9 +71,25 @@ namespace mito::math {
     // Algebraic operations on Function
     // TODO: see if expression templates can be used to avoid copies with intermediate results
 
-    // fa + fb
+    // fa + fb (identical return type for fa and fb)
     template <class X, class Y>
     constexpr function_t<X, Y> operator+(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
+    {
+        return function_t<X, Y>([fA, fB](const X & x) { return fA(x) + fB(x); });
+    }
+
+    // fa + fb (return type for fa is convertible to return type for fb)
+    template <class X, class Y, class Z>
+    constexpr function_t<X, Z> operator+(const function_t<X, Y> & fA, const function_t<X, Z> & fB)
+    requires(std::is_convertible<Y, Z>::value)
+    {
+        return function_t<X, Z>([fA, fB](const X & x) { return fA(x) + fB(x); });
+    }
+
+    // fa + fb (return type for fb is convertible to return type for fa)
+    template <class X, class Y, class Z>
+    constexpr function_t<X, Y> operator+(const function_t<X, Y> & fA, const function_t<X, Z> & fB)
+    requires(std::is_convertible<Z, Y>::value)
     {
         return function_t<X, Y>([fA, fB](const X & x) { return fA(x) + fB(x); });
     }
@@ -115,6 +131,16 @@ namespace mito::math {
     constexpr function_t<X, Y> operator*(const function_t<X, Y> & f, const real & a)
     {
         return a * f;
+    }
+
+    // scalar function times tensor
+    template <class X, typename T, class packingT, int... I>
+    constexpr auto operator*(
+        const function_t<X, real> & f, const pyre::tensor::Tensor<T, packingT, I...> & A)
+        -> function_t<X, pyre::tensor::Tensor<T, packingT, I...>>
+    {
+        return function_t<X, pyre::tensor::Tensor<T, packingT, I...>>(
+            [f, A](const X & x) { return f(x) * A; });
     }
 
     // f / a

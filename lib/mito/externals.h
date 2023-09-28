@@ -7,6 +7,7 @@
 #include <array>
 #include <vector>
 #include <iostream>
+#include <type_traits>
 
 #define HAVE_TENSOR
 #define HAVE_COMPACT_PACKINGS
