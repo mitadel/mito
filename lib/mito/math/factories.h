@@ -58,13 +58,13 @@ namespace mito::math {
 
     // construct a one-form based on its metric-equivalent vector
     template <int D>
-    constexpr auto one_form(mito::vector_t<D> & vector)
+    constexpr auto one_form(mito::vector_t<D> vector)
     {
         // return the contraction of a given vector {x} with {vector}
-        return function([vector](const mito::vector_t<D> & x) -> mito::scalar_t {
+        return [vector](const mito::vector_t<D> & x) -> mito::scalar_t {
             // return the contraction of {vector} with {x}
             return vector * x;
-        });
+        };
     }
 }
 
