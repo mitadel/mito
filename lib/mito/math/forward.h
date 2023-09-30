@@ -5,10 +5,6 @@
 
 namespace mito::math {
 
-    // alias for functor
-    template <class X, class Y = scalar_t>
-    using functor_t = std::function<Y(const X &)>;
-
     // class function
     template <class X, class Y = scalar_t>
     class Function;

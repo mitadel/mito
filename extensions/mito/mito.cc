@@ -69,7 +69,7 @@ PYBIND11_MODULE(mito, m)
         // the constructor
         .def(
             // the implementation
-            mito::py::init<const mito::math::functor_t<mito::vector_t<3>, mito::scalar_t> &>())
+            mito::py::init<const mito::math::function_t<mito::vector_t<3>, mito::scalar_t> &>())
         // operator()
         .def(
             "__call__",
@@ -86,7 +86,7 @@ PYBIND11_MODULE(mito, m)
         // the constructor
         .def(
             // the implementation
-            mito::py::init<const mito::math::functor_t<mito::vector_t<2>, mito::scalar_t> &>())
+            mito::py::init<const mito::math::function_t<mito::vector_t<2>, mito::scalar_t> &>())
         // operator()
         .def(
             "__call__",
