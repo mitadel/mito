@@ -64,36 +64,36 @@ PYBIND11_MODULE(mito, m)
         ;
 
 
-    // the mito scalar Field interface
-    mito::py::class_<mito::math::scalar_field_t<3>>(m, "ScalarField3D")
+    // the mito scalar function 2D
+    mito::py::class_<
+        mito::math::function_t<std::function<mito::scalar_t(const mito::vector_t<2> &)>>>(
+        m, "ScalarFunction2D")
         // the constructor
-        .def(
-            // the implementation
-            mito::py::init<const mito::math::function_t<mito::vector_t<3>, mito::scalar_t> &>())
+        .def(mito::py::init<std::function<mito::scalar_t(const mito::vector_t<2> &)>>())
         // operator()
         .def(
             "__call__",
             // the implementation
-            [](const mito::math::scalar_field_t<3> & self, const mito::vector_t<3> & x) {
-                return self(x);
-            })
+            [](const mito::math::function_t<
+                   std::function<mito::scalar_t(const mito::vector_t<2> &)>> & self,
+               const mito::vector_t<2> & x) { return self(x); })
         // done
         ;
 
 
-    // the mito scalar Field interface
-    mito::py::class_<mito::math::scalar_field_t<2>>(m, "ScalarField2D")
+    // the mito scalar function 3D
+    mito::py::class_<
+        mito::math::function_t<std::function<mito::scalar_t(const mito::vector_t<3> &)>>>(
+        m, "ScalarFunction3D")
         // the constructor
-        .def(
-            // the implementation
-            mito::py::init<const mito::math::function_t<mito::vector_t<2>, mito::scalar_t> &>())
+        .def(mito::py::init<std::function<mito::scalar_t(const mito::vector_t<3> &)>>())
         // operator()
         .def(
             "__call__",
             // the implementation
-            [](const mito::math::scalar_field_t<2> & self, const mito::vector_t<2> & x) {
-                return self(x);
-            })
+            [](const mito::math::function_t<
+                   std::function<mito::scalar_t(const mito::vector_t<3> &)>> & self,
+               const mito::vector_t<3> & x) { return self(x); })
         // done
         ;
 
