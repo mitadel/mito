@@ -1,4 +1,5 @@
 #include <type_traits>
+#include <memory>
 
 template <typename T>
 struct lambda_traits : public lambda_traits<decltype(&T::operator())> {};
@@ -9,35 +10,58 @@ struct lambda_traits<ReturnT (ClassT::*)(ArgumentT) const> {
     typedef ArgumentT argument_type;
 };
 
-// helper typedef to remove the reference to F&&
-template <class F>
-using remove_reference_lambda = typename std::remove_reference_t<F>;
-
-template <class F>
+template <class X, class Y>
 class Function {
-
-    using traits = lambda_traits<remove_reference_lambda<F>>;
-    using X = typename std::remove_reference_t<typename traits::argument_type>;
-    using Y = typename std::remove_reference_t<typename traits::result_type>;
-
   public:
-    constexpr Function(F f) : _f { f } {}
-    constexpr auto operator()(X x) const -> Y { return _f(x); }
+    template <class F>
+    constexpr Function(F f) : ptr { std::make_unique<implementation<F>>(f) }
+    {}
 
-    F _f;
+    constexpr ~Function() {}
+
+    constexpr auto operator()(X x) const -> Y { return ptr->get(x); }
+
+  private:
+    struct interface {
+        constexpr virtual auto get(X) -> Y = 0;
+        constexpr virtual ~interface() = default;
+    };
+
+    template <class F>
+    struct implementation final : interface {
+        constexpr explicit(true) implementation(F f) : _f { f } {}
+        constexpr auto get(X x) -> Y { return _f(x); }
+        constexpr ~implementation() {};
+
+      private:
+        F _f;
+    };
+
+    std::unique_ptr<interface> ptr;
 };
 
-// make function from lambda function
 template <class F>
 constexpr auto
-function(F && f)
+function(F f)
 {
-    return Function<F>(f);
+    return Function<
+        typename lambda_traits<F>::argument_type, typename lambda_traits<F>::result_type>(f);
+}
+
+
+consteval auto
+test_capture()
+{
+    auto f = function([&](int i) { return 2 * i; });
+    return f(2);
 }
 
 int
 main()
 {
-    constexpr auto f = function([](double i) -> int { return 2 * i; });
-    static_assert(f(1.0) == 2);
+    // auto f = function([&](int i) { return 2 * i; });
+    // static_assert(4 == f(2));
+
+    static_assert(4 == test_capture());
+    return 0;
 }
