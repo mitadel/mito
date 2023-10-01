@@ -6,7 +6,6 @@
 static constexpr mito::real PI = 4.0 * atan(1.0);
 
 //
-// mito::real
 mito::scalar_t
 my_function(const mito::vector_t<2> & x)
 {
@@ -59,28 +58,27 @@ TEST(Functions, Sanity)
     constexpr auto function12 = (function1 + function2) / function1;
     static_assert((function1(x) + function2(x)) / function1(x) == function12(x));
 
-    // TOFIX: fix the rest of the test
-    // auto function13 = mito::math::function(my_function);
-    // auto function14 = function13 + function1;
+    [[maybe_unused]] auto function13 = mito::math::function(&my_function);
+    [[maybe_unused]] auto function14 = function13 + function1;
 
-    // std::function<mito::real(const mito::vector_t<2> &)> my_other_f(my_function);
-    // auto my_other_function = mito::math::function(my_other_f);
-    // auto function15 = my_other_function + function1;
+    auto my_other_function =
+        mito::math::function(std::function<mito::real(const mito::vector_t<2> &)> { my_function });
+    auto function15 = my_other_function + function1;
 
-    // // a vector function
-    // auto function16 = mito::math::function([](const mito::vector_t<2> & x) -> mito::vector_t<3> {
-    //     return { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
-    // });
+    // a vector function
+    auto function16 = mito::math::function([](const mito::vector_t<2> & x) -> mito::vector_t<3> {
+        return { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
+    });
 
-    // // vector times scalar multiplication
-    // mito::real alpha = 10;
-    // auto function17 = alpha * function16;
-    // std::cout << "function16 = " << function16(x) << std::endl;
-    // std::cout << "function17 = " << function17(x) << std::endl;
+    // vector times scalar multiplication
+    mito::real alpha = 10;
+    auto function17 = alpha * function16;
+    std::cout << "function16 = " << function16(x) << std::endl;
+    std::cout << "function17 = " << function17(x) << std::endl;
 
-    // // inner product between vectors
-    // mito::vector_t<3> my_vector = { 1, 2, 3 };
-    // auto function18 = my_vector * function16;
-    // std::cout << "function16 = " << function16(x) << std::endl;
-    // std::cout << "function18 = " << function18(x) << std::endl;
+    // inner product between vectors
+    mito::vector_t<3> my_vector = { 1, 2, 3 };
+    auto function18 = my_vector * function16;
+    std::cout << "function16 = " << function16(x) << std::endl;
+    std::cout << "function18 = " << function18(x) << std::endl;
 }

@@ -5,12 +5,6 @@
 
 namespace mito::math {
 
-    // TOFIX: do we need this function?
-    // make function from pointer to function
-    template <class X, class Y>
-    constexpr auto function(Y(f)(const X &));
-
-    // TOFIX: do we need this function?
     // make function from lambda function
     template <class F>
     constexpr auto function(F && f);

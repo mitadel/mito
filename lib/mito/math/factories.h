@@ -19,16 +19,6 @@ namespace mito::math {
         return constant<X, 1.0>();
     }
 
-    // TOFIX: do we need this function?
-    // factories for function
-    // make function from pointer to function
-    // template <class X, class Y>
-    // constexpr auto function(Y(f)(const X &))
-    // {
-    //     return function_t<X, Y>(f);
-    // }
-
-    // TOFIX: do we need this function?
     // make function from lambda function
     template <class F>
     constexpr auto function(F && f)

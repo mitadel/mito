@@ -10,8 +10,8 @@ namespace mito::math {
     class Function {
 
       private:
-        // TOFIX: remove remove_reference if useless
-        using traits = lambda_traits<remove_reference_lambda<F>>;
+        using traits = std::conditional<
+            std::is_pointer<F>::value, pointer_function_traits<F>, lambda_traits<F>>::type;
 
       public:
         using X = typename traits::argument_type;
