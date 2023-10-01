@@ -9,6 +9,7 @@ static constexpr mito::real PI = 4.0 * atan(1.0);
 mito::scalar_t
 my_function(const mito::vector_t<2> & x)
 {
+    // TOFIX: we may use https://github.com/kthohr/gcem to make {cos} {constexpr}
     return cos(x[0] * x[1]) + 1.0;
 }
 
@@ -66,19 +67,20 @@ TEST(Functions, Sanity)
     auto function15 = my_other_function + function1;
 
     // a vector function
-    auto function16 = mito::math::function([](const mito::vector_t<2> & x) -> mito::vector_t<3> {
-        return { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
-    });
+    constexpr auto function16 =
+        mito::math::function([](const mito::vector_t<2> & x) -> mito::vector_t<3> {
+            return { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
+        });
 
     // vector times scalar multiplication
-    mito::real alpha = 10;
-    auto function17 = alpha * function16;
+    constexpr mito::real alpha = 10;
+    constexpr auto function17 = alpha * function16;
     std::cout << "function16 = " << function16(x) << std::endl;
     std::cout << "function17 = " << function17(x) << std::endl;
 
     // inner product between vectors
-    mito::vector_t<3> my_vector = { 1, 2, 3 };
-    auto function18 = my_vector * function16;
+    constexpr mito::vector_t<3> my_vector = { 1, 2, 3 };
+    constexpr auto function18 = my_vector * function16;
     std::cout << "function16 = " << function16(x) << std::endl;
     std::cout << "function18 = " << function18(x) << std::endl;
 }
