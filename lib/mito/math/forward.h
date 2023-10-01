@@ -6,12 +6,12 @@
 namespace mito::math {
 
     // class function
-    template <class X, class Y = scalar_t>
+    template <class F>
     class Function;
 
     // alias for function
-    template <class X, class Y = scalar_t>
-    using function_t = Function<X, Y>;
+    template <class F>
+    using function_t = Function<F>;
 
     // class field
     template <class X, class Y = scalar_t>

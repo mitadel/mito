@@ -6,9 +6,24 @@
 
 namespace mito::math {
 
-    // We need a class function to explicitly put the return value Y in the template
-    template <class X, class Y>
-    class Function : public std::function<Y(X)> {};
+    template <class F>
+    class Function {
+
+      private:
+        // TOFIX: remove remove_reference if useless
+        using traits = lambda_traits<remove_reference_lambda<F>>;
+
+      public:
+        using X = typename traits::argument_type;
+        using Y = typename traits::result_type;
+
+      public:
+        constexpr Function(F f) : _f { f } {}
+        constexpr auto operator()(X x) const -> Y { return _f(x); }
+
+      private:
+        F _f;
+    };
 }
 
 #endif    // mito_math_Function_h

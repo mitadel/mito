@@ -15,9 +15,9 @@ namespace mito::math {
     template <class F>
     constexpr auto function(F && f);
 
-    // make a vector-valued function from N scalar-valued functions
-    template <class X, int N>
-    constexpr auto function(const function_t<X, scalar_t> (&f_list)[N]);
+    // // make a vector-valued function from N scalar-valued functions
+    // template <class X, int N>
+    // constexpr auto function(const function_t<X, scalar_t> (&f_list)[N]);
 
     // factories for field from either a field_t or a function_t (without derivatives)
     template <class X, class Y, template <class, class> class FUNCTION>

@@ -10,148 +10,127 @@
 namespace mito::math {
 
     // fa + fb (identical return type for fa and fb)
-    template <class X, class Y>
-    constexpr auto operator+(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
-        -> function_t<X, Y>
+    template <class F1, class F2>
+    constexpr auto operator+(const function_t<F1> & fA, const function_t<F2> & fB)
+    requires(std::is_same<typename function_t<F1>::X, typename function_t<F2>::X>::value)
     {
-        return function_t<X, Y>([fA, fB](const X & x) { return fA(x) + fB(x); });
-    }
-
-    // fa + fb (return type for fa is convertible to return type for fb)
-    template <class X, class Y, class Z>
-    constexpr auto operator+(const function_t<X, Y> & fA, const function_t<X, Z> & fB)
-        -> function_t<X, Z>
-    requires(std::is_convertible<Y, Z>::value)
-    {
-        return function_t<X, Z>([fA, fB](const X & x) { return fA(x) + fB(x); });
-    }
-
-    // fa + fb (return type for fb is convertible to return type for fa)
-    template <class X, class Y, class Z>
-    constexpr auto operator+(const function_t<X, Y> & fA, const function_t<X, Z> & fB)
-        -> function_t<X, Y>
-    requires(std::is_convertible<Z, Y>::value)
-    {
-        return function_t<X, Y>([fA, fB](const X & x) { return fA(x) + fB(x); });
+        return function([fA, fB](const function_t<F1>::X & x) { return fA(x) + fB(x); });
     }
 
     // fa * fb
-    template <class X, class Y>
-    constexpr auto operator*(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
-        -> function_t<X, Y>
+    template <class F1, class F2>
+    constexpr auto operator*(const function_t<F1> & fA, const function_t<F2> & fB)
+    requires(std::is_same<typename function_t<F1>::X, typename function_t<F2>::X>::value)
     {
-        return function_t<X, Y>([fA, fB](const X & x) { return fA(x) * fB(x); });
+        return function([fA, fB](const function_t<F1>::X & x) { return fA(x) * fB(x); });
     }
 
     // y * f (inner product)
-    template <class X, class Y>
-    constexpr auto operator*(const Y & y, const function_t<X, Y> & f)
-        -> function_t<X, typename type<Y>::value>
-    requires(Y::size != 1)
+    template <class F>
+    constexpr auto operator*(const typename function_t<F>::Y & y, const function_t<F> & f)
+    requires(function_t<F>::Y::size != 1)
     {
-        return function_t<X, typename type<Y>::value>([y, f](const X & x) { return y * f(x); });
+        return function([y, f](const function_t<F>::X & x) { return y * f(x); });
     }
 
     // f * y (inner product)
-    template <class X, class Y>
-    constexpr auto operator*(const function_t<X, Y> & f, const Y & y)
-        -> function_t<X, typename type<Y>::value>
-    requires(Y::size != 1)
+    template <class F>
+    constexpr auto operator*(const function_t<F> & f, const typename function_t<F>::Y & y)
+    requires(function_t<F>::Y::size != 1)
     {
         return y * f;
     }
 
     // a * f
-    template <class X, class Y>
-    constexpr auto operator*(const real & a, const function_t<X, Y> & f) -> function_t<X, Y>
+    template <class F>
+    constexpr auto operator*(const real & a, const function_t<F> & f)
     {
-        return function_t<X, Y>([a, f](const X & x) { return a * f(x); });
+        return function([a, f](const function_t<F>::X & x) { return a * f(x); });
     }
 
     // f * a
-    template <class X, class Y>
-    constexpr auto operator*(const function_t<X, Y> & f, const real & a) -> function_t<X, Y>
+    template <class F>
+    constexpr auto operator*(const function_t<F> & f, const real & a)
     {
         return a * f;
     }
 
     // scalar function times tensor
-    template <class X, typename T, class packingT, int... I>
+    template <class F, typename T, class packingT, int... I>
     constexpr auto operator*(
-        const function_t<X, real> & f, const pyre::tensor::Tensor<T, packingT, I...> & A)
-        -> function_t<X, pyre::tensor::Tensor<T, packingT, I...>>
+        const function_t<F> & f, const pyre::tensor::Tensor<T, packingT, I...> & A)
     {
-        return function_t<X, pyre::tensor::Tensor<T, packingT, I...>>(
-            [f, A](const X & x) { return f(x) * A; });
+        return function([f, A](const function_t<F>::X & x) { return f(x) * A; });
     }
 
     // f / a
-    template <class X, class Y>
-    constexpr auto operator/(const function_t<X, Y> & f, const real & a) -> function_t<X, Y>
+    template <class F>
+    constexpr auto operator/(const function_t<F> & f, const real & a)
     {
         return (1.0 / a) * f;
     }
 
     // -f
-    template <class X, class Y>
-    constexpr auto operator-(const function_t<X, Y> & f) -> function_t<X, Y>
+    template <class F>
+    constexpr auto operator-(const function_t<F> & f)
     {
         return -1.0 * f;
     }
 
     // fa - fb
-    template <class X, class Y>
-    constexpr auto operator-(const function_t<X, Y> & fA, const function_t<X, Y> & fB)
-        -> function_t<X, Y>
+    template <class F1, class F2>
+    constexpr auto operator-(const function_t<F1> & fA, const function_t<F2> & fB)
     {
         return fA + (-fB);
     }
 
     // Special algebraic functions for scalar functions
     // a / f
-    template <class X>
-    constexpr auto operator/(const real & a, const function_t<X, scalar_t> & f)
-        -> function_t<X, scalar_t>
+    template <class F>
+    constexpr auto operator/(const real & a, const function_t<F> & f)
+    requires(std::is_same<typename function_t<F>::Y, scalar_t>::value)
     {
-        return function_t<X, scalar_t>([a, f](const X & x) { return a / f(x); });
+        return function([a, f](const function_t<F>::X & x) { return a / f(x); });
     }
 
     // f1 / f2
-    template <class X, class Y>
-    constexpr auto operator/(const function_t<X, Y> & f1, const function_t<X, scalar_t> & f2)
-        -> function_t<X, Y>
+    template <class F1, class F2>
+    constexpr auto operator/(const function_t<F1> & fa, const function_t<F2> & fb)
+    requires(
+        std::is_same<typename function_t<F1>::X, typename function_t<F2>::X>::value
+        && std::is_same<typename function_t<F2>::Y, scalar_t>::value)
     {
-        return function_t<X, Y>([f1, f2](const X & x) { return f1(x) / f2(x); });
+        return function([fa, fb](const function_t<F1>::X & x) { return fa(x) / fb(x); });
     }
 
     // a + f
-    template <class X>
-    constexpr auto operator+(const real & a, const function_t<X, scalar_t> & f)
-        -> function_t<X, scalar_t>
+    template <class F>
+    constexpr auto operator+(const real & a, const function_t<F> & f)
+    requires(std::is_same<typename function_t<F>::Y, scalar_t>::value)
     {
-        return function_t<X, scalar_t>([a, f](const X & x) { return a + f(x); });
+        return function([a, f](const function_t<F>::X & x) { return a + f(x); });
     }
 
     // f + a
-    template <class X>
-    constexpr auto operator+(const function_t<X, scalar_t> & f, const real & a)
-        -> function_t<X, scalar_t>
+    template <class F>
+    constexpr auto operator+(const function_t<F> & f, const real & a)
+    requires(std::is_same<typename function_t<F>::Y, scalar_t>::value)
     {
         return a + f;
     }
 
     // a - f
-    template <class X>
-    constexpr auto operator-(const real & a, const function_t<X, scalar_t> & f)
-        -> function_t<X, scalar_t>
+    template <class F>
+    constexpr auto operator-(const real & a, const function_t<F> & f)
+    requires(std::is_same<typename function_t<F>::Y, scalar_t>::value)
     {
         return a + (-f);
     }
 
     // f - a
-    template <class X>
-    constexpr auto operator-(const function_t<X, scalar_t> & f, const real & a)
-        -> function_t<X, scalar_t>
+    template <class F>
+    constexpr auto operator-(const function_t<F> & f, const real & a)
+    requires(std::is_same<typename function_t<F>::Y, scalar_t>::value)
     {
         return f + (-a);
     }
