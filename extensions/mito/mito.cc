@@ -139,26 +139,27 @@ PYBIND11_MODULE(mito, m)
         ;
 
 
-    // the mito Integrator interface
-    mito::py::class_<mito::quadrature::integrator_t<
-        mito::quadrature::GAUSS, 2 /* degree of exactness */,
-        mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>>(
-        m, "GaussIntegrator2Triangle2D")
-        // the constructor
-        .def(
-            // the implementation
-            mito::py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
-        // interface
-        // QUESTION: should this be called integrateScalarfield?
-        // integrate a scalar field
-        .def(
-            "integrate",
-            // the method;
-            &mito::quadrature::integrator_t<
-                mito::quadrature::GAUSS, 2 /* degree of exactness */,
-                mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>::integrate<mito::real>,
-            // the docstring
-            "integrate a field")
-        // done
-        ;
+    // // the mito Integrator interface
+    // mito::py::class_<mito::quadrature::integrator_t<
+    //     mito::quadrature::GAUSS, 2 /* degree of exactness */,
+    //     mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>>(
+    //     m, "GaussIntegrator2Triangle2D")
+    //     // the constructor
+    //     .def(
+    //         // the implementation
+    //         mito::py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
+    //     // interface
+    //     // QUESTION: should this be called integrateScalarfield?
+    //     // integrate a scalar field
+    //     .def(
+    //         "integrate",
+    //         // the method;
+    //         &mito::quadrature::integrator_t<
+    //             mito::quadrature::GAUSS, 2 /* degree of exactness */,
+    //             mito::manifolds::manifold_t<mito::topology::triangle_t,
+    //             2>>::integrate<mito::real>,
+    //         // the docstring
+    //         "integrate a field")
+    //     // done
+    //     ;
 }
