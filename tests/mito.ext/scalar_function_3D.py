@@ -5,7 +5,7 @@ from numpy import cos
 
 
 def myfunction(x):
-    return eval('cos(x[0] * x[1]) + x[2]')
+    return cos(x[0] * x[1]) + x[2]
 
 
 field = mito.ScalarFunction3D(myfunction)
