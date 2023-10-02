@@ -11,8 +11,8 @@ namespace mito::math {
 
     template <typename ClassT, typename ReturnT, typename ArgumentT>
     struct lambda_traits<ReturnT (ClassT::*)(ArgumentT) const> {
-        typedef ReturnT result_type;
-        typedef ArgumentT argument_type;
+        using result_type = ReturnT;
+        using argument_type = ArgumentT;
     };
 
     // traits for pointers to function
@@ -21,8 +21,8 @@ namespace mito::math {
 
     template <typename ReturnT, typename ArgumentT>
     struct pointer_function_traits<ReturnT (*)(ArgumentT)> {
-        typedef ReturnT result_type;
-        typedef ArgumentT argument_type;
+        using result_type = ReturnT;
+        using argument_type = ArgumentT;
     };
 }
 
