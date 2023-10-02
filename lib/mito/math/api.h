@@ -5,7 +5,7 @@
 
 namespace mito::math {
 
-    // make function from lambda function
+    // functions factory
     template <class F>
     constexpr auto function(F && f);
 

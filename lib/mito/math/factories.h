@@ -19,12 +19,13 @@ namespace mito::math {
         return constant<X, 1.0>();
     }
 
-    // make function from lambda function
+    // functions factory
     template <class F>
     constexpr auto function(F && f)
     {
         return function_t<F>(f);
     }
+
     // TOFIX: do we need this?
     // // make a vector-valued function from N scalar-valued functions
     // template <class X, int N>
