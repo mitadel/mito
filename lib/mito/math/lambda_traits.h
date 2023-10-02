@@ -15,10 +15,6 @@ namespace mito::math {
         typedef ArgumentT argument_type;
     };
 
-    // helper typedef to remove the reference to F&&
-    template <class F>
-    using remove_reference_lambda = typename std::remove_reference_t<F>;
-
     // traits for pointers to function
     template <typename T>
     struct pointer_function_traits : public pointer_function_traits<decltype(&T::operator())> {};
