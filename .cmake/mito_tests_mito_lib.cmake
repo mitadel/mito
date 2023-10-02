@@ -13,14 +13,16 @@ if(WITH_VTK)
     mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_2D.cc)
 endif()
 
+# manifolds
+# mito_test_driver(tests/mito.lib/manifolds/fields.cc)
+mito_test_driver(tests/mito.lib/manifolds/one_forms.cc)
+
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
 
 # math
-mito_test_driver(tests/mito.lib/math/fields.cc)
 mito_test_driver(tests/mito.lib/math/functions.cc)
 mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
-mito_test_driver(tests/mito.lib/math/one_forms.cc)
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
