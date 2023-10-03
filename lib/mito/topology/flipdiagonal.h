@@ -33,16 +33,16 @@ namespace mito::topology {
         -> vertex_vector_t
     {
         // need a regular set (not an unordered one) because set_difference works with ordered sets
-        using vertex_set_t = std::set<vertex_t>;
+        using vertex_set_type = std::set<vertex_t>;
 
-        vertex_set_t vertices;
+        vertex_set_type vertices;
         simplex0->vertices(vertices);
         simplex1->vertices(vertices);
 
-        vertex_set_t shared_simplex_vertices;
+        vertex_set_type shared_simplex_vertices;
         shared_simplex->vertices(shared_simplex_vertices);
 
-        vertex_set_t opposite_vertices;
+        vertex_set_type opposite_vertices;
         std::set_difference(
             std::begin(vertices), std::end(vertices), std::begin(shared_simplex_vertices),
             std::end(shared_simplex_vertices),
