@@ -97,11 +97,7 @@ namespace mito::topology {
             assert(std::size(vertices_collection) == std::size(vertices));
 
             // populate the array of vertices
-            int i = 0;
-            for (const auto & vertex : vertices_collection) {
-                vertices[i] = vertex;
-                ++i;
-            }
+            std::copy(vertices_collection.begin(), vertices_collection.end(), vertices.begin());
 
             // return the array of vertices
             return vertices;
