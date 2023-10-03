@@ -14,6 +14,9 @@ namespace mito::topology {
     template <int N>
     class Simplex : public utilities::Shareable {
 
+        // vertex set alias
+        using vertex_set_type = std::set<vertex_t>;
+
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
         // constructor for a simplex based on its composition in terms of subsimplices
@@ -67,6 +70,18 @@ namespace mito::topology {
             vertices.insert(_simplices[1]->footprint());
         }
 
+        auto vertices() const -> vertex_set_type
+        {
+            // use a set to cleanup duplicates
+            vertex_set_type vertex_set;
+
+            // populate the vertices
+            vertices(vertex_set);
+
+            // return the set of vertices
+            return vertex_set;
+        }
+
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void
@@ -108,10 +123,8 @@ namespace mito::topology {
                 }
             }
 
-            // use a set to cleanup duplicates
-            vertex_set_t vertices;
             // collect vertices of this simplex
-            this->vertices(vertices);
+            auto vertices = this->vertices();
 
             // if this simplex does not have N+1 vertices, something went wrong
             if (std::size(vertices) != int(N) + 1) {

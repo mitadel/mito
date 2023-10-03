@@ -15,9 +15,6 @@ namespace mito::topology {
     template <int N>
     using vertex_simplex_composition_t = std::array<vertex_t, N + 1>;
 
-    // vertex set alias
-    using vertex_set_t = element_set_t<vertex_t>;
-
     // vertex vector alias
     using vertex_vector_t = element_vector_t<vertex_t>;
 }

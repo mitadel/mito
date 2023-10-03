@@ -69,8 +69,7 @@ namespace mito::io::vtk {
             auto indexLocalPointVtk = 0;
 
             // retrieve vertices of the cell
-            topology::vertex_set_t vertices;
-            cell->vertices(vertices);
+            auto vertices = cell->vertices();
 
             // loop over the vertices of the cell
             for (const auto & vertex : vertices) {

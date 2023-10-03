@@ -87,11 +87,8 @@ namespace mito::topology {
         inline auto vertices() const -> vertex_simplex_composition_t<N>
         requires(N > 0)
         {
-            // a set of vertices
-            vertex_set_t vertices_collection;
-
             // fetch the vertices of this simplex
-            _footprint->vertices(vertices_collection);
+            auto vertices_collection = _footprint->vertices();
 
             // an array to store the composition of a N-simplex in terms of vertices
             vertex_simplex_composition_t<N> vertices;

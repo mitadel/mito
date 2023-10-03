@@ -87,9 +87,8 @@ namespace mito::manifolds {
         inline auto parametrization(const cell_t & cell, const parametric_point_t & point) const
             -> vector_t<D>
         {
-            // use a set to collect vertices without repeated entries
-            topology::vertex_set_t vertices;
-            cell->vertices(vertices);
+            // collect the element vertices
+            auto vertices = cell->vertices(vertices);
             vector_t<D> coordinates;
             // loop on vertices
             int v = 0;
@@ -114,8 +113,7 @@ namespace mito::manifolds {
                 std::cout << e;
                 // and the coordinates of the vertices
                 std::cout << "Vertices: " << std::endl;
-                topology::vertex_set_t vertices;
-                e->vertices(vertices);
+                auto vertices = e->vertices();
                 for (const auto & v : vertices) {
                     std::cout << coordinatesVertex(v) << std::endl;
                 }
