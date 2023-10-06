@@ -8,6 +8,7 @@
 // support
 #include "../math.h"
 #include "../mesh.h"
+#include "../utilities.h"
 
 #endif
 

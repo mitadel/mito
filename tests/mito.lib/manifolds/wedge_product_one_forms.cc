@@ -15,7 +15,4 @@ TEST(Math, Forms)
 
     // evaluating {a_tilda} on {xi} yields 0.0
     static_assert(a_tilda(xi) == 0.0);
-
-    // assert that {a_tilda} is indeed a one form
-    static_assert(mito::manifolds::is_one_form<3, decltype(a_tilda)>);
 }

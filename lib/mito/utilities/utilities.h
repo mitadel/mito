@@ -15,6 +15,10 @@ namespace mito::utilities {
             return reinterpret_cast<size_t>(item.id());
         }
     };
+
+    // strip constant/volatile and reference from type
+    template <typename T>
+    using base_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
 }
 
 
