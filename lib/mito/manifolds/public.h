@@ -16,6 +16,7 @@
 #include "metrics.h"
 #include "parametric.h"
 #include "forms.h"
+#include "OneForm.h"    // TOFIX: requires to be define after the forms.h header
 #include "Manifold.h"
 
 // factories implementation

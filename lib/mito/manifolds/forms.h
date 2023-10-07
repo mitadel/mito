@@ -5,17 +5,6 @@
 
 namespace mito::manifolds {
 
-    // construct a one-form based on its metric-equivalent vector
-    template <int D>
-    constexpr auto one_form(mito::vector_t<D> vector)
-    {
-        // return a one-form that, when contracted with {x}...
-        return mito::math::function([vector](const mito::vector_t<D> & x) -> mito::scalar_t {
-            // ... returns the contraction of {vector} with {x}
-            return vector * x;
-        });
-    }
-
     // concept for a function {F} being a one forms on a D-dimensional manifold
     template <class FUNCTION, int D>
     // {F} is a one form if:
