@@ -32,7 +32,7 @@ namespace mito::manifolds {
             mito::utilities::base_type<typename mito::math::function_t<F>::X>::size;
     };
 
-    // the wedge product of two forms
+    // the wedge product of two one-forms
     template <class F1, class F2, int D = input<F1>::dim>
     constexpr auto wedge(
         const mito::math::function_t<F1> & a_tilda, const mito::math::function_t<F2> & b_tilda)
