@@ -2,19 +2,6 @@
 #include <mito/base.h>
 #include <mito/manifolds.h>
 
-template <int D, class F1, class F2>
-constexpr auto
-wedge(
-    const mito::math::function_t<F1> & a_tilda,
-    const mito::math::function_t<F2> &
-        b_tilda)    // TOFIX: requires {a_tilda} and {b_tilda} one forms ...
-{
-    // return the contraction of a given vector {x} with {vector}
-    return mito::math::function([ a_tilda, b_tilda ](const mito::vector_t<D> & x) -> auto{
-        // return the contraction of {vector} with {x}
-        return a_tilda(x) * b_tilda - b_tilda(x) * a_tilda;
-    });
-}
 
 TEST(Math, Forms)
 {
