@@ -32,7 +32,7 @@ namespace mito::manifolds {
     template <int D, class F1, class F2>
     constexpr auto
     wedge(const mito::math::function_t<F1> & a_tilda, const mito::math::function_t<F2> & b_tilda)
-    // TOFIX: requires {a_tilda} and {b_tilda} one forms ...
+    requires (is_one_form<D, F1> && is_one_form<D, F2>)
     {
         // return the contraction of a given vector {x} with {vector}
         return mito::math::function([ a_tilda, b_tilda ](const mito::vector_t<D> & x) -> auto{
