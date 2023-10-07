@@ -17,7 +17,7 @@ namespace mito::manifolds {
     }
 
     // concept for a function {F} being a one forms on a D-dimensional manifold
-    template <int D, class FUNCTION>
+    template <class FUNCTION, int D>
     // {F} is a one form if:
     concept is_one_form =
         // ... it takes in input a mito::vector_t<D>
@@ -37,7 +37,7 @@ namespace mito::manifolds {
     constexpr auto wedge(
         const mito::math::function_t<F1> & a_tilda, const mito::math::function_t<F2> & b_tilda)
     requires(
-        is_one_form<D, mito::math::function_t<F1>> && is_one_form<D, mito::math::function_t<F2>>)
+        is_one_form<mito::math::function_t<F1>, D> && is_one_form<mito::math::function_t<F2>, D>)
     {
         // return a two-form that, when contracted with {x}...
         return mito::math::function([a_tilda, b_tilda](const mito::vector_t<D> & x) -> auto {
