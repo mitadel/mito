@@ -17,6 +17,10 @@ namespace mito::manifolds {
     template <class cellT, int D>
     using manifold_t = Manifold<cellT, D>;
 
+    // manifold alias
+    template <class F, int D>
+    using one_form_t = OneForm<F, D>;
+
 }
 
 
