@@ -6,6 +6,9 @@
 // external packages
 #include "externals.h"
 
+// manifolds utilities
+#include "utilities.h"
+
 // get the forward declarations
 #include "forward.h"
 
@@ -15,13 +18,14 @@
 // classes implementation
 #include "metrics.h"
 #include "parametric.h"
-#include "forms.h"
-#include "OneForm.h"    // TOFIX: requires to be define after the forms.h header
+#include "OneForm.h"
 #include "Manifold.h"
 
 // factories implementation
 #include "factories.h"
 
+// algebraic operations on forms
+#include "forms_algebra.h"
 
 #endif
 
