@@ -12,13 +12,6 @@ namespace mito::manifolds {
         return one_form([fA, fB](const mito::vector_t<D> & x) { return fA(x) + fB(x); });
     }
 
-    // tensor product of forms
-    template <class F1, class F2, int D>
-    constexpr auto operator*(const one_form_t<F1, D> & fA, const one_form_t<F2, D> & fB)
-    {
-        return function([fA, fB](const mito::vector_t<D> & x) { return fA(x) * fB; });
-    }
-
     // scalar * form
     template <class F, int D>
     constexpr auto operator*(const real & a, const one_form_t<F, D> & f)
@@ -31,6 +24,13 @@ namespace mito::manifolds {
     constexpr auto operator*(const one_form_t<F, D> & f, const real & a)
     {
         return a * f;
+    }
+
+    // tensor product of forms
+    template <class F1, class F2, int D>
+    constexpr auto operator*(const one_form_t<F1, D> & fA, const one_form_t<F2, D> & fB)
+    {
+        return one_form([fA, fB](const mito::vector_t<D> & x) { return fA(x) * fB; });
     }
 
     // unary operator- for forms
