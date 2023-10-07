@@ -25,10 +25,15 @@ namespace mito::manifolds {
         // ... and returns a scalar
         && std::is_same<typename FUNCTION::Y, mito::scalar_t>::value;
 
+    // type trait for the dimension of the input of function {F}
+    template <class F>
+    struct input {
+        static constexpr int dim =
+            mito::utilities::base_type<typename mito::math::function_t<F>::X>::size;
+    };
+
     // the wedge product of two forms
-    template <
-        class F1, class F2,
-        int D = mito::utilities::base_type<typename mito::math::function_t<F1>::X>::size>
+    template <class F1, class F2, int D = input<F1>::dim>
     constexpr auto wedge(
         const mito::math::function_t<F1> & a_tilda, const mito::math::function_t<F2> & b_tilda)
     requires(
