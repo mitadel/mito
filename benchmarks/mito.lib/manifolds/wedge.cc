@@ -46,7 +46,7 @@ wedge_array(int N)
     t.stop();
 
     // report
-    channel << "mito" << pyre::journal::newline << pyre::journal::indent(1)
+    channel << "array" << pyre::journal::newline << pyre::journal::indent(1)
             << "result = " << result[0] << pyre::journal::newline << "process time = " << t.ms()
             << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
 
