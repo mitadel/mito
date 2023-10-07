@@ -13,6 +13,10 @@ namespace mito::manifolds {
     template <int D>
     using parametric_point_t = std::array<double, D>;
 
+    // manifold alias
+    template <class cellT, int D>
+    using manifold_t = Manifold<cellT, D>;
+
 }
 
 

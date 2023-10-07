@@ -9,10 +9,6 @@ namespace mito::manifolds {
     template <class cellT, int D>
     class Manifold;
 
-    // manifold alias
-    template <class cellT, int D>
-    using manifold_t = Manifold<cellT, D>;
-
     // class one-form
     template <class F, int D>
     requires(is_one_form<mito::math::function_t<F>, D>)
