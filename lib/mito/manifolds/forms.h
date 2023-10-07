@@ -9,9 +9,9 @@ namespace mito::manifolds {
     template <int D>
     constexpr auto one_form(mito::vector_t<D> vector)
     {
-        // return the contraction of a given vector {x} with {vector}
+        // return a one-form that, when contracted with {x}...
         return mito::math::function([vector](const mito::vector_t<D> & x) -> mito::scalar_t {
-            // return the contraction of {vector} with {x}
+            // ... returns the contraction of {vector} with {x}
             return vector * x;
         });
     }
@@ -39,9 +39,9 @@ namespace mito::manifolds {
     requires(
         is_one_form<D, mito::math::function_t<F1>> && is_one_form<D, mito::math::function_t<F2>>)
     {
-        // return the contraction of a given vector {x} with {vector}
+        // return a two-form that, when contracted with {x}...
         return mito::math::function([a_tilda, b_tilda](const mito::vector_t<D> & x) -> auto {
-            // return the contraction of {vector} with {x}
+            // ... returns the one-form prescribed by the wedge product
             return a_tilda(x) * b_tilda - b_tilda(x) * a_tilda;
         });
     }
