@@ -28,4 +28,7 @@ TEST(Math, Forms)
 
     // contract the two-form with two vectors
     static_assert(ab_two_form(xi1)(xi2) == -1.0);
+
+    // check anti-symmetry property
+    static_assert(ab_two_form(xi1)(xi2) == -ab_two_form(xi2)(xi1));
 }
