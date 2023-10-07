@@ -18,7 +18,7 @@ TEST(Math, Forms)
     constexpr auto b_tilda = mito::manifolds::one_form(b);
 
     // the wedge product of {a_tilda} and {b_tilda} (a two-form)
-    constexpr auto ab_two_form = wedge<3>(a_tilda, b_tilda);
+    constexpr auto ab_two_form = wedge(a_tilda, b_tilda);
 
     // a vector
     constexpr auto xi1 = mito::e_2<3>;

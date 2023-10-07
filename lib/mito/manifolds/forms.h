@@ -25,9 +25,10 @@ namespace mito::manifolds {
         // ... and returns a scalar
         && std::is_same<typename FUNCTION::Y, mito::scalar_t>::value;
 
-    // TODO: deduce template parameter {D} based on {a_tilda} and {b_tilda}
     // the wedge product of two forms
-    template <int D, class F1, class F2>
+    template <
+        class F1, class F2,
+        int D = mito::utilities::base_type<typename mito::math::function_t<F1>::X>::size>
     constexpr auto wedge(
         const mito::math::function_t<F1> & a_tilda, const mito::math::function_t<F2> & b_tilda)
     requires(
