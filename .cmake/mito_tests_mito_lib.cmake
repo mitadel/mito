@@ -17,7 +17,7 @@ endif()
 # mito_test_driver(tests/mito.lib/manifolds/fields.cc)
 mito_test_driver(tests/mito.lib/manifolds/one_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/tensor_product_forms.cc)
-mito_test_driver(tests/mito.lib/manifolds/wedge_product_one_forms.cc)
+mito_test_driver(tests/mito.lib/manifolds/wedge_product_forms.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
