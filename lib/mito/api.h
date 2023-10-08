@@ -113,6 +113,9 @@ namespace mito {
     requires(D > 2)
     constexpr auto e_22 = pyre::tensor::unit<pyre::tensor::matrix_t<D>, 2, 2>;
 
+    template <int D>
+    requires(D > 1)
+    constexpr auto identity = pyre::tensor::identity<pyre::tensor::matrix_t<D>>;
 }
 
 #endif
