@@ -14,6 +14,10 @@ namespace mito::manifolds {
         using output_type = typename mito::math::function_t<F>::Y;
         // strip from {X} the cv-qualifiers and references, and get the size of the input
         static constexpr int input_dim = mito::utilities::base_type<input_type>::size;
+        // strip from {X} the cv-qualifiers and references, and get the rank of the input
+        static constexpr int input_rank = mito::utilities::base_type<input_type>::input_rank;
+        // strip from {X} the cv-qualifiers and references, and get the size of the output
+        static constexpr int output_dim = mito::utilities::base_type<output_type>::size;
         // strip from {Y} the cv-qualifiers and references, and get the rank of the output
         static constexpr int output_rank = mito::utilities::base_type<output_type>::rank;
     };
