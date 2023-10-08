@@ -13,6 +13,9 @@ namespace mito::manifolds {
     template <class F>
     class Form;
 
+    // class field
+    template <class F>
+    class Field;
 
     // TOFIX: remove this datastructure
     // element vector alias

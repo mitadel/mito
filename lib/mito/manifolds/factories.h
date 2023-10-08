@@ -32,6 +32,13 @@ namespace mito::manifolds {
         });
     }
 
+    // factory for fields
+    template <class F>
+    constexpr auto field(F && f)
+    {
+        return mito::manifolds::field_t<F>(f);
+    }
+
 }
 
 
