@@ -22,6 +22,7 @@ namespace mito::manifolds {
         static constexpr int output_rank = mito::utilities::base_type<output_type>::rank;
     };
 
+
     // concept for a form {FORM} being a one-form on a D-dimensional manifold
     template <class FORM>
     // {FORM} is a one form if:
@@ -33,6 +34,49 @@ namespace mito::manifolds {
         // ... and returns a scalar
         && std::is_same_v<
             typename input<typename FORM::function_type>::output_type, mito::scalar_t>;
+
+
+    // concept of a field {FIELD} being a vector field on a D-dimensional manifold
+    template <class FIELD>
+    // {FIELD} is a vector field if:
+    concept is_vector_field =
+        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            mito::vector_t<FIELD::dim>>
+        // ... and returns a mito::vector_t<N>, N = FIELD::output_dim
+        && std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            mito::vector_t<input<typename FIELD::function_type>::output_dim>>;
+
+
+    // concept of a field {FIELD} being a symmetric tensor field on a D-dimensional manifold
+    template <class FIELD>
+    // {FIELD} is a symmetric tensor field on a D-dimensional manifold if:
+    concept is_symmetric_tensor_field =
+        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            mito::vector_t<FIELD::dim>>
+        // ... and returns a mito::matrix_t<N>, N = FIELD::output_dim
+        && std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
+            mito::symmetric_matrix_t<input<typename FIELD::function_type>::output_dim>>;
+
+
+    // concept of a field {FIELD} being a diagonal tensor field on a D-dimensional manifold
+    template <class FIELD>
+    // {FIELD} is a diagonal tensor field on a D-dimensional manifold if:
+    concept is_diagonal_tensor_field =
+        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            mito::vector_t<FIELD::dim>>
+        // ... and returns a mito::matrix_t<N>, N = FIELD::output_dim
+        && std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
+            mito::diagonal_matrix_t<input<typename FIELD::function_type>::output_dim>>;
+
 }
 
 
