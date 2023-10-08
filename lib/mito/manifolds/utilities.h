@@ -50,6 +50,18 @@ namespace mito::manifolds {
             mito::vector_t<input<typename FIELD::function_type>::output_dim>>;
 
 
+    // concept of a field {FIELD} being a tensor field on a D-dimensional manifold
+    template <class FIELD>
+    // {FIELD} is a tensor field on a D-dimensional manifold if:
+    concept is_tensor_field =
+        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            mito::vector_t<FIELD::dim>>
+        // ... and returns a matrix
+        && input<typename FIELD::function_type>::output_rank == 2;
+
+
     // concept of a field {FIELD} being a symmetric tensor field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a symmetric tensor field on a D-dimensional manifold if:
@@ -58,10 +70,10 @@ namespace mito::manifolds {
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
             mito::vector_t<FIELD::dim>>
-        // ... and returns a mito::matrix_t<N>, N = FIELD::output_dim
-        && std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
-            mito::symmetric_matrix_t<input<typename FIELD::function_type>::output_dim>>;
+        // ... and returns a matrix...
+        && input<typename FIELD::function_type>::output_rank == 2
+        // ... that has symmetric packing
+        && input<typename FIELD::function_type>::output_type::symmetric;
 
 
     // concept of a field {FIELD} being a diagonal tensor field on a D-dimensional manifold
@@ -72,10 +84,10 @@ namespace mito::manifolds {
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
             mito::vector_t<FIELD::dim>>
-        // ... and returns a mito::matrix_t<N>, N = FIELD::output_dim
-        && std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
-            mito::diagonal_matrix_t<input<typename FIELD::function_type>::output_dim>>;
+        // ... and returns a matrix...
+        && input<typename FIELD::function_type>::output_rank == 2
+        // ... that has diagonal packing
+        && input<typename FIELD::function_type>::output_type::diagonal;
 
 }
 
