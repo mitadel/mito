@@ -10,7 +10,7 @@ namespace mito::manifolds {
     class Manifold;
 
     // class one-form
-    template <class F, int D>
+    template <class F>
     class Form;
 
 

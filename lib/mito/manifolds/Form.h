@@ -6,11 +6,14 @@
 
 namespace mito::manifolds {
 
-    template <class F, int D = input<F>::dim>
+    template <class F>
     class Form {
       public:
-        static constexpr int dim = D;
+        static constexpr int dim = input<F>::dim;
         using function_type = F;
+
+      private:
+        static constexpr int D = dim;
 
       public:
         // constructor

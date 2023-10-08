@@ -6,52 +6,62 @@
 namespace mito::manifolds {
 
     // addition of forms fa + fb
-    template <class F1, class F2, int D>
-    constexpr auto operator+(const form_t<F1, D> & fA, const form_t<F2, D> & fB)
+    template <class F1, class F2>
+    constexpr auto operator+(const form_t<F1> & fA, const form_t<F2> & fB)
+    requires(form_t<F1>::dim == form_t<F2>::dim)
     {
+        // the dimension of the vector space
+        constexpr int D = form_t<F1>::dim;
         return form([fA, fB](const mito::vector_t<D> & x) { return fA(x) + fB(x); });
     }
 
     // scalar * form
-    template <class F, int D>
-    constexpr auto operator*(const real & a, const form_t<F, D> & f)
+    template <class F>
+    constexpr auto operator*(const real & a, const form_t<F> & f)
     {
+        // the dimension of the vector space
+        constexpr int D = form_t<F>::dim;
         return form([a, f](const mito::vector_t<D> & x) { return a * f(x); });
     }
 
     // form * scalar
-    template <class F, int D>
-    constexpr auto operator*(const form_t<F, D> & f, const real & a)
+    template <class F>
+    constexpr auto operator*(const form_t<F> & f, const real & a)
     {
         return a * f;
     }
 
     // tensor product of forms
-    template <class F1, class F2, int D>
-    constexpr auto operator*(const form_t<F1, D> & fA, const form_t<F2, D> & fB)
+    template <class F1, class F2>
+    constexpr auto operator*(const form_t<F1> & fA, const form_t<F2> & fB)
     {
+        // the dimension of the vector space
+        constexpr int D = form_t<F1>::dim;
         return form([fA, fB](const mito::vector_t<D> & x) { return fA(x) * fB; });
     }
 
     // unary operator- for forms
-    template <class F, int D>
-    constexpr auto operator-(const form_t<F, D> & f)
+    template <class F>
+    constexpr auto operator-(const form_t<F> & f)
     {
         return -1.0 * f;
     }
 
     // subtraction of forms fa - fb
-    template <class F1, class F2, int D>
-    constexpr auto operator-(const form_t<F1, D> & fA, const form_t<F2, D> & fB)
+    template <class F1, class F2>
+    constexpr auto operator-(const form_t<F1> & fA, const form_t<F2> & fB)
     {
         return fA + (-fB);
     }
 
     // the wedge product of two one-forms
-    template <class F1, class F2, int D = input<F1>::dim>
-    constexpr auto wedge(const form_t<F1, D> & a_tilda, const form_t<F2, D> & b_tilda)
-    requires(is_one_form<form_t<F1, D>> && is_one_form<form_t<F2, D>>)
+    template <class F1, class F2>
+    constexpr auto wedge(const form_t<F1> & a_tilda, const form_t<F2> & b_tilda)
+    requires(
+        is_one_form<form_t<F1>> && is_one_form<form_t<F2>> && form_t<F1>::dim == form_t<F2>::dim)
     {
+        // the dimension of the vector space
+        constexpr int D = form_t<F1>::dim;
         // return a form that, when contracted with {x}...
         return form([a_tilda, b_tilda](const mito::vector_t<D> & x) -> auto {
             // ... returns the form prescribed by the wedge product
@@ -60,11 +70,15 @@ namespace mito::manifolds {
     }
 
     // the wedge product of three one-forms
-    template <class F1, class F2, class F3, int D = input<F1>::dim>
+    template <class F1, class F2, class F3>
     constexpr auto wedge(
-        const form_t<F1, D> & a_tilda, const form_t<F2, D> & b_tilda, const form_t<F3, D> & c_tilda)
-    requires(is_one_form<form_t<F1, D>> && is_one_form<form_t<F2, D>> && is_one_form<form_t<F3, D>>)
+        const form_t<F1> & a_tilda, const form_t<F2> & b_tilda, const form_t<F3> & c_tilda)
+    requires(
+        is_one_form<form_t<F1>> && is_one_form<form_t<F2>> && is_one_form<form_t<F3>>
+        && form_t<F1>::dim == form_t<F2>::dim && form_t<F1>::dim == form_t<F3>::dim)
     {
+        // the dimension of the vector space
+        constexpr int D = form_t<F1>::dim;
         // return a form that, when contracted with {x}...
         return form([a_tilda, b_tilda, c_tilda](const mito::vector_t<D> & x) -> auto {
             // ... returns the form prescribed by the wedge product
