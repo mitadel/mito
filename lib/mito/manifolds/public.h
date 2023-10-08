@@ -19,6 +19,7 @@
 #include "metrics.h"
 #include "parametric.h"
 #include "Form.h"
+#include "Field.h"
 #include "Manifold.h"
 
 // factories implementation
@@ -26,6 +27,7 @@
 
 // algebraic operations on forms
 #include "forms_algebra.h"
+
 
 #endif
 

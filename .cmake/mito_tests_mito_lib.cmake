@@ -14,7 +14,7 @@ if(WITH_VTK)
 endif()
 
 # manifolds
-# mito_test_driver(tests/mito.lib/manifolds/fields.cc)
+mito_test_driver(tests/mito.lib/manifolds/fields.cc)
 mito_test_driver(tests/mito.lib/manifolds/one_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/tensor_product_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/wedge_product_forms.cc)
