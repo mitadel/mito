@@ -20,15 +20,15 @@ namespace mito::manifolds {
         return mito::manifolds::form_t<F>(f);
     }
 
-    // TOFIX: the metric should have a say on this form
     // construct a one-form based on its metric-equivalent vector
     template <int D>
-    constexpr auto one_form(mito::vector_t<D> vector)
+    constexpr auto one_form(
+        mito::vector_t<D> vector, mito::symmetric_matrix_t<D> metric = mito::identity<D>)
     {
         // return a one-form that, when contracted with {x}...
-        return form([vector](const mito::vector_t<D> & x) -> mito::scalar_t {
+        return form([vector, metric](const mito::vector_t<D> & x) -> mito::scalar_t {
             // ... returns the contraction of {vector} with {x}
-            return vector * x;
+            return metric * vector * x;
         });
     }
 
