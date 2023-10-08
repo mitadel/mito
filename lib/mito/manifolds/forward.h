@@ -11,8 +11,7 @@ namespace mito::manifolds {
 
     // class one-form
     template <class F, int D>
-    requires(is_one_form<mito::math::function_t<F>, D>)
-    class OneForm;
+    class Form;
 
 
     // TOFIX: remove this datastructure

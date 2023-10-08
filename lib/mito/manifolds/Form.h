@@ -7,17 +7,16 @@
 namespace mito::manifolds {
 
     template <class F, int D = input<F>::dim>
-    requires(is_one_form<mito::math::function_t<F>, D>)
-    class OneForm {
+    class Form {
+      public:
+        static constexpr int dim = D;
+
       public:
         // constructor
-        constexpr OneForm(F f) : _f { f } {}
+        constexpr Form(F f) : _f { f } {}
 
-        // call operator
-        constexpr auto operator()(const mito::vector_t<D> x) const -> mito::scalar_t
-        {
-            return _f(x);
-        }
+        // contraction with a vector
+        constexpr auto operator()(const mito::vector_t<D> x) const -> auto { return _f(x); }
 
       private:
         // the action of the form

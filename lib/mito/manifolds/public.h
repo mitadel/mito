@@ -18,7 +18,7 @@
 // classes implementation
 #include "metrics.h"
 #include "parametric.h"
-#include "OneForm.h"
+#include "Form.h"
 #include "Manifold.h"
 
 // factories implementation
