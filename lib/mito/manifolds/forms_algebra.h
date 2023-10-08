@@ -47,12 +47,10 @@ namespace mito::manifolds {
         return fA + (-fB);
     }
 
-    // TOFIX: is_one_form should take a form type as input
     // the wedge product of two one-forms
     template <class F1, class F2, int D = input<F1>::dim>
     constexpr auto wedge(const form_t<F1, D> & a_tilda, const form_t<F2, D> & b_tilda)
-    requires(
-        is_one_form<mito::math::function_t<F1>, D> && is_one_form<mito::math::function_t<F2>, D>)
+    requires(is_one_form<form_t<F1, D>> && is_one_form<form_t<F2, D>>)
     {
         // return a form that, when contracted with {x}...
         return form([a_tilda, b_tilda](const mito::vector_t<D> & x) -> auto {

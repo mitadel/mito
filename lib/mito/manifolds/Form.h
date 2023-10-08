@@ -10,6 +10,7 @@ namespace mito::manifolds {
     class Form {
       public:
         static constexpr int dim = D;
+        using function_type = F;
 
       public:
         // constructor
