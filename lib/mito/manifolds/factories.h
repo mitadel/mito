@@ -39,6 +39,12 @@ namespace mito::manifolds {
         return mito::manifolds::field_t<F>(f);
     }
 
+    // uniform field
+    template <int D, class Y>
+    constexpr auto uniform_field(const Y & constant)
+    {
+        return field([constant](const mito::vector_t<D> &) -> Y { return constant; });
+    }
 }
 
 
