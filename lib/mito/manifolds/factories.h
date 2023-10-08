@@ -21,14 +21,20 @@ namespace mito::manifolds {
     }
 
     // construct a one-form based on its metric-equivalent vector
-    template <int D>
-    constexpr auto one_form(
-        mito::vector_t<D> vector, mito::symmetric_matrix_t<D> metric = mito::identity<D>)
+    template <class F, class G, int D = field_t<F>::dim>
+    constexpr auto one_form(field_t<F> vector, field_t<G> metric)
+    requires(
+        // the vector and the metric are define on the same vector space
+        field_t<F>::dim == field_t<G>::dim
+        // {vector} is a vector field
+        && is_vector_field<field_t<F>>
+        // {metric} is a symmetric or diagonal tensor field
+        && (is_symmetric_tensor_field<field_t<G>> || is_diagonal_tensor_field<field_t<G>>) )
     {
         // return a one-form that, when contracted with {x}...
         return form([vector, metric](const mito::vector_t<D> & x) -> mito::scalar_t {
             // ... returns the contraction of {vector} with {x}
-            return metric * vector * x;
+            return metric(x) * vector(x) * x;
         });
     }
 

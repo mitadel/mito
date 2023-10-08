@@ -64,17 +64,20 @@ wedge_mito(int N)
     // make a timer
     pyre::timers::process_timer_t t("benchmarks.wedge");
 
-    // a vector
-    auto a = 2.0 * mito::e_0<3> + mito::e_1<3>;
+    // the euclidean metric in 3D space
+    constexpr auto metric = mito::manifolds::uniform_field<3>(mito::identity<3>);
+
+    // a vector field
+    auto a = mito::manifolds::uniform_field<3>(2.0 * mito::e_0<3> + mito::e_1<3>);
 
     // the corresponding one-form
-    auto a_tilda = mito::manifolds::one_form(a);
+    auto a_tilda = mito::manifolds::one_form(a, metric);
 
-    // another vector
-    auto b = mito::e_2<3>;
+    // another vector field
+    auto b = mito::manifolds::uniform_field<3>(mito::e_2<3>);
 
     // the corresponding one-form
-    auto b_tilda = mito::manifolds::one_form(b);
+    auto b_tilda = mito::manifolds::one_form(b, metric);
 
     // the wedge product of {a_tilda} and {b_tilda} (a two-form)
     auto ab_two_form = mito::manifolds::wedge(a_tilda, b_tilda);
