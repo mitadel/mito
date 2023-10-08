@@ -13,7 +13,7 @@ namespace mito::manifolds {
         return manifold_t<cellT, D>(mesh);
     }
 
-    // factory for one form
+    // factory for forms
     template <class F>
     constexpr auto form(F && f)
     {

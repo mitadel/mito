@@ -9,7 +9,7 @@ namespace mito::manifolds {
     template <class cellT, int D>
     class Manifold;
 
-    // class one-form
+    // class form
     template <class F>
     class Form;
 
