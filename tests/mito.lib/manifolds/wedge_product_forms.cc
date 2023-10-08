@@ -18,7 +18,7 @@ TEST(Forms, WedgeProduct)
     constexpr auto b_tilda = mito::manifolds::one_form(b);
 
     // the wedge product of {a_tilda} and {b_tilda} (a two-form)
-    constexpr auto ab_two_form = wedge(a_tilda, b_tilda);
+    constexpr auto ab_two_form = mito::manifolds::wedge(a_tilda, b_tilda);
 
     // a vector
     constexpr auto xi0 = mito::e_0<3>;
@@ -39,7 +39,7 @@ TEST(Forms, WedgeProduct)
     constexpr auto c_tilda = mito::manifolds::one_form(c);
 
     // the wedge product of {ab_two_form} and {c_tilda} (a three-form)
-    constexpr auto abc_three_form = wedge(a_tilda, b_tilda, c_tilda);
+    constexpr auto abc_three_form = mito::manifolds::wedge(a_tilda, b_tilda, c_tilda);
 
     // another vector
     constexpr auto xi2 = mito::e_2<3>;

@@ -77,7 +77,7 @@ wedge_mito(int N)
     auto b_tilda = mito::manifolds::one_form(b);
 
     // the wedge product of {a_tilda} and {b_tilda} (a two-form)
-    auto ab_two_form = wedge(a_tilda, b_tilda);
+    auto ab_two_form = mito::manifolds::wedge(a_tilda, b_tilda);
 
     // a vector
     auto xi1 = mito::e_2<3>;
