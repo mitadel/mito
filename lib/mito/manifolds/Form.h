@@ -17,7 +17,7 @@ namespace mito::manifolds {
         constexpr Form(F f) : _f { f } {}
 
         // contraction with a vector
-        constexpr auto operator()(const mito::vector_t<D> x) const -> auto { return _f(x); }
+        constexpr auto operator()(const mito::vector_t<D> & x) const -> auto { return _f(x); }
 
       private:
         // the action of the form
