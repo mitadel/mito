@@ -59,6 +59,18 @@ namespace mito::manifolds {
         });
     }
 
+    // the wedge product of three one-forms
+    template <class F1, class F2, class F3, int D = input<F1>::dim>
+    constexpr auto wedge(
+        const form_t<F1, D> & a_tilda, const form_t<F2, D> & b_tilda, const form_t<F3, D> & c_tilda)
+    requires(is_one_form<form_t<F1, D>> && is_one_form<form_t<F2, D>> && is_one_form<form_t<F3, D>>)
+    {
+        // return a form that, when contracted with {x}...
+        return form([a_tilda, b_tilda, c_tilda](const mito::vector_t<D> & x) -> auto {
+            // ... returns the form prescribed by the wedge product
+            return a_tilda(x) * b_tilda * c_tilda - a_tilda(x) * c_tilda * b_tilda
+                 + b_tilda(x) * c_tilda * a_tilda - b_tilda(x) * a_tilda * c_tilda
+                 + c_tilda(x) * a_tilda * b_tilda - c_tilda(x) * b_tilda * a_tilda;
         });
     }
 }
