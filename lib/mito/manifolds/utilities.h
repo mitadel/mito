@@ -9,11 +9,13 @@ namespace mito::manifolds {
     template <class F>
     struct input {
         // input of function {F}
-        using X = typename mito::math::function_t<F>::X;
+        using input_type = typename mito::math::function_t<F>::X;
         // output of function {F}
-        using Y = typename mito::math::function_t<F>::Y;
-        // strip from {X} the cv-qualifiers and references, and get the size of the input (vector)
-        static constexpr int dim = mito::utilities::base_type<X>::size;
+        using output_type = typename mito::math::function_t<F>::Y;
+        // strip from {X} the cv-qualifiers and references, and get the size of the input
+        static constexpr int input_dim = mito::utilities::base_type<input_type>::size;
+        // strip from {Y} the cv-qualifiers and references, and get the rank of the output
+        static constexpr int output_rank = mito::utilities::base_type<output_type>::rank;
     };
 
     // concept for a form {FORM} being a one-form on a D-dimensional manifold
@@ -22,10 +24,11 @@ namespace mito::manifolds {
     concept is_one_form =
         // ... it takes in input a mito::vector_t<D>
         std::is_same_v<
-            mito::utilities::base_type<typename input<typename FORM::function_type>::X>,
+            mito::utilities::base_type<typename input<typename FORM::function_type>::input_type>,
             mito::vector_t<FORM::dim>>
         // ... and returns a scalar
-        && std::is_same_v<typename input<typename FORM::function_type>::Y, mito::scalar_t>;
+        && std::is_same_v<
+            typename input<typename FORM::function_type>::output_type, mito::scalar_t>;
 }
 
 
