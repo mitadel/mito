@@ -58,7 +58,11 @@ namespace mito::manifolds {
     template <class F1, class F2>
     constexpr auto wedge(const form_t<F1> & a_tilda, const form_t<F2> & b_tilda)
     requires(
-        is_one_form<form_t<F1>> && is_one_form<form_t<F2>> && form_t<F1>::dim == form_t<F2>::dim)
+        // {a_tilda} and {b_tilda} are one-forms...
+        is_one_form<form_t<F1>>
+        && is_one_form<form_t<F2>>
+        // ... defined on the same vector space
+        && form_t<F1>::dim == form_t<F2>::dim)
     {
         // the dimension of the vector space
         constexpr int D = form_t<F1>::dim;
@@ -74,7 +78,10 @@ namespace mito::manifolds {
     constexpr auto wedge(
         const form_t<F1> & a_tilda, const form_t<F2> & b_tilda, const form_t<F3> & c_tilda)
     requires(
-        is_one_form<form_t<F1>> && is_one_form<form_t<F2>> && is_one_form<form_t<F3>>
+        // {a_tilda}, {b_tilda} and {c_tilda} are one-forms...
+        is_one_form<form_t<F1>> && is_one_form<form_t<F2>>
+        && is_one_form<form_t<F3>>
+        // defined on the same vector space
         && form_t<F1>::dim == form_t<F2>::dim && form_t<F1>::dim == form_t<F3>::dim)
     {
         // the dimension of the vector space
