@@ -18,9 +18,8 @@ namespace mito::manifolds {
     using manifold_t = Manifold<cellT, D>;
 
     // form alias
-    template <class F, int D>
+    template <class F, int D = input<F>::dim>
     using form_t = Form<F, D>;
-
 }
 
 

@@ -17,7 +17,7 @@ namespace mito::manifolds {
     template <class F>
     constexpr auto form(F && f)
     {
-        return mito::manifolds::Form<F>(f);
+        return mito::manifolds::form_t<F>(f);
     }
 
     // TOFIX: the metric should have a say on this form
