@@ -2,7 +2,7 @@
 #include <mito/base.h>
 #include <mito/manifolds.h>
 
-TEST(Math, Forms)
+TEST(Forms, OneForms)
 {
     // a vector
     constexpr auto a = 2.0 * mito::e_0<3> + mito::e_1<3>;

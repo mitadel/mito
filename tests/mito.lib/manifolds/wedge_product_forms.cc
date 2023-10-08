@@ -3,7 +3,7 @@
 #include <mito/manifolds.h>
 
 
-TEST(Math, Forms)
+TEST(Forms, WedgeProduct)
 {
     // a vector
     constexpr auto a = mito::e_0<3>;
