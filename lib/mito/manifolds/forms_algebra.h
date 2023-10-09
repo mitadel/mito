@@ -37,6 +37,8 @@ namespace mito::manifolds {
     {
         // the dimension of the vector space
         constexpr int D = form_t<F1>::dim;
+        // NOTE: why fA(x) * fB and not fA * fB(x)? be aware that we are introducing a convention
+        // here
         return form([fA, fB](const mito::vector_t<D> & x) { return fA(x) * fB; });
     }
 
