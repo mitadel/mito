@@ -65,6 +65,8 @@ namespace mito {
         return os;
     }
 
+    // TOFIX: perhaps move the pyre wrapping to a separate header? This stuff should be under
+    //          external
     template <int D>
     requires(D > 0)
     constexpr auto e_0 = pyre::tensor::unit<pyre::tensor::vector_t<D>, 0>;
