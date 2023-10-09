@@ -135,27 +135,6 @@ namespace mito::math {
         return f + (-a);
     }
 
-    // f^(-1)
-    template <class F>
-    constexpr auto inverse(const function_t<F> & f)
-    {
-        return function([f](const function_t<F>::X & x) { return inverse(f(x)); });
-    }
-
-    // det(f)
-    template <class F>
-    constexpr auto determinant(const function_t<F> & f)
-    {
-        return function([f](const function_t<F>::X & x) { return determinant(f(x)); });
-    }
-
-    // sqrt(f)
-    template <class F>
-    constexpr auto sqrt(const function_t<F> & f)
-    requires(std::is_same<typename function_t<F>::Y, scalar_t>::value)
-    {
-        return function([f](const function_t<F>::X & x) { return std::sqrt(f(x)); });
-    }
 }
 
 
