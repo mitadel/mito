@@ -25,6 +25,8 @@
 // factories implementation
 #include "factories.h"
 
+// algebraic operations on fields
+#include "fields_algebra.h"
 // algebraic operations on forms
 #include "forms_algebra.h"
 
