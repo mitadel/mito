@@ -71,7 +71,7 @@ namespace mito::manifolds {
         // return a form that, when contracted with {x}...
         return form([a_tilda, b_tilda](const mito::vector_t<D> & x) -> auto {
             // ... returns the form prescribed by the wedge product
-            return (a_tilda * b_tilda - b_tilda * a_tilda)(x);
+            return a_tilda(x) * b_tilda - b_tilda(x) * a_tilda;
         });
     }
 
@@ -91,9 +91,8 @@ namespace mito::manifolds {
         // return a form that, when contracted with {x}...
         return form([a_tilda, b_tilda, c_tilda](const mito::vector_t<D> & x) -> auto {
             // ... returns the form prescribed by the wedge product
-            return a_tilda(x) * b_tilda * c_tilda - a_tilda(x) * c_tilda * b_tilda
-                 + b_tilda(x) * c_tilda * a_tilda - b_tilda(x) * a_tilda * c_tilda
-                 + c_tilda(x) * a_tilda * b_tilda - c_tilda(x) * b_tilda * a_tilda;
+            return a_tilda(x) * wedge(b_tilda, c_tilda) + b_tilda(x) * wedge(c_tilda, a_tilda)
+                 + c_tilda(x) * wedge(a_tilda, b_tilda);
         });
     }
 }
