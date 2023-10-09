@@ -20,11 +20,10 @@ TEST(Metric, Polar)
         mito::manifolds::one_form(mito::manifolds::uniform_field<2>(mito::e_0<2>), g);
     constexpr auto dtheta =
         mito::manifolds::one_form(mito::manifolds::uniform_field<2>(mito::e_1<2>), g);
-    ;
 
-    // // the metric volume element
-    // constexpr auto w =
-    //     mito::math::sqrt(mito::math::determinant(g)) * mito::manifolds::wedge(dr, dtheta);
+    // the metric volume element
+    constexpr auto w =
+        mito::manifolds::sqrt(mito::manifolds::determinant(g)) * mito::manifolds::wedge(dr, dtheta);
 }
 
 
