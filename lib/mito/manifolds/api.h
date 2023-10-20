@@ -19,7 +19,7 @@ namespace mito::manifolds {
 
     // form alias
     template <class F>
-    using form_t = Form<F>;
+    using one_form_t = OneForm<F>;
 
     // tensor alias
     template <class F>

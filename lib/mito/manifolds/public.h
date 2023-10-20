@@ -18,7 +18,7 @@
 // classes implementation
 #include "metrics.h"
 #include "parametric.h"
-#include "Form.h"
+#include "OneForm.h"
 #include "Field.h"
 #include "Manifold.h"
 #include "Tensor.h"

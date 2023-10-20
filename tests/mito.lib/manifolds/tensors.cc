@@ -10,7 +10,7 @@ constexpr auto
 one_form(mito::vector_t<D> vector)
 {
     // return a one-form that, when contracted with {x}...
-    return mito::manifolds::form([vector](const mito::vector_t<D> & x) -> mito::scalar_t {
+    return mito::manifolds::one_form([vector](const mito::vector_t<D> & x) -> mito::scalar_t {
         // ... returns the contraction of {vector} with {x}
         return vector * x;
     });
@@ -19,7 +19,7 @@ one_form(mito::vector_t<D> vector)
 // tensor product of forms
 template <class F1, class F2>
 constexpr auto
-tens(const mito::manifolds::form_t<F1> & fA, const mito::manifolds::form_t<F2> & fB)
+tens(const mito::manifolds::one_form_t<F1> & fA, const mito::manifolds::one_form_t<F2> & fB)
 {
     return mito::manifolds::tensor(
         [fA, fB]<class xA, class xB>(const xA & x, const xB & y) { return fA(x) * fB(y); });

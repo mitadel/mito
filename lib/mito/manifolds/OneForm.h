@@ -14,7 +14,7 @@ namespace mito::manifolds {
 
     // TOFIX: forms should cast to tensors
     template <class F>
-    class Form {
+    class OneForm {
       private:
         static constexpr int D = input<F>::input_dim;
 
@@ -24,7 +24,7 @@ namespace mito::manifolds {
 
       public:
         // constructor
-        constexpr Form(F f) : _f { f } {}
+        constexpr OneForm(F f) : _f { f } {}
 
         // contraction with a vector
         constexpr auto operator()(const mito::vector_t<D> & x) const -> auto { return _f(x); }
@@ -33,11 +33,11 @@ namespace mito::manifolds {
         constexpr auto operator()(const dummy_vector &) const -> auto { return *this; }
 
       private:
-        // the action of the form
+        // the action of the one-form
         F _f;
     };
 }
 
-#endif    // mito_math_Function_h
+#endif    // mito_manifolds_OneForm_h
 
 // end of file

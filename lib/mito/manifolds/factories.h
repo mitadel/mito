@@ -13,11 +13,11 @@ namespace mito::manifolds {
         return manifold_t<cellT, D>(mesh);
     }
 
-    // factory for forms
+    // factory for one-forms
     template <class F>
-    constexpr auto form(F && f)
+    constexpr auto one_form(F && f)
     {
-        return mito::manifolds::form_t<F>(f);
+        return mito::manifolds::one_form_t<F>(f);
     }
 
     // factory for tensors
@@ -39,7 +39,7 @@ namespace mito::manifolds {
         && is_symmetric_tensor_field<field_t<G>>)
     {
         // return a one-form that, when contracted with {x}...
-        return form([vector, metric](const mito::vector_t<D> & x) -> mito::scalar_t {
+        return one_form([vector, metric](const mito::vector_t<D> & x) -> mito::scalar_t {
             // ... returns the contraction of {vector} with {x}
             return metric(x) * vector(x) * x;
         });
