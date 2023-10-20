@@ -2,9 +2,7 @@
 #include <mito/base.h>
 #include <mito/manifolds.h>
 
-class dummy_vector {};
-
-static constexpr dummy_vector _;
+using mito::manifolds::_;
 
 template <class F1, class F2>
 struct overload_set : F1, F2 {
@@ -45,7 +43,7 @@ tens(const mito::manifolds::form_t<F1> & fA, const mito::manifolds::form_t<F2> &
     // the dimension of the vector space
     constexpr int D = mito::manifolds::form_t<F1>::dim;
     auto f = overload(
-        [fA, fB](dummy_vector) { return fB * fA; },
+        [fA, fB](mito::manifolds::dummy_vector) { return fB * fA; },
         [fA, fB](const mito::vector_t<D> & x) { return fA(x) * fB; });
     return f;
 }
@@ -80,10 +78,8 @@ TEST(Tensors, Base)
     constexpr auto contraction0 = a_tensor_b(xi0);
     static_assert(contraction0(xi1) == 1.0);
 
-
-    // // TOFIX: make this work
-    // auto contraction1 = a_tensor_b(xi0)(_);
-    // assert(contraction1(xi1) == a_tensor_b(xi0)(xi1));
+    constexpr auto contraction1 = a_tensor_b(xi0)(_);
+    static_assert(contraction1(xi1) == a_tensor_b(xi0)(xi1));
 
     // IDEA: do that fA(_) returns fa, i.e. the non contracted form?
     constexpr auto contraction2 = a_tensor_b(_)(xi1);
