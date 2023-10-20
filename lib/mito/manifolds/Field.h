@@ -7,6 +7,7 @@
 namespace mito::manifolds {
 
     template <class F>
+    // TOFIX: add requirements of taking a position in input and returning a {Tensor} instance
     class Field {
       private:
         static constexpr int D = input<F>::input_dim;
@@ -21,14 +22,15 @@ namespace mito::manifolds {
         // constructor
         constexpr Field(F f) : _f { f } {}
 
+        // QUESTION: should this act on a {coordinates_t} or a {point_t}?
         // the value of the field at {x}
-        constexpr auto operator()(const mito::vector_t<D> & x) const -> return_type
+        constexpr auto operator()(const mito::geometry::coordinates_t<D> & x) const -> return_type
         {
             return _f(x);
         }
 
       private:
-        // the function assigning the value of the field at each point
+        // the function assigning the value of the tensor field at each point
         F _f;
     };
 }
