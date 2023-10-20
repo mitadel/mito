@@ -4,25 +4,6 @@
 
 using mito::manifolds::_;
 
-template <class F1, class F2>
-struct overload_set : F1, F2 {
-    constexpr overload_set(F1 x1, F2 x2) : F1(x1), F2(x2) {}
-    using F1::operator();
-    using F2::operator();
-};
-
-template <class F1, class F2>
-constexpr overload_set<F1, F2>
-overload(F1 x1, F2 x2)
-{
-    return overload_set<F1, F2>(x1, x2);
-}
-
-// example usage of {overload}
-// auto f = overload(
-//     [](dummy_vector) { std::cout << "call by default" << std::endl; },
-//     []<typename T>(std::vector<T>) { std::cout << "call for vector" << std::endl; });
-
 // construct a one-form based on its metric-equivalent vector
 template <int D>
 constexpr auto
@@ -40,12 +21,8 @@ template <class F1, class F2>
 constexpr auto
 tens(const mito::manifolds::form_t<F1> & fA, const mito::manifolds::form_t<F2> & fB)
 {
-    // the dimension of the vector space
-    constexpr int D = mito::manifolds::form_t<F1>::dim;
-    auto f = overload(
-        [fA, fB](mito::manifolds::dummy_vector) { return fB * fA; },
-        [fA, fB](const mito::vector_t<D> & x) { return fA(x) * fB; });
-    return f;
+    return mito::manifolds::tensor(
+        [fA, fB]<class xA, class xB>(const xA & x, const xB & y) { return fA(x) * fB(y); });
 }
 
 
@@ -73,17 +50,15 @@ TEST(Tensors, Base)
     constexpr auto xi1 = mito::e_1<3>;
 
     // check result of double contraction
-    static_assert(a_tensor_b(xi0)(xi1) == 1.0);
+    static_assert(a_tensor_b(xi0, xi1) == a_tilda(xi0) * b_tilda(xi1));
 
-    constexpr auto contraction0 = a_tensor_b(xi0);
-    static_assert(contraction0(xi1) == 1.0);
+    // contract first index
+    constexpr auto contraction1 = a_tensor_b(xi0, _);
+    static_assert(contraction1(xi1) == a_tensor_b(xi0, xi1));
 
-    constexpr auto contraction1 = a_tensor_b(xi0)(_);
-    static_assert(contraction1(xi1) == a_tensor_b(xi0)(xi1));
-
-    // IDEA: do that fA(_) returns fa, i.e. the non contracted form?
-    constexpr auto contraction2 = a_tensor_b(_)(xi1);
-    static_assert(contraction2(xi0) == a_tensor_b(xi0)(xi1));
+    // contract second index
+    constexpr auto contraction2 = a_tensor_b(_, xi1);
+    static_assert(contraction2(xi0) == a_tensor_b(xi0, xi1));
 }
 
 
