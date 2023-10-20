@@ -5,6 +5,10 @@
 
 namespace mito::geometry {
 
+    // coordinates alias in D-dimensions
+    template <int D>
+    using coordinates_t = mito::vector_t<D>;
+
     // point alias
     template <int D>
     using point_t = utilities::shared_ptr<const Point<D>>;

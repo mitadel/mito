@@ -30,7 +30,10 @@ namespace mito::geometry {
 
       public:
         // get the coordinates of the point
-        constexpr auto coordinates() const noexcept -> const vector_t<D> & { return _coordinates; }
+        constexpr auto coordinates() const noexcept -> const coordinates_t<D> &
+        {
+            return _coordinates;
+        }
 
         auto print() const noexcept -> void
         {
@@ -43,7 +46,7 @@ namespace mito::geometry {
 
       private:
         // the coordinates of the point
-        const vector_t<D> _coordinates;
+        const coordinates_t<D> _coordinates;
 
         // private friendship with the repository of points
         friend class utilities::Repository<point_t<D>>;
