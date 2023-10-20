@@ -2,46 +2,29 @@
 #include <mito/base.h>
 #include <mito/manifolds.h>
 
+
 using mito::manifolds::_;
 
-// construct a one-form based on its metric-equivalent vector
-template <int D>
-constexpr auto
-one_form(mito::vector_t<D> vector)
-{
-    // return a one-form that, when contracted with {x}...
-    return mito::manifolds::one_form([vector](const mito::vector_t<D> & x) -> mito::scalar_t {
-        // ... returns the contraction of {vector} with {x}
-        return vector * x;
-    });
-}
 
-// tensor product of forms
-template <class F1, class F2>
-constexpr auto
-tens(const mito::manifolds::one_form_t<F1> & fA, const mito::manifolds::one_form_t<F2> & fB)
+TEST(Contractions, Base)
 {
-    return mito::manifolds::tensor(
-        [fA, fB]<class xA, class xB>(const xA & x, const xB & y) { return fA(x) * fB(y); });
-}
+    // the euclidean metric in 3D space
+    constexpr auto metric = mito::manifolds::uniform_field<3>(mito::identity<3>);
 
-
-TEST(Tensors, Base)
-{
     // a vector field
-    constexpr auto a = mito::e_0<3>;
+    constexpr auto a = mito::manifolds::uniform_field<3>(mito::e_0<3>);
 
     // the corresponding one-form
-    constexpr auto a_tilda = one_form(a);
+    constexpr auto a_tilda = mito::manifolds::one_form(a, metric);
 
     // another vector field
-    constexpr auto b = mito::e_1<3>;
+    constexpr auto b = mito::manifolds::uniform_field<3>(mito::e_1<3>);
 
     // the corresponding one-form
-    constexpr auto b_tilda = one_form(b);
+    constexpr auto b_tilda = mito::manifolds::one_form(b, metric);
 
     // tensor product of two one-forms
-    constexpr auto a_tensor_b = tens(a_tilda, b_tilda);
+    constexpr auto a_tensor_b = mito::manifolds::tensor(a_tilda, b_tilda);
 
     // a vector
     constexpr auto xi0 = mito::e_0<3>;
@@ -54,10 +37,12 @@ TEST(Tensors, Base)
 
     // contract first index
     constexpr auto contraction1 = a_tensor_b(xi0, _);
+    // check result
     static_assert(contraction1(xi1) == a_tensor_b(xi0, xi1));
 
     // contract second index
     constexpr auto contraction2 = a_tensor_b(_, xi1);
+    // check result
     static_assert(contraction2(xi0) == a_tensor_b(xi0, xi1));
 }
 
