@@ -96,7 +96,7 @@ wedge_mito(int N)
     // evaluate the wedge product on {xi1} and {xi2}
     std::vector<double> result(N);
     for (int i = 0; i < N; ++i) {
-        result[i] = ab_two_form(xi1)(xi2);
+        result[i] = ab_two_form(xi1, xi2);
     }
 
     // stop the timer

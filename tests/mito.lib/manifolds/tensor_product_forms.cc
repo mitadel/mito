@@ -21,7 +21,7 @@ TEST(Forms, TensorProduct)
     constexpr auto b_tilda = mito::manifolds::one_form(b, metric);
 
     // tensor product of two one-forms
-    constexpr auto a_tensor_b = a_tilda * b_tilda;
+    constexpr auto a_tensor_b = mito::manifolds::tensor(a_tilda, b_tilda);
 
     // a vector
     constexpr auto xi0 = mito::e_0<3>;
@@ -30,8 +30,8 @@ TEST(Forms, TensorProduct)
     constexpr auto xi1 = mito::e_1<3>;
 
     // check result of double contraction
-    static_assert(a_tensor_b(xi0)(xi1) == 1.0);
-    static_assert(a_tensor_b(xi1)(xi0) == 0.0);
+    static_assert(a_tensor_b(xi0, xi1) == 1.0);
+    static_assert(a_tensor_b(xi1, xi0) == 0.0);
 
     // another vector field
     constexpr auto c = mito::manifolds::uniform_field<3>(mito::e_2<3>);
@@ -40,18 +40,18 @@ TEST(Forms, TensorProduct)
     constexpr auto c_tilda = mito::manifolds::one_form(c, metric);
 
     // triple tensor product
-    constexpr auto a_tensor_b_tensor_c = a_tilda * b_tilda * c_tilda;
+    constexpr auto a_tensor_b_tensor_c = mito::manifolds::tensor(a_tilda, b_tilda, c_tilda);
 
     // another vector
     constexpr auto xi2 = mito::e_2<3>;
 
     // check result of triple contraction
-    static_assert(a_tensor_b_tensor_c(xi0)(xi1)(xi2) == 1.0);
-    static_assert(a_tensor_b_tensor_c(xi2)(xi0)(xi1) == 0.0);
-    static_assert(a_tensor_b_tensor_c(xi1)(xi2)(xi0) == 0.0);
-    static_assert(a_tensor_b_tensor_c(xi0)(xi2)(xi1) == 0.0);
-    static_assert(a_tensor_b_tensor_c(xi2)(xi1)(xi0) == 0.0);
-    static_assert(a_tensor_b_tensor_c(xi1)(xi0)(xi2) == 0.0);
+    static_assert(a_tensor_b_tensor_c(xi0, xi1, xi2) == 1.0);
+    static_assert(a_tensor_b_tensor_c(xi2, xi0, xi1) == 0.0);
+    static_assert(a_tensor_b_tensor_c(xi1, xi2, xi0) == 0.0);
+    static_assert(a_tensor_b_tensor_c(xi0, xi2, xi1) == 0.0);
+    static_assert(a_tensor_b_tensor_c(xi2, xi1, xi0) == 0.0);
+    static_assert(a_tensor_b_tensor_c(xi1, xi0, xi2) == 0.0);
 }
 
 

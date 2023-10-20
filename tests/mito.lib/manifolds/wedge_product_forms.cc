@@ -30,10 +30,10 @@ TEST(Forms, WedgeProduct)
     constexpr auto xi1 = mito::e_1<3>;
 
     // contract the two-form with two vectors
-    static_assert(ab_two_form(xi0)(xi1) == 1.0);
+    static_assert(ab_two_form(xi0, xi1) == 1.0);
 
     // check anti-symmetry property
-    static_assert(ab_two_form(xi0)(xi1) == -ab_two_form(xi1)(xi0));
+    static_assert(ab_two_form(xi0, xi1) == -ab_two_form(xi1, xi0));
 
     // another vector field
     constexpr auto c = mito::manifolds::uniform_field<3>(mito::e_2<3>);
@@ -48,10 +48,10 @@ TEST(Forms, WedgeProduct)
     constexpr auto xi2 = mito::e_2<3>;
 
     // contract the three-form with three vectors
-    static_assert(abc_three_form(xi0)(xi1)(xi2) == 1.0);
+    static_assert(abc_three_form(xi0, xi1, xi2) == 1.0);
 
     // check anti-symmetry property
-    static_assert(abc_three_form(xi0)(xi1)(xi2) == -abc_three_form(xi0)(xi2)(xi1));
-    static_assert(abc_three_form(xi1)(xi2)(xi0) == -abc_three_form(xi1)(xi0)(xi2));
-    static_assert(abc_three_form(xi2)(xi0)(xi1) == -abc_three_form(xi2)(xi1)(xi0));
+    static_assert(abc_three_form(xi0, xi1, xi2) == -abc_three_form(xi0, xi2, xi1));
+    static_assert(abc_three_form(xi1, xi2, xi0) == -abc_three_form(xi1, xi0, xi2));
+    static_assert(abc_three_form(xi2, xi0, xi1) == -abc_three_form(xi2, xi1, xi0));
 }
