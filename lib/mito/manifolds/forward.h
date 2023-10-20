@@ -13,6 +13,10 @@ namespace mito::manifolds {
     template <class F>
     class Form;
 
+    // class tensor
+    template <class F>
+    class Tensor;
+
     // class field
     template <class F>
     class Field;

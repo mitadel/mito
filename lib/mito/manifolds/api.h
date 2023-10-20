@@ -21,6 +21,10 @@ namespace mito::manifolds {
     template <class F>
     using form_t = Form<F>;
 
+    // tensor alias
+    template <class F>
+    using tensor_t = Tensor<F>;
+
     // field alias
     template <class F>
     using field_t = Field<F>;

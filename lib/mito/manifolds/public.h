@@ -21,6 +21,7 @@
 #include "Form.h"
 #include "Field.h"
 #include "Manifold.h"
+#include "Tensor.h"
 
 // factories implementation
 #include "factories.h"
