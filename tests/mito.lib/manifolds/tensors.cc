@@ -8,13 +8,13 @@ static constexpr dummy_vector _;
 
 template <class F1, class F2>
 struct overload_set : F1, F2 {
-    overload_set(F1 x1, F2 x2) : F1(x1), F2(x2) {}
+    constexpr overload_set(F1 x1, F2 x2) : F1(x1), F2(x2) {}
     using F1::operator();
     using F2::operator();
 };
 
 template <class F1, class F2>
-overload_set<F1, F2>
+constexpr overload_set<F1, F2>
 overload(F1 x1, F2 x2)
 {
     return overload_set<F1, F2>(x1, x2);
@@ -39,8 +39,7 @@ one_form(mito::vector_t<D> vector)
 
 // tensor product of forms
 template <class F1, class F2>
-// TOFIX: should be {constexpr}
-auto
+constexpr auto
 tens(const mito::manifolds::form_t<F1> & fA, const mito::manifolds::form_t<F2> & fB)
 {
     // the dimension of the vector space
@@ -67,8 +66,7 @@ TEST(Tensors, Base)
     constexpr auto b_tilda = one_form(b);
 
     // tensor product of two one-forms
-    // TOFIX: should be {constexpr}
-    auto a_tensor_b = tens(a_tilda, b_tilda);
+    constexpr auto a_tensor_b = tens(a_tilda, b_tilda);
 
     // a vector
     constexpr auto xi0 = mito::e_0<3>;
@@ -77,23 +75,19 @@ TEST(Tensors, Base)
     constexpr auto xi1 = mito::e_1<3>;
 
     // check result of double contraction
-    // TOFIX: should be {static_assert}
-    assert(a_tensor_b(xi0)(xi1) == 1.0);
+    static_assert(a_tensor_b(xi0)(xi1) == 1.0);
 
-    // TOFIX: should be {constexpr}
-    auto contraction0 = a_tensor_b(xi0);
-    // TOFIX: should be {static_assert}
-    assert(contraction0(xi1) == 1.0);
+    constexpr auto contraction0 = a_tensor_b(xi0);
+    static_assert(contraction0(xi1) == 1.0);
+
 
     // // TOFIX: make this work
     // auto contraction1 = a_tensor_b(xi0)(_);
     // assert(contraction1(xi1) == a_tensor_b(xi0)(xi1));
 
     // IDEA: do that fA(_) returns fa, i.e. the non contracted form?
-    // TOFIX: should be {constexpr}
-    auto contraction2 = a_tensor_b(_)(xi1);
-    // TOFIX: should be {static_assert}
-    assert(contraction2(xi0) == a_tensor_b(xi0)(xi1));
+    constexpr auto contraction2 = a_tensor_b(_)(xi1);
+    static_assert(contraction2(xi0) == a_tensor_b(xi0)(xi1));
 }
 
 
