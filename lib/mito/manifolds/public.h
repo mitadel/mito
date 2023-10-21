@@ -30,6 +30,8 @@
 #include "fields_algebra.h"
 // algebraic operations on forms
 #include "forms_algebra.h"
+// algebraic operations on tensors
+#include "tensor_algebra.h"
 
 
 #endif
