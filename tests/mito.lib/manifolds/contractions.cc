@@ -8,20 +8,17 @@ using mito::manifolds::_;
 
 TEST(Contractions, Base)
 {
-    // the euclidean metric in 3D space
-    constexpr auto metric = mito::identity<3>;
-
     // a vector field
     constexpr auto a = mito::e_0<3>;
 
     // the corresponding one-form
-    constexpr auto a_tilda = mito::manifolds::one_form(a, metric);
+    constexpr auto a_tilda = mito::manifolds::one_form(a);
 
     // another vector field
     constexpr auto b = mito::e_1<3>;
 
     // the corresponding one-form
-    constexpr auto b_tilda = mito::manifolds::one_form(b, metric);
+    constexpr auto b_tilda = mito::manifolds::one_form(b);
 
     // tensor product of two one-forms
     constexpr auto a_tensor_b = mito::manifolds::tensor(a_tilda, b_tilda);

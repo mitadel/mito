@@ -42,7 +42,8 @@ namespace mito::manifolds {
     // construct a one-form based on its metric-equivalent vector (case: diagonal metric)
     template <int D>
     constexpr auto one_form(
-        const mito::vector_t<D> & vector, const mito::diagonal_matrix_t<D> & inverse_metric)
+        const mito::vector_t<D> & vector,
+        const mito::diagonal_matrix_t<D> & inverse_metric = mito::identity<D>)
     {
         // return a one-form that, when contracted with {v}...
         return one_form([vector, inverse_metric](const mito::vector_t<D> & v) -> mito::scalar_t {
