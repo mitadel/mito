@@ -40,10 +40,10 @@ namespace mito::manifolds {
     template <class FIELD>
     // {FIELD} is a vector field if:
     concept is_vector_field =
-        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
-            mito::vector_t<FIELD::dim>>
+            mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a mito::vector_t<N>, N = FIELD::output_dim
         && std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
@@ -54,10 +54,10 @@ namespace mito::manifolds {
     template <class FIELD>
     // {FIELD} is a tensor field on a D-dimensional manifold if:
     concept is_tensor_field =
-        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
-            mito::vector_t<FIELD::dim>>
+            mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a matrix
         && input<typename FIELD::function_type>::output_rank == 2;
 
@@ -66,10 +66,10 @@ namespace mito::manifolds {
     template <class FIELD>
     // {FIELD} is a symmetric tensor field on a D-dimensional manifold if:
     concept is_symmetric_tensor_field =
-        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
-            mito::vector_t<FIELD::dim>>
+            mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a matrix...
         && input<typename FIELD::function_type>::output_rank == 2
         // ... that has symmetric packing
@@ -80,10 +80,10 @@ namespace mito::manifolds {
     template <class FIELD>
     // {FIELD} is a diagonal tensor field on a D-dimensional manifold if:
     concept is_diagonal_tensor_field =
-        // ... it takes in input a mito::vector_t<D>, D = FIELD::dim
+        // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
-            mito::vector_t<FIELD::dim>>
+            mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a matrix...
         && input<typename FIELD::function_type>::output_rank == 2
         // ... that has diagonal packing
