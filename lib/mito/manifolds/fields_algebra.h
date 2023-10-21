@@ -32,18 +32,18 @@ namespace mito::manifolds {
         return a * f;
     }
 
-    // TOFIX: this method is dangerous as it might misleadingly lead to think that a dot product is
-    //          being performed. Let's activate it only if we see we need it.
-    // // tensor product of fields
-    // template <class F1, class F2>
-    // constexpr auto operator*(const field_t<F1> & fA, const field_t<F2> & fB)
-    // {
-    //     // the dimension of the vector space
-    //     constexpr int D = field_t<F1>::dim;
-    //     // NOTE: why fA(x) * fB and not fA * fB(x)? be aware that we are introducing a convention
-    //     // here
-    //     return field([fA, fB](const mito::vector_t<D> & x) { return fA(x) * fB; });
-    // }
+    // product of fields
+    template <class F1, class F2>
+    constexpr auto operator*(const field_t<F1> & fA, const field_t<F2> & fB)
+    requires(
+        // {field_a} and {field_b} are defined on the same vector space
+        field_t<F1>::dim == field_t<F2>::dim)
+    {
+        // the dimension of the vector space
+        constexpr int D = field_t<F1>::dim;
+        return field(
+            [fA, fB](const mito::geometry::coordinates_t<D> & x) { return fA(x) * fB(x); });
+    }
 
     // unary operator- for fields
     template <class F>
