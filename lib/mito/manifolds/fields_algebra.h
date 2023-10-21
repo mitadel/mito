@@ -84,6 +84,62 @@ namespace mito::manifolds {
         return field(
             [f](const mito::vector_t<D> & x) -> mito::scalar_t { return std::sqrt(f(x)); });
     }
+
+    // the wedge product of two fields of one-forms
+    template <class F1, class F2>
+    constexpr auto wedge(const field_t<F1> & fA, const field_t<F2> & fB)
+    requires(
+        // {fA} and {fB} are defined on the same vector space
+        field_t<F1>::dim == field_t<F2>::dim)
+    {
+        // the dimension of the vector space
+        constexpr int D = field_t<F1>::dim;
+        return field([fA, fB](const mito::geometry::coordinates_t<D> & x) -> auto {
+            return wedge(fA(x), fB(x));
+        });
+    }
+
+    // the wedge product of three fields of one-forms
+    template <class F1, class F2, class F3>
+    constexpr auto wedge(const field_t<F1> & fA, const field_t<F2> & fB, const field_t<F3> & fC)
+    requires(
+        // {fA}, {fB} and {fC} are defined on the same vector space
+        field_t<F1>::dim == field_t<F2>::dim && field_t<F1>::dim == field_t<F3>::dim)
+    {
+        // the dimension of the vector space
+        constexpr int D = field_t<F1>::dim;
+        return field([fA, fB, fC](const mito::geometry::coordinates_t<D> & x) -> auto {
+            return wedge(fA(x), fB(x), fC(x));
+        });
+    }
+
+    // the tensor product of two fields of one-forms
+    template <class F1, class F2>
+    constexpr auto tensor(const field_t<F1> & fA, const field_t<F2> & fB)
+    requires(
+        // {fA} and {fB} are defined on the same vector space
+        field_t<F1>::dim == field_t<F2>::dim)
+    {
+        // the dimension of the vector space
+        constexpr int D = field_t<F1>::dim;
+        return field([fA, fB](const mito::geometry::coordinates_t<D> & x) -> auto {
+            return tensor(fA(x), fB(x));
+        });
+    }
+
+    // the tensor product of three fields of one-forms
+    template <class F1, class F2, class F3>
+    constexpr auto tensor(const field_t<F1> & fA, const field_t<F2> & fB, const field_t<F3> & fC)
+    requires(
+        // {fA}, {fB} and {fC} are defined on the same vector space
+        field_t<F1>::dim == field_t<F2>::dim && field_t<F1>::dim == field_t<F3>::dim)
+    {
+        // the dimension of the vector space
+        constexpr int D = field_t<F1>::dim;
+        return field([fA, fB, fC](const mito::geometry::coordinates_t<D> & x) -> auto {
+            return tensor(fA(x), fB(x), fC(x));
+        });
+    }
 }
 
 
