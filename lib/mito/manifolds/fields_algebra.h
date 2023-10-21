@@ -72,7 +72,8 @@ namespace mito::manifolds {
     constexpr auto determinant(const field_t<F> & f)
     {
         constexpr int D = field_t<F>::dim;
-        return field([f](const mito::vector_t<D> & x) { return determinant(f(x)); });
+        return field(
+            [f](const mito::vector_t<D> & x) -> mito::scalar_t { return determinant(f(x)); });
     }
 
     // sqrt(f)
@@ -80,7 +81,8 @@ namespace mito::manifolds {
     constexpr auto sqrt(const field_t<F> & f)
     {
         constexpr int D = field_t<F>::dim;
-        return field([f](const mito::vector_t<D> & x) { return std::sqrt(f(x)); });
+        return field(
+            [f](const mito::vector_t<D> & x) -> mito::scalar_t { return std::sqrt(f(x)); });
     }
 }
 
