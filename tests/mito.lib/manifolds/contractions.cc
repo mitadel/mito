@@ -8,13 +8,13 @@ using mito::manifolds::_;
 
 TEST(Contractions, Base)
 {
-    // a vector field
+    // a vector
     constexpr auto a = mito::e_0<3>;
 
     // the corresponding one-form
     constexpr auto a_tilda = mito::manifolds::one_form(a);
 
-    // another vector field
+    // another vector
     constexpr auto b = mito::e_1<3>;
 
     // the corresponding one-form
