@@ -51,23 +51,6 @@ namespace mito::manifolds {
             return inverse_metric * vector * v;
         });
     }
-    // construct a one-form based on its metric-equivalent vector
-    template <class F, class G, int D = field_t<F>::dim>
-    constexpr auto one_form(field_t<F> vector, field_t<G> metric)
-    requires(
-        // the vector and the metric are define on the same vector space
-        field_t<F>::dim == field_t<G>::dim
-        // {vector} is a vector field
-        && is_vector_field<field_t<F>>
-        // {metric} is a symmetric tensor field
-        && is_symmetric_tensor_field<field_t<G>>)
-    {
-        // return a one-form that, when contracted with {x}...
-        return one_form([vector, metric](const mito::vector_t<D> & x) -> mito::scalar_t {
-            // ... returns the contraction of {vector} with {x}
-            return metric(x) * vector(x) * x;
-        });
-    }
 
     // factory for fields
     template <class F>
@@ -81,6 +64,24 @@ namespace mito::manifolds {
     constexpr auto uniform_field(const Y & constant)
     {
         return field([constant](const mito::vector_t<D> &) -> Y { return constant; });
+    }
+
+    // construct a one-form based on its metric-equivalent vector field
+    template <class F, class G, int D = field_t<F>::dim>
+    constexpr auto one_form(const field_t<F> & vector, const field_t<G> & inverse_metric)
+    requires(
+        // the vector and the metric are define on the same vector space
+        field_t<F>::dim == field_t<G>::dim
+        // {vector} is a vector field
+        && is_vector_field<field_t<F>>
+        // {metric} is a symmetric tensor field
+        && is_symmetric_tensor_field<field_t<G>>)
+    {
+        // return a one-form that, when contracted with {x}...
+        return field([vector, inverse_metric](const mito::geometry::coordinates_t<D> & x) -> auto {
+            // ... returns the contraction of {vector} with {x}
+            return one_form(vector(x), inverse_metric(x));
+        });
     }
 }
 
