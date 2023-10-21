@@ -45,26 +45,6 @@ namespace mito::manifolds {
         return fA + (-fB);
     }
 
-    // scalar field * form (this is legal because scalar fields are zero-forms)
-    template <class F1, class F2>
-    constexpr auto operator*(const field_t<F1> & a, const one_form_t<F2> & f)
-        // require that {a} is a scalar field
-    requires(field_t<F1>::rank == 1)
-    {
-        // the dimension of the vector space
-        constexpr int D = one_form_t<F2>::dim;
-        return field([a, f](const mito::vector_t<D> & x) { return a(x) * f(x); });
-    }
-
-    // form * scalar field (this is legal because scalar fields are zero-forms)
-    template <class F1, class F2>
-    constexpr auto operator*(const one_form_t<F1> & f, const field_t<F2> & a)
-        // require that {a} is a scalar field
-    requires(field_t<F2>::rank == 1)
-    {
-        return a * f;
-    }
-
     // the wedge product of two one-forms
     template <class F1, class F2>
     constexpr auto wedge(const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda)
