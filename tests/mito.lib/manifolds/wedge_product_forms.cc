@@ -6,16 +6,16 @@
 TEST(Forms, WedgeProduct)
 {
     // the euclidean metric in 3D space
-    constexpr auto metric = mito::manifolds::uniform_field<3>(mito::identity<3>);
+    constexpr auto metric = mito::identity<3>;
 
     // a vector field
-    constexpr auto a = mito::manifolds::uniform_field<3>(mito::e_0<3>);
+    constexpr auto a = mito::e_0<3>;
 
     // the corresponding one-form
     constexpr auto a_tilda = mito::manifolds::one_form(a, metric);
 
     // another vector field
-    constexpr auto b = mito::manifolds::uniform_field<3>(mito::e_1<3>);
+    constexpr auto b = mito::e_1<3>;
 
     // the corresponding one-form
     constexpr auto b_tilda = mito::manifolds::one_form(b, metric);
@@ -36,7 +36,7 @@ TEST(Forms, WedgeProduct)
     static_assert(ab_two_form(xi0, xi1) == -ab_two_form(xi1, xi0));
 
     // another vector field
-    constexpr auto c = mito::manifolds::uniform_field<3>(mito::e_2<3>);
+    constexpr auto c = mito::e_2<3>;
 
     // the corresponding one-form
     constexpr auto c_tilda = mito::manifolds::one_form(c, metric);

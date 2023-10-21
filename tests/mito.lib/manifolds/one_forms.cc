@@ -5,10 +5,10 @@
 TEST(Forms, OneForms)
 {
     // the euclidean metric in 3D space
-    constexpr auto metric = mito::manifolds::uniform_field<3>(mito::identity<3>);
+    constexpr auto metric = mito::identity<3>;
 
     // a vector field
-    constexpr auto a = mito::manifolds::uniform_field<3>(2.0 * mito::e_0<3> + mito::e_1<3>);
+    constexpr auto a = 2.0 * mito::e_0<3> + mito::e_1<3>;
 
     // the corresponding one-form
     constexpr auto a_tilda = mito::manifolds::one_form(a, metric);
