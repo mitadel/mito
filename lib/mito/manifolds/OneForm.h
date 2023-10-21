@@ -16,10 +16,13 @@ namespace mito::manifolds {
     template <class F>
     class OneForm {
       private:
+        // the dimension of the embedding space
         static constexpr int D = input<F>::input_dim;
 
       public:
+        // the dimension of the embedding space
         static constexpr int dim = D;
+        // alias for my underlying function type
         using function_type = F;
 
       public:
