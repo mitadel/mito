@@ -38,6 +38,16 @@ TEST(Metric, Polar)
     constexpr auto dr = mito::manifolds::one_form(g_inv * e_r, g);
     constexpr auto dt = mito::manifolds::one_form(g_inv * e_t, g);
 
+    // a point in space
+    constexpr auto r = 2.0;
+    constexpr auto t = 0.0;
+    constexpr auto x = mito::geometry::coordinates_t<2>({ r, t });
+
+    // assert that at a(ny) point the basis for one-forms is dual to that of vectors
+    static_assert(dr(x)(e_r(x)) == 1.0);
+    static_assert(dr(x)(e_t(x)) == 0.0);
+    static_assert(dt(x)(e_r(x)) == 0.0);
+    static_assert(dt(x)(e_t(x)) == 1.0);
 
     // the metric volume element
     constexpr auto w =
