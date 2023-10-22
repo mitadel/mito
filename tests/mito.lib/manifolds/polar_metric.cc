@@ -35,8 +35,8 @@ TEST(Metric, Polar)
             });
 
     // the basis one-forms
-    constexpr auto dr = mito::manifolds::one_form(e_r, g_inv);
-    constexpr auto dt = mito::manifolds::one_form(e_t, g_inv);
+    constexpr auto dr = mito::manifolds::one_form(g_inv * e_r, g);
+    constexpr auto dt = mito::manifolds::one_form(g_inv * e_t, g);
 
 
     // the metric volume element
