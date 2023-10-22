@@ -3,6 +3,15 @@
 #include <mito/manifolds.h>
 
 
+// the basis for vector fields (e_r and e_theta)
+static constexpr auto e_r = mito::manifolds::uniform_field<2>(mito::e_0<2>);
+static constexpr auto e_t = mito::manifolds::uniform_field<2>(mito::e_1<2>);
+
+// the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
+static constexpr auto e_rr = mito::manifolds::uniform_field<2>(mito::e_00<2>);
+static constexpr auto e_tt = mito::manifolds::uniform_field<2>(mito::e_11<2>);
+
+
 TEST(Metric, Polar)
 {
     // the metric field
@@ -11,8 +20,8 @@ TEST(Metric, Polar)
         // x[1] -> theta
         mito::manifolds::field(
             [](const mito::geometry::coordinates_t<2> & x) -> mito::diagonal_matrix_t<2> {
-                // e_r + r^2 * e_theta
-                return mito::e_00<2> + (x[0] * x[0]) * mito::e_11<2>;
+                // e_rr + r^2 * e_tt
+                return e_rr(x) + (x[0] * x[0]) * e_tt(x);
             });
 
     // the inverse metric field
@@ -22,18 +31,18 @@ TEST(Metric, Polar)
         mito::manifolds::field(
             [](const mito::geometry::coordinates_t<2> & x) -> mito::diagonal_matrix_t<2> {
                 // e_r + 1/r^2 * e_theta
-                return mito::e_00<2> + 1.0 / (x[0] * x[0]) * mito::e_11<2>;
+                return e_rr(x) + 1.0 / (x[0] * x[0]) * e_tt(x);
             });
 
-    // the basis one forms
-    constexpr auto dr =
-        mito::manifolds::one_form(mito::manifolds::uniform_field<2>(mito::e_0<2>), g_inv);
-    constexpr auto dtheta =
-        mito::manifolds::one_form(mito::manifolds::uniform_field<2>(mito::e_1<2>), g_inv);
+    // the basis one-forms
+    constexpr auto dr = mito::manifolds::one_form(e_r, g_inv);
+    constexpr auto dt = mito::manifolds::one_form(e_t, g_inv);
+
 
     // the metric volume element
     constexpr auto w =
-        mito::manifolds::sqrt(mito::manifolds::determinant(g)) * mito::manifolds::wedge(dr, dtheta);
+        mito::manifolds::sqrt(mito::manifolds::determinant(g)) * mito::manifolds::wedge(dr, dt);
+
 }
 
 
