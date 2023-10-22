@@ -30,12 +30,12 @@ namespace mito::manifolds {
     // construct a one-form based on its metric-equivalent vector (case: symmetric metric)
     template <int D>
     constexpr auto one_form(
-        const mito::vector_t<D> & vector, const mito::symmetric_matrix_t<D> & inverse_metric)
+        const mito::vector_t<D> & vector, const mito::symmetric_matrix_t<D> & metric)
     {
         // return a one-form that, when contracted with {v}...
-        return one_form([vector, inverse_metric](const mito::vector_t<D> & v) -> mito::scalar_t {
-            // ... returns the contraction of {inverse_metric} with {vector} and {v}
-            return inverse_metric * vector * v;
+        return one_form([vector, metric](const mito::vector_t<D> & v) -> mito::scalar_t {
+            // ... returns the contraction of {metric} with {vector} and {v}
+            return metric * vector * v;
         });
     }
 
@@ -43,12 +43,12 @@ namespace mito::manifolds {
     template <int D>
     constexpr auto one_form(
         const mito::vector_t<D> & vector,
-        const mito::diagonal_matrix_t<D> & inverse_metric = mito::identity<D>)
+        const mito::diagonal_matrix_t<D> & metric = mito::identity<D>)
     {
         // return a one-form that, when contracted with {v}...
-        return one_form([vector, inverse_metric](const mito::vector_t<D> & v) -> mito::scalar_t {
-            // ... returns the contraction of {inverse_metric} with {vector} and {v}
-            return inverse_metric * vector * v;
+        return one_form([vector, metric](const mito::vector_t<D> & v) -> mito::scalar_t {
+            // ... returns the contraction of {metric} with {vector} and {v}
+            return metric * vector * v;
         });
     }
 
@@ -68,7 +68,7 @@ namespace mito::manifolds {
 
     // construct a one-form based on its metric-equivalent vector field
     template <class F, class G, int D = field_t<F>::dim>
-    constexpr auto one_form(const field_t<F> & vector, const field_t<G> & inverse_metric)
+    constexpr auto one_form(const field_t<F> & vector, const field_t<G> & metric)
     requires(
         // the vector and the metric are define on the same vector space
         field_t<F>::dim == field_t<G>::dim
@@ -78,9 +78,9 @@ namespace mito::manifolds {
         && is_symmetric_tensor_field<field_t<G>>)
     {
         // return a one-form that, when contracted with {x}...
-        return field([vector, inverse_metric](const mito::geometry::coordinates_t<D> & x) -> auto {
+        return field([vector, metric](const mito::geometry::coordinates_t<D> & x) -> auto {
             // ... returns the contraction of {vector} with {x}
-            return one_form(vector(x), inverse_metric(x));
+            return one_form(vector(x), metric(x));
         });
     }
 }
