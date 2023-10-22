@@ -53,6 +53,9 @@ TEST(Metric, Polar)
     constexpr auto w =
         mito::manifolds::sqrt(mito::manifolds::determinant(g)) * mito::manifolds::wedge(dr, dt);
 
+    constexpr mito::scalar_t dr_scalar = 0.01;
+    constexpr mito::scalar_t dt_scalar = 0.01;
+    static_assert(w(x)(dr_scalar * e_r(x), dt_scalar * e_t(x)) == r * dr_scalar * dt_scalar);
 }
 
 
