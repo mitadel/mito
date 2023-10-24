@@ -18,10 +18,9 @@
 // classes implementation
 #include "metrics.h"
 #include "parametric.h"
-#include "OneForm.h"
+#include "Form.h"
 #include "Field.h"
 #include "Manifold.h"
-#include "Tensor.h"
 
 // factories implementation
 #include "factories.h"
@@ -30,8 +29,6 @@
 #include "fields_algebra.h"
 // algebraic operations on forms
 #include "forms_algebra.h"
-// algebraic operations on tensors
-#include "tensor_algebra.h"
 
 
 #endif

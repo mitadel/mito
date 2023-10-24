@@ -20,11 +20,11 @@ namespace mito::manifolds {
         return mito::manifolds::one_form_t<F>(f);
     }
 
-    // factory for tensors
-    template <class F>
-    constexpr auto tensor(F && f)
+    // factory for general forms
+    template <int N, class F>
+    constexpr auto form(F && f)
     {
-        return mito::manifolds::tensor_t<F>(f);
+        return mito::manifolds::form_t<N, F>(f);
     }
 
     // construct a one-form based on its metric-equivalent vector (case: symmetric metric)

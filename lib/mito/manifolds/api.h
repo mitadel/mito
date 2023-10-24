@@ -18,12 +18,12 @@ namespace mito::manifolds {
     using manifold_t = Manifold<cellT, D>;
 
     // form alias
-    template <class F>
-    using one_form_t = OneForm<F>;
+    template <int N, class F>
+    using form_t = Form<N, F>;
 
-    // tensor alias
+    // one-form alias
     template <class F>
-    using tensor_t = Tensor<F>;
+    using one_form_t = Form<1, F>;
 
     // field alias
     template <class F>

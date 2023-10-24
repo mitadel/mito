@@ -9,13 +9,9 @@ namespace mito::manifolds {
     template <class cellT, int D>
     class Manifold;
 
-    // class one-form
-    template <class F>
-    class OneForm;
-
-    // class tensor
-    template <class F>
-    class Tensor;
+    // class P-form
+    template <int P, class F>
+    class Form;
 
     // class field
     template <class F>
