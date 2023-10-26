@@ -5,12 +5,13 @@
 
 namespace mito::manifolds {
 
-    // TOFIX
     // factory manifolds
-    template <class cellT, int D>
-    constexpr auto manifold(mesh::mesh_t<cellT, D> & mesh)
+    template <class cellT, int D, class F>
+    constexpr auto manifold(
+        mesh::mesh_t<cellT, D> & mesh,
+        const field_t<F> & metric = uniform_field<D>(mito::identity<D>))
     {
-        return manifold_t<cellT, D>(mesh);
+        return manifold_t<cellT, D, F>(mesh, metric);
     }
 
     // factory for one-forms

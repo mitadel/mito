@@ -6,7 +6,7 @@
 namespace mito::manifolds {
 
     // class manifold
-    template <class cellT, int D>
+    template <class cellT, int D, class F>
     class Manifold;
 
     // class P-form

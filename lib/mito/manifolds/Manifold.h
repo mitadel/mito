@@ -5,15 +5,7 @@
 
 namespace mito::manifolds {
 
-    // QUESTION:
-    // In the case of a bulk element or a line element in 3D the differential in the
-    // integral is different (dV, or |r'(d)| dt). Is it a good idea to implement the jacobian, the
-    // derivative of the parametrization, the normal times the area differential, as the returned
-    // value by a method called, say, differential?
-
-    // TOFIX: distinguish between element family/class (simplicial) and element type (triangles)
-
-    template <class cellT /* the type of cell */, int D /* spatial dimension */>
+    template <class cellT /* the type of cell */, int D /* spatial dimension */, class F>
     class Manifold {
 
       public:
@@ -32,14 +24,10 @@ namespace mito::manifolds {
         using vertex_t = topology::vertex_t;
 
       public:
-        inline Manifold(mesh_t & mesh) :
-            _elements(std::begin(mesh.cells()), std::end(mesh.cells())),
-            _vertices(mesh.geometry().nodes()),
-            _jacobians(std::size(_elements), 0.0)
-        {
-            // compute the jacobians of the map from reference to current element for each element
-            _computeJacobians();
-        }
+        inline Manifold(const mesh_t & mesh, const field_t<F> & metric) :
+            _mesh(mesh),
+            _metric(metric)
+        {}
 
         inline ~Manifold() {}
 
@@ -63,7 +51,7 @@ namespace mito::manifolds {
         inline auto sanityCheck() -> bool
         {
             bool check = true;
-            for (const auto & e : _elements) {
+            for (const auto & e : _mesh.cells()) {
                 if (!e->sanityCheck()) {
                     std::cout << "Failed sanity check for element " << e << std::endl;
                     check = false;
@@ -74,10 +62,11 @@ namespace mito::manifolds {
 
         inline auto elements() const noexcept -> const element_vector_t<cell_t> &
         {
-            return _elements;
+            return _mesh.cells();
         }
-        inline auto nElements() const noexcept -> int { return std::size(_elements); }
-        inline auto jacobian(int e) const -> real { return _jacobians[e]; }
+
+        inline auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
+
         inline auto coordinatesVertex(const vertex_t & v) const -> const vector_t<D> &
         {
             // get the coordinates of the point attached to vertex {v}
@@ -107,7 +96,7 @@ namespace mito::manifolds {
             // print the element set of the manifold
             std::cout << "Element set: " << std::endl;
 
-            for (const auto & e : elements()) {
+            for (const auto & e : _mesh.cells()) {
                 // print the elemental composition
                 std::cout << "Composition: " << std::endl;
                 std::cout << e;
@@ -125,25 +114,18 @@ namespace mito::manifolds {
         inline auto _point(const vertex_t & v) const -> const geometry::point_t<D> &
         {
             // look up the point attached to vertex {v}
-            return _vertices.find(v)->second;
-        }
-
-        inline auto _computeJacobians() -> void
-        {
-            return computeElementsVolume(_elements, _vertices, _jacobians);
+            return _mesh.geometry().point(v);
         }
 
       private:
-        // TOFIX: not sure I like that {_elements} is a copy while {_vertices} is a reference
-        const element_vector_t<cell_t> _elements;
-        // QUESTION: should the manifold hold directly a reference to the mesh?
-        // the mapping of vertices to points
-        const geometry::nodes_t<D> & _vertices;
-        std::vector<real> _jacobians;
+        // the underlying mesh
+        const mesh_t & _mesh;
+        // the metric field
+        field_t<F> _metric;
     };
 
-    template <class cellT, int D>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, D> & manifold)
+    template <class cellT, int D, class F>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, D, F> & manifold)
     {
         // print the manifold
         manifold.print();
