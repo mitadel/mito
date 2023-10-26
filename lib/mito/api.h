@@ -67,17 +67,20 @@ namespace mito {
 
     // TOFIX: perhaps move the pyre wrapping to a separate header? This stuff should be under
     //          external
-    template <int D>
-    requires(D > 0)
-    constexpr auto e_0 = pyre::tensor::unit<pyre::tensor::vector_t<D>, 0>;
+
+    // I-th basis vector in dimension D
+    template <int I, int D>
+    requires(D > 0 && I > 0 && I < D)
+    constexpr auto e = pyre::tensor::unit<pyre::tensor::vector_t<D>, I>;
 
     template <int D>
-    requires(D > 1)
-    constexpr auto e_1 = pyre::tensor::unit<pyre::tensor::vector_t<D>, 1>;
+    constexpr auto e_0 = e<0, D>;
 
     template <int D>
-    requires(D > 2)
-    constexpr auto e_2 = pyre::tensor::unit<pyre::tensor::vector_t<D>, 2>;
+    constexpr auto e_1 = e<1, D>;
+
+    template <int D>
+    constexpr auto e_2 = e<2, D>;
 
     template <int D>
     requires(D > 0)
