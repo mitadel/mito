@@ -29,6 +29,13 @@ namespace mito::manifolds {
     template <class F>
     using field_t = Field<F>;
 
+    // uniform field
+    template <int D, class Y>
+    constexpr auto uniform_field(const Y & constant)
+    {
+        return field([constant](const mito::vector_t<D> &) -> Y { return constant; });
+    }
+
     // the order N identity tensor in D dimensions
     template <int N, int D>
     constexpr auto identity_tensor_field = uniform_field<D>(mito::identity<N>);
