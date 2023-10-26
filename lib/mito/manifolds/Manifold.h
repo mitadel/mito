@@ -72,7 +72,7 @@ namespace mito::manifolds {
 
         inline auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
-        inline auto coordinatesVertex(const vertex_type & v) const -> const vector_t<D> &
+        inline auto coordinates(const vertex_type & v) const -> const vector_t<D> &
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
@@ -87,7 +87,7 @@ namespace mito::manifolds {
             // loop on vertices
             int v = 0;
             for (const auto & vertex : vertices) {
-                const auto & vertexCoordinates = coordinatesVertex(vertex);
+                const auto & vertexCoordinates = coordinates(vertex);
                 coordinates += point[v] * vertexCoordinates;
 
                 ++v;
@@ -109,7 +109,7 @@ namespace mito::manifolds {
                 std::cout << "Vertices: " << std::endl;
                 auto vertices = e->vertices();
                 for (const auto & v : vertices) {
-                    std::cout << coordinatesVertex(v) << std::endl;
+                    std::cout << coordinates(v) << std::endl;
                 }
                 std::cout << std::endl;
             }
