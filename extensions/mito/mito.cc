@@ -114,7 +114,7 @@ PYBIND11_MODULE(mito, m)
     // alias for a manifold of triangles embedded in 2D
     using manifold_triangle_2D_t = mito::manifolds::manifold_t<
         mito::topology::triangle_t, 2,
-        std::function<mito::symmetric_matrix_t<2>(const mito::vector_t<2> &)>>;
+        decltype(mito::manifolds::uniform_field<2>(mito::identity<2>))>;
 
     // the mito manifold interface
     mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")
@@ -137,8 +137,7 @@ PYBIND11_MODULE(mito, m)
                     mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
                 // instantiate
                 return new manifold_triangle_2D_t(
-                    *mesh, std::function<mito::symmetric_matrix_t<2>(const mito::vector_t<2> &)>(
-                               mito::manifolds::uniform_field<2>(mito::identity<2>)));
+                    *mesh, mito::manifolds::uniform_field<2>(mito::identity<2>));
             }))
         // done
         ;
