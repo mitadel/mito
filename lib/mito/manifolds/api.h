@@ -5,10 +5,6 @@
 
 namespace mito::manifolds {
 
-    // factory manifolds
-    template <class cellT, int D>
-    constexpr auto manifold(mesh::mesh_t<cellT, D> & mesh);
-
     // a point in parametric coordinates
     template <int D>
     using parametric_point_t = std::array<double, D>;
@@ -39,6 +35,12 @@ namespace mito::manifolds {
     // the order N identity tensor in D dimensions
     template <int N, int D>
     constexpr auto identity_tensor_field = uniform_field<D>(mito::identity<N>);
+
+    // factory manifolds
+    template <class cellT, int D, class F>
+    constexpr auto manifold(
+        const mesh::mesh_t<cellT, D> & mesh,
+        const field_t<F> & metric = identity_tensor_field<D, D>) -> manifold_t<cellT, D, F>;
 }
 
 
