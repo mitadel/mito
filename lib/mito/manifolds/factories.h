@@ -8,8 +8,7 @@ namespace mito::manifolds {
     // factory manifolds
     template <class cellT, int D, class F>
     constexpr auto manifold(
-        mesh::mesh_t<cellT, D> & mesh,
-        const field_t<F> & metric = uniform_field<D>(mito::identity<D>))
+        mesh::mesh_t<cellT, D> & mesh, const field_t<F> & metric = identity_tensor_field<D, D>)
     {
         return manifold_t<cellT, D, F>(mesh, metric);
     }
