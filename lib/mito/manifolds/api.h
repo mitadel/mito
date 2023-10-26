@@ -28,6 +28,10 @@ namespace mito::manifolds {
     // field alias
     template <class F>
     using field_t = Field<F>;
+
+    // the order N identity tensor in D dimensions
+    template <int N, int D>
+    constexpr auto identity_tensor_field = uniform_field<D>(mito::identity<N>);
 }
 
 
