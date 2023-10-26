@@ -36,6 +36,18 @@ namespace mito::manifolds {
     template <int N, int D>
     constexpr auto identity_tensor_field = uniform_field<D>(mito::identity<N>);
 
+    template <class F, class G, int D = field_t<F>::dim>
+    constexpr auto one_form(
+        const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<D, D>)
+    requires(
+        // the vector and the metric are define on the same vector space
+        field_t<F>::dim == field_t<G>::dim
+        // {vector} is a vector field
+        && is_vector_field<field_t<F>>
+        // {metric} is a symmetric tensor field
+        && is_symmetric_tensor_field<field_t<G>>);
+
+
     // factory manifolds
     template <class cellT, int D, class F>
     constexpr auto manifold(
