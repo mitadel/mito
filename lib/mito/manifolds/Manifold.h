@@ -9,22 +9,27 @@ namespace mito::manifolds {
     class Manifold {
 
       public:
-        // typedef for cell type
-        using cell_t = cellT;
-        // get the order of the cell
-        static constexpr int N = topology::order<cellT>();
-        // a point in parametric coordinates
-        static constexpr int parametricDim = parametric_dim<cell_t>();
-        using parametric_point_t = manifolds::parametric_point_t<parametricDim>;
         // the dimension of the physical space
         static constexpr int dim = D;
+
+      private:
+        // typedef for cell type
+        using cell_type = cellT;
         // typedef for mesh type
-        using mesh_t = mesh::mesh_t<cell_t, D>;
+        using mesh_type = mesh::mesh_t<cell_type, D>;
         // typedef for vertex
-        using vertex_t = topology::vertex_t;
+        using vertex_type = topology::vertex_t;
+        // the dimension of the manifold (that is the order of the cell)
+        static constexpr int N = topology::order<cell_type>();
+        // the dimension of the parametric space
+        static constexpr int parametricDim = parametric_dim<cell_type>();
+        // typedef for a point in parametric coordinates
+        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
+        // typedef for the metric field
+        using metric_field_type = field_t<F>;
 
       public:
-        inline Manifold(const mesh_t & mesh, const field_t<F> & metric) :
+        inline Manifold(const mesh_type & mesh, const metric_field_type & metric) :
             _mesh(mesh),
             _metric(metric)
         {}
@@ -60,21 +65,21 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline auto elements() const noexcept -> const element_vector_t<cell_t> &
+        inline auto elements() const noexcept -> const element_vector_t<cell_type> &
         {
             return _mesh.cells();
         }
 
         inline auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
-        inline auto coordinatesVertex(const vertex_t & v) const -> const vector_t<D> &
+        inline auto coordinatesVertex(const vertex_type & v) const -> const vector_t<D> &
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
         }
 
-        inline auto parametrization(const cell_t & cell, const parametric_point_t & point) const
-            -> vector_t<D>
+        inline auto parametrization(
+            const cell_type & cell, const parametric_point_type & point) const -> vector_t<D>
         {
             // collect the element vertices
             auto vertices = cell->vertices(vertices);
@@ -111,7 +116,7 @@ namespace mito::manifolds {
         }
 
       private:
-        inline auto _point(const vertex_t & v) const -> const geometry::point_t<D> &
+        inline auto _point(const vertex_type & v) const -> const geometry::point_t<D> &
         {
             // look up the point attached to vertex {v}
             return _mesh.geometry().point(v);
@@ -119,9 +124,9 @@ namespace mito::manifolds {
 
       private:
         // the underlying mesh
-        const mesh_t & _mesh;
+        const mesh_type & _mesh;
         // the metric field
-        field_t<F> _metric;
+        metric_field_type _metric;
     };
 
     template <class cellT, int D, class F>
