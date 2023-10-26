@@ -70,7 +70,7 @@ namespace mito {
 
     // I-th basis vector in dimension D
     template <int I, int D>
-    requires(D > 0 && I > 0 && I < D)
+    requires(D > 0 && I >= 0 && I < D)
     constexpr auto e = pyre::tensor::unit<pyre::tensor::vector_t<D>, I>;
 
     template <int D>
