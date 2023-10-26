@@ -29,12 +29,12 @@ namespace mito::manifolds {
         using metric_field_type = field_t<F>;
 
       public:
-        inline Manifold(const mesh_type & mesh, const metric_field_type & metric) :
+        constexpr Manifold(const mesh_type & mesh, const metric_field_type & metric) :
             _mesh(mesh),
             _metric(metric)
         {}
 
-        inline ~Manifold() {}
+        constexpr ~Manifold() {}
 
       private:
         // delete default constructor
@@ -53,7 +53,7 @@ namespace mito::manifolds {
         Manifold & operator=(Manifold &&) = delete;
 
       public:
-        inline auto sanityCheck() -> bool
+        constexpr auto sanityCheck() -> bool
         {
             bool check = true;
             for (const auto & e : _mesh.cells()) {
@@ -65,20 +65,20 @@ namespace mito::manifolds {
             return check;
         }
 
-        inline auto elements() const noexcept -> const element_vector_t<cell_type> &
+        constexpr auto elements() const noexcept -> const element_vector_t<cell_type> &
         {
             return _mesh.cells();
         }
 
-        inline auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
+        constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
-        inline auto coordinates(const vertex_type & v) const -> const vector_t<D> &
+        constexpr auto coordinates(const vertex_type & v) const -> const vector_t<D> &
         {
             // get the coordinates of the point attached to vertex {v}
             return _point(v)->coordinates();
         }
 
-        inline auto parametrization(
+        constexpr auto parametrization(
             const cell_type & cell, const parametric_point_type & point) const -> vector_t<D>
         {
             // collect the element vertices
@@ -96,7 +96,7 @@ namespace mito::manifolds {
             return coordinates;
         }
 
-        inline auto print() const -> void
+        constexpr auto print() const -> void
         {
             // print the element set of the manifold
             std::cout << "Element set: " << std::endl;
@@ -116,7 +116,7 @@ namespace mito::manifolds {
         }
 
       private:
-        inline auto _point(const vertex_type & v) const -> const geometry::point_t<D> &
+        constexpr auto _point(const vertex_type & v) const -> const geometry::point_t<D> &
         {
             // look up the point attached to vertex {v}
             return _mesh.geometry().point(v);
