@@ -145,13 +145,13 @@ namespace mito::manifolds {
 
         // basis for vector fields
         template <int I>
-        static constexpr auto _e = mito::manifolds::uniform_field<D>(mito::e<I, N>);
+        static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
 
         // basis for one-form fields
         // TOFIX: does it make sense to use the metric here since it cancels out with the inverse
         //  metric?
         template <int I>
-        static constexpr auto _dx = mito::manifolds::one_form(_e<I>, identity_tensor_field<N, D>);
+        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
 
     };
 

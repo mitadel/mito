@@ -17,14 +17,14 @@ namespace mito::manifolds {
     template <class F>
     constexpr auto one_form(F && f)
     {
-        return mito::manifolds::one_form_t<F>(f);
+        return one_form_t<F>(f);
     }
 
     // factory for general forms
     template <int N, class F>
     constexpr auto form(F && f)
     {
-        return mito::manifolds::form_t<N, F>(f);
+        return form_t<N, F>(f);
     }
 
     // construct a one-form based on its metric-equivalent vector (case: symmetric metric)
