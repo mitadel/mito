@@ -29,8 +29,7 @@ TEST(Manifold, Triangle2D)
     mesh.insert(triangle);
 
     // create a manifold on {mesh} with Euclidean metric
-    auto metric = mito::manifolds::identity_tensor_field<2, 2>;
-    auto manifold = mito::manifolds::manifold(mesh, metric);
+    auto manifold = mito::manifolds::manifold(mesh);
 
     // get the 0-th basis element for vector fields
     constexpr auto e0 = manifold.e<0>();

@@ -6,11 +6,10 @@
 namespace mito::manifolds {
 
     // factory manifolds
-    template <class cellT, int D, class F>
-    constexpr auto manifold(const mesh::mesh_t<cellT, D> & mesh, const field_t<F> & metric)
-        -> manifold_t<cellT, D, F>
+    template <metric_t metricT, class cellT, int D>
+    constexpr auto manifold(const mesh::mesh_t<cellT, D> & mesh) -> manifold_t<metricT, cellT, D>
     {
-        return manifold_t<cellT, D, F>(mesh, metric);
+        return manifold_t<metricT, cellT, D>(mesh);
     }
 
     // factory for one-forms

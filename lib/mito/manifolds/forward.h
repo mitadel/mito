@@ -9,7 +9,7 @@ namespace mito::manifolds {
     enum metric_t { EUCLIDEAN, POLAR };
 
     // class manifold
-    template <class cellT, int D, class F>
+    template <metric_t metricT, class cellT, int D>
     class Manifold;
 
     // class P-form

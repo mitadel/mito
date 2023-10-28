@@ -5,7 +5,7 @@
 
 namespace mito::manifolds {
 
-    template <class cellT /* the type of cell */, int D /* spatial dimension */, class F>
+    template <metric_t metricT, class cellT /* the type of cell */, int D /* spatial dimension */>
     class Manifold {
 
       public:
@@ -19,20 +19,21 @@ namespace mito::manifolds {
         using mesh_type = mesh::mesh_t<cell_type, D>;
         // typedef for vertex
         using vertex_type = topology::vertex_t;
+        // the metric type
+        static constexpr metric_t metric_type = metricT;
         // the dimension of the manifold (that is the order of the cell)
         static constexpr int N = topology::order<cell_type>();
         // the dimension of the parametric space
         static constexpr int parametricDim = parametric_dim<cell_type>();
         // typedef for a point in parametric coordinates
         using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
-        // typedef for the metric field
-        using metric_field_type = field_t<F>;
+
+      private:
+        // the metric field
+        static constexpr auto _metric = metric<metric_type, N, D>::field();
 
       public:
-        constexpr Manifold(const mesh_type & mesh, const metric_field_type & metric) :
-            _mesh(mesh),
-            _metric(metric)
-        {}
+        constexpr Manifold(const mesh_type & mesh) : _mesh(mesh) {}
 
         constexpr ~Manifold() {}
 
@@ -140,9 +141,6 @@ namespace mito::manifolds {
         // the underlying mesh
         const mesh_type & _mesh;
 
-        // the metric field
-        metric_field_type _metric;
-
         // basis for vector fields
         template <int I>
         static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
@@ -155,8 +153,8 @@ namespace mito::manifolds {
 
     };
 
-    template <class cellT, int D, class F>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, D, F> & manifold)
+    template <metric_t metricT, class cellT, int D>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<metricT, cellT, D> & manifold)
     {
         // print the manifold
         manifold.print();

@@ -10,8 +10,8 @@ namespace mito::manifolds {
     using parametric_point_t = std::array<double, D>;
 
     // manifold alias
-    template <class cellT, int D, class F>
-    using manifold_t = Manifold<cellT, D, F>;
+    template <metric_t metricT, class cellT, int D>
+    using manifold_t = Manifold<metricT, cellT, D>;
 
     // form alias
     template <int N, class F>
@@ -24,6 +24,10 @@ namespace mito::manifolds {
     // field alias
     template <class F>
     using field_t = Field<F>;
+
+    // factory manifolds
+    template <metric_t metricT = EUCLIDEAN, class cellT, int D>
+    constexpr auto manifold(const mesh::mesh_t<cellT, D> & mesh) -> manifold_t<metricT, cellT, D>;
 
     // factory for one-forms
     template <class F>
@@ -59,12 +63,6 @@ namespace mito::manifolds {
         // {metric} is a symmetric tensor field
         && is_symmetric_tensor_field<field_t<G>>);
 
-
-    // factory manifolds
-    template <class cellT, int D, class F>
-    constexpr auto manifold(
-        const mesh::mesh_t<cellT, D> & mesh,
-        const field_t<F> & metric = identity_tensor_field<D, D>) -> manifold_t<cellT, D, F>;
 }
 
 
