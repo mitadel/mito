@@ -5,6 +5,13 @@
 
 namespace mito::geometry {
 
+    // factory for coordinates from brace-enclosed initializer list
+    template <int D>
+    constexpr auto coordinates(const mito::scalar_t (&&coords)[D])
+    {
+        return coordinates_t<D>(coords);
+    }
+
     // point cloud factory
     template <int D>
     auto point_cloud() -> point_cloud_t<D> &
