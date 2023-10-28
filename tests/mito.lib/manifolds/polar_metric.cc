@@ -12,7 +12,7 @@ static constexpr auto e_rr = mito::manifolds::uniform_field<2>(mito::e_00<2>);
 static constexpr auto e_tt = mito::manifolds::uniform_field<2>(mito::e_11<2>);
 
 
-TEST(Metric, Polar)
+TEST(Manifolds, PolarCoordinates)
 {
     // the metric field
     constexpr auto g =

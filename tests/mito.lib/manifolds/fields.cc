@@ -3,7 +3,7 @@
 #include <mito/manifolds.h>
 
 
-TEST(Fields, VectorFields)
+TEST(Manifolds, VectorFields)
 {
     // a point in space
     constexpr mito::geometry::coordinates_t<2> x = { 0.0, 0.0 };

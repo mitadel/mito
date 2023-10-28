@@ -2,7 +2,7 @@
 #include <mito/base.h>
 #include <mito/manifolds.h>
 
-TEST(Forms, OneForms)
+TEST(Manifolds, OneForms)
 {
     // the euclidean metric in 3D space
     constexpr auto metric = mito::identity<3>;

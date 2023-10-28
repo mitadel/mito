@@ -6,7 +6,7 @@
 using mito::manifolds::_;
 
 
-TEST(Contractions, Base)
+TEST(Manifolds, Contractions)
 {
     // a vector
     constexpr auto a = mito::e_0<3>;

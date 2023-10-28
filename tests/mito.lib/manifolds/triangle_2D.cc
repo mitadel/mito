@@ -3,7 +3,7 @@
 #include <mito/manifolds.h>
 
 
-TEST(Manifold, Triangle2D)
+TEST(Manifolds, Triangle2D)
 {
     // an empty topology
     auto & topology = mito::topology::topology();

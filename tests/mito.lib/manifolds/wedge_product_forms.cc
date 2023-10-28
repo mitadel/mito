@@ -3,7 +3,7 @@
 #include <mito/manifolds.h>
 
 
-TEST(Forms, WedgeProduct)
+TEST(Manifolds, FormsWedgeProduct)
 {
     // the euclidean metric in 3D space
     constexpr auto metric = mito::identity<3>;
