@@ -31,6 +31,14 @@ namespace mito::manifolds {
       private:
         // the metric field
         static constexpr auto _metric = metric<metric_type, N, D>::field();
+        // basis for vector fields
+        template <int I>
+        static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
+        // basis for one-form fields
+        // TOFIX: does it make sense to use the metric here since it cancels out with the inverse
+        //  metric?
+        template <int I>
+        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
 
       public:
         constexpr Manifold(const mesh_type & mesh) : _mesh(mesh) {}
@@ -140,17 +148,6 @@ namespace mito::manifolds {
       private:
         // the underlying mesh
         const mesh_type & _mesh;
-
-        // basis for vector fields
-        template <int I>
-        static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
-
-        // basis for one-form fields
-        // TOFIX: does it make sense to use the metric here since it cancels out with the inverse
-        //  metric?
-        template <int I>
-        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
-
     };
 
     template <metric_t metricT, class cellT, int D>
