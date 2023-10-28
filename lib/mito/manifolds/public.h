@@ -20,6 +20,7 @@
 #include "parametric.h"
 #include "Form.h"
 #include "Field.h"
+#include "Metric.h"
 #include "Manifold.h"
 
 // factories implementation

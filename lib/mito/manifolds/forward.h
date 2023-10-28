@@ -5,6 +5,9 @@
 
 namespace mito::manifolds {
 
+    // available metrics
+    enum metric_t { EUCLIDEAN, POLAR };
+
     // class manifold
     template <class cellT, int D, class F>
     class Manifold;
