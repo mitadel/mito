@@ -25,6 +25,18 @@ namespace mito::manifolds {
     template <class F>
     using field_t = Field<F>;
 
+    // factory for one-forms
+    template <class F>
+    constexpr auto one_form(F && f) -> one_form_t<F>;
+
+    // factory for P-forms
+    template <int P, class F>
+    constexpr auto form(F && f) -> form_t<P, F>;
+
+    // factory for fields
+    template <class F>
+    constexpr auto field(F && f) -> field_t<F>;
+
     // uniform field
     template <int D, class Y>
     constexpr auto uniform_field(const Y & constant)
