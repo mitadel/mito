@@ -60,6 +60,22 @@ namespace mito::geometry {
             return _nodes.find(vertex)->second;
         }
 
+        // construct the vector that goes from the first to the second end of this segment
+        inline auto vector(const topology::segment_t & segment) const -> vector_t<D>
+        {
+            // get the segment composition
+            auto composition = segment->composition();
+
+            // get the coordinates of the first end of the segment
+            auto point0 = point(composition[0]->footprint())->coordinates();
+
+            // get the coordinates of the second end of the segment
+            auto point1 = point(composition[1]->footprint())->coordinates();
+
+            // construct the vector from {point0} to {point1} and return it
+            return point1 - point0;
+        }
+
         // accessor for topology
         inline auto topology() noexcept -> topology_t & { return _topology; }
 
