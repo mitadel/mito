@@ -11,7 +11,7 @@ namespace mito::topology {
     using simplex_composition_t = std::array<oriented_simplex_t<N - 1>, N + 1>;
 
     // alias for oriented simplex composition in terms of vertices
-    // (e.g. a D-simplex has D + 1 0-simplices, i.e. vertices)
+    // (e.g. a N-simplex has N+1 0-simplices, i.e. vertices)
     template <int N>
     using vertex_simplex_composition_t = std::array<vertex_t, N + 1>;
 
