@@ -121,6 +121,12 @@ namespace mito {
     template <int D>
     requires(D > 1)
     constexpr auto identity = pyre::tensor::identity<pyre::tensor::matrix_t<D>>;
+
+    // sequences of integers
+    template <int N>
+    using make_integer_sequence = pyre::tensor::make_integer_sequence<N>;
+    template <int... I>
+    using integer_sequence = pyre::tensor::integer_sequence<I...>;
 }
 
 #endif
