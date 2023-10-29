@@ -52,6 +52,39 @@ TEST(Manifolds, Triangle2D)
     // check that it contracts as expected with the basis vectors
     static_assert(dx1({ 0.0, 0.0 })(e0({ 0.0, 0.0 })) == 0.0);
     static_assert(dx1({ 0.0, 0.0 })(e1({ 0.0, 0.0 })) == 1.0);
+
+    // compute the volume of the manifold
+    mito::scalar_t volume;
+    volume = manifold.volume();
+    // check that the volume of triangle is correct
+    EXPECT_DOUBLE_EQ(volume, 0.5);
+
+    // erase {triangle} from the mesh
+    mesh.erase(triangle);
+    // create a triangle from an even permutation of the vertices
+    triangle = topology.triangle({ vertex1, vertex2, vertex0 });
+    // add {triangle} to mesh
+    mesh.insert(triangle);
+
+    // compute the volume of the manifold
+    volume = manifold.volume();
+    // check that the volume of triangle is correct
+    EXPECT_DOUBLE_EQ(volume, 0.5);
+
+    // erase {triangle} from the mesh
+    mesh.erase(triangle);
+    // create a triangle from an odd permutation of the vertices
+    triangle = topology.triangle({ vertex0, vertex2, vertex1 });
+    // add {triangle} to mesh
+    mesh.insert(triangle);
+
+    // compute the volume of the manifold
+    volume = manifold.volume();
+    // check that the volume of triangle is correct
+    EXPECT_DOUBLE_EQ(volume, -0.5);
+
+    // TOFIX: support this as well
+    // (dx1(e1))({ 0.0, 0.0 });
 }
 
 

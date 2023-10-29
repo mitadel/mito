@@ -39,6 +39,9 @@ namespace mito::manifolds {
         //  metric?
         template <int I>
         static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
+        // the metric volume form
+        // TOFIX: make it general for N-dimension
+        static constexpr auto _volume_form = sqrt(determinant(_metric)) * wedge(_dx<0>, _dx<1>);
 
       public:
         constexpr Manifold(const mesh_type & mesh) : _mesh(mesh) {}
@@ -138,11 +141,52 @@ namespace mito::manifolds {
             return _dx<I>;
         }
 
+        // QUESTION: we can precompute the element volumes and store them in a data structure. Shall
+        //  we do this here or at a higher level?
+        // QUESTION: does this work for general metric tensors?
+        constexpr auto volume() -> scalar_t
+        {
+            scalar_t volume = 0.0;
+
+            for (const auto & cell : _mesh.cells()) {
+                volume += _volume(cell);
+            }
+
+            // all done
+            return volume;
+        }
+
       private:
         constexpr auto _point(const vertex_type & v) const -> const geometry::point_t<D> &
         {
             // look up the point attached to vertex {v}
             return _mesh.geometry().point(v);
+        }
+
+        // helper function to pass from a collection of segments to a collection of
+        // vectors associated to those segements
+        template <int... J>
+        constexpr auto _compute_director_vectors(
+            const topology::edge_simplex_directors_t<N> & segments, integer_sequence<J...>) const
+            -> auto
+        {
+            return std::array { _mesh.geometry().vector(segments[J])... };
+        }
+
+        // computes the volume of a cell
+        constexpr auto _volume(const cell_type & cell) -> scalar_t
+        {
+            // get the director edges of this cell
+            auto edge_directors = cell->directors();
+            // compute the director vectors associated with each director edge
+            auto directors = _compute_director_vectors(edge_directors, make_integer_sequence<N> {});
+            // compute the volume of a N-order simplicial cell as (1/N) times the volume form
+            // contracted with the cell directors
+            // QUESTION: at what point should the volume be evaluated?
+            // TOFIX: make it general for N-dimensions
+            auto volume = 1. / N * _volume_form({ 0.0, 0.0 })(directors[0], directors[1]);
+            // all done
+            return volume;
         }
 
       private:
