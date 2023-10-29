@@ -6,7 +6,7 @@
 TEST(Manifolds, VectorFields)
 {
     // a point in space
-    constexpr mito::geometry::coordinates_t<2> x = { 0.0, 0.0 };
+    constexpr auto x = mito::geometry::coordinates({ 0.0, 0.0 });
 
     // a scalar field
     constexpr auto f =

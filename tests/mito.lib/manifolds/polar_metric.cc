@@ -41,7 +41,7 @@ TEST(Manifolds, PolarCoordinates)
     // a point in space
     constexpr auto r = 2.0;
     constexpr auto t = 0.0;
-    constexpr auto x = mito::geometry::coordinates_t<2>({ r, t });
+    constexpr auto x = mito::geometry::coordinates({ r, t });
 
     // assert that at a(ny) point the basis for one-forms is dual to that of vectors
     static_assert(dr(x)(e_r(x)) == 1.0);
