@@ -103,6 +103,14 @@ namespace mito::topology {
             return vertices;
         }
 
+        // return the array of edge-directors of this simplex
+        inline auto directors() const -> edge_simplex_directors_t<N>
+        requires(N > 0)
+        {
+            // delegate question to the footprint
+            return _footprint->directors();
+        }
+
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void

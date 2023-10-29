@@ -15,6 +15,11 @@ namespace mito::topology {
     template <int N>
     using vertex_simplex_composition_t = std::array<vertex_t, N + 1>;
 
+    // alias for the collection of oriented simplex director edges
+    // (e.g. an N-simplex has as N director edges)
+    template <int N>
+    using edge_simplex_directors_t = std::array<segment_t, N>;
+
     // vertex vector alias
     using vertex_vector_t = element_vector_t<vertex_t>;
 }
