@@ -14,6 +14,7 @@ if(WITH_VTK)
 endif()
 
 # manifolds
+mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/fields.cc)
 mito_test_driver(tests/mito.lib/manifolds/one_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/metric.cc)
