@@ -34,7 +34,8 @@ namespace mito::topology {
         // oriented simplices
       private:
         // constructor with an existing shared pointer as footprint
-        constexpr OrientedSimplex(const unoriented_simplex_t<N> & footprint, bool orientation) :
+        constexpr OrientedSimplex(
+            const unoriented_simplex_t<N> & footprint, orientation_t orientation) :
             _footprint(footprint),
             _orientation(orientation)
         {}
@@ -68,7 +69,7 @@ namespace mito::topology {
         // returns the orientation of this simplex
         // (true: oriented simplex is oriented as the footprint,
         //  false: oriented simplex is oriented opposite to the footprint)
-        inline auto orientation() const noexcept -> bool { return _orientation; }
+        inline auto orientation() const noexcept -> orientation_t { return _orientation; }
 
         // returns the array of subsimplices
         inline auto composition() const noexcept -> const simplex_composition_t<N> &
@@ -126,7 +127,7 @@ namespace mito::topology {
         // the shared pointer to the footprint
         const unoriented_simplex_t<N> _footprint;
         // the orientation
-        const bool _orientation;
+        const orientation_t _orientation;
         // private friendship with the repository of oriented simplices
         friend class utilities::Repository<oriented_simplex_t<N>>;
     };

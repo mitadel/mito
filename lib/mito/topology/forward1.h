@@ -52,6 +52,9 @@ namespace mito::topology {
     // oriented simplex alias
     template <int N>
     using oriented_simplex_t = utilities::shared_ptr<const OrientedSimplex<N>>;
+
+    // type for simplex orientation
+    using orientation_t = int;
 }
 
 

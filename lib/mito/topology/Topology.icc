@@ -71,8 +71,8 @@ mito::topology::Topology::_get_factory<3>() const noexcept -> const oriented_sim
 
 template <int N>
 inline auto
-mito::topology::Topology::simplex(const unoriented_simplex_t<N> & footprint, bool orientation)
-    -> simplex_t<N>
+mito::topology::Topology::simplex(
+    const unoriented_simplex_t<N> & footprint, orientation_t orientation) -> simplex_t<N>
 {
     // ask the factory of oriented simplices
     return _get_factory<N>().orientedSimplex(footprint, orientation);
@@ -89,7 +89,7 @@ requires(N > 0)
 
 template <int N>
 inline auto
-mito::topology::Topology::simplex(bool orientation) -> simplex_t<0>
+mito::topology::Topology::simplex(orientation_t orientation) -> simplex_t<0>
 requires(N == 0)
 {
     // ask the factory of oriented simplices
@@ -117,7 +117,7 @@ mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices
 inline auto
 mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & simplices) -> simplex_t<1>
 {
-    return segment({ simplex(simplices[0], false), simplex(simplices[1], true) });
+    return segment({ simplex(simplices[0], -1), simplex(simplices[1], +1) });
 }
 
 inline auto
@@ -151,7 +151,7 @@ template <int N>
 inline auto
 mito::topology::Topology::exists_flipped(const simplex_t<N> & simplex) const -> bool
 {
-    return _get_factory<N>().existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
+    return _get_factory<N>().existsOrientedSimplex(simplex->footprint(), -simplex->orientation());
 }
 
 template <int N>
@@ -159,7 +159,7 @@ inline auto
 mito::topology::Topology::flip(const simplex_t<N> & simplex) -> simplex_t<N>
 {
     // ask the factory of oriented simplices
-    return _get_factory<N>().orientedSimplex(simplex->footprint(), !simplex->orientation());
+    return _get_factory<N>().orientedSimplex(simplex->footprint(), -simplex->orientation());
 }
 
 template <int N>
@@ -226,8 +226,8 @@ inline auto
 mito::topology::Topology::exists(const vertex_simplex_composition_t<1> & vertices) const -> bool
 {
     // find left and right tip simplices
-    auto simplex_left_tip = _get_factory<0>().findOrientedSimplex(vertices[0], false);
-    auto simplex_right_tip = _get_factory<0>().findOrientedSimplex(vertices[1], true);
+    auto simplex_left_tip = _get_factory<0>().findOrientedSimplex(vertices[0], -1);
+    auto simplex_right_tip = _get_factory<0>().findOrientedSimplex(vertices[1], +1);
 
     // if both are are found
     if (!simplex_left_tip.is_nullptr() && !simplex_right_tip.is_nullptr()) {

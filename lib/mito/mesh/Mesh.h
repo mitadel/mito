@@ -134,8 +134,9 @@ namespace mito::mesh {
                 for (const auto & subcell : cell->composition()) {
                     // decrement the orientations count for this cell footprint id, depending on the
                     // orientation
-                    (subcell->orientation() ? _orientations[subcell->footprint().id()][0] -= 1 :
-                                              _orientations[subcell->footprint().id()][1] -= 1);
+                    (subcell->orientation() == +1 ?
+                         _orientations[subcell->footprint().id()][0] -= 1 :
+                         _orientations[subcell->footprint().id()][1] -= 1);
 
                     // cleanup orientation map
                     if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
@@ -152,8 +153,8 @@ namespace mito::mesh {
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
-            (!cell->orientation() ? count = _orientations.at(cell->footprint().id())[0] :
-                                    count = _orientations.at(cell->footprint().id())[1]);
+            (cell->orientation() == -1 ? count = _orientations.at(cell->footprint().id())[0] :
+                                         count = _orientations.at(cell->footprint().id())[1]);
 
             // the cell is on the boundary if it never occurs in the mesh with opposite
             // orientation
@@ -227,8 +228,8 @@ namespace mito::mesh {
             for (const auto & subcell : cell->composition()) {
                 // increment the orientations count for this cell footprint id, depending on the
                 // orientation
-                (subcell->orientation() ? _orientations[subcell->footprint().id()][0] += 1 :
-                                          _orientations[subcell->footprint().id()][1] += 1);
+                (subcell->orientation() == +1 ? _orientations[subcell->footprint().id()][0] += 1 :
+                                                _orientations[subcell->footprint().id()][1] += 1);
             }
 
             // all done

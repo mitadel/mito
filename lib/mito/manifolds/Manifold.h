@@ -184,7 +184,7 @@ namespace mito::manifolds {
             // contracted with the cell directors
             // QUESTION: at what point should the volume be evaluated?
             // TOFIX: make it general for N-dimensions
-            auto volume = (cell->orientation() ? 1.0 : -1.0) / N
+            auto volume = cell->orientation() * 1.0 / N
                         * _volume_form({ 0.0, 0.0 })(directors[0], directors[1]);
             // all done
             return volume;
