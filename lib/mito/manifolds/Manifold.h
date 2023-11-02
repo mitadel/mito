@@ -39,9 +39,19 @@ namespace mito::manifolds {
         //  metric?
         template <int I>
         static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
+        // TOFIX: move this to the private methods scope
+        // TOFIX: support 1D case
+        // helper function wedging the N basis 1-forms
+        template <int... J>
+        static constexpr auto _wedge(integer_sequence<J...>)
+        requires(sizeof...(J) == N)
+        {
+            // return the basis N-form
+            return wedge(_dx<J>...);
+        }
         // the metric volume form
-        // TOFIX: make it general for N-dimension
-        static constexpr auto _volume_form = sqrt(determinant(_metric)) * wedge(_dx<0>, _dx<1>);
+        static constexpr auto _volume_form =
+            sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N> {});
 
       public:
         constexpr Manifold(const mesh_type & mesh) : _mesh(mesh) {}
@@ -149,7 +159,7 @@ namespace mito::manifolds {
             scalar_t volume = 0.0;
 
             for (const auto & cell : _mesh.cells()) {
-                volume += _volume(cell);
+                volume += _volume(cell, make_integer_sequence<N> {});
             }
 
             // all done
@@ -163,29 +173,20 @@ namespace mito::manifolds {
             return _mesh.geometry().point(v);
         }
 
-        // helper function to pass from a collection of segments to a collection of
-        // vectors associated to those segments
-        template <int... J>
-        constexpr auto _compute_director_vectors(
-            const topology::edge_simplex_directors_t<N> & segments, integer_sequence<J...>) const
-            -> auto
-        {
-            return std::array { _mesh.geometry().vector(segments[J])... };
-        }
-
         // computes the volume of a cell
-        constexpr auto _volume(const cell_type & cell) -> scalar_t
+        template <int... J>
+        constexpr auto _volume(const cell_type & cell, integer_sequence<J...>) -> scalar_t
+        requires(sizeof...(J) == N)
         {
             // get the director edges of this cell
             auto edge_directors = cell->directors();
             // compute the director vectors associated with each director edge
-            auto directors = _compute_director_vectors(edge_directors, make_integer_sequence<N> {});
+            auto directors = std::array { _mesh.geometry().vector(edge_directors[J])... };
+            // QUESTION: at what point should the volume be evaluated?
+            auto point = mito::vector_t<D>();
             // compute the volume of a N-order simplicial cell as (1/N) times the volume form
             // contracted with the cell directors
-            // QUESTION: at what point should the volume be evaluated?
-            // TOFIX: make it general for N-dimensions
-            auto volume = cell->orientation() * 1.0 / N
-                        * _volume_form({ 0.0, 0.0 })(directors[0], directors[1]);
+            auto volume = cell->orientation() * 1.0 / N * _volume_form(point)(directors[J]...);
             // all done
             return volume;
         }
