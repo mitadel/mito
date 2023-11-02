@@ -164,7 +164,7 @@ namespace mito::manifolds {
         }
 
         // helper function to pass from a collection of segments to a collection of
-        // vectors associated to those segements
+        // vectors associated to those segments
         template <int... J>
         constexpr auto _compute_director_vectors(
             const topology::edge_simplex_directors_t<N> & segments, integer_sequence<J...>) const
