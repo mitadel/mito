@@ -221,9 +221,9 @@ namespace mito::topology {
       private:
         // compute the orientation of the {composition} with respect to the orientation of
         // {simplex}
-        inline orientation_t _orientation(
+        inline auto _orientation(
             const simplex_composition_t<N> & composition,
-            const unoriented_simplex_t<N> & simplex) const;
+            const unoriented_simplex_t<N> & simplex) const -> orientation_t;
 
         inline auto _rotate(const simplex_composition_t<N> & composition) const;
 
@@ -272,8 +272,9 @@ namespace mito::topology {
 
     // compute the orientation of the {composition} with respect to the orientation of {simplex}
     template <>
-    orientation_t OrientedSimplexFactory<2>::_orientation(
+    auto OrientedSimplexFactory<2>::_orientation(
         const simplex_composition_t<2> & composition, const unoriented_simplex_t<2> & simplex) const
+        -> orientation_t
     {
         if (_rotate(composition) == _rotate(simplex->composition())) {
             return +1;
@@ -282,9 +283,9 @@ namespace mito::topology {
     }
 
     template <>    // TODO: implement
-    orientation_t OrientedSimplexFactory<3>::_orientation(
+    auto OrientedSimplexFactory<3>::_orientation(
         const simplex_composition_t<3> & /*composition*/,
-        const unoriented_simplex_t<3> & /*simplex*/) const
+        const unoriented_simplex_t<3> & /*simplex*/) const -> orientation_t
     {
         return +1;
     }
