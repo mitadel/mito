@@ -5,6 +5,7 @@
 
 #include "function_algebra.h"
 #include "lambda_traits.h"
+#include "combinatorics.h"
 
 
 #endif
