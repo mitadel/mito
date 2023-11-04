@@ -5,31 +5,38 @@
 
 namespace mito::math {
 
+    // swap-sort an {array} in the same order of a {reference} array and return the number of swaps
+    // performed
+    // (grab {array} by copy as we damage it in the function)
     template <class T>
-    inline auto sort(T array)
+    inline auto swap_sort(T array, const T & reference)
     {
-        // get the first element
+        // get the first element of {array}
         auto first = std::begin(array);
-        // get the last element
+        // get the last element of {array}
         auto last = std::end(array);
+        // get the first element of {reference}
+        auto first_reference = std::begin(reference);
 
         // counter for the number of swaps
         int nswaps = 0;
 
         // loop on the {array}, excluding the last element
         while (first != last - 1) {
-            // get the minimum entry in the range {first} to {last}
-            auto min = std::min_element(first, last);
-            // if the {min} is not at the place it be at (based on ascending order)
-            if (min != first) {
-                // put the {min} up front
-                std::swap(*first, *min);
+            // find the {first_reference} entry in the range {first} to {last}
+            auto ref = std::find(first, last, *first_reference);
+            // if the {ref} is not at the place it be at (based on the order in {reference})
+            if (ref != first) {
+                // pull the {ref} up front within range {first} to {last}
+                std::swap(*first, *ref);
                 // increase the swap count
                 ++nswaps;
             }
             // move the range of interest of one element to the right
             // (the part of the array up to {first}, included, has already been sorted)
             ++first;
+            // same for {reference}
+            ++first_reference;
         }
 
         // return the number of swaps
@@ -39,10 +46,10 @@ namespace mito::math {
     // compute the permutation sign of a data structure {data} with respect to a reference data
     // structure that has the same elements of {data} but sorted in ascending order
     template <class T>
-    inline auto permutation_sign(const T & data) -> int
+    inline auto permutation_sign(const T & data, const T & reference) -> int
     {
-        // if the data structure was sorted in an even number of swaps
-        if (sort(data) % 2 == 0) {
+        // if the data structure was sorted from {data} to {reference} in an even number of swaps
+        if (swap_sort(data, reference) % 2 == 0) {
             // then the permutation sign is positive
             return +1;
         }

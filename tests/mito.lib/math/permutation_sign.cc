@@ -21,46 +21,46 @@ TEST(Math, PermutationSign)
         // odd permutation
         {
             auto array = composition_t<3> { 1, 3, 2 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, -1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, -1);
         }
 
         // even permutation
         {
             auto array = composition_t<3> { 3, 1, 2 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, +1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, +1);
         }
 
         // odd permutation
         {
             auto array = composition_t<3> { 2, 1, 3 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, -1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, -1);
         }
 
         // even permutation
         {
             auto array = composition_t<3> { 2, 3, 1 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, +1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, +1);
         }
 
         // odd permutation
         {
             auto array = composition_t<3> { 3, 2, 1 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, -1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, -1);
         }
     }
 
@@ -73,31 +73,31 @@ TEST(Math, PermutationSign)
         // odd permutation
         {
             auto array = composition_t<4> { 1, 3, 2, 4 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, -1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << " " << array[3]
                     << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, -1);
         }
 
         // even permutation
         {
             auto array = composition_t<4> { 1, 3, 4, 2 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, +1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << " " << array[3]
                     << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, +1);
         }
 
         // odd permutation
         {
             auto array = composition_t<4> { 3, 1, 4, 2 };
-            auto sign = mito::math::permutation_sign(array);
-            EXPECT_EQ(sign, -1);
+            auto sign = mito::math::permutation_sign(array, reference);
             channel << array[0] << " " << array[1] << " " << array[2] << " " << array[3]
                     << pyre::journal::endl;
             channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, -1);
         }
     }
 }
