@@ -13,6 +13,21 @@ TEST(Math, PermutationSign)
     pyre::journal::info_t channel("mito.math.permutation_sign");
 
     {
+        // reference permutation 2D
+        auto reference = composition_t<2> { 1, 2 };
+        channel << "Reference " << reference[0] << " " << reference[1] << pyre::journal::endl;
+
+        // odd permutation
+        {
+            auto array = composition_t<2> { 2, 1 };
+            auto sign = mito::math::permutation_sign(array, reference);
+            channel << array[0] << " " << array[1] << pyre::journal::endl;
+            channel << sign << pyre::journal::endl;
+            EXPECT_EQ(sign, -1);
+        }
+    }
+
+    {
         // reference permutation 3D
         auto reference = composition_t<3> { 1, 2, 3 };
         channel << "Reference " << reference[0] << " " << reference[1] << " " << reference[2]
