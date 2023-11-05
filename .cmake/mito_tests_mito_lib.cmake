@@ -15,6 +15,7 @@ endif()
 
 # manifolds
 mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_2D.cc)
+mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/fields.cc)
 mito_test_driver(tests/mito.lib/manifolds/one_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/metric.cc)
@@ -22,6 +23,7 @@ mito_test_driver(tests/mito.lib/manifolds/polar_metric.cc)
 mito_test_driver(tests/mito.lib/manifolds/contractions.cc)
 mito_test_driver(tests/mito.lib/manifolds/tensor_product_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/triangle_2D.cc)
+mito_test_driver(tests/mito.lib/manifolds/tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/wedge_product_forms.cc)
 
 # materials
