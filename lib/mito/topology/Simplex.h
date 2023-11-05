@@ -119,10 +119,10 @@ namespace mito::topology {
             edge_simplex_directors_t<N> directors;
 
             // of the three directors, get the first two from the first subsimplex
-            directors[0] = _simplices[0].directors()[0];
-            directors[1] = _simplices[0].directors()[1];
+            directors[0] = _simplices[0]->directors()[0];
+            directors[1] = _simplices[0]->directors()[1];
             // and the last from the second subsimplex
-            directors[2] = _simplices[1].directors()[0];
+            directors[2] = _simplices[1]->directors()[0];
 
             // return the collection of directors for this simplex
             return directors;
