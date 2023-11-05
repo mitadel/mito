@@ -111,52 +111,6 @@ namespace mito::topology {
             return;
         }
 
-        // return the array of edge-directors of this simplex
-        inline auto directors() const -> edge_simplex_directors_t<N>
-        requires(N == 3)
-        {
-            // instantiate an empty collection of directors
-            edge_simplex_directors_t<N> directors;
-
-            // of the three directors, get the first two from the first subsimplex
-            directors[0] = _simplices[0]->directors()[0];
-            directors[1] = _simplices[0]->directors()[1];
-            // and the last from the second subsimplex
-            directors[2] = _simplices[1]->directors()[0];
-
-            // return the collection of directors for this simplex
-            return directors;
-        }
-
-        // return the array of edge-directors of this simplex
-        inline auto directors() const -> edge_simplex_directors_t<N>
-        requires(N == 2)
-        {
-            // instantiate an empty collection of directors
-            edge_simplex_directors_t<N> directors;
-
-            // if the simplex is a triangle (N = 2), its directors are two of its three edges
-            directors[0] = _simplices[0];
-            directors[1] = _simplices[1];
-
-            // all done
-            return directors;
-        }
-
-        // return the array of edge-directors of this simplex
-        inline auto directors() const -> edge_simplex_directors_t<N>
-        requires(N == 1)
-        {
-            // instantiate an empty collection of directors
-            edge_simplex_directors_t<N> directors;
-
-            // if the simplex is a segment (N = 1), build the director by connecting the vertices
-            directors[0] = segment_t(_simplices[0], _simplices[1]);
-
-            // all done
-            return directors;
-        }
-
         // perform a sanity check (check that a simplex of order N has N+1 distinct vertices)
         inline auto sanityCheck() const -> bool
         {

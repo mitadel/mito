@@ -186,7 +186,7 @@ namespace mito::manifolds {
             auto point = mito::vector_t<D>();
             // compute the volume of a N-order simplicial cell as (1/N) times the volume form
             // contracted with the cell directors
-            auto volume = cell->orientation() * 1.0 / N * _volume_form(point)(directors[J]...);
+            auto volume = 1.0 / N * _volume_form(point)(directors[J]...);
             // all done
             return volume;
         }

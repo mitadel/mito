@@ -114,13 +114,55 @@ namespace mito::topology {
             return vertices;
         }
 
-        // TOFIX
         // return the array of edge-directors of this simplex
         inline auto directors() const -> edge_simplex_directors_t<N>
-        requires(N > 0)
+        requires(N == 3)
         {
-            // delegate question to the footprint
-            return _footprint->directors();
+            // instantiate an empty collection of directors
+            edge_simplex_directors_t<N> directors;
+
+            auto comp = composition();
+
+            // of the three directors, get the first two from the first subsimplex
+            directors[0] = comp[0]->directors()[0];
+            directors[1] = comp[0]->directors()[1];
+            // and the last from the second subsimplex
+            directors[2] = comp[1]->directors()[0];
+
+            // return the collection of directors for this simplex
+            return directors;
+        }
+
+        // return the array of edge-directors of this simplex
+        inline auto directors() const -> edge_simplex_directors_t<N>
+        requires(N == 2)
+        {
+            // instantiate an empty collection of directors
+            edge_simplex_directors_t<N> directors;
+
+            auto comp = composition();
+
+            // if the simplex is a triangle (N = 2), its directors are two of its three edges
+            directors[0] = comp[0];
+            directors[1] = comp[1];
+
+            // all done
+            return directors;
+        }
+
+        // return the array of edge-directors of this simplex
+        inline auto directors() const -> edge_simplex_directors_t<N>
+        requires(N == 1)
+        {
+            // instantiate an empty collection of directors
+            edge_simplex_directors_t<N> directors;
+
+            // if the simplex is a segment (N = 1), it is already the director
+            directors[0] = *this;
+
+            // all done
+            return directors;
+            // return edge_simplex_directors_t<N>{*this};
         }
 
         // TOFIX
