@@ -12,9 +12,9 @@ namespace mito::topology {
      * fact, being an instance of OrientedSimplex<N> identified by its N+1 subsimplices (through its
      * footprint), there are (N+1)!/2 possible representations of the same oriented simplex. The
      * factory makes sure that at any given time there is at most one OrientedSimplex for an
-     * equivalence class, i.e. the representative of the class. The representative of the class of
-     * equivalence is chosen by starting the composition with the subsimplex of smallest address and
-     * by circularly rotating the other simplices in the composition array around the first simplex.
+     * equivalence class, i.e. the representative of the class.
+     * The representative of the class of equivalence is chosen by sorting in increasing order the
+     * addresses of the instances of the subsimplices.
      */
 
     template <int N>

@@ -25,7 +25,7 @@ namespace mito::math {
         while (first != last - 1) {
             // find the {first_reference} entry in the range {first} to {last}
             auto ref = std::find(first, last, *first_reference);
-            // if the {ref} is not at the place it be at (based on the order in {reference})
+            // if the {ref} is not at the place it should be at (based on the order in {reference})
             if (ref != first) {
                 // pull the {ref} up front within range {first} to {last}
                 std::swap(*first, *ref);
