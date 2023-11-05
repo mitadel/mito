@@ -74,13 +74,13 @@ namespace mito::topology {
     }
 
     // what would be the 2D implementation of this function?
-    auto isValid([[maybe_unused]] const simplex_composition_t<3> & composition) -> bool
+    auto isValid(const simplex_composition_t<3> &) -> bool
     {
         return true;
     }
 
     // a triangle is valid if the edges are all head-tail connected
-    auto isValid([[maybe_unused]] const simplex_composition_t<2> & composition) -> bool
+    auto isValid(const simplex_composition_t<2> & composition) -> bool
     {
         if (headTailConnected(composition[0], composition[1])
             && headTailConnected(composition[1], composition[2])
