@@ -219,13 +219,29 @@ namespace mito::topology {
         }
 
       private:
-        // compute the orientation of the {composition} with respect to the orientation of
-        // {simplex}
+        template <int... J>
+        inline auto _permutation_sign(
+            const simplex_composition_t<N> & composition,
+            const simplex_composition_t<N> & reference, integer_sequence<J...>) const
+        {
+            // compute the sign of the permutation between the indices of {composition} with respect
+            // to the reference composition {reference}
+            return mito::math::permutation_sign(
+                std::array<simplex_id_t, N + 1> { composition[J]->footprint().id()... },
+                std::array<simplex_id_t, N + 1> { reference[J]->footprint().id()... });
+        }
+
+        // compute the orientation of the {composition} with respect to the reference
+        // orientation (that is the orientation of the reference simplex)
         inline auto _orientation(
             const simplex_composition_t<N> & composition,
-            const unoriented_simplex_t<N> & simplex) const -> orientation_t;
-
-        inline auto _rotate(const simplex_composition_t<N> & composition) const;
+            const unoriented_simplex_t<N> & simplex) const -> orientation_t
+        {
+            // compute the permutation sign of {composition} with respect to the composition of
+            // {simplex}
+            return _permutation_sign(
+                composition, simplex->composition(), make_integer_sequence<N + 1> {});
+        }
 
       private:
         // factory for simplices
@@ -241,54 +257,6 @@ namespace mito::topology {
         friend class Topology;
     };
 
-    // compute the orientation of the {composition} with respect to the orientation of {simplex}
-    template <>
-    orientation_t OrientedSimplexFactory<1>::_orientation(
-        const simplex_composition_t<1> & composition, const unoriented_simplex_t<1> & simplex) const
-    {
-        if (composition == simplex->composition()) {
-            return +1;
-        }
-        return -1;
-    }
-
-    template <>
-    inline auto OrientedSimplexFactory<2>::_rotate(
-        const simplex_composition_t<2> & composition) const
-    {
-        // an array of oriented simplices ids
-        using oriented_simplex_array_t = std::array<simplex_id_t, 3>;
-
-        // get the oriented simplices from the shared pointers
-        auto composition_copy = oriented_simplex_array_t { composition[0].id(), composition[1].id(),
-                                                           composition[2].id() };
-        auto first_simplex =
-            std::min_element(std::begin(composition_copy), std::end(composition_copy));
-        std::rotate(std::begin(composition_copy), first_simplex, std::end(composition_copy));
-
-        // return rotated composition
-        return composition_copy;
-    }
-
-    // compute the orientation of the {composition} with respect to the orientation of {simplex}
-    template <>
-    inline auto OrientedSimplexFactory<2>::_orientation(
-        const simplex_composition_t<2> & composition, const unoriented_simplex_t<2> & simplex) const
-        -> orientation_t
-    {
-        if (_rotate(composition) == _rotate(simplex->composition())) {
-            return +1;
-        }
-        return -1;
-    }
-
-    template <>    // TODO: implement
-    inline auto OrientedSimplexFactory<3>::_orientation(
-        const simplex_composition_t<3> & /*composition*/,
-        const unoriented_simplex_t<3> & /*simplex*/) const -> orientation_t
-    {
-        return +1;
-    }
 }
 
 #endif    // mito_topology_OrientedSimplexFactory_h
