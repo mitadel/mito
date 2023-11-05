@@ -86,127 +86,127 @@ TEST(Manifolds, Tetrahedron3D)
     // build tetrahedron with a positive volume (reference tetrahedron)
     auto tetrahedron = topology.tetrahedron({ vertex1, vertex2, vertex3, vertex4 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex1, vertex2, vertex3, vertex4 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex1, vertex3, vertex4, vertex2 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex1, vertex4, vertex2, vertex3 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex2, vertex1, vertex4, vertex3 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex2, vertex3, vertex1, vertex4 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex2, vertex4, vertex3, vertex1 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex3, vertex1, vertex2, vertex4 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex3, vertex2, vertex4, vertex1 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex3, vertex4, vertex1, vertex2 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex4, vertex1, vertex3, vertex2 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex4, vertex2, vertex1, vertex3 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex4, vertex3, vertex2, vertex1 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), 1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex1, vertex2, vertex4, vertex3 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex1, vertex3, vertex2, vertex4 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex1, vertex4, vertex3, vertex2 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex2, vertex1, vertex3, vertex4 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex2, vertex3, vertex4, vertex1 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex2, vertex4, vertex1, vertex3 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex3, vertex1, vertex4, vertex2 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex3, vertex2, vertex1, vertex4 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex3, vertex4, vertex2, vertex1 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex4, vertex1, vertex2, vertex3 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex4, vertex2, vertex3, vertex1 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
     tetrahedron = topology.tetrahedron({ vertex4, vertex3, vertex1, vertex2 });
     // check that the volume of tetrahedron is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 3.0);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, tetrahedron), -1.0 / 6.0);
 }
 
 
