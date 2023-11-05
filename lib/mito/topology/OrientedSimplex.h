@@ -154,15 +154,8 @@ namespace mito::topology {
         inline auto directors() const -> edge_simplex_directors_t<N>
         requires(N == 1)
         {
-            // instantiate an empty collection of directors
-            edge_simplex_directors_t<N> directors;
-
             // if the simplex is a segment (N = 1), it is already the director
-            directors[0] = *this;
-
-            // all done
-            return directors;
-            // return edge_simplex_directors_t<N>{*this};
+            return edge_simplex_directors_t<N> { *this };
         }
 
         // TOFIX
