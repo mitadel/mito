@@ -56,20 +56,12 @@ namespace mito::topology {
 
     auto tail(const simplex_t<1> & oriented_simplex) -> vertex_t
     {
-        if (oriented_simplex->orientation() == +1) {
-            return oriented_simplex->composition()[0]->footprint();
-        } else {
-            return oriented_simplex->composition()[1]->footprint();
-        }
+        return oriented_simplex->composition()[0]->footprint();
     }
 
     auto head(const simplex_t<1> & oriented_simplex) -> vertex_t
     {
-        if (oriented_simplex->orientation() == +1) {
-            return oriented_simplex->composition()[1]->footprint();
-        } else {
-            return oriented_simplex->composition()[0]->footprint();
-        }
+        return oriented_simplex->composition()[1]->footprint();
     }
 
     bool headTailConnected(const simplex_t<1> & simplex_1, const simplex_t<1> & simplex_2)
@@ -114,6 +106,7 @@ namespace mito::topology {
         return true;
     }
 
+    // TOFIX: remove these functions eventually
     // return the vertices of a segment following the order dictated by the segment's orientation
     auto vertices(const segment_t & segment) -> vertex_simplex_composition_t<1>
     {
@@ -121,12 +114,8 @@ namespace mito::topology {
         vertex_simplex_composition_t<1> vertices_collection;
 
         // the first two vertices come from the first edge
-        vertices_collection[0] = (segment->orientation() == +1) ?
-                                     segment->composition()[0]->footprint() :
-                                     segment->composition()[1]->footprint();
-        vertices_collection[1] = (segment->orientation() == +1) ?
-                                     segment->composition()[1]->footprint() :
-                                     segment->composition()[0]->footprint();
+        vertices_collection[0] = segment->composition()[0]->footprint();
+        vertices_collection[1] = segment->composition()[1]->footprint();
 
         // assert that you found two distinct vertices
         assert(vertices_collection[0] != vertices_collection[1]);
@@ -135,6 +124,7 @@ namespace mito::topology {
         return vertices_collection;
     }
 
+    // TOFIX: remove these functions eventually
     // return the vertices of a triangle following the order dictated by the triangle's
     // orientation
     auto vertices(const triangle_t & triangle) -> vertex_simplex_composition_t<2>
@@ -143,19 +133,13 @@ namespace mito::topology {
         vertex_simplex_composition_t<2> vertices_collection;
 
         // get the three vertices following the orientation of the simplex
-        const auto & edge_0 = triangle->composition()[0];
+        const auto edge_0 = triangle->composition()[0];
         // the first two vertices come from the first edge
-        vertices_collection[0] = (edge_0->orientation() == +1) ?
-                                     edge_0->composition()[0]->footprint() :
-                                     edge_0->composition()[1]->footprint();
-        vertices_collection[1] = (edge_0->orientation() == +1) ?
-                                     edge_0->composition()[1]->footprint() :
-                                     edge_0->composition()[0]->footprint();
+        vertices_collection[0] = edge_0->composition()[0]->footprint();
+        vertices_collection[1] = edge_0->composition()[1]->footprint();
         // the third vertex comes from the second edge
-        const auto & edge_1 = triangle->composition()[1];
-        vertices_collection[2] = (edge_1->orientation() == +1) ?
-                                     edge_1->composition()[1]->footprint() :
-                                     edge_1->composition()[0]->footprint();
+        const auto edge_1 = triangle->composition()[1];
+        vertices_collection[2] = edge_1->composition()[1]->footprint();
 
         // assert that you found three distinct vertices
         assert(vertices_collection[0] != vertices_collection[1]);
@@ -166,6 +150,7 @@ namespace mito::topology {
         return vertices_collection;
     }
 
+    // TOFIX: remove these functions eventually
     // return the vertices of a tetrahedron following the order dictated by the tetrahedron's
     // orientation
     auto vertices(const tetrahedron_t & tetrahedron) -> vertex_simplex_composition_t<3>

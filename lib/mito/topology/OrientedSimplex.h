@@ -71,12 +71,21 @@ namespace mito::topology {
         //  false: oriented simplex is oriented opposite to the footprint)
         inline auto orientation() const noexcept -> orientation_t { return _orientation; }
 
-        // returns the array of subsimplices
-        inline auto composition() const noexcept -> const simplex_composition_t<N> &
+        // returns the ordered array of subsimplices
+        inline auto composition() const noexcept -> simplex_composition_t<N>
         {
-            return _footprint->composition();
+            // get a tentative composition from the composition of the footprint
+            auto composition = _footprint->composition();
+            // if the orientation of this simplex is opposite to that of the footprint
+            if (_orientation == -1) {
+                // reverse the order of {composition}
+                std::reverse(composition.begin(), composition.end());
+            }
+            // return the simplex {composition}
+            return composition;
         }
 
+        // TOFIX
         // append the vertices of this simplex to a collection of vertices
         template <class VERTEX_COLLECTION_T>
         inline auto vertices(VERTEX_COLLECTION_T & vertices) const -> void
@@ -84,6 +93,7 @@ namespace mito::topology {
             return _footprint->vertices(vertices);
         }
 
+        // TOFIX
         // return the array of vertices of this simplex
         inline auto vertices() const -> vertex_simplex_composition_t<N>
         requires(N > 0)
@@ -104,6 +114,7 @@ namespace mito::topology {
             return vertices;
         }
 
+        // TOFIX
         // return the array of edge-directors of this simplex
         inline auto directors() const -> edge_simplex_directors_t<N>
         requires(N > 0)
@@ -112,6 +123,7 @@ namespace mito::topology {
             return _footprint->directors();
         }
 
+        // TOFIX
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void
