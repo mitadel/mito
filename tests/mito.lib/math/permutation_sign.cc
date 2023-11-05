@@ -3,116 +3,67 @@
 #include <mito/math.h>
 
 
+// the type for {composition_t}
 template <int N>
 using composition_t = std::array<int, N>;
+// namespace specification
+using mito::math::permutation_sign;
 
 
 TEST(Math, PermutationSign)
 {
-    // make a channel
-    pyre::journal::info_t channel("mito.math.permutation_sign");
-
     {
         // reference permutation 2D
-        auto reference = composition_t<2> { 1, 2 };
-        channel << "Reference " << reference[0] << " " << reference[1] << pyre::journal::endl;
+        constexpr auto reference = composition_t<2> { 1, 2 };
 
         // odd permutation
-        {
-            auto array = composition_t<2> { 2, 1 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, -1);
-        }
+        static_assert(permutation_sign(composition_t<2> { 2, 1 }, reference) == -1);
     }
 
     {
         // reference permutation 3D
-        auto reference = composition_t<3> { 1, 2, 3 };
-        channel << "Reference " << reference[0] << " " << reference[1] << " " << reference[2]
-                << pyre::journal::endl;
+        constexpr auto reference = composition_t<3> { 1, 2, 3 };
 
-        // odd permutation
-        {
-            auto array = composition_t<3> { 1, 3, 2 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, -1);
-        }
+        // even permutations
+        static_assert(permutation_sign(composition_t<3> { 2, 3, 1 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<3> { 3, 1, 2 }, reference) == +1);
 
-        // even permutation
-        {
-            auto array = composition_t<3> { 3, 1, 2 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, +1);
-        }
-
-        // odd permutation
-        {
-            auto array = composition_t<3> { 2, 1, 3 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, -1);
-        }
-
-        // even permutation
-        {
-            auto array = composition_t<3> { 2, 3, 1 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, +1);
-        }
-
-        // odd permutation
-        {
-            auto array = composition_t<3> { 3, 2, 1 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, -1);
-        }
+        // odd permutations
+        static_assert(permutation_sign(composition_t<3> { 1, 3, 2 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<3> { 3, 2, 1 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<3> { 2, 1, 3 }, reference) == -1);
     }
 
     {
         // reference permutation 4D
-        auto reference = composition_t<4> { 1, 2, 3, 4 };
-        channel << "Reference " << reference[0] << " " << reference[1] << " " << reference[2] << " "
-                << reference[3] << pyre::journal::endl;
+        constexpr auto reference = composition_t<4> { 1, 2, 3, 4 };
 
-        // odd permutation
-        {
-            auto array = composition_t<4> { 1, 3, 2, 4 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << " " << array[3]
-                    << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, -1);
-        }
+        // even permutations
+        static_assert(permutation_sign(composition_t<4> { 1, 2, 3, 4 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 1, 3, 4, 2 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 1, 4, 2, 3 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 2, 1, 4, 3 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 2, 3, 1, 4 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 2, 4, 3, 1 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 3, 1, 2, 4 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 3, 2, 4, 1 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 3, 4, 1, 2 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 4, 1, 3, 2 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 4, 2, 1, 3 }, reference) == +1);
+        static_assert(permutation_sign(composition_t<4> { 4, 3, 2, 1 }, reference) == +1);
 
-        // even permutation
-        {
-            auto array = composition_t<4> { 1, 3, 4, 2 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << " " << array[3]
-                    << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, +1);
-        }
-
-        // odd permutation
-        {
-            auto array = composition_t<4> { 3, 1, 4, 2 };
-            auto sign = mito::math::permutation_sign(array, reference);
-            channel << array[0] << " " << array[1] << " " << array[2] << " " << array[3]
-                    << pyre::journal::endl;
-            channel << sign << pyre::journal::endl;
-            EXPECT_EQ(sign, -1);
-        }
+        // odd permutations
+        static_assert(permutation_sign(composition_t<4> { 1, 2, 4, 3 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 1, 3, 2, 4 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 1, 4, 3, 2 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 2, 1, 3, 4 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 2, 3, 4, 1 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 2, 4, 1, 3 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 3, 1, 4, 2 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 3, 2, 1, 4 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 3, 4, 2, 1 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 4, 1, 2, 3 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 4, 2, 3, 1 }, reference) == -1);
+        static_assert(permutation_sign(composition_t<4> { 4, 3, 1, 2 }, reference) == -1);
     }
 }
