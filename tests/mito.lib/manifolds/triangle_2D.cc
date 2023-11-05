@@ -3,6 +3,27 @@
 #include <mito/manifolds.h>
 
 
+auto
+volume(
+    mito::mesh::mesh_t<mito::topology::triangle_t, 2> & mesh,
+    const mito::manifolds::manifold_t<mito::manifolds::EUCLIDEAN, mito::topology::triangle_t, 2> &
+        manifold,
+    const mito::topology::triangle_t & triangle) -> mito::scalar_t
+{
+    // insert triangle in the mesh
+    mesh.insert(triangle);
+
+    // compute the volume of the manifold
+    mito::scalar_t result = manifold.volume();
+
+    // erase the triangle
+    mesh.erase(triangle);
+
+    // return the volume computed
+    return result;
+}
+
+
 TEST(Manifolds, Triangle2D)
 {
     // an empty topology
@@ -21,12 +42,6 @@ TEST(Manifolds, Triangle2D)
     auto vertex0 = geometry.node({ 0.0, 0.0 });
     auto vertex1 = geometry.node({ 1.0, 0.0 });
     auto vertex2 = geometry.node({ 0.0, 1.0 });
-
-    // build triangle
-    auto triangle = topology.triangle({ vertex0, vertex1, vertex2 });
-
-    // insert cells in the mesh
-    mesh.insert(triangle);
 
     // create a manifold on {mesh} with Euclidean metric
     auto manifold = mito::manifolds::manifold(mesh);
@@ -53,38 +68,35 @@ TEST(Manifolds, Triangle2D)
     static_assert(dx1({ 0.0, 0.0 })(e0({ 0.0, 0.0 })) == 0.0);
     static_assert(dx1({ 0.0, 0.0 })(e1({ 0.0, 0.0 })) == 1.0);
 
-    // compute the volume of the manifold
-    mito::scalar_t volume;
-    volume = manifold.volume();
+    // build triangle with a positive volume (reference triangle)
+    auto triangle = topology.triangle({ vertex0, vertex1, vertex2 });
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume, 0.5);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), 0.5);
 
-    // erase {triangle} from the mesh
-    mesh.erase(triangle);
-    // create a triangle from an even permutation of the vertices
+    // create a triangle from an even permutation of the vertices with respect to the reference
     triangle = topology.triangle({ vertex1, vertex2, vertex0 });
-    // add {triangle} to mesh
-    mesh.insert(triangle);
-
-    // compute the volume of the manifold
-    volume = manifold.volume();
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume, 0.5);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), 0.5);
 
-    // erase {triangle} from the mesh
-    mesh.erase(triangle);
-    // create a triangle from an odd permutation of the vertices
+    // create a triangle from an even permutation of the vertices with respect to the reference
+    triangle = topology.triangle({ vertex2, vertex0, vertex1 });
+    // check that the volume of triangle is correct
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), 0.5);
+
+    // create a triangle from an odd permutation of the vertices with respect to the reference
     triangle = topology.triangle({ vertex0, vertex2, vertex1 });
-    // add {triangle} to mesh
-    mesh.insert(triangle);
-
-    // compute the volume of the manifold
-    volume = manifold.volume();
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume, -0.5);
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), -0.5);
 
-    // TOFIX: support this as well
-    // (dx1(e1))({ 0.0, 0.0 });
+    // create a triangle from an odd permutation of the vertices with respect to the reference
+    triangle = topology.triangle({ vertex1, vertex0, vertex2 });
+    // check that the volume of triangle is correct
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), -0.5);
+
+    // create a triangle from an odd permutation of the vertices with respect to the reference
+    triangle = topology.triangle({ vertex2, vertex1, vertex0 });
+    // check that the volume of triangle is correct
+    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), -0.5);
 }
 
 
