@@ -78,8 +78,8 @@ namespace mito::topology {
             auto composition = _footprint->composition();
             // if the orientation of this simplex is opposite to that of the footprint
             if (_orientation == -1) {
-                // reverse the order of {composition}
-                std::reverse(composition.begin(), composition.end());
+                // perform an odd permutation on {composition}
+                std::swap(composition[0], composition[1]);
             }
             // return the simplex {composition}
             return composition;
