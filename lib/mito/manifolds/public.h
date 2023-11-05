@@ -16,7 +16,6 @@
 #include "api.h"
 
 // classes implementation
-#include "metrics.h"
 #include "parametric.h"
 #include "Form.h"
 #include "Field.h"
