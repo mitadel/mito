@@ -139,14 +139,14 @@ namespace mito::manifolds {
 
         // get the I-th basis element for vector fields
         template <int I>
-        constexpr auto e()
+        constexpr auto e() const
         {
             return _e<I>;
         }
 
         // get the I-th basis element for one-form fields
         template <int I>
-        constexpr auto dx()
+        constexpr auto dx() const
         {
             return _dx<I>;
         }
@@ -154,7 +154,7 @@ namespace mito::manifolds {
         // QUESTION: we can precompute the element volumes and store them in a data structure. Shall
         //  we do this here or at a higher level?
         // QUESTION: does this work for general metric tensors?
-        constexpr auto volume() -> scalar_t
+        constexpr auto volume() const -> scalar_t
         {
             scalar_t volume = 0.0;
 
@@ -175,7 +175,7 @@ namespace mito::manifolds {
 
         // computes the volume of a cell
         template <int... J>
-        constexpr auto _volume(const cell_type & cell, integer_sequence<J...>) -> scalar_t
+        constexpr auto _volume(const cell_type & cell, integer_sequence<J...>) const -> scalar_t
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell
