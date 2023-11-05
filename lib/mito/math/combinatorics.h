@@ -9,7 +9,7 @@ namespace mito::math {
     // performed
     // (grab {array} by copy as we damage it in the function)
     template <class T>
-    inline auto swap_sort(T array, const T & reference)
+    constexpr auto swap_sort(T array, const T & reference)
     {
         // get the first element of {array}
         auto first = std::begin(array);
@@ -46,7 +46,7 @@ namespace mito::math {
     // check whether the data structures contain the same elements (although possibly in different
     // orders)
     template <class T>
-    inline auto same_elements(T array1, T array2) -> bool
+    constexpr auto same_elements(T array1, T array2) -> bool
     {
         // sort the two data structures
         std::sort(array1.begin(), array1.end());
@@ -59,7 +59,7 @@ namespace mito::math {
     // compute the permutation sign of a data structure {data} with respect to a reference data
     // structure that has the same elements of {data} but sorted in ascending order
     template <class T>
-    inline auto permutation_sign(const T & data, const T & reference) -> int
+    constexpr auto permutation_sign(const T & data, const T & reference) -> int
     {
         // assert that the two data structures have the same elements
         assert(same_elements(data, reference));
