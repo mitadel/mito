@@ -43,11 +43,27 @@ namespace mito::math {
         return nswaps;
     }
 
+    // check whether the data structures contain the same elements (although possibly in different
+    // orders)
+    template <class T>
+    inline auto same_elements(T array1, T array2) -> bool
+    {
+        // sort the two data structures
+        std::sort(array1.begin(), array1.end());
+        std::sort(array2.begin(), array2.end());
+
+        // return whether the two data structures are now identical
+        return array1 == array2;
+    }
+
     // compute the permutation sign of a data structure {data} with respect to a reference data
     // structure that has the same elements of {data} but sorted in ascending order
     template <class T>
     inline auto permutation_sign(const T & data, const T & reference) -> int
     {
+        // assert that the two data structures have the same elements
+        assert(same_elements(data, reference));
+
         // if the data structure was sorted from {data} to {reference} in an even number of swaps
         if (swap_sort(data, reference) % 2 == 0) {
             // then the permutation sign is positive
