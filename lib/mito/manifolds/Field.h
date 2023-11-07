@@ -6,14 +6,23 @@
 
 namespace mito::manifolds {
 
+    /*
+     * A field of vectors or forms. The fields implements {operator()} for an input type
+     * {coordinates_t}, which returns the value of the field at that physical location.
+     */
+
     template <class F>
     class Field {
       private:
+        // the dimension of the physical space
         static constexpr int D = input<F>::input_dim;
+        // the type of field (e.g. vector field, form field, ...)
         using output_type = input<F>::output_type;
 
       public:
+        // publish the dimension of the physical space
         static constexpr int dim = D;
+        // publish my template parameter
         using function_type = F;
 
       public:
