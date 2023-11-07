@@ -10,6 +10,7 @@ namespace mito::manifolds {
     class Field {
       private:
         static constexpr int D = input<F>::input_dim;
+        using output_type = input<F>::output_type;
 
       public:
         static constexpr int dim = D;
@@ -21,7 +22,7 @@ namespace mito::manifolds {
 
         // QUESTION: should this act on a {coordinates_t} or a {point_t}?
         // the value of the field at position {x}
-        constexpr auto operator()(const mito::geometry::coordinates_t<D> & x) const
+        constexpr auto operator()(const mito::geometry::coordinates_t<D> & x) const -> output_type
         {
             return _f(x);
         }
