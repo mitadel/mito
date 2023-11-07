@@ -20,7 +20,6 @@ namespace mito::manifolds {
         // constructor
         constexpr Field(F f) : _f { f } {}
 
-        // QUESTION: should this act on a {coordinates_t} or a {point_t}?
         // the value of the field at position {x}
         constexpr auto operator()(const mito::geometry::coordinates_t<D> & x) const -> output_type
         {
