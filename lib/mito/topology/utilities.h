@@ -37,7 +37,6 @@ namespace mito::topology {
     // overload operator<< for simplices
     template <int N>
     std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<N> & s)
-    requires(N > 0)
     {
         os << s.id() << " composed of:" << std::endl;
         for (const auto & simplex : s->composition()) {
@@ -48,9 +47,9 @@ namespace mito::topology {
 
     // overload operator<< for oriented simplices
     template <>
-    std::ostream & operator<<(std::ostream & os, const simplex_t<0> & s)
+    std::ostream & operator<<(std::ostream & os, const unoriented_simplex_t<0> & s)
     {
-        os << "vertex: " << s->footprint().id() << std::endl;
+        os << "vertex: " << s.id() << std::endl;
         return os;
     }
 
