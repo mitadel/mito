@@ -72,25 +72,58 @@ namespace mito::topology {
         return false;
     }
 
-    // what would be the 2D implementation of this function?
-    auto isValid(const simplex_composition_t<3> &) -> bool
+    // checks whether a given simplex composition is valid, i.e. if all simplices in {composition}
+    // have consistent orientations with each other
+    // NOTE: the result of this function should not depend on the order of the simplices in
+    //          {composition}
+    // TODO: add a test to check this
+    template <int N>
+    auto isValid(const simplex_composition_t<N> & composition) -> bool
+    requires(N > 1)
     {
+        // id type of unoriented simplex
+        using cell_id_type = utilities::index_t<unoriented_simplex_t<N>>;
+        // map from a simplex id to an integer
+        using orientation_map_type = std::unordered_map<cell_id_type, int>;
+        // map to store the net orientation (i.e. positive-orientation occurrences minus
+        // negative-orientation occurrences) of a given unoriented simplex
+        // this map is used to determine whether the simplices in composition have consistent
+        // orientation with each other (i.e. if its (N-2)-subsimplices appear two
+        // times with two opposite orientations
+        orientation_map_type orientation_map;
+
+        // loop on all the (N-1)-simplices in {composition}
+        for (const auto & simplex : composition) {
+            // loop on all the (N-2)-simplices in {composition}
+            for (const auto & subsimplex : simplex->composition()) {
+                // populate the orientation map with the {subsimplex} id and its 'net' orientation
+                orientation_map[subsimplex->footprint().id()] +=
+                    subsimplex->orientation() * simplex->orientation();
+            }
+        }
+
+        // assert that the {orientation_map} has as many entries as the number of (unoriented) edges
+        // in an N-simplex
+        assert(std::size(orientation_map) == ((N + 1) * N) / 2);
+
+        // check that the net orientation of each (N-2)-subsimplex is 0
+        // (i.e. the subsimplex appears twice, with each opposite orientations)
+        for (const auto & item : orientation_map) {
+            // if any of the simplices in {orientation_map} has not zero net orientation within the
+            // {composition}...
+            if (item.second != 0) {
+                // {composition} is not a valid simplex composition
+                return false;
+            }
+        }
+
+        // otherwise, {composition} is a valid simplex composition
         return true;
     }
 
-    // a triangle is valid if the edges are all head-tail connected
-    auto isValid(const simplex_composition_t<2> & composition) -> bool
-    {
-        if (headTailConnected(composition[0], composition[1])
-            && headTailConnected(composition[1], composition[2])
-            && headTailConnected(composition[2], composition[0])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    auto isValid(const simplex_composition_t<1> & composition) -> bool
+    template <int N>
+    auto isValid(const simplex_composition_t<N> & composition) -> bool
+    requires(N == 1)
     {
         // a segment is not valid if the two vertices coincide
         if (composition[0]->footprint() == composition[1]->footprint()) {

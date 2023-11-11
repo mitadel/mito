@@ -141,7 +141,7 @@ namespace mito::topology {
         inline auto orientedSimplex(const simplex_composition_t<N> & composition) -> simplex_t<N>
         requires(N > 0)
         {
-            if (!isValid(composition)) {
+            if (!isValid<N>(composition)) {
                 pyre::journal::firewall_t firewall("topology::OrientedSimplexFactory");
                 firewall << pyre::journal::at(__HERE__)
                          << "I cannot create an OrientedSimplex from a simplex composition "
