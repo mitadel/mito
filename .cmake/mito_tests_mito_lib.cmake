@@ -15,6 +15,8 @@ endif()
 
 # manifolds
 mito_test_driver(tests/mito.lib/manifolds/cube_volume.cc)
+mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_2D.cc)
+mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/fields.cc)

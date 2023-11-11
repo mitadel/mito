@@ -41,7 +41,6 @@ volume_determinant(
     mito::matrix_t<V> pointsTensor;
 
     // collect element vertices
-    // TOFIX: when the vertices will be returned in order, perhaps we can remove the {fabs} below
     auto element_vertices = tetrahedron->vertices();
 
     // assert you found V element vertices
