@@ -115,9 +115,9 @@ mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices
 }
 
 inline auto
-mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & simplices) -> simplex_t<1>
+mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & vertices) -> simplex_t<1>
 {
-    return segment({ simplex(simplices[0], -1), simplex(simplices[1], +1) });
+    return segment({ simplex(vertices[0], -1), simplex(vertices[1], +1) });
 }
 
 inline auto
