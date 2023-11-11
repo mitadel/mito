@@ -117,25 +117,49 @@ mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices
 inline auto
 mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & vertices) -> simplex_t<1>
 {
-    return segment({ simplex(vertices[0], -1), simplex(vertices[1], +1) });
+    // instantiate a segment
+    const auto & segment = simplex<1>({ simplex(vertices[0], -1), simplex(vertices[1], +1) });
+
+    // assert that accessing the vertices of the segment returns a positive permutation of the
+    // vertex composition used to instantiate it
+    assert(mito::math::permutation_sign(segment->vertices2(), vertices) == +1);
+
+    // all done
+    return segment;
 }
 
 inline auto
 mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & vertices) -> simplex_t<2>
 {
-    return simplex<2>({ segment({ vertices[0], vertices[1] }),
-                        segment({ vertices[1], vertices[2] }),
-                        segment({ vertices[2], vertices[0] }) });
+    // instantiate a triangle
+    const auto & triangle =
+        simplex<2>({ segment({ vertices[0], vertices[1] }), segment({ vertices[1], vertices[2] }),
+                     segment({ vertices[2], vertices[0] }) });
+
+    // assert that accessing the vertices of the triangle returns a positive permutation of the
+    // vertex composition used to instantiate it
+    assert(mito::math::permutation_sign(triangle->vertices2(), vertices) == +1);
+
+    // all done
+    return triangle;
 }
 
 inline auto
 mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & vertices)
     -> simplex_t<3>
 {
-    return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[2] }),
-                        triangle({ vertices[1], vertices[3], vertices[2] }),
-                        triangle({ vertices[3], vertices[1], vertices[0] }),
-                        triangle({ vertices[3], vertices[0], vertices[2] }) });
+    // instantiate a tetrahedron
+    const auto & tetrahedron = simplex<3>({ triangle({ vertices[0], vertices[1], vertices[2] }),
+                                            triangle({ vertices[1], vertices[3], vertices[2] }),
+                                            triangle({ vertices[3], vertices[1], vertices[0] }),
+                                            triangle({ vertices[3], vertices[0], vertices[2] }) });
+
+    // assert that accessing the vertices of the tetrahedron returns a positive permutation of the
+    // vertex composition used to instantiate it
+    assert(mito::math::permutation_sign(tetrahedron->vertices2(), vertices) == +1);
+
+    // all done
+    return tetrahedron;
 }
 
 template <int D>
