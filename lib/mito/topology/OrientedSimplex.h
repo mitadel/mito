@@ -122,11 +122,12 @@ namespace mito::topology {
         inline auto vertices2() const -> vertex_simplex_composition_t<N>
         requires(N > 0)
         {
-            std::vector<vertex_t> vertices_subsimplices;
-            _vertices2(vertices_subsimplices);
-
             // an array to store the composition of a N-simplex in terms of vertices
             vertex_simplex_composition_t<N> vertices;
+
+            std::vector<vertex_t> vertices_subsimplices;
+            vertices_subsimplices.reserve(std::size(vertices));
+            _vertices2(vertices_subsimplices);
 
             // assert that you found the correct number of vertices
             assert(std::size(vertices_subsimplices) == std::size(vertices));
