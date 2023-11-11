@@ -83,7 +83,7 @@ namespace mito::topology {
         // TOFIX
         // append the vertices of this simplex to a collection of vertices
         inline auto vertices2(std::vector<vertex_t> & vertices) const -> void
-        requires(N > 0)
+        requires(N > 1)
         {
             const auto & subsimplex0 = _simplices[0];
 
@@ -92,18 +92,24 @@ namespace mito::topology {
 
             const auto & subsimplex1 = _simplices[1];
 
-            if constexpr (N == 1) {
-                vertices.push_back(subsimplex1->footprint());
-            } else {
-
-                for (const auto & v : subsimplex1->footprint()->vertices()) {
-                    // if the vertex was not found in {vertices}
-                    auto found = std::find(std::begin(vertices), std::end(vertices), v);
-                    if (found == std::end(vertices)) {
-                        vertices.push_back(v);
-                    }
+            for (const auto & v : subsimplex1->footprint()->vertices()) {
+                // if the vertex was not found in {vertices}
+                auto found = std::find(std::begin(vertices), std::end(vertices), v);
+                if (found == std::end(vertices)) {
+                    vertices.push_back(v);
                 }
             }
+
+            // all done
+            return;
+        }
+
+        // append the vertices of this simplex to a collection of vertices
+        inline auto vertices2(std::vector<vertex_t> & vertices) const -> void
+        requires(N == 1)
+        {
+            vertices.push_back(_simplices[0]->footprint());
+            vertices.push_back(_simplices[1]->footprint());
 
             // all done
             return;
