@@ -124,15 +124,17 @@ namespace mito::topology {
         }
 
         // TOFIX
-        // return the array of vertices of this simplex
+        // return the composition of this simplex in terms of its vertices
         inline auto vertices2() const -> vertex_simplex_composition_t<N>
         requires(N > 0)
         {
-            // an array to store the composition of a N-simplex in terms of vertices
+            // array to store the composition of this N-simplex in terms of vertices
             vertex_simplex_composition_t<N> vertices;
 
+            // instantiate a vector to collect the vertices of this simplex
             std::vector<vertex_t> vertices_subsimplices;
             vertices_subsimplices.reserve(std::size(vertices));
+            // collect the vertices of this simplex recursively
             _vertices2(vertices_subsimplices);
 
             // assert that you found the correct number of vertices
