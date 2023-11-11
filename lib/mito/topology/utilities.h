@@ -53,6 +53,62 @@ namespace mito::topology {
         return os;
     }
 
+    // TOFIX: decide on one way to print simplices nicely, support that and remove the rest
+    // overload operator<< for oriented simplices
+    template <int N>
+    auto print(const simplex_t<N> & s) -> void
+    {
+        // make a channel
+        pyre::journal::info_t channel("lib.topology.simplex");
+
+        // print footprint and orientation
+        channel << "footprint: " << s->footprint().id() << ", orientation: " << s->orientation()
+                << pyre::journal::endl;
+        // print footprint
+        print(s->footprint());
+        // all done
+        return;
+    }
+
+    // overload operator<< for simplices
+    template <int N>
+    auto print(const unoriented_simplex_t<N> & s) -> void
+    {
+        // make a channel
+        pyre::journal::info_t channel("lib.topology.simplex");
+
+        if constexpr (N == 0)
+            channel << "vertex ";
+
+        if constexpr (N == 1)
+            channel << "segment ";
+
+        if constexpr (N == 2)
+            channel << "triangle ";
+
+        if constexpr (N == 3)
+            channel << "tetrahedron ";
+
+        channel << s.id() << " composed of:" << pyre::journal::endl;
+        channel << pyre::journal::indent(1) << pyre::journal::endl;
+        for (const auto & simplex : s->composition()) {
+            // channel << simplex.id() << pyre::journal::endl;
+            print(simplex);
+        }
+        return;
+    }
+
+    // overload operator<< for oriented simplices
+    template <>
+    auto print(const unoriented_simplex_t<0> & s) -> void
+    {
+        // make a channel
+        pyre::journal::info_t channel("lib.topology.simplex");
+        channel << pyre::journal::indent(1) << "vertex: " << s.id() << pyre::journal::endl;
+
+        return;
+    }
+
     auto tail(const simplex_t<1> & oriented_simplex) -> vertex_t
     {
         return oriented_simplex->composition()[0]->footprint();
