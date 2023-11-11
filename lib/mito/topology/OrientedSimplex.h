@@ -113,9 +113,12 @@ namespace mito::topology {
         inline auto _vertices2(VertexPushBackable auto & vertices) const -> void
         requires(N == 0)
         {
+            // search for the footprint of this oriented vertex in the vertex collection {vertices}
             auto found = std::find(std::begin(vertices), std::end(vertices), _footprint);
 
+            // if we have not collected it yet
             if (found == std::end(vertices)) {
+                // add it to the collection
                 vertices.push_back(_footprint);
             }
 
