@@ -76,6 +76,36 @@ namespace mito::geometry {
             return point1 - point0;
         }
 
+        // TOFIX: split this header into interface and implementation
+      private:
+        template <int N, int... J>
+        inline auto _directors(const topology::simplex_t<N> & simplex, integer_sequence<J...>) const
+            -> topology::edge_simplex_directors_t<N, D>
+        requires(sizeof...(J) == N)
+        {
+            // get the simplex vertices
+            auto vertices = simplex->vertices();
+
+            // get the coordinates of the first vertex
+            auto p0 = point(vertices[0])->coordinates();
+
+            // compute the director vectors associated with each director edge
+            // auto directors = std::array { _mesh.geometry().vector(edge_directors[J])... };
+            auto directors = std::array { (point(vertices[J + 1])->coordinates() - p0)... };
+
+            // all done
+            return directors;
+        }
+
+      public:
+        // return the array of director vectors of the simplex
+        template <int N>
+        inline auto directors(const topology::simplex_t<N> & simplex) const
+            -> topology::edge_simplex_directors_t<N, D>
+        {
+            return _directors(simplex, make_integer_sequence<N> {});
+        }
+
         // accessor for topology
         inline auto topology() noexcept -> topology_t & { return _topology; }
 

@@ -13,35 +13,14 @@ static constexpr auto e_z = mito::e_2<3>;
 // compute the volume of a tetrahedron via the metric volume element
 auto
 volume_form(
-    const auto & w, mito::topology::topology_t & topology,
-    const mito::geometry::geometry_t<3> & geometry,
+    const auto & w, const mito::geometry::geometry_t<3> & geometry,
     const mito::topology::tetrahedron_t & tetrahedron) -> mito::scalar_t
 {
-    //
-    auto composition = tetrahedron->composition();
-    auto triangle0 = composition[0];
-    auto segment0 = triangle0->directors()[0];
-    auto segment1 = triangle0->directors()[1];
-
-    auto triangle_vertices = triangle0->vertices();
-    auto tetrahedron_vertices = tetrahedron->vertices();
-    std::set<mito::topology::vertex_t> missing_vertex_set;
-    std::set_difference(
-        tetrahedron_vertices.begin(), tetrahedron_vertices.end(), triangle_vertices.begin(),
-        triangle_vertices.end(), std::inserter(missing_vertex_set, std::end(missing_vertex_set)));
-
-    assert(missing_vertex_set.size() == 1);
-
-    auto segment2 =
-        topology.segment({ *missing_vertex_set.begin(), segment0->composition()[0]->footprint() });
-
-    // build director vectors
-    auto director0 = geometry.vector(segment0);
-    auto director1 = geometry.vector(segment1);
-    auto director2 = geometry.vector(segment2);
+    // get the directors of the tetrahedron
+    auto directors = geometry.directors(tetrahedron);
 
     // compute volume of tetrahedron
-    auto volume = 1. / 6. * w(director0, director1, director2);
+    auto volume = 1. / 6. * w(directors[0], directors[1], directors[2]);
 
     // all done
     return volume;
@@ -113,7 +92,7 @@ TEST(Manifolds, CubeVolume)
     mito::scalar_t volume_new = 0.0;
     mito::scalar_t volume_old = 0.0;
     for (const auto & cell : mesh.cells()) {
-        volume_new += volume_form(w, topology, geometry, cell);
+        volume_new += volume_form(w, geometry, cell);
         volume_old += volume_determinant(geometry, cell);
     }
     // std::cout << volume_new << "\t" << volume_old << std::endl;

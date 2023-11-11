@@ -179,9 +179,7 @@ namespace mito::manifolds {
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell
-            auto edge_directors = cell->directors();
-            // compute the director vectors associated with each director edge
-            auto directors = std::array { _mesh.geometry().vector(edge_directors[J])... };
+            auto directors = _mesh.geometry().directors(cell);
             // TOFIX: how do we encode the quadrature point information where the volume
             auto point = mito::vector_t<D>();
             // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
