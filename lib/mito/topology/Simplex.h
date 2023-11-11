@@ -83,7 +83,7 @@ namespace mito::topology {
         // TOFIX
         // append the vertices of this simplex to a collection of vertices
         // (maintaining the order dictated by the simplex composition)
-        inline auto vertices2(std::vector<vertex_t> & vertices) const -> void
+        inline auto vertices2(VertexPushBackable auto & vertices) const -> void
         requires(N > 1)
         {
             // get the first subsimplex
@@ -114,7 +114,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        inline auto vertices2(std::vector<vertex_t> & vertices) const -> void
+        inline auto vertices2(VertexPushBackable auto & vertices) const -> void
         requires(N == 1)
         {
             vertices.push_back(_simplices[0]->footprint());

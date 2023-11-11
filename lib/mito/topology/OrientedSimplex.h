@@ -93,7 +93,7 @@ namespace mito::topology {
 
         // TOFIX
         // append the vertices of this simplex to a collection of vertices
-        inline auto _vertices2(std::vector<vertex_t> & vertices) const -> void
+        inline auto _vertices2(VertexPushBackable auto & vertices) const -> void
         requires(N > 0)
         {
             _footprint->vertices2(vertices);
@@ -110,7 +110,7 @@ namespace mito::topology {
 
         // TOFIX
         // append the vertices of this simplex to a collection of vertices
-        inline auto _vertices2(std::vector<vertex_t> & vertices) const -> void
+        inline auto _vertices2(VertexPushBackable auto & vertices) const -> void
         requires(N == 0)
         {
             auto found = std::find(std::begin(vertices), std::end(vertices), _footprint);
