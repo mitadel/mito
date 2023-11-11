@@ -82,24 +82,30 @@ namespace mito::topology {
 
         // TOFIX
         // append the vertices of this simplex to a collection of vertices
+        // (maintaining the order dictated by the simplex composition)
         inline auto vertices2(std::vector<vertex_t> & vertices) const -> void
         requires(N > 1)
         {
+            // get the first subsimplex
             const auto & subsimplex0 = _simplices[0];
 
-            //
+            // get the first {N} vertices from the first subsimplex
             subsimplex0->_vertices2(vertices);
 
             // assert that {N} vertices were found
             assert(std::size(vertices) == N);
 
+            // get the second subsimplex to find the remaining vertex
             const auto & subsimplex1 = _simplices[1];
 
-            for (const auto & v : subsimplex1->footprint()->vertices()) {
-                // if the vertex was not found in {vertices}
-                auto found = std::find(std::begin(vertices), std::end(vertices), v);
+            // loop on the vertices of the second subsimplex
+            for (const auto & vertex : subsimplex1->footprint()->vertices()) {
+                // search for {vertex} in the vertex collection {vertices}
+                auto found = std::find(std::begin(vertices), std::end(vertices), vertex);
+                // if we have not collected {vertex} yet
                 if (found == std::end(vertices)) {
-                    vertices.push_back(v);
+                    // add {vertex} to the collection
+                    vertices.push_back(vertex);
                 }
             }
 
