@@ -90,6 +90,9 @@ namespace mito::topology {
             //
             subsimplex0->_vertices2(vertices);
 
+            // assert that {N} vertices were found
+            assert(std::size(vertices) == N);
+
             const auto & subsimplex1 = _simplices[1];
 
             for (const auto & v : subsimplex1->footprint()->vertices()) {
