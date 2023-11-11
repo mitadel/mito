@@ -52,8 +52,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
+        void vertices(VertexInsertable auto & vertices) const
         requires(N > 1)
         {
             for (const auto & simplex : composition()) {
@@ -62,8 +61,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
+        void vertices(VertexInsertable auto & vertices) const
         requires(N == 1)
         {
             vertices.insert(_simplices[0]->footprint());
