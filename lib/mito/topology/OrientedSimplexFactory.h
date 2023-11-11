@@ -143,14 +143,12 @@ namespace mito::topology {
         {
             if (!isValid<N>(composition)) {
                 pyre::journal::firewall_t firewall("topology::OrientedSimplexFactory");
-                firewall << pyre::journal::at(__HERE__)
-                         << "I cannot create an OrientedSimplex from a simplex composition "
-                         << "that is not head-tail connected." << pyre::journal::endl;
+                firewall << pyre::journal::at(__HERE__) << "Invalid simplex composition."
+                         << pyre::journal::endl;
                 assert(false);
             }
 
-            // get the representative of simplices with composition {composition} from the
-            // factory
+            // get the representative of simplices with composition {composition} from the factory
             const auto & simplex = _simplex_factory.simplex(composition);
 
             // compute the orientation of the current composition with respect to the
