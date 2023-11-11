@@ -82,6 +82,42 @@ namespace mito::topology {
             return vertex_set;
         }
 
+        // TOFIX
+        // append the vertices of this simplex to a collection of vertices
+        inline auto vertices2(std::vector<vertex_t> & vertices) const -> void
+        requires(N > 0)
+        {
+            const auto & subsimplex0 = _simplices[0];
+
+            //
+            subsimplex0->_vertices2(vertices);
+
+            if constexpr (N > 1) {
+                if (subsimplex0->orientation() == -1) {
+                    // perform an odd permutation
+                    std::swap(vertices[0], vertices[1]);
+                }
+            }
+
+            const auto & subsimplex1 = _simplices[1];
+
+            if constexpr (N == 1) {
+                vertices.push_back(subsimplex1->footprint());
+            } else {
+
+                for (const auto & v : subsimplex1->footprint()->vertices()) {
+                    // if the vertex was not found in {vertices}
+                    auto found = std::find(std::begin(vertices), std::end(vertices), v);
+                    if (found == std::end(vertices)) {
+                        vertices.push_back(v);
+                    }
+                }
+            }
+
+            // all done
+            return;
+        }
+
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void

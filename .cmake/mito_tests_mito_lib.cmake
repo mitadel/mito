@@ -61,6 +61,9 @@ mito_test_driver(tests/mito.lib/topology/erase_element.cc)
 mito_test_driver(tests/mito.lib/topology/flip_diagonal.cc)
 mito_test_driver(tests/mito.lib/topology/oriented_simplex_segment.cc)
 mito_test_driver(tests/mito.lib/topology/oriented_simplex_triangle.cc)
+mito_test_driver(tests/mito.lib/topology/tetrahedron.cc)
+mito_test_driver(tests/mito.lib/topology/triangle.cc)
+mito_test_driver(tests/mito.lib/topology/segment.cc)
 mito_test_driver(tests/mito.lib/topology/simplices.cc)
 
 # utilities

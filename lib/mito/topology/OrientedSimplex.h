@@ -94,21 +94,53 @@ namespace mito::topology {
         }
 
         // TOFIX
-        // return the array of vertices of this simplex
-        inline auto vertices() const -> vertex_simplex_composition_t<N>
+        // append the vertices of this simplex to a collection of vertices
+        inline auto _vertices2(std::vector<vertex_t> & vertices) const -> void
         requires(N > 0)
         {
-            // fetch the vertices of this simplex
-            auto vertices_collection = _footprint->vertices();
+            _footprint->vertices2(vertices);
+
+            // all done
+            return;
+        }
+
+        // TOFIX
+        // append the vertices of this simplex to a collection of vertices
+        inline auto _vertices2(std::vector<vertex_t> & vertices) const -> void
+        requires(N == 0)
+        {
+            auto found = std::find(std::begin(vertices), std::end(vertices), _footprint);
+
+            if (found == std::end(vertices)) {
+                vertices.push_back(_footprint);
+            }
+
+            // all done
+            return;
+        }
+
+        // TOFIX
+        // return the array of vertices of this simplex
+        inline auto vertices2() const -> vertex_simplex_composition_t<N>
+        requires(N > 0)
+        {
+            std::vector<vertex_t> vertices_subsimplices;
+            _vertices2(vertices_subsimplices);
 
             // an array to store the composition of a N-simplex in terms of vertices
             vertex_simplex_composition_t<N> vertices;
 
             // assert that you found the correct number of vertices
-            assert(std::size(vertices_collection) == std::size(vertices));
+            assert(std::size(vertices_subsimplices) == std::size(vertices));
 
             // populate the array of vertices
-            std::copy(vertices_collection.begin(), vertices_collection.end(), vertices.begin());
+            std::copy(vertices_subsimplices.begin(), vertices_subsimplices.end(), vertices.begin());
+
+            // if the orientation of this simplex is opposite to that of the footprint
+            if (_orientation == -1) {
+                // perform an odd permutation on {composition}
+                std::swap(vertices[0], vertices[1]);
+            }
 
             // return the array of vertices
             return vertices;
