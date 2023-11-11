@@ -91,12 +91,11 @@ namespace mito::topology {
             return _footprint->vertices(vertices);
         }
 
-        // TOFIX
         // append the vertices of this simplex to a collection of vertices
-        inline auto _vertices2(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(VertexPushBackable auto & vertices) const -> void
         requires(N > 0)
         {
-            _footprint->vertices2(vertices);
+            _footprint->vertices(vertices);
 
             // if the orientation of this simplex is opposite to that of the footprint
             if (_orientation == -1) {
@@ -108,9 +107,8 @@ namespace mito::topology {
             return;
         }
 
-        // TOFIX
         // append the vertices of this simplex to a collection of vertices
-        inline auto _vertices2(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(VertexPushBackable auto & vertices) const -> void
         requires(N == 0)
         {
             // search for the footprint of this oriented vertex in the vertex collection {vertices}
@@ -126,9 +124,8 @@ namespace mito::topology {
             return;
         }
 
-        // TOFIX
         // return the composition of this simplex in terms of its vertices
-        inline auto vertices2() const -> vertex_simplex_composition_t<N>
+        inline auto vertices() const -> vertex_simplex_composition_t<N>
         requires(N > 0)
         {
             // array to store the composition of this N-simplex in terms of vertices
@@ -137,8 +134,9 @@ namespace mito::topology {
             // instantiate a vector to collect the vertices of this simplex
             std::vector<vertex_t> vertices_subsimplices;
             vertices_subsimplices.reserve(std::size(vertices));
+
             // collect the vertices of this simplex recursively
-            _vertices2(vertices_subsimplices);
+            this->vertices(vertices_subsimplices);
 
             // assert that you found the correct number of vertices
             assert(std::size(vertices_subsimplices) == std::size(vertices));

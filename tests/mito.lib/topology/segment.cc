@@ -16,13 +16,13 @@ TEST(Topology, Segment)
     auto seg = topology.segment({ vertex0, vertex1 });
     // check that the vertices of the segment are a positive permutation of the combination
     // that was requested
-    EXPECT_EQ(mito::math::permutation_sign(seg->vertices2(), { vertex0, vertex1 }), +1);
+    EXPECT_EQ(mito::math::permutation_sign(seg->vertices(), { vertex0, vertex1 }), +1);
 
     // build segment with a combination of vertices
     seg = topology.segment({ vertex1, vertex0 });
     // check that the vertices of the segment are a positive permutation of the combination
     // that was requested
-    EXPECT_EQ(mito::math::permutation_sign(seg->vertices2(), { vertex1, vertex0 }), +1);
+    EXPECT_EQ(mito::math::permutation_sign(seg->vertices(), { vertex1, vertex0 }), +1);
 }
 
 

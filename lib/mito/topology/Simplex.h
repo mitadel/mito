@@ -80,17 +80,16 @@ namespace mito::topology {
             return vertex_set;
         }
 
-        // TOFIX
         // append the vertices of this simplex to a collection of vertices
         // (maintaining the order dictated by the simplex composition)
-        inline auto vertices2(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(VertexPushBackable auto & vertices) const -> void
         requires(N > 1)
         {
             // get the first subsimplex
             const auto & subsimplex0 = _simplices[0];
 
             // get the first {N} vertices from the first subsimplex
-            subsimplex0->_vertices2(vertices);
+            subsimplex0->vertices(vertices);
 
             // assert that {N} vertices were found
             assert(std::size(vertices) == N);
@@ -114,7 +113,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        inline auto vertices2(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(VertexPushBackable auto & vertices) const -> void
         requires(N == 1)
         {
             vertices.push_back(_simplices[0]->footprint());
