@@ -98,6 +98,12 @@ namespace mito::topology {
         {
             _footprint->vertices2(vertices);
 
+            // if the orientation of this simplex is opposite to that of the footprint
+            if (_orientation == -1) {
+                // perform an odd permutation
+                std::swap(vertices[0], vertices[1]);
+            }
+
             // all done
             return;
         }
@@ -134,12 +140,6 @@ namespace mito::topology {
 
             // populate the array of vertices
             std::copy(vertices_subsimplices.begin(), vertices_subsimplices.end(), vertices.begin());
-
-            // if the orientation of this simplex is opposite to that of the footprint
-            if (_orientation == -1) {
-                // perform an odd permutation on {composition}
-                std::swap(vertices[0], vertices[1]);
-            }
 
             // return the array of vertices
             return vertices;

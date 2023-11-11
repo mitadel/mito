@@ -90,13 +90,6 @@ namespace mito::topology {
             //
             subsimplex0->_vertices2(vertices);
 
-            if constexpr (N > 1) {
-                if (subsimplex0->orientation() == -1) {
-                    // perform an odd permutation
-                    std::swap(vertices[0], vertices[1]);
-                }
-            }
-
             const auto & subsimplex1 = _simplices[1];
 
             if constexpr (N == 1) {
