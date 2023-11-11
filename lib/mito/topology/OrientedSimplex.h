@@ -88,6 +88,7 @@ namespace mito::topology {
         // append the vertices of this simplex to a collection of vertices
         inline auto vertices(VertexInsertable auto & vertices) const -> void
         {
+            // get the vertices from the footprint
             return _footprint->vertices(vertices);
         }
 
@@ -95,6 +96,7 @@ namespace mito::topology {
         inline auto vertices(VertexPushBackable auto & vertices) const -> void
         requires(N > 0)
         {
+            // get a tentative collection of vertices from the footprint
             _footprint->vertices(vertices);
 
             // if the orientation of this simplex is opposite to that of the footprint
