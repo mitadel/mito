@@ -34,7 +34,7 @@ volume(
 }
 
 
-TEST(Manifolds, EuclideanMetric2D)
+TEST(Manifolds, EuclideanMetric3D)
 {
     // the basis one-forms
     constexpr auto dx = mito::manifolds::one_form(e_x);
@@ -84,7 +84,7 @@ TEST(Manifolds, EuclideanMetric2D)
     EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex2, vertex1, vertex3), 1.0 / 6.0);
     EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex3, vertex2, vertex1), 1.0 / 6.0);
 
-    // odd permutations of the vertices order result in a positive volume
+    // odd permutations of the vertices order result in a negative volume
     EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex2, vertex4, vertex3), -1.0 / 6.0);
     EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex3, vertex2, vertex4), -1.0 / 6.0);
     EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex4, vertex3, vertex2), -1.0 / 6.0);
