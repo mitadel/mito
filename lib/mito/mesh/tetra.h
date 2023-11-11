@@ -218,7 +218,7 @@ namespace mito::mesh {
         for (const auto & cell : mesh.cells()) {
 
             // get the vertices of the cell in the order dictated by the orientation
-            auto vertices = topology::vertices(cell);
+            auto vertices = cell->vertices2();
 
             // helper function to expand array to parameter pack
             constexpr auto _subdivide =
