@@ -132,10 +132,10 @@ inline auto
 mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & vertices)
     -> simplex_t<3>
 {
-    return simplex<3>({ triangle({ vertices[1], vertices[2], vertices[3] }),
-                        triangle({ vertices[0], vertices[1], vertices[3] }),
-                        triangle({ vertices[2], vertices[0], vertices[3] }),
-                        triangle({ vertices[0], vertices[2], vertices[1] }) });
+    return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[2] }),
+                        triangle({ vertices[1], vertices[3], vertices[2] }),
+                        triangle({ vertices[3], vertices[1], vertices[0] }),
+                        triangle({ vertices[3], vertices[0], vertices[2] }) });
 }
 
 template <int D>
