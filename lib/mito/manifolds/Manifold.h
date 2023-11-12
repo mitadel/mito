@@ -76,10 +76,7 @@ namespace mito::manifolds {
         Manifold & operator=(Manifold &&) = delete;
 
       public:
-        constexpr auto elements() const noexcept -> const element_vector_t<cell_type> &
-        {
-            return _mesh.cells();
-        }
+        constexpr auto elements() const noexcept -> const cells_type & { return _mesh.cells(); }
 
         constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
