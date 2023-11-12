@@ -23,19 +23,6 @@ namespace mito::manifolds {
     };
 
 
-    // concept for a form {FORM} being a one-form on a D-dimensional manifold
-    template <class FORM>
-    // {FORM} is a one form if:
-    concept is_one_form =
-        // ... it takes in input a mito::vector_t<D>
-        std::is_same_v<
-            mito::utilities::base_type<typename input<typename FORM::function_type>::input_type>,
-            mito::vector_t<FORM::dim>>
-        // ... and returns a scalar
-        && std::is_same_v<
-            typename input<typename FORM::function_type>::output_type, mito::scalar_t>;
-
-
     // concept of a field {FIELD} being a scalar field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a scalar field if:
