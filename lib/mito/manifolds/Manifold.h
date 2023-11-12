@@ -11,12 +11,14 @@ namespace mito::manifolds {
       public:
         // the dimension of the physical space
         static constexpr int dim = D;
-
-      private:
         // typedef for cell type
         using cell_type = cellT;
         // typedef for mesh type
         using mesh_type = mesh::mesh_t<cell_type, D>;
+        // typedef for the cell type
+        using cells_type = mesh_type::cells_type;
+
+      private:
         // typedef for vertex
         using vertex_type = topology::vertex_t;
         // the metric type
