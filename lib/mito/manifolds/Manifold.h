@@ -75,18 +75,6 @@ namespace mito::manifolds {
         Manifold & operator=(Manifold &&) = delete;
 
       public:
-        constexpr auto sanityCheck() -> bool
-        {
-            bool check = true;
-            for (const auto & e : _mesh.cells()) {
-                if (!e->sanityCheck()) {
-                    std::cout << "Failed sanity check for element " << e << std::endl;
-                    check = false;
-                }
-            }
-            return check;
-        }
-
         constexpr auto elements() const noexcept -> const element_vector_t<cell_type> &
         {
             return _mesh.cells();
