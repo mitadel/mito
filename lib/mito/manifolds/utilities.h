@@ -26,7 +26,7 @@ namespace mito::manifolds {
     // concept of a field {FIELD} being a scalar field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a scalar field if:
-    concept is_scalar_field =
+    concept ScalarField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
@@ -40,7 +40,7 @@ namespace mito::manifolds {
     // concept of a field {FIELD} being a vector field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a vector field if:
-    concept is_vector_field =
+    concept VectorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
@@ -54,7 +54,7 @@ namespace mito::manifolds {
     // concept of a field {FIELD} being a tensor field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a tensor field on a D-dimensional manifold if:
-    concept is_tensor_field =
+    concept TensorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
@@ -66,7 +66,7 @@ namespace mito::manifolds {
     // concept of a field {FIELD} being a symmetric tensor field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a symmetric tensor field on a D-dimensional manifold if:
-    concept is_symmetric_tensor_field =
+    concept SymmetricTensorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
@@ -80,7 +80,7 @@ namespace mito::manifolds {
     // concept of a field {FIELD} being a diagonal tensor field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a diagonal tensor field on a D-dimensional manifold if:
-    concept is_diagonal_tensor_field =
+    concept DiagonalTensorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
             mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,

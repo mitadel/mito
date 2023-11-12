@@ -59,10 +59,9 @@ namespace mito::manifolds {
         // the vector and the metric are define on the same vector space
         field_t<F>::dim == field_t<G>::dim
         // {vector} is a vector field
-        && is_vector_field<field_t<F>>
+        && VectorField<field_t<F>>
         // {metric} is a symmetric tensor field
-        && is_symmetric_tensor_field<field_t<G>>);
-
+        && SymmetricTensorField<field_t<G>>);
 }
 
 
