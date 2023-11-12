@@ -86,7 +86,7 @@ namespace mito::manifolds {
         constexpr auto coordinates(const vertex_type & v) const -> const vector_t<D> &
         {
             // get the coordinates of the point attached to vertex {v}
-            return _point(v)->coordinates();
+            return _mesh.geometry().point(v)->coordinates();
         }
 
         constexpr auto parametrization(
@@ -156,12 +156,6 @@ namespace mito::manifolds {
         }
 
       private:
-        constexpr auto _point(const vertex_type & v) const -> const geometry::point_t<D> &
-        {
-            // look up the point attached to vertex {v}
-            return _mesh.geometry().point(v);
-        }
-
         // computes the volume of a cell
         template <int... J>
         constexpr auto _volume(const cell_type & cell, integer_sequence<J...>) const -> scalar_t
