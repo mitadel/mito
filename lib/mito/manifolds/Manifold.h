@@ -39,7 +39,6 @@ namespace mito::manifolds {
         //  metric?
         template <int I>
         static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
-        // TOFIX: move this to the private methods scope
         // TOFIX: support 1D case
         // helper function wedging the N basis 1-forms
         template <int... J>
