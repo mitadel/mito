@@ -136,15 +136,15 @@ namespace mito::mesh {
             auto new_cell_1 =
                 geometry.topology().tetrahedron({ vertex_1, vertex_01, vertex_13, vertex_12 });
             auto new_cell_2 =
-                geometry.topology().tetrahedron({ vertex_2, vertex_12, vertex_02, vertex_23 });
+                geometry.topology().tetrahedron({ vertex_2, vertex_02, vertex_12, vertex_23 });
             auto new_cell_3 =
-                geometry.topology().tetrahedron({ vertex_3, vertex_03, vertex_13, vertex_23 });
+                geometry.topology().tetrahedron({ vertex_3, vertex_13, vertex_03, vertex_23 });
             auto new_cell_4 =
                 geometry.topology().tetrahedron({ vertex_02, vertex_01, vertex_13, vertex_03 });
             auto new_cell_5 =
                 geometry.topology().tetrahedron({ vertex_02, vertex_03, vertex_13, vertex_23 });
             auto new_cell_6 =
-                geometry.topology().tetrahedron({ vertex_02, vertex_01, vertex_13, vertex_12 });
+                geometry.topology().tetrahedron({ vertex_02, vertex_13, vertex_01, vertex_12 });
             auto new_cell_7 =
                 geometry.topology().tetrahedron({ vertex_02, vertex_23, vertex_13, vertex_12 });
 
@@ -170,10 +170,10 @@ namespace mito::mesh {
             vertex_1, vertex_01, vertex_13, vertex_12, geometry, subdivided_mesh,
             n_refinements - 1);
         subdivide(
-            vertex_2, vertex_12, vertex_02, vertex_23, geometry, subdivided_mesh,
+            vertex_2, vertex_02, vertex_12, vertex_23, geometry, subdivided_mesh,
             n_refinements - 1);
         subdivide(
-            vertex_3, vertex_03, vertex_13, vertex_23, geometry, subdivided_mesh,
+            vertex_03, vertex_3, vertex_13, vertex_23, geometry, subdivided_mesh,
             n_refinements - 1);
         subdivide(
             vertex_02, vertex_01, vertex_13, vertex_03, geometry, subdivided_mesh,
@@ -182,7 +182,7 @@ namespace mito::mesh {
             vertex_02, vertex_03, vertex_13, vertex_23, geometry, subdivided_mesh,
             n_refinements - 1);
         subdivide(
-            vertex_02, vertex_01, vertex_13, vertex_12, geometry, subdivided_mesh,
+            vertex_01, vertex_02, vertex_13, vertex_12, geometry, subdivided_mesh,
             n_refinements - 1);
         subdivide(
             vertex_02, vertex_23, vertex_13, vertex_12, geometry, subdivided_mesh,
