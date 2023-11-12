@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
-#include <mito/mito.h>
+#include <mito/base.h>
+#include <mito/mesh.h>
 
 
 TEST(Tetra, Segment)
