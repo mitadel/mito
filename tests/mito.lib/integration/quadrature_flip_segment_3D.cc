@@ -25,22 +25,21 @@ TEST(Quadrature, FlipSegment)
     auto segment0 = topology.segment({ vertex0, vertex1 });
 
     // the integrand
-    auto f = mito::math::function([](const mito::vector_t<3> & x) { return cos(x[0] * x[1]); });
-    auto f_cosine = mito::math::field(f);
+    auto f = mito::manifolds::field([](const mito::vector_t<3> & x) { return cos(x[0] * x[1]); });
 
     // integrate the integrand on {segment0}
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
     mesh.insert(segment0);
     auto manifold = mito::manifolds::manifold(mesh);
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
-    auto result = integrator.integrate(f_cosine);
+    auto result = integrator.integrate(f);
 
     // integrate the integrand on the opposite of {segment0}
     auto mesh_flip = mito::mesh::mesh<mito::topology::segment_t>(geometry);
     mesh_flip.insert(topology.flip(segment0));
     auto manifold_flip = mito::manifolds::manifold(mesh_flip);
     auto integrator_flip = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold_flip);
-    auto result_flip = integrator_flip.integrate(f_cosine);
+    auto result_flip = integrator_flip.integrate(f);
 
     std::cout << "Integration of cos(x*y): Result = " << result << std::endl;
     std::cout << "Integration of cos(x*y): Result flipped = " << result_flip << std::endl;
