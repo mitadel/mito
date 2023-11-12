@@ -92,19 +92,17 @@ namespace mito::manifolds {
         constexpr auto parametrization(
             const cell_type & cell, const parametric_point_type & point) const -> vector_t<D>
         {
-            // collect the element vertices
-            auto vertices = cell->vertices(vertices);
-            vector_t<D> coordinates;
-            // loop on vertices
+            vector_t<D> coord;
+            // loop on the element vertices
             int v = 0;
-            for (const auto & vertex : vertices) {
+            for (const auto & vertex : cell->vertices()) {
                 const auto & vertexCoordinates = coordinates(vertex);
-                coordinates += point[v] * vertexCoordinates;
+                coord += point[v] * vertexCoordinates;
 
                 ++v;
             }
 
-            return coordinates;
+            return coord;
         }
 
         constexpr auto print() const -> void
