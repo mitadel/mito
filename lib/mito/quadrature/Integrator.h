@@ -5,9 +5,6 @@
 
 namespace mito::quadrature {
 
-    // TODO: Keep in mind that we will need integrator and the above defined fields to compute
-    // integrals of contact forces down the road. Do we have enough machinery for that?
-
     // template with respect to element type T and to degree of exactness r of quadrature rule
     template <class quadratureT, int r, class manifoldT>
     class Integrator {
