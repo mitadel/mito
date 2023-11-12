@@ -17,15 +17,6 @@ namespace mito::mesh {
         static constexpr int dim = D;
         // typedef for cell type
         using cell_type = cellT;
-
-      private:
-        // get the order of the cell
-        static constexpr int N = order;
-        // get the family this cell type belongs to (e.g. simplicial cells)
-        template <int I>
-        using cell_family_type = typename topology::cell_family<cellT, I>;
-        // typedef for geometry type
-        using geometry_type = geometry::geometry_t<D>;
         // typedef for a collection of cells
         // QUESTION: we may consider switching this to a container that is faster to iterate on
         //  e.g. {vector}, if we decide to base {Manifold} on a {Mesh}. In this case, in fact,
@@ -35,6 +26,15 @@ namespace mito::mesh {
         //  the full cell objects, but just their addresses, so perhaps it would not even be that
         //  expensive to allocate/deallocate the memory.
         using cells_type = element_set_t<cell_type>;
+
+      private:
+        // get the order of the cell
+        static constexpr int N = order;
+        // get the family this cell type belongs to (e.g. simplicial cells)
+        template <int I>
+        using cell_family_type = typename topology::cell_family<cellT, I>;
+        // typedef for geometry type
+        using geometry_type = geometry::geometry_t<D>;
         // id type of unoriented cell
         using cell_id_type = utilities::index_t<cell_type>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
