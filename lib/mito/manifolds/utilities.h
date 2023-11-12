@@ -36,6 +36,20 @@ namespace mito::manifolds {
             typename input<typename FORM::function_type>::output_type, mito::scalar_t>;
 
 
+    // concept of a field {FIELD} being a scalar field on a D-dimensional manifold
+    template <class FIELD>
+    // {FIELD} is a scalar field if:
+    concept is_scalar_field =
+        // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
+        std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            mito::geometry::coordinates_t<FIELD::dim>>
+        // ... and returns a mito::scalar_t
+        && std::is_same_v<
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
+            mito::scalar_t>;
+
+
     // concept of a field {FIELD} being a vector field on a D-dimensional manifold
     template <class FIELD>
     // {FIELD} is a vector field if:
