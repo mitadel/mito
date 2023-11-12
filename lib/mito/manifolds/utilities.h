@@ -46,7 +46,7 @@ namespace mito::manifolds {
             mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a mito::vector_t<N>, N = FIELD::output_dim
         && std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
             mito::vector_t<input<typename FIELD::function_type>::output_dim>>;
 
 
