@@ -22,11 +22,6 @@ TEST(Quadrature, LoadMeshTriangles)
     // load mesh
     std::ifstream fileStream("square.summit");
     auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
-    // TOFIX: is it better that the cells and vertices are first fetched from mesh and then
-    //  used to build the manifold?
-    // instantiate a cell set as a collection of simplices and vertices.
-    // const auto & cells = mesh.cells<2>();    // TODO: region label to fetch cells
-    // auto manifold = mito::manifolds::manifold<2>(cells);
     auto manifold = mito::manifolds::manifold(mesh);
 
     // instantiate a scalar field
