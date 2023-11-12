@@ -140,26 +140,33 @@ namespace mito::manifolds {
         // QUESTION: does this work for general metric tensors?
         constexpr auto volume() const -> scalar_t
         {
-            scalar_t volume = 0.0;
-
+            scalar_t result = 0.0;
             for (const auto & cell : _mesh.cells()) {
-                volume += _volume(cell, make_integer_sequence<N> {});
+                result += volume(cell);
             }
-
             // all done
-            return volume;
+            return result;
+        }
+
+        // computes the volume of {cell} with the metric volume at {point}
+        constexpr auto volume(
+            const cell_type & cell,
+            const geometry::coordinates_t<D> & point = mito::vector_t<D>()) const -> scalar_t
+        {
+            // all done
+            return _volume(cell, point, make_integer_sequence<N> {});
         }
 
       private:
         // computes the volume of a cell
         template <int... J>
-        constexpr auto _volume(const cell_type & cell, integer_sequence<J...>) const -> scalar_t
+        constexpr auto _volume(
+            const cell_type & cell, const geometry::coordinates_t<D> & point,
+            integer_sequence<J...>) const -> scalar_t
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell
             auto directors = _mesh.geometry().directors(cell);
-            // TOFIX: how do we encode the quadrature point information where the volume
-            auto point = mito::vector_t<D>();
             // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
             // contracted with the cell directors
             auto volume = 1.0 / pyre::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
