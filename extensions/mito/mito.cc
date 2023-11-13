@@ -64,36 +64,32 @@ PYBIND11_MODULE(mito, m)
         ;
 
 
-    // the mito scalar function 2D
-    mito::py::class_<
-        mito::math::function_t<std::function<mito::scalar_t(const mito::vector_t<2> &)>>>(
-        m, "ScalarFunction2D")
+    // the mito scalar field 2D
+    using scalar_function_2D_t = std::function<mito::scalar_t(const mito::vector_t<2> &)>;
+    using scalar_field_2D_t = mito::manifolds::field_t<scalar_function_2D_t>;
+    mito::py::class_<scalar_field_2D_t>(m, "ScalarField2D")
         // the constructor
-        .def(mito::py::init<std::function<mito::scalar_t(const mito::vector_t<2> &)>>())
+        .def(mito::py::init<scalar_function_2D_t>())
         // operator()
         .def(
             "__call__",
             // the implementation
-            [](const mito::math::function_t<
-                   std::function<mito::scalar_t(const mito::vector_t<2> &)>> & self,
-               const mito::vector_t<2> & x) { return self(x); })
+            [](const scalar_field_2D_t & self, const mito::vector_t<2> & x) { return self(x); })
         // done
         ;
 
 
-    // the mito scalar function 3D
-    mito::py::class_<
-        mito::math::function_t<std::function<mito::scalar_t(const mito::vector_t<3> &)>>>(
-        m, "ScalarFunction3D")
+    // the mito scalar field 3D
+    using scalar_function_3D_t = std::function<mito::scalar_t(const mito::vector_t<3> &)>;
+    using scalar_field_3D_t = mito::manifolds::field_t<scalar_function_3D_t>;
+    mito::py::class_<scalar_field_3D_t>(m, "ScalarField3D")
         // the constructor
-        .def(mito::py::init<std::function<mito::scalar_t(const mito::vector_t<3> &)>>())
+        .def(mito::py::init<scalar_function_3D_t>())
         // operator()
         .def(
             "__call__",
             // the implementation
-            [](const mito::math::function_t<
-                   std::function<mito::scalar_t(const mito::vector_t<3> &)>> & self,
-               const mito::vector_t<3> & x) { return self(x); })
+            [](const scalar_field_3D_t & self, const mito::vector_t<3> & x) { return self(x); })
         // done
         ;
 
@@ -112,9 +108,8 @@ PYBIND11_MODULE(mito, m)
         ;
 
     // alias for a manifold of triangles embedded in 2D
-    using manifold_triangle_2D_t = mito::manifolds::manifold_t<
-        mito::topology::triangle_t, 2,
-        decltype(mito::manifolds::uniform_field<2>(mito::identity<2>))>;
+    using manifold_triangle_2D_t =
+        mito::manifolds::manifold_t<mito::manifolds::EUCLIDEAN, mito::topology::triangle_t, 2>;
 
     // the mito manifold interface
     mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")
@@ -136,34 +131,29 @@ PYBIND11_MODULE(mito, m)
                 auto mesh = new mito::mesh::mesh_t<mito::topology::triangle_t, 2>(
                     mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
                 // instantiate
-                return new manifold_triangle_2D_t(
-                    *mesh, mito::manifolds::uniform_field<2>(mito::identity<2>));
+                return new manifold_triangle_2D_t(*mesh);
             }))
         // done
         ;
 
 
-    // // the mito Integrator interface
-    // mito::py::class_<mito::quadrature::integrator_t<
-    //     mito::quadrature::GAUSS, 2 /* degree of exactness */,
-    //     mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>>(
-    //     m, "GaussIntegrator2Triangle2D")
-    //     // the constructor
-    //     .def(
-    //         // the implementation
-    //         mito::py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
-    //     // interface
-    //     // QUESTION: should this be called integrateScalarfield?
-    //     // integrate a scalar field
-    //     .def(
-    //         "integrate",
-    //         // the method;
-    //         &mito::quadrature::integrator_t<
-    //             mito::quadrature::GAUSS, 2 /* degree of exactness */,
-    //             mito::manifolds::manifold_t<mito::topology::triangle_t,
-    //             2>>::integrate<mito::real>,
-    //         // the docstring
-    //         "integrate a field")
-    //     // done
-    //     ;
+    // the mito Integrator interface
+    using gauss_integrator_2_triangle_2D_t = mito::quadrature::integrator_t<
+        mito::quadrature::GAUSS, 2 /* degree of exactness */, manifold_triangle_2D_t>;
+    mito::py::class_<gauss_integrator_2_triangle_2D_t>(m, "GaussIntegrator2Triangle2D")
+        // the constructor
+        .def(
+            // the implementation
+            mito::py::init<const manifold_triangle_2D_t &>())
+        // interface
+        // QUESTION: should this be called integrateScalarfield?
+        // integrate a scalar field
+        .def(
+            "integrate",
+            // the implementation
+            [](const gauss_integrator_2_triangle_2D_t & self, const scalar_field_2D_t & f) {
+                return self.integrate(f);
+            })
+        // done
+        ;
 }
