@@ -57,6 +57,14 @@ namespace mito::manifolds {
         return fA + (-fB);
     }
 
+    // the wedge product of one one-form (trivial case)
+    template <class F1>
+    constexpr auto wedge(const one_form_t<F1> & a_tilda)
+    {
+        // return a {a_tilda}
+        return a_tilda;
+    }
+
     // the wedge product of two one-forms
     template <class F1, class F2>
     constexpr auto wedge(const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda)

@@ -85,6 +85,14 @@ namespace mito::manifolds {
             [f](const mito::vector_t<D> & x) -> mito::scalar_t { return std::sqrt(f(x)); });
     }
 
+    // the wedge product of one field of one-forms (trivial case)
+    template <class F1>
+    constexpr auto wedge(const field_t<F1> & fA)
+    {
+        // return a {fA}
+        return fA;
+    }
+
     // the wedge product of two fields of one-forms
     template <class F1, class F2>
     constexpr auto wedge(const field_t<F1> & fA, const field_t<F2> & fB)
