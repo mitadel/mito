@@ -78,7 +78,7 @@ mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 
 # integration
 # mito_test_driver(tests/mito.lib/integration/divergence_theorem.cc) #TOFIX
-# mito_test_driver(tests/mito.lib/integration/quadrature_1D.cc) #TOFIX
+mito_test_driver(tests/mito.lib/integration/quadrature_1D.cc)
 mito_test_driver(tests/mito.lib/integration/quadrature_2D.cc)
 mito_test_driver(tests/mito.lib/integration/quadrature_load_mesh_2D.cc)
 # mito_test_driver(tests/mito.lib/integration/quadrature_flip_segment_3D.cc) #TOFIX
