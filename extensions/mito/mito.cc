@@ -93,17 +93,30 @@ PYBIND11_MODULE(mito, m)
         // done
         ;
 
+    // alias for a mesh of triangles embedded in 2D
+    using mesh_triangle_2D_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
 
     // the mito Mesh interface
-    mito::py::class_<mito::mesh::Mesh<mito::topology::triangle_t, 2>>(m, "SimplicialMesh2D")
+    mito::py::class_<mesh_triangle_2D_t>(m, "SimplicialMesh2D")
         // the default constructor
-        .def(
-            // the implementation
-            mito::py::init<mito::geometry::Geometry<2> &>())
+        .def(mito::py::init([](std::string filename) {
+            // TOFIX: who is going to delete?
+            // an empty topology
+            auto & topology = mito::topology::topology();
+            // an empty cloud of points in 2D
+            auto & point_cloud = mito::geometry::point_cloud<2>();
+            // an empty geometry binding {topology} and {point_cloud}
+            auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
+            // create an input stream
+            auto filestream = std::ifstream(filename);
+            // read the mesh
+            return new mesh_triangle_2D_t(
+                mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
+        }))
         // accessors
         // the cells; read-only property
-        .def_property_readonly(
-            "cells", &mito::mesh::mesh_t<mito::topology::triangle_t, 2>::cells, "the body cells")
+        .def_property_readonly("cells", &mesh_triangle_2D_t::cells, "the body cells")
         // done
         ;
 
@@ -116,22 +129,9 @@ PYBIND11_MODULE(mito, m)
         // the constructor
         .def(
             // the implementation
-            mito::py::init([](std::string filename) {
-                // TOFIX: who is going to delete?
-                // an empty topology
-                auto & topology = mito::topology::topology();
-                // an empty cloud of points in 2D
-                auto & point_cloud = mito::geometry::point_cloud<2>();
-                // an empty geometry binding {topology} and {point_cloud}
-                auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
-                // create an input stream
-                auto filestream = std::ifstream(filename);
-                // read the mesh
-                auto mesh = new mito::mesh::mesh_t<mito::topology::triangle_t, 2>(
-                    mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
+            mito::py::init([](const mesh_triangle_2D_t & mesh) {
                 // instantiate
-                return new manifold_triangle_2D_t(*mesh);
+                return new manifold_triangle_2D_t(mesh);
             }))
         // done
         ;
