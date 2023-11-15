@@ -20,9 +20,6 @@ namespace mito::topology {
     template <int N, int D>
     using edge_simplex_directors_t = std::array<vector_t<D>, N>;
 
-    // vertex vector alias
-    using vertex_vector_t = element_vector_t<vertex_t>;
-
     // concept for a class supporting the {insert} method for a {vertex_t} argument
     template <class T>
     concept VertexInsertable = requires(T instance, const vertex_t & v) { instance.insert(v); };

@@ -30,7 +30,7 @@ namespace mito::topology {
 
     auto oppositeVertices(
         const simplex_t<2> & simplex0, const simplex_t<2> & simplex1, const auto & shared_simplex)
-        -> vertex_vector_t
+        -> auto
     {
         // need a regular set (not an unordered one) because set_difference works with ordered sets
         using vertex_set_type = std::set<vertex_t>;
@@ -48,7 +48,7 @@ namespace mito::topology {
             std::end(shared_simplex_vertices),
             std::inserter(opposite_vertices, std::end(opposite_vertices)));
 
-        vertex_vector_t opposite_vertices_vector(
+        std::vector<vertex_t> opposite_vertices_vector(
             std::begin(opposite_vertices), std::end(opposite_vertices));
         assert(std::size(opposite_vertices) == 2);
 

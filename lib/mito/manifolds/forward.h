@@ -19,11 +19,6 @@ namespace mito::manifolds {
     // class field
     template <class F>
     class Field;
-
-    // TOFIX: remove this datastructure
-    // element vector alias
-    template <class elementT>
-    using element_vector_t = topology::element_vector_t<elementT>;
 }
 
 

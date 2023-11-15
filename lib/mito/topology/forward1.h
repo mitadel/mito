@@ -40,11 +40,6 @@ namespace mito::topology {
     template <class cellT>
     using element_set_t = std::unordered_set<cellT, utilities::hash_function<cellT>>;
 
-    // TOFIX: this is mostly used in {Manifold}: either remove it or {typedef} there
-    // element vector alias
-    template <class cellT>
-    using element_vector_t = std::vector<cellT>;
-
     // unoriented simplex alias
     template <int N>
     using unoriented_simplex_t = utilities::shared_ptr<const Simplex<N>>;
