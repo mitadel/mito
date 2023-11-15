@@ -100,7 +100,6 @@ PYBIND11_MODULE(mito, m)
     mito::py::class_<mesh_triangle_2D_t>(m, "SimplicialMesh2D")
         // the default constructor
         .def(mito::py::init([](std::string filename) {
-            // TOFIX: who is going to delete?
             // an empty topology
             auto & topology = mito::topology::topology();
             // an empty cloud of points in 2D
