@@ -58,15 +58,15 @@ namespace mito::manifolds {
 
         constexpr ~Manifold() {}
 
+        // default move constructor
+        Manifold(Manifold &&) = default;
+
       private:
         // delete default constructor
         Manifold() = delete;
 
         // delete copy constructor
         Manifold(const Manifold &) = delete;
-
-        // delete move constructor
-        Manifold(Manifold &&) = delete;
 
         // delete assignment operator
         Manifold & operator=(const Manifold &) = delete;

@@ -29,7 +29,7 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1, x2] = data;
                 // instantiate
-                return new mito::vector_t<3> { x0, x1, x2 };
+                return mito::vector_t<3> { x0, x1, x2 };
             }))
         // operator[]
         .def(
@@ -53,7 +53,7 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1] = data;
                 // instantiate
-                return new mito::vector_t<2> { x0, x1 };
+                return mito::vector_t<2> { x0, x1 };
             }))
         // operator[]
         .def(
@@ -110,7 +110,7 @@ PYBIND11_MODULE(mito, m)
             // create an input stream
             auto filestream = std::ifstream(filename);
             // read the mesh
-            return new mesh_triangle_2D_t(
+            return mesh_triangle_2D_t(
                 mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
         }))
         // accessors
@@ -130,7 +130,7 @@ PYBIND11_MODULE(mito, m)
             // the implementation
             mito::py::init([](const mesh_triangle_2D_t & mesh) {
                 // instantiate
-                return new manifold_triangle_2D_t(mesh);
+                return manifold_triangle_2D_t(mesh);
             }))
         // done
         ;
