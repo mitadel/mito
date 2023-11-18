@@ -9,6 +9,9 @@ namespace mito::quadrature {
     template <int D>
     using quadrature_point_t = manifolds::parametric_point_t<D>;
 
+    // the quadrature weights type
+    using quadrature_weight_t = double;
+
     template <class quadrature_t, class element_t, int r>
     struct QuadratureRulesFactory {
         static constexpr auto degreeExactness = r;
@@ -25,12 +28,13 @@ namespace mito::quadrature {
 
     template <int parametricDim, int Q>
     class quadrature_array_t :
-        public std::array<std::tuple<quadrature_point_t<parametricDim>, double>, Q> {
+        public std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
       public:
         template <typename... T>
         constexpr quadrature_array_t(T &&... t) :
-            std::array<std::tuple<quadrature_point_t<parametricDim>, double>, Q> { std::forward<T>(
-                t)... }
+            std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
+                std::forward<T>(t)...
+            }
         {}
 
         constexpr auto getPoint(int q) const { return std::get<0>((*this)[q]); }
@@ -45,8 +49,9 @@ namespace mito::quadrature {
             QuadratureRulesFactory<quadrature_t, element_t, r>::GetQuadratureRule();
 
         // lambda function to compute the sum of Q quadrature weights at compile time
-        constexpr auto sum = [quadrature_rule]<int Q>() consteval -> double {
-            constexpr auto sum_impl = [quadrature_rule]<int q>(auto & sum_ref) consteval -> double {
+        constexpr auto sum = [quadrature_rule]<int Q>() consteval -> quadrature_weight_t {
+            constexpr auto sum_impl =
+                [quadrature_rule]<int q>(auto & sum_ref) consteval -> quadrature_weight_t {
                 if constexpr (q == -1) {
                     return 0.0;
                 } else {
