@@ -16,6 +16,11 @@ namespace mito::quadrature {
         // quadrature_t, cell_type, and r identify a specific quadrature rule
         using QuadratureRule = QuadratureRulesFactory<quadrature_t, cell_type, r>;
 
+        // the quadrature rule
+        static constexpr auto _quadratureRule = QuadratureRule::Get();
+        // the number of quadrature points
+        static constexpr int Q = std::size(_quadratureRule);
+
       private:
         // QUESTION: Who should be in charge of computing the coordinates of the quadrature points
         //           in the elements? The quadrature rule has the coordinates of the quadrature
@@ -67,10 +72,6 @@ namespace mito::quadrature {
         }
 
       private:
-        // the quadrature rule
-        static constexpr auto _quadratureRule = QuadratureRule::Get();
-        // the number of quadrature points
-        static constexpr int Q = std::size(_quadratureRule);
         // the domain of integration
         const manifold_t & _manifold;
         // the coordinates of the quadrature points in the domain of integration
