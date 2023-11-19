@@ -31,11 +31,11 @@ namespace mito::quadrature {
     };
 
     template <int parametricDim, int Q>
-    class QuadratureArray :
+    class QuadratureRule :
         public std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
       public:
         template <typename... T>
-        constexpr QuadratureArray(T &&... t) :
+        constexpr QuadratureRule(T &&... t) :
             std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
                 std::forward<T>(t)...
             }
@@ -52,7 +52,7 @@ namespace mito::quadrature {
     };
 
     template <int parametricDim, int Q>
-    using quadrature_array_t = QuadratureArray<parametricDim, Q>;
+    using quadrature_rule_t = QuadratureRule<parametricDim, Q>;
 
     template <class quadrature_t, class element_t, int r>
     constexpr auto QuadratureRulesFactory<quadrature_t, element_t, r>::Get() -> auto
@@ -90,7 +90,7 @@ namespace mito::quadrature {
     constexpr auto QuadratureRulesFactory<GAUSS, topology::triangle_t, 1>::GetQuadratureRule()
         -> auto
     {
-        return quadrature_array_t<parametricDim, 1 /* nPoints */>(
+        return quadrature_rule_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 }), 1.0) });
@@ -100,7 +100,7 @@ namespace mito::quadrature {
     constexpr auto QuadratureRulesFactory<GAUSS, topology::triangle_t, 2>::GetQuadratureRule()
         -> auto
     {
-        return quadrature_array_t<parametricDim, 3 /* nPoints */>(
+        return quadrature_rule_t<parametricDim, 3 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 2.0 / 3.0, 1.0 / 6.0, 1.0 / 6.0 }),
@@ -123,7 +123,7 @@ namespace mito::quadrature {
         constexpr quadrature_weight_t w1 = 0.28114980244097964825351432270207695;
         constexpr quadrature_weight_t w2 = 0.05218353089235368507981901063125638;
 
-        return quadrature_array_t<parametricDim, 6 /* nPoints */>(
+        return quadrature_rule_t<parametricDim, 6 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(quadrature_point_t<parametricDim>({ 1.0 - 2.0 * a, a, a }), w1),
               std::make_tuple(quadrature_point_t<parametricDim>({ a, 1.0 - 2.0 * a, a }), w1),
@@ -137,7 +137,7 @@ namespace mito::quadrature {
     constexpr auto QuadratureRulesFactory<GAUSS, topology::segment_t, 1>::GetQuadratureRule()
         -> auto
     {
-        return quadrature_array_t<parametricDim, 1 /* nPoints */>(
+        return quadrature_rule_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(quadrature_point_t<parametricDim>({ 1.0, 1.0 }), 1.0) });
     }
@@ -146,7 +146,7 @@ namespace mito::quadrature {
     constexpr auto QuadratureRulesFactory<GAUSS, topology::segment_t, 2>::GetQuadratureRule()
         -> auto
     {
-        return quadrature_array_t<parametricDim, 2 /* nPoints */>(
+        return quadrature_rule_t<parametricDim, 2 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 0.788675134594813, 0.211324865405187 }), 0.5),
@@ -160,7 +160,7 @@ namespace mito::quadrature {
         -> auto
     {
         /*Hammer rule*/
-        return quadrature_array_t<parametricDim, 1 /* nPoints */>(
+        return quadrature_rule_t<parametricDim, 1 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0 }),
@@ -172,7 +172,7 @@ namespace mito::quadrature {
         -> auto
     {
         /*Hammer rule*/
-        return quadrature_array_t<parametricDim, 4 /* nPoints */>(
+        return quadrature_rule_t<parametricDim, 4 /* nPoints */>(
             { /*{point}, weight*/
               std::make_tuple(
                   quadrature_point_t<parametricDim>({ 0.5854101966249685e0, 0.1381966011250105e0,
