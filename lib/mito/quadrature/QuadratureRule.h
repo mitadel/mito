@@ -12,12 +12,12 @@ namespace mito::quadrature {
         static constexpr auto table = QuadratureTable<quadratureT, elementT, r>();
         // the table type
         using table_type = decltype(table);
+
+      public:
         // the type of quadrature points in the table
         using quadrature_point_type = table_type::quadrature_point_type;
         // the type of quadrature weights in the table
         using quadrature_weight_type = table_type::quadrature_weight_type;
-
-      public:
         // the number of point-weight pairs
         static constexpr int npoints = std::size(table);
 
