@@ -23,7 +23,7 @@ namespace mito::quadrature {
         // the quadrature rule
         static constexpr auto _quadratureRule = QuadratureRule::Get();
         // the number of quadrature points
-        static constexpr int Q = std::size(_quadratureRule);
+        static constexpr int Q = decltype(_quadratureRule)::npoints;
 
       private:
         // QUESTION: Who should be in charge of computing the coordinates of the quadrature points
@@ -40,7 +40,7 @@ namespace mito::quadrature {
                     // use manifold parametrization to map the position of quadrature points in
                     // the canonical element to the coordinate of the quadrature point
                     _coordinates[{ e, q }] =
-                        _manifold.parametrization(element, _quadratureRule.getPoint(q));
+                        _manifold.parametrization(element, _quadratureRule.point(q));
                 }
                 ++e;
             }
@@ -65,8 +65,7 @@ namespace mito::quadrature {
             for (const auto & cell : _manifold.elements()) {
                 for (auto q = 0; q < Q; ++q) {
                     auto point = _coordinates[{ e, q }];
-                    result +=
-                        f(point) * _quadratureRule.getWeight(q) * _manifold.volume(cell, point);
+                    result += f(point) * _quadratureRule.weight(q) * _manifold.volume(cell, point);
                 }
                 // increment element count
                 ++e;

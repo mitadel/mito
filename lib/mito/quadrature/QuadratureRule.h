@@ -31,24 +31,26 @@ namespace mito::quadrature {
     };
 
     template <int parametricDim, int Q>
-    class QuadratureRule :
-        public std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
-      public:
-        template <typename... T>
-        constexpr QuadratureRule(T &&... t) :
-            std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
-                std::forward<T>(t)...
-            }
-        {}
+    class QuadratureRule {
+      private:
+        using quadrature_point_type = quadrature_point_t<parametricDim>;
+        using quadrature_weight_type = quadrature_weight_t;
+        using point_weight_pair_type = std::tuple<quadrature_point_type, quadrature_weight_type>;
+        using array_type = std::array<point_weight_pair_type, Q>;
 
-        constexpr auto getPoint(int q) const -> quadrature_point_t<parametricDim>
+      public:
+        static constexpr int npoints = Q;
+
+      public:
+        constexpr QuadratureRule(array_type && t) : _rule(t) {}
+
+        constexpr auto point(int q) const -> quadrature_point_type { return std::get<0>(_rule[q]); }
+        constexpr auto weight(int q) const -> quadrature_weight_type
         {
-            return std::get<0>((*this)[q]);
+            return std::get<1>(_rule[q]);
         }
-        constexpr auto getWeight(int q) const -> quadrature_weight_t
-        {
-            return std::get<1>((*this)[q]);
-        }
+
+        const array_type _rule;
     };
 
     template <int parametricDim, int Q>
@@ -68,15 +70,14 @@ namespace mito::quadrature {
                 if constexpr (q == -1) {
                     return 0.0;
                 } else {
-                    return quadrature_rule.getWeight(q)
-                         + sum_ref.template operator()<q - 1>(sum_ref);
+                    return quadrature_rule.weight(q) + sum_ref.template operator()<q - 1>(sum_ref);
                 }
             };
             return sum_impl.template operator()<Q - 1>(sum_impl);
         };
 
         // the number of quadrature weights
-        constexpr auto Q = std::size(quadrature_rule);
+        constexpr auto Q = decltype(quadrature_rule)::npoints;
         // have the compiler compute the sum of the quadrature weights
         constexpr auto weightsSum = sum.template operator()<Q>();
         // assert the quadrature weights are a partition of unity
