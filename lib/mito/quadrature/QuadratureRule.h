@@ -31,11 +31,11 @@ namespace mito::quadrature {
     };
 
     template <int parametricDim, int Q>
-    class quadrature_array_t :
+    class QuadratureArray :
         public std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
       public:
         template <typename... T>
-        constexpr quadrature_array_t(T &&... t) :
+        constexpr QuadratureArray(T &&... t) :
             std::array<std::tuple<quadrature_point_t<parametricDim>, quadrature_weight_t>, Q> {
                 std::forward<T>(t)...
             }
@@ -44,6 +44,9 @@ namespace mito::quadrature {
         constexpr auto getPoint(int q) const { return std::get<0>((*this)[q]); }
         constexpr auto getWeight(int q) const { return std::get<1>((*this)[q]); }
     };
+
+    template <int parametricDim, int Q>
+    using quadrature_array_t = QuadratureArray<parametricDim, Q>;
 
     template <class quadrature_t, class element_t, int r>
     constexpr auto QuadratureRulesFactory<quadrature_t, element_t, r>::Get() -> auto
