@@ -41,8 +41,14 @@ namespace mito::quadrature {
             }
         {}
 
-        constexpr auto getPoint(int q) const { return std::get<0>((*this)[q]); }
-        constexpr auto getWeight(int q) const { return std::get<1>((*this)[q]); }
+        constexpr auto getPoint(int q) const -> quadrature_point_t<parametricDim>
+        {
+            return std::get<0>((*this)[q]);
+        }
+        constexpr auto getWeight(int q) const -> quadrature_weight_t
+        {
+            return std::get<1>((*this)[q]);
+        }
     };
 
     template <int parametricDim, int Q>
@@ -72,7 +78,7 @@ namespace mito::quadrature {
         // the number of quadrature weights
         constexpr auto Q = std::size(quadrature_rule);
         // have the compiler compute the sum of the quadrature weights
-        constexpr double weightsSum = sum.template operator()<Q>();
+        constexpr auto weightsSum = sum.template operator()<Q>();
         // assert the quadrature weights are a partition of unity
         static_assert(weightsSum == 1.0);
 
