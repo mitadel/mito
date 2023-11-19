@@ -77,6 +77,11 @@ mito_test_driver(tests/mito.lib/utilities/segmented_container.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_container_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 
+# quadrature
+mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)
+mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_triangle.cc)
+mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_tetrahedron.cc)
+
 # integration
 # mito_test_driver(tests/mito.lib/integration/divergence_theorem.cc) #TOFIX
 mito_test_driver(tests/mito.lib/integration/quadrature_1D.cc)
