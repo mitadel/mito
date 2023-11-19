@@ -8,14 +8,18 @@ namespace mito::quadrature {
     // template with respect to element type T and to degree of exactness r of quadrature rule
     template <class quadratureT, int r, class manifoldT>
     class Integrator {
+
+      public:
+        // publish my template parameters
         using quadrature_type = quadratureT;
         using manifold_type = manifoldT;
         using cell_type = typename manifold_type::cell_type;
-        static constexpr int D = manifold_type::dim;
 
+      private:
         // quadrature_type, cell_type, and r identify a specific quadrature rule
         using QuadratureRule = QuadratureRulesFactory<quadrature_type, cell_type, r>;
-
+        // the dimension of the physical space
+        static constexpr int D = manifold_type::dim;
         // the quadrature rule
         static constexpr auto _quadratureRule = QuadratureRule::Get();
         // the number of quadrature points

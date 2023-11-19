@@ -12,10 +12,14 @@ namespace mito::quadrature {
     // the quadrature weights type
     using quadrature_weight_t = double;
 
+    // the factory for quadrature rules
     template <class quadrature_t, class element_t, int r>
     struct QuadratureRulesFactory {
+        // the highest polynomial degree integrated exactly by the quadrature rule
         static constexpr auto degreeExactness = r;
+        // the parametric dimension of the element type {element_t}
         static constexpr int parametricDim = manifolds::parametric_dim<element_t>();
+        // get the quadrature rule
         static constexpr auto Get() -> auto;
 
       private:
