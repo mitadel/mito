@@ -114,6 +114,26 @@ namespace mito::quadrature {
     }
 
     template <>
+    constexpr auto QuadratureRulesFactory<GAUSS, topology::triangle_t, 3>::GetQuadratureRule()
+        -> auto
+    {
+        constexpr quadrature_weight_t a = 0.16288285039589191090016180418490635;
+        constexpr quadrature_weight_t b = 0.47791988356756370000000000000000000;
+
+        constexpr quadrature_weight_t w1 = 0.28114980244097964825351432270207695;
+        constexpr quadrature_weight_t w2 = 0.05218353089235368507981901063125638;
+
+        return quadrature_array_t<parametricDim, 6 /* nPoints */>(
+            { /*{point}, weight*/
+              std::make_tuple(quadrature_point_t<parametricDim>({ 1.0 - 2.0 * a, a, a }), w1),
+              std::make_tuple(quadrature_point_t<parametricDim>({ a, 1.0 - 2.0 * a, a }), w1),
+              std::make_tuple(quadrature_point_t<parametricDim>({ a, a, 1.0 - 2.0 * a }), w1),
+              std::make_tuple(quadrature_point_t<parametricDim>({ 1.0 - 2.0 * b, b, b }), w2),
+              std::make_tuple(quadrature_point_t<parametricDim>({ b, 1.0 - 2.0 * b, b }), w2),
+              std::make_tuple(quadrature_point_t<parametricDim>({ b, b, 1.0 - 2.0 * b }), w2) });
+    }
+
+    template <>
     constexpr auto QuadratureRulesFactory<GAUSS, topology::segment_t, 1>::GetQuadratureRule()
         -> auto
     {
