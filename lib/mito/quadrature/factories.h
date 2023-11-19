@@ -6,12 +6,17 @@
 namespace mito::quadrature {
 
     // integrator factory
-    template <class quadratureT, int r, class manifoldT>
-    constexpr auto integrator(const manifoldT & manifold)
+    template <quadrature_formula quadratureT, int r, class manifoldT>
+    constexpr auto integrator(const manifoldT & manifold) -> integrator_t<quadratureT, r, manifoldT>
     {
         return integrator_t<quadratureT, r, manifoldT>(manifold);
     }
 
+    template <quadrature_formula quadratureT, class elementT, int r>
+    constexpr auto quadrature_rule() -> quadrature_rule_t<quadratureT, elementT, r>
+    {
+        return quadrature_rule_t<quadratureT, elementT, r>();
+    }
 }
 
 

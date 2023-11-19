@@ -5,13 +5,16 @@
 
 namespace mito::quadrature {
 
+    // available quadrature formulae
+    enum quadrature_formula { GAUSS };
+
     // class integrator
-    template <class quadratureT, int r, class manifoldT>
+    template <quadrature_formula quadratureT, int r, class manifoldT>
     class Integrator;
 
-    // integrator alias
-    template <class quadratureT, int r, class manifoldT>
-    using integrator_t = Integrator<quadratureT, r, manifoldT>;
+    // class quadrature rule
+    template <quadrature_formula quadratureT, class elementT, int r>
+    class QuadratureRule;
 }
 
 

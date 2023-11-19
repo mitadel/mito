@@ -5,25 +5,25 @@
 
 namespace mito::quadrature {
 
-    // template with respect to element type T and to degree of exactness r of quadrature rule
-    template <class quadratureT, int r, class manifoldT>
+    // an integrator on a manifold {manifoldT} with a quadrature rule of type {quadratureT} and
+    // degree of exactness {r}
+    template <quadrature_formula quadratureT, int r, class manifoldT>
     class Integrator {
 
       public:
         // publish my template parameters
-        using quadrature_type = quadratureT;
         using manifold_type = manifoldT;
         using cell_type = typename manifold_type::cell_type;
 
       private:
         // quadrature_type, cell_type, and r identify a specific quadrature rule
-        using QuadratureRule = QuadratureRulesFactory<quadrature_type, cell_type, r>;
+        using quadrature_rule_type = quadrature_rule_t<quadratureT, cell_type, r>;
+        // the quadrature rule
+        static constexpr auto _quadratureRule = quadrature_rule_type();
+        // the number of quadrature points
+        static constexpr int Q = quadrature_rule_type::npoints;
         // the dimension of the physical space
         static constexpr int D = manifold_type::dim;
-        // the quadrature rule
-        static constexpr auto _quadratureRule = QuadratureRule::Get();
-        // the number of quadrature points
-        static constexpr int Q = decltype(_quadratureRule)::npoints;
 
       private:
         // QUESTION: Who should be in charge of computing the coordinates of the quadrature points

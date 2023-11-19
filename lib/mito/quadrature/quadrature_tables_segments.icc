@@ -1,0 +1,40 @@
+// code guard
+#if !defined(mito_quadrature_quadrature_tables_segments_h)
+#define mito_quadrature_quadrature_tables_segments_h
+
+
+namespace mito::quadrature {
+
+    template <>
+    constexpr auto QuadratureTable<GAUSS, topology::segment_t, 1>() -> auto
+    {
+        constexpr int Q = 1;
+        using table_type = Table<topology::segment_t, Q>;
+        using point_weight_pair_type = table_type::point_weight_pair_type;
+
+        return table_type({ /*{point}, weight*/
+                            point_weight_pair_type({ 1.0, 1.0 }, 1.0) });
+    }
+
+    template <>
+    constexpr auto QuadratureTable<GAUSS, topology::segment_t, 2>() -> auto
+    {
+        constexpr int Q = 2;
+        using table_type = Table<topology::segment_t, Q>;
+        using point_weight_pair_type = table_type::point_weight_pair_type;
+
+        constexpr auto a = 0.788675134594813;
+        constexpr auto b = 0.211324865405187;
+
+        return table_type(
+            { /*{point}, weight*/
+              point_weight_pair_type({ a, b }, 0.5), point_weight_pair_type({ b, a }, 0.5) });
+    }
+
+}    // namespace mito
+
+
+#endif    // mito_quadrature_quadrature_tables_segments_h
+
+
+// end of file

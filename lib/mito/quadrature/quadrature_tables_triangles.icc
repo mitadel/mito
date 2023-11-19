@@ -1,0 +1,60 @@
+// code guard
+#if !defined(mito_quadrature_quadrature_tables_triangles_h)
+#define mito_quadrature_quadrature_tables_triangles_h
+
+
+namespace mito::quadrature {
+
+    template <>
+    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 1>() -> auto
+    {
+        constexpr int Q = 1;
+        using table_type = Table<topology::triangle_t, Q>;
+        using point_weight_pair_type = table_type::point_weight_pair_type;
+
+        return table_type({ /*{point}, weight*/
+                            point_weight_pair_type({ 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 }, 1.0) });
+    }
+
+    template <>
+    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 2>() -> auto
+    {
+        constexpr int Q = 3;
+        using table_type = Table<topology::triangle_t, Q>;
+        using point_weight_pair_type = table_type::point_weight_pair_type;
+
+        return table_type(
+            { /*{point}, weight*/
+              point_weight_pair_type({ 2.0 / 3.0, 1.0 / 6.0, 1.0 / 6.0 }, 1.0 / 3.0),
+              point_weight_pair_type({ 1.0 / 6.0, 2.0 / 3.0, 1.0 / 6.0 }, 1.0 / 3.0),
+              point_weight_pair_type({ 1.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0 }, 1.0 / 3.0) });
+    }
+
+    template <>
+    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 3>() -> auto
+    {
+        constexpr int Q = 6;
+        using table_type = Table<topology::triangle_t, Q>;
+        using point_weight_pair_type = table_type::point_weight_pair_type;
+
+        constexpr auto a = 0.16288285039589191090016180418490635;
+        constexpr auto b = 0.47791988356756370000000000000000000;
+        constexpr auto w1 = 0.28114980244097964825351432270207695;
+        constexpr auto w2 = 0.05218353089235368507981901063125638;
+
+        return table_type({ /*{point}, weight*/
+                            point_weight_pair_type({ 1.0 - 2.0 * a, a, a }, w1),
+                            point_weight_pair_type({ a, 1.0 - 2.0 * a, a }, w1),
+                            point_weight_pair_type({ a, a, 1.0 - 2.0 * a }, w1),
+                            point_weight_pair_type({ 1.0 - 2.0 * b, b, b }, w2),
+                            point_weight_pair_type({ b, 1.0 - 2.0 * b, b }, w2),
+                            point_weight_pair_type({ b, b, 1.0 - 2.0 * b }, w2) });
+    }
+
+}    // namespace mito
+
+
+#endif    // mito_quadrature_quadrature_tables_triangles_h
+
+
+// end of file
