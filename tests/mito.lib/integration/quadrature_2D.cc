@@ -88,8 +88,7 @@ TEST(Quadrature, Square)
     EXPECT_NEAR(result, exact, 1.e-3);
 
     // a scalar field
-    auto f_one =
-        mito::manifolds::field([]([[maybe_unused]] const vector_t<2> & x) -> real { return 1.0; });
+    auto f_one = mito::manifolds::field([](const vector_t<2> &) -> real { return 1.0; });
     // integrate the field
     result = bodyIntegrator.integrate(f_one);    // exact 1.0
     // report
