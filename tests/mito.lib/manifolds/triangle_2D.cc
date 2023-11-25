@@ -6,7 +6,7 @@
 auto
 volume(
     mito::mesh::mesh_t<mito::topology::triangle_t, 2> & mesh,
-    const mito::manifolds::manifold_t<mito::manifolds::EUCLIDEAN, mito::topology::triangle_t, 2> &
+    const mito::manifolds::manifold_t<mito::geometry::EUCLIDEAN, mito::topology::triangle_t, 2> &
         manifold,
     const mito::topology::triangle_t & triangle) -> mito::scalar_t
 {

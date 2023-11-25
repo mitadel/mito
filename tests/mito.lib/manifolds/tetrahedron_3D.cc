@@ -6,8 +6,8 @@
 auto
 volume(
     mito::mesh::mesh_t<mito::topology::tetrahedron_t, 3> & mesh,
-    const mito::manifolds::manifold_t<
-        mito::manifolds::EUCLIDEAN, mito::topology::tetrahedron_t, 3> & manifold,
+    const mito::manifolds::manifold_t<mito::geometry::EUCLIDEAN, mito::topology::tetrahedron_t, 3> &
+        manifold,
     const mito::topology::tetrahedron_t & tetrahedron) -> mito::scalar_t
 {
     // insert tetrahedron in the mesh

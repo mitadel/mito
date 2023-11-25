@@ -5,7 +5,9 @@
 
 namespace mito::manifolds {
 
-    template <metric_t metricT, class cellT /* the type of cell */, int D /* spatial dimension */>
+    template <
+        geometry::CoordinateSystem coordsT, class cellT /* the type of cell */,
+        int D /* spatial dimension */>
     class Manifold {
 
       public:
@@ -21,8 +23,8 @@ namespace mito::manifolds {
       private:
         // typedef for vertex
         using vertex_type = topology::vertex_t;
-        // the metric type
-        static constexpr metric_t metric_type = metricT;
+        // the coordinates type
+        static constexpr geometry::CoordinateSystem coords_type = coordsT;
         // the dimension of the manifold (that is the order of the cell)
         static constexpr int N = topology::order<cell_type>();
         // the dimension of the parametric space
@@ -32,7 +34,7 @@ namespace mito::manifolds {
 
       private:
         // the metric field
-        static constexpr auto _metric = metric<metric_type, N, D>::field();
+        static constexpr auto _metric = metric<coords_type, N, D>::field();
         // basis for vector fields
         template <int I>
         static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
@@ -178,8 +180,8 @@ namespace mito::manifolds {
         const mesh_type & _mesh;
     };
 
-    template <metric_t metricT, class cellT, int D>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<metricT, cellT, D> & manifold)
+    template <geometry::CoordinateSystem coordsT, class cellT, int D>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<coordsT, cellT, D> & manifold)
     {
         // print the manifold
         manifold.print();

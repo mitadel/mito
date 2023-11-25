@@ -23,7 +23,7 @@ TEST(Manifolds, EuclideanGradient)
         mito::manifolds::field([](const mito::vector_t<2> & x) -> mito::scalar_t { return x[0]; });
 
     // the Euclidean metric
-    constexpr auto g = mito::manifolds::metric<mito::manifolds::EUCLIDEAN, 2, 2>::field();
+    constexpr auto g = mito::manifolds::metric<mito::geometry::EUCLIDEAN, 2, 2>::field();
 
     // the gradient form
     constexpr auto gradient = mito::manifolds::one_form(df0 * e_0 + df1 * e_1, g);

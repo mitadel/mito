@@ -5,20 +5,20 @@
 
 namespace mito::manifolds {
 
-    // the metric tensor field of type {metricT} for an N-dimensional manifold embedded in
+    // the metric tensor field of type {coordsT} for an N-dimensional manifold embedded in
     //  D-dimensional space
-    template <metric_t metricT, int N, int D>
+    template <geometry::CoordinateSystem coordsT, int N, int D>
     struct metric {};
 
     // specialization for the Euclidean metric
     template <int N, int D>
-    struct metric<EUCLIDEAN, N, D> {
+    struct metric<geometry::EUCLIDEAN, N, D> {
         static constexpr auto field() { return identity_tensor_field<N, D>; }
     };
 
     // specialization for the polar metric in 2D
     template <>
-    struct metric<POLAR, 2, 2> {
+    struct metric<geometry::POLAR, 2, 2> {
         static constexpr auto field()
         {
             return mito::manifolds::field(

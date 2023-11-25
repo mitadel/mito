@@ -121,7 +121,7 @@ PYBIND11_MODULE(mito, m)
 
     // alias for a manifold of triangles embedded in 2D
     using manifold_triangle_2D_t =
-        mito::manifolds::manifold_t<mito::manifolds::EUCLIDEAN, mito::topology::triangle_t, 2>;
+        mito::manifolds::manifold_t<mito::geometry::EUCLIDEAN, mito::topology::triangle_t, 2>;
 
     // the mito manifold interface
     mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")

@@ -18,7 +18,7 @@ TEST(Manifolds, Disk2D)
     auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry);
 
     // create a manifold on {mesh} with polar metric
-    auto manifold = mito::manifolds::manifold<mito::manifolds::POLAR>(mesh);
+    auto manifold = mito::manifolds::manifold<mito::geometry::POLAR>(mesh);
     // TOFIX: this method {volume} should be removed as it does not work for nonconstant metrics
     // mito::scalar_t area = manifold.volume();
 

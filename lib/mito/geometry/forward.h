@@ -5,6 +5,9 @@
 
 namespace mito::geometry {
 
+    // available coordinate types
+    enum CoordinateSystem { EUCLIDEAN, POLAR };
+
     // class point
     template <int D>
     class Point;

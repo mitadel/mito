@@ -11,12 +11,12 @@ TEST(Manifolds, Metric)
 
     // the Euclidean metric
     constexpr auto euclidean_metric =
-        mito::manifolds::metric<mito::manifolds::EUCLIDEAN, 2, 2>::field();
+        mito::manifolds::metric<mito::geometry::EUCLIDEAN, 2, 2>::field();
     // check that the metric field at a point is the identity
     static_assert(euclidean_metric(point) == mito::diagonal_matrix_t<2>({ 1.0, 1.0 }));
 
     // the polar metric
-    constexpr auto polar_metric = mito::manifolds::metric<mito::manifolds::POLAR, 2, 2>::field();
+    constexpr auto polar_metric = mito::manifolds::metric<mito::geometry::POLAR, 2, 2>::field();
     // check that the metric field at a point is e_00 + a^2 e_11
     static_assert(polar_metric(point) == mito::diagonal_matrix_t<2>({ 1.0, a * a }));
 }
