@@ -76,6 +76,9 @@ namespace mito::geometry {
         friend constexpr auto length<>(const coordinates_type & xA) -> scalar_t;
 
       public:
+        // components accessor
+        constexpr auto operator[](int i) const -> scalar_t { return _array[i]; }
+
         auto print() const noexcept -> void
         {
             // print the coordinates of the point
