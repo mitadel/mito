@@ -10,32 +10,32 @@ namespace mito::mesh::metis {
 
       private:
         // typedef my template parameter
-        using mesh_t = meshT;
+        using mesh_type = meshT;
         // typedef vertex type
-        using vertex_t = mito::topology::vertex_t;
-        // typedef edge type
-        using edge_t = mito::topology::segment_t;
+        using vertex_type = topology::vertex_t;
+        // typedef geometry type
+        using geometry_type = geometry::geometry_t<mesh_type::dim>;
 
       private:
         // populate a map between vertices and a continuous integer id = 0, ..., n_vertices - 1
-        static auto _populate_vertices_map(const mesh_t & mesh) -> auto;
+        static auto _populate_vertices_map(const mesh_type & mesh) -> auto;
         // get the mesh cells in with a lexicographic order on the barycenter
-        static auto _get_ordered_mesh_cells(const mesh_t & mesh) -> auto;
+        static auto _get_ordered_mesh_cells(const mesh_type & mesh) -> auto;
         // populate elements connectivity
         static auto _populate_element_connectivity(
-            const auto & cells, const auto & vertex_to_id,
-            const mito::geometry::geometry_t<mesh_t::dim> & geometry) -> auto;
+            const auto & cells, const auto & vertex_to_id, const geometry_type & geometry) -> auto;
         // paint metis partition
         static auto _metis_paint_partition(
             std::vector<int> & element_connectivity, int n_vertices, int n_elements,
             int n_partitions) -> auto;
         // return a partitioned mesh with the painted partition
         static auto _create_partitioned_mesh(
-            const mesh_t & mesh, const auto & cells, const auto & painting, int n_rank) -> mesh_t;
+            const mesh_type & mesh, const auto & cells, const auto & painting, int n_rank)
+            -> mesh_type;
 
       public:
         // paint partition and return the partition corresponding to {n_rank}
-        static auto partition(const mesh_t & mesh, int n_partitions, int n_rank) -> mesh_t;
+        static auto partition(const mesh_type & mesh, int n_partitions, int n_rank) -> mesh_type;
     };
 }
 
