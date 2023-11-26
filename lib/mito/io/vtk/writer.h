@@ -4,23 +4,24 @@
 
 
 namespace mito::io::vtk {
-    template <int D>
-    auto vtkCellPointer(const mito::mesh::mesh_t<topology::tetrahedron_t, D> &)
-        -> vtkSmartPointer<vtkTetra>
+
+    template <class cellT>
+    auto vtkCellPointer() -> vtkSmartPointer<typename vtkCellT<cellT>::type>;
+
+    template <>
+    auto vtkCellPointer<topology::tetrahedron_t>() -> vtkSmartPointer<vtkTetra>
     {
         return vtkSmartPointer<vtkTetra>::New();
     }
 
-    template <int D>
-    auto vtkCellPointer(const mito::mesh::mesh_t<topology::triangle_t, D> &)
-        -> vtkSmartPointer<vtkTriangle>
+    template <>
+    auto vtkCellPointer<topology::triangle_t>() -> vtkSmartPointer<vtkTriangle>
     {
         return vtkSmartPointer<vtkTriangle>::New();
     }
 
-    template <int D>
-    auto vtkCellPointer(const mito::mesh::mesh_t<topology::segment_t, D> &)
-        -> vtkSmartPointer<vtkLine>
+    template <>
+    auto vtkCellPointer<topology::segment_t>() -> vtkSmartPointer<vtkLine>
     {
         return vtkSmartPointer<vtkLine>::New();
     }
@@ -63,7 +64,7 @@ namespace mito::io::vtk {
         // loop over the cells
         for (const auto & cell : mesh.cells()) {
             // create vtk cell
-            auto cellVtk = vtkCellPointer(mesh);
+            auto cellVtk = vtkCellPointer<cellT>();
 
             // local index for the points of the cell
             auto indexLocalPointVtk = 0;
