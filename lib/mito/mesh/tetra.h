@@ -7,8 +7,9 @@ namespace mito::mesh {
 
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
-        const vertex_t & vertex_0, const vertex_t & vertex_1, geometry::geometry_t<D> & geometry,
-        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
+        const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
+        geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh, int n_refinements)
+        -> void
     requires(std::is_same_v<cellT, topology::segment_t>)
     {
         // compute the middle point of the segment 0->1
@@ -41,9 +42,9 @@ namespace mito::mesh {
 
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
-        const vertex_t & vertex_0, const vertex_t & vertex_1, const vertex_t & vertex_2,
-        geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh, int n_refinements)
-        -> void
+        const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
+        const topology::vertex_t & vertex_2, geometry::geometry_t<D> & geometry,
+        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
     requires(std::is_same_v<cellT, topology::triangle_t>)
     {
         // compute the middle point of the segment 0->1
@@ -92,9 +93,10 @@ namespace mito::mesh {
 
     template <class cellT, int D /*spatial dimension*/>
     auto subdivide(
-        const vertex_t & vertex_0, const vertex_t & vertex_1, const vertex_t & vertex_2,
-        const vertex_t & vertex_3, geometry::geometry_t<D> & geometry,
-        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
+        const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
+        const topology::vertex_t & vertex_2, const topology::vertex_t & vertex_3,
+        geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh, int n_refinements)
+        -> void
     requires(std::is_same_v<cellT, topology::tetrahedron_t>)
     {
         // compute the middle point of the segment 0->1
