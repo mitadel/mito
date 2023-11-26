@@ -35,11 +35,6 @@ namespace mito::topology {
     // topology alias
     using topology_t = Topology;
 
-    // TOFIX: not sure if this type is useful in other places than {Mesh}
-    // element set alias
-    template <class cellT>
-    using element_set_t = std::unordered_set<cellT, utilities::hash_function<cellT>>;
-
     // unoriented simplex alias
     template <int N>
     using unoriented_simplex_t = utilities::shared_ptr<const Simplex<N>>;

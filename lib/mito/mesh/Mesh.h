@@ -25,7 +25,7 @@ namespace mito::mesh {
         //  insert/erase much less frequently than we iterate. Also, this vector does not contain
         //  the full cell objects, but just their addresses, so perhaps it would not even be that
         //  expensive to allocate/deallocate the memory.
-        using cells_type = element_set_t<cell_type>;
+        using cells_type = std::unordered_set<cell_type, utilities::hash_function<cell_type>>;
 
       private:
         // get the order of the cell

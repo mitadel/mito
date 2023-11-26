@@ -16,10 +16,6 @@ namespace mito::mesh {
     // vertex alias
     using vertex_t = topology::vertex_t;
 
-    // element set alias
-    template <class cellT>
-    using element_set_t = topology::element_set_t<cellT>;
-
     // topology alias
     using topology_t = topology::topology_t;
 
