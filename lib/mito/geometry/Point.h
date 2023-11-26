@@ -8,6 +8,9 @@ namespace mito::geometry {
     template <int D>
     class Point : public utilities::Shareable {
       private:
+        using coordinates_type = coordinates_t<D>;
+
+      private:
         template <class... Args>
         constexpr Point(Args &&... args)
         requires(sizeof...(Args) == D)
@@ -30,7 +33,7 @@ namespace mito::geometry {
 
       public:
         // get the coordinates of the point
-        constexpr auto coordinates() const noexcept -> const coordinates_t<D> &
+        constexpr auto coordinates() const noexcept -> const coordinates_type &
         {
             return _coordinates;
         }
@@ -46,7 +49,7 @@ namespace mito::geometry {
 
       private:
         // the coordinates of the point
-        const coordinates_t<D> _coordinates;
+        const coordinates_type _coordinates;
 
         // private friendship with the repository of points
         friend class utilities::Repository<point_t<D>>;
@@ -71,6 +74,7 @@ namespace mito::geometry {
     }
 
 }    // namespace mito
+
 
 #endif    // mito_geometry_Point_h
 
