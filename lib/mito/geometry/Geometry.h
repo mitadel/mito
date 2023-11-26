@@ -9,13 +9,19 @@ namespace mito::geometry {
     class Geometry {
       private:
         // typedef for a topology
-        using topology_t = topology::topology_t;
+        using topology_type = topology::topology_t;
         // typedef for a vertex
-        using vertex_t = topology::vertex_t;
+        using vertex_type = topology::vertex_t;
+        // typedef for a point
+        using point_type = point_t<D>;
+        // typedef for a point cloud
+        using point_cloud_type = point_cloud_t<D>;
+        // typedef for a nodes collection
+        using nodes_type = nodes_t<D>;
 
       private:
         // constructor
-        Geometry(topology_t & topology, point_cloud_t<D> & point_cloud) :
+        Geometry(topology_type & topology, point_cloud_type & point_cloud) :
             _nodes(),
             _topology(topology),
             _point_cloud(point_cloud)
@@ -26,7 +32,7 @@ namespace mito::geometry {
 
       public:
         // register {vertex}-{point} relation as a new node
-        inline auto node(const vertex_t & vertex, const point_t<D> & point) -> void
+        inline auto node(const vertex_type & vertex, const point_type & point) -> void
         {
             // register the node with the geometry
             _nodes.emplace(node_t<D>(vertex, point));
@@ -36,7 +42,7 @@ namespace mito::geometry {
         }
 
         // instantiate a new vertex and a new point at {coord} and bind them into a node
-        inline auto node(vector_t<D> && coord) -> vertex_t
+        inline auto node(vector_t<D> && coord) -> vertex_type
         {
             // ask the topology for a new vertex
             auto vertex = _topology.vertex();
@@ -52,10 +58,10 @@ namespace mito::geometry {
         }
 
         // accessor to the collection of nodes
-        inline auto nodes() const noexcept -> const nodes_t<D> & { return _nodes; }
+        inline auto nodes() const noexcept -> const nodes_type & { return _nodes; }
 
         // get the point in space associated to this vertex
-        inline auto point(const vertex_t & vertex) const -> point_t<D>
+        inline auto point(const vertex_type & vertex) const -> point_type
         {
             return _nodes.find(vertex)->second;
         }
@@ -87,6 +93,7 @@ namespace mito::geometry {
             auto vertices = simplex->vertices();
 
             // get the coordinates of the first vertex
+            // TOFIX: const auto &
             auto p0 = point(vertices[0])->coordinates();
 
             // compute the director vectors associated with each director edge
@@ -107,29 +114,29 @@ namespace mito::geometry {
         }
 
         // accessor for topology
-        inline auto topology() noexcept -> topology_t & { return _topology; }
+        inline auto topology() noexcept -> topology_type & { return _topology; }
 
         // const accessor for topology
-        inline auto topology() const noexcept -> const topology_t & { return _topology; }
+        inline auto topology() const noexcept -> const topology_type & { return _topology; }
 
         // accessor for point cloud
-        inline auto point_cloud() noexcept -> point_cloud_t<D> & { return _point_cloud; }
+        inline auto point_cloud() noexcept -> point_cloud_type & { return _point_cloud; }
 
         // const accessor for point cloud
-        inline auto point_cloud() const noexcept -> const point_cloud_t<D> &
+        inline auto point_cloud() const noexcept -> const point_cloud_type &
         {
             return _point_cloud;
         }
 
       private:
         // the collection of nodes
-        nodes_t<D> _nodes;
+        nodes_type _nodes;
 
         // a reference to the topology
-        topology_t & _topology;
+        topology_type & _topology;
 
         // a reference to the point cloud
-        point_cloud_t<D> & _point_cloud;
+        point_cloud_type & _point_cloud;
 
         // friendship with the singleton
         using GeometrySingleton = utilities::Singleton<Geometry<D>>;
