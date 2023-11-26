@@ -47,20 +47,8 @@ namespace mito::geometry {
         // example use: cloud.point({0.0, ..., 0.0})
         auto point(coordinates_type && coord) -> point_type
         {
-            // helper function to convert vector_t to variadic template argument
-            auto _emplace_point = [this]<size_t... I>(
-                                      const vector_t<D> & coord, std::index_sequence<I...>)
-                                      ->point_t<D>
-            {
-                // emplace a new point in the cloud and return it
-                return _cloud.emplace(coord[I]...);
-            };
-
-            // emplace point in {_cloud}
-            auto point = _emplace_point(coord, std::make_index_sequence<D> {});
-
             // return the newly added point
-            return point;
+            return _cloud.emplace(coord);
         }
 
         // the iterable repository of the points in the cloud

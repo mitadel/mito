@@ -11,11 +11,7 @@ namespace mito::geometry {
         using coordinates_type = coordinates_t<D>;
 
       private:
-        template <class... Args>
-        constexpr Point(Args &&... args)
-        requires(sizeof...(Args) == D)
-            : _coordinates(args...)
-        {}
+        constexpr Point(const coordinates_type & coordinates) : _coordinates(coordinates) {}
 
         constexpr ~Point() override {}
 
