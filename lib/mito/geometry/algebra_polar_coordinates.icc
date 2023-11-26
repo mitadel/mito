@@ -1,0 +1,58 @@
+// code guard
+#if !defined(mito_geometry_algebra_polar_coordinates_h)
+#define mito_geometry_algebra_polar_coordinates_h
+
+
+namespace mito::geometry {
+
+    // addition of polar coordinates xA + xB
+    template <>
+    constexpr auto operator+(const Coordinates<2, POLAR> & xA, const Coordinates<2, POLAR> & xB)
+        -> Coordinates<2, POLAR>
+    {
+        // get the radius and angle of the two points
+        const auto & r_A = xA._array[0];
+        const auto & r_B = xB._array[0];
+        const auto & theta_A = xA._array[1];
+        const auto & theta_B = xB._array[1];
+
+        // helper variables
+        auto r_AB_c = r_A * std::cos(theta_A) + r_B * std::cos(theta_B);
+        auto r_AB_s = r_A * std::sin(theta_A) + r_B * std::sin(theta_B);
+
+        // the radius of the sum of the two points
+        auto r_AB = std::sqrt(r_AB_c * r_AB_c + r_AB_s * r_AB_s);
+
+        // the angle of the sum of the two points
+        auto theta_AB = std::atan2(r_AB_s, r_AB_c);
+
+        // all done
+        return Coordinates<2, POLAR>({ r_AB, theta_AB });
+    }
+
+    // multiplication of polar coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<2, POLAR> & xB)
+        -> Coordinates<2, POLAR>
+    {
+        // get the radius and angle of the point
+        const auto r_B = xB._array[0];
+        const auto theta_B = xB._array[1];
+
+        // scale the radius and return
+        return Coordinates<2, POLAR>({ a * r_B, theta_B });
+    }
+
+    // the distance from the origin
+    template <>
+    constexpr auto length(const Coordinates<2, POLAR> & xA) -> scalar_t
+    {
+        // the distance from the origin is the radius
+        return xA._array[0];
+    }
+}
+
+
+#endif
+
+// end of file

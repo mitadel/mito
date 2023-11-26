@@ -8,6 +8,10 @@ namespace mito::geometry {
     // available coordinate types
     enum CoordinateSystem { EUCLIDEAN, POLAR };
 
+    // class coordinates
+    template <int D, CoordinateSystem coordT = EUCLIDEAN>
+    class Coordinates;
+
     // class point
     template <int D>
     class Point;

@@ -1,0 +1,95 @@
+// code guard
+#if !defined(mito_geometry_algebra_euclidean_coordinates_h)
+#define mito_geometry_algebra_euclidean_coordinates_h
+
+
+namespace mito::geometry {
+
+    // addition of Euclidean coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<1, EUCLIDEAN> & xA, const Coordinates<1, EUCLIDEAN> & xB)
+        -> Coordinates<1, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<1, EUCLIDEAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Euclidean coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<1, EUCLIDEAN> & xB)
+        -> Coordinates<1, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<1, EUCLIDEAN>(a * xB._array);
+    }
+
+    // the distance from the origin
+    template <>
+    constexpr auto length(const Coordinates<1, EUCLIDEAN> & xA) -> scalar_t
+    {
+        return std::sqrt(xA._array[0] * xA._array[0]);
+    }
+
+
+    // addition of Euclidean coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<2, EUCLIDEAN> & xA, const Coordinates<2, EUCLIDEAN> & xB)
+        -> Coordinates<2, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<2, EUCLIDEAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Euclidean coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<2, EUCLIDEAN> & xB)
+        -> Coordinates<2, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<2, EUCLIDEAN>(a * xB._array);
+    }
+
+    // the distance from the origin
+    template <>
+    constexpr auto length(const Coordinates<2, EUCLIDEAN> & xA) -> scalar_t
+    {
+        return std::sqrt(xA._array[0] * xA._array[0] + xA._array[1] * xA._array[1]);
+    }
+
+
+    // addition of Euclidean coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<3, EUCLIDEAN> & xA, const Coordinates<3, EUCLIDEAN> & xB)
+        -> Coordinates<3, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<3, EUCLIDEAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Euclidean coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<3, EUCLIDEAN> & xB)
+        -> Coordinates<3, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<3, EUCLIDEAN>(a * xB._array);
+    }
+
+    // the distance from the origin
+    template <>
+    constexpr auto length(const Coordinates<3, EUCLIDEAN> & xA) -> scalar_t
+    {
+        return std::sqrt(
+            xA._array[0] * xA._array[0] + xA._array[1] * xA._array[1]
+            + xA._array[2] * xA._array[2]);
+    }
+
+}
+
+
+#endif
+
+// end of file
