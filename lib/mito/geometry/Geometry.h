@@ -7,7 +7,7 @@ namespace mito::geometry {
 
     template <int D>
     class Geometry {
-      public:
+      private:
         // typedef for a topology
         using topology_t = topology::topology_t;
         // typedef for a vertex
