@@ -9,9 +9,9 @@ namespace mito::manifolds {
     template <class F>
     struct input {
         // input of function {F}
-        using input_type = typename mito::math::function_t<F>::X;
+        using input_type = mito::utilities::base_type<typename mito::math::function_t<F>::X>;
         // output of function {F}
-        using output_type = typename mito::math::function_t<F>::Y;
+        using output_type = mito::utilities::base_type<typename mito::math::function_t<F>::Y>;
         // strip from {X} the cv-qualifiers and references, and get the size of the input
         static constexpr int input_dim = mito::size<mito::utilities::base_type<input_type>>();
         // strip from {X} the cv-qualifiers and references, and get the rank of the input
@@ -29,12 +29,11 @@ namespace mito::manifolds {
     concept ScalarField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            typename input<typename FIELD::function_type>::input_type,
             mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a mito::scalar_t
         && std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
-            mito::scalar_t>;
+            typename input<typename FIELD::function_type>::output_type, mito::scalar_t>;
 
 
     // concept of a field {FIELD} being a vector field on a D-dimensional manifold
@@ -43,11 +42,11 @@ namespace mito::manifolds {
     concept VectorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            typename input<typename FIELD::function_type>::input_type,
             mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a mito::vector_t<N>, N = FIELD::output_dim
         && std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::output_type>,
+            typename input<typename FIELD::function_type>::output_type,
             mito::vector_t<input<typename FIELD::function_type>::output_dim>>;
 
 
@@ -57,7 +56,7 @@ namespace mito::manifolds {
     concept TensorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            typename input<typename FIELD::function_type>::input_type,
             mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a matrix
         && input<typename FIELD::function_type>::output_rank == 2;
@@ -69,7 +68,7 @@ namespace mito::manifolds {
     concept SymmetricTensorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            typename input<typename FIELD::function_type>::input_type,
             mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a matrix...
         && input<typename FIELD::function_type>::output_rank == 2
@@ -83,7 +82,7 @@ namespace mito::manifolds {
     concept DiagonalTensorField =
         // ... it takes in input a mito::geometry::coordinates_t<D>, D = FIELD::dim
         std::is_same_v<
-            mito::utilities::base_type<typename input<typename FIELD::function_type>::input_type>,
+            typename input<typename FIELD::function_type>::input_type,
             mito::geometry::coordinates_t<FIELD::dim>>
         // ... and returns a matrix...
         && input<typename FIELD::function_type>::output_rank == 2
