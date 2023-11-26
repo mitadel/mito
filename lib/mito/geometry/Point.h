@@ -61,10 +61,10 @@ namespace mito::geometry {
     }
 
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const Point<D> & point) noexcept
+    std::ostream & operator<<(std::ostream & os, const point_t<D> & point) noexcept
     {
         // print the point
-        point.print();
+        point->print();
 
         // all done
         return os;
