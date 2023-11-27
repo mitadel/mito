@@ -10,6 +10,18 @@ namespace mito::manifolds {
         int D /* spatial dimension */>
     class Manifold {
 
+      private:
+        // typedef for vertex
+        using vertex_type = topology::vertex_t;
+        // the coordinates type
+        static constexpr geometry::CoordinateSystem coords_type = coordsT;
+        // the dimension of the manifold (that is the order of the cell)
+        static constexpr int N = topology::order<cellT>();
+        // the dimension of the parametric space
+        static constexpr int parametricDim = parametric_dim<cellT>();
+        // typedef for a point in parametric coordinates
+        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
+
       public:
         // the dimension of the physical space
         static constexpr int dim = D;
@@ -19,18 +31,8 @@ namespace mito::manifolds {
         using mesh_type = mesh::mesh_t<cell_type, D>;
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
-
-      private:
-        // typedef for vertex
-        using vertex_type = topology::vertex_t;
-        // the coordinates type
-        static constexpr geometry::CoordinateSystem coords_type = coordsT;
-        // the dimension of the manifold (that is the order of the cell)
-        static constexpr int N = topology::order<cell_type>();
-        // the dimension of the parametric space
-        static constexpr int parametricDim = parametric_dim<cell_type>();
-        // typedef for a point in parametric coordinates
-        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
+        // typedef for a set of coordinates
+        using coordinates_type = geometry::coordinates_t<D>;
 
       private:
         // the metric field
@@ -81,16 +83,16 @@ namespace mito::manifolds {
 
         constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
-        constexpr auto coordinates(const vertex_type & v) const -> const vector_t<D> &
+        constexpr auto coordinates(const vertex_type & v) const -> const coordinates_type &
         {
             // get the coordinates of the point attached to vertex {v}
             return _mesh.geometry().point(v)->coordinates();
         }
 
         constexpr auto parametrization(
-            const cell_type & cell, const parametric_point_type & point) const -> vector_t<D>
+            const cell_type & cell, const parametric_point_type & point) const -> coordinates_type
         {
-            vector_t<D> coord;
+            coordinates_type coord;
             // loop on the element vertices
             int v = 0;
             for (const auto & vertex : cell->vertices()) {
@@ -151,8 +153,8 @@ namespace mito::manifolds {
 
         // computes the volume of {cell} with the metric volume at {point}
         constexpr auto volume(
-            const cell_type & cell,
-            const geometry::coordinates_t<D> & point = mito::vector_t<D>()) const -> scalar_t
+            const cell_type & cell, const coordinates_type & point = mito::vector_t<D>()) const
+            -> scalar_t
         {
             // all done
             return _volume(cell, point, make_integer_sequence<N> {});
@@ -162,8 +164,8 @@ namespace mito::manifolds {
         // computes the volume of a cell
         template <int... J>
         constexpr auto _volume(
-            const cell_type & cell, const geometry::coordinates_t<D> & point,
-            integer_sequence<J...>) const -> scalar_t
+            const cell_type & cell, const coordinates_type & point, integer_sequence<J...>) const
+            -> scalar_t
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell
