@@ -29,7 +29,7 @@ namespace mito::geometry {
         return (1.0 / b) * xA;
     }
 
-    // division of coordinates xA / b
+    // operator==
     template <int D, CoordinateSystem coordT>
     constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
         -> bool
