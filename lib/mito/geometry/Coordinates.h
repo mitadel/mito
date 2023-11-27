@@ -32,10 +32,14 @@ namespace mito::geometry {
     template <int D, CoordinateSystem coordT>
     class Coordinates {
       private:
-        // alias for me
-        using coordinates_type = Coordinates<D, coordT>;
         // my underlying array type
         using array_t = mito::vector_t<D>;
+
+      public:
+        // alias for me
+        using coordinates_type = Coordinates<D, coordT>;
+        // publish the dimension of the physical space
+        static constexpr int dim = D;
 
       public:
         // constructor
