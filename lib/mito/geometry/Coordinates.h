@@ -90,7 +90,7 @@ namespace mito::geometry {
 
       private:
         // the array of coordinates
-        const array_t _array;
+        array_t _array;
     };
 
     template <int D, CoordinateSystem coordT>
