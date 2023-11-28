@@ -18,6 +18,10 @@ namespace mito::geometry {
         using point_cloud_type = point_cloud_t<D>;
         // typedef for a nodes collection
         using nodes_type = nodes_t<D>;
+        // typedef for a node
+        using node_type = node_t<D>;
+        // typedef for a set of coordinates
+        using coordinates_type = coordinates_t<D>;
 
       private:
         // constructor
@@ -35,14 +39,14 @@ namespace mito::geometry {
         inline auto node(const vertex_type & vertex, const point_type & point) -> void
         {
             // register the node with the geometry
-            _nodes.emplace(node_t<D>(vertex, point));
+            _nodes.emplace(node_type(vertex, point));
 
             // all done
             return;
         }
 
         // instantiate a new vertex and a new point at {coord} and bind them into a node
-        inline auto node(vector_t<D> && coord) -> vertex_type
+        inline auto node(coordinates_type && coord) -> vertex_type
         {
             // ask the topology for a new vertex
             auto vertex = _topology.vertex();
@@ -51,7 +55,7 @@ namespace mito::geometry {
             auto point = _point_cloud.point(std::move(coord));
 
             // register the node with the geometry
-            _nodes.emplace(node_t<D>(vertex, point));
+            _nodes.emplace(node_type(vertex, point));
 
             // return a reference to the newly emplaced node
             return vertex;
