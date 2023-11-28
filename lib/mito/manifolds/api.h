@@ -45,7 +45,7 @@ namespace mito::manifolds {
     template <int D, class Y>
     constexpr auto uniform_field(const Y & constant)
     {
-        return field([constant](const mito::vector_t<D> &) -> Y { return constant; });
+        return field([constant](const geometry::coordinates_t<D> &) -> Y { return constant; });
     }
 
     // the order N identity tensor in D dimensions

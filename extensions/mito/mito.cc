@@ -16,8 +16,9 @@ PYBIND11_MODULE(mito, m)
 {
     m.doc() = "pybind11 mito plugin";    // optional module docstring
 
-    // the mito vector interface
-    mito::py::class_<mito::vector_t<3>>(m, "Vector3D")
+    // the mito cartesian coordinates interface
+    using coordinates_3D_t = mito::geometry::coordinates_t<3>;
+    mito::py::class_<coordinates_3D_t>(m, "Coordinates3D")
         // the default constructor
         .def(
             // the implementation
@@ -29,19 +30,20 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1, x2] = data;
                 // instantiate
-                return mito::vector_t<3> { x0, x1, x2 };
+                return coordinates_3D_t { x0, x1, x2 };
             }))
         // operator[]
         .def(
             "__getitem__",
             // the implementation
-            [](const mito::vector_t<3> & self, int i) { return self[i]; })
+            [](const coordinates_3D_t & self, int i) { return self[i]; })
         // done
         ;
 
 
     // the mito vector interface
-    mito::py::class_<mito::vector_t<2>>(m, "Vector2D")
+    using coordinates_2D_t = mito::geometry::coordinates_t<2>;
+    mito::py::class_<coordinates_2D_t>(m, "Coordinates2D")
         // the default constructor
         .def(
             // the implementation
@@ -59,13 +61,13 @@ PYBIND11_MODULE(mito, m)
         .def(
             "__getitem__",
             // the implementation
-            [](const mito::vector_t<2> & self, int i) { return self[i]; })
+            [](const coordinates_2D_t & self, int i) { return self[i]; })
         // done
         ;
 
 
     // the mito scalar field 2D
-    using scalar_function_2D_t = std::function<mito::scalar_t(const mito::vector_t<2> &)>;
+    using scalar_function_2D_t = std::function<mito::scalar_t(const coordinates_2D_t &)>;
     using scalar_field_2D_t = mito::manifolds::field_t<scalar_function_2D_t>;
     mito::py::class_<scalar_field_2D_t>(m, "ScalarField2D")
         // the constructor
@@ -74,13 +76,13 @@ PYBIND11_MODULE(mito, m)
         .def(
             "__call__",
             // the implementation
-            [](const scalar_field_2D_t & self, const mito::vector_t<2> & x) { return self(x); })
+            [](const scalar_field_2D_t & self, const coordinates_2D_t & x) { return self(x); })
         // done
         ;
 
 
     // the mito scalar field 3D
-    using scalar_function_3D_t = std::function<mito::scalar_t(const mito::vector_t<3> &)>;
+    using scalar_function_3D_t = std::function<mito::scalar_t(const coordinates_3D_t &)>;
     using scalar_field_3D_t = mito::manifolds::field_t<scalar_function_3D_t>;
     mito::py::class_<scalar_field_3D_t>(m, "ScalarField3D")
         // the constructor
@@ -89,7 +91,7 @@ PYBIND11_MODULE(mito, m)
         .def(
             "__call__",
             // the implementation
-            [](const scalar_field_3D_t & self, const mito::vector_t<3> & x) { return self(x); })
+            [](const scalar_field_3D_t & self, const coordinates_3D_t & x) { return self(x); })
         // done
         ;
 

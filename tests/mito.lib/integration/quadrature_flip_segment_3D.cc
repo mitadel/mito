@@ -25,7 +25,8 @@ TEST(Quadrature, FlipSegment)
     auto segment0 = topology.segment({ vertex0, vertex1 });
 
     // the integrand
-    auto f = mito::manifolds::field([](const mito::vector_t<3> & x) { return cos(x[0] * x[1]); });
+    using coordinates_t = mito::geometry::coordinates_t<2>;
+    auto f = mito::manifolds::field([](const coordinates_t & x) { return cos(x[0] * x[1]); });
 
     // integrate the integrand on {segment0}
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);

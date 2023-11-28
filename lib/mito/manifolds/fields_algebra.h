@@ -13,7 +13,8 @@ namespace mito::manifolds {
     {
         // the dimension of the vector space
         constexpr int D = field_t<F1>::dim;
-        return field([fA, fB](const mito::vector_t<D> & x) { return fA(x) + fB(x); });
+        return field(
+            [fA, fB](const mito::geometry::coordinates_t<D> & x) { return fA(x) + fB(x); });
     }
 
     // scalar * fields
@@ -22,7 +23,7 @@ namespace mito::manifolds {
     {
         // the dimension of the vector space
         constexpr int D = field_t<F>::dim;
-        return field([a, f](const mito::vector_t<D> & x) { return a * f(x); });
+        return field([a, f](const mito::geometry::coordinates_t<D> & x) { return a * f(x); });
     }
 
     // field * scalar
@@ -64,7 +65,7 @@ namespace mito::manifolds {
     constexpr auto inverse(const field_t<F> & f)
     {
         constexpr int D = field_t<F>::dim;
-        return function([f](const mito::vector_t<D> & x) { return inverse(f(x)); });
+        return function([f](const mito::geometry::coordinates_t<D> & x) { return inverse(f(x)); });
     }
 
     // det(f)
@@ -72,8 +73,9 @@ namespace mito::manifolds {
     constexpr auto determinant(const field_t<F> & f)
     {
         constexpr int D = field_t<F>::dim;
-        return field(
-            [f](const mito::vector_t<D> & x) -> mito::scalar_t { return determinant(f(x)); });
+        return field([f](const mito::geometry::coordinates_t<D> & x) -> mito::scalar_t {
+            return determinant(f(x));
+        });
     }
 
     // sqrt(f)
@@ -81,8 +83,9 @@ namespace mito::manifolds {
     constexpr auto sqrt(const field_t<F> & f)
     {
         constexpr int D = field_t<F>::dim;
-        return field(
-            [f](const mito::vector_t<D> & x) -> mito::scalar_t { return std::sqrt(f(x)); });
+        return field([f](const mito::geometry::coordinates_t<D> & x) -> mito::scalar_t {
+            return std::sqrt(f(x));
+        });
     }
 
     // the wedge product of one field of one-forms (trivial case)

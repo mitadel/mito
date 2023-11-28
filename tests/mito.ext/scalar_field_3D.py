@@ -10,7 +10,7 @@ def myfunction(x):
 
 field = mito.ScalarField3D(myfunction)
 
-result = field(mito.Vector3D((2., 1., 3.)))
+result = field(mito.Coordinates3D((2., 1., 3.)))
 assert abs(result - 2.583853) < 1.e-3
 
 print("all done!")

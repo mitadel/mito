@@ -7,6 +7,11 @@ using mito::real;
 using mito::quadrature::GAUSS;
 using mito::topology::triangle_t;
 
+// alias for a set of cartesian coordinates in 2D
+using coordinates_2D_t = mito::geometry::coordinates_t<2>;
+// alias for a set of cartesian coordinates in 3D
+using coordinates_3D_t = mito::geometry::coordinates_t<2>;
+
 
 TEST(Quadrature, Square)
 {
@@ -76,7 +81,8 @@ TEST(Quadrature, Square)
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     // a scalar field
-    auto f = mito::manifolds::field([](const vector_t<2> & x) -> real { return cos(x[0] * x[1]); });
+    auto f =
+        mito::manifolds::field([](const coordinates_2D_t & x) -> real { return cos(x[0] * x[1]); });
     // integrate the field
     real result = bodyIntegrator.integrate(f);
     // the exact solution
@@ -88,7 +94,7 @@ TEST(Quadrature, Square)
     EXPECT_NEAR(result, exact, 1.e-3);
 
     // a scalar field
-    auto f_one = mito::manifolds::field([](const vector_t<2> &) -> real { return 1.0; });
+    auto f_one = mito::manifolds::field([](const coordinates_2D_t &) -> real { return 1.0; });
     // integrate the field
     result = bodyIntegrator.integrate(f_one);    // exact 1.0
     // report
@@ -98,7 +104,7 @@ TEST(Quadrature, Square)
     EXPECT_DOUBLE_EQ(result, 1.0);
 
     // a scalar field
-    auto f_linear = mito::manifolds::field([](const vector_t<2> & x) -> real { return x[0]; });
+    auto f_linear = mito::manifolds::field([](const coordinates_2D_t & x) -> real { return x[0]; });
     // integrate the field
     result = bodyIntegrator.integrate(f_linear);    // exact 0.5
     // report
@@ -108,7 +114,8 @@ TEST(Quadrature, Square)
     EXPECT_DOUBLE_EQ(result, 0.5);
 
     // a scalar function
-    auto f_xy = mito::manifolds::field([](const vector_t<2> & x) -> real { return x[0] * x[1]; });
+    auto f_xy =
+        mito::manifolds::field([](const coordinates_2D_t & x) -> real { return x[0] * x[1]; });
     // integrate the field
     result = bodyIntegrator.integrate(f_xy);    // exact 0.25
     // report
@@ -118,7 +125,8 @@ TEST(Quadrature, Square)
     EXPECT_DOUBLE_EQ(result, 0.25);
 
     // a scalar function
-    auto f_xx = mito::manifolds::field([](const vector_t<2> & x) -> real { return x[0] * x[0]; });
+    auto f_xx =
+        mito::manifolds::field([](const coordinates_2D_t & x) -> real { return x[0] * x[0]; });
     // integrate the field
     result = bodyIntegrator.integrate(f_xx);    // exact 1.0/3.0
     // report
@@ -156,7 +164,7 @@ TEST(Quadrature, Square)
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold3D);
 
     // a scalar field
-    auto f_xy3D = mito::manifolds::field([](const vector_t<3> & x) -> real { return x[0] * x[1]; });
+    auto f_xy3D = mito::manifolds::field([](const coordinates_3D_t & x) -> real { return x[0] * x[1]; });
     // integrate the field
     result = bodyIntegrator3D.integrate(f_xy3D);
     // the exact solution

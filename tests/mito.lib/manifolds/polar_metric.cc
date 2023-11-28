@@ -11,6 +11,9 @@ static constexpr auto e_t = mito::manifolds::uniform_field<2>(mito::e_1<2>);
 static constexpr auto e_rr = mito::manifolds::uniform_field<2>(mito::e_00<2>);
 static constexpr auto e_tt = mito::manifolds::uniform_field<2>(mito::e_11<2>);
 
+// alias for a set of polar coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2>;
+
 
 TEST(Manifolds, PolarCoordinates)
 {
@@ -18,21 +21,19 @@ TEST(Manifolds, PolarCoordinates)
     constexpr auto g =
         // x[0] -> r
         // x[1] -> theta
-        mito::manifolds::field(
-            [](const mito::geometry::coordinates_t<2> & x) -> mito::diagonal_matrix_t<2> {
-                // e_rr + r^2 * e_tt
-                return e_rr(x) + (x[0] * x[0]) * e_tt(x);
-            });
+        mito::manifolds::field([](const coordinates_t & x) -> mito::diagonal_matrix_t<2> {
+            // e_rr + r^2 * e_tt
+            return e_rr(x) + (x[0] * x[0]) * e_tt(x);
+        });
 
     // the inverse metric field
     constexpr auto g_inv =
         // x[0] -> r
         // x[1] -> theta
-        mito::manifolds::field(
-            [](const mito::geometry::coordinates_t<2> & x) -> mito::diagonal_matrix_t<2> {
-                // e_r + 1/r^2 * e_theta
-                return e_rr(x) + 1.0 / (x[0] * x[0]) * e_tt(x);
-            });
+        mito::manifolds::field([](const coordinates_t & x) -> mito::diagonal_matrix_t<2> {
+            // e_r + 1/r^2 * e_theta
+            return e_rr(x) + 1.0 / (x[0] * x[0]) * e_tt(x);
+        });
 
     // the basis one-forms
     constexpr auto dr = mito::manifolds::one_form(g_inv * e_r, g);
