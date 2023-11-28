@@ -14,6 +14,7 @@ namespace mito::quadrature {
         // publish my template parameters
         using manifold_type = manifoldT;
         using cell_type = typename manifold_type::cell_type;
+        using coordinates_type = typename manifold_type::coordinates_type;
 
       private:
         // quadrature_type, cell_type, and r identify a specific quadrature rule
@@ -78,7 +79,7 @@ namespace mito::quadrature {
         // the domain of integration
         const manifold_type & _manifold;
         // the coordinates of the quadrature points in the domain of integration
-        fem::quadrature_field_t<Q, vector_t<D>> _coordinates;
+        fem::quadrature_field_t<Q, coordinates_type> _coordinates;
     };
 
 }    // namespace  mito
