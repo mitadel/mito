@@ -29,12 +29,38 @@ namespace mito::geometry {
         return (1.0 / b) * xA;
     }
 
+    // operator+=
+    template <int D, CoordinateSystem coordT>
+    constexpr auto operator+=(Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> Coordinates<D, coordT> &
+    {
+        xA = xA + xB;
+        return xA;
+    }
+
+    // operator/=
+    template <int D, CoordinateSystem coordT>
+    constexpr auto operator/=(Coordinates<D, coordT> & xA, const scalar_t & b)
+        -> Coordinates<D, coordT> &
+    {
+        xA = xA / b;
+        return xA;
+    }
+
     // operator==
     template <int D, CoordinateSystem coordT>
     constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
         -> bool
     {
         return xA._array == xB._array;
+    }
+
+    // operator<
+    template <int D, CoordinateSystem coordT>
+    constexpr auto operator<(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> bool
+    {
+        return xA._array < xB._array;
     }
 
     template <int D, CoordinateSystem coordT>

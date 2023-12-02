@@ -18,6 +18,11 @@ namespace mito::geometry {
     constexpr auto operator*(const scalar_t & a, const Coordinates<D, coordT> & xB)
         -> Coordinates<D, coordT>;
 
+    // operator less than
+    template <int D, CoordinateSystem coordT>
+    constexpr auto operator<(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
+        -> bool;
+
     // the distance from the origin
     // TOFIX: not sure whether it makes sense to talk about {length} of a set of coordinates
     template <int D, CoordinateSystem coordT>
@@ -75,6 +80,11 @@ namespace mito::geometry {
         // friendship with {operator==} for coordinates
         friend constexpr auto operator==<>(const coordinates_type & xA, const coordinates_type & xB)
             -> bool;
+
+        // friendship with {operator<} for coordinates
+        friend constexpr auto operator< <>(const coordinates_type &, const coordinates_type &)
+            -> bool;
+
 
         // friendship with {length} of coordinates
         friend constexpr auto length<>(const coordinates_type & xA) -> scalar_t;
