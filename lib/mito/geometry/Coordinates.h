@@ -47,11 +47,21 @@ namespace mito::geometry {
         static constexpr int dim = D;
 
       public:
+        // default constructor
+        constexpr Coordinates() : _array() {}
+
         // constructor
         constexpr Coordinates(const mito::scalar_t (&&coords)[D]) : _array(coords) {}
 
         // constructor
         constexpr Coordinates(const array_t coords) : _array(coords) {}
+
+        // constructor from parameter pack
+        template <class... T>
+        constexpr Coordinates(T... coords)
+        requires(sizeof...(T) == D)
+            : _array { coords... }
+        {}
 
         // destructor
         constexpr ~Coordinates() {}
