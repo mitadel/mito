@@ -62,15 +62,15 @@ namespace mito::manifolds {
     template <class F, class G, int D>
     constexpr auto one_form(const field_t<F> & vector, const field_t<G> & metric)
     requires(
-        // the vector and the metric are define on the same vector space
-        field_t<F>::dim == field_t<G>::dim
+        // the vector and the metric are defined on the same coordinates
+        std::is_same_v<typename field_t<F>::coordinates_type, typename field_t<G>::coordinates_type>
         // {vector} is a vector field
         && VectorField<field_t<F>>
         // {metric} is a symmetric tensor field
         && SymmetricTensorField<field_t<G>>)
     {
         // return a one-form that, when contracted with {x}...
-        return field([vector, metric](const mito::geometry::coordinates_t<D> & x) -> auto {
+        return field([vector, metric](const field_t<F>::coordinates_type & x) -> auto {
             // ... returns the contraction of {vector} with {x}
             return one_form(vector(x), metric(x));
         });

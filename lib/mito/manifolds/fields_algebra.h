@@ -9,21 +9,21 @@ namespace mito::manifolds {
     // addition of fields fa + fb
     template <class F1, class F2>
     constexpr auto operator+(const field_t<F1> & fA, const field_t<F2> & fB)
-    requires(field_t<F1>::dim == field_t<F2>::dim)
+    requires(
+        // {fA} and {fB} are defined on the same coordinates
+        std::is_same_v<
+            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>)
     {
-        // the dimension of the vector space
-        constexpr int D = field_t<F1>::dim;
-        return field(
-            [fA, fB](const mito::geometry::coordinates_t<D> & x) { return fA(x) + fB(x); });
+        using coordinates_type = typename field_t<F1>::coordinates_type;
+        return field([fA, fB](const coordinates_type & x) { return fA(x) + fB(x); });
     }
 
     // scalar * fields
     template <class F>
     constexpr auto operator*(const real & a, const field_t<F> & f)
     {
-        // the dimension of the vector space
-        constexpr int D = field_t<F>::dim;
-        return field([a, f](const mito::geometry::coordinates_t<D> & x) { return a * f(x); });
+        using coordinates_type = typename field_t<F>::coordinates_type;
+        return field([a, f](const coordinates_type & x) { return a * f(x); });
     }
 
     // field * scalar
@@ -37,13 +37,12 @@ namespace mito::manifolds {
     template <class F1, class F2>
     constexpr auto operator*(const field_t<F1> & fA, const field_t<F2> & fB)
     requires(
-        // {field_a} and {field_b} are defined on the same vector space
-        field_t<F1>::dim == field_t<F2>::dim)
+        // {fA} and {fB} are defined on the same coordinates
+        std::is_same_v<
+            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>)
     {
-        // the dimension of the vector space
-        constexpr int D = field_t<F1>::dim;
-        return field(
-            [fA, fB](const mito::geometry::coordinates_t<D> & x) { return fA(x) * fB(x); });
+        using coordinates_type = typename field_t<F1>::coordinates_type;
+        return field([fA, fB](const coordinates_type & x) { return fA(x) * fB(x); });
     }
 
     // unary operator- for fields
@@ -64,28 +63,25 @@ namespace mito::manifolds {
     template <class F>
     constexpr auto inverse(const field_t<F> & f)
     {
-        constexpr int D = field_t<F>::dim;
-        return function([f](const mito::geometry::coordinates_t<D> & x) { return inverse(f(x)); });
+        using coordinates_type = typename field_t<F>::coordinates_type;
+        return function([f](const coordinates_type & x) { return inverse(f(x)); });
     }
 
     // det(f)
     template <class F>
     constexpr auto determinant(const field_t<F> & f)
     {
-        constexpr int D = field_t<F>::dim;
-        return field([f](const mito::geometry::coordinates_t<D> & x) -> mito::scalar_t {
-            return determinant(f(x));
-        });
+        using coordinates_type = typename field_t<F>::coordinates_type;
+        return field(
+            [f](const coordinates_type & x) -> mito::scalar_t { return determinant(f(x)); });
     }
 
     // sqrt(f)
     template <class F>
     constexpr auto sqrt(const field_t<F> & f)
     {
-        constexpr int D = field_t<F>::dim;
-        return field([f](const mito::geometry::coordinates_t<D> & x) -> mito::scalar_t {
-            return std::sqrt(f(x));
-        });
+        using coordinates_type = typename field_t<F>::coordinates_type;
+        return field([f](const coordinates_type & x) -> mito::scalar_t { return std::sqrt(f(x)); });
     }
 
     // the wedge product of one field of one-forms (trivial case)
@@ -100,26 +96,26 @@ namespace mito::manifolds {
     template <class F1, class F2>
     constexpr auto wedge(const field_t<F1> & fA, const field_t<F2> & fB)
     requires(
-        // {fA} and {fB} are defined on the same vector space
-        field_t<F1>::dim == field_t<F2>::dim)
+        // {fA} and {fB} are defined on the same coordinates
+        std::is_same_v<
+            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>)
     {
-        // the dimension of the vector space
-        constexpr int D = field_t<F1>::dim;
-        return field([fA, fB](const mito::geometry::coordinates_t<D> & x) -> auto {
-            return wedge(fA(x), fB(x));
-        });
+        using coordinates_type = typename field_t<F1>::coordinates_type;
+        return field([fA, fB](const coordinates_type & x) -> auto { return wedge(fA(x), fB(x)); });
     }
 
     // the wedge product of three fields of one-forms
     template <class F1, class F2, class F3>
     constexpr auto wedge(const field_t<F1> & fA, const field_t<F2> & fB, const field_t<F3> & fC)
     requires(
-        // {fA}, {fB} and {fC} are defined on the same vector space
-        field_t<F1>::dim == field_t<F2>::dim && field_t<F1>::dim == field_t<F3>::dim)
+        // {fA}, {fB} and {fC} are defined on the same coordinates
+        std::is_same_v<
+            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>
+        && std::is_same_v<
+            typename field_t<F2>::coordinates_type, typename field_t<F3>::coordinates_type>)
     {
-        // the dimension of the vector space
-        constexpr int D = field_t<F1>::dim;
-        return field([fA, fB, fC](const mito::geometry::coordinates_t<D> & x) -> auto {
+        using coordinates_type = typename field_t<F1>::coordinates_type;
+        return field([fA, fB, fC](const coordinates_type & x) -> auto {
             return wedge(fA(x), fB(x), fC(x));
         });
     }
@@ -128,26 +124,26 @@ namespace mito::manifolds {
     template <class F1, class F2>
     constexpr auto tensor(const field_t<F1> & fA, const field_t<F2> & fB)
     requires(
-        // {fA} and {fB} are defined on the same vector space
-        field_t<F1>::dim == field_t<F2>::dim)
+        // {fA} and {fB} are defined on the same coordinates
+        std::is_same_v<
+            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>)
     {
-        // the dimension of the vector space
-        constexpr int D = field_t<F1>::dim;
-        return field([fA, fB](const mito::geometry::coordinates_t<D> & x) -> auto {
-            return tensor(fA(x), fB(x));
-        });
+        using coordinates_type = typename field_t<F1>::coordinates_type;
+        return field([fA, fB](const coordinates_type & x) -> auto { return tensor(fA(x), fB(x)); });
     }
 
     // the tensor product of three fields of one-forms
     template <class F1, class F2, class F3>
     constexpr auto tensor(const field_t<F1> & fA, const field_t<F2> & fB, const field_t<F3> & fC)
     requires(
-        // {fA}, {fB} and {fC} are defined on the same vector space
-        field_t<F1>::dim == field_t<F2>::dim && field_t<F1>::dim == field_t<F3>::dim)
+        // {fA}, {fB} and {fC} are defined on the same coordinates
+        std::is_same_v<
+            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>
+        && std::is_same_v<
+            typename field_t<F2>::coordinates_type, typename field_t<F3>::coordinates_type>)
     {
-        // the dimension of the vector space
-        constexpr int D = field_t<F1>::dim;
-        return field([fA, fB, fC](const mito::geometry::coordinates_t<D> & x) -> auto {
+        using coordinates_type = typename field_t<F1>::coordinates_type;
+        return field([fA, fB, fC](const coordinates_type & x) -> auto {
             return tensor(fA(x), fB(x), fC(x));
         });
     }

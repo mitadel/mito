@@ -56,8 +56,8 @@ namespace mito::manifolds {
     constexpr auto one_form(
         const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<D, D>)
     requires(
-        // the vector and the metric are define on the same vector space
-        field_t<F>::dim == field_t<G>::dim
+        // the vector and the metric are defined on the same coordinates
+        std::is_same_v<typename field_t<F>::coordinates_type, typename field_t<G>::coordinates_type>
         // {vector} is a vector field
         && VectorField<field_t<F>>
         // {metric} is a symmetric tensor field
