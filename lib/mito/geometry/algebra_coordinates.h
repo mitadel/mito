@@ -5,14 +5,6 @@
 
 namespace mito::geometry {
 
-    // subtraction of coordinates xA - xB
-    template <int D, CoordinateSystem coordT>
-    constexpr auto operator-(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
-        -> Coordinates<D, coordT>
-    {
-        return xA + (-1.0) * xB;
-    }
-
     // multiplication of coordinates xA * b
     template <int D, CoordinateSystem coordT>
     constexpr auto operator*(const Coordinates<D, coordT> & xA, const scalar_t & b)
@@ -68,13 +60,13 @@ namespace mito::geometry {
         const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB) noexcept -> scalar_t
     {
         // return the distance between the two points
-        return length(xA - xB);
+        return pyre::tensor::norm(xA - xB);
     }
 
 }    // namespace mito
 
 
-// implementation of custom {operator+}, {operator*}, and {length}
+// implementation of custom {operator+}, {operator-} {operator*}
 #include "algebra_euclidean_coordinates.icc"
 #include "algebra_polar_coordinates.icc"
 

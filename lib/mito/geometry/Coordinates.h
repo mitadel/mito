@@ -18,15 +18,15 @@ namespace mito::geometry {
     constexpr auto operator*(const scalar_t &, const Coordinates<D, coordT> &)
         -> Coordinates<D, coordT>;
 
+    // coordinates subtraction returning vectors
+    template <int D, CoordinateSystem coordT>
+    constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
+        -> mito::vector_t<D>;
+
     // operator less than
     template <int D, CoordinateSystem coordT>
     constexpr auto operator<(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
         -> bool;
-
-    // the distance from the origin
-    // TOFIX: not sure whether it makes sense to talk about {length} of a set of coordinates
-    template <int D, CoordinateSystem coordT>
-    constexpr auto length(const Coordinates<D, coordT> & xA) -> scalar_t;
 }
 
 
@@ -91,13 +91,13 @@ namespace mito::geometry {
         friend constexpr auto operator==<>(const coordinates_type &, const coordinates_type &)
             -> bool;
 
+        // friendship with {operator-} for coordinates
+        friend constexpr auto operator-<>(const coordinates_type &, const coordinates_type &)
+            -> mito::vector_t<D>;
+
         // friendship with {operator<} for coordinates
         friend constexpr auto operator< <>(const coordinates_type &, const coordinates_type &)
             -> bool;
-
-
-        // friendship with {length} of coordinates
-        friend constexpr auto length<>(const coordinates_type & xA) -> scalar_t;
 
       public:
         // components accessor
