@@ -8,6 +8,7 @@ namespace mito::geometry {
     template <int D>
     class Point : public utilities::Shareable {
       private:
+        // alias for a set of coordinates
         using coordinates_type = coordinates_t<D>;
 
       private:
