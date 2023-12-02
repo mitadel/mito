@@ -5,11 +5,11 @@
 
 namespace mito::mesh {
 
-    template <class cellT, int D /*spatial dimension*/>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
-        geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh, int n_refinements)
-        -> void
+        geometry::geometry_t<D, coordT> & geometry, mesh_t<cellT, D, coordT> & subdivided_mesh,
+        int n_refinements) -> void
     requires(std::is_same_v<cellT, topology::segment_t>)
     {
         // compute the middle point of the segment 0->1
@@ -40,11 +40,11 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
-        const topology::vertex_t & vertex_2, geometry::geometry_t<D> & geometry,
-        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
+        const topology::vertex_t & vertex_2, geometry::geometry_t<D, coordT> & geometry,
+        mesh_t<cellT, D, coordT> & subdivided_mesh, int n_refinements) -> void
     requires(std::is_same_v<cellT, topology::triangle_t>)
     {
         // compute the middle point of the segment 0->1
@@ -91,12 +91,12 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
         const topology::vertex_t & vertex_2, const topology::vertex_t & vertex_3,
-        geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh, int n_refinements)
-        -> void
+        geometry::geometry_t<D, coordT> & geometry, mesh_t<cellT, D, coordT> & subdivided_mesh,
+        int n_refinements) -> void
     requires(std::is_same_v<cellT, topology::tetrahedron_t>)
     {
         // compute the middle point of the segment 0->1
@@ -194,13 +194,13 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
     auto tetra(
-        const mesh_t<cellT, D> & mesh, geometry::geometry_t<D> & geometry, int n_refinements = 1)
-        -> mesh_t<cellT, D>
+        const mesh_t<cellT, D, coordT> & mesh, geometry::geometry_t<D, coordT> & geometry,
+        int n_refinements = 1) -> mesh_t<cellT, D, coordT>
     {
         // instantiate a new (empty) mesh for the refined mesh
-        mesh_t<cellT, D> subdivided_mesh(geometry);
+        mesh_t<cellT, D, coordT> subdivided_mesh(geometry);
 
         // trivial case (just return a copy of the original mesh)
         if (n_refinements == 0) {
@@ -227,8 +227,9 @@ namespace mito::mesh {
                 []<size_t... J>(
                     const topology::vertex_simplex_composition_t<topology::order<cellT>()> &
                         vertices,
-                    geometry::geometry_t<D> & geometry, mesh_t<cellT, D> & subdivided_mesh,
-                    int n_refinements, std::index_sequence<J...>) {
+                    geometry::geometry_t<D, coordT> & geometry,
+                    mesh_t<cellT, D, coordT> & subdivided_mesh, int n_refinements,
+                    std::index_sequence<J...>) {
                     return subdivide(vertices[J]..., geometry, subdivided_mesh, n_refinements);
                 };
 

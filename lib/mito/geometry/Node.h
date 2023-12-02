@@ -5,11 +5,11 @@
 
 namespace mito::geometry {
 
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class Node {
       public:
         using vertex_type = topology::vertex_t;
-        using point_type = point_t<D>;
+        using point_type = point_t<D, coordT>;
 
       public:
         // get the coordinates of the point
@@ -30,8 +30,8 @@ namespace mito::geometry {
         point_type _point;
     };
 
-    template <int D>
-    inline bool operator==(const Node<D> & lhs, const Node<D> & rhs) noexcept
+    template <int D, CoordinateSystem coordT>
+    inline bool operator==(const Node<D, coordT> & lhs, const Node<D, coordT> & rhs) noexcept
     {
         return lhs.vertex() == rhs.vertex() && lhs.point() == rhs.point();
     }

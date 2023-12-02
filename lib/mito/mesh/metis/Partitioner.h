@@ -14,7 +14,8 @@ namespace mito::mesh::metis {
         // typedef vertex type
         using vertex_type = topology::vertex_t;
         // typedef geometry type
-        using geometry_type = geometry::geometry_t<mesh_type::dim>;
+        using geometry_type =
+            geometry::geometry_t<mesh_type::dim, mesh_type::coordinate_system_type>;
 
       private:
         // populate a map between vertices and a continuous integer id = 0, ..., n_vertices - 1

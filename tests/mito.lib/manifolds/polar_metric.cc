@@ -4,15 +4,17 @@
 
 
 // the basis for vector fields (e_r and e_theta)
-static constexpr auto e_r = mito::manifolds::uniform_field<2>(mito::e_0<2>);
-static constexpr auto e_t = mito::manifolds::uniform_field<2>(mito::e_1<2>);
+static constexpr auto e_r = mito::manifolds::uniform_field<2, mito::geometry::POLAR>(mito::e_0<2>);
+static constexpr auto e_t = mito::manifolds::uniform_field<2, mito::geometry::POLAR>(mito::e_1<2>);
 
 // the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
-static constexpr auto e_rr = mito::manifolds::uniform_field<2>(mito::e_00<2>);
-static constexpr auto e_tt = mito::manifolds::uniform_field<2>(mito::e_11<2>);
+static constexpr auto e_rr =
+    mito::manifolds::uniform_field<2, mito::geometry::POLAR>(mito::e_00<2>);
+static constexpr auto e_tt =
+    mito::manifolds::uniform_field<2, mito::geometry::POLAR>(mito::e_11<2>);
 
 // alias for a set of polar coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
 
 
 TEST(Manifolds, PolarCoordinates)
@@ -42,7 +44,7 @@ TEST(Manifolds, PolarCoordinates)
     // a point in space
     constexpr auto r = 2.0;
     constexpr auto t = 0.0;
-    constexpr auto x = mito::geometry::coordinates({ r, t });
+    constexpr auto x = mito::geometry::coordinates<mito::geometry::POLAR>({ r, t });
 
     // assert that at a(ny) point the basis for one-forms is dual to that of vectors
     static_assert(dr(x)(e_r(x)) == 1.0);

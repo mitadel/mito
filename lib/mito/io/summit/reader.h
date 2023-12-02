@@ -4,9 +4,9 @@
 
 
 namespace mito::io::summit {
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readVertices(
-        std::ifstream & fileStream, geometry::geometry_t<D> & geometry, int N_vertices,
+        std::ifstream & fileStream, geometry::geometry_t<D, coordT> & geometry, int N_vertices,
         std::vector<topology::vertex_t> & vertices) -> void
     {
         // fill in vertices
@@ -29,11 +29,11 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readSegment(
-        std::ifstream & fileStream, mesh::mesh_t<topology::segment_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, const std::vector<topology::vertex_t> & vertices)
-        -> void
+        std::ifstream & fileStream, mesh::mesh_t<topology::segment_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry,
+        const std::vector<topology::vertex_t> & vertices) -> void
     {
         auto & topology = geometry.topology();
 
@@ -61,11 +61,11 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readTriangle(
-        std::ifstream & fileStream, mesh::mesh_t<topology::triangle_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, const std::vector<topology::vertex_t> & vertices)
-        -> void
+        std::ifstream & fileStream, mesh::mesh_t<topology::triangle_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry,
+        const std::vector<topology::vertex_t> & vertices) -> void
     {
         auto & topology = geometry.topology();
 
@@ -98,9 +98,9 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     inline auto orientation(
-        const geometry::geometry_t<D> & geometry, const topology::vertex_t & v0,
+        const geometry::geometry_t<D, coordT> & geometry, const topology::vertex_t & v0,
         const topology::vertex_t & v1, const topology::vertex_t & v2, const topology::vertex_t & v3)
         -> bool
     {
@@ -116,11 +116,11 @@ namespace mito::io::summit {
         return pyre::tensor::cross(dir1, dir2) * dir3 > 0;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readTetrahedron(
-        std::ifstream & fileStream, mesh::mesh_t<topology::tetrahedron_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, const std::vector<topology::vertex_t> & vertices)
-        -> void
+        std::ifstream & fileStream, mesh::mesh_t<topology::tetrahedron_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry,
+        const std::vector<topology::vertex_t> & vertices) -> void
     {
         auto & topology = geometry.topology();
 
@@ -160,10 +160,10 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readSegments(
-        std::ifstream & fileStream, mesh::mesh_t<topology::segment_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, int N_cells,
+        std::ifstream & fileStream, mesh::mesh_t<topology::segment_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry, int N_cells,
         const std::vector<topology::vertex_t> & vertices) -> void
     {
         for (int i = 0; i < N_cells; ++i) {
@@ -182,10 +182,10 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readTriangles(
-        std::ifstream & fileStream, mesh::mesh_t<topology::triangle_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, int N_cells,
+        std::ifstream & fileStream, mesh::mesh_t<topology::triangle_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry, int N_cells,
         const std::vector<topology::vertex_t> & vertices) -> void
     {
         for (int i = 0; i < N_cells; ++i) {
@@ -204,10 +204,10 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readTetrahedra(
-        std::ifstream & fileStream, mesh::mesh_t<topology::tetrahedron_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, int N_cells,
+        std::ifstream & fileStream, mesh::mesh_t<topology::tetrahedron_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry, int N_cells,
         const std::vector<topology::vertex_t> & vertices) -> void
     {
         for (int i = 0; i < N_cells; ++i) {
@@ -225,36 +225,36 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<topology::segment_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, int N_cells,
+        std::ifstream & fileStream, mesh::mesh_t<topology::segment_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry, int N_cells,
         const std::vector<topology::vertex_t> & vertices) -> void
     {
         return readSegments(fileStream, mesh, geometry, N_cells, vertices);
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<topology::tetrahedron_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, int N_cells,
+        std::ifstream & fileStream, mesh::mesh_t<topology::tetrahedron_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry, int N_cells,
         const std::vector<topology::vertex_t> & vertices) -> void
     {
         return readTetrahedra(fileStream, mesh, geometry, N_cells, vertices);
     }
 
-    template <int D>
+    template <int D, geometry::CoordinateSystem coordT>
     auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<topology::triangle_t, D> & mesh,
-        geometry::geometry_t<D> & geometry, int N_cells,
+        std::ifstream & fileStream, mesh::mesh_t<topology::triangle_t, D, coordT> & mesh,
+        geometry::geometry_t<D, coordT> & geometry, int N_cells,
         const std::vector<topology::vertex_t> & vertices) -> void
     {
         return readTriangles(fileStream, mesh, geometry, N_cells, vertices);
     }
 
-    template <class cellT, int D>
-    auto reader(std::ifstream & fileStream, geometry::geometry_t<D> & geometry)
-        -> mesh::mesh_t<cellT, D>
+    template <class cellT, int D, geometry::CoordinateSystem coordT>
+    auto reader(std::ifstream & fileStream, geometry::geometry_t<D, coordT> & geometry)
+        -> mesh::mesh_t<cellT, D, coordT>
     {
         if (!fileStream.is_open()) {
             throw std::runtime_error("reader: Mesh file could not be opened");
@@ -270,7 +270,7 @@ namespace mito::io::summit {
         assert(int(D) == dim);
 
         // instantiate mesh
-        auto mesh = mesh::mesh<cellT, D>(geometry);
+        auto mesh = mesh::mesh<cellT, D, coordT>(geometry);
 
         // read number of vertices
         int N_vertices = 0;

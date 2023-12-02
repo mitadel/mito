@@ -6,13 +6,12 @@
 namespace mito::mesh {
 
     // class mesh
-    template <class cellT, int D>
+    template <class cellT, int D, geometry::CoordinateSystem coordT>
     class Mesh;
 
     // mesh alias
-    template <class cellT, int D>
-    using mesh_t = Mesh<cellT, D>;
-
+    template <class cellT, int D, geometry::CoordinateSystem coordT>
+    using mesh_t = Mesh<cellT, D, coordT>;
 }
 
 

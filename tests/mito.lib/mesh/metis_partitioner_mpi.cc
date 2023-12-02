@@ -4,8 +4,8 @@
 #include <mito/mesh.h>
 #include <mito/simulation.h>
 
-using geometry_t = mito::geometry::geometry_t<2>;
-using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
+using geometry_t = mito::geometry::geometry_t<2, mito::geometry::EUCLIDEAN>;
+using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2, mito::geometry::EUCLIDEAN>;
 
 
 auto

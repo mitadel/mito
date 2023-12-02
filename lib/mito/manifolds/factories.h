@@ -7,7 +7,8 @@ namespace mito::manifolds {
 
     // factory manifolds
     template <geometry::CoordinateSystem coordsT, class cellT, int D>
-    constexpr auto manifold(const mesh::mesh_t<cellT, D> & mesh) -> manifold_t<coordsT, cellT, D>
+    constexpr auto manifold(const mesh::mesh_t<cellT, D, coordsT> & mesh)
+        -> manifold_t<coordsT, cellT, D>
     {
         return manifold_t<coordsT, cellT, D>(mesh);
     }

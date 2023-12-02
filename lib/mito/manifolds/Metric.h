@@ -13,7 +13,7 @@ namespace mito::manifolds {
     // specialization for the Euclidean metric
     template <int N, int D>
     struct metric<geometry::EUCLIDEAN, N, D> {
-        static constexpr auto field() { return identity_tensor_field<N, D>; }
+        static constexpr auto field() { return identity_tensor_field<N, D, geometry::EUCLIDEAN>; }
     };
 
     // specialization for the polar metric in 2D
@@ -22,7 +22,8 @@ namespace mito::manifolds {
         static constexpr auto field()
         {
             return mito::manifolds::field(
-                [](const mito::geometry::coordinates_t<2> & x) -> mito::diagonal_matrix_t<2> {
+                [](const mito::geometry::coordinates_t<2, geometry::POLAR> & x)
+                    -> mito::diagonal_matrix_t<2> {
                     // e_rr + r^2 * e_tt
                     return mito::e_00<2> + (x[0] * x[0]) * mito::e_11<2>;
                 });

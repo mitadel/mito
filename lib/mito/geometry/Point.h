@@ -5,11 +5,11 @@
 
 namespace mito::geometry {
 
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class Point : public utilities::Shareable {
       private:
         // alias for a set of coordinates
-        using coordinates_type = coordinates_t<D>;
+        using coordinates_type = coordinates_t<D, coordT>;
 
       private:
         constexpr Point(const coordinates_type & coordinates) : _coordinates(coordinates) {}
@@ -49,19 +49,19 @@ namespace mito::geometry {
         const coordinates_type _coordinates;
 
         // private friendship with the repository of points
-        friend class utilities::Repository<point_t<D>>;
+        friend class utilities::Repository<point_t<D, coordT>>;
     };
 
-    template <int D>
-    constexpr auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
+    template <int D, CoordinateSystem coordT>
+    constexpr auto distance(const point_t<D, coordT> & pointA, const point_t<D, coordT> & pointB)
+        -> real
     {
         // return the distance between the two points
-        auto dist = pointA->coordinates() - pointB->coordinates();
-        return std::sqrt(dist * dist);
+        return distance(pointA->coordinates(), pointB->coordinates());
     }
 
-    template <int D>
-    std::ostream & operator<<(std::ostream & os, const point_t<D> & point) noexcept
+    template <int D, CoordinateSystem coordT>
+    std::ostream & operator<<(std::ostream & os, const point_t<D, coordT> & point) noexcept
     {
         // print the point
         point->print();

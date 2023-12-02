@@ -26,12 +26,14 @@ namespace mito::io::vtk {
         return vtkSmartPointer<vtkLine>::New();
     }
 
-    template <int D>
-    auto insertVtkPoint(const geometry::coordinates_t<D> &, vtkSmartPointer<vtkPoints> &) -> void;
+    template <int D, geometry::CoordinateSystem coordT>
+    auto insertVtkPoint(const geometry::coordinates_t<D, coordT> &, vtkSmartPointer<vtkPoints> &)
+        -> void;
 
     template <>
     auto insertVtkPoint(
-        const geometry::coordinates_t<3> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::coordinates_t<3, geometry::EUCLIDEAN> & coord,
+        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], coord[2]);
@@ -39,14 +41,15 @@ namespace mito::io::vtk {
 
     template <>
     auto insertVtkPoint(
-        const geometry::coordinates_t<2> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::coordinates_t<2, geometry::EUCLIDEAN> & coord,
+        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
     }
 
-    template <class cellT, int D>
-    auto createVtkUnstructuredGrid(const mito::mesh::mesh_t<cellT, D> & mesh)
+    template <class cellT, int D, geometry::CoordinateSystem coordT>
+    auto createVtkUnstructuredGrid(const mito::mesh::mesh_t<cellT, D, coordT> & mesh)
         -> vtkSmartPointer<vtkUnstructuredGrid>
     {
         // vtk unstructured grid
@@ -57,7 +60,8 @@ namespace mito::io::vtk {
         // map mesh points to the index of the vtk points. Points that are shared among
         // multiple elements have the same index.
         std::unordered_map<
-            geometry::point_t<D>, int, utilities::hash_function<geometry::point_t<D>>>
+            geometry::point_t<D, coordT>, int,
+            utilities::hash_function<geometry::point_t<D, coordT>>>
             mapPoints;
 
         // global index assigned to each vtk point
@@ -119,8 +123,8 @@ namespace mito::io::vtk {
         writer->Write();
     }
 
-    template <class cellT, int D>
-    auto writer(std::string fileName, const mito::mesh::mesh_t<cellT, D> & mesh) -> void
+    template <class cellT, int D, geometry::CoordinateSystem coordT>
+    auto writer(std::string fileName, const mito::mesh::mesh_t<cellT, D, coordT> & mesh) -> void
     {
         // create vtk unstructured grid
         const auto gridVtk = createVtkUnstructuredGrid(mesh);
@@ -130,8 +134,8 @@ namespace mito::io::vtk {
     }
 
 
-    template <int D>
-    auto writer(std::string fileName, const geometry::point_cloud_t<D> & cloud) -> void
+    template <int D, geometry::CoordinateSystem coordT>
+    auto writer(std::string fileName, const geometry::point_cloud_t<D, coordT> & cloud) -> void
     {
         // get point cloud compositions
         const auto & points = cloud.points();

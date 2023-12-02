@@ -4,13 +4,13 @@
 
 namespace mito::geometry {
 
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class PointCloud {
       private:
         // a point
-        using point_type = point_t<D>;
+        using point_type = point_t<D, coordT>;
         // a point
-        using coordinates_type = coordinates_t<D>;
+        using coordinates_type = coordinates_t<D, coordT>;
         // a cloud of points
         using cloud_type = utilities::repository_t<point_type>;
 
@@ -18,10 +18,10 @@ namespace mito::geometry {
         PointCloud() : _cloud(100 /*segment size */) {}
 
         // delete copy constructor
-        PointCloud(const PointCloud<D> &) = delete;
+        PointCloud(const PointCloud<D, coordT> &) = delete;
 
         // delete assignment operator
-        void operator=(const PointCloud<D> &) = delete;
+        void operator=(const PointCloud<D, coordT> &) = delete;
 
         // destructor
         ~PointCloud() {}
@@ -59,12 +59,12 @@ namespace mito::geometry {
         cloud_type _cloud;
 
         // friendship with the singleton
-        using PointCloudSingleton = utilities::Singleton<PointCloud<D>>;
+        using PointCloudSingleton = utilities::Singleton<PointCloud<D, coordT>>;
         friend PointCloudSingleton;
     };
 
-    template <int D>
-    std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud) noexcept
+    template <int D, CoordinateSystem coordT>
+    std::ostream & operator<<(std::ostream & os, const PointCloud<D, coordT> & cloud) noexcept
     {
         // print the cloud
         cloud.print();

@@ -5,7 +5,7 @@
 
 namespace mito::geometry {
 
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class Geometry {
       private:
         // typedef for a topology
@@ -13,15 +13,15 @@ namespace mito::geometry {
         // typedef for a vertex
         using vertex_type = topology::vertex_t;
         // typedef for a point
-        using point_type = point_t<D>;
+        using point_type = point_t<D, coordT>;
         // typedef for a point cloud
-        using point_cloud_type = point_cloud_t<D>;
+        using point_cloud_type = point_cloud_t<D, coordT>;
         // typedef for a nodes collection
-        using nodes_type = nodes_t<D>;
+        using nodes_type = nodes_t<D, coordT>;
         // typedef for a node
-        using node_type = node_t<D>;
+        using node_type = node_t<D, coordT>;
         // typedef for a set of coordinates
-        using coordinates_type = coordinates_t<D>;
+        using coordinates_type = coordinates_t<D, coordT>;
 
       private:
         // constructor
@@ -100,6 +100,8 @@ namespace mito::geometry {
             // TOFIX: const auto &
             auto p0 = point(vertices[0])->coordinates();
 
+            // TOFIX: the distance of two points must be a vector
+            // TOFIX: implement a coordinate system as a basis for the space + an origin
             // compute the director vectors associated with each director edge
             // auto directors = std::array { _mesh.geometry().vector(edge_directors[J])... };
             auto directors = std::array { (point(vertices[J + 1])->coordinates() - p0)... };
@@ -143,7 +145,7 @@ namespace mito::geometry {
         point_cloud_type & _point_cloud;
 
         // friendship with the singleton
-        using GeometrySingleton = utilities::Singleton<Geometry<D>>;
+        using GeometrySingleton = utilities::Singleton<Geometry<D, coordT>>;
         friend GeometrySingleton;
     };
 

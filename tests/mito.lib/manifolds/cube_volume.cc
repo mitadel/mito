@@ -13,7 +13,7 @@ static constexpr auto e_z = mito::e_2<3>;
 // compute the volume of a tetrahedron via the metric volume element
 auto
 volume_form(
-    const auto & w, const mito::geometry::geometry_t<3> & geometry,
+    const auto & w, const mito::geometry::geometry_t<3, mito::geometry::EUCLIDEAN> & geometry,
     const mito::topology::tetrahedron_t & tetrahedron) -> mito::scalar_t
 {
     // get the directors of the tetrahedron
@@ -30,8 +30,8 @@ volume_form(
 // compute the volume of a tetrahedron as the determinant of the matrix of its vertices
 auto
 volume_determinant(
-    mito::geometry::geometry_t<3> & geometry, const mito::topology::tetrahedron_t & tetrahedron)
-    -> mito::scalar_t
+    mito::geometry::geometry_t<3, mito::geometry::EUCLIDEAN> & geometry,
+    const mito::topology::tetrahedron_t & tetrahedron) -> mito::scalar_t
 {
     // number of element vertices
     constexpr int D = 3;

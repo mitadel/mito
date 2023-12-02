@@ -8,9 +8,9 @@ using mito::quadrature::GAUSS;
 using mito::topology::triangle_t;
 
 // alias for a set of cartesian coordinates in 2D
-using coordinates_2D_t = mito::geometry::coordinates_t<2>;
+using coordinates_2D_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
 // alias for a set of cartesian coordinates in 3D
-using coordinates_3D_t = mito::geometry::coordinates_t<2>;
+using coordinates_3D_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
 
 
 TEST(Quadrature, Square)

@@ -12,9 +12,9 @@ static constexpr auto e_z = mito::e_2<3>;
 auto
 volume(
     const auto & w, mito::topology::topology_t & topology,
-    const mito::geometry::geometry_t<3> & geometry, const mito::topology::vertex_t & v0,
-    const mito::topology::vertex_t & v1, const mito::topology::vertex_t & v2,
-    const mito::topology::vertex_t & v3) -> mito::scalar_t
+    const mito::geometry::geometry_t<3, mito::geometry::EUCLIDEAN> & geometry,
+    const mito::topology::vertex_t & v0, const mito::topology::vertex_t & v1,
+    const mito::topology::vertex_t & v2, const mito::topology::vertex_t & v3) -> mito::scalar_t
 {
     // build director segments
     auto segment0 = topology.segment({ v0, v1 });

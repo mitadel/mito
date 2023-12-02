@@ -28,23 +28,23 @@ namespace mito::manifolds {
         // typedef for cell type
         using cell_type = cellT;
         // typedef for mesh type
-        using mesh_type = mesh::mesh_t<cell_type, D>;
+        using mesh_type = mesh::mesh_t<cell_type, D, coords_type>;
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
         // typedef for a set of coordinates
-        using coordinates_type = geometry::coordinates_t<D>;
+        using coordinates_type = geometry::coordinates_t<D, coords_type>;
 
       private:
         // the metric field
         static constexpr auto _metric = metric<coords_type, N, D>::field();
         // basis for vector fields
         template <int I>
-        static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
+        static constexpr auto _e = uniform_field<D, coords_type>(mito::e<I, N>);
         // basis for one-form fields
         // QUESTION: does it make sense to use the metric here since it cancels out with the inverse
         //  metric?
         template <int I>
-        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
+        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D, coords_type>);
         // helper function wedging the N basis 1-forms
         template <int... J>
         static constexpr auto _wedge(integer_sequence<J...>)

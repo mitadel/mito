@@ -9,25 +9,24 @@ namespace mito::geometry {
     enum CoordinateSystem { EUCLIDEAN, POLAR };
 
     // class coordinates
-    template <int D, CoordinateSystem coordT = EUCLIDEAN>
+    template <int D, CoordinateSystem coordT>
     class Coordinates;
 
     // class point
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class Point;
 
     // class point cloud
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class PointCloud;
 
     // class geometry
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class Geometry;
 
     // class node
-    template <int D>
+    template <int D, CoordinateSystem coordT>
     class Node;
-
 }
 
 
