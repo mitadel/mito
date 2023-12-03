@@ -97,14 +97,14 @@ namespace mito::geometry {
             auto vertices = simplex->vertices();
 
             // get the coordinates of the first vertex
-            // TOFIX: const auto &
-            auto p0 = point(vertices[0])->coordinates();
+            const auto & p0 = point(vertices[0])->coordinates();
 
             // TOFIX: the distance of two points must be a vector
             // TOFIX: implement a coordinate system as a basis for the space + an origin
             // compute the director vectors associated with each director edge
             // auto directors = std::array { _mesh.geometry().vector(edge_directors[J])... };
-            auto directors = std::array { (point(vertices[J + 1])->coordinates() - p0)... };
+            auto directors = topology::edge_simplex_directors_t<N, D> { (
+                point(vertices[J + 1])->coordinates() - p0)... };
 
             // all done
             return { p0, directors };
