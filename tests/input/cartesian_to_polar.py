@@ -6,6 +6,10 @@ def cartesian_to_polar(x, y):
     theta = math.atan2(y, x)
     return r, theta
 
+def polar_to_cartesian(r, theta):
+    x = r * math.cos(theta)
+    y = r * math.sin(theta)
+    return x, y
 
 # open input and output files
 input_file_path = 'disk_cartesian.summit'
