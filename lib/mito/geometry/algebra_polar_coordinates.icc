@@ -65,7 +65,7 @@ namespace mito::geometry {
         return mito::vector_t<2> {
             r_AB
                 * (std::cos(theta_AB) * std::cos(theta_B) + std::sin(theta_AB) * std::sin(theta_B)),
-            r_AB
+            r_AB / r_B
                 * (-std::cos(theta_AB) * std::sin(theta_B) + std::sin(theta_AB) * std::cos(theta_B))
         };
     }
