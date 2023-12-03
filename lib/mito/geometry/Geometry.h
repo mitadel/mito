@@ -90,7 +90,7 @@ namespace mito::geometry {
       private:
         template <int N, int... J>
         inline auto _directors(const topology::simplex_t<N> & simplex, integer_sequence<J...>) const
-            -> topology::edge_simplex_directors_t<N, D>
+            -> std::pair<coordinates_type, topology::edge_simplex_directors_t<N, D>>
         requires(sizeof...(J) == N)
         {
             // get the simplex vertices
@@ -107,14 +107,15 @@ namespace mito::geometry {
             auto directors = std::array { (point(vertices[J + 1])->coordinates() - p0)... };
 
             // all done
-            return directors;
+            return { p0, directors };
         }
 
       public:
-        // return the array of director vectors of the simplex
+        // return the array of director vectors of the simplex and the coordinates of the point
+        // where they stem from
         template <int N>
         inline auto directors(const topology::simplex_t<N> & simplex) const
-            -> topology::edge_simplex_directors_t<N, D>
+            -> std::pair<coordinates_type, topology::edge_simplex_directors_t<N, D>>
         {
             return _directors(simplex, make_integer_sequence<N> {});
         }

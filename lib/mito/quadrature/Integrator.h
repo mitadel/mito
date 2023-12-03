@@ -66,7 +66,7 @@ namespace mito::quadrature {
             for (const auto & cell : _manifold.elements()) {
                 for (auto q = 0; q < Q; ++q) {
                     auto point = _coordinates[{ e, q }];
-                    result += f(point) * _quadratureRule.weight(q) * _manifold.volume(cell, point);
+                    result += f(point) * _quadratureRule.weight(q) * _manifold.volume(cell);
                 }
                 // increment element count
                 ++e;

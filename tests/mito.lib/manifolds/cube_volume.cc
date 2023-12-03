@@ -17,7 +17,7 @@ volume_form(
     const mito::topology::tetrahedron_t & tetrahedron) -> mito::scalar_t
 {
     // get the directors of the tetrahedron
-    auto directors = geometry.directors(tetrahedron);
+    auto [_, directors] = geometry.directors(tetrahedron);
 
     // compute volume of tetrahedron
     auto volume = 1. / 6. * w(directors[0], directors[1], directors[2]);
