@@ -60,7 +60,7 @@ namespace mito::quadrature {
 
         auto integrate(const manifolds::ScalarField auto & f) const -> scalar_t
         {
-            auto result = 0.0;
+            auto result = scalar_t(0.0);
             // assemble elementary contributions
             int e = 0;
             for (const auto & cell : _manifold.elements()) {
