@@ -53,21 +53,7 @@ namespace mito::geometry {
         const auto & theta_A = xA._array[1];
         const auto & theta_B = xB._array[1];
 
-        // the angle of the sum of the two points
-        auto r_AB_c = r_A * std::cos(theta_A) - r_B * std::cos(theta_B);
-        auto r_AB_s = r_A * std::sin(theta_A) - r_B * std::sin(theta_B);
-        auto theta_AB = std::atan2(r_AB_s, r_AB_c);
-
-        // the radius of the sum of the two points
-        auto r_AB =
-            std::sqrt(r_A * r_A + r_B * r_B - 2.0 * r_A * r_B * std::cos(theta_A - theta_B));
-
-        return mito::vector_t<2> {
-            r_AB
-                * (std::cos(theta_AB) * std::cos(theta_B) + std::sin(theta_AB) * std::sin(theta_B)),
-            r_AB / r_B
-                * (-std::cos(theta_AB) * std::sin(theta_B) + std::sin(theta_AB) * std::cos(theta_B))
-        };
+        return { r_A * std::cos(theta_A - theta_B) - r_B, r_A / r_B * std::sin(theta_A - theta_B) };
     }
 }
 
