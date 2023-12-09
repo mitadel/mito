@@ -10,18 +10,18 @@ static constexpr auto e_y = mito::e_1<2>;
 
 auto
 area(
-    const auto & w, mito::topology::topology_t & topology,
-    const mito::geometry::geometry_t<2, mito::geometry::EUCLIDEAN> & geometry,
+    const auto & w, const mito::geometry::geometry_t<2, mito::geometry::EUCLIDEAN> & geometry,
     const mito::topology::vertex_t & v0, const mito::topology::vertex_t & v1,
     const mito::topology::vertex_t & v2) -> mito::scalar_t
 {
-    // build director segments
-    auto segment0 = topology.segment({ v0, v1 });
-    auto segment1 = topology.segment({ v1, v2 });
+    // get vertex coordinates
+    auto x0 = geometry.point(v0)->coordinates();
+    auto x1 = geometry.point(v1)->coordinates();
+    auto x2 = geometry.point(v2)->coordinates();
 
     // build director vectors
-    auto director0 = geometry.vector(segment0);
-    auto director1 = geometry.vector(segment1);
+    auto director0 = x1 - x0;
+    auto director1 = x2 - x0;
 
     // compute volume of triangle
     auto area = 1. / 2. * w(director0, director1);
@@ -61,14 +61,14 @@ TEST(Manifolds, EuclideanMetric2D)
     auto vertex2 = geometry.node({ 0.0, 1.0 });
 
     // check that even permutations of the vertices give a positive area
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex0, vertex1, vertex2), 0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex1, vertex2, vertex0), 0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex2, vertex0, vertex1), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, vertex0, vertex1, vertex2), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, vertex1, vertex2, vertex0), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, vertex2, vertex0, vertex1), 0.5);
 
     // check that odd permutations of the vertices give a negative area
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex0, vertex2, vertex1), -0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex2, vertex1, vertex0), -0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex1, vertex0, vertex2), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, vertex0, vertex2, vertex1), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, vertex2, vertex1, vertex0), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, vertex1, vertex0, vertex2), -0.5);
 }
 
 
