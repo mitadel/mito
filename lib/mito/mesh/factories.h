@@ -6,7 +6,7 @@
 namespace mito::mesh {
 
     // mesh factory
-    template <class cellT, int D, geometry::CoordinateSystem coordT>
+    template <class cellT, int D, geometry::CoordinateType coordT>
     auto mesh(geometry::geometry_t<D, coordT> & geometry) -> mesh_t<cellT, D, coordT>
     {
         return mesh_t<cellT, D, coordT>(geometry);

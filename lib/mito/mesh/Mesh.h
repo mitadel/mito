@@ -7,7 +7,7 @@ namespace mito::mesh {
 
     template <
         class cellT /* the type of cell */, int D /* spatial dimension */,
-        geometry::CoordinateSystem coordT>
+        geometry::CoordinateType coordT>
     class Mesh {
 
       public:
@@ -29,7 +29,7 @@ namespace mito::mesh {
         //  expensive to allocate/deallocate the memory.
         using cells_type = std::unordered_set<cell_type, utilities::hash_function<cell_type>>;
         // coordinate system
-        static constexpr geometry::CoordinateSystem coordinate_system_type = coordT;
+        static constexpr geometry::CoordinateType coordinate_system_type = coordT;
 
       private:
         // get the order of the cell

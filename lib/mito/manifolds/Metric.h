@@ -7,7 +7,7 @@ namespace mito::manifolds {
 
     // the metric tensor field of type {coordsT} for an N-dimensional manifold embedded in
     //  D-dimensional space
-    template <geometry::CoordinateSystem coordsT, int N, int D>
+    template <geometry::CoordinateType coordsT, int N, int D>
     struct metric {};
 
     // specialization for the Euclidean metric

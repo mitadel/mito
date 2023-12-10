@@ -4,7 +4,7 @@
 
 namespace mito::geometry {
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     class PointCloud {
       private:
         // a point
@@ -63,7 +63,7 @@ namespace mito::geometry {
         friend PointCloudSingleton;
     };
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     std::ostream & operator<<(std::ostream & os, const PointCloud<D, coordT> & cloud) noexcept
     {
         // print the cloud

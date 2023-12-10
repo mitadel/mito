@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     // compute the barycenter of a cell, given a geometry
-    template <class cellT, int D, CoordinateSystem coordT>
+    template <class cellT, int D, CoordinateType coordT>
     auto barycenter(const cellT & cell, const geometry_t<D, coordT> & geometry)
         -> coordinates_t<D, coordT>
     {

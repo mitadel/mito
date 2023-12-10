@@ -6,7 +6,7 @@
 namespace mito::geometry {
 
     // multiplication of coordinates xA * b
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator*(const Coordinates<D, coordT> & xA, const scalar_t & b)
         -> Coordinates<D, coordT>
     {
@@ -14,7 +14,7 @@ namespace mito::geometry {
     }
 
     // division of coordinates xA / b
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator/(const Coordinates<D, coordT> & xA, const scalar_t & b)
         -> Coordinates<D, coordT>
     {
@@ -22,7 +22,7 @@ namespace mito::geometry {
     }
 
     // operator+=
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator+=(Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
         -> Coordinates<D, coordT> &
     {
@@ -31,7 +31,7 @@ namespace mito::geometry {
     }
 
     // operator/=
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator/=(Coordinates<D, coordT> & xA, const scalar_t & b)
         -> Coordinates<D, coordT> &
     {
@@ -40,7 +40,7 @@ namespace mito::geometry {
     }
 
     // operator==
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
         -> bool
     {
@@ -48,14 +48,14 @@ namespace mito::geometry {
     }
 
     // operator<
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator<(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
         -> bool
     {
         return xA._array < xB._array;
     }
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto distance(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
         -> scalar_t
     {

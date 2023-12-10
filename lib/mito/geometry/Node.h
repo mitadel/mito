@@ -5,7 +5,7 @@
 
 namespace mito::geometry {
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     class Node {
       public:
         using vertex_type = topology::vertex_t;
@@ -30,7 +30,7 @@ namespace mito::geometry {
         point_type _point;
     };
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     inline bool operator==(const Node<D, coordT> & lhs, const Node<D, coordT> & rhs) noexcept
     {
         return lhs.vertex() == rhs.vertex() && lhs.point() == rhs.point();

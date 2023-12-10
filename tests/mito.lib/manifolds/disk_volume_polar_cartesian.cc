@@ -2,7 +2,7 @@
 #include <mito/mito.h>
 
 
-template <mito::geometry::CoordinateSystem coordT>
+template <mito::geometry::CoordinateType coordT>
 auto
 area(std::string mesh_file_name) -> mito::scalar_t
 {

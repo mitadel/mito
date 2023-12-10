@@ -5,7 +5,7 @@
 
 namespace mito::geometry {
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     class Point : public utilities::Shareable {
       private:
         // alias for a set of coordinates
@@ -52,7 +52,7 @@ namespace mito::geometry {
         friend class utilities::Repository<point_t<D, coordT>>;
     };
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto distance(const point_t<D, coordT> & pointA, const point_t<D, coordT> & pointB)
         -> real
     {
@@ -60,7 +60,7 @@ namespace mito::geometry {
         return distance(pointA->coordinates(), pointB->coordinates());
     }
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     std::ostream & operator<<(std::ostream & os, const point_t<D, coordT> & point) noexcept
     {
         // print the point

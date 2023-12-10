@@ -5,7 +5,7 @@
 
 namespace mito::mesh {
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
         geometry::geometry_t<D, coordT> & geometry, mesh_t<cellT, D, coordT> & subdivided_mesh,
@@ -40,7 +40,7 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
         const topology::vertex_t & vertex_2, geometry::geometry_t<D, coordT> & geometry,
@@ -91,7 +91,7 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
         const topology::vertex_t & vertex_2, const topology::vertex_t & vertex_3,
@@ -194,7 +194,7 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateSystem coordT>
+    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
     auto tetra(
         const mesh_t<cellT, D, coordT> & mesh, geometry::geometry_t<D, coordT> & geometry,
         int n_refinements = 1) -> mesh_t<cellT, D, coordT>

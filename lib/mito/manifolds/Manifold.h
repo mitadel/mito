@@ -6,7 +6,7 @@
 namespace mito::manifolds {
 
     template <
-        geometry::CoordinateSystem coordsT, class cellT /* the type of cell */,
+        geometry::CoordinateType coordsT, class cellT /* the type of cell */,
         int D /* spatial dimension */>
     class Manifold {
 
@@ -14,7 +14,7 @@ namespace mito::manifolds {
         // typedef for vertex
         using vertex_type = topology::vertex_t;
         // the coordinates type
-        static constexpr geometry::CoordinateSystem coords_type = coordsT;
+        static constexpr geometry::CoordinateType coords_type = coordsT;
         // the dimension of the manifold (that is the order of the cell)
         static constexpr int N = topology::order<cellT>();
         // the dimension of the parametric space
@@ -178,7 +178,7 @@ namespace mito::manifolds {
         const mesh_type & _mesh;
     };
 
-    template <geometry::CoordinateSystem coordsT, class cellT, int D>
+    template <geometry::CoordinateType coordsT, class cellT, int D>
     std::ostream & operator<<(std::ostream & os, const manifold_t<coordsT, cellT, D> & manifold)
     {
         // print the manifold

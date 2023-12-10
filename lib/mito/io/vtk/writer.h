@@ -26,7 +26,7 @@ namespace mito::io::vtk {
         return vtkSmartPointer<vtkLine>::New();
     }
 
-    template <int D, geometry::CoordinateSystem coordT>
+    template <int D, geometry::CoordinateType coordT>
     auto insertVtkPoint(const geometry::coordinates_t<D, coordT> &, vtkSmartPointer<vtkPoints> &)
         -> void;
 
@@ -48,7 +48,7 @@ namespace mito::io::vtk {
         pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
     }
 
-    template <class cellT, int D, geometry::CoordinateSystem coordT>
+    template <class cellT, int D, geometry::CoordinateType coordT>
     auto createVtkUnstructuredGrid(const mito::mesh::mesh_t<cellT, D, coordT> & mesh)
         -> vtkSmartPointer<vtkUnstructuredGrid>
     {
@@ -123,7 +123,7 @@ namespace mito::io::vtk {
         writer->Write();
     }
 
-    template <class cellT, int D, geometry::CoordinateSystem coordT>
+    template <class cellT, int D, geometry::CoordinateType coordT>
     auto writer(std::string fileName, const mito::mesh::mesh_t<cellT, D, coordT> & mesh) -> void
     {
         // create vtk unstructured grid
@@ -134,7 +134,7 @@ namespace mito::io::vtk {
     }
 
 
-    template <int D, geometry::CoordinateSystem coordT>
+    template <int D, geometry::CoordinateType coordT>
     auto writer(std::string fileName, const geometry::point_cloud_t<D, coordT> & cloud) -> void
     {
         // get point cloud compositions

@@ -5,7 +5,7 @@
 
 namespace mito::geometry {
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     class Geometry {
       private:
         // typedef for a topology
