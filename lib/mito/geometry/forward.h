@@ -12,6 +12,10 @@ namespace mito::geometry {
     template <int D, CoordinateType coordT>
     class Coordinates;
 
+    // class coordinate system
+    template <int D, CoordinateType coordT>
+    class CoordinateSystem;
+
     // class point
     template <int D, CoordinateType coordT>
     class Point;

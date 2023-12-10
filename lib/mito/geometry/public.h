@@ -14,6 +14,7 @@
 
 // classes implementation
 #include "Coordinates.h"
+#include "CoordinateSystem.h"
 #include "Point.h"
 #include "PointCloud.h"
 #include "Node.h"

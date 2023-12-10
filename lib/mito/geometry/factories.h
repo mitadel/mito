@@ -12,6 +12,13 @@ namespace mito::geometry {
         return coordinates_t<D, coordT>(coords);
     }
 
+    // factory for coordinate system
+    template <int D, mito::geometry::CoordinateType coordT = mito::geometry::EUCLIDEAN>
+    constexpr auto coordinate_system()
+    {
+        return coordinate_system_t<D, coordT>();
+    }
+
     // point cloud factory
     template <int D, CoordinateType coordT = mito::geometry::EUCLIDEAN>
     auto point_cloud() -> point_cloud_t<D, coordT> &

@@ -9,6 +9,10 @@ namespace mito::geometry {
     template <int D, CoordinateType coordT>
     using coordinates_t = Coordinates<D, coordT>;
 
+    // coordinates alias in D-dimensions
+    template <int D, CoordinateType coordT>
+    using coordinate_system_t = CoordinateSystem<D, coordT>;
+
     // point alias
     template <int D, CoordinateType coordT>
     using point_t = utilities::shared_ptr<const Point<D, coordT>>;
