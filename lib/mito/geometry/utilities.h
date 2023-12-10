@@ -5,7 +5,6 @@
 
 namespace mito::geometry {
 
-    // TOFIX: should be {coordinates_t} not {vector_t}
     // compute the barycenter of a cell, given a geometry
     template <class cellT, int D, CoordinateSystem coordT>
     auto barycenter(const cellT & cell, const geometry_t<D, coordT> & geometry)
