@@ -16,18 +16,22 @@ TEST(Tetra, Rectangle)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::io::summit::reader<mito::topology::triangle_t>(fileStream, geometry);
+    auto mesh =
+        mito::io::summit::reader<mito::topology::triangle_t>(fileStream, geometry, coord_system);
 
     // do tetra mesh refinements
-    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 1);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, 1);
 
     // compute the volume of the original mesh
-    auto volume_mesh = mito::manifolds::manifold(mesh).volume();
+    auto volume_mesh = mito::manifolds::manifold(mesh, coord_system).volume();
 
     // compute the volume of the refined mesh
-    auto volume_tetra_mesh = mito::manifolds::manifold(tetra_mesh).volume();
+    auto volume_tetra_mesh = mito::manifolds::manifold(tetra_mesh, coord_system).volume();
 
     // assert that the two volumes coincide
     EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-15);

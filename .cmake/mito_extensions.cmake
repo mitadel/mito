@@ -1,6 +1,6 @@
 # -*- cmake -*-
 
 # build mito extensions
-mito_mitoModule()
+# mito_mitoModule() #TOFIX
 
 # end of file

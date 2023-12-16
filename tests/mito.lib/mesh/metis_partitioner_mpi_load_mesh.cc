@@ -5,8 +5,8 @@
 #include <mito/simulation.h>
 
 
-using geometry_t = mito::geometry::geometry_t<2,mito::geometry::EUCLIDEAN>;
-using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2, mito::geometry::EUCLIDEAN>;
+using geometry_t = mito::geometry::geometry_t<2>;
+using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
 
 
 TEST(MetisPartitionerMPI, LoadMesh)
@@ -23,9 +23,13 @@ TEST(MetisPartitionerMPI, LoadMesh)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // load mesh
     std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
+    auto mesh =
+        mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry, coord_system);
 
     // number of partitions
     int n_partitions = simulation.context().n_tasks();
@@ -34,7 +38,7 @@ TEST(MetisPartitionerMPI, LoadMesh)
     int n_rank = simulation.context().task_id();
 
     // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, coord_system, n_partitions, n_rank);
 
     // the number of cells in this partition
     int local_ncells = mesh_partition.nCells();

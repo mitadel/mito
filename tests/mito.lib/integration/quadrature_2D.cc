@@ -41,15 +41,18 @@ TEST(Quadrature, Square)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud_2D);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of simplicial topology in 2D
     auto mesh_2D = mito::mesh::mesh<mito::topology::triangle_t, 2>(geometry);
 
     // create nodes
-    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::node(geometry, { 0.5, 0.5 });
-    auto vertex4 = mito::geometry::node(geometry, { 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
+    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     auto segment0 = topology.segment({ vertex0, vertex1 });
     auto segment1 = topology.segment({ vertex1, vertex3 });
@@ -77,7 +80,7 @@ TEST(Quadrature, Square)
     mesh_2D.insert(cell3);
 
     // This instantiates a quad rule on the cells (pairing cell type and degree of exactness)
-    auto bodyManifold = mito::manifolds::manifold(mesh_2D);
+    auto bodyManifold = mito::manifolds::manifold(mesh_2D, coord_system);
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
@@ -144,11 +147,25 @@ TEST(Quadrature, Square)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry_3D = mito::geometry::geometry(topology, point_cloud_3D);
 
-    geometry_3D.node(vertex0, point_cloud_3D.point({ 0.0, 0.0, 0.0 }));
-    geometry_3D.node(vertex1, point_cloud_3D.point({ 1.0, 0.0, 1.0 }));
-    geometry_3D.node(vertex2, point_cloud_3D.point({ 1.0, 1.0, 1.0 }));
-    geometry_3D.node(vertex3, point_cloud_3D.point({ 0.5, 0.5, 0.5 }));
-    geometry_3D.node(vertex4, point_cloud_3D.point({ 0.0, 1.0, 0.0 }));
+    // a Euclidean coordinate system in 3D
+    auto coord_system_3D = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+
+    auto point0_3D = point_cloud_3D.point();
+    auto point1_3D = point_cloud_3D.point();
+    auto point2_3D = point_cloud_3D.point();
+    auto point3_3D = point_cloud_3D.point();
+    auto point4_3D = point_cloud_3D.point();
+    coord_system_3D.place(point0_3D, { 0.0, 0.0, 0.0 });
+    coord_system_3D.place(point1_3D, { 1.0, 0.0, 1.0 });
+    coord_system_3D.place(point2_3D, { 1.0, 1.0, 1.0 });
+    coord_system_3D.place(point3_3D, { 0.5, 0.5, 0.5 });
+    coord_system_3D.place(point4_3D, { 0.0, 1.0, 0.0 });
+
+    geometry_3D.node(vertex0, point0_3D);
+    geometry_3D.node(vertex1, point1_3D);
+    geometry_3D.node(vertex2, point2_3D);
+    geometry_3D.node(vertex3, point3_3D);
+    geometry_3D.node(vertex4, point4_3D);
 
     // an empty mesh of simplicial topology in 3D
     auto mesh_3D = mito::mesh::mesh<mito::topology::triangle_t, 3>(geometry_3D);
@@ -158,7 +175,7 @@ TEST(Quadrature, Square)
     mesh_3D.insert(cell3);
 
     // instantiate an cell set with the same cells as above but the new coordinates map
-    auto bodyManifold3D = mito::manifolds::manifold(mesh_3D);
+    auto bodyManifold3D = mito::manifolds::manifold(mesh_3D, coord_system_3D);
 
     // This instantiates a quad rule on the cells (pairing cell type and degree of exactness)
     auto bodyIntegrator3D =

@@ -5,7 +5,7 @@
 
 namespace mito::geometry {
 
-    template <int D, CoordinateType coordT>
+    template <int D>
     class Geometry {
       private:
         // typedef for a topology
@@ -13,15 +13,13 @@ namespace mito::geometry {
         // typedef for a vertex
         using vertex_type = topology::vertex_t;
         // typedef for a point
-        using point_type = point_t<D, coordT>;
+        using point_type = point_t<D>;
         // typedef for a point cloud
-        using point_cloud_type = point_cloud_t<D, coordT>;
+        using point_cloud_type = point_cloud_t<D>;
         // typedef for a nodes collection
-        using nodes_type = nodes_t<D, coordT>;
+        using nodes_type = nodes_t<D>;
         // typedef for a node
-        using node_type = node_t<D, coordT>;
-        // typedef for a set of coordinates
-        using coordinates_type = coordinates_t<D, coordT>;
+        using node_type = node_t<D>;
 
       private:
         // constructor
@@ -46,13 +44,10 @@ namespace mito::geometry {
         }
 
         // instantiate a new vertex and a new point at {coord} and bind them into a node
-        inline auto node(const coordinates_type & coord) -> vertex_type
+        inline auto node(const point_type & point) -> vertex_type
         {
             // ask the topology for a new vertex
             auto vertex = _topology.vertex();
-
-            // ask the point cloud for a point with coordinates {coord}
-            auto point = _point_cloud.point(coord);
 
             // register the node with the geometry
             _nodes.emplace(node_type(vertex, point));
@@ -71,7 +66,6 @@ namespace mito::geometry {
         }
 
         // TOFIX: split this header into interface and implementation
-
       public:
         // accessor for topology
         inline auto topology() noexcept -> topology_type & { return _topology; }
@@ -99,7 +93,7 @@ namespace mito::geometry {
         point_cloud_type & _point_cloud;
 
         // friendship with the singleton
-        using GeometrySingleton = utilities::Singleton<Geometry<D, coordT>>;
+        using GeometrySingleton = utilities::Singleton<Geometry<D>>;
         friend GeometrySingleton;
     };
 

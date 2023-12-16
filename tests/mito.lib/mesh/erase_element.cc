@@ -14,12 +14,15 @@ TEST(Mesh, EraseElement)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // instantiate four nodes
-    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::node(geometry, { 0.5, 0.5 });
-    auto vertex4 = mito::geometry::node(geometry, { 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
+    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     // ask the topology for segments connecting the vertices of the nodes above
     auto segment0 = topology.segment({ vertex0, vertex1 });

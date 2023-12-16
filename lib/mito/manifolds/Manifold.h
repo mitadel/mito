@@ -28,11 +28,13 @@ namespace mito::manifolds {
         // typedef for cell type
         using cell_type = cellT;
         // typedef for mesh type
-        using mesh_type = mesh::mesh_t<cell_type, D, coords_type>;
+        using mesh_type = mesh::mesh_t<cell_type, D>;
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
         // typedef for a set of coordinates
         using coordinates_type = geometry::coordinates_t<D, coords_type>;
+        // typedef for a coordinates system
+        using coordinate_system_type = geometry::coordinate_system_t<D, coords_type>;
 
       private:
         // the metric field
@@ -58,7 +60,11 @@ namespace mito::manifolds {
             sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N> {});
 
       public:
-        constexpr Manifold(const mesh_type & mesh) : _mesh(mesh) {}
+        constexpr Manifold(
+            const mesh_type & mesh, const coordinate_system_type & coordinate_system) :
+            _mesh(mesh),
+            _coordinate_system(coordinate_system)
+        {}
 
         constexpr ~Manifold() {}
 
@@ -86,7 +92,7 @@ namespace mito::manifolds {
         constexpr auto coordinates(const vertex_type & v) const -> const coordinates_type &
         {
             // get the coordinates of the point attached to vertex {v}
-            return _mesh.geometry().point(v)->coordinates();
+            return _coordinate_system.coordinates(_mesh.geometry().point(v));
         }
 
         constexpr auto parametrization(
@@ -165,7 +171,8 @@ namespace mito::manifolds {
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell and the point where they stem from
-            auto [point, directors] = mito::geometry::directors(cell, _mesh.geometry());
+            auto [point, directors] =
+                mito::geometry::directors(cell, _mesh.geometry(), _coordinate_system);
             // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
             // contracted with the cell directors
             auto volume = 1.0 / pyre::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
@@ -176,6 +183,8 @@ namespace mito::manifolds {
       private:
         // the underlying mesh
         const mesh_type & _mesh;
+        // the coordinate system
+        const coordinate_system_type & _coordinate_system;
     };
 
     template <geometry::CoordinateType coordsT, class cellT, int D>

@@ -10,18 +10,21 @@ area(std::string mesh_file_name) -> mito::scalar_t
     auto & topology = mito::topology::topology();
 
     // an empty cloud of points in 2D
-    auto & point_cloud = mito::geometry::point_cloud<2, coordT>();
+    auto & point_cloud = mito::geometry::point_cloud<2>();
 
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, coordT>();
+
     // read the mesh
     auto filestream = std::ifstream(mesh_file_name);
     auto mesh =
-        mito::io::summit::reader<mito::topology::triangle_t, 2, coordT>(filestream, geometry);
+        mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry, coord_system);
 
     // create a manifold on {mesh}
-    auto manifold = mito::manifolds::manifold<coordT>(mesh);
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // compute the area of the disk
     mito::scalar_t area = manifold.volume();

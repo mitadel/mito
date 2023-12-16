@@ -2,15 +2,14 @@
 #if !defined(mito_geometry_PointCloud_h)
 #define mito_geometry_PointCloud_h
 
+
 namespace mito::geometry {
 
-    template <int D, CoordinateType coordT>
+    template <int D>
     class PointCloud {
       private:
         // a point
-        using point_type = point_t<D, coordT>;
-        // a point
-        using coordinates_type = coordinates_t<D, coordT>;
+        using point_type = point_t<D>;
         // a cloud of points
         using cloud_type = utilities::repository_t<point_type>;
 
@@ -18,10 +17,10 @@ namespace mito::geometry {
         PointCloud() : _cloud(100 /*segment size */) {}
 
         // delete copy constructor
-        PointCloud(const PointCloud<D, coordT> &) = delete;
+        PointCloud(const PointCloud<D> &) = delete;
 
         // delete assignment operator
-        void operator=(const PointCloud<D, coordT> &) = delete;
+        void operator=(const PointCloud<D> &) = delete;
 
         // destructor
         ~PointCloud() {}
@@ -32,7 +31,7 @@ namespace mito::geometry {
             // iterate on points
             std::cout << "Point cloud:" << std::endl;
             for (const auto & point : _cloud) {
-                std::cout << point->coordinates() << std::endl;
+                std::cout << point.id() << std::endl;
             }
             // all done
             return;
@@ -45,10 +44,10 @@ namespace mito::geometry {
         auto size() const noexcept -> int { return std::size(_cloud); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(const coordinates_type & coord) -> point_type
+        auto point() -> point_type
         {
             // return the newly added point
-            return _cloud.emplace(coord);
+            return _cloud.emplace();
         }
 
         // the iterable repository of the points in the cloud
@@ -59,12 +58,12 @@ namespace mito::geometry {
         cloud_type _cloud;
 
         // friendship with the singleton
-        using PointCloudSingleton = utilities::Singleton<PointCloud<D, coordT>>;
+        using PointCloudSingleton = utilities::Singleton<PointCloud<D>>;
         friend PointCloudSingleton;
     };
 
-    template <int D, CoordinateType coordT>
-    std::ostream & operator<<(std::ostream & os, const PointCloud<D, coordT> & cloud) noexcept
+    template <int D>
+    std::ostream & operator<<(std::ostream & os, const PointCloud<D> & cloud) noexcept
     {
         // print the cloud
         cloud.print();
@@ -75,6 +74,8 @@ namespace mito::geometry {
 
 }    // namespace mito
 
+
 #endif    // mito_geometry_PointCloud_h
+
 
 // end of file

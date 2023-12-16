@@ -5,9 +5,7 @@
 
 namespace mito::mesh {
 
-    template <
-        class cellT /* the type of cell */, int D /* spatial dimension */,
-        geometry::CoordinateType coordT>
+    template <class cellT /* the type of cell */, int D /* spatial dimension */>
     class Mesh {
 
       public:
@@ -28,8 +26,6 @@ namespace mito::mesh {
         //  the full cell objects, but just their addresses, so perhaps it would not even be that
         //  expensive to allocate/deallocate the memory.
         using cells_type = std::unordered_set<cell_type, utilities::hash_function<cell_type>>;
-        // coordinate system
-        static constexpr geometry::CoordinateType coordinate_system_type = coordT;
 
       private:
         // get the order of the cell
@@ -38,7 +34,7 @@ namespace mito::mesh {
         template <int I>
         using cell_family_type = typename topology::cell_family<cellT, I>;
         // typedef for geometry type
-        using geometry_type = geometry::geometry_t<D, coordT>;
+        using geometry_type = geometry::geometry_t<D>;
         // id type of unoriented cell
         using cell_id_type = utilities::index_t<cell_type>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
@@ -70,8 +66,8 @@ namespace mito::mesh {
       private:
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_type<I>, D, coordT> & boundary_mesh,
-            const cell_family_type<J> & cell) const -> void
+            Mesh<cell_family_type<I>, D> & boundary_mesh, const cell_family_type<J> & cell) const
+            -> void
         requires(I == J)
         {
             // add {subcell} to the boundary mesh
@@ -83,8 +79,8 @@ namespace mito::mesh {
 
         template <int I, int J>
         inline auto _insert_subcells(
-            Mesh<cell_family_type<I>, D, coordT> & boundary_mesh,
-            const cell_family_type<J> & cell) const -> void
+            Mesh<cell_family_type<I>, D> & boundary_mesh, const cell_family_type<J> & cell) const
+            -> void
         requires(I < J)
         {
             // loop on the subcells of {cell}
@@ -200,11 +196,11 @@ namespace mito::mesh {
          * @brief Returns a mesh with all boundary cells of dimension I
          */
         template <int I = N - 1>
-        inline auto boundary() const -> Mesh<cell_family_type<I>, D, coordT> const
+        inline auto boundary() const -> Mesh<cell_family_type<I>, D> const
         requires(I >= 0)
         {
             // instantiate a new mesh for the boundary elements
-            Mesh<cell_family_type<I>, D, coordT> boundary_mesh(_geometry);
+            Mesh<cell_family_type<I>, D> boundary_mesh(_geometry);
 
             // loop on the (N-1)-dimensional cells
             for (const auto & cell : cells()) {

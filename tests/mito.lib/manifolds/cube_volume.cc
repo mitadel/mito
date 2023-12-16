@@ -13,11 +13,12 @@ static constexpr auto e_z = mito::e_2<3>;
 // compute the volume of a tetrahedron via the metric volume element
 auto
 volume_form(
-    const auto & w, const mito::geometry::geometry_t<3, mito::geometry::EUCLIDEAN> & geometry,
+    const auto & w, const mito::geometry::geometry_t<3> & geometry,
+    const mito::geometry::coordinate_system_t<3, mito::geometry::EUCLIDEAN> & coord_system,
     const mito::topology::tetrahedron_t & tetrahedron) -> mito::scalar_t
 {
     // get the directors of the tetrahedron
-    auto [_, directors] = mito::geometry::directors(tetrahedron, geometry);
+    auto [_, directors] = mito::geometry::directors(tetrahedron, geometry, coord_system);
 
     // compute volume of tetrahedron
     auto volume = 1. / 6. * w(directors[0], directors[1], directors[2]);
@@ -30,7 +31,8 @@ volume_form(
 // compute the volume of a tetrahedron as the determinant of the matrix of its vertices
 auto
 volume_determinant(
-    mito::geometry::geometry_t<3, mito::geometry::EUCLIDEAN> & geometry,
+    mito::geometry::geometry_t<3> & geometry,
+    const mito::geometry::coordinate_system_t<3, mito::geometry::EUCLIDEAN> & coord_system,
     const mito::topology::tetrahedron_t & tetrahedron) -> mito::scalar_t
 {
     // number of element vertices
@@ -51,7 +53,7 @@ volume_determinant(
     for (const auto & vertex : element_vertices) {
         // fill up pointsTensor container
         for (int d = 0; d < D; ++d) {
-            pointsTensor[v * V + d] = geometry.point(vertex)->coordinates()[d];
+            pointsTensor[v * V + d] = coord_system.coordinates(geometry.point(vertex))[d];
         }
         pointsTensor[v * V + D] = 1.0;
         // update element vertices counter
@@ -84,15 +86,19 @@ TEST(Manifolds, CubeVolume)
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+
     // read the cube mesh
     std::ifstream fileStream("cube.summit");
-    auto mesh = mito::io::summit::reader<mito::topology::tetrahedron_t>(fileStream, geometry);
+    auto mesh =
+        mito::io::summit::reader<mito::topology::tetrahedron_t>(fileStream, geometry, coord_system);
 
     mito::scalar_t volume_new = 0.0;
     mito::scalar_t volume_old = 0.0;
     for (const auto & cell : mesh.cells()) {
-        volume_new += volume_form(w, geometry, cell);
-        volume_old += volume_determinant(geometry, cell);
+        volume_new += volume_form(w, geometry, coord_system, cell);
+        volume_old += volume_determinant(geometry, coord_system, cell);
     }
     // std::cout << volume_new << "\t" << volume_old << std::endl;
     EXPECT_NEAR(volume_new, volume_old, 1.e-15);

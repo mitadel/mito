@@ -28,15 +28,17 @@ main()
 
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // build nodes
-    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::node(geometry, { 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     // build segments and cells
     auto segment0 = topology.segment({ vertex0, vertex1 });
@@ -66,10 +68,10 @@ main()
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
-    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, subdivisions);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, subdivisions);
 
     // create manifold from the mesh
-    auto manifold = mito::manifolds::manifold(tetra_mesh);
+    auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system);
 
     // instantiate a scalar field
     using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;

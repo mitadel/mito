@@ -4,12 +4,13 @@
 #include <mito/mesh.h>
 
 
-using geometry_t = mito::geometry::geometry_t<2, mito::geometry::EUCLIDEAN>;
-using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2, mito::geometry::EUCLIDEAN>;
+using geometry_t = mito::geometry::geometry_t<2>;
+using coord_system_t = mito::geometry::coordinate_system_t<2, mito::geometry::EUCLIDEAN>;
+using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
 
 
 auto
-build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
+build_mesh(geometry_t & geometry, coord_system_t & coord_system, mesh_t & mesh) -> void
 {
     /**
      * Mesh with four cells:
@@ -30,11 +31,11 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
 
     auto & topology = geometry.topology();
 
-    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::node(geometry, { 0.5, 0.5 });
-    auto vertex4 = mito::geometry::node(geometry, { 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
+    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     // print the vertices ids in order of construction
     // std::cout << vertex0.id() << "\t" << vertex1.id() << "\t" << vertex2.id() << "\t"
@@ -80,11 +81,14 @@ TEST(MetisPartitioner, Base)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // populate the mesh
-    build_mesh(geometry, mesh);
+    build_mesh(geometry, coord_system, mesh);
 
     // number of partitions
     int n_partitions = 1;
@@ -93,7 +97,7 @@ TEST(MetisPartitioner, Base)
     int n_rank = 0;
 
     // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, coord_system, n_partitions, n_rank);
 
     // expect that the mesh was partitioned equally
     // (this check assumes that the number of cells of the original mesh is divisible by the number

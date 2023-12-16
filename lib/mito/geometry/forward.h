@@ -17,19 +17,19 @@ namespace mito::geometry {
     class CoordinateSystem;
 
     // class point
-    template <int D, CoordinateType coordT>
+    template <int D>
     class Point;
 
     // class point cloud
-    template <int D, CoordinateType coordT>
+    template <int D>
     class PointCloud;
 
     // class geometry
-    template <int D, CoordinateType coordT>
+    template <int D>
     class Geometry;
 
     // class node
-    template <int D, CoordinateType coordT>
+    template <int D>
     class Node;
 }
 

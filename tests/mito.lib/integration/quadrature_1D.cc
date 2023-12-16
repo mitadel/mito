@@ -19,18 +19,21 @@ TEST(Quadrature, Segment)
     // a 1D geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 1D
+    auto coord_system = mito::geometry::coordinate_system<1, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of simplicial topology in 1D
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
 
     // a mesh of the segment (0, 1)
-    auto vertex0 = mito::geometry::node(geometry, { 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, { 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0 });
     auto segment0 = topology.segment({ vertex0, vertex1 });
     mesh.insert(segment0);
-    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 12);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, 12);
 
     // an integrator with degree of exactness 2 on segment (0, 1)
-    auto manifold = mito::manifolds::manifold(tetra_mesh);
+    auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system);
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
     // a scalar function

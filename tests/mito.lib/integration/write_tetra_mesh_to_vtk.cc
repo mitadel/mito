@@ -13,14 +13,17 @@ TEST(VtkWriter, WriteTetraMeshToVtk)
     // a 3D geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of simplicial topology in 3D
     auto mesh = mito::mesh::mesh<mito::topology::tetrahedron_t>(geometry);
 
     // vertices for one single tetrahedron
-    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, { 0.0, 1.0, 0.0 });
-    auto vertex3 = mito::geometry::node(geometry, { 0.0, 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 1.0 });
 
     // build the tetrahedron
     const auto cell = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
@@ -29,8 +32,8 @@ TEST(VtkWriter, WriteTetraMeshToVtk)
     mesh.insert(cell);
 
     // use tetra
-    auto tetra_mesh = mito::mesh::tetra(mesh, geometry);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system);
 
     // write mesh to vtk file
-    mito::io::vtk::writer("tetra_output", tetra_mesh);
+    mito::io::vtk::writer("tetra_output", tetra_mesh, coord_system);
 }

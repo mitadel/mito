@@ -20,26 +20,30 @@ namespace mito::geometry {
     }
 
     // point cloud factory
-    template <int D, CoordinateType coordT = mito::geometry::EUCLIDEAN>
-    auto point_cloud() -> point_cloud_t<D, coordT> &
+    template <int D>
+    auto point_cloud() -> point_cloud_t<D> &
     {
-        return utilities::Singleton<point_cloud_t<D, coordT>>::GetInstance();
+        return utilities::Singleton<point_cloud_t<D>>::GetInstance();
     }
 
     // geometry factory
-    template <int D, CoordinateType coordT = mito::geometry::EUCLIDEAN>
-    auto geometry(topology::topology_t & topology, point_cloud_t<D, coordT> & point_cloud)
-        -> geometry_t<D, coordT> &
+    template <int D>
+    auto geometry(topology::topology_t & topology, point_cloud_t<D> & point_cloud)
+        -> geometry_t<D> &
     {
-        return utilities::Singleton<geometry_t<D, coordT>>::GetInstance(topology, point_cloud);
+        return utilities::Singleton<geometry_t<D>>::GetInstance(topology, point_cloud);
     }
 
     // node factory
     template <int D, mito::geometry::CoordinateType coordT>
-    constexpr auto node(geometry_t<D, coordT> & geometry, const coordinates_t<D, coordT> & coords)
-        -> topology::vertex_t
+    constexpr auto node(
+        geometry_t<D> & geometry, coordinate_system_t<D, coordT> & coordinate_system,
+        const coordinates_t<D, coordT> & coords) -> topology::vertex_t
     {
-        return geometry.node(coords);
+        // create and place two points
+        auto point = geometry.point_cloud().point();
+        coordinate_system.place(point, coords);
+        return geometry.node(point);
     }
 }
 

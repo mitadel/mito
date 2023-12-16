@@ -27,7 +27,9 @@ namespace mito::manifolds {
 
     // factory manifolds
     template <geometry::CoordinateType coordsT = geometry::EUCLIDEAN, class cellT, int D>
-    constexpr auto manifold(const mesh::mesh_t<cellT, D, coordsT> & mesh)
+    constexpr auto manifold(
+        const mesh::mesh_t<cellT, D> & mesh,
+        const geometry::coordinate_system_t<D, coordsT> & coordinate_system)
         -> manifold_t<coordsT, cellT, D>;
 
     // factory for one-forms
