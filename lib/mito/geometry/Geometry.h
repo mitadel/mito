@@ -34,26 +34,20 @@ namespace mito::geometry {
 
       public:
         // register {vertex}-{point} relation as a new node
-        inline auto node(const vertex_type & vertex, const point_type & point) -> void
+        inline auto node(const vertex_type & vertex, const point_type & point) -> node_type
         {
             // register the node with the geometry
-            _nodes.emplace(node_type(vertex, point));
-
-            // all done
-            return;
+            return node_type(vertex, point);
         }
 
         // instantiate a new vertex and a new point at {coord} and bind them into a node
-        inline auto node(const point_type & point) -> vertex_type
+        inline auto node(const point_type & point) -> node_type
         {
             // ask the topology for a new vertex
             auto vertex = _topology.vertex();
 
             // register the node with the geometry
-            _nodes.emplace(node_type(vertex, point));
-
-            // return a reference to the newly emplaced node
-            return vertex;
+            return node_type(vertex, point);
         }
 
         // accessor to the collection of nodes

@@ -38,7 +38,7 @@ namespace mito::geometry {
     template <int D, CoordinateType coordT>
     constexpr auto node(
         geometry_t<D> & geometry, coordinate_system_t<D, coordT> & coordinate_system,
-        const coordinates_t<D, coordT> & coords) -> topology::vertex_t
+        const coordinates_t<D, coordT> & coords) -> node_t<D>
     {
         // create and place two points
         auto point = geometry.point_cloud().point();
