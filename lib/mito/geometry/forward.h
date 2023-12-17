@@ -20,6 +20,10 @@ namespace mito::geometry {
     template <int D>
     class Point;
 
+    // class geometric simplex
+    template <int N, int D>
+    class GeometricSimplex;
+
     // class point cloud
     template <int D>
     class PointCloud;

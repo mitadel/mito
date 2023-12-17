@@ -17,6 +17,10 @@ namespace mito::geometry {
     template <int D>
     using point_t = utilities::shared_ptr<const Point<D>>;
 
+    // geometric simplex alias
+    template <int N, int D>
+    using geometric_simplex_t = utilities::shared_ptr<const GeometricSimplex<N, D>>;
+
     // point cloud alias
     template <int D>
     using point_cloud_t = PointCloud<D>;

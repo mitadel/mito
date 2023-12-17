@@ -16,6 +16,7 @@
 #include "Coordinates.h"
 #include "CoordinateSystem.h"
 #include "Point.h"
+#include "GeometricSimplex.h"
 #include "PointCloud.h"
 #include "Node.h"
 #include "Geometry.h"

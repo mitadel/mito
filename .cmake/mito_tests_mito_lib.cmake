@@ -6,6 +6,7 @@ mito_test_driver(tests/mito.lib/geometry/barycenter_triangle.cc)
 mito_test_driver(tests/mito.lib/geometry/barycenter_tetrahedron.cc)
 mito_test_driver(tests/mito.lib/geometry/cell_directors.cc)
 mito_test_driver(tests/mito.lib/geometry/point.cc)
+mito_test_driver(tests/mito.lib/geometry/geometric_triangle.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/read_mesh_summit_2D.cc)
