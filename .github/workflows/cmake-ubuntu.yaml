@@ -172,7 +172,7 @@ jobs:
           echo " -- testing mito"
           ctest --output-on-failure -E postgres.ext
         working-directory: ${{runner.temp}}/build
-      
+
       - name: run valgrind
         run: |
           echo " -- run valgrind on benchmark test"

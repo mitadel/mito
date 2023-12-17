@@ -1,13 +1,13 @@
 # -*- yaml -*-
 
 name: cmake-macos
-on: 
+on:
   push:
     branches:
       - 'main'
   pull_request:
   workflow_dispatch:
-  
+
 
 jobs:
   # build and test the ref that launched this action
@@ -47,13 +47,13 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           pip3 install distro numpy pybind11 pytest vtk
-      
+
       - name: checkout gtest
         uses: actions/checkout@v3
         with:
           repository: google/googletest
           path: googletest
-      
+
       - name: install gtest
         run: |
           echo " -- switching to the build directory"
@@ -72,7 +72,7 @@ jobs:
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
         working-directory: ${{runner.temp}}
-      
+
       - name: checkout pyre
         uses: actions/checkout@v3
         with:
@@ -113,7 +113,7 @@ jobs:
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
           pythonVersion: ${{matrix.python}}
         working-directory: ${{runner.temp}}
-      
+
       - name: list system packages
         run: |
           brew list
@@ -182,7 +182,7 @@ jobs:
           echo " -- testing mito"
           ctest --output-on-failure -E postgres.ext
         working-directory: ${{runner.temp}}/build
-      
+
       - name: create artifact
         if: ${{!cancelled()}}
         uses: actions/upload-artifact@v3
