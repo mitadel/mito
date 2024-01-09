@@ -19,18 +19,10 @@ TEST(Manifolds, Disk2D)
 
     // create a manifold on {mesh} with polar metric
     auto manifold = mito::manifolds::manifold<mito::geometry::POLAR>(mesh);
-    // TOFIX: this method {volume} should be removed as it does not work for nonconstant metrics
-    // mito::scalar_t area = manifold.volume();
+    mito::scalar_t area = manifold.volume();
 
-    auto integrator =
-        mito::quadrature::integrator<mito::quadrature::GAUSS, 2 /* degree of exactness */>(
-            manifold);
-    // a scalar field
-    auto one =
-        mito::manifolds::field([](const mito::vector_t<2> &) -> mito::scalar_t { return 1.0; });
-    // integrate the field
-    auto area = integrator.integrate(one);
-    std::cout << area << std::endl;
+    // check area calculation
+    EXPECT_DOUBLE_EQ(std::numbers::pi / 4.0, area);
 }
 
 // end of file
