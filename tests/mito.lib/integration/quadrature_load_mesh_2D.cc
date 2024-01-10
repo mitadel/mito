@@ -22,24 +22,20 @@ TEST(Quadrature, LoadMeshTriangles)
     // load mesh
     std::ifstream fileStream("square.summit");
     auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
-    // TOFIX: is it better that the cells and vertices are first fetched from mesh and then
-    //  used to build the manifold?
-    // instantiate a cell set as a collection of simplices and vertices.
-    // const auto & cells = mesh.cells<2>();    // TODO: region label to fetch cells
-    // auto manifold = mito::manifolds::manifold<2>(cells);
     auto manifold = mito::manifolds::manifold(mesh);
 
     // instantiate a scalar field
-    auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
-    auto f_cosine = mito::math::field(f);
+    using coordinates_t = mito::geometry::coordinates_t<2>;
+    auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
-    auto result = integrator.integrate(f_cosine);
+    auto result = integrator.integrate(f);
+    auto exact = 0.9460830607878437;
     std::cout << "Integration of cos(x*y): Result = " << result
-              << ", Error = " << std::fabs(result - 0.946083) << std::endl;
-    EXPECT_NEAR(result, 0.946083, 1.e-7);
+              << ", Error = " << std::fabs(result - exact) << std::endl;
+    EXPECT_NEAR(result, exact, 1.e-7);
 }
 
 // end of file

@@ -1,14 +1,14 @@
 // code guard
-#if !defined(mito_mesh_externals_h)
-#define mito_mesh_externals_h
+#if !defined(mito_manifold_externals_h)
+#define mito_manifold_externals_h
 
 
 // externals
-#include <vector>
-#include <array>
 
 // support
+#include "../math.h"
 #include "../mesh.h"
+#include "../utilities.h"
 
 #endif
 

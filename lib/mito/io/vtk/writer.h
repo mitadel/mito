@@ -4,39 +4,42 @@
 
 
 namespace mito::io::vtk {
-    template <int D>
-    auto vtkCellPointer(const mito::mesh::mesh_t<topology::tetrahedron_t, D> &)
-        -> vtkSmartPointer<vtkTetra>
+
+    template <class cellT>
+    auto vtkCellPointer() -> vtkSmartPointer<typename vtkCellT<cellT>::type>;
+
+    template <>
+    auto vtkCellPointer<topology::tetrahedron_t>() -> vtkSmartPointer<vtkTetra>
     {
         return vtkSmartPointer<vtkTetra>::New();
     }
 
-    template <int D>
-    auto vtkCellPointer(const mito::mesh::mesh_t<topology::triangle_t, D> &)
-        -> vtkSmartPointer<vtkTriangle>
+    template <>
+    auto vtkCellPointer<topology::triangle_t>() -> vtkSmartPointer<vtkTriangle>
     {
         return vtkSmartPointer<vtkTriangle>::New();
     }
 
-    template <int D>
-    auto vtkCellPointer(const mito::mesh::mesh_t<topology::segment_t, D> &)
-        -> vtkSmartPointer<vtkLine>
+    template <>
+    auto vtkCellPointer<topology::segment_t>() -> vtkSmartPointer<vtkLine>
     {
         return vtkSmartPointer<vtkLine>::New();
     }
 
     template <int D>
-    auto insertVtkPoint(const vector_t<D> &, vtkSmartPointer<vtkPoints> &) -> void;
+    auto insertVtkPoint(const geometry::coordinates_t<D> &, vtkSmartPointer<vtkPoints> &) -> void;
 
     template <>
-    auto insertVtkPoint(const vector_t<3> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+    auto insertVtkPoint(
+        const geometry::coordinates_t<3> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], coord[2]);
     }
 
     template <>
-    auto insertVtkPoint(const vector_t<2> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+    auto insertVtkPoint(
+        const geometry::coordinates_t<2> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
@@ -63,14 +66,13 @@ namespace mito::io::vtk {
         // loop over the cells
         for (const auto & cell : mesh.cells()) {
             // create vtk cell
-            auto cellVtk = vtkCellPointer(mesh);
+            auto cellVtk = vtkCellPointer<cellT>();
 
             // local index for the points of the cell
             auto indexLocalPointVtk = 0;
 
             // retrieve vertices of the cell
-            topology::vertex_set_t vertices;
-            cell->vertices(vertices);
+            auto vertices = cell->vertices();
 
             // loop over the vertices of the cell
             for (const auto & vertex : vertices) {
@@ -106,7 +108,7 @@ namespace mito::io::vtk {
     {
         // write the grid to file
         auto writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
-        writer->SetFileName((fileName + ".vtk").c_str());
+        writer->SetFileName((fileName + ".vtu").c_str());
 
 #if VTK_MAJOR_VERSION <= 8
         writer->SetInput(gridVtk);

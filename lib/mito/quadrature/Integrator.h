@@ -5,19 +5,26 @@
 
 namespace mito::quadrature {
 
-    // TODO: Keep in mind that we will need integrator and the above defined fields to compute
-    // integrals of contact forces down the road. Do we have enough machinery for that?
-
-    // template with respect to element type T and to degree of exactness r of quadrature rule
-    template <class quadratureT, int r, class manifoldT>
+    // an integrator on a manifold {manifoldT} with a quadrature rule of type {quadratureT} and
+    // degree of exactness {r}
+    template <quadrature_formula quadratureT, int r, class manifoldT>
     class Integrator {
-        using quadrature_t = quadratureT;
-        using manifold_t = manifoldT;
-        using cell_t = typename manifold_t::cell_t;
-        static constexpr int D = manifold_t::dim;
 
-        // quadrature_t, cell_t, and r identify a specific quadrature rule
-        using QuadratureRule = QuadratureRulesFactory<quadrature_t, cell_t, r>;
+      public:
+        // publish my template parameters
+        using manifold_type = manifoldT;
+        using cell_type = typename manifold_type::cell_type;
+        using coordinates_type = typename manifold_type::coordinates_type;
+
+      private:
+        // quadrature_type, cell_type, and r identify a specific quadrature rule
+        using quadrature_rule_type = quadrature_rule_t<quadratureT, cell_type, r>;
+        // the quadrature rule
+        static constexpr auto _quadratureRule = quadrature_rule_type();
+        // the number of quadrature points
+        static constexpr int Q = quadrature_rule_type::npoints;
+        // the dimension of the physical space
+        static constexpr int D = manifold_type::dim;
 
       private:
         // QUESTION: Who should be in charge of computing the coordinates of the quadrature points
@@ -34,7 +41,7 @@ namespace mito::quadrature {
                     // use manifold parametrization to map the position of quadrature points in
                     // the canonical element to the coordinate of the quadrature point
                     _coordinates[{ e, q }] =
-                        _manifold.parametrization(element, _quadratureRule.getPoint(q));
+                        _manifold.parametrization(element, _quadratureRule.point(q));
                 }
                 ++e;
             }
@@ -44,38 +51,35 @@ namespace mito::quadrature {
         }
 
       public:
-        Integrator(const manifold_t & manifold) :
+        Integrator(const manifold_type & manifold) :
             _manifold(manifold),
             _coordinates(manifold.nElements())
         {
             _computeQuadPointCoordinates();
         }
 
-        template <class Y>
-        auto integrate(const math::field_t<vector_t<D>, Y> & field) const -> Y
+        auto integrate(const manifolds::ScalarField auto & f) const -> scalar_t
         {
-            auto result = Y();
-
+            auto result = 0.0;
             // assemble elementary contributions
-            for (auto e = 0; e < _manifold.nElements(); ++e) {
+            int e = 0;
+            for (const auto & cell : _manifold.elements()) {
                 for (auto q = 0; q < Q; ++q) {
-                    result += field(_coordinates[{ e, q }]) * _quadratureRule.getWeight(q)
-                            * _manifold.jacobian(e);
+                    auto point = _coordinates[{ e, q }];
+                    result += f(point) * _quadratureRule.weight(q) * _manifold.volume(cell, point);
                 }
+                // increment element count
+                ++e;
             }
 
             return result;
         }
 
       private:
-        // the quadrature rule
-        static constexpr auto _quadratureRule = QuadratureRule::Get();
-        // the number of quadrature points
-        static constexpr int Q = std::size(_quadratureRule);
         // the domain of integration
-        const manifold_t & _manifold;
+        const manifold_type & _manifold;
         // the coordinates of the quadrature points in the domain of integration
-        fem::quadrature_field_t<Q, vector_t<D>> _coordinates;
+        fem::quadrature_field_t<Q, coordinates_type> _coordinates;
     };
 
 }    // namespace  mito

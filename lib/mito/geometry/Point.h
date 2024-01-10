@@ -8,11 +8,11 @@ namespace mito::geometry {
     template <int D>
     class Point : public utilities::Shareable {
       private:
-        template <class... Args>
-        constexpr Point(Args &&... args)
-        requires(sizeof...(Args) == D)
-            : _coordinates(args...)
-        {}
+        // alias for a set of coordinates
+        using coordinates_type = coordinates_t<D>;
+
+      private:
+        constexpr Point(const coordinates_type & coordinates) : _coordinates(coordinates) {}
 
         constexpr ~Point() override {}
 
@@ -30,7 +30,10 @@ namespace mito::geometry {
 
       public:
         // get the coordinates of the point
-        constexpr auto coordinates() const noexcept -> const vector_t<D> & { return _coordinates; }
+        constexpr auto coordinates() const noexcept -> const coordinates_type &
+        {
+            return _coordinates;
+        }
 
         auto print() const noexcept -> void
         {
@@ -43,14 +46,14 @@ namespace mito::geometry {
 
       private:
         // the coordinates of the point
-        const vector_t<D> _coordinates;
+        const coordinates_type _coordinates;
 
         // private friendship with the repository of points
         friend class utilities::Repository<point_t<D>>;
     };
 
     template <int D>
-    constexpr auto distance(const point_t<D> & pointA, const point_t<D> & pointB) noexcept -> real
+    constexpr auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
     {
         // return the distance between the two points
         auto dist = pointA->coordinates() - pointB->coordinates();
@@ -58,16 +61,17 @@ namespace mito::geometry {
     }
 
     template <int D>
-    std::ostream & operator<<(std::ostream & os, const Point<D> & point) noexcept
+    std::ostream & operator<<(std::ostream & os, const point_t<D> & point) noexcept
     {
         // print the point
-        point.print();
+        point->print();
 
         // all done
         return os;
     }
 
 }    // namespace mito
+
 
 #endif    // mito_geometry_Point_h
 

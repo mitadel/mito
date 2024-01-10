@@ -71,8 +71,8 @@ mito::topology::Topology::_get_factory<3>() const noexcept -> const oriented_sim
 
 template <int N>
 inline auto
-mito::topology::Topology::simplex(const unoriented_simplex_t<N> & footprint, bool orientation)
-    -> simplex_t<N>
+mito::topology::Topology::simplex(
+    const unoriented_simplex_t<N> & footprint, orientation_t orientation) -> simplex_t<N>
 {
     // ask the factory of oriented simplices
     return _get_factory<N>().orientedSimplex(footprint, orientation);
@@ -89,7 +89,7 @@ requires(N > 0)
 
 template <int N>
 inline auto
-mito::topology::Topology::simplex(bool orientation) -> simplex_t<0>
+mito::topology::Topology::simplex(orientation_t orientation) -> simplex_t<0>
 requires(N == 0)
 {
     // ask the factory of oriented simplices
@@ -115,27 +115,51 @@ mito::topology::Topology::tetrahedron(const simplex_composition_t<3> & simplices
 }
 
 inline auto
-mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & simplices) -> simplex_t<1>
+mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & vertices) -> simplex_t<1>
 {
-    return segment({ simplex(simplices[0], false), simplex(simplices[1], true) });
+    // instantiate a segment
+    const auto & segment = simplex<1>({ simplex(vertices[0], -1), simplex(vertices[1], +1) });
+
+    // assert that accessing the vertices of the segment returns a positive permutation of the
+    // vertex composition used to instantiate it
+    assert(mito::math::permutation_sign(segment->vertices(), vertices) == +1);
+
+    // all done
+    return segment;
 }
 
 inline auto
 mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & vertices) -> simplex_t<2>
 {
-    return simplex<2>({ segment({ vertices[0], vertices[1] }),
-                        segment({ vertices[1], vertices[2] }),
-                        segment({ vertices[2], vertices[0] }) });
+    // instantiate a triangle
+    const auto & triangle =
+        simplex<2>({ segment({ vertices[0], vertices[1] }), segment({ vertices[1], vertices[2] }),
+                     segment({ vertices[2], vertices[0] }) });
+
+    // assert that accessing the vertices of the triangle returns a positive permutation of the
+    // vertex composition used to instantiate it
+    assert(mito::math::permutation_sign(triangle->vertices(), vertices) == +1);
+
+    // all done
+    return triangle;
 }
 
 inline auto
 mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & vertices)
     -> simplex_t<3>
 {
-    return simplex<3>({ triangle({ vertices[0], vertices[1], vertices[3] }),
-                        triangle({ vertices[1], vertices[2], vertices[3] }),
-                        triangle({ vertices[2], vertices[0], vertices[3] }),
-                        triangle({ vertices[0], vertices[2], vertices[1] }) });
+    // instantiate a tetrahedron
+    const auto & tetrahedron = simplex<3>({ triangle({ vertices[0], vertices[1], vertices[2] }),
+                                            triangle({ vertices[1], vertices[3], vertices[2] }),
+                                            triangle({ vertices[3], vertices[1], vertices[0] }),
+                                            triangle({ vertices[3], vertices[0], vertices[2] }) });
+
+    // assert that accessing the vertices of the tetrahedron returns a positive permutation of the
+    // vertex composition used to instantiate it
+    assert(mito::math::permutation_sign(tetrahedron->vertices(), vertices) == +1);
+
+    // all done
+    return tetrahedron;
 }
 
 template <int D>
@@ -151,7 +175,7 @@ template <int N>
 inline auto
 mito::topology::Topology::exists_flipped(const simplex_t<N> & simplex) const -> bool
 {
-    return _get_factory<N>().existsOrientedSimplex(simplex->footprint(), !simplex->orientation());
+    return _get_factory<N>().existsOrientedSimplex(simplex->footprint(), -simplex->orientation());
 }
 
 template <int N>
@@ -159,7 +183,7 @@ inline auto
 mito::topology::Topology::flip(const simplex_t<N> & simplex) -> simplex_t<N>
 {
     // ask the factory of oriented simplices
-    return _get_factory<N>().orientedSimplex(simplex->footprint(), !simplex->orientation());
+    return _get_factory<N>().orientedSimplex(simplex->footprint(), -simplex->orientation());
 }
 
 template <int N>
@@ -226,8 +250,8 @@ inline auto
 mito::topology::Topology::exists(const vertex_simplex_composition_t<1> & vertices) const -> bool
 {
     // find left and right tip simplices
-    auto simplex_left_tip = _get_factory<0>().findOrientedSimplex(vertices[0], false);
-    auto simplex_right_tip = _get_factory<0>().findOrientedSimplex(vertices[1], true);
+    auto simplex_left_tip = _get_factory<0>().findOrientedSimplex(vertices[0], -1);
+    auto simplex_right_tip = _get_factory<0>().findOrientedSimplex(vertices[1], +1);
 
     // if both are are found
     if (!simplex_left_tip.is_nullptr() && !simplex_right_tip.is_nullptr()) {

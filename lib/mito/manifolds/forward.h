@@ -6,17 +6,16 @@
 namespace mito::manifolds {
 
     // class manifold
-    template <class cellT, int D>
+    template <geometry::CoordinateSystem coordsT, class cellT, int D>
     class Manifold;
 
-    // manifold alias
-    template <class cellT, int D>
-    using manifold_t = Manifold<cellT, D>;
+    // class P-form
+    template <int P, class F>
+    class Form;
 
-    // TOFIX: remove this datastructure
-    // element vector alias
-    template <class elementT>
-    using element_vector_t = topology::element_vector_t<elementT>;
+    // class field
+    template <class F>
+    class Field;
 }
 
 

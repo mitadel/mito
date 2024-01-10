@@ -12,8 +12,10 @@
 // published type aliases; this is the file you are looking for...
 #include "api.h"
 
+// utilities
+#include "utilities.h"
+
 // classes implementation
-#include "Field.h"
 #include "Function.h"
 
 // factories implementation

@@ -1,8 +1,11 @@
 #include <gtest/gtest.h>
-#include <mito/mito.h>
+#include <mito/base.h>
+#include <mito/mesh.h>
+#include <mito/io.h>
+#include <mito/manifolds.h>
 
 
-TEST(Tetra, Rectangle)
+TEST(Tetra, Triangle)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
@@ -13,19 +16,29 @@ TEST(Tetra, Rectangle)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
-    // load a mesh of triangles
-    std::ifstream fileStream("rectangle.summit");
-    auto mesh = mito::io::summit::reader<mito::topology::triangle_t>(fileStream, geometry);
+    // an empty mesh of triangles
+    auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
+
+    // build nodes of a triangle (counterclockwise order)
+    auto vertex1 = geometry.node({ 0.0, 0.0 });
+    auto vertex2 = geometry.node({ 1.0, 0.0 });
+    auto vertex3 = geometry.node({ 0.0, 1.0 });
+
+    // build triangle with a positive volume
+    auto triangle = topology.triangle({ vertex1, vertex2, vertex3 });
+
+    // insert triangle in mesh
+    mesh.insert(triangle);
 
     // do tetra mesh refinements
-    auto tetra_mesh = tetra(mesh, geometry, 1);
+    auto tetra_mesh = tetra(mesh, geometry, 2);
 
     // compute the volume of the original mesh
-    auto volume_mesh = mito::quadrature::volume(mito::manifolds::manifold(mesh));
+    auto volume_mesh = mito::manifolds::manifold(mesh).volume();
 
     // compute the volume of the refined mesh
-    auto volume_tetra_mesh = mito::quadrature::volume(mito::manifolds::manifold(tetra_mesh));
+    auto volume_tetra_mesh = mito::manifolds::manifold(tetra_mesh).volume();
 
     // assert that the two volumes coincide
-    EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-15);
+    EXPECT_DOUBLE_EQ(volume_mesh, volume_tetra_mesh);
 }

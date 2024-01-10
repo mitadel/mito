@@ -3,11 +3,10 @@
 #define mito_math_externals_h
 
 
-// externals
+// external
+#include <algorithm>
 
 // support
-#include "lambda_traits.h"
-#include "../fem.h"
 
 #endif
 

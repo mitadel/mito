@@ -25,7 +25,7 @@ namespace mito::topology {
 
       public:
         template <int N>
-        inline auto simplex(const unoriented_simplex_t<N> & footprint, bool orientation)
+        inline auto simplex(const unoriented_simplex_t<N> & footprint, orientation_t orientation)
             -> simplex_t<N>;
 
         // return a simplex with composition {composition} (either create a new simplex if such
@@ -36,7 +36,7 @@ namespace mito::topology {
         requires(N > 0);
 
         template <int N>
-        inline auto simplex(bool orientation) -> simplex_t<0>
+        inline auto simplex(orientation_t orientation) -> simplex_t<0>
         requires(N == 0);
 
         // instantiate a vertex

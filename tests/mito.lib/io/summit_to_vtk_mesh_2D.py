@@ -4,7 +4,7 @@ from utilities import load_vtk_mesh, cleanup
 
 
 def test_SummitMeshToVtk():
-    filename = "rectangle_output.vtk"
+    filename = "rectangle_output.vtu"
 
     # get the loaded mesh
     mesh = load_vtk_mesh(filename)

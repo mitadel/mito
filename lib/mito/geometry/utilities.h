@@ -7,10 +7,10 @@ namespace mito::geometry {
 
     // compute the barycenter of a cell, given a geometry
     template <class cellT, int D>
-    auto barycenter(const cellT & cell, const geometry_t<D> & geometry) -> vector_t<D>
+    auto barycenter(const cellT & cell, const geometry_t<D> & geometry) -> coordinates_t<D>
     {
         // the barycenter
-        vector_t<D> result;
+        coordinates_t<D> result;
 
         // average the position of each vertex
         for (const auto & vertex : cell->vertices()) {

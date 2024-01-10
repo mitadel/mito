@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
-#include <mito/mito.h>
+#include <mito/base.h>
+#include <mito/mesh.h>
+#include <mito/manifolds.h>
 
 
 TEST(Tetra, Segment)
@@ -31,4 +33,13 @@ TEST(Tetra, Segment)
     auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 3);
 
     EXPECT_EQ(tetra_mesh.nCells(), 8);
+
+    // compute the volume of the original mesh
+    auto volume_mesh = mito::manifolds::manifold(mesh).volume();
+
+    // compute the volume of the refined mesh
+    auto volume_tetra_mesh = mito::manifolds::manifold(tetra_mesh).volume();
+
+    // assert that the two volumes coincide
+    EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-15);
 }

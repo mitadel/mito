@@ -111,10 +111,7 @@ TEST(DivergenceTheorem, Mesh2D)
 
     // TOFIX: Include normal notion on the boundary element set, so that we can avoid hardcoding
     // the normals calculations (we might need std::inner_product to do the inner product)
-    /*
-    mito::manifolds::Manifold boundaryManifold(
-        mito::topology::element_vector_t<segment_t> { &segment0, &segment3, &segment6, &segment7 });
-    */
+
     // integrator on the bottom boundary
     auto meshBot = mito::mesh::mesh<mito::topology::segment_t>(geometry);
     meshBot.insert(segment0);

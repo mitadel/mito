@@ -83,15 +83,16 @@ main()
     auto manifold = mito::manifolds::manifold(tetra_mesh);
 
     // instantiate a scalar field
-    auto f = mito::math::function([](const mito::vector_t<2> & x) { return cos(x[0] * x[1]); });
-    auto f_cosine = mito::math::field(f);
+    using coordinates_t = mito::geometry::coordinates_t<2>;
+    auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
-    auto result = integrator.integrate(f_cosine);
+    auto result = integrator.integrate(f);
+    auto exact = mito::scalar_t(0.9460830607878437);
     std::cout << "Integration of cos(x*y): Result = " << result
-              << ", Error = " << std::fabs(result - 0.946083) << std::endl;
+              << ", Error = " << std::fabs(result - exact) << std::endl;
 
     // all done
     return 0;

@@ -1,7 +1,10 @@
 build*/
+__pycache__*/
 *.log
 *.DS_Store
 *main.dSYM
 *main
 *.o
+*.out
+*.vtu
 *.msh

@@ -3,8 +3,8 @@
 import mito
 
 
-vectorTuple = (2., 3.)
-vectorMito = mito.Vector2D(vectorTuple)
+vectorTuple = (2., 3., 1.)
+vectorMito = mito.Coordinates3D(vectorTuple)
 
 for itemMito, itemTuple in zip(vectorMito, vectorTuple):
     assert itemMito == itemTuple

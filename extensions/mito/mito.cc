@@ -16,8 +16,9 @@ PYBIND11_MODULE(mito, m)
 {
     m.doc() = "pybind11 mito plugin";    // optional module docstring
 
-    // the mito vector interface
-    mito::py::class_<mito::vector_t<3>>(m, "Vector3D")
+    // the mito cartesian coordinates interface
+    using coordinates_3D_t = mito::geometry::coordinates_t<3>;
+    mito::py::class_<coordinates_3D_t>(m, "Coordinates3D")
         // the default constructor
         .def(
             // the implementation
@@ -29,19 +30,20 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1, x2] = data;
                 // instantiate
-                return new mito::vector_t<3> { x0, x1, x2 };
+                return coordinates_3D_t { x0, x1, x2 };
             }))
         // operator[]
         .def(
             "__getitem__",
             // the implementation
-            [](const mito::vector_t<3> & self, int i) { return self[i]; })
+            [](const coordinates_3D_t & self, int i) { return self[i]; })
         // done
         ;
 
 
     // the mito vector interface
-    mito::py::class_<mito::vector_t<2>>(m, "Vector2D")
+    using coordinates_2D_t = mito::geometry::coordinates_t<2>;
+    mito::py::class_<coordinates_2D_t>(m, "Coordinates2D")
         // the default constructor
         .def(
             // the implementation
@@ -53,112 +55,106 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1] = data;
                 // instantiate
-                return new mito::vector_t<2> { x0, x1 };
+                return mito::vector_t<2> { x0, x1 };
             }))
         // operator[]
         .def(
             "__getitem__",
             // the implementation
-            [](const mito::vector_t<2> & self, int i) { return self[i]; })
+            [](const coordinates_2D_t & self, int i) { return self[i]; })
         // done
         ;
 
 
-    // the mito scalar Field interface
-    mito::py::class_<mito::math::scalar_field_t<3>>(m, "ScalarField3D")
+    // the mito scalar field 2D
+    using scalar_function_2D_t = std::function<mito::scalar_t(const coordinates_2D_t &)>;
+    using scalar_field_2D_t = mito::manifolds::field_t<scalar_function_2D_t>;
+    mito::py::class_<scalar_field_2D_t>(m, "ScalarField2D")
         // the constructor
-        .def(
-            // the implementation
-            mito::py::init<const mito::math::functor_t<mito::vector_t<3>, mito::scalar_t> &>())
+        .def(mito::py::init<scalar_function_2D_t>())
         // operator()
         .def(
             "__call__",
             // the implementation
-            [](const mito::math::scalar_field_t<3> & self, const mito::vector_t<3> & x) {
-                return self(x);
-            })
+            [](const scalar_field_2D_t & self, const coordinates_2D_t & x) { return self(x); })
         // done
         ;
 
 
-    // the mito scalar Field interface
-    mito::py::class_<mito::math::scalar_field_t<2>>(m, "ScalarField2D")
+    // the mito scalar field 3D
+    using scalar_function_3D_t = std::function<mito::scalar_t(const coordinates_3D_t &)>;
+    using scalar_field_3D_t = mito::manifolds::field_t<scalar_function_3D_t>;
+    mito::py::class_<scalar_field_3D_t>(m, "ScalarField3D")
         // the constructor
-        .def(
-            // the implementation
-            mito::py::init<const mito::math::functor_t<mito::vector_t<2>, mito::scalar_t> &>())
+        .def(mito::py::init<scalar_function_3D_t>())
         // operator()
         .def(
             "__call__",
             // the implementation
-            [](const mito::math::scalar_field_t<2> & self, const mito::vector_t<2> & x) {
-                return self(x);
-            })
+            [](const scalar_field_3D_t & self, const coordinates_3D_t & x) { return self(x); })
         // done
         ;
 
+    // alias for a mesh of triangles embedded in 2D
+    using mesh_triangle_2D_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
 
     // the mito Mesh interface
-    mito::py::class_<mito::mesh::Mesh<mito::topology::triangle_t, 2>>(m, "SimplicialMesh2D")
+    mito::py::class_<mesh_triangle_2D_t>(m, "SimplicialMesh2D")
         // the default constructor
-        .def(
-            // the implementation
-            mito::py::init<mito::geometry::Geometry<2> &>())
+        .def(mito::py::init([](std::string filename) {
+            // an empty topology
+            auto & topology = mito::topology::topology();
+            // an empty cloud of points in 2D
+            auto & point_cloud = mito::geometry::point_cloud<2>();
+            // an empty geometry binding {topology} and {point_cloud}
+            auto & geometry = mito::geometry::geometry(topology, point_cloud);
+
+            // create an input stream
+            auto filestream = std::ifstream(filename);
+            // read the mesh
+            return mesh_triangle_2D_t(
+                mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
+        }))
         // accessors
         // the cells; read-only property
-        .def_property_readonly(
-            "cells", &mito::mesh::mesh_t<mito::topology::triangle_t, 2>::cells, "the body cells")
+        .def_property_readonly("cells", &mesh_triangle_2D_t::cells, "the body cells")
         // done
         ;
 
+    // alias for a manifold of triangles embedded in 2D
+    using manifold_triangle_2D_t =
+        mito::manifolds::manifold_t<mito::geometry::EUCLIDEAN, mito::topology::triangle_t, 2>;
 
     // the mito manifold interface
-    mito::py::class_<mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>(
-        m, "ManifoldTriangle2D")
+    mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")
         // the constructor
         .def(
             // the implementation
-            mito::py::init([](std::string filename) {
-                // TOFIX: who is going to delete?
-                // an empty topology
-                auto & topology = mito::topology::topology();
-                // an empty cloud of points in 2D
-                auto & point_cloud = mito::geometry::point_cloud<2>();
-                // an empty geometry binding {topology} and {point_cloud}
-                auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
-                // create an input stream
-                auto filestream = std::ifstream(filename);
-                // read the mesh
-                auto mesh = new mito::mesh::mesh_t<mito::topology::triangle_t, 2>(
-                    mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
+            mito::py::init([](const mesh_triangle_2D_t & mesh) {
                 // instantiate
-                return new mito::manifolds::manifold_t<mito::topology::triangle_t, 2>(*mesh);
+                return manifold_triangle_2D_t(mesh);
             }))
         // done
         ;
 
 
     // the mito Integrator interface
-    mito::py::class_<mito::quadrature::integrator_t<
-        mito::quadrature::GAUSS, 2 /* degree of exactness */,
-        mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>>(
-        m, "GaussIntegrator2Triangle2D")
+    using gauss_integrator_2_triangle_2D_t = mito::quadrature::integrator_t<
+        mito::quadrature::GAUSS, 2 /* degree of exactness */, manifold_triangle_2D_t>;
+    mito::py::class_<gauss_integrator_2_triangle_2D_t>(m, "GaussIntegrator2Triangle2D")
         // the constructor
         .def(
             // the implementation
-            mito::py::init<const mito::manifolds::manifold_t<mito::topology::triangle_t, 2> &>())
+            mito::py::init<const manifold_triangle_2D_t &>())
         // interface
         // QUESTION: should this be called integrateScalarfield?
         // integrate a scalar field
         .def(
             "integrate",
-            // the method;
-            &mito::quadrature::integrator_t<
-                mito::quadrature::GAUSS, 2 /* degree of exactness */,
-                mito::manifolds::manifold_t<mito::topology::triangle_t, 2>>::integrate<mito::real>,
-            // the docstring
-            "integrate a field")
+            // the implementation
+            [](const gauss_integrator_2_triangle_2D_t & self, const scalar_field_2D_t & f) {
+                return self.integrate(f);
+            })
         // done
         ;
 }

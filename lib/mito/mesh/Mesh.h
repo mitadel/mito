@@ -17,6 +17,15 @@ namespace mito::mesh {
         static constexpr int dim = D;
         // typedef for cell type
         using cell_type = cellT;
+        // typedef for a collection of cells
+        // QUESTION: we may consider switching this to a container that is faster to iterate on
+        //  e.g. {vector}, if we decide to base {Manifold} on a {Mesh}. In this case, in fact,
+        //  iterating on a manifold would iterate on the mesh elements. It is true that
+        //  inserting/erasing elements in a vector is more expensive than in a set. However, we
+        //  insert/erase much less frequently than we iterate. Also, this vector does not contain
+        //  the full cell objects, but just their addresses, so perhaps it would not even be that
+        //  expensive to allocate/deallocate the memory.
+        using cells_type = std::unordered_set<cell_type, utilities::hash_function<cell_type>>;
 
       private:
         // get the order of the cell
@@ -26,8 +35,6 @@ namespace mito::mesh {
         using cell_family_type = typename topology::cell_family<cellT, I>;
         // typedef for geometry type
         using geometry_type = geometry::geometry_t<D>;
-        // typedef for a collection of cells
-        using cells_type = element_set_t<cell_type>;
         // id type of unoriented cell
         using cell_id_type = utilities::index_t<cell_type>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
@@ -54,7 +61,7 @@ namespace mito::mesh {
         Mesh & operator=(const Mesh &) = delete;
 
         // delete move assignment operator
-        Mesh & operator=(Mesh &&) = delete;
+        Mesh & operator=(Mesh &&) noexcept = delete;
 
       private:
         template <int I, int J>
@@ -127,8 +134,9 @@ namespace mito::mesh {
                 for (const auto & subcell : cell->composition()) {
                     // decrement the orientations count for this cell footprint id, depending on the
                     // orientation
-                    (subcell->orientation() ? _orientations[subcell->footprint().id()][0] -= 1 :
-                                              _orientations[subcell->footprint().id()][1] -= 1);
+                    (subcell->orientation() == +1 ?
+                         _orientations[subcell->footprint().id()][0] -= 1 :
+                         _orientations[subcell->footprint().id()][1] -= 1);
 
                     // cleanup orientation map
                     if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
@@ -145,8 +153,8 @@ namespace mito::mesh {
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation
             int count = 0;
-            (!cell->orientation() ? count = _orientations.at(cell->footprint().id())[0] :
-                                    count = _orientations.at(cell->footprint().id())[1]);
+            (cell->orientation() == -1 ? count = _orientations.at(cell->footprint().id())[0] :
+                                         count = _orientations.at(cell->footprint().id())[1]);
 
             // the cell is on the boundary if it never occurs in the mesh with opposite
             // orientation
@@ -220,8 +228,8 @@ namespace mito::mesh {
             for (const auto & subcell : cell->composition()) {
                 // increment the orientations count for this cell footprint id, depending on the
                 // orientation
-                (subcell->orientation() ? _orientations[subcell->footprint().id()][0] += 1 :
-                                          _orientations[subcell->footprint().id()][1] += 1);
+                (subcell->orientation() == +1 ? _orientations[subcell->footprint().id()][0] += 1 :
+                                                _orientations[subcell->footprint().id()][1] += 1);
             }
 
             // all done

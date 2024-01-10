@@ -5,43 +5,65 @@
 
 namespace mito::manifolds {
 
-    // QUESTION:
-    // In the case of a bulk element or a line element in 3D the differential in the
-    // integral is different (dV, or |r'(d)| dt). Is it a good idea to implement the jacobian, the
-    // derivative of the parametrization, the normal times the area differential, as the returned
-    // value by a method called, say, differential?
-
-    // TOFIX: distinguish between element family/class (simplicial) and element type (triangles)
-
-    template <class cellT /* the type of cell */, int D /* spatial dimension */>
+    template <
+        geometry::CoordinateSystem coordsT, class cellT /* the type of cell */,
+        int D /* spatial dimension */>
     class Manifold {
 
-      public:
-        // typedef for cell type
-        using cell_t = cellT;
-        // get the order of the cell
+      private:
+        // typedef for vertex
+        using vertex_type = topology::vertex_t;
+        // the coordinates type
+        static constexpr geometry::CoordinateSystem coords_type = coordsT;
+        // the dimension of the manifold (that is the order of the cell)
         static constexpr int N = topology::order<cellT>();
-        // a point in parametric coordinates
-        static constexpr int parametricDim = parametric_dim<cell_t>();
-        using parametric_point_t = manifolds::parametric_point_t<parametricDim>;
+        // the dimension of the parametric space
+        static constexpr int parametricDim = parametric_dim<cellT>();
+        // typedef for a point in parametric coordinates
+        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
+
+      public:
         // the dimension of the physical space
         static constexpr int dim = D;
+        // typedef for cell type
+        using cell_type = cellT;
         // typedef for mesh type
-        using mesh_t = mesh::mesh_t<cell_t, D>;
-        // typedef for vertex
-        using vertex_t = topology::vertex_t;
+        using mesh_type = mesh::mesh_t<cell_type, D>;
+        // typedef for the cell type
+        using cells_type = mesh_type::cells_type;
+        // typedef for a set of coordinates
+        using coordinates_type = geometry::coordinates_t<D>;
+
+      private:
+        // the metric field
+        static constexpr auto _metric = metric<coords_type, N, D>::field();
+        // basis for vector fields
+        template <int I>
+        static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
+        // basis for one-form fields
+        // QUESTION: does it make sense to use the metric here since it cancels out with the inverse
+        //  metric?
+        template <int I>
+        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
+        // helper function wedging the N basis 1-forms
+        template <int... J>
+        static constexpr auto _wedge(integer_sequence<J...>)
+        requires(sizeof...(J) == N)
+        {
+            // return the basis N-form
+            return wedge(_dx<J>...);
+        }
+        // the metric volume form
+        static constexpr auto _volume_form =
+            sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N> {});
 
       public:
-        inline Manifold(mesh_t & mesh) :
-            _elements(std::begin(mesh.cells()), std::end(mesh.cells())),
-            _vertices(mesh.geometry().nodes()),
-            _jacobians(std::size(_elements), 0.0)
-        {
-            // compute the jacobians of the map from reference to current element for each element
-            _computeJacobians();
-        }
+        constexpr Manifold(const mesh_type & mesh) : _mesh(mesh) {}
 
-        inline ~Manifold() {}
+        constexpr ~Manifold() {}
+
+        // default move constructor
+        Manifold(Manifold &&) noexcept = default;
 
       private:
         // delete default constructor
@@ -50,102 +72,118 @@ namespace mito::manifolds {
         // delete copy constructor
         Manifold(const Manifold &) = delete;
 
-        // delete move constructor
-        Manifold(Manifold &&) = delete;
-
         // delete assignment operator
         Manifold & operator=(const Manifold &) = delete;
 
         // delete move assignment operator
-        Manifold & operator=(Manifold &&) = delete;
+        Manifold & operator=(Manifold &&) noexcept = delete;
 
       public:
-        inline auto sanityCheck() -> bool
-        {
-            bool check = true;
-            for (const auto & e : _elements) {
-                if (!e->sanityCheck()) {
-                    std::cout << "Failed sanity check for element " << e << std::endl;
-                    check = false;
-                }
-            }
-            return check;
-        }
+        constexpr auto elements() const noexcept -> const cells_type & { return _mesh.cells(); }
 
-        inline auto elements() const noexcept -> const element_vector_t<cell_t> &
-        {
-            return _elements;
-        }
-        inline auto nElements() const noexcept -> int { return std::size(_elements); }
-        inline auto jacobian(int e) const -> real { return _jacobians[e]; }
-        inline auto coordinatesVertex(const vertex_t & v) const -> const vector_t<D> &
+        constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
+
+        constexpr auto coordinates(const vertex_type & v) const -> const coordinates_type &
         {
             // get the coordinates of the point attached to vertex {v}
-            return _point(v)->coordinates();
+            return _mesh.geometry().point(v)->coordinates();
         }
 
-        inline auto parametrization(const cell_t & cell, const parametric_point_t & point) const
-            -> vector_t<D>
+        constexpr auto parametrization(
+            const cell_type & cell, const parametric_point_type & point) const -> coordinates_type
         {
-            // use a set to collect vertices without repeated entries
-            topology::vertex_set_t vertices;
-            cell->vertices(vertices);
-            vector_t<D> coordinates;
-            // loop on vertices
+            coordinates_type coord;
+            // loop on the element vertices
             int v = 0;
-            for (const auto & vertex : vertices) {
-                const auto & vertexCoordinates = coordinatesVertex(vertex);
-                coordinates += point[v] * vertexCoordinates;
+            for (const auto & vertex : cell->vertices()) {
+                const auto & vertexCoordinates = coordinates(vertex);
+                coord += point[v] * vertexCoordinates;
 
                 ++v;
             }
 
-            return coordinates;
+            return coord;
         }
 
-        inline auto print() const -> void
+        constexpr auto print() const -> void
         {
             // print the element set of the manifold
             std::cout << "Element set: " << std::endl;
 
-            for (const auto & e : elements()) {
+            for (const auto & e : _mesh.cells()) {
                 // print the elemental composition
                 std::cout << "Composition: " << std::endl;
                 std::cout << e;
                 // and the coordinates of the vertices
                 std::cout << "Vertices: " << std::endl;
-                topology::vertex_set_t vertices;
-                e->vertices(vertices);
+                auto vertices = e->vertices();
                 for (const auto & v : vertices) {
-                    std::cout << coordinatesVertex(v) << std::endl;
+                    std::cout << coordinates(v) << std::endl;
                 }
                 std::cout << std::endl;
             }
         }
 
-      private:
-        inline auto _point(const vertex_t & v) const -> const geometry::point_t<D> &
+        // get the I-th basis element for vector fields
+        template <int I>
+        constexpr auto e() const
         {
-            // look up the point attached to vertex {v}
-            return _vertices.find(v)->second;
+            return _e<I>;
         }
 
-        inline auto _computeJacobians() -> void
+        // get the I-th basis element for one-form fields
+        template <int I>
+        constexpr auto dx() const
         {
-            return computeElementsVolume(_elements, _vertices, _jacobians);
+            return _dx<I>;
+        }
+
+        // QUESTION: we can precompute the element volumes and store them in a data structure. Shall
+        //  we do this here or at a higher level?
+        // QUESTION: does this work for general metric tensors?
+        constexpr auto volume() const -> scalar_t
+        {
+            scalar_t result = 0.0;
+            for (const auto & cell : _mesh.cells()) {
+                result += volume(cell);
+            }
+            // all done
+            return result;
+        }
+
+        // computes the volume of {cell} with the metric volume at {point}
+        constexpr auto volume(
+            const cell_type & cell, const coordinates_type & point = mito::vector_t<D>()) const
+            -> scalar_t
+        {
+            // all done
+            return _volume(cell, point, make_integer_sequence<N> {});
         }
 
       private:
-        // TOFIX: not sure I like that {_elements} is a copy while {_vertices} is a reference
-        const element_vector_t<cell_t> _elements;
-        // QUESTION: should the manifold hold directly a reference to the mesh?
-        // the mapping of vertices to points
-        const geometry::nodes_t<D> & _vertices;
-        std::vector<real> _jacobians;
+        // computes the volume of a cell
+        template <int... J>
+        constexpr auto _volume(
+            const cell_type & cell, const coordinates_type & point, integer_sequence<J...>) const
+            -> scalar_t
+        requires(sizeof...(J) == N)
+        {
+            // get the director edges of this cell
+            auto directors = _mesh.geometry().directors(cell);
+            // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
+            // contracted with the cell directors
+            auto volume = 1.0 / pyre::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
+            // all done
+            return volume;
+        }
+
+      private:
+        // the underlying mesh
+        const mesh_type & _mesh;
     };
 
-    template <class cellT, int D>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, D> & manifold)
+    template <geometry::CoordinateSystem coordsT, class cellT, int D>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<coordsT, cellT, D> & manifold)
     {
         // print the manifold
         manifold.print();

@@ -7,6 +7,7 @@
 #include "externals.h"
 
 // classes implementation
+#include "vtk_cell.h"
 #include "writer.h"
 
 

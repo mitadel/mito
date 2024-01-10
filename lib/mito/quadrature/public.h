@@ -13,6 +13,7 @@
 #include "api.h"
 
 // classes implementation
+#include "QuadratureTable.h"
 #include "QuadratureRule.h"
 #include "Integrator.h"
 

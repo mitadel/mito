@@ -14,6 +14,9 @@ namespace mito::topology {
     template <int N>
     class Simplex : public utilities::Shareable {
 
+        // vertex set alias
+        using vertex_set_type = std::set<vertex_t>;
+
         // private constructors: only the SimplexFactory has the right to instantiate simplices
       private:
         // constructor for a simplex based on its composition in terms of subsimplices
@@ -49,8 +52,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
+        void vertices(VertexInsertable auto & vertices) const
         requires(N > 1)
         {
             for (const auto & simplex : composition()) {
@@ -59,12 +61,66 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        template <class VERTEX_COLLECTION_T>
-        void vertices(VERTEX_COLLECTION_T & vertices) const
+        void vertices(VertexInsertable auto & vertices) const
         requires(N == 1)
         {
             vertices.insert(_simplices[0]->footprint());
             vertices.insert(_simplices[1]->footprint());
+        }
+
+        auto vertices() const -> vertex_set_type
+        {
+            // use a set to cleanup duplicates
+            vertex_set_type vertex_set;
+
+            // populate the vertices
+            vertices(vertex_set);
+
+            // return the set of vertices
+            return vertex_set;
+        }
+
+        // append the vertices of this simplex to a collection of vertices
+        // (maintaining the order dictated by the simplex composition)
+        inline auto vertices(VertexPushBackable auto & vertices) const -> void
+        requires(N > 1)
+        {
+            // get the first subsimplex
+            const auto & subsimplex0 = _simplices[0];
+
+            // get the first {N} vertices from the first subsimplex
+            subsimplex0->vertices(vertices);
+
+            // assert that {N} vertices were found
+            assert(std::size(vertices) == N);
+
+            // get the second subsimplex to find the remaining vertex
+            const auto & subsimplex1 = _simplices[1];
+
+            // loop on the vertices of the second subsimplex
+            for (const auto & vertex : subsimplex1->footprint()->vertices()) {
+                // search for {vertex} in the vertex collection {vertices}
+                auto found = std::find(std::begin(vertices), std::end(vertices), vertex);
+                // if we have not collected {vertex} yet
+                if (found == std::end(vertices)) {
+                    // add {vertex} to the collection
+                    vertices.push_back(vertex);
+                }
+            }
+
+            // all done
+            return;
+        }
+
+        // append the vertices of this simplex to a collection of vertices
+        inline auto vertices(VertexPushBackable auto & vertices) const -> void
+        requires(N == 1)
+        {
+            vertices.push_back(_simplices[0]->footprint());
+            vertices.push_back(_simplices[1]->footprint());
+
+            // all done
+            return;
         }
 
         // append the edges of this simplex to a collection of edges
@@ -108,10 +164,8 @@ namespace mito::topology {
                 }
             }
 
-            // use a set to cleanup duplicates
-            vertex_set_t vertices;
             // collect vertices of this simplex
-            this->vertices(vertices);
+            auto vertices = this->vertices();
 
             // if this simplex does not have N+1 vertices, something went wrong
             if (std::size(vertices) != int(N) + 1) {

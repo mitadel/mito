@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      8042,        218]
-NotebookOptionsPosition[      7224,        195]
-NotebookOutlinePosition[      7767,        216]
-CellTagsIndexPosition[      7684,        211]
+NotebookDataLength[      9489,        262]
+NotebookOptionsPosition[      8449,        235]
+NotebookOutlinePosition[      8992,        256]
+CellTagsIndexPosition[      8909,        251]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -191,7 +191,47 @@ Cell[BoxData[
   3.828251690852193*^9, 3.828251716392885*^9}, {3.82825176352297*^9, 
   3.828251823405449*^9}, {3.82825192861733*^9, 3.828251991858637*^9}, {
   3.828252069774494*^9, 3.8282521073772907`*^9}},
- CellLabel->"In[12]:=",ExpressionUUID->"8096cab5-6db3-4f2e-8fb3-9aa79fb62576"]
+ CellLabel->"In[12]:=",ExpressionUUID->"8096cab5-6db3-4f2e-8fb3-9aa79fb62576"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Integrate", " ", "over", " ", "square", " ", "in", " ", "3", "D"}], " ", 
+   "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"\[ScriptCapitalR]", "=", 
+     RowBox[{"Polygon", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"0.0", ",", "0.0"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"1.0", ",", "0.0"}], "}"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"1.0", ",", "1.0"}], "}"}], ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"0.0", ",", "1.0"}], "}"}]}], "}"}], "]"}]}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{"Integrate", "[", 
+    RowBox[{
+     RowBox[{"Cos", "[", 
+      RowBox[{"x", " ", "y"}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"x", ",", "y"}], "}"}], "\[Element]", "\[ScriptCapitalR]"}]}], 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.908798346913336*^9, 
+  3.908798446732223*^9}},ExpressionUUID->"7205a41b-ea3f-4d2b-86cc-\
+3fd411969929"],
+
+Cell[BoxData["0.7080731423261479`"], "Output",
+ CellChangeTimes->{3.908798422288995*^9},
+ CellLabel->"Out[6]=",ExpressionUUID->"5850291d-ea14-4269-ab99-dde47462c1d9"]
+}, Open  ]]
 },
 WindowSize->{943, 612},
 WindowMargins->{{Automatic, 2}, {-31, Automatic}},
@@ -210,7 +250,7 @@ CellTagsIndex->{
 *)
 (*CellTagsIndex
 CellTagsIndex->{
- {"Tetrahedron_templates", 7524, 205}
+ {"Tetrahedron_templates", 8749, 245}
  }
 *)
 (*NotebookFileOutline
@@ -219,7 +259,11 @@ Cell[558, 20, 1512, 36, 136, "Input",ExpressionUUID->"1387086d-ceb9-4b20-8cc1-0a
 Cell[2073, 58, 1821, 44, 157, "Input",ExpressionUUID->"c98d2fee-bd85-41f7-9f36-458e6b6b4dc8"],
 Cell[3897, 104, 2062, 55, 178, "Input",ExpressionUUID->"012e5cb0-b675-4825-a3ad-93b0a0e3c151",
  CellTags->"Tetrahedron_templates"],
-Cell[5962, 161, 1258, 32, 73, "Input",ExpressionUUID->"8096cab5-6db3-4f2e-8fb3-9aa79fb62576"]
+Cell[5962, 161, 1258, 32, 73, "Input",ExpressionUUID->"8096cab5-6db3-4f2e-8fb3-9aa79fb62576"],
+Cell[CellGroupData[{
+Cell[7245, 197, 1019, 31, 73, "Input",ExpressionUUID->"7205a41b-ea3f-4d2b-86cc-3fd411969929"],
+Cell[8267, 230, 166, 2, 34, "Output",ExpressionUUID->"5850291d-ea14-4269-ab99-dde47462c1d9"]
+}, Open  ]]
 }
 ]
 *)

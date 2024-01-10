@@ -24,7 +24,7 @@ TEST(Barycenter, Segment)
     auto barycenter = mito::geometry::barycenter(segment, geometry);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::vector_t<2>({ 0.5, 0.0 }));
+    EXPECT_TRUE(barycenter == mito::geometry::coordinates({ 0.5, 0.0 }));
 
     // all done
     return;
@@ -53,7 +53,7 @@ TEST(Barycenter, Triangle)
     auto barycenter = mito::geometry::barycenter(triangle, geometry);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::vector_t<2>({ 0.5, 1.0 / 6.0 }));
+    EXPECT_TRUE(barycenter == mito::geometry::coordinates({ 0.5, 1.0 / 6.0 }));
 
     // all done
     return;
@@ -83,7 +83,7 @@ TEST(Barycenter, Tetrahedron)
     auto barycenter = mito::geometry::barycenter(tetrahedron, geometry);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::vector_t<3>({ 0.25, 0.25, 0.25 }));
+    EXPECT_TRUE(barycenter == mito::geometry::coordinates({ 0.25, 0.25, 0.25 }));
 
     // all done
     return;

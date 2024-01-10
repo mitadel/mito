@@ -34,8 +34,9 @@ TEST(Quadrature, Segment)
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
     // a scalar function
-    auto f_exp = mito::math::field(mito::math::function(
-        [](const mito::vector_t<1> & x) -> mito::scalar_t { return exp(-x[0]); }));
+    using coordinates_t = mito::geometry::coordinates_t<1>;
+    auto f_exp = mito::manifolds::field(
+        mito::math::function([](const coordinates_t & x) -> mito::scalar_t { return exp(-x[0]); }));
 
     // integrate exp(-x) on (0, 1)
     auto integral = integrator.integrate(f_exp);

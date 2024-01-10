@@ -1,0 +1,99 @@
+// code guard
+#if !defined(mito_geometry_algebra_euclidean_coordinates_h)
+#define mito_geometry_algebra_euclidean_coordinates_h
+
+
+namespace mito::geometry {
+
+    // addition of Euclidean coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<1, EUCLIDEAN> & xA, const Coordinates<1, EUCLIDEAN> & xB)
+        -> Coordinates<1, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<1, EUCLIDEAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Euclidean coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<1, EUCLIDEAN> & xB)
+        -> Coordinates<1, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<1, EUCLIDEAN>(a * xB._array);
+    }
+
+    // subtraction of coordinates xA - xB
+    template <>
+    constexpr auto operator-(
+        const Coordinates<1, EUCLIDEAN> & xA, const Coordinates<1, EUCLIDEAN> & xB)
+        -> mito::vector_t<1>
+    {
+        return mito::vector_t<1>(xA._array - xB._array);
+    }
+
+
+    // addition of Euclidean coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<2, EUCLIDEAN> & xA, const Coordinates<2, EUCLIDEAN> & xB)
+        -> Coordinates<2, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<2, EUCLIDEAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Euclidean coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<2, EUCLIDEAN> & xB)
+        -> Coordinates<2, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<2, EUCLIDEAN>(a * xB._array);
+    }
+
+    // subtraction of coordinates xA - xB
+    template <>
+    constexpr auto operator-(
+        const Coordinates<2, EUCLIDEAN> & xA, const Coordinates<2, EUCLIDEAN> & xB)
+        -> mito::vector_t<2>
+    {
+        return mito::vector_t<2>(xA._array - xB._array);
+    }
+
+
+    // addition of Euclidean coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<3, EUCLIDEAN> & xA, const Coordinates<3, EUCLIDEAN> & xB)
+        -> Coordinates<3, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<3, EUCLIDEAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Euclidean coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<3, EUCLIDEAN> & xB)
+        -> Coordinates<3, EUCLIDEAN>
+    {
+        // easy enough
+        return Coordinates<3, EUCLIDEAN>(a * xB._array);
+    }
+
+    // subtraction of coordinates xA - xB
+    template <>
+    constexpr auto operator-(
+        const Coordinates<3, EUCLIDEAN> & xA, const Coordinates<3, EUCLIDEAN> & xB)
+        -> mito::vector_t<3>
+    {
+        return mito::vector_t<3>(xA._array - xB._array);
+    }
+
+}
+
+
+#endif
+
+// end of file
