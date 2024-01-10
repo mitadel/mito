@@ -18,7 +18,7 @@ namespace mito::utilities {
 
     // strip constant/volatile and reference from type
     template <typename T>
-    using base_type = typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+    using base_type = typename std::remove_cvref_t<T>;
 }
 
 
