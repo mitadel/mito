@@ -63,7 +63,7 @@ namespace mito::manifolds {
         constexpr ~Manifold() {}
 
         // default move constructor
-        Manifold(Manifold &&) = default;
+        Manifold(Manifold &&) noexcept = default;
 
       private:
         // delete default constructor
@@ -76,7 +76,7 @@ namespace mito::manifolds {
         Manifold & operator=(const Manifold &) = delete;
 
         // delete move assignment operator
-        Manifold & operator=(Manifold &&) = delete;
+        Manifold & operator=(Manifold &&) noexcept = delete;
 
       public:
         constexpr auto elements() const noexcept -> const cells_type & { return _mesh.cells(); }
