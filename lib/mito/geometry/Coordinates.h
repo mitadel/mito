@@ -70,29 +70,29 @@ namespace mito::geometry {
         constexpr Coordinates(const Coordinates &) = default;
 
         // default move constructor
-        constexpr Coordinates(Coordinates &&) = default;
+        constexpr Coordinates(Coordinates &&) noexcept = default;
 
         // default assignment operator
         constexpr Coordinates & operator=(const Coordinates &) = default;
 
         // default move assignment operator
-        constexpr Coordinates & operator=(Coordinates &&) = default;
+        constexpr Coordinates & operator=(Coordinates &&) noexcept = default;
 
       public:
         // friendship with addition of coordinates
-        friend constexpr auto operator+<>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator+ <>(const coordinates_type &, const coordinates_type &)
             -> coordinates_type;
 
         // friendship with scaling of coordinates
-        friend constexpr auto operator*<>(const scalar_t &, const coordinates_type &)
+        friend constexpr auto operator* <>(const scalar_t &, const coordinates_type &)
             -> coordinates_type;
 
         // friendship with {operator==} for coordinates
-        friend constexpr auto operator==<>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator== <>(const coordinates_type &, const coordinates_type &)
             -> bool;
 
         // friendship with {operator-} for coordinates
-        friend constexpr auto operator-<>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator- <>(const coordinates_type &, const coordinates_type &)
             -> mito::vector_t<D>;
 
         // friendship with {operator<} for coordinates
