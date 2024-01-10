@@ -61,7 +61,7 @@ namespace mito::mesh {
         Mesh & operator=(const Mesh &) = delete;
 
         // delete move assignment operator
-        Mesh & operator=(Mesh &&) = delete;
+        Mesh & operator=(Mesh &&) noexcept = delete;
 
       private:
         template <int I, int J>
