@@ -81,8 +81,8 @@ TEST(Quadrature, Square)
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     // a scalar field
-    auto f =
-        mito::manifolds::field([](const coordinates_2D_t & x) -> real { return cos(x[0] * x[1]); });
+    auto f = mito::manifolds::field(
+        [](const coordinates_2D_t & x) -> real { return std::cos(x[0] * x[1]); });
     // integrate the field
     real result = bodyIntegrator.integrate(f);
     // the exact solution

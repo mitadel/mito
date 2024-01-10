@@ -7,7 +7,7 @@ TEST(Math, TensorFunctions)
 {
     // a scalar function
     constexpr auto f = mito::math::function(
-        [](const mito::vector_t<3> & x) -> mito::scalar_t { return x[1] * x[2] * cos(x[0]); });
+        [](const mito::vector_t<3> & x) -> mito::scalar_t { return x[1] * x[2] * std::cos(x[0]); });
 
     // a point in space
     constexpr auto x = 2.0 * mito::e_1<3> + mito::e_2<3>;

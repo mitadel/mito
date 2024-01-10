@@ -14,14 +14,14 @@ TEST(Manifolds, VectorFields)
 
     // a scalar field
     constexpr auto f = mito::manifolds::field(
-        [](const coordinates_t & x) -> mito::scalar_t { return cos(x[0] * x[1]); });
+        [](const coordinates_t & x) -> mito::scalar_t { return std::cos(x[0] * x[1]); });
 
     // check value of field at {x}
     static_assert(f(x) == 1.0);
 
     // a vector field
     constexpr auto g = mito::manifolds::field([](const coordinates_t & x) -> mito::vector_t<2> {
-        return { cos(x[0] * x[1]), cos(x[0] * x[1]) };
+        return { std::cos(x[0] * x[1]), std::cos(x[0] * x[1]) };
     });
 
     // check value of field at {x}

@@ -11,20 +11,20 @@ TEST(Manifolds, FieldsTraits)
 {
     // a scalar field
     constexpr auto f = mito::manifolds::field(
-        [](const coordinates_t & x) -> mito::scalar_t { return cos(x[0] * x[1]); });
+        [](const coordinates_t & x) -> mito::scalar_t { return std::cos(x[0] * x[1]); });
     // assert that {f} is a scalar field
     static_assert(mito::manifolds::ScalarField<decltype(f)>);
 
     // a vector field
     constexpr auto g = mito::manifolds::field([](const coordinates_t & x) -> mito::vector_t<2> {
-        return { cos(x[0] * x[1]), cos(x[0] * x[1]) };
+        return { std::cos(x[0] * x[1]), std::cos(x[0] * x[1]) };
     });
     // assert that {g} is a vector field
     static_assert(mito::manifolds::VectorField<decltype(g)>);
 
     // another vector field
     constexpr auto h = mito::manifolds::field([](const coordinates_t & x) -> mito::vector_t<2> {
-        return { cos(x[0] * x[1]), cos(x[0] * x[1]) };
+        return { std::cos(x[0] * x[1]), std::cos(x[0] * x[1]) };
     });
     // assert that {h} is also a vector field
     static_assert(mito::manifolds::VectorField<decltype(h)>);

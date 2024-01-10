@@ -3,14 +3,14 @@
 #include <mito/math.h>
 
 
-static constexpr mito::real PI = 4.0 * atan(1.0);
+static constexpr mito::real PI = 4.0 * std::atan(1.0);
 
 //
 mito::scalar_t
 my_function(const mito::vector_t<2> & x)
 {
     // TOFIX: we may use https://github.com/kthohr/gcem to make {cos} {constexpr}
-    return cos(x[0] * x[1]) + 1.0;
+    return std::cos(x[0] * x[1]) + 1.0;
 }
 
 
@@ -18,7 +18,7 @@ TEST(Functions, Sanity)
 {
     // a scalar function
     constexpr auto function1 = mito::math::function(
-        [](const mito::vector_t<2> & x) -> mito::scalar_t { return cos(x[0] * x[1]); });
+        [](const mito::vector_t<2> & x) -> mito::scalar_t { return std::cos(x[0] * x[1]); });
 
     // a scalar function
     constexpr auto function2 =
@@ -69,7 +69,7 @@ TEST(Functions, Sanity)
     // a vector function
     constexpr auto function16 =
         mito::math::function([](const mito::vector_t<2> & x) -> mito::vector_t<3> {
-            return { cos(x[0] * x[1]), cos(x[0] * x[1]), cos(x[0] * x[1]) };
+            return { std::cos(x[0] * x[1]), std::cos(x[0] * x[1]), std::cos(x[0] * x[1]) };
         });
 
     // vector times scalar multiplication
