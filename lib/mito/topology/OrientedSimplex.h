@@ -72,7 +72,7 @@ namespace mito::topology {
         inline auto orientation() const noexcept -> orientation_t { return _orientation; }
 
         // returns the ordered array of subsimplices
-        inline auto composition() const noexcept -> simplex_composition_t<N>
+        inline auto composition() const -> simplex_composition_t<N>
         {
             // get a tentative composition from the composition of the footprint
             auto composition = _footprint->composition();

@@ -103,7 +103,7 @@ namespace mito::geometry {
         // components accessor
         constexpr auto operator[](int i) const -> scalar_t { return _array[i]; }
 
-        auto print() const noexcept -> void
+        auto print() const -> void
         {
             // print the coordinates of the point
             std::cout << "Coordinates: " << _array << std::endl;

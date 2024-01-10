@@ -56,8 +56,8 @@ namespace mito::geometry {
     }
 
     template <int D, CoordinateSystem coordT>
-    constexpr auto distance(
-        const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB) noexcept -> scalar_t
+    constexpr auto distance(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> scalar_t
     {
         // return the distance between the two points
         return pyre::tensor::norm(xA - xB);

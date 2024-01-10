@@ -53,7 +53,7 @@ namespace mito::geometry {
     };
 
     template <int D>
-    constexpr auto distance(const point_t<D> & pointA, const point_t<D> & pointB) noexcept -> real
+    constexpr auto distance(const point_t<D> & pointA, const point_t<D> & pointB) -> real
     {
         // return the distance between the two points
         auto dist = pointA->coordinates() - pointB->coordinates();
