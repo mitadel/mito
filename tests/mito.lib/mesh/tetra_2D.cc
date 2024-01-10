@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
-#include <mito/io.h>
 #include <mito/manifolds.h>
 
 
