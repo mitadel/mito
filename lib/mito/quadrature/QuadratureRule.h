@@ -23,7 +23,7 @@ namespace mito::quadrature {
 
       public:
         // constructor
-        constexpr QuadratureRule() { _check_weights(); }
+        consteval QuadratureRule() { _check_weights(); }
 
         // get the q-th point in the table
         constexpr auto point(int q) const -> quadrature_point_type { return table.point(q); }
@@ -33,7 +33,7 @@ namespace mito::quadrature {
 
       private:
         // helper function to check that the weights add up to 1.0
-        constexpr auto _check_weights()
+        consteval auto _check_weights()
         {
             // lambda function to compute the sum of Q quadrature weights at compile time
             constexpr auto sum =
