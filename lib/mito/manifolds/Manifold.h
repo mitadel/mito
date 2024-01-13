@@ -165,7 +165,7 @@ namespace mito::manifolds {
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell and the point where they stem from
-            auto [point, directors] = _mesh.geometry().directors(cell);
+            auto [point, directors] = mito::geometry::directors(cell, _mesh.geometry());
             // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
             // contracted with the cell directors
             auto volume = 1.0 / pyre::tensor::factorial<N>() * _volume_form(point)(directors[J]...);

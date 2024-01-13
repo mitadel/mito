@@ -34,6 +34,11 @@ namespace mito::geometry {
     using nodes_t = std::unordered_map<
         topology::vertex_t, point_t<D, coordT>, utilities::hash_function<topology::vertex_t>>;
 
+    // alias for the collection of oriented simplex director vectors
+    // (e.g. an N-simplex has as N director vectors)
+    template <int N, int D>
+    using edge_simplex_directors_t = std::array<vector_t<D>, N>;
+
     // point cloud factory
     template <int D, CoordinateType coordT>
     auto point_cloud() -> point_cloud_t<D, coordT> &;
