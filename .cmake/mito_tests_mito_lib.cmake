@@ -1,6 +1,7 @@
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/cell_barycenter.cc)
+mito_test_driver(tests/mito.lib/geometry/cell_directors.cc)
 mito_test_driver(tests/mito.lib/geometry/point.cc)
 
 # io
