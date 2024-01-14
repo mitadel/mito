@@ -46,13 +46,13 @@ namespace mito::geometry {
         }
 
         // instantiate a new vertex and a new point at {coord} and bind them into a node
-        inline auto node(coordinates_type && coord) -> vertex_type
+        inline auto node(const coordinates_type & coord) -> vertex_type
         {
             // ask the topology for a new vertex
             auto vertex = _topology.vertex();
 
             // ask the point cloud for a point with coordinates {coord}
-            auto point = _point_cloud.point(std::move(coord));
+            auto point = _point_cloud.point(coord);
 
             // register the node with the geometry
             _nodes.emplace(node_type(vertex, point));

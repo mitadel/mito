@@ -45,7 +45,7 @@ namespace mito::geometry {
         auto size() const noexcept -> int { return std::size(_cloud); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(coordinates_type && coord) -> point_type
+        auto point(const coordinates_type & coord) -> point_type
         {
             // return the newly added point
             return _cloud.emplace(coord);
