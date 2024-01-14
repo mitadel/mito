@@ -19,8 +19,8 @@ TEST(Tetra, Segment)
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
 
     // build nodes
-    auto vertex0 = geometry.node({ 0.0 });
-    auto vertex1 = geometry.node({ 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0 });
 
     // build segment
     auto segment_a = topology.segment({ vertex0, vertex1 });

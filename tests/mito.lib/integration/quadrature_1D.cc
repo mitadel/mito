@@ -23,8 +23,8 @@ TEST(Quadrature, Segment)
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);
 
     // a mesh of the segment (0, 1)
-    auto vertex0 = geometry.node({ 0.0 });
-    auto vertex1 = geometry.node({ 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0 });
     auto segment0 = topology.segment({ vertex0, vertex1 });
     mesh.insert(segment0);
     auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 12);

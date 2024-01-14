@@ -33,21 +33,10 @@ main()
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // build nodes
-    auto point0 = point_cloud.point({ 0.0, 0.0 });
-    auto point1 = point_cloud.point({ 1.0, 0.0 });
-    auto point2 = point_cloud.point({ 1.0, 1.0 });
-    auto point3 = point_cloud.point({ 0.0, 1.0 });
-
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
-    auto vertex3 = topology.vertex();
-
-    // add nodes to geometry
-    geometry.node(vertex0, point0);
-    geometry.node(vertex1, point1);
-    geometry.node(vertex2, point2);
-    geometry.node(vertex3, point3);
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, { 0.0, 1.0 });
 
     // build segments and cells
     auto segment0 = topology.segment({ vertex0, vertex1 });

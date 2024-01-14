@@ -56,9 +56,9 @@ TEST(Manifolds, EuclideanMetric2D)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // build nodes of a triangle (counterclockwise order)
-    auto vertex0 = geometry.node({ 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0 });
-    auto vertex2 = geometry.node({ 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 0.0, 1.0 });
 
     // check that even permutations of the vertices give a positive area
     EXPECT_DOUBLE_EQ(area(w, geometry, vertex0, vertex1, vertex2), 0.5);

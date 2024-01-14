@@ -26,6 +26,14 @@ namespace mito::geometry {
     {
         return utilities::Singleton<geometry_t<D, coordT>>::GetInstance(topology, point_cloud);
     }
+
+    // node factory
+    template <int D, mito::geometry::CoordinateType coordT>
+    constexpr auto node(geometry_t<D, coordT> & geometry, const coordinates_t<D, coordT> & coords)
+        -> topology::vertex_t
+    {
+        return geometry.node(coords);
+    }
 }
 
 

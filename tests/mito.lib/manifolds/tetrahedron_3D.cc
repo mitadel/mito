@@ -42,10 +42,10 @@ TEST(Manifolds, Tetrahedron3D)
     auto manifold = mito::manifolds::manifold(mesh);
 
     // build nodes
-    auto vertex1 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex2 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto vertex3 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto vertex4 = geometry.node({ 0.0, 0.0, 1.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 0.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 1.0, 0.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, { 0.0, 1.0, 0.0 });
+    auto vertex4 = mito::geometry::node(geometry, { 0.0, 0.0, 1.0 });
 
     // build tetrahedron with a positive volume (reference tetrahedron)
     auto tetrahedron = topology.tetrahedron({ vertex1, vertex2, vertex3, vertex4 });

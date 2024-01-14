@@ -20,8 +20,8 @@ TEST(Quadrature, FlipSegment)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // a segment
-    auto vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 1.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 1.0, 1.0 });
     auto segment0 = topology.segment({ vertex0, vertex1 });
 
     // the integrand

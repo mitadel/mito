@@ -17,10 +17,10 @@ TEST(VtkWriter, WriteTetraMeshToVtk)
     auto mesh = mito::mesh::mesh<mito::topology::tetrahedron_t>(geometry);
 
     // vertices for one single tetrahedron
-    auto vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto vertex2 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto vertex3 = geometry.node({ 0.0, 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 0.0, 1.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, { 0.0, 0.0, 1.0 });
 
     // build the tetrahedron
     const auto cell = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });

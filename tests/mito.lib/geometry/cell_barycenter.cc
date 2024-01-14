@@ -15,8 +15,8 @@ TEST(Barycenter, Segment)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // create two nodes
-    auto vertex0 = geometry.node({ 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
 
     // create a segment
     auto segment = topology.segment({ vertex0, vertex1 });
@@ -43,9 +43,9 @@ TEST(Barycenter, Triangle)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // create three nodes
-    auto vertex0 = geometry.node({ 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0 });
-    auto vertex2 = geometry.node({ 0.5, 0.5 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 0.5, 0.5 });
 
     // create a triangle
     auto triangle = topology.triangle({ vertex0, vertex1, vertex2 });
@@ -71,11 +71,11 @@ TEST(Barycenter, Tetrahedron)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
-    // create three nodes
-    auto vertex0 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto vertex2 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto vertex3 = geometry.node({ 0.0, 0.0, 1.0 });
+    // create four nodes
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 0.0, 1.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, { 0.0, 0.0, 1.0 });
 
     // create a tetrahedron
     auto tetrahedron = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });

@@ -64,11 +64,11 @@ TEST(Manifolds, EuclideanMetric3D)
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
-    // build nodes of a triangle (counterclockwise order)
-    auto vertex1 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex2 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto vertex3 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto vertex4 = geometry.node({ 0.0, 0.0, 1.0 });
+    // build nodes of a tetrahedron
+    auto vertex1 = mito::geometry::node(geometry, { 0.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 1.0, 0.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, { 0.0, 1.0, 0.0 });
+    auto vertex4 = mito::geometry::node(geometry, { 0.0, 0.0, 1.0 });
 
     // even permutations of the vertices order result in a positive volume
     EXPECT_DOUBLE_EQ(volume(w, geometry, vertex1, vertex2, vertex3, vertex4), 1.0 / 6.0);

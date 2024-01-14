@@ -39,9 +39,9 @@ TEST(Manifolds, Triangle2D)
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // build nodes
-    auto vertex0 = geometry.node({ 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0 });
-    auto vertex2 = geometry.node({ 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 0.0, 1.0 });
 
     // create a manifold on {mesh} with Euclidean metric
     auto manifold = mito::manifolds::manifold(mesh);

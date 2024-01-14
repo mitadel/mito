@@ -19,11 +19,11 @@ TEST(Tetra, Tetrahedron)
     // an empty mesh of tetrahedra
     auto mesh = mito::mesh::mesh<mito::topology::tetrahedron_t>(geometry);
 
-    // build nodes of a triangle (counterclockwise order)
-    auto vertex1 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex2 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto vertex3 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto vertex4 = geometry.node({ 0.0, 0.0, 1.0 });
+    // build nodes of a tetrahedron
+    auto vertex1 = mito::geometry::node(geometry, { 0.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 1.0, 0.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, { 0.0, 1.0, 0.0 });
+    auto vertex4 = mito::geometry::node(geometry, { 0.0, 0.0, 1.0 });
 
     // build tetrahedron with a positive volume
     auto tetrahedron = topology.tetrahedron({ vertex1, vertex2, vertex3, vertex4 });

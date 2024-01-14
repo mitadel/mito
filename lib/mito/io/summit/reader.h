@@ -18,8 +18,9 @@ namespace mito::io::summit {
                 fileStream >> coordinates[d];
             }
 
-            // instantiate a new node at {coordinates}
-            const auto & vertex = geometry.node(std::move(coordinates));
+            // instantiate a new node
+            auto vertex = mito::geometry::node(
+                geometry, mito::geometry::coordinates_t<D, coordT>(coordinates));
 
             // add vertex to {vertices}
             vertices.push_back(vertex);

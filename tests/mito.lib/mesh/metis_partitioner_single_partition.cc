@@ -28,31 +28,17 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
         (0,0)           (1,0)
     */
 
-    auto & point_cloud = geometry.point_cloud();
     auto & topology = geometry.topology();
 
-    auto point0 = point_cloud.point({ 0.0, 0.0 });
-    auto point1 = point_cloud.point({ 1.0, 0.0 });
-    auto point2 = point_cloud.point({ 1.0, 1.0 });
-    auto point3 = point_cloud.point({ 0.5, 0.5 });
-    auto point4 = point_cloud.point({ 0.0, 1.0 });
-
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
-    auto vertex3 = topology.vertex();
-    auto vertex4 = topology.vertex();
+    auto vertex0 = mito::geometry::node(geometry, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, { 0.5, 0.5 });
+    auto vertex4 = mito::geometry::node(geometry, { 0.0, 1.0 });
 
     // print the vertices ids in order of construction
     // std::cout << vertex0.id() << "\t" << vertex1.id() << "\t" << vertex2.id() << "\t"
     //           << vertex3.id() << "\t" << vertex4.id() << std::endl;
-
-    // add nodes to geometry
-    geometry.node(vertex0, point0);
-    geometry.node(vertex1, point1);
-    geometry.node(vertex2, point2);
-    geometry.node(vertex3, point3);
-    geometry.node(vertex4, point4);
 
     auto segment0 = topology.segment({ vertex0, vertex1 });
     auto segment1 = topology.segment({ vertex1, vertex3 });
