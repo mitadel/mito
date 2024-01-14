@@ -6,14 +6,14 @@
 namespace mito::geometry {
 
     // factory for coordinates from brace-enclosed initializer list
-    template <mito::geometry::CoordinateType coordT = mito::geometry::EUCLIDEAN, int D>
+    template <CoordinateType coordT = EUCLIDEAN, int D>
     constexpr auto coordinates(const mito::scalar_t (&&coords)[D])
     {
         return coordinates_t<D, coordT>(coords);
     }
 
     // factory for coordinate system
-    template <int D, mito::geometry::CoordinateType coordT = mito::geometry::EUCLIDEAN>
+    template <int D, CoordinateType coordT = EUCLIDEAN>
     constexpr auto coordinate_system()
     {
         return coordinate_system_t<D, coordT>();
@@ -35,7 +35,7 @@ namespace mito::geometry {
     }
 
     // node factory
-    template <int D, mito::geometry::CoordinateType coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto node(
         geometry_t<D> & geometry, coordinate_system_t<D, coordT> & coordinate_system,
         const coordinates_t<D, coordT> & coords) -> topology::vertex_t
