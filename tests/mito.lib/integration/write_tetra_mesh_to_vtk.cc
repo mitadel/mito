@@ -29,7 +29,7 @@ TEST(VtkWriter, WriteTetraMeshToVtk)
     mesh.insert(cell);
 
     // use tetra
-    auto tetra_mesh = tetra(mesh, geometry);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry);
 
     // write mesh to vtk file
     mito::io::vtk::writer("tetra_output", tetra_mesh);

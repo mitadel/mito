@@ -22,7 +22,7 @@ TEST(Tetra, Cube)
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
-    auto tetra_mesh = tetra(mesh, geometry, subdivisions);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, subdivisions);
     // assert that the refined mesh has 8 times more elements than the original one
     EXPECT_EQ(tetra_mesh.nCells(), std::pow(8, subdivisions) * mesh.nCells());
 

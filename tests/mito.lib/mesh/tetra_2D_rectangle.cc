@@ -21,7 +21,7 @@ TEST(Tetra, Rectangle)
     auto mesh = mito::io::summit::reader<mito::topology::triangle_t>(fileStream, geometry);
 
     // do tetra mesh refinements
-    auto tetra_mesh = tetra(mesh, geometry, 1);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 1);
 
     // compute the volume of the original mesh
     auto volume_mesh = mito::manifolds::manifold(mesh).volume();

@@ -29,7 +29,7 @@ TEST(Tetra, ZeroSubdivisions)
     mesh.insert(cell);
 
     // generate tetra mesh with 0 subdivisions
-    auto tetra_mesh = tetra(mesh, geometry, 0);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 0);
 
     // assert that the refined mesh has the same number of elements than the original one
     EXPECT_EQ(tetra_mesh.nCells(), mesh.nCells());

@@ -77,7 +77,7 @@ main()
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
-    auto tetra_mesh = tetra(mesh, geometry, subdivisions);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, subdivisions);
 
     // create manifold from the mesh
     auto manifold = mito::manifolds::manifold(tetra_mesh);

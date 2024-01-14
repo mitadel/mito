@@ -21,17 +21,17 @@ TEST(Tetra, MultipleSubdivisions)
     int cells = mesh.nCells();
 
     // do one tetra mesh refinement
-    auto tetra_mesh = tetra(mesh, geometry);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry);
     // assert that the refined mesh has 4 times more elements than the original one
     EXPECT_EQ(tetra_mesh.nCells(), 4 * cells);
 
     // do two tetra mesh refinements on the original mesh
-    auto tetra_tetra_mesh_original = tetra(mesh, geometry, 2);
+    auto tetra_tetra_mesh_original = mito::mesh::tetra(mesh, geometry, 2);
     // assert that the refined mesh has 16 times more elements than the original one
     EXPECT_EQ(tetra_tetra_mesh_original.nCells(), 16 * cells);
 
     // do a tetra mesh refinement on the refined mesh
-    auto tetra_tetra_mesh_refined = tetra(tetra_mesh, geometry);
+    auto tetra_tetra_mesh_refined = mito::mesh::tetra(tetra_mesh, geometry);
     // assert that the refined mesh has 16 times more elements than the original one
     EXPECT_EQ(tetra_tetra_mesh_refined.nCells(), 16 * cells);
 }

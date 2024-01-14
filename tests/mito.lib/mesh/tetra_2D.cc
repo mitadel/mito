@@ -31,7 +31,7 @@ TEST(Tetra, Triangle)
     mesh.insert(triangle);
 
     // do tetra mesh refinements
-    auto tetra_mesh = tetra(mesh, geometry, 2);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, 2);
 
     // compute the volume of the original mesh
     auto volume_mesh = mito::manifolds::manifold(mesh).volume();
