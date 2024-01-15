@@ -1,7 +1,9 @@
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)
-mito_test_driver(tests/mito.lib/geometry/cell_barycenter.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_segment.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_triangle.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_tetrahedron.cc)
 mito_test_driver(tests/mito.lib/geometry/cell_directors.cc)
 mito_test_driver(tests/mito.lib/geometry/point.cc)
 
