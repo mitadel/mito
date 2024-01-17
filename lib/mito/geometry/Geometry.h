@@ -20,13 +20,28 @@ namespace mito::geometry {
         using nodes_type = nodes_t<D>;
         // typedef for a node
         using node_type = node_t<D>;
+        // typedef for a geometric simplex
+        template <int N>
+        using geometric_simplex_type = geometric_simplex_t<N, D>;
+        // typedef for a repository of oriented simplices
+        template <int N>
+        using geometric_simplex_repository_type =
+            utilities::repository_t<geometric_simplex_type<N>>;
+        // a map between points and their coordinates
+        // TOFIX: change name to {nodes_type}
+        // TOFIX: remove the ugly {resource_type}
+        template <int N>
+        using vertex_point_map_type = geometric_simplex_type<N>::resource_type::nodes_type;
 
       private:
         // constructor
         Geometry(topology_type & topology, point_cloud_type & point_cloud) :
             _nodes(),
             _topology(topology),
-            _point_cloud(point_cloud)
+            _point_cloud(point_cloud),
+            _segments(100 /*segment size */),
+            _triangles(100 /*segment size */),
+            _tetrahedra(100 /*segment size */)
         {}
 
         // destructor
@@ -61,6 +76,7 @@ namespace mito::geometry {
 
         // TOFIX: split this header into interface and implementation
       public:
+        // TOFIX: not sure if I like these accessors
         // accessor for topology
         inline auto topology() noexcept -> topology_type & { return _topology; }
 
@@ -76,15 +92,83 @@ namespace mito::geometry {
             return _point_cloud;
         }
 
+        // QUESTION: what spatial search needs to be done to guarantee the uniqueness of the
+        // simplex?
+
+        // build the segment connecting two nodes
+        constexpr auto segment(vertex_point_map_type<1> && nodes) -> geometric_simplex_type<1>
+        requires(D > 0)
+        {
+            // fetch vertices
+            auto vertex_0 = nodes[0].first;
+            auto vertex_1 = nodes[1].first;
+
+            // instantiate a segment
+            const auto & simplex = _topology.segment({ vertex_0, vertex_1 });
+
+            // all done
+            return _segments.emplace(simplex, nodes);
+        }
+
+        // build the triangle connecting these three nodes
+        constexpr auto triangle(vertex_point_map_type<2> && nodes) -> geometric_simplex_type<2>
+        requires(D > 1)
+        {
+            // TOFIX: not a big fan of the {first} and {second} business
+            // fetch vertices
+            auto vertex_0 = nodes[0].first;
+            auto vertex_1 = nodes[1].first;
+            auto vertex_2 = nodes[2].first;
+
+            // TOFIX: reserve the words {segment}, {triangle}, {tetrahedron} for the geometric
+            // entities
+            const auto & simplex = _topology.triangle({ vertex_0, vertex_1, vertex_2 });
+
+            // all done
+            return _triangles.emplace(simplex, nodes);
+        }
+
+        // build the tetrahedron connecting these four nodes
+        constexpr auto tetrahedron(vertex_point_map_type<3> && nodes) -> geometric_simplex_type<3>
+        requires(D > 1)
+        {
+            // TOFIX: not a big fan of the {first} and {second} business
+            // fetch vertices
+            auto vertex_0 = nodes[0].first;
+            auto vertex_1 = nodes[1].first;
+            auto vertex_2 = nodes[2].first;
+            auto vertex_3 = nodes[3].first;
+
+            // TOFIX: reserve the words {segment}, {triangle}, {tetrahedron} for the geometric
+            // entities
+            const auto & simplex =
+                _topology.tetrahedron({ vertex_0, vertex_1, vertex_2, vertex_3 });
+
+            // all done
+            return _tetrahedra.emplace(simplex, nodes);
+        }
+
       private:
         // the collection of nodes
+        // TOFIX: remove
         nodes_type _nodes;
 
         // a reference to the topology
         topology_type & _topology;
 
         // a reference to the point cloud
+        // TOFIX: remove
         point_cloud_type & _point_cloud;
+
+        // TOFIX: is there a way to activate these if D>... ?
+        // repository of segments
+        geometric_simplex_repository_type<1> _segments;
+
+        // repository of triangles
+        geometric_simplex_repository_type<2> _triangles;
+
+        // repository of tetrahedra
+        geometric_simplex_repository_type<3> _tetrahedra;
 
         // friendship with the singleton
         using GeometrySingleton = utilities::Singleton<Geometry<D>>;

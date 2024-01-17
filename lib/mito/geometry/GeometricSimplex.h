@@ -43,8 +43,7 @@ namespace mito::geometry {
         }
 
         // private constructors: only the Geometry has the right to instantiate geometric simplices
-        // TOFIX: make private
-      public:
+      private:
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const simplex_type & simplex, const nodes_type & nodes) :
             _simplex(simplex),
