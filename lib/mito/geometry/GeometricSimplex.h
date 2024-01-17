@@ -26,6 +26,9 @@ namespace mito::geometry {
         // the type of the topological simplex
         using simplex_type = mito::topology::oriented_simplex_t<N>;
 
+        // number of vertices of simplex
+        static constexpr int n_vertices = topology::n_vertices<simplex_type>();
+
         // the node type
         // TODO: perhaps we should have a {Node} class so we don't need to remember that {first} is
         //          the vertex and {second} is the point.
