@@ -35,6 +35,14 @@ namespace mito::topology {
         inline auto simplex(const simplex_composition_t<N> & composition) -> simplex_t<N>
         requires(N > 0);
 
+        // return a simplex with vertices {vertices} (either create a new simplex if such
+        // simplex does not exist in the factory or return the existing representative of the class
+        // of equivalence of simplices with this composition)
+        // TOFIX: implement this method to build a simplex from a collection of vertices
+        template <int N>
+        inline auto simplex(const vertex_simplex_composition_t<N + 1> & vertices) -> simplex_t<N>
+        requires(N > 0);
+
         template <int N>
         inline auto simplex(orientation_t orientation) -> simplex_t<0>
         requires(N == 0);
@@ -43,21 +51,27 @@ namespace mito::topology {
         inline auto vertex() -> vertex_t;
 
         // instantiate a segment
+        // TOFIX: remove
         inline auto segment(const simplex_composition_t<1> & simplices) -> simplex_t<1>;
 
         // instantiate a triangle
+        // TOFIX: remove
         inline auto triangle(const simplex_composition_t<2> & simplices) -> simplex_t<2>;
 
         // instantiate a tetrahedron
+        // TOFIX: remove
         inline auto tetrahedron(const simplex_composition_t<3> & simplices) -> simplex_t<3>;
 
         // instantiate a segment from unoriented vertices
+        // TOFIX: remove
         inline auto segment(const vertex_simplex_composition_t<1> & simplices) -> simplex_t<1>;
 
         // instantiate a triangle
+        // TOFIX: remove
         inline auto triangle(const vertex_simplex_composition_t<2> & vertices) -> simplex_t<2>;
 
         // instantiate a tetrahedron
+        // TOFIX: remove
         inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices) -> simplex_t<3>;
 
         template <int D>

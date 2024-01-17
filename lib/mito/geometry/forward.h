@@ -22,6 +22,9 @@ namespace mito::geometry {
 
     // class geometric simplex
     template <int N, int D>
+    // TOFIX: the following {requires} clause should apply but cannot be applied because class
+    // {Geometry} will attempt to instantiate {_triangles} and {_tetrahedra} regardless of the dim D
+    // requires((N > 0) && (N <= D) && (D > 0))
     class GeometricSimplex;
 
     // class point cloud
