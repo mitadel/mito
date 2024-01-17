@@ -18,14 +18,14 @@ TEST(Barycenter, Segment)
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // create two nodes
-    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto node_0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto node_1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
 
     // create a segment
-    auto segment = topology.segment({ vertex0, vertex1 });
+    auto segment = geometry.segment({ node_0, node_1 });
 
     // compute the barycenter position
-    auto barycenter = mito::geometry::barycenter(segment, geometry, coord_system);
+    auto barycenter = mito::geometry::barycenter(segment, coord_system);
 
     // check that the barycenter position is correct
     EXPECT_TRUE(barycenter == mito::geometry::coordinates({ 0.5, 0.0 }));

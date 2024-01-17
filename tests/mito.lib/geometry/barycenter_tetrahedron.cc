@@ -18,16 +18,16 @@ TEST(Barycenter, Tetrahedron)
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
 
     // create four nodes
-    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0, 0.0 });
-    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 1.0 });
+    auto node_0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 0.0 });
+    auto node_1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0, 0.0 });
+    auto node_2 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0, 0.0 });
+    auto node_3 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 1.0 });
 
     // create a tetrahedron
-    auto tetrahedron = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
+    auto tetrahedron = geometry.tetrahedron({ node_0, node_1, node_2, node_3 });
 
     // compute the barycenter position
-    auto barycenter = mito::geometry::barycenter(tetrahedron, geometry, coord_system);
+    auto barycenter = mito::geometry::barycenter(tetrahedron, coord_system);
 
     // check that the barycenter position is correct
     EXPECT_TRUE(barycenter == mito::geometry::coordinates({ 0.25, 0.25, 0.25 }));

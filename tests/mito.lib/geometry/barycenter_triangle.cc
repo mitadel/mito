@@ -18,15 +18,15 @@ TEST(Barycenter, Triangle)
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // create three nodes
-    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
+    auto node_0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto node_1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto node_2 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
 
     // create a triangle
-    auto triangle = topology.triangle({ vertex0, vertex1, vertex2 });
+    auto triangle = geometry.triangle({ node_0, node_1, node_2 });
 
     // compute the barycenter position
-    auto barycenter = mito::geometry::barycenter(triangle, geometry, coord_system);
+    auto barycenter = mito::geometry::barycenter(triangle, coord_system);
 
     // check that the barycenter position is correct
     EXPECT_TRUE(barycenter == mito::geometry::coordinates({ 0.5, 1.0 / 6.0 }));
