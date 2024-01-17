@@ -21,6 +21,21 @@ namespace mito::geometry {
     template <int N, int D>
     using geometric_simplex_t = utilities::shared_ptr<const GeometricSimplex<N, D>>;
 
+    // segment alias
+    template <int D>
+    requires(D > 0)
+    using segment_t = geometric_simplex_t<1, D>;
+
+    // triangle alias
+    template <int D>
+    requires(D > 1)
+    using triangle_t = geometric_simplex_t<2, D>;
+
+    // tetrahedron alias
+    template <int D>
+    requires(D > 2)
+    using tetrahedron_t = geometric_simplex_t<3, D>;
+
     // point cloud alias
     template <int D>
     using point_cloud_t = PointCloud<D>;
