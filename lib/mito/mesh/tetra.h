@@ -17,13 +17,12 @@ namespace mito::mesh {
             coordinate_system.midpoint(geometry.point(vertex_a), geometry.point(vertex_b)));
     }
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
+    template <int D /*spatial dimension*/, geometry::CoordinateType coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
         geometry::geometry_t<D> & geometry,
         geometry::coordinate_system_t<D, coordT> & coordinate_system,
-        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
-    requires(std::is_same_v<cellT, topology::segment_t>)
+        mesh_t<topology::segment_t, D> & subdivided_mesh, int n_refinements) -> void
     {
         // compute the middle point of the segment 0->1
         auto vertex_01 = midnode(vertex_0, vertex_1, geometry, coordinate_system);
@@ -54,13 +53,12 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
+    template <int D /*spatial dimension*/, geometry::CoordinateType coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
         const topology::vertex_t & vertex_2, geometry::geometry_t<D> & geometry,
         geometry::coordinate_system_t<D, coordT> & coordinate_system,
-        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
-    requires(std::is_same_v<cellT, topology::triangle_t>)
+        mesh_t<topology::triangle_t, D> & subdivided_mesh, int n_refinements) -> void
     {
         // compute the middle point of the segment 0->1
         auto vertex_01 = midnode(vertex_0, vertex_1, geometry, coordinate_system);
@@ -108,14 +106,13 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
+    template <int D /*spatial dimension*/, geometry::CoordinateType coordT>
     auto subdivide(
         const topology::vertex_t & vertex_0, const topology::vertex_t & vertex_1,
         const topology::vertex_t & vertex_2, const topology::vertex_t & vertex_3,
         geometry::geometry_t<D> & geometry,
         geometry::coordinate_system_t<D, coordT> & coordinate_system,
-        mesh_t<cellT, D> & subdivided_mesh, int n_refinements) -> void
-    requires(std::is_same_v<cellT, topology::tetrahedron_t>)
+        mesh_t<topology::tetrahedron_t, D> & subdivided_mesh, int n_refinements) -> void
     {
         // compute the middle point of the segment 0->1
         auto vertex_01 = midnode(vertex_0, vertex_1, geometry, coordinate_system);
