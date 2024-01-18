@@ -32,5 +32,9 @@ TEST(Tetra, Triangle)
     mesh.insert(triangle);
 
     // do tetra mesh refinements
-    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, 2);
+    const auto subdivisions = 2;
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, subdivisions);
+
+    // assert that the refined mesh has 4 times more elements than the original one
+    EXPECT_EQ(tetra_mesh.nCells(), std::pow(4, subdivisions) * mesh.nCells());
 }
