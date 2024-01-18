@@ -33,8 +33,6 @@ namespace mito::geometry {
         static constexpr int n_vertices = topology::n_vertices<simplex_type>();
 
         // the node type
-        // TODO: perhaps we should have a {Node} class so we don't need to remember that {first} is
-        //          the vertex and {second} is the point.
         using node_type = node_t<D>;
 
         // a collection of nodes
@@ -45,7 +43,8 @@ namespace mito::geometry {
         constexpr auto _check_vertices(integer_sequence<J...>) const -> void
         {
             assert(
-                mito::math::permutation_sign(_simplex->vertices(), { _nodes[J].first... }) == +1);
+                mito::math::permutation_sign(_simplex->vertices(), { _nodes[J].vertex()... })
+                == +1);
         }
 
       public:

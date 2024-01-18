@@ -40,11 +40,9 @@ namespace mito::geometry {
     template <int D>
     using point_cloud_t = PointCloud<D>;
 
-    // a node is a pair of a vertex and a point
-    // template <int D>
-    // using node_t = Node<D>;
+    // node alias
     template <int D>
-    using node_t = std::pair<topology::vertex_t, point_t<D>>;
+    using node_t = Node<D>;
 
     // mapping from vertices to points
     // TOFIX: is this going to be an {unordered_multimap} when we do DG (i.e. when we have
