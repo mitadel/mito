@@ -14,10 +14,10 @@ namespace mito::geometry {
         coordinates_t<D, coordT> result;
 
         // average the position of each vertex
-        for (const auto & node : cell->nodes()) {
-            result += coordinate_system.coordinates(node.second);
+        for (const auto & node : cell.nodes()) {
+            result += coordinate_system.coordinates(node.point());
         }
-        result /= topology::n_vertices<cellT>();
+        result /= cellT::n_vertices;
 
         // all done
         return result;
