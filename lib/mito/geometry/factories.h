@@ -5,11 +5,19 @@
 
 namespace mito::geometry {
 
-    // factory for coordinates from brace-enclosed initializer list
+    // factory for coordinates from brace-enclosed initializer list (case D > 1)
     template <CoordinateType coordT = EUCLIDEAN, int D>
     constexpr auto coordinates(const mito::scalar_t (&&coords)[D])
+    requires(D > 1)
     {
         return coordinates_t<D, coordT>(coords);
+    }
+
+    // factory for coordinates from brace-enclosed initializer list (case D = 1)
+    template <CoordinateType coordT = EUCLIDEAN>
+    constexpr auto coordinates(const mito::scalar_t && coords)
+    {
+        return coordinates_t<1, coordT>(coords);
     }
 
     // factory for coordinate system
