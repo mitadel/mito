@@ -20,6 +20,9 @@ namespace mito::geometry {
         // spatial dimension
         static constexpr int dim = D;
 
+        // order of simplex
+        static constexpr int order = N;
+
         // the type of the vertices
         using vertex_type = mito::topology::vertex_t;
 
