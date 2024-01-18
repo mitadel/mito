@@ -227,15 +227,10 @@ namespace mito::mesh {
                         nodes[J]..., geometry, coordinate_system, subdivided_mesh, n_refinements);
                 };
 
-            // TOFIX: define
-            // constexpr int order = topology::order<typename
-            // cellT<D>::resource_type::simplex_type>();
-
             // recursively subdivide the cell identified by these vertices
             _subdivide(
                 nodes, geometry, coordinate_system, subdivided_mesh, n_refinements,
-                std::make_index_sequence<
-                    topology::order<typename cellT<D>::resource_type::simplex_type>() + 1> {});
+                std::make_index_sequence<cellT<D>::order + 1> {});
         }
 
         // return the refined mesh
