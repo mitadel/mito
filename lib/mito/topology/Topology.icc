@@ -96,6 +96,20 @@ requires(N == 0)
     return _get_factory<0>().orientedSimplex(orientation);
 }
 
+template <int N>
+inline auto
+mito::topology::Topology::simplex(const vertex_simplex_composition_t<N> & vertices) -> simplex_t<N>
+requires(N >= 1 && N <= 3)
+{
+    if constexpr (N == 1) {
+        return segment(vertices);
+    } else if constexpr (N == 2) {
+        return triangle(vertices);
+    } else if constexpr (N == 3) {
+        return tetrahedron(vertices);
+    }
+}
+
 inline auto
 mito::topology::Topology::segment(const simplex_composition_t<1> & simplices) -> simplex_t<1>
 {
