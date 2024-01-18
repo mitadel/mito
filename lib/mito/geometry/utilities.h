@@ -38,31 +38,31 @@ namespace mito::geometry {
     // where they stem from
     template <int N, int D, CoordinateType coordT>
     inline auto directors(
-        const topology::simplex_t<N> & simplex, const geometry_t<D> & geometry,
+        const geometric_simplex_t<N, D> & simplex,
         const coordinate_system_t<D, coordT> & coordinate_system)
         -> std::pair<coordinates_t<D, coordT>, edge_simplex_directors_t<N, D>>
     {
         // helper function to expand {nodes[1] - nodes[0]}, ..., {nodes[N-1] - nodes[0]}
-        constexpr auto _directors =
-            []<int... J>(
-                const topology::simplex_t<N> & simplex, const geometry_t<D> & geometry,
-                const coordinate_system_t<D, coordT> & coordinate_system, integer_sequence<J...>)
+        constexpr auto _directors = []<int... J>(
+                                        const geometric_simplex_t<N, D> & simplex,
+                                        const coordinate_system_t<D, coordT> & coordinate_system,
+                                        integer_sequence<J...>)
             -> std::pair<coordinates_t<D, coordT>, edge_simplex_directors_t<N, D>> {
-            // get the simplex vertices
-            auto vertices = simplex->vertices();
+            // get the simplex nodes
+            auto nodes = simplex.nodes();
 
             // get the coordinates of the first node
-            const auto & p0 = coordinate_system.coordinates(geometry.point(vertices[0]));
+            const auto & p0 = coordinate_system.coordinates(nodes[0].point());
 
             // compute the director vectors associated with each director edge
             auto directors = edge_simplex_directors_t<N, D> { (
-                coordinate_system.coordinates(geometry.point(vertices[J + 1])) - p0)... };
+                coordinate_system.coordinates(nodes[J + 1].point()) - p0)... };
 
             // all done
             return { p0, directors };
         };
 
-        return _directors(simplex, geometry, coordinate_system, make_integer_sequence<N> {});
+        return _directors(simplex, coordinate_system, make_integer_sequence<N> {});
     }
 }
 
