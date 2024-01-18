@@ -34,24 +34,87 @@ namespace mito::geometry {
         return utilities::Singleton<point_cloud_t<D>>::GetInstance();
     }
 
-    // geometry factory
-    template <int D>
-    auto geometry(topology::topology_t & topology, point_cloud_t<D> & point_cloud)
-        -> geometry_t<D> &
-    {
-        return utilities::Singleton<geometry_t<D>>::GetInstance(topology, point_cloud);
-    }
-
     // node factory
     template <int D, CoordinateType coordT>
     constexpr auto node(
-        geometry_t<D> & geometry, coordinate_system_t<D, coordT> & coordinate_system,
-        const coordinates_t<D, coordT> & coords) -> node_t<D>
+        coordinate_system_t<D, coordT> & coordinate_system, const coordinates_t<D, coordT> & coords)
+        -> node_t<D>
     {
-        // create and place two points
-        auto point = geometry.point_cloud().point();
+        // fetch the topology
+        auto & topology = mito::topology::topology();
+        // fetch the point cloud
+        auto & point_cloud = mito::geometry::point_cloud<D>();
+        // instantiate a point
+        auto point = point_cloud.point();
+        // place it in space
         coordinate_system.place(point, coords);
-        return geometry.node(point);
+        // instantiate a vertex
+        auto vertex = topology.vertex();
+        // instantiate a node binding a vertex to a point
+        return node_t<D>(vertex, point);
+    }
+
+    // segment factory
+    template <int D>
+    constexpr auto segment(typename geometric_simplex_t<1, D>::nodes_type && nodes)
+        -> geometric_simplex_t<1, D>
+    requires(D >= 1)
+    {
+        // fetch the topology
+        auto & topology = mito::topology::topology();
+
+        // fetch vertices
+        auto vertex_0 = nodes[0].vertex();
+        auto vertex_1 = nodes[1].vertex();
+
+        // instantiate a segment
+        const auto & simplex = topology.segment({ vertex_0, vertex_1 });
+
+        // all done
+        return geometric_simplex_t<1, D>(simplex, nodes);
+    }
+
+    // triangle factory
+    template <int D>
+    constexpr auto triangle(typename geometric_simplex_t<2, D>::nodes_type && nodes)
+        -> geometric_simplex_t<2, D>
+    requires(D >= 2)
+    {
+        // fetch the topology
+        auto & topology = mito::topology::topology();
+
+        // fetch vertices
+        auto vertex_0 = nodes[0].vertex();
+        auto vertex_1 = nodes[1].vertex();
+        auto vertex_2 = nodes[2].vertex();
+
+        // instantiate a triangle
+        const auto & simplex = topology.triangle({ vertex_0, vertex_1, vertex_2 });
+
+        // all done
+        return geometric_simplex_t<2, D>(simplex, nodes);
+    }
+
+    // tetrahedron factory
+    template <int D>
+    constexpr auto tetrahedron(typename geometric_simplex_t<3, D>::nodes_type && nodes)
+        -> geometric_simplex_t<3, D>
+    requires(D >= 3)
+    {
+        // fetch the topology
+        auto & topology = mito::topology::topology();
+
+        // fetch vertices
+        auto vertex_0 = nodes[0].vertex();
+        auto vertex_1 = nodes[1].vertex();
+        auto vertex_2 = nodes[2].vertex();
+        auto vertex_3 = nodes[3].vertex();
+
+        // instantiate a tetrahedron
+        const auto & simplex = topology.tetrahedron({ vertex_0, vertex_1, vertex_2, vertex_3 });
+
+        // all done
+        return geometric_simplex_t<3, D>(simplex, nodes);
     }
 }
 

@@ -19,7 +19,7 @@ namespace mito::geometry {
 
     // geometric simplex alias
     template <int N, int D>
-    using geometric_simplex_t = utilities::shared_ptr<const GeometricSimplex<N, D>>;
+    using geometric_simplex_t = GeometricSimplex<N, D>;
 
     // segment alias
     template <int D>
@@ -39,10 +39,6 @@ namespace mito::geometry {
     // point cloud alias
     template <int D>
     using point_cloud_t = PointCloud<D>;
-
-    // geometry alias
-    template <int D>
-    using geometry_t = Geometry<D>;
 
     // a node is a pair of a vertex and a point
     // template <int D>

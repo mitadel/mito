@@ -14,7 +14,7 @@ namespace mito::geometry {
 
     template <int N, int D>
     // requires((N > 0) && (N <= D) && (D > 0))
-    class GeometricSimplex : public utilities::Shareable {
+    class GeometricSimplex {
 
       public:
         // spatial dimension
@@ -45,8 +45,7 @@ namespace mito::geometry {
                 mito::math::permutation_sign(_simplex->vertices(), { _nodes[J].first... }) == +1);
         }
 
-        // private constructors: only the Geometry has the right to instantiate geometric simplices
-      private:
+      public:
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const simplex_type & simplex, const nodes_type & nodes) :
             _simplex(simplex),
@@ -57,18 +56,18 @@ namespace mito::geometry {
             _check_vertices(make_integer_sequence<N + 1> {});
         }
 
+        // move constructor
+        GeometricSimplex(GeometricSimplex &&) = default;
+
+        // copy constructor
+        GeometricSimplex(const GeometricSimplex &) = default;
+
         // destructor
-        constexpr ~GeometricSimplex() override {}
+        constexpr ~GeometricSimplex() {}
 
       private:
         // delete default constructor
         GeometricSimplex() = delete;
-
-        // delete copy constructor
-        GeometricSimplex(const GeometricSimplex &) = delete;
-
-        // delete move constructor
-        GeometricSimplex(GeometricSimplex &&) = delete;
 
         // delete assignment operator
         GeometricSimplex & operator=(const GeometricSimplex &) = delete;
@@ -88,8 +87,6 @@ namespace mito::geometry {
         const simplex_type _simplex;
         // the simplex nodes
         const nodes_type _nodes;
-        // private friendship with the repository of geometric simplices
-        friend class utilities::Repository<geometric_simplex_t<N, D>>;
     };
 }
 

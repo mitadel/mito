@@ -31,10 +31,6 @@ namespace mito::geometry {
     template <int D>
     class PointCloud;
 
-    // class geometry
-    template <int D>
-    class Geometry;
-
     // class node
     template <int D>
     class Node;
