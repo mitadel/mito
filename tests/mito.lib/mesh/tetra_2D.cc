@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/mesh.h>
-// #include <mito/manifolds.h>
 
 
 TEST(Tetra, Triangle)
@@ -34,14 +33,4 @@ TEST(Tetra, Triangle)
 
     // do tetra mesh refinements
     auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, 2);
-
-    // TOFIX: uncomment
-    // // compute the volume of the original mesh
-    // auto volume_mesh = mito::manifolds::manifold(mesh, coord_system).volume();
-
-    // // compute the volume of the refined mesh
-    // auto volume_tetra_mesh = mito::manifolds::manifold(tetra_mesh, coord_system).volume();
-
-    // // assert that the two volumes coincide
-    // EXPECT_DOUBLE_EQ(volume_mesh, volume_tetra_mesh);
 }
