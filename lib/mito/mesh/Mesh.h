@@ -98,24 +98,6 @@ namespace mito::mesh {
         // }
 
       public:
-        inline auto sanityCheck() const -> bool
-        {
-#if 0
-            // print summary
-            std::cout << "Mesh composition: " << std::endl;
-            std::cout << std::size(_cells) << " cells embedded in " << D << " dimension " << std::endl;
-#endif
-
-            // sanity check: each cell is self-consistent
-            for (const auto & cell : _cells) {
-                if (!cell->sanityCheck()) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         inline auto nCells() const noexcept -> int
         {
             // all done
