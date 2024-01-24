@@ -19,7 +19,7 @@
 #include "SegmentedAllocator.h"
 #include "SegmentedAllocatorIterator.h"
 #include "Repository.h"
-#include "RepositoryIterator.h"
+#include "SegmentedContainerIterator.h"
 
 // factories implementation
 #include "factories.h"

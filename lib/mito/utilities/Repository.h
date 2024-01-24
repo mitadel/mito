@@ -56,7 +56,7 @@ namespace mito::utilities {
         using resource_collection_type = segmented_allocator_t<resource_type>;
 
         // iterators
-        using iterator = RepositoryIterator<repository_type>;
+        using iterator = SegmentedContainerIterator<repository_type>;
 
       public:
         // default constructor
