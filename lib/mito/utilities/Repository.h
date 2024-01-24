@@ -120,16 +120,16 @@ namespace mito::utilities {
             return shared_ptr_t(resource);
         }
 
-        inline auto resources() const -> const resource_collection_t &
-        {
-            // all done
-            return _resources;
-        }
-
         inline auto size() const -> int
         {
             // all done
             return std::size(_resources);
+        }
+
+        inline auto capacity() const -> int
+        {
+            // all done
+            return _resources.capacity();
         }
 
       public:

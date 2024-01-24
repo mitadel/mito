@@ -23,8 +23,8 @@ TEST(Utilities, RepositoryIterator)
     mito::utilities::repository_t<resource_t> collection(3 /*segment size */);
 
     // assert that the container is empty and with no capacity
-    EXPECT_EQ(collection.resources().capacity(), 0);
-    EXPECT_EQ(std::size(collection.resources()), 0);
+    EXPECT_EQ(collection.capacity(), 0);
+    EXPECT_EQ(std::size(collection), 0);
 
     // emplace three simplices in the container
     auto simplex0 = collection.emplace(0);
