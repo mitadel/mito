@@ -26,8 +26,8 @@ namespace mito::utilities {
     class SegmentedAllocatorIterator;
 
     // the repository
-    template <class sharedResourceT>
-    // requires ReferenceCountedObject<typename sharedResourceT::resource_type>
+    template <class sharedPointerT>
+    // requires ReferenceCountedObject<typename sharedPointerT::resource_type>
     class Repository;
 
     // and its iterator

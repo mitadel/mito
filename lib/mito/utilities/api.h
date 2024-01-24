@@ -19,8 +19,8 @@ namespace mito::utilities {
     using segmented_allocator_t = SegmentedAllocator<resourceT>;
 
     // the repository
-    template <class sharedResourceT>
-    using repository_t = class Repository<sharedResourceT>;
+    template <class sharedPointerT>
+    using repository_t = class Repository<sharedPointerT>;
 }
 
 
