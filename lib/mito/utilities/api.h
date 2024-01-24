@@ -21,6 +21,10 @@ namespace mito::utilities {
     // the repository
     template <class sharedPointerT>
     using repository_t = class Repository<sharedPointerT>;
+
+    // segmented vector alias
+    template <class resourceT>
+    using segmented_vector_t = SegmentedVector<resourceT>;
 }
 
 

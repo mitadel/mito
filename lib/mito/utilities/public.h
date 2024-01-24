@@ -16,8 +16,10 @@
 #include "Singleton.h"
 #include "Shareable.h"
 #include "SharedPointer.h"
+#include "Invalidatable.h"
 #include "SegmentedAllocator.h"
 #include "SegmentedAllocatorIterator.h"
+#include "SegmentedVector.h"
 #include "Repository.h"
 #include "SegmentedContainerIterator.h"
 
