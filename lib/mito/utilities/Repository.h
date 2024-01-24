@@ -49,11 +49,11 @@ namespace mito::utilities {
         // me
         using repository_type = Repository<sharedResourceT>;
         // the shared resource
-        using shared_ptr_t = sharedResourceT;
+        using shared_ptr_type = sharedResourceT;
         // my resource type
-        using resource_t = typename sharedResourceT::resource_type;
+        using resource_type = typename sharedResourceT::resource_type;
         // typedef for a collection of resources
-        using resource_collection_t = segmented_allocator_t<resource_t>;
+        using resource_collection_type = segmented_allocator_t<resource_type>;
 
         // iterators
         using iterator = RepositoryIterator<repository_type>;
@@ -67,26 +67,26 @@ namespace mito::utilities {
         {
             // destroy all resources
             for (const auto & resource : _resources) {
-                resource.~resource_t();
+                resource.~resource_type();
             }
         }
 
         // build a resource passing down {args...} to the resource constructor and store it in the
         // repository
         template <class... Args>
-        auto emplace(Args &&... args) -> shared_ptr_t
+        auto emplace(Args &&... args) -> shared_ptr_type
         {
             // get a spare location for the placement of the new resource
             auto location = _resources.location_for_placement();
 
-            // create a new instance of {resource_t} at location {location} with placement new
-            resource_t * resource = new (location) resource_t(args...);
+            // create a new instance of {resource_type} at location {location} with placement new
+            resource_type * resource = new (location) resource_type(args...);
 
             // add resource to the collection of resources
             _resources.insert(resource);
 
             // assign it to a new pointer
-            shared_ptr_t pointer(resource);
+            shared_ptr_type pointer(resource);
 
             // all done
             return pointer;
@@ -95,7 +95,7 @@ namespace mito::utilities {
         // erase a resource from the repository
         // (this method actually erases the simplex only if is no one else is using it, otherwise
         // does nothing)
-        inline auto erase(shared_ptr_t & resource) -> void
+        inline auto erase(shared_ptr_type & resource) -> void
         {
             // TOFIX: capture exception of invalid resource (nullptr)
             // sanity check
@@ -103,7 +103,7 @@ namespace mito::utilities {
             // remove this resource from the collection of resources
             _resources.erase(resource.handle());
             // destroy the resource
-            resource->~resource_t();
+            resource->~resource_type();
             // reset the shared pointer to the resource
             resource.reset();
 
@@ -112,12 +112,12 @@ namespace mito::utilities {
         }
 
         // returns the resource corresponding to this resource id
-        static inline auto resource(index_t<resource_t> index) -> shared_ptr_t
+        static inline auto resource(index_t<resource_type> index) -> shared_ptr_type
         {
             // fetch the resource based on the index
-            auto resource = shared_ptr_t::resource(index);
+            auto resource = shared_ptr_type::resource(index);
             // wrap the resource in a shared pointer
-            return shared_ptr_t(resource);
+            return shared_ptr_type(resource);
         }
 
         inline auto size() const -> int
@@ -150,7 +150,7 @@ namespace mito::utilities {
 
       private:
         // container to store the resources
-        resource_collection_t _resources;
+        resource_collection_type _resources;
     };
 }
 

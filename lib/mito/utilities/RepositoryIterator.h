@@ -26,10 +26,10 @@ namespace mito::utilities {
         // a reference to me
         using iterator_reference = iterator &;
         // what I point to
-        using shared_pointer = typename repository_type::shared_ptr_t;
+        using shared_pointer = typename repository_type::shared_ptr_type;
 
         // the segmented allocator type
-        using segmented_type = typename repository_type::resource_collection_t;
+        using segmented_type = typename repository_type::resource_collection_type;
 
         // a reference to an iterator on the segmented allocator
         using segmented_iterator_type = segmented_type::iterator;
