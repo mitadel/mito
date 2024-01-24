@@ -26,7 +26,7 @@ namespace mito::utilities {
         // a reference to me
         using iterator_reference = iterator &;
         // what I point to
-        using shared_pointer = typename repository_type::shared_ptr_type;
+        using pointer_type = typename repository_type::pointer_type;
 
         // the segmented allocator type
         using segmented_type = typename repository_type::resource_collection_type;
@@ -53,10 +53,10 @@ namespace mito::utilities {
         // iterator protocol
       public:
         // dereference
-        constexpr auto operator*() const -> shared_pointer
+        constexpr auto operator*() const -> pointer_type
         {
             // wrap the resource in a shared pointer and return it
-            return shared_pointer(_segmented_iterator.ptr());
+            return pointer_type(_segmented_iterator.ptr());
         }
 
         // arithmetic: prefix

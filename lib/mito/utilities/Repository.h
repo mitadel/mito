@@ -49,7 +49,7 @@ namespace mito::utilities {
         // me
         using repository_type = Repository<sharedPointerT>;
         // the shared resource
-        using shared_ptr_type = sharedPointerT;
+        using pointer_type = sharedPointerT;
         // my resource type
         using resource_type = typename sharedPointerT::resource_type;
         // typedef for a collection of resources
@@ -74,7 +74,7 @@ namespace mito::utilities {
         // build a resource passing down {args...} to the resource constructor and store it in the
         // repository
         template <class... Args>
-        auto emplace(Args &&... args) -> shared_ptr_type
+        auto emplace(Args &&... args) -> pointer_type
         {
             // get a spare location for the placement of the new resource
             auto location = _resources.location_for_placement();
@@ -86,7 +86,7 @@ namespace mito::utilities {
             _resources.insert(resource);
 
             // assign it to a new pointer
-            shared_ptr_type pointer(resource);
+            pointer_type pointer(resource);
 
             // all done
             return pointer;
@@ -95,7 +95,7 @@ namespace mito::utilities {
         // erase a resource from the repository
         // (this method actually erases the simplex only if is no one else is using it, otherwise
         // does nothing)
-        inline auto erase(shared_ptr_type & resource) -> void
+        inline auto erase(pointer_type & resource) -> void
         {
             // TOFIX: capture exception of invalid resource (nullptr)
             // sanity check
@@ -112,12 +112,12 @@ namespace mito::utilities {
         }
 
         // returns the resource corresponding to this resource id
-        static inline auto resource(index_t<resource_type> index) -> shared_ptr_type
+        static inline auto resource(index_t<resource_type> index) -> pointer_type
         {
             // fetch the resource based on the index
-            auto resource = shared_ptr_type::resource(index);
+            auto resource = pointer_type::resource(index);
             // wrap the resource in a shared pointer
-            return shared_ptr_type(resource);
+            return pointer_type(resource);
         }
 
         inline auto size() const -> int
