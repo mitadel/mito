@@ -8,11 +8,9 @@
 
 // DESIGN NOTES
 
-// Class {SegmentedAllocator} implements a data structure that is resizable, while also being stable
-// in memory and able to leverage the efficiency of concurrent contiguous memory allocation in
-// large chunks, as opposed to fragmented allocation.
+// Class {SegmentedAllocator} implements the memory management for a {SegmentedVector}.
 //
-// A {SegmentedAllocator} is articulated in multiple segments of memory. Each segment is contiguous
+// A {SegmentedAllocator} manages memory in multiple segments of memory. Each segment is contiguous
 // in memory and consists of a memory allocation for {_segment_size} resources of type {T}. Right at
 // the end of each segment, a pointer {T*} points to the beginning of the next segment, much like
 // what happens in linked lists.
