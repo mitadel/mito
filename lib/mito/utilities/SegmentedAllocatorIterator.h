@@ -3,29 +3,29 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedContainerIterator_h)
-#define mito_utilities_SegmentedContainerIterator_h
+#if !defined(mito_utilities_SegmentedAllocatorIterator_h)
+#define mito_utilities_SegmentedAllocatorIterator_h
 
 
 namespace mito::utilities {
 
-    template <class SegmentedContainerT>
-    class SegmentedContainerIterator {
+    template <class SegmentedAllocatorT>
+    class SegmentedAllocatorIterator {
         // types
       public:
         // my template parameters
-        using segmented_container_type = SegmentedContainerT;
+        using segmented_allocator_type = SegmentedAllocatorT;
         // me
-        using iterator = SegmentedContainerIterator<segmented_container_type>;
+        using iterator = SegmentedAllocatorIterator<segmented_allocator_type>;
         using iterator_reference = iterator &;
         // what I point to
-        using pointer = typename SegmentedContainerT::pointer;
-        using reference = typename SegmentedContainerT::reference;
+        using pointer = typename SegmentedAllocatorT::pointer;
+        using reference = typename SegmentedAllocatorT::reference;
 
         // metamethods
       public:
         // constructor
-        constexpr SegmentedContainerIterator(
+        constexpr SegmentedAllocatorIterator(
             pointer ptr, pointer segment_end, int segment_size, pointer end) :
             _ptr(ptr),
             _segment_end(segment_end),
@@ -115,32 +115,32 @@ namespace mito::utilities {
         // default metamethods
       public:
         // destructor
-        ~SegmentedContainerIterator() = default;
+        ~SegmentedAllocatorIterator() = default;
         // let the compiler write the rest
-        constexpr SegmentedContainerIterator(const SegmentedContainerIterator &) = default;
-        constexpr SegmentedContainerIterator(SegmentedContainerIterator &&) noexcept = default;
-        constexpr SegmentedContainerIterator & operator=(const SegmentedContainerIterator &) =
+        constexpr SegmentedAllocatorIterator(const SegmentedAllocatorIterator &) = default;
+        constexpr SegmentedAllocatorIterator(SegmentedAllocatorIterator &&) noexcept = default;
+        constexpr SegmentedAllocatorIterator & operator=(const SegmentedAllocatorIterator &) =
             default;
-        constexpr SegmentedContainerIterator & operator=(SegmentedContainerIterator &&) noexcept =
+        constexpr SegmentedAllocatorIterator & operator=(SegmentedAllocatorIterator &&) noexcept =
             default;
     };
 
     // the global operators
     // equality
-    template <class SegmentedContainerT>
+    template <class SegmentedAllocatorT>
     constexpr auto operator==(
-        const SegmentedContainerIterator<SegmentedContainerT> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool
+        const SegmentedAllocatorIterator<SegmentedAllocatorT> & it1,
+        const SegmentedAllocatorIterator<SegmentedAllocatorT> & it2) noexcept -> bool
     {
         // iterators are equal if they point to the same segmented container
         return it1.ptr() == it2.ptr();
     }
 
     // and not
-    template <class SegmentedContainerT>
+    template <class SegmentedAllocatorT>
     constexpr auto operator!=(
-        const SegmentedContainerIterator<SegmentedContainerT> & it1,
-        const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool
+        const SegmentedAllocatorIterator<SegmentedAllocatorT> & it1,
+        const SegmentedAllocatorIterator<SegmentedAllocatorT> & it2) noexcept -> bool
     {
         // iterators are unequal iff they are not equal
         return !(it1 == it2);

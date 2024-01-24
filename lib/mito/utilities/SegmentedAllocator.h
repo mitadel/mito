@@ -3,16 +3,16 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedContainer_h)
-#define mito_utilities_SegmentedContainer_h
+#if !defined(mito_utilities_SegmentedAllocator_h)
+#define mito_utilities_SegmentedAllocator_h
 
 // DESIGN NOTES
 
-// Class {SegmentedContainer} implements a data structure that is resizable, while also being stable
+// Class {SegmentedAllocator} implements a data structure that is resizable, while also being stable
 // in memory and able to leverage the efficiency of concurrent contiguous memory allocation in
 // large chunks, as opposed to fragmented allocation.
 //
-// A {SegmentedContainer} is articulated in multiple segments of memory. Each segment is contiguous
+// A {SegmentedAllocator} is articulated in multiple segments of memory. Each segment is contiguous
 // in memory and consists of a memory allocation for {_segment_size} resources of type {T}. Right at
 // the end of each segment, a pointer {T*} points to the beginning of the next segment, much like
 // what happens in linked lists.
@@ -31,18 +31,18 @@
 // altogether.
 // The current implementation only supports immutable resources (i.e. resources can be created
 // and destroyed but cannot be modified once they are into the segmented container). The use of
-// {SegmentedContainer} with a resource type {T} that is not immutable can be envisioned but has
+// {SegmentedAllocator} with a resource type {T} that is not immutable can be envisioned but has
 // not been explored so far.
 //
-// Iterators to a {SegmentedContainer} are smart enough to jump from one segment to the next one,
+// Iterators to a {SegmentedAllocator} are smart enough to jump from one segment to the next one,
 // once the end of a segment has been reached.
 
 namespace mito::utilities {
     template <class resourceT>
-    class SegmentedContainer {
+    class SegmentedAllocator {
       public:
         // me
-        using segmented_container_type = SegmentedContainer<resourceT>;
+        using segmented_allocator_type = SegmentedAllocator<resourceT>;
 
         // my template parameter
         using resource_type = resourceT;
@@ -58,12 +58,12 @@ namespace mito::utilities {
         using const_reference = const unqualified_resource_type &;
 
         // iterators
-        using iterator = SegmentedContainerIterator<segmented_container_type>;
+        using iterator = SegmentedAllocatorIterator<segmented_allocator_type>;
         using iterator_const_reference = const iterator &;
 
       public:
         // default constructor (empty data structure)
-        SegmentedContainer(int segment_size) :
+        SegmentedAllocator(int segment_size) :
             _segment_size(segment_size),
             _begin(nullptr),
             _end(_begin),
@@ -73,7 +73,7 @@ namespace mito::utilities {
         {}
 
         // destructor
-        ~SegmentedContainer()
+        ~SegmentedAllocator()
         {
             if (_begin == nullptr)
                 return;
@@ -242,16 +242,16 @@ namespace mito::utilities {
 
       private:
         // delete copy constructor
-        SegmentedContainer(const SegmentedContainer &) = delete;
+        SegmentedAllocator(const SegmentedAllocator &) = delete;
 
         // delete move constructor
-        SegmentedContainer(SegmentedContainer &&) = delete;
+        SegmentedAllocator(SegmentedAllocator &&) = delete;
 
         // delete assignment operator
-        SegmentedContainer & operator=(const SegmentedContainer &) = delete;
+        SegmentedAllocator & operator=(const SegmentedAllocator &) = delete;
 
         // delete move assignment operator
-        SegmentedContainer & operator=(SegmentedContainer &&) = delete;
+        SegmentedAllocator & operator=(SegmentedAllocator &&) = delete;
 
         // the segment size
         const int _segment_size;

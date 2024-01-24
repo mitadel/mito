@@ -17,13 +17,13 @@ namespace mito::utilities {
     // requires ReferenceCountedObject<resourceT>
     class SharedPointer;
 
-    // class segmented container
+    // class segmented allocator
     template <class resourceT>
-    class SegmentedContainer;
+    class SegmentedAllocator;
 
     // and its iterator
-    template <class SegmentedContainerT>
-    class SegmentedContainerIterator;
+    template <class SegmentedAllocatorT>
+    class SegmentedAllocatorIterator;
 
     // the repository
     template <class sharedResourceT>

@@ -28,10 +28,10 @@ namespace mito::utilities {
         // what I point to
         using shared_pointer = typename repository_type::shared_ptr_t;
 
-        // the segmented container type
+        // the segmented allocator type
         using segmented_type = typename repository_type::resource_collection_t;
 
-        // a reference to an iterator on the segmented container
+        // a reference to an iterator on the segmented allocator
         using segmented_iterator_type = segmented_type::iterator;
         using segmented_iterator_const_reference_type = segmented_type::iterator_const_reference;
 
@@ -62,7 +62,7 @@ namespace mito::utilities {
         // arithmetic: prefix
         constexpr auto operator++() -> iterator_reference
         {
-            // increment the iterator to the segmented container
+            // increment the iterator to the segmented allocator
             ++_segmented_iterator;
 
             if (_segmented_iterator.ptr() == _segmented_iterator.end()) {
@@ -92,7 +92,7 @@ namespace mito::utilities {
 
         // implementation details: data
       private:
-        // a segmented container iterator
+        // a segmented allocator iterator
         segmented_iterator_type _segmented_iterator;
 
         // befriend operator==

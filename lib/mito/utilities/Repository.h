@@ -17,7 +17,7 @@
 //      1) the {SharedPointer} does not have ownership of the resource and does not have privileges
 //          to allocate and deallocate memory for it. In fact, the allocation and deallocation of
 //          memory is entirely managed by the {Repository} class, which in turn delegates this to a
-//          {SegmentedContainer}, which allocates and deallocates resources collectively in chunks
+//          {SegmentedAllocator}, which allocates and deallocates resources collectively in chunks
 //          to optimize memory allocation/deallocation. In this respect, the role of the
 //          {SharedPointer} is only that of managing the book keeping on the count of references to
 //          the resources.
@@ -53,7 +53,7 @@ namespace mito::utilities {
         // my resource type
         using resource_t = typename sharedResourceT::resource_type;
         // typedef for a collection of resources
-        using resource_collection_t = segmented_t<resource_t>;
+        using resource_collection_t = segmented_allocator_t<resource_t>;
 
         // iterators
         using iterator = RepositoryIterator<repository_type>;
