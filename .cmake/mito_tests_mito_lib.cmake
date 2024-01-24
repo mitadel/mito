@@ -82,8 +82,8 @@ mito_test_driver(tests/mito.lib/topology/segment.cc)
 mito_test_driver(tests/mito.lib/topology/simplices.cc)
 
 # utilities
-mito_test_driver(tests/mito.lib/utilities/segmented_container.cc)
-mito_test_driver(tests/mito.lib/utilities/segmented_container_iterator.cc)
+mito_test_driver(tests/mito.lib/utilities/repository.cc)
+mito_test_driver(tests/mito.lib/utilities/repository_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 
 # quadrature

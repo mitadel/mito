@@ -17,8 +17,7 @@ class Resource : public mito::utilities::Shareable {
 using resource_t = mito::utilities::shared_ptr<Resource>;
 
 
-// TOFIX: these tests now really test Repository. Rename the tests
-TEST(Utilities, SegmentedContainerIterator)
+TEST(Utilities, RepositoryIterator)
 {
     // instantiate a repository of {Resource} resources
     mito::utilities::repository_t<resource_t> collection(3 /*segment size */);

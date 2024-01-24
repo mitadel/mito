@@ -15,7 +15,7 @@ class Resource : public mito::utilities::Shareable {
 using resource_t = mito::utilities::shared_ptr<Resource>;
 
 
-TEST(Utilities, SegmentedContainer)
+TEST(Utilities, Repository)
 {
     // segment size
     const auto segmentSize = 3;
