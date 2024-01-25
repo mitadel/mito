@@ -67,15 +67,15 @@ namespace mito::geometry {
         // destructor
         constexpr ~GeometricSimplex() {}
 
+        // default assignment operator
+        constexpr GeometricSimplex & operator=(const GeometricSimplex &) = default;
+
+        // default move assignment operator
+        constexpr GeometricSimplex & operator=(GeometricSimplex &&) = default;
+
       private:
         // delete default constructor
         constexpr GeometricSimplex() = delete;
-
-        // delete assignment operator
-        constexpr GeometricSimplex & operator=(const GeometricSimplex &) = delete;
-
-        // delete move assignment operator
-        constexpr GeometricSimplex & operator=(GeometricSimplex &&) = delete;
 
       public:
         // accessor for the underlying oriented simplex
