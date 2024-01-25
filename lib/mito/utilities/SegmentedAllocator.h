@@ -41,23 +41,27 @@ namespace mito::utilities {
       public:
         // me
         using segmented_allocator_type = SegmentedAllocator<resourceT>;
-
         // my template parameter
         using resource_type = resourceT;
-        // unqualified resource type (for internal book-keeping)
-        using unqualified_resource_type = typename std::remove_const<resource_type>::type;
         // raw pointer type to unqualified resource type
-        using pointer = unqualified_resource_type *;
-        // const raw pointer type to unqualified resource type
-        using const_pointer = const unqualified_resource_type *;
+        using pointer = resource_type *;
         // raw reference type to unqualified resource type
-        using reference = unqualified_resource_type &;
-        // const raw reference type to unqualified resource type
-        using const_reference = const unqualified_resource_type &;
-
+        using reference = resource_type &;
         // iterators
         using iterator = SegmentedAllocatorIterator<segmented_allocator_type>;
         using iterator_const_reference = const iterator &;
+
+      private:
+        // unqualified resource type (for internal book-keeping)
+        using unqualified_resource_type = typename std::remove_const<resource_type>::type;
+        // raw pointer type to unqualified resource type
+        using unqualified_pointer = unqualified_resource_type *;
+        // TOFIX: remove?
+        // const raw pointer type to unqualified resource type
+        using const_pointer = const unqualified_resource_type *;
+        // TOFIX: remove?
+        // const raw reference type to unqualified resource type
+        using const_reference = const unqualified_resource_type &;
 
       public:
         // default constructor (empty data structure)
@@ -80,13 +84,14 @@ namespace mito::utilities {
                 return;
 
             // start from the beginning of the first segment
-            pointer ptr = _begin;
+            unqualified_pointer ptr = _begin;
 
             // while the current segment is not the last segment
             while (ptr + _segment_size != _end_allocation) {
                 // retrieve the location of the next segment which is left behind
                 // by the segmented container right at the end of the current segment
-                pointer next = *(reinterpret_cast<pointer *>(ptr + _segment_size));
+                unqualified_pointer next =
+                    *(reinterpret_cast<unqualified_pointer *>(ptr + _segment_size));
 
                 // delete the current segment
                 ::operator delete(ptr);
@@ -114,11 +119,11 @@ namespace mito::utilities {
         inline auto segment_size() const noexcept -> int { return _segment_size; }
 
       private:
-        auto _allocate_new_segment() -> pointer
+        auto _allocate_new_segment() -> unqualified_pointer
         {
             // allocate a new segment of memory
-            pointer segment = static_cast<pointer>(
-                ::operator new(_segment_size * sizeof(resource_type) + sizeof(pointer)));
+            unqualified_pointer segment = static_cast<unqualified_pointer>(::operator new(
+                _segment_size * sizeof(resource_type) + sizeof(unqualified_pointer)));
             // if it is the first segment
             if (_begin == _end) {
                 // point {_begin} to the beginning of the allocated memory
@@ -127,7 +132,8 @@ namespace mito::utilities {
             // otherwise
             else {
                 // reinterpret the element after the last element in data as a {pointer} *
-                pointer * tail = reinterpret_cast<pointer *>(_end_allocation);
+                unqualified_pointer * tail =
+                    reinterpret_cast<unqualified_pointer *>(_end_allocation);
                 // leave behind a pointer with the location of the next segment
                 *tail = segment;
             }
@@ -141,12 +147,12 @@ namespace mito::utilities {
             return segment;
         }
 
-        auto _next_available_location() -> pointer
+        auto _next_available_location() -> unqualified_pointer
         {
             // if there are available locations to spare
             if (!_available_locations.empty()) {
                 // get an available location from the queue
-                pointer location = _available_locations.front();
+                unqualified_pointer location = _available_locations.front();
 
                 // return the available location from the queue
                 return location;
@@ -164,7 +170,7 @@ namespace mito::utilities {
         }
 
       public:
-        auto location_for_placement() -> pointer
+        auto location_for_placement() -> unqualified_pointer
         {
             // fetch the next available location where to write the new element
             auto location = _next_available_location();
@@ -216,7 +222,7 @@ namespace mito::utilities {
             --_n_elements;
 
             // add the address of the element to the queue of the available locations for write
-            _available_locations.push(const_cast<pointer>(element));
+            _available_locations.push(const_cast<unqualified_pointer>(element));
 
             // all done
             return;
@@ -256,18 +262,18 @@ namespace mito::utilities {
         // the segment size
         const int _segment_size;
         // the beginning of the container
-        pointer _begin;
+        unqualified_pointer _begin;
         // the end of the container (no element has been constructed so far after this point)
         // (it does not necessarily coincide with the end of the last allocated segment)
-        pointer _end;
+        unqualified_pointer _end;
         // points right after the last segment of allocated memory
-        pointer _end_allocation;
+        unqualified_pointer _end_allocation;
         // the number of segments stored in the container
         int _n_segments;
         // the number of elements stored in the container
         int _n_elements;
         // a queue with the available locations for writing
-        std::queue<pointer> _available_locations;
+        std::queue<unqualified_pointer> _available_locations;
 
       private:
         // non-const iterator
