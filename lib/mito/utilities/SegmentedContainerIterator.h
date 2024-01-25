@@ -59,6 +59,12 @@ namespace mito::utilities {
             // wrap the resource in a shared pointer and return it
             return pointer_type(_segmented_iterator.ptr());
         }
+        // operator->
+        constexpr auto operator->() const noexcept -> pointer_type
+        {
+            // return the pointer
+            return _segmented_iterator.ptr();
+        }
 
         // arithmetic: prefix
         constexpr auto operator++() -> iterator_reference
