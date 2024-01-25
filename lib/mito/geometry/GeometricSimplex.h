@@ -59,30 +59,30 @@ namespace mito::geometry {
         }
 
         // move constructor
-        GeometricSimplex(GeometricSimplex &&) = default;
+        constexpr GeometricSimplex(GeometricSimplex &&) = default;
 
         // copy constructor
-        GeometricSimplex(const GeometricSimplex &) = default;
+        constexpr GeometricSimplex(const GeometricSimplex &) = default;
 
         // destructor
         constexpr ~GeometricSimplex() {}
 
       private:
         // delete default constructor
-        GeometricSimplex() = delete;
+        constexpr GeometricSimplex() = delete;
 
         // delete assignment operator
-        GeometricSimplex & operator=(const GeometricSimplex &) = delete;
+        constexpr GeometricSimplex & operator=(const GeometricSimplex &) = delete;
 
         // delete move assignment operator
-        GeometricSimplex & operator=(GeometricSimplex &&) = delete;
+        constexpr GeometricSimplex & operator=(GeometricSimplex &&) = delete;
 
       public:
         // accessor for the underlying oriented simplex
-        inline auto simplex() const noexcept -> const simplex_type & { return _simplex; }
+        constexpr auto simplex() const noexcept -> simplex_type & { return _simplex; }
 
         // return the composition of this simplex in terms of its vertices
-        inline auto nodes() const -> nodes_type { return _nodes; }
+        constexpr auto nodes() const -> nodes_type { return _nodes; }
 
       private:
         // the shared pointer to the footprint
