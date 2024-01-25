@@ -70,6 +70,9 @@ namespace mito::utilities {
             _n_elements(0)
         {}
 
+        // default move constructor
+        SegmentedAllocator(SegmentedAllocator &&) = default;
+
         // destructor
         ~SegmentedAllocator()
         {
@@ -243,9 +246,6 @@ namespace mito::utilities {
       private:
         // delete copy constructor
         SegmentedAllocator(const SegmentedAllocator &) = delete;
-
-        // delete move constructor
-        SegmentedAllocator(SegmentedAllocator &&) = delete;
 
         // delete assignment operator
         SegmentedAllocator & operator=(const SegmentedAllocator &) = delete;
