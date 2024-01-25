@@ -65,14 +65,13 @@ namespace mito::utilities {
         // erase a resource from the vector
         inline auto erase(iterator & resource) -> void
         {
-
             // sanity check
-            assert((*resource)->is_valid());
+            assert(resource->is_valid());
 
             // invalidate the resource
-            (*resource)->invalidate();
+            resource->invalidate();
             // remove this resource from the collection of resources
-            _resources.erase(*resource);
+            _resources.erase(&*resource);
 
             // all done
             return;

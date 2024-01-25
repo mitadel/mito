@@ -27,6 +27,8 @@ namespace mito::utilities {
         using iterator_reference = iterator &;
         // what I point to
         using pointer_type = typename segmented_container_type::pointer_type;
+        // the resource stored
+        using resource_type = typename segmented_container_type::resource_type;
 
         // the segmented allocator type
         using segmented_type = typename segmented_container_type::resource_collection_type;
@@ -53,12 +55,22 @@ namespace mito::utilities {
 
         // iterator protocol
       public:
-        // dereference
+        // dereference (case reference-counted object)
         constexpr auto operator*() const -> pointer_type
+        requires(ReferenceCountedObject<resource_type>)
         {
             // wrap the resource in a shared pointer and return it
             return pointer_type(_segmented_iterator.ptr());
         }
+
+        // dereference (case non reference-counted object)
+        constexpr auto operator*() const -> resource_type &
+        requires(!ReferenceCountedObject<resource_type>)
+        {
+            // return the resource
+            return *(_segmented_iterator.ptr());
+        }
+
         // operator->
         constexpr auto operator->() const noexcept -> pointer_type
         {

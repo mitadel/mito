@@ -33,7 +33,7 @@ TEST(Utilities, RepositoryIterator)
 
     std::vector<int> store_elements;
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -47,7 +47,7 @@ TEST(Utilities, RepositoryIterator)
     collection.erase(simplex1);
 
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -60,7 +60,7 @@ TEST(Utilities, RepositoryIterator)
     collection.erase(simplex0);
 
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 2);
@@ -73,7 +73,7 @@ TEST(Utilities, RepositoryIterator)
 
     // loop on an empty repository
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(std::size(store_elements), 0);
@@ -91,7 +91,7 @@ TEST(Utilities, RepositoryIterator)
     auto simplex4 = collection.emplace_back(4);
 
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     // the order of the values depends on the order elimination of the previous simplices
