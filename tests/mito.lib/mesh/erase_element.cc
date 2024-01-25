@@ -84,10 +84,6 @@ TEST(Mesh, EraseElement)
     // assert the boundary is now made of 5 cells
     EXPECT_EQ(mesh.boundary().nCells(), 5);
 
-    // assert that a cell with the composition of {cell0} does not exist
-    // any more within the topology
-    EXPECT_FALSE(topology.exists<2>({ segment0, segment1, segment2 }));
-
     // show me the boundary cells
     // std::cout << "Boundary: " << std::endl;
     // for (const auto & simplex : mito::mesh::boundary<1>(mesh, topology)) {
@@ -102,8 +98,4 @@ TEST(Mesh, EraseElement)
 
     // assert the boundary is now made of 4 cells
     EXPECT_EQ(mesh.boundary().nCells(), 4);
-
-    // assert that a cell with the composition of {cell1} does not exist
-    // any more within the topology
-    EXPECT_FALSE(topology.exists<2>({ segment3, segment4, segment5 }));
 }

@@ -72,7 +72,8 @@ endif()
 
 # topology
 mito_test_driver(tests/mito.lib/topology/cell_edges.cc)
-mito_test_driver(tests/mito.lib/topology/erase_element.cc)
+mito_test_driver(tests/mito.lib/topology/erase_element_check_vertices.cc)
+mito_test_driver(tests/mito.lib/topology/erase_element_check_segments.cc)
 mito_test_driver(tests/mito.lib/topology/flip_diagonal.cc)
 mito_test_driver(tests/mito.lib/topology/oriented_simplex_segment.cc)
 mito_test_driver(tests/mito.lib/topology/oriented_simplex_triangle.cc)
