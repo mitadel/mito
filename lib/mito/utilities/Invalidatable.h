@@ -14,32 +14,32 @@ namespace mito::utilities {
         // interface
       public:
         // whether the resource is valid or not
-        inline auto is_valid() const noexcept -> bool;
+        constexpr auto is_valid() const noexcept -> bool;
 
         // invalidate the resource
-        inline auto invalidate() noexcept -> void;
+        constexpr auto invalidate() noexcept -> void;
 
         // meta methods
       public:
         // destructor
-        constexpr inline virtual ~Invalidatable();
+        constexpr virtual ~Invalidatable();
 
         // default constructor
-        constexpr inline Invalidatable();
+        constexpr Invalidatable();
 
         // copy constructors
-        inline Invalidatable(const Invalidatable &) = delete;
-        inline Invalidatable(Invalidatable &) = delete;
+        constexpr Invalidatable(const Invalidatable &) = default;
+        constexpr Invalidatable(Invalidatable &) = default;
 
         // move constructor
-        inline Invalidatable(Invalidatable &&) = delete;
+        constexpr Invalidatable(Invalidatable &&) = default;
 
         // assignment operator
-        inline Invalidatable & operator=(const Invalidatable &) = delete;
-        inline Invalidatable & operator=(Invalidatable &) = delete;
+        constexpr Invalidatable & operator=(const Invalidatable &) = default;
+        constexpr Invalidatable & operator=(Invalidatable &) = default;
 
         // move assignment operator
-        inline Invalidatable & operator=(Invalidatable &&) = delete;
+        constexpr Invalidatable & operator=(Invalidatable &&) = default;
 
         // data members
       private:

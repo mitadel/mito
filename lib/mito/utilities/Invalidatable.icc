@@ -6,7 +6,7 @@
 #else
 
 // interface
-auto
+constexpr auto
 mito::utilities::Invalidatable::is_valid() const noexcept -> bool
 {
     // easy enough
@@ -14,7 +14,7 @@ mito::utilities::Invalidatable::is_valid() const noexcept -> bool
 }
 
 // interface
-auto
+constexpr auto
 mito::utilities::Invalidatable::invalidate() noexcept -> void
 {
     // invalid state
