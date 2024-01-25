@@ -95,11 +95,13 @@ namespace mito::utilities {
         // erase a resource from the repository
         // (this method actually erases the simplex only if is no one else is using it, otherwise
         // does nothing)
-        inline auto erase(pointer_type & resource) -> void
+        inline auto erase(pointer_type & resource) -> bool
         {
-            // TOFIX: capture exception of invalid resource (nullptr)
-            // sanity check
-            assert(!resource.is_nullptr());
+            // in the resource is {nullptr}, there is nothing to erase
+            if (resource.is_nullptr()) {
+                return false;
+            }
+
             // remove this resource from the collection of resources
             _resources.erase(resource.handle());
             // destroy the resource
@@ -108,7 +110,7 @@ namespace mito::utilities {
             resource.reset();
 
             // all done
-            return;
+            return true;
         }
 
         // returns the resource corresponding to this resource id

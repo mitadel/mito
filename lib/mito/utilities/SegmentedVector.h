@@ -63,10 +63,12 @@ namespace mito::utilities {
         }
 
         // erase a resource from the vector
-        inline auto erase(iterator & resource) -> void
+        inline auto erase(iterator & resource) -> bool
         {
-            // sanity check
-            assert(resource->is_valid());
+            // in the resource is already invalid, there is nothing to erase
+            if (!resource->is_valid()) {
+                return false;
+            }
 
             // invalidate the resource
             resource->invalidate();
@@ -74,7 +76,7 @@ namespace mito::utilities {
             _resources.erase(&*resource);
 
             // all done
-            return;
+            return true;
         }
 
         inline auto size() const -> int
