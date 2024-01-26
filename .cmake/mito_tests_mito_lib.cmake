@@ -86,6 +86,7 @@ mito_test_driver(tests/mito.lib/topology/simplices.cc)
 mito_test_driver(tests/mito.lib/utilities/repository.cc)
 mito_test_driver(tests/mito.lib/utilities/repository_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector.cc)
+mito_test_driver(tests/mito.lib/utilities/segmented_vector_move.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 

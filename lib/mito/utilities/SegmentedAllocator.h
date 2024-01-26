@@ -74,8 +74,23 @@ namespace mito::utilities {
             _n_elements(0)
         {}
 
-        // default move constructor
-        SegmentedAllocator(SegmentedAllocator &&) = default;
+        //  move constructor
+        SegmentedAllocator(SegmentedAllocator && other) :
+            _segment_size(other._segment_size),
+            _begin(other._begin),
+            _end(other._end),
+            _end_allocation(other._end_allocation),
+            _n_segments(other._n_segments),
+            _n_elements(other._n_elements),
+            _available_locations(std::move(other._available_locations))
+        {
+            // invalidate the source
+            other._begin = nullptr;
+            other._end = other._begin;
+            other._end_allocation = other._begin;
+            other._n_segments = 0;
+            other._n_elements = 0;
+        }
 
         // destructor
         ~SegmentedAllocator()
