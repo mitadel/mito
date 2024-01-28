@@ -50,7 +50,7 @@ namespace mito::utilities {
 
         // build a resource passing down {args...} to the resource constructor
         template <class... Args>
-        auto emplace_back(Args &&... args) -> iterator
+        inline auto emplace_back(Args &&... args) -> iterator
         {
             // get a spare location for the placement of the new resource
             auto location = _resources.location_for_placement();
@@ -95,13 +95,13 @@ namespace mito::utilities {
         /**
          * iterators
          */
-        constexpr auto begin() const -> iterator
+        inline auto begin() const -> iterator
         {
             // delegate answer to {_resources}
             return iterator(_resources.begin());
         }
 
-        constexpr auto end() const -> iterator
+        inline auto end() const -> iterator
         {
             // delegate answer to {_resources}
             return iterator(_resources.end());
