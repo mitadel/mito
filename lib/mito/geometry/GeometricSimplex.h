@@ -47,6 +47,16 @@ namespace mito::geometry {
                 == +1);
         }
 
+        template <int... J>
+        constexpr auto _create_simplex(integer_sequence<J...>) const -> simplex_type
+        {
+            // fetch the topology
+            auto & topology = mito::topology::topology();
+
+            // instantiate a simplex with the vertices prescribed by {_nodes}
+            return topology.simplex<N>({ _nodes[J].vertex()... });
+        }
+
       public:
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const simplex_type & simplex, const nodes_type & nodes) :
@@ -57,6 +67,12 @@ namespace mito::geometry {
             // positive permutation
             _check_vertices(make_integer_sequence<N + 1> {});
         }
+
+        // constructor with an existing oriented simplex and a collection of nodes
+        constexpr GeometricSimplex(const nodes_type & nodes) :
+            _nodes(nodes),
+            _simplex(_create_simplex(make_integer_sequence<n_vertices> {}))
+        {}
 
         // move constructor
         constexpr GeometricSimplex(GeometricSimplex &&) = default;

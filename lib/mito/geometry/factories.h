@@ -60,18 +60,8 @@ namespace mito::geometry {
         -> geometric_simplex_t<1, D>
     requires(D >= 1)
     {
-        // fetch the topology
-        auto & topology = mito::topology::topology();
-
-        // fetch vertices
-        auto vertex_0 = nodes[0].vertex();
-        auto vertex_1 = nodes[1].vertex();
-
-        // instantiate a segment
-        const auto & simplex = topology.segment({ vertex_0, vertex_1 });
-
         // all done
-        return geometric_simplex_t<1, D>(simplex, nodes);
+        return geometric_simplex_t<1, D>(nodes);
     }
 
     // triangle factory
@@ -80,19 +70,8 @@ namespace mito::geometry {
         -> geometric_simplex_t<2, D>
     requires(D >= 2)
     {
-        // fetch the topology
-        auto & topology = mito::topology::topology();
-
-        // fetch vertices
-        auto vertex_0 = nodes[0].vertex();
-        auto vertex_1 = nodes[1].vertex();
-        auto vertex_2 = nodes[2].vertex();
-
-        // instantiate a triangle
-        const auto & simplex = topology.triangle({ vertex_0, vertex_1, vertex_2 });
-
         // all done
-        return geometric_simplex_t<2, D>(simplex, nodes);
+        return geometric_simplex_t<2, D>(nodes);
     }
 
     // tetrahedron factory
@@ -101,20 +80,8 @@ namespace mito::geometry {
         -> geometric_simplex_t<3, D>
     requires(D >= 3)
     {
-        // fetch the topology
-        auto & topology = mito::topology::topology();
-
-        // fetch vertices
-        auto vertex_0 = nodes[0].vertex();
-        auto vertex_1 = nodes[1].vertex();
-        auto vertex_2 = nodes[2].vertex();
-        auto vertex_3 = nodes[3].vertex();
-
-        // instantiate a tetrahedron
-        const auto & simplex = topology.tetrahedron({ vertex_0, vertex_1, vertex_2, vertex_3 });
-
         // all done
-        return geometric_simplex_t<3, D>(simplex, nodes);
+        return geometric_simplex_t<3, D>(nodes);
     }
 }
 
