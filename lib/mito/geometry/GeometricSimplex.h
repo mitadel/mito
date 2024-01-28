@@ -50,8 +50,8 @@ namespace mito::geometry {
       public:
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const simplex_type & simplex, const nodes_type & nodes) :
-            _simplex(simplex),
-            _nodes(nodes)
+            _nodes(nodes),
+            _simplex(simplex)
         {
             // check that the vertices in {nodes} match the vertices of the {simplex} within a
             // positive permutation
@@ -85,10 +85,10 @@ namespace mito::geometry {
         constexpr auto nodes() const -> nodes_type { return _nodes; }
 
       private:
-        // the shared pointer to the footprint
-        const simplex_type _simplex;
         // the simplex nodes
         const nodes_type _nodes;
+        // the shared pointer to the footprint
+        const simplex_type _simplex;
     };
 }
 
