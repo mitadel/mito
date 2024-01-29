@@ -30,7 +30,7 @@ TEST(Quadrature, LoadMeshTrianglesMPI)
     auto task_id = simulation.context().task_id();
 
     // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, coord_system, n_tasks, task_id);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, n_tasks, task_id);
 
     // build the manifold on the partitioned mesh
     auto manifold = mito::manifolds::manifold(mesh_partition, coord_system);

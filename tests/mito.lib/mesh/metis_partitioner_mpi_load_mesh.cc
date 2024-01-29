@@ -24,7 +24,7 @@ TEST(MetisPartitionerMPI, LoadMesh)
     int n_rank = simulation.context().task_id();
 
     // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, coord_system, n_partitions, n_rank);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
 
     // the number of cells in this partition
     int local_ncells = mesh_partition.nCells();

@@ -18,12 +18,10 @@ TEST(MetisPartitioner, LoadMesh)
     int n_partitions = 2;
 
     // partition the mesh in two and get the first partition
-    auto mesh_partition_0 =
-        mito::mesh::metis::partition(mesh, coord_system, n_partitions, 0 /* n_rank */);
+    auto mesh_partition_0 = mito::mesh::metis::partition(mesh, n_partitions, 0 /* n_rank */);
 
     // partition the mesh in two and get the second partition
-    auto mesh_partition_1 =
-        mito::mesh::metis::partition(mesh, coord_system, n_partitions, 1 /* n_rank */);
+    auto mesh_partition_1 = mito::mesh::metis::partition(mesh, n_partitions, 1 /* n_rank */);
 
     // report
     std::cout << "Initial mesh size = " << mesh.nCells() << std::endl;
