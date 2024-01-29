@@ -5,22 +5,28 @@
 
 namespace mito::mesh {
 
-    template <template <int> class cellT /* the type of cell */, int D /* spatial dimension */>
+    template <class cellT /* the type of cell */>
     class Mesh {
 
       public:
         // typedef for cell type
-        using cell_type = cellT<D>;
+        using cell_type = cellT;
         // TOFIX: below we make the assumption that the cell is always simplicial, remove this
         //  assumption.
         // typedef for simplex type
-        using simplex_type = cell_type::resource_type::simplex_type;
+        using simplex_type = cell_type::simplex_type;
         // publish the order of the cell
         static constexpr int order = topology::order<simplex_type>();
         // publish the number of vertices per element
         static constexpr int n_vertices = topology::n_vertices<simplex_type>();
+        // the type of vertex
+        using vertex_type = cell_type::vertex_type;
+        // a collection of nodes
+        using node_type = cell_type::node_type;
+        // a collection of nodes
+        using nodes_type = cell_type::nodes_type;
         // publish the dimension of physical space
-        static constexpr int dim = D;
+        static constexpr int dim = cell_type::dim;
         // typedef for a collection of cells
         // QUESTION: we may consider switching this to a container that is faster to iterate on
         //  e.g. {vector}, if we decide to base {Manifold} on a {Mesh}. In this case, in fact,
@@ -29,16 +35,21 @@ namespace mito::mesh {
         //  insert/erase much less frequently than we iterate. Also, this vector does not contain
         //  the full cell objects, but just their addresses, so perhaps it would not even be that
         //  expensive to allocate/deallocate the memory.
-        using cells_type = std::unordered_set<cell_type, utilities::hash_function<cell_type>>;
+        using cells_type = utilities::segmented_vector_t<cell_type>;
+        // iterator to the cells datastructure
+        using cells_iterator = cells_type::iterator;
 
       private:
         // get the order of the cell
         static constexpr int N = order;
-        // // get the family this cell type belongs to (e.g. simplicial cells)
-        // template <int I>
-        // using cell_family_type = typename topology::cell_family<simplex_type, I>;
-        // typedef for geometry type
-        using geometry_type = geometry::geometry_t<D>;
+        // the dimension of physical space
+        static constexpr int D = dim;
+        // get the family this cell type belongs to (e.g. geometric simplices)
+        template <int I, int DD>
+        using cell_family_type = typename cell_type::cell_family_type<I, DD>;
+        // get the topological family this cell type belongs to (e.g. simplicial cells)
+        template <int I>
+        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
         // id type of unoriented cell
         using cell_id_type = utilities::index_t<cell_type>;
         // this map maps a simplex id to a tuple of two integers counting how many times a simplex
@@ -47,9 +58,9 @@ namespace mito::mesh {
 
       public:
         // default constructor
-        inline Mesh(const geometry_type & geometry)
+        inline Mesh()
         requires(N <= D)
-            : _geometry(geometry), _cells()
+            : _cells(100)
         {}
 
         inline ~Mesh() {}
@@ -68,34 +79,71 @@ namespace mito::mesh {
         Mesh & operator=(Mesh &&) noexcept = delete;
 
       private:
-        // template <int I, int J>
-        // inline auto _insert_subcells(
-        //     Mesh<cell_family_type<I>, D, coordT> & boundary_mesh,
-        //     const cell_family_type<J> & cell) const -> void
-        // requires(I == J)
-        // {
-        //     // add {subcell} to the boundary mesh
-        //     boundary_mesh.insert(cell);
-        //
-        //     // all done
-        //     return;
-        // }
+        template <int I, int J>
+        inline auto _insert_subcells(
+            Mesh<cell_family_type<I, D>> & boundary_mesh,
+            const cell_topological_family_type<J> & cell, const nodes_type & nodes) const -> void
+        requires(I == J)
+        {
+            // helper function to {node_t<D>(vertex, *std::find(vertex))}
+            constexpr auto _subcell_nodes =
+                []<int... K>(
+                    const cell_topological_family_type<J> & cell, const nodes_type & nodes,
+                    integer_sequence<K...>) -> cell_family_type<I, D>::nodes_type {
+                // get the vertices
+                auto vertices = cell->vertices();
 
-        // template <int I, int J>
-        // inline auto _insert_subcells(
-        //     Mesh<cell_family_type<I>, D, coordT> & boundary_mesh,
-        //     const cell_family_type<J> & cell) const -> void
-        // requires(I < J)
-        // {
-        //     // loop on the subcells of {cell}
-        //     for (const auto & subcell : cell->composition()) {
-        //         // recursively add subcells of {subcell} to {boundary_mesh}
-        //         _insert_subcells(boundary_mesh, subcell);
-        //     }
-        //
-        //     // all done
-        //     return;
-        // }
+                auto has_vertex = [](const vertex_type & vertex) {
+                    auto lambda = [&vertex](const node_type & node) {
+                        return node.vertex() == vertex;
+                    };
+                    return lambda;
+                };
+
+                // all done
+                return { node_type(
+                    vertices[K], std::find_if(nodes.begin(), nodes.end(), has_vertex(vertices[K]))
+                                     ->point())... };
+            };
+
+            // add {subcell} to the boundary mesh
+            boundary_mesh.insert(_subcell_nodes(
+                cell, nodes,
+                make_integer_sequence<topology::n_vertices<cell_topological_family_type<J>>()>()));
+
+            // all done
+            return;
+        }
+
+        template <int I, int J>
+        inline auto _insert_subcells(
+            Mesh<cell_family_type<I, D>> & boundary_mesh,
+            const cell_topological_family_type<J> & cell, const nodes_type & nodes) const -> void
+        requires(I < J)
+        {
+            // loop on the subcells of {cell}
+            for (const auto & subcell : cell.composition()) {
+                // recursively add subcells of {subcell} to {boundary_mesh}
+                _insert_subcells(boundary_mesh, subcell, nodes);
+            }
+
+            // all done
+            return;
+        }
+
+        inline auto _register_cell_orientation(const cell_type & cell) -> void
+        {
+            // loop on the subcells of {cell}
+            for (const auto & subcell : cell.simplex()->composition()) {
+                // increment the orientations count for this cell footprint id, depending on the
+                // orientation
+                (subcell->orientation() == +1 ? _orientations[subcell->footprint().id()][0] += 1 :
+                                                _orientations[subcell->footprint().id()][1] += 1);
+            }
+
+            // all done
+            return;
+        }
 
       public:
         inline auto nCells() const noexcept -> int
@@ -110,14 +158,21 @@ namespace mito::mesh {
             return _cells;
         }
 
-        inline auto erase(const cell_type & cell) -> void
+        inline auto cells() noexcept -> cells_type &
+        {
+            // all done
+            return _cells;
+        }
+
+        // erase cell at location {cell}
+        inline auto erase(cells_iterator & cell) -> void
         {
             // erase the cell from the mesh
             bool cell_was_erased = _cells.erase(cell);
             // if the cell was in fact erased from the cell
             if (cell_was_erased) {
                 // loop on the subcells of {cell}
-                for (const auto & subcell : cell->composition()) {
+                for (const auto & subcell : cell->simplex()->composition()) {
                     // decrement the orientations count for this cell footprint id, depending on
                     // the orientation
                     (subcell->orientation() == +1 ?
@@ -135,119 +190,100 @@ namespace mito::mesh {
             return;
         }
 
-        // inline auto isOnBoundary(const cell_family_type<N - 1> & cell) const -> bool
-        // {
-        //     // count how many times this oriented cell occurs in the mesh with opposite
-        //     orientation int count = 0; (cell->orientation() == -1 ? count =
-        //     _orientations.at(cell->footprint().id())[0] :
-        //                                  count =
-        //                                  _orientations.at(cell->footprint().id())[1]);
-
-        //     // the cell is on the boundary if it never occurs in the mesh with opposite
-        //     // orientation
-        //     if (count == 0) {
-        //         return true;
-        //     }
-
-        //     return false;
-        // }
-
-        // /**
-        //  * @brief Returns a mesh with all boundary cells of dimension I
-        //  */
-        // template <int I = N - 1>
-        // inline auto boundary_size() const -> int
-        // requires(I >= 0)
-        // {
-        //     // number of boundary cells
-        //     int count = 0;
-
-        //     // loop on the (N-1)-dimensional cells
-        //     for (const auto & cell : cells()) {
-        //         // loop on the subcells of {cell}
-        //         for (const auto & subcell : cell->composition()) {
-        //             // if {subcell} does not have a counterpart in {topology} with opposite
-        //             // orientation
-        //             if (isOnBoundary(subcell)) {
-        //                 // increment counter for boundary cells
-        //                 ++count;
-        //             }
-        //         }
-        //     }
-
-        //     // return the count of boundary cells
-        //     return count;
-        // }
-
-        // /**
-        //  * @brief Returns a mesh with all boundary cells of dimension I
-        //  */
-        // template <int I = N - 1>
-        // inline auto boundary() const -> Mesh<cell_family_type<I>, D, coordT> const
-        // requires(I >= 0)
-        // {
-        //     // instantiate a new mesh for the boundary elements
-        //     Mesh<cell_family_type<I>, D, coordT> boundary_mesh(_geometry);
-        //
-        //     // loop on the (N-1)-dimensional cells
-        //     for (const auto & cell : cells()) {
-        //         // loop on the subcells of {cell}
-        //         for (const auto & subcell : cell->composition()) {
-        //             // if {subcell} does not have a counterpart in {topology} with
-        //             opposite
-        //             // orientation
-        //             if (isOnBoundary(subcell)) {
-        //                 _insert_subcells(boundary_mesh, subcell);
-        //             }
-        //         }
-        //     }
-        //
-        //     // return the boundary mesh
-        //     return boundary_mesh;
-        // }
-
-        inline auto insert(const cell_type & cell) -> void
-        requires(N >= 1)
+        inline auto isOnBoundary(const cell_topological_family_type<N - 1> & cell) const -> bool
         {
-            // add the cell to the set of cells with same dimension
-            _cells.insert(cell);
+            // count how many times this oriented cell occurs in the mesh with opposite orientation
+            int count = 0;
+            (cell->orientation() == -1 ? count = _orientations.at(cell->footprint().id())[0] :
+                                         count = _orientations.at(cell->footprint().id())[1]);
 
-            // // loop on the subcells of {cell}
-            // for (const auto & subcell : cell->composition()) {
-            //     // increment the orientations count for this cell footprint id, depending
-            //     on the
-            //     // orientation
-            //     (subcell->orientation() == +1 ?
-            //     _orientations[subcell->footprint().id()][0] += 1
-            //     :
-            //                                     _orientations[subcell->footprint().id()][1]
-            //                                     += 1);
-            // }
+            // the cell is on the boundary if it never occurs in the mesh with opposite
+            // orientation
+            if (count == 0) {
+                return true;
+            }
 
-            // all done
-            return;
+            return false;
         }
 
-        // QUESTION: specialization of method {insert} for a mesh of vertices
-        //           not sure if supporting meshes of 0-simplices makes sense...
-        inline auto insert(const cell_type & cell) -> void
-        requires(N == 0)
+        /**
+         * @brief Returns a mesh with all boundary cells of dimension I
+         */
+        template <int I = N - 1>
+        inline auto boundary_size() const -> int
+        requires(I >= 0)
         {
-            // add the cell to the set of cells with same dimension
-            _cells.insert(cell);
+            // number of boundary cells
+            int count = 0;
 
-            // all done
-            return;
+            // loop on the (N-1)-dimensional cells
+            for (const auto & cell : cells()) {
+                // loop on the subcells of {cell}
+                for (const auto & subcell : cell.composition()) {
+                    // if {subcell} does not have a counterpart in {topology} with opposite
+                    // orientation
+                    if (isOnBoundary(subcell)) {
+                        // increment counter for boundary cells
+                        ++count;
+                    }
+                }
+            }
+
+            // return the count of boundary cells
+            return count;
         }
 
-      public:
-        // const accessor to geometry
-        auto geometry() const noexcept -> const geometry_type & { return _geometry; }
+        /**
+         * @brief Returns a mesh with all boundary cells of dimension I
+         */
+        template <int I = N - 1>
+        inline auto boundary() const -> Mesh<cell_family_type<I, D>> const
+        requires(I >= 0)
+        {
+            // instantiate a new mesh for the boundary elements
+            Mesh<cell_family_type<I, D>> boundary_mesh;
+
+            // loop on the (N-1)-dimensional cells
+            for (const auto & cell : cells()) {
+                // loop on the subcells of {cell}
+                for (const auto & subcell : cell.simplex()->composition()) {
+                    // if {subcell} does not have a counterpart in {topology} with opposite
+                    // orientation
+                    if (isOnBoundary(subcell)) {
+                        _insert_subcells(boundary_mesh, subcell, cell.nodes());
+                    }
+                }
+            }
+
+            // return the boundary mesh
+            return boundary_mesh;
+        }
+
+        // insert {cell} in mesh
+        inline auto insert(const cell_type & cell) -> cells_iterator
+        {
+            // register {cell} in the orientation map
+            _register_cell_orientation(cell);
+
+            // add the cell to the collection of cells
+            return _cells.emplace_back(cell);
+        }
+
+        // build a cell based with nodes {nodes} and insert it in mesh
+        inline auto insert(const nodes_type & nodes) -> cells_iterator
+        {
+
+            // instantiate cell and add it to the collection of cells
+            auto cell = _cells.emplace_back(nodes);
+
+            // register {cell} in the orientation map
+            _register_cell_orientation(*cell);
+
+            // all done
+            return cell;
+        }
 
       private:
-        // a reference to the geometry where the cells are embedded
-        const geometry_type & _geometry;
-
         // container to store the mesh cells
         cells_type _cells;
 

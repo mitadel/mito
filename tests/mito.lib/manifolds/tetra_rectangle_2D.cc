@@ -7,25 +7,15 @@
 
 TEST(Tetra, Rectangle)
 {
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points in 2D
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Euclidean coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");
-    auto mesh =
-        mito::io::summit::reader<mito::topology::triangle_t>(fileStream, geometry, coord_system);
+    auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
 
     // do tetra mesh refinements
-    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, 1);
+    auto tetra_mesh = mito::mesh::tetra(mesh, coord_system, 1);
 
     // compute the volume of the original mesh
     auto volume_mesh = mito::manifolds::manifold(mesh, coord_system).volume();

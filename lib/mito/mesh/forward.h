@@ -6,12 +6,12 @@
 namespace mito::mesh {
 
     // class mesh
-    template <template <int> class cellT, int D>
+    template <class cellT>
     class Mesh;
 
     // mesh alias
-    template <template <int> class cellT, int D>
-    using mesh_t = Mesh<cellT, D>;
+    template <class cellT>
+    using mesh_t = Mesh<cellT>;
 }
 
 

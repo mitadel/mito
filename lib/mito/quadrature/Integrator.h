@@ -13,7 +13,7 @@ namespace mito::quadrature {
       public:
         // publish my template parameters
         using manifold_type = manifoldT;
-        using cell_type = typename manifold_type::cell_type;
+        using cell_type = typename manifold_type::cell_type::simplex_type;
         using coordinates_type = typename manifold_type::coordinates_type;
 
       private:

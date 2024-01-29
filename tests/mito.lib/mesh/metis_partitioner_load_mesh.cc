@@ -7,22 +7,12 @@
 
 TEST(MetisPartitioner, LoadMesh)
 {
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Euclidean coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // load mesh
     std::ifstream fileStream("rectangle.summit");
-    auto mesh =
-        mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry, coord_system);
+    auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
 
     // number of partitions
     int n_partitions = 2;

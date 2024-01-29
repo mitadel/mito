@@ -38,6 +38,10 @@ namespace mito::geometry {
         // a collection of nodes
         using nodes_type = std::array<node_type, N + 1>;
 
+        // typedef for the family type (simplicial)
+        template <int NN, int DD>
+        using cell_family_type = geometric_simplex_t<NN, DD>;
+
       private:
         template <int... J>
         constexpr auto _check_vertices(integer_sequence<J...>) const -> void

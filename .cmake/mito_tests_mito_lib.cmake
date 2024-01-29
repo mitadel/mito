@@ -94,8 +94,8 @@ mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_triangle.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_tetrahedron.cc)
-mito_test_driver(tests/mito.lib/quadrature/quadrature_1D.cc)
-mito_test_driver(tests/mito.lib/quadrature/quadrature_2D.cc)
+mito_test_driver(tests/mito.lib/quadrature/quadrature_segment_1D.cc)
+mito_test_driver(tests/mito.lib/quadrature/quadrature_triangle_2D.cc)
 
 # integration
 # mito_test_driver(tests/mito.lib/integration/divergence_theorem.cc) #TOFIX

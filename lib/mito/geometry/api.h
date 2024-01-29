@@ -44,13 +44,6 @@ namespace mito::geometry {
     template <int D>
     using node_t = Node<D>;
 
-    // mapping from vertices to points
-    // TOFIX: is this going to be an {unordered_multimap} when we do DG (i.e. when we have
-    // different nodes for the same vertex and same point)
-    template <int D>
-    using nodes_t = std::unordered_map<
-        topology::vertex_t, point_t<D>, utilities::hash_function<topology::vertex_t>>;
-
     // alias for the collection of oriented simplex director vectors
     // (e.g. an N-simplex has as N director vectors)
     template <int N, int D>

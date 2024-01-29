@@ -11,10 +11,12 @@ namespace mito::mesh::metis {
       private:
         // typedef my template parameter
         using mesh_type = meshT;
+        // typedef cell type
+        using cell_type = typename mesh_type::cell_type;
         // typedef vertex type
         using vertex_type = topology::vertex_t;
-        // typedef geometry type
-        using geometry_type = geometry::geometry_t<mesh_type::dim>;
+        // typedef node type
+        using node_type = typename mesh_type::node_type;
         // typedef coordinate system type
         using coordinate_system_type = geometry::coordinate_system_t<mesh_type::dim, coordT>;
 

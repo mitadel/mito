@@ -3,81 +3,51 @@
 #include <mito/manifolds.h>
 
 
-auto
-volume(
-    mito::mesh::mesh_t<mito::topology::triangle_t, 2> & mesh,
-    const mito::manifolds::manifold_t<mito::geometry::EUCLIDEAN, mito::topology::triangle_t, 2> &
-        manifold,
-    const mito::topology::triangle_t & triangle) -> mito::scalar_t
-{
-    // insert triangle in the mesh
-    mesh.insert(triangle);
-
-    // compute the volume of the manifold
-    mito::scalar_t result = manifold.volume();
-
-    // erase the triangle
-    mesh.erase(triangle);
-
-    // return the volume computed
-    return result;
-}
-
-
 TEST(Manifolds, Triangle2D)
 {
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points in 2D
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Euclidean coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // an empty mesh of triangles
-    auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
+    auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();
 
     // build nodes
-    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
+    auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
+    auto node_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto node_2 = mito::geometry::node(coord_system, { 0.0, 1.0 });
 
     // create a manifold on {mesh} with Euclidean metric
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // build triangle with a positive volume (reference triangle)
-    auto triangle = topology.triangle({ vertex0, vertex1, vertex2 });
+    auto triangle = mito::geometry::triangle<2>({ node_0, node_1, node_2 });
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), 0.5);
+    EXPECT_DOUBLE_EQ(manifold.volume(triangle), 0.5);
 
     // create a triangle from an even permutation of the vertices with respect to the reference
-    triangle = topology.triangle({ vertex1, vertex2, vertex0 });
+    triangle = mito::geometry::triangle<2>({ node_1, node_2, node_0 });
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), 0.5);
+    EXPECT_DOUBLE_EQ(manifold.volume(triangle), 0.5);
 
     // create a triangle from an even permutation of the vertices with respect to the reference
-    triangle = topology.triangle({ vertex2, vertex0, vertex1 });
+    triangle = mito::geometry::triangle<2>({ node_2, node_0, node_1 });
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), 0.5);
+    EXPECT_DOUBLE_EQ(manifold.volume(triangle), 0.5);
 
     // create a triangle from an odd permutation of the vertices with respect to the reference
-    triangle = topology.triangle({ vertex0, vertex2, vertex1 });
+    triangle = mito::geometry::triangle<2>({ node_0, node_2, node_1 });
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), -0.5);
+    EXPECT_DOUBLE_EQ(manifold.volume(triangle), -0.5);
 
     // create a triangle from an odd permutation of the vertices with respect to the reference
-    triangle = topology.triangle({ vertex1, vertex0, vertex2 });
+    triangle = mito::geometry::triangle<2>({ node_1, node_0, node_2 });
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), -0.5);
+    EXPECT_DOUBLE_EQ(manifold.volume(triangle), -0.5);
 
     // create a triangle from an odd permutation of the vertices with respect to the reference
-    triangle = topology.triangle({ vertex2, vertex1, vertex0 });
+    triangle = mito::geometry::triangle<2>({ node_2, node_1, node_0 });
     // check that the volume of triangle is correct
-    EXPECT_DOUBLE_EQ(volume(mesh, manifold, triangle), -0.5);
+    EXPECT_DOUBLE_EQ(manifold.volume(triangle), -0.5);
 }
 
 

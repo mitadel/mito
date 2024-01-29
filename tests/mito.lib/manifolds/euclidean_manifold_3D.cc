@@ -5,20 +5,11 @@
 
 TEST(Manifolds, Euclidean3D)
 {
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points in 3D
-    auto & point_cloud = mito::geometry::point_cloud<3>();
-
-    // a geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Euclidean coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
 
     // an empty mesh of tetrahedra
-    auto mesh = mito::mesh::mesh<mito::topology::tetrahedron_t>(geometry);
+    auto mesh = mito::mesh::mesh<mito::geometry::tetrahedron_t<3>>();
 
     // create a manifold on {mesh} with Euclidean metric
     auto manifold = mito::manifolds::manifold(mesh, coord_system);

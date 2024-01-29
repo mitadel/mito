@@ -10,8 +10,8 @@ namespace mito::manifolds {
     using parametric_point_t = std::array<double, D>;
 
     // manifold alias
-    template <geometry::CoordinateType coordsT, class cellT, int D>
-    using manifold_t = Manifold<coordsT, cellT, D>;
+    template <class cellT, geometry::CoordinateType coordsT>
+    using manifold_t = Manifold<cellT, coordsT>;
 
     // form alias
     template <int N, class F>
@@ -26,11 +26,11 @@ namespace mito::manifolds {
     using field_t = Field<F>;
 
     // factory manifolds
-    template <geometry::CoordinateType coordsT = geometry::EUCLIDEAN, class cellT, int D>
+    template <class cellT, geometry::CoordinateType coordsT>
     constexpr auto manifold(
-        const mesh::mesh_t<cellT, D> & mesh,
-        const geometry::coordinate_system_t<D, coordsT> & coordinate_system)
-        -> manifold_t<coordsT, cellT, D>;
+        const mesh::mesh_t<cellT> & mesh,
+        const geometry::coordinate_system_t<cellT::dim, coordsT> & coordinate_system)
+        -> manifold_t<cellT, coordsT>;
 
     // factory for one-forms
     template <class F>
