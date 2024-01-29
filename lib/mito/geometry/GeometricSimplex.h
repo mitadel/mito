@@ -13,7 +13,7 @@
 namespace mito::geometry {
 
     template <int N, int D>
-    // requires((N > 0) && (N <= D) && (D > 0))
+    requires((N > 0) && (N <= D) && (D > 0))
     class GeometricSimplex : public utilities::Invalidatable {
 
       public:
