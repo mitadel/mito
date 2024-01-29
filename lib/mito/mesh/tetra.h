@@ -170,10 +170,10 @@ namespace mito::mesh {
 
                 // insert new cells in new mesh
                 subdivided_mesh.insert(cell.nodes());
-
-                // all done
-                return subdivided_mesh;
             }
+
+            // all done
+            return subdivided_mesh;
         }
 
         // loop on the cells of the mesh
