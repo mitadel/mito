@@ -19,8 +19,7 @@ TEST(FlipDiagonal, TestFlipDiagonal)
     auto simplex1 = topology.triangle({ vertex0, vertex2, vertex3 });
 
     // build the two triangles obtained by flipping the common edge of the two triangles
-    [[maybe_unused]] auto simplex_pair =
-        mito::topology::flipDiagonal(std::make_pair(simplex0, simplex1));
+    [[maybe_unused]] auto simplex_pair = mito::topology::flip_diagonal({ simplex0, simplex1 });
 
     // assert that new flipped segments have been created
     EXPECT_TRUE(topology.exists({ vertex1, vertex3 }));
