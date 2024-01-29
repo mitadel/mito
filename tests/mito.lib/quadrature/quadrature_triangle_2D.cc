@@ -2,7 +2,6 @@
 #include <mito/base.h>
 #include <mito/quadrature.h>
 
-// TOFIX: consider moving these quadrature tests to a subdirectory {quadrature}
 // TOFIX: consider including the mito base header as external dependency in all the mito submodules
 
 using mito::vector_t;
