@@ -9,10 +9,17 @@ using coord_system_t = mito::geometry::coordinate_system_t<2, mito::geometry::EU
 using mesh_t = mito::mesh::mesh_t<mito::geometry::triangle_t<2>>;
 
 
-// TOFIX: factor this function out
-auto
-build_mesh(coord_system_t & coord_system, mesh_t & mesh) -> void
+TEST(MetisPartitionerMPI, Base)
 {
+    // the simulation representative
+    auto & simulation = mito::simulation::simulation();
+
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
+    // an empty mesh of simplicial topology in 2D
+    auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();
+
     /**
      * Mesh with four cells:
         (0,1)           (1,1)
@@ -41,25 +48,6 @@ build_mesh(coord_system_t & coord_system, mesh_t & mesh) -> void
     mesh.insert({ node_1, node_2, node_3 });
     mesh.insert({ node_2, node_4, node_3 });
     mesh.insert({ node_4, node_0, node_3 });
-
-    // all done
-    return;
-}
-
-
-TEST(MetisPartitionerMPI, Base)
-{
-    // the simulation representative
-    auto & simulation = mito::simulation::simulation();
-
-    // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
-
-    // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();
-
-    // populate the mesh
-    build_mesh(coord_system, mesh);
 
     // number of partitions
     int n_partitions = simulation.context().n_tasks();
