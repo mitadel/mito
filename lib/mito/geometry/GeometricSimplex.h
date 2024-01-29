@@ -14,7 +14,7 @@ namespace mito::geometry {
 
     template <int N, int D>
     // requires((N > 0) && (N <= D) && (D > 0))
-    class GeometricSimplex {
+    class GeometricSimplex : public utilities::Invalidatable {
 
       public:
         // spatial dimension
@@ -94,17 +94,22 @@ namespace mito::geometry {
         constexpr GeometricSimplex() = delete;
 
       public:
+        // TOFIX: possibly change {simplex} into {footprint} to remove the baggage of simplicial
+        // elements
         // accessor for the underlying oriented simplex
-        constexpr auto simplex() const noexcept -> simplex_type & { return _simplex; }
+        constexpr auto simplex() const noexcept -> const simplex_type & { return _simplex; }
+
+        // accessor for the underlying oriented simplex
+        constexpr auto simplex() noexcept -> simplex_type & { return _simplex; }
 
         // return the composition of this simplex in terms of its vertices
         constexpr auto nodes() const -> nodes_type { return _nodes; }
 
       private:
         // the simplex nodes
-        const nodes_type _nodes;
+        nodes_type _nodes;
         // the shared pointer to the footprint
-        const simplex_type _simplex;
+        simplex_type _simplex;
     };
 }
 
