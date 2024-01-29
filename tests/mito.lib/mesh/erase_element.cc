@@ -31,6 +31,13 @@ TEST(Mesh, EraseElement)
     // assert the boundary is made of 4 cells
     EXPECT_EQ(mesh.boundary().nCells(), 4);
 
+    // assert that there exists a segment connecting vertex 0 and 1
+    EXPECT_TRUE(topology.exists({ node_0.vertex(), node_1.vertex() }));
+    // assert that there exists a segment connecting vertex 1 and 3
+    EXPECT_TRUE(topology.exists({ node_1.vertex(), node_3.vertex() }));
+    // assert that there exists a segment connecting vertex 3 and 0
+    EXPECT_TRUE(topology.exists({ node_3.vertex(), node_0.vertex() }));
+
     // erase a simplex
     std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(geom_cell0);
@@ -41,6 +48,13 @@ TEST(Mesh, EraseElement)
 
     // assert the boundary is now made of 5 cells
     EXPECT_EQ(mesh.boundary().nCells(), 5);
+
+    // assert that a segment connecting vertex 0 and 1 no longer exists in the topology
+    EXPECT_FALSE(topology.exists({ node_0.vertex(), node_1.vertex() }));
+    // assert that a segment connecting vertex 1 and 3 no longer exists in the topology
+    EXPECT_FALSE(topology.exists({ node_1.vertex(), node_3.vertex() }));
+    // assert that a segment connecting vertex 3 and 0 no longer exists in the topology
+    EXPECT_FALSE(topology.exists({ node_3.vertex(), node_0.vertex() }));
 
     // check that erasing a cell twice does not result in an error
     mesh.erase(geom_cell0);
@@ -54,4 +68,11 @@ TEST(Mesh, EraseElement)
 
     // assert the boundary is now made of 4 cells
     EXPECT_EQ(mesh.boundary().nCells(), 4);
+
+    // assert that a segment connecting vertex 1 and 2 no longer exists in the topology
+    EXPECT_FALSE(topology.exists({ node_1.vertex(), node_2.vertex() }));
+    // assert that a segment connecting vertex 2 and 3 no longer exists in the topology
+    EXPECT_FALSE(topology.exists({ node_2.vertex(), node_3.vertex() }));
+    // assert that a segment connecting vertex 3 and 1 no longer exists in the topology
+    EXPECT_FALSE(topology.exists({ node_3.vertex(), node_1.vertex() }));
 }
