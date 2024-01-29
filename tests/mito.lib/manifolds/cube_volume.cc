@@ -91,7 +91,7 @@ TEST(Manifolds, CubeVolume)
         volume_old += volume_determinant(coord_system, cell);
     }
     // std::cout << volume_new << "\t" << volume_old << std::endl;
-    EXPECT_NEAR(volume_new, volume_old, 1.e-15);
+    EXPECT_DOUBLE_EQ(volume_new, volume_old);
 }
 
 

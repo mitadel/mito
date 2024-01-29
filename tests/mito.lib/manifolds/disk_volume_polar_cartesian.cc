@@ -32,7 +32,7 @@ TEST(Manifolds, Disk)
     mito::scalar_t area_cartesian = area<mito::geometry::EUCLIDEAN>("disk_cartesian.summit");
 
     // expect to get the same result
-    EXPECT_NEAR(area_cartesian, area_polar, 1.e-14);
+    EXPECT_DOUBLE_EQ(area_cartesian, area_polar);
 
     // exact area: the area of a disk with unit radius is {pi}
     mito::scalar_t exact = std::numbers::pi;
