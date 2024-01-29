@@ -51,6 +51,7 @@ mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
 mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
 
 # mesh
+mito_test_driver(tests/mito.lib/mesh/ball.cc)
 mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_segment_1D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_triangle_2D.cc)
