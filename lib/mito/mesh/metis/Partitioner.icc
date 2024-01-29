@@ -141,16 +141,16 @@ mito::mesh::metis::Partitioner<meshT>::partition(
 {
     // if it is a single partition, return a copy of the mesh
     if (n_partitions == 1) {
-        // make a copy of the original mesh
+        // instantiate an empty mesh
         mesh_type mesh_copy;
 
         // loop over all the cells of the original mesh
         for (const auto & cell : mesh.cells()) {
-            // populate the copy
+            // populate {mesh_copy} with identical cells to {mesh}
             mesh_copy.insert(cell.nodes());
         }
 
-        // all done
+        // return a copy of the original mesh
         return mesh_copy;
     }
 
