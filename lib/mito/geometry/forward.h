@@ -22,16 +22,12 @@ namespace mito::geometry {
 
     // class geometric simplex
     template <int N, int D>
-    requires((N > 0) && (N <= D) && (D > 0))
+    requires((N >= 0) && (N <= D) && (D > 0))
     class GeometricSimplex;
 
     // class point cloud
     template <int D>
     class PointCloud;
-
-    // class node
-    template <int D>
-    class Node;
 }
 
 

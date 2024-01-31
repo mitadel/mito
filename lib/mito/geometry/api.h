@@ -21,6 +21,10 @@ namespace mito::geometry {
     template <int N, int D>
     using geometric_simplex_t = GeometricSimplex<N, D>;
 
+    // node alias
+    template <int D>
+    using node_t = geometric_simplex_t<0, D>;
+
     // segment alias
     template <int D>
     requires(D > 0)
@@ -39,10 +43,6 @@ namespace mito::geometry {
     // point cloud alias
     template <int D>
     using point_cloud_t = PointCloud<D>;
-
-    // node alias
-    template <int D>
-    using node_t = Node<D>;
 
     // alias for the collection of oriented simplex director vectors
     // (e.g. an N-simplex has as N director vectors)

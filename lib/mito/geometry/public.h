@@ -18,7 +18,6 @@
 #include "Point.h"
 #include "GeometricSimplex.h"
 #include "PointCloud.h"
-#include "Node.h"
 
 // algebra
 #include "algebra_coordinates.h"

@@ -13,7 +13,7 @@
 namespace mito::geometry {
 
     template <int N, int D>
-    requires((N > 0) && (N <= D) && (D > 0))
+    requires((N >= 0) && (N <= D) && (D > 0))
     class GeometricSimplex : public utilities::Invalidatable {
 
       public:
@@ -115,6 +115,80 @@ namespace mito::geometry {
         // the shared pointer to the footprint
         simplex_type _simplex;
     };
+
+    template <int D>
+    requires(D > 0)
+    class GeometricSimplex<0, D> : public utilities::Invalidatable {
+
+      public:
+        // spatial dimension
+        static constexpr int dim = D;
+
+        // order of simplex
+        static constexpr int order = 0;
+
+        // the type of the vertices
+        using vertex_type = mito::topology::vertex_t;
+
+        // the type of the topological simplex
+        using simplex_type = mito::topology::oriented_simplex_t<0>;
+
+        // number of vertices of simplex
+        static constexpr int n_vertices = 0;
+
+        // the node type
+        using node_type = node_t<D>;
+
+        // a collection of nodes
+        using nodes_type = std::array<node_type, order + 1>;
+
+        // typedef for the family type (simplicial)
+        template <int NN, int DD>
+        using cell_family_type = geometric_simplex_t<NN, DD>;
+
+        // the point type
+        using point_type = point_t<D>;
+
+      public:
+        // get the coordinates of the point
+        GeometricSimplex(const vertex_type & vertex, const point_type & point) :
+            _vertex(vertex),
+            _point(point)
+        {}
+
+        // move constructor
+        constexpr GeometricSimplex(GeometricSimplex &&) = default;
+
+        // copy constructor
+        constexpr GeometricSimplex(const GeometricSimplex &) = default;
+
+        // destructor
+        constexpr ~GeometricSimplex() {}
+
+        // default assignment operator
+        constexpr GeometricSimplex & operator=(const GeometricSimplex &) = default;
+
+        // default move assignment operator
+        constexpr GeometricSimplex & operator=(GeometricSimplex &&) = default;
+
+      private:
+        // delete default constructor
+        constexpr GeometricSimplex() = delete;
+
+      public:
+        // accessor for the underlying vertex
+        auto vertex() const noexcept -> const vertex_type & { return _vertex; }
+
+        // accessor for the underlying point
+        auto point() const noexcept -> const point_type & { return _point; }
+
+      private:
+        // the vertex that this node is attached to
+        vertex_type _vertex;
+        // the point that this node is attached to
+        point_type _point;
+    };
+
 }
 
 
