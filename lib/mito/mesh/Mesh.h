@@ -131,6 +131,36 @@ namespace mito::mesh {
             return;
         }
 
+        inline auto _insert_nodes(
+            Mesh<cell_family_type<0, D>> & boundary_mesh,
+            const cell_topological_family_type<0> & cell, const nodes_type & nodes) const -> void
+        {
+            // helper function to {node_t<D>(vertex, *std::find(vertex))}
+            constexpr auto _subcell_node =
+                [](const cell_topological_family_type<0> & cell,
+                   const nodes_type & nodes) -> cell_family_type<0, D>::node_type {
+                // get the vertex footprint
+                auto vertex = cell->footprint();
+
+                auto has_vertex = [](const vertex_type & vertex) {
+                    auto lambda = [&vertex](const node_type & node) {
+                        return node.vertex() == vertex;
+                    };
+                    return lambda;
+                };
+
+                // all done
+                return node_type(
+                    vertex, std::find_if(nodes.begin(), nodes.end(), has_vertex(vertex))->point());
+            };
+
+            // insert {node} into {boundary_mesh}
+            boundary_mesh.insert(_subcell_node(cell, nodes));
+
+            // all done
+            return;
+        }
+
         inline auto _register_cell_orientation(const cell_type & cell) -> void
         {
             // loop on the subcells of {cell}
@@ -211,7 +241,7 @@ namespace mito::mesh {
          */
         template <int I = N - 1>
         inline auto boundary_size() const -> int
-        requires(I >= 0)
+        requires(N > 0 && I >= 0)
         {
             // number of boundary cells
             int count = 0;
@@ -238,7 +268,7 @@ namespace mito::mesh {
          */
         template <int I = N - 1>
         inline auto boundary() const -> Mesh<cell_family_type<I, D>> const
-        requires(I >= 0)
+        requires(N > 0 && I >= 0)
         {
             // instantiate a new mesh for the boundary elements
             Mesh<cell_family_type<I, D>> boundary_mesh;
@@ -250,7 +280,11 @@ namespace mito::mesh {
                     // if {subcell} does not have a counterpart in {topology} with opposite
                     // orientation
                     if (isOnBoundary(subcell)) {
-                        _insert_subcells(boundary_mesh, subcell, cell.nodes());
+                        if constexpr (I == 0) {
+                            _insert_nodes(boundary_mesh, subcell, cell.nodes());
+                        } else {
+                            _insert_subcells(boundary_mesh, subcell, cell.nodes());
+                        }
                     }
                 }
             }
@@ -261,6 +295,7 @@ namespace mito::mesh {
 
         // insert {cell} in mesh
         inline auto insert(const cell_type & cell) -> cells_iterator
+        requires(N > 0)
         {
             // register {cell} in the orientation map
             _register_cell_orientation(cell);
@@ -271,6 +306,7 @@ namespace mito::mesh {
 
         // build a cell based with nodes {nodes} and insert it in mesh
         inline auto insert(const nodes_type & nodes) -> cells_iterator
+        requires(N > 0)
         {
 
             // instantiate cell and add it to the collection of cells
@@ -281,6 +317,14 @@ namespace mito::mesh {
 
             // all done
             return cell;
+        }
+
+        // insert {cell} in mesh
+        inline auto insert(const cell_type & cell) -> cells_iterator
+        requires(N == 0)
+        {
+            // add the cell to the collection of cells
+            return _cells.emplace_back(cell);
         }
 
       private:

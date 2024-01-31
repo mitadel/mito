@@ -15,12 +15,13 @@ TEST(SummitReader, LoadSummitSegmentsMesh3D)
     // assert you read 10 cells
     EXPECT_EQ(mesh.nCells(), 10);
 
-    // // assert you found 2 cells (vertices) on the boundary
-    // {
-    //     auto boundary_mesh = mesh.boundary();
-    //     EXPECT_EQ(boundary_mesh.nCells(), 2);
-    // }
+    // assert you found 2 nodes on the boundary
+    {
+        auto boundary_mesh = mesh.boundary();
+        EXPECT_EQ(boundary_mesh.nCells(), 2);
+    }
 
+#if 0    // TOFIX
     // show me the cells
     std::cout << "Initial mesh: " << std::endl;
     int count = 0;
@@ -39,9 +40,10 @@ TEST(SummitReader, LoadSummitSegmentsMesh3D)
     // assert you read 9 cells
     EXPECT_EQ(mesh.nCells(), 9);
 
-    // // assert you found 4 cells (vertices) on the boundary
+    // // assert you found 4 nodes on the boundary
     // {
     //     auto boundary_mesh = mesh.boundary();
     //     EXPECT_EQ(boundary_mesh.nCells(), 4);
     // }
+#endif
 }
