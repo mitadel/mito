@@ -35,8 +35,6 @@ namespace mito::io::summit {
         std::ifstream & fileStream, mesh::mesh_t<geometry::segment_t<D>> & mesh,
         const std::vector<geometry::node_t<D>> & nodes) -> void
     {
-        auto & topology = mito::topology::topology();
-
         int index0 = 0;
         fileStream >> index0;
         --index0;
