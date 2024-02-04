@@ -39,7 +39,8 @@ namespace mito::topology {
         OrientedSimplexFactory() :
             _simplex_factory(),
             _oriented_simplices(100 /*segment size */),
-            _orientations() {};
+            _orientations()
+        {}
 
         // destructor
         ~OrientedSimplexFactory() {}
@@ -225,8 +226,8 @@ namespace mito::topology {
             // compute the sign of the permutation between the indices of {composition} with respect
             // to the reference composition {reference}
             return mito::math::permutation_sign(
-                std::array<simplex_id_t, N + 1> { composition[J]->footprint().id()... },
-                std::array<simplex_id_t, N + 1> { reference[J]->footprint().id()... });
+                std::array<simplex_id_t, N + 1>{ composition[J]->footprint().id()... },
+                std::array<simplex_id_t, N + 1>{ reference[J]->footprint().id()... });
         }
 
         // compute the orientation of the {composition} with respect to the reference
@@ -238,7 +239,7 @@ namespace mito::topology {
             // compute the permutation sign of {composition} with respect to the composition of
             // {simplex}
             return _permutation_sign(
-                composition, simplex->composition(), make_integer_sequence<N + 1> {});
+                composition, simplex->composition(), make_integer_sequence<N + 1>{});
         }
 
       private:

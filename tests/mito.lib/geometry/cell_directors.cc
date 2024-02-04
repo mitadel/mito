@@ -29,7 +29,7 @@ TEST(Director, Segment)
     auto [_, directors] = mito::geometry::directors(segment, geometry, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE((directors[0] == mito::vector_t<2> { 1.0, 0.0 }));
+    EXPECT_TRUE((directors[0] == mito::vector_t<2>{ 1.0, 0.0 }));
 
     // all done
     return;

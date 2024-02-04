@@ -60,7 +60,7 @@ namespace mito::utilities {
 
       public:
         // default constructor
-        Repository(int segment_size) : _resources(segment_size) {};
+        Repository(int segment_size) : _resources(segment_size) {}
 
         // destructor
         ~Repository()

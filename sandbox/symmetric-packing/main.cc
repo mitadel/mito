@@ -63,7 +63,7 @@ offsetN(index_t<N> index)
     };
 
     // shift the indices (i, j, k, ...) into (i, j - i, k - j, ...)
-    _shiftIndices(index, std::make_index_sequence<N - 1> {});
+    _shiftIndices(index, std::make_index_sequence<N - 1>{});
 
     // helper function needed to expand the array in a parameter pack
     auto _getOffset = []<size_t... I>(index_t<N> idx, std::index_sequence<I...>) {
@@ -71,7 +71,7 @@ offsetN(index_t<N> index)
     };
 
     // get the offset
-    return _getOffset(index, std::make_index_sequence<N> {});
+    return _getOffset(index, std::make_index_sequence<N>{});
 }
 
 template <int N, int D>
@@ -105,20 +105,20 @@ main()
 
     // assert that the N-dimensional index (D-1, ..., D-1) is mapped to the last entry
     static_assert(
-        offsetN<2 /* N */, 2 /* D */>(index_t<2 /* N */> { 1 /*D - 1*/, 1 /*D - 1*/ })
+        offsetN<2 /* N */, 2 /* D */>(index_t<2 /* N */>{ 1 /*D - 1*/, 1 /*D - 1*/ })
         == entries<2 /* N */>(2 /* D */) - 1);
     static_assert(
-        offsetN<3 /* N */, 2 /* D */>(index_t<3 /* N */> { 1 /*D - 1*/, 1 /*D - 1*/, 1 /*D - 1*/ })
+        offsetN<3 /* N */, 2 /* D */>(index_t<3 /* N */>{ 1 /*D - 1*/, 1 /*D - 1*/, 1 /*D - 1*/ })
         == entries<3 /* N */>(2 /* D */) - 1);
     static_assert(
-        offsetN<2 /* N */, 3 /* D */>(index_t<2 /* N */> { 2 /*D - 1*/, 2 /*D - 1*/ })
+        offsetN<2 /* N */, 3 /* D */>(index_t<2 /* N */>{ 2 /*D - 1*/, 2 /*D - 1*/ })
         == entries<2 /* N */>(3 /* D */) - 1);
     static_assert(
-        offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/ })
+        offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/ })
         == entries<3 /* N */>(3 /* D */) - 1);
     static_assert(
         offsetN<4 /* N */, 3 /* D */>(
-            index_t<4 /* N */> { 2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/ })
+            index_t<4 /* N */>{ 2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/, 2 /*D - 1*/ })
         == entries<4 /* N */>(3 /* D */) - 1);
 
 #if 0
@@ -182,52 +182,52 @@ main()
     int offset = 0;
 
     std::cout << "(0, 0, 0) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 0, 0, 0 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 0, 0, 0 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 0, 1) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 0, 0, 1 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 0, 0, 1 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 0, 2) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 0, 0, 2 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 0, 0, 2 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 1, 1) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 0, 1, 1 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 0, 1, 1 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 1, 2) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 0, 1, 2 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 0, 1, 2 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(0, 2, 2) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 0, 2, 2 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 0, 2, 2 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 1, 1) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 1, 1, 1 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 1, 1, 1 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 1, 2) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 1, 1, 2 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 1, 1, 2 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(1, 2, 2) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 1, 2, 2 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 1, 2, 2 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 
     std::cout << "(2, 2, 2) " << std::endl;
-    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */> { 2, 2, 2 });
+    offset = offsetN<3 /* N */, 3 /* D */>(index_t<3 /* N */>{ 2, 2, 2 });
     std::cout << "offset " << offset << std::endl;
     std::cout << std::endl;
 #endif

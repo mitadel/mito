@@ -27,8 +27,8 @@ gent_constitutive_array(
     // ARRAY
 
     // array tensor
-    std::array<double, 9> F_array { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
-                                    epsilon,       epsilon, epsilon, 1.0 + epsilon };
+    std::array<double, 9> F_array{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                                   epsilon,       epsilon, epsilon, 1.0 + epsilon };
 
     // reset timer
     t.reset();
@@ -53,7 +53,7 @@ gent_constitutive_array(
 
         double detinv = 1.0 / detF;
 
-        std::array<double, 9> F_inv_array {
+        std::array<double, 9> F_inv_array{
             detinv * (f22 * f33 - f23 * f32), detinv * (-f12 * f33 + f13 * f32),
             detinv * (f12 * f23 - f13 * f22), detinv * (-f21 * f33 + f23 * f31),
             detinv * (f11 * f33 - f13 * f31), detinv * (-f11 * f23 + f13 * f21),
@@ -157,9 +157,9 @@ gent_constitutive_mito(
     // mito gent material
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
-    mito::vector_t<3> u { 0.0, 0.0, 0.0 };
-    mito::matrix_t<3> F { 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
-                          epsilon,       epsilon, epsilon, 1.0 + epsilon };
+    mito::vector_t<3> u{ 0.0, 0.0, 0.0 };
+    mito::matrix_t<3> F{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                         epsilon,       epsilon, epsilon, 1.0 + epsilon };
     mito::matrix_t<3> P;
 
     // reset timer
@@ -210,7 +210,7 @@ main()
     double epsilon = 0.01 * ((std::rand() % 20001 / 10000.0) - 1.0);
 
     // gent constitutive update
-    std::array<double, 9> P_array_result { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    std::array<double, 9> P_array_result{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
     gent_constitutive_array(N, kappa, mu, Jm, epsilon, P_array_result);
 
     // gent constitutive update

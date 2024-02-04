@@ -60,7 +60,7 @@ namespace mito::geometry {
         template <class... T>
         constexpr Coordinates(T... coords)
         requires(sizeof...(T) == D)
-            : _array { coords... }
+            : _array{ coords... }
         {}
 
         // destructor

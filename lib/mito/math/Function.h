@@ -29,7 +29,7 @@ namespace mito::math {
 
       public:
         // constructor
-        constexpr Function(F f) : _f { f } {}
+        constexpr Function(F f) : _f{ f } {}
 
         // call operator
         constexpr auto operator()(X x) const -> Y { return _f(x); }

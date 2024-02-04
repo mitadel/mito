@@ -246,7 +246,7 @@ namespace mito::mesh {
             // recursively subdivide the cell identified by these vertices
             _subdivide(
                 vertices, geometry, coordinate_system, subdivided_mesh, n_refinements,
-                std::make_index_sequence<topology::order<cellT>() + 1> {});
+                std::make_index_sequence<topology::order<cellT>() + 1>{});
         }
 
         // return the refined mesh

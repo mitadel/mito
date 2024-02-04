@@ -30,22 +30,22 @@ main()
 
     mito::AddDirichletBC("boundary subset A", &myFunctionA);
 
-    mito::field<mito::vector_t<3>, mito::vector_t<3>> myFunctionB { [](const mito::vector_t<3> & x,
-                                                                       mito::real t) {
-        return mito::vector_t<3> { (x[0] - 1) * (x[1] + 1), 0.0, 0.0 };
+    mito::field<mito::vector_t<3>, mito::vector_t<3>> myFunctionB{ [](const mito::vector_t<3> & x,
+                                                                      mito::real t) {
+        return mito::vector_t<3>{ (x[0] - 1) * (x[1] + 1), 0.0, 0.0 };
     } };
     mito::AddDirichletBC("boundary subset B", myFunctionB);
 
     mito::AddDirichletBC("boundary subset: field vector3D to vector2D", &myFunctionC);
 
-    mito::field<mito::vector_t<3>, mito::vector_t<2>> myFunction3DtoReal {
+    mito::field<mito::vector_t<3>, mito::vector_t<2>> myFunction3DtoReal{
         [](const mito::vector_t<3> & x, mito::real t) {
-            return mito::vector_t<2> { (x[0] - 1) * (x[1] + 1), 0.0 };
+            return mito::vector_t<2>{ (x[0] - 1) * (x[1] + 1), 0.0 };
         }
     };
     mito::AddDirichletBC("boundary subset: field vector2D to real", &myFunctionVector2DtoReal);
 
-    mito::field<mito::vector_t<2>, mito::real> myOtherFunctionVector2DtoReal {
+    mito::field<mito::vector_t<2>, mito::real> myOtherFunctionVector2DtoReal{
         [](const mito::vector_t<2> & x, mito::real t) {
             return (x[0] - 1) * (x[1] + 1);
         }

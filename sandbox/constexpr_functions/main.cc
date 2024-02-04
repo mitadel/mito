@@ -14,7 +14,7 @@ template <class X, class Y>
 class Function {
   public:
     template <class F>
-    constexpr Function(F f) : ptr { std::make_unique<implementation<F>>(f) }
+    constexpr Function(F f) : ptr{ std::make_unique<implementation<F>>(f) }
     {}
 
     constexpr ~Function() {}
@@ -29,9 +29,9 @@ class Function {
 
     template <class F>
     struct implementation final : interface {
-        constexpr explicit(true) implementation(F f) : _f { f } {}
+        constexpr explicit(true) implementation(F f) : _f{ f } {}
         constexpr auto get(X x) -> Y { return _f(x); }
-        constexpr ~implementation() {};
+        constexpr ~implementation() {}
 
       private:
         F _f;
