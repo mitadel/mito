@@ -56,14 +56,14 @@ namespace mito::geometry {
             const auto & p0 = coordinate_system.coordinates(geometry.point(vertices[0]));
 
             // compute the director vectors associated with each director edge
-            auto directors = edge_simplex_directors_t<N, D> { (
+            auto directors = edge_simplex_directors_t<N, D>{ (
                 coordinate_system.coordinates(geometry.point(vertices[J + 1])) - p0)... };
 
             // all done
             return { p0, directors };
         };
 
-        return _directors(simplex, geometry, coordinate_system, make_integer_sequence<N> {});
+        return _directors(simplex, geometry, coordinate_system, make_integer_sequence<N>{});
     }
 }
 
