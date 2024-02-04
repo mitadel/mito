@@ -139,7 +139,7 @@ namespace mito::mesh {
                          _orientations[subcell->footprint().id()][1] -= 1);
 
                     // cleanup orientation map
-                    if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
+                    if (_orientations[subcell->footprint().id()] == std::array<int, 2>{ 0, 0 }) {
                         _orientations.erase(subcell->footprint().id());
                     }
                 }

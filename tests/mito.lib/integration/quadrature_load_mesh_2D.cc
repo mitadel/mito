@@ -19,13 +19,17 @@ TEST(Quadrature, LoadMeshTriangles)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // load mesh
     std::ifstream fileStream("square.summit");
-    auto mesh = mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry);
-    auto manifold = mito::manifolds::manifold(mesh);
+    auto mesh =
+        mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry, coord_system);
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // instantiate a scalar field
-    using coordinates_t = mito::geometry::coordinates_t<2>;
+    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
     auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2

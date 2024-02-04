@@ -35,17 +35,20 @@ TEST(Manifolds, Tetrahedron3D)
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of tetrahedra
     auto mesh = mito::mesh::mesh<mito::topology::tetrahedron_t>(geometry);
 
     // create a manifold on {mesh} with Euclidean metric
-    auto manifold = mito::manifolds::manifold(mesh);
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // build nodes
-    auto vertex1 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex2 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto vertex3 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto vertex4 = geometry.node({ 0.0, 0.0, 1.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0, 0.0 });
+    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 1.0 });
 
     // build tetrahedron with a positive volume (reference tetrahedron)
     auto tetrahedron = topology.tetrahedron({ vertex1, vertex2, vertex3, vertex4 });

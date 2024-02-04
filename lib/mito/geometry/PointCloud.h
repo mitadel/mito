@@ -2,6 +2,7 @@
 #if !defined(mito_geometry_PointCloud_h)
 #define mito_geometry_PointCloud_h
 
+
 namespace mito::geometry {
 
     template <int D>
@@ -9,8 +10,6 @@ namespace mito::geometry {
       private:
         // a point
         using point_type = point_t<D>;
-        // a point
-        using coordinates_type = coordinates_t<D>;
         // a cloud of points
         using cloud_type = utilities::repository_t<point_type>;
 
@@ -32,7 +31,7 @@ namespace mito::geometry {
             // iterate on points
             std::cout << "Point cloud:" << std::endl;
             for (const auto & point : _cloud) {
-                std::cout << point->coordinates() << std::endl;
+                std::cout << point.id() << std::endl;
             }
             // all done
             return;
@@ -45,10 +44,10 @@ namespace mito::geometry {
         auto size() const noexcept -> int { return std::size(_cloud); }
 
         // example use: cloud.point({0.0, ..., 0.0})
-        auto point(coordinates_type && coord) -> point_type
+        auto point() -> point_type
         {
             // return the newly added point
-            return _cloud.emplace(coord);
+            return _cloud.emplace();
         }
 
         // the iterable repository of the points in the cloud
@@ -75,6 +74,8 @@ namespace mito::geometry {
 
 }    // namespace mito
 
+
 #endif    // mito_geometry_PointCloud_h
+
 
 // end of file

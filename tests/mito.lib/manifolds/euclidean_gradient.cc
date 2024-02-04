@@ -8,7 +8,7 @@ static constexpr auto e_0 = mito::manifolds::uniform_field<2>(mito::e_0<2>);
 static constexpr auto e_1 = mito::manifolds::uniform_field<2>(mito::e_1<2>);
 
 // alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
 
 
 TEST(Manifolds, EuclideanGradient)

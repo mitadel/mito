@@ -35,16 +35,19 @@ TEST(Manifolds, Triangle2D)
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of triangles
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // build nodes
-    auto vertex0 = geometry.node({ 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0 });
-    auto vertex2 = geometry.node({ 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     // create a manifold on {mesh} with Euclidean metric
-    auto manifold = mito::manifolds::manifold(mesh);
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // build triangle with a positive volume (reference triangle)
     auto triangle = topology.triangle({ vertex0, vertex1, vertex2 });

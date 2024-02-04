@@ -11,20 +11,21 @@ static constexpr auto e_z = mito::e_2<3>;
 
 auto
 volume(
-    const auto & w, mito::topology::topology_t & topology,
-    const mito::geometry::geometry_t<3> & geometry, const mito::topology::vertex_t & v0,
-    const mito::topology::vertex_t & v1, const mito::topology::vertex_t & v2,
-    const mito::topology::vertex_t & v3) -> mito::scalar_t
+    const auto & w, const mito::geometry::geometry_t<3> & geometry,
+    const mito::geometry::coordinate_system_t<3, mito::geometry::EUCLIDEAN> & coordinate_system,
+    const mito::topology::vertex_t & v0, const mito::topology::vertex_t & v1,
+    const mito::topology::vertex_t & v2, const mito::topology::vertex_t & v3) -> mito::scalar_t
 {
     // build director segments
-    auto segment0 = topology.segment({ v0, v1 });
-    auto segment1 = topology.segment({ v1, v2 });
-    auto segment2 = topology.segment({ v0, v3 });
+    auto x0 = coordinate_system.coordinates(geometry.point(v0));
+    auto x1 = coordinate_system.coordinates(geometry.point(v1));
+    auto x2 = coordinate_system.coordinates(geometry.point(v2));
+    auto x3 = coordinate_system.coordinates(geometry.point(v3));
 
     // build director vectors
-    auto director0 = geometry.vector(segment0);
-    auto director1 = geometry.vector(segment1);
-    auto director2 = geometry.vector(segment2);
+    auto director0 = x1 - x0;
+    auto director1 = x2 - x0;
+    auto director2 = x3 - x0;
 
     // compute volume of tetrahedron
     auto volume = 1. / 6. * w(director0, director1, director2);
@@ -64,39 +65,66 @@ TEST(Manifolds, EuclideanMetric3D)
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
-    // build nodes of a triangle (counterclockwise order)
-    auto vertex1 = geometry.node({ 0.0, 0.0, 0.0 });
-    auto vertex2 = geometry.node({ 1.0, 0.0, 0.0 });
-    auto vertex3 = geometry.node({ 0.0, 1.0, 0.0 });
-    auto vertex4 = geometry.node({ 0.0, 0.0, 1.0 });
+    // a Euclidean coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+
+    // build nodes of a tetrahedron
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0, 0.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0, 0.0 });
+    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 1.0 });
 
     // even permutations of the vertices order result in a positive volume
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex2, vertex3, vertex4), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex3, vertex4, vertex2), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex4, vertex2, vertex3), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex2, vertex1, vertex4, vertex3), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex2, vertex3, vertex1, vertex4), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex2, vertex4, vertex3, vertex1), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex3, vertex1, vertex2, vertex4), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex3, vertex2, vertex4, vertex1), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex3, vertex4, vertex1, vertex2), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex1, vertex3, vertex2), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex2, vertex1, vertex3), 1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex3, vertex2, vertex1), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex1, vertex2, vertex3, vertex4), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex1, vertex3, vertex4, vertex2), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex1, vertex4, vertex2, vertex3), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex2, vertex1, vertex4, vertex3), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex2, vertex3, vertex1, vertex4), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex2, vertex4, vertex3, vertex1), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex3, vertex1, vertex2, vertex4), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex3, vertex2, vertex4, vertex1), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex3, vertex4, vertex1, vertex2), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex4, vertex1, vertex3, vertex2), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex4, vertex2, vertex1, vertex3), 1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex4, vertex3, vertex2, vertex1), 1.0 / 6.0);
 
     // odd permutations of the vertices order result in a negative volume
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex2, vertex4, vertex3), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex3, vertex2, vertex4), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex1, vertex4, vertex3, vertex2), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex2, vertex1, vertex3, vertex4), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex2, vertex3, vertex4, vertex1), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex2, vertex4, vertex1, vertex3), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex3, vertex1, vertex4, vertex2), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex3, vertex2, vertex1, vertex4), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex3, vertex4, vertex2, vertex1), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex1, vertex2, vertex3), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex2, vertex3, vertex1), -1.0 / 6.0);
-    EXPECT_DOUBLE_EQ(volume(w, topology, geometry, vertex4, vertex3, vertex1, vertex2), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex1, vertex2, vertex4, vertex3), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex1, vertex3, vertex2, vertex4), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex1, vertex4, vertex3, vertex2), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex2, vertex1, vertex3, vertex4), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex2, vertex3, vertex4, vertex1), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex2, vertex4, vertex1, vertex3), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex3, vertex1, vertex4, vertex2), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex3, vertex2, vertex1, vertex4), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex3, vertex4, vertex2, vertex1), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex4, vertex1, vertex2, vertex3), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex4, vertex2, vertex3, vertex1), -1.0 / 6.0);
+    EXPECT_DOUBLE_EQ(
+        volume(w, geometry, coord_system, vertex4, vertex3, vertex1, vertex2), -1.0 / 6.0);
 }
 
 

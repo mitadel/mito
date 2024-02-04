@@ -28,26 +28,17 @@ main()
 
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // build nodes
-    auto point0 = point_cloud.point({ 0.0, 0.0 });
-    auto point1 = point_cloud.point({ 1.0, 0.0 });
-    auto point2 = point_cloud.point({ 1.0, 1.0 });
-    auto point3 = point_cloud.point({ 0.0, 1.0 });
-
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
-    auto vertex3 = topology.vertex();
-
-    // add nodes to geometry
-    geometry.node(vertex0, point0);
-    geometry.node(vertex1, point1);
-    geometry.node(vertex2, point2);
-    geometry.node(vertex3, point3);
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     // build segments and cells
     auto segment0 = topology.segment({ vertex0, vertex1 });
@@ -77,13 +68,13 @@ main()
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
-    auto tetra_mesh = tetra(mesh, geometry, subdivisions);
+    auto tetra_mesh = mito::mesh::tetra(mesh, geometry, coord_system, subdivisions);
 
     // create manifold from the mesh
-    auto manifold = mito::manifolds::manifold(tetra_mesh);
+    auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system);
 
     // instantiate a scalar field
-    using coordinates_t = mito::geometry::coordinates_t<2>;
+    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
     auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2

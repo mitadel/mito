@@ -4,9 +4,10 @@
 
 
 namespace mito::io::summit {
-    template <int D>
+    template <int D, geometry::CoordinateType coordT>
     auto readVertices(
-        std::ifstream & fileStream, geometry::geometry_t<D> & geometry, int N_vertices,
+        std::ifstream & fileStream, geometry::geometry_t<D> & geometry,
+        geometry::coordinate_system_t<D, coordT> & coordinate_system, int N_vertices,
         std::vector<topology::vertex_t> & vertices) -> void
     {
         // fill in vertices
@@ -18,8 +19,9 @@ namespace mito::io::summit {
                 fileStream >> coordinates[d];
             }
 
-            // instantiate a new node at {coordinates}
-            const auto & vertex = geometry.node(std::move(coordinates));
+            // instantiate a new node
+            auto vertex = mito::geometry::node(
+                geometry, coordinate_system, mito::geometry::coordinates_t<D, coordT>(coordinates));
 
             // add vertex to {vertices}
             vertices.push_back(vertex);
@@ -99,24 +101,6 @@ namespace mito::io::summit {
     }
 
     template <int D>
-    inline auto orientation(
-        const geometry::geometry_t<D> & geometry, const topology::vertex_t & v0,
-        const topology::vertex_t & v1, const topology::vertex_t & v2, const topology::vertex_t & v3)
-        -> bool
-    {
-        auto p0 = geometry.point(v0)->coordinates();
-        auto p1 = geometry.point(v1)->coordinates();
-        auto p2 = geometry.point(v2)->coordinates();
-        auto p3 = geometry.point(v3)->coordinates();
-
-        auto dir1 = p1 - p0;
-        auto dir2 = p2 - p0;
-        auto dir3 = p3 - p0;
-
-        return pyre::tensor::cross(dir1, dir2) * dir3 > 0;
-    }
-
-    template <int D>
     auto readTetrahedron(
         std::ifstream & fileStream, mesh::mesh_t<topology::tetrahedron_t, D> & mesh,
         geometry::geometry_t<D> & geometry, const std::vector<topology::vertex_t> & vertices)
@@ -144,8 +128,6 @@ namespace mito::io::summit {
         const auto & vertex1 = vertices[index1];
         const auto & vertex2 = vertices[index2];
         const auto & vertex3 = vertices[index3];
-
-        assert(orientation(geometry, vertex0, vertex1, vertex2, vertex3));
 
         const auto & cell = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
         mesh.insert(cell);
@@ -252,9 +234,10 @@ namespace mito::io::summit {
         return readTriangles(fileStream, mesh, geometry, N_cells, vertices);
     }
 
-    template <class cellT, int D>
-    auto reader(std::ifstream & fileStream, geometry::geometry_t<D> & geometry)
-        -> mesh::mesh_t<cellT, D>
+    template <class cellT, int D, geometry::CoordinateType coordT>
+    auto reader(
+        std::ifstream & fileStream, geometry::geometry_t<D> & geometry,
+        geometry::coordinate_system_t<D, coordT> & coordinate_system) -> mesh::mesh_t<cellT, D>
     {
         if (!fileStream.is_open()) {
             throw std::runtime_error("reader: Mesh file could not be opened");
@@ -291,7 +274,7 @@ namespace mito::io::summit {
         assert(N_cell_types == 1);
 
         // read the vertices
-        readVertices(fileStream, geometry, N_vertices, vertices);
+        readVertices(fileStream, geometry, coordinate_system, N_vertices, vertices);
 
         // read the cells
         readElements(fileStream, mesh, geometry, N_cells, vertices);

@@ -6,8 +6,12 @@
 namespace mito::geometry {
 
     // coordinates alias in D-dimensions
-    template <int D>
-    using coordinates_t = mito::vector_t<D>;
+    template <int D, CoordinateType coordT>
+    using coordinates_t = Coordinates<D, coordT>;
+
+    // coordinates alias in D-dimensions
+    template <int D, CoordinateType coordT>
+    using coordinate_system_t = CoordinateSystem<D, coordT>;
 
     // point alias
     template <int D>
@@ -33,6 +37,11 @@ namespace mito::geometry {
     template <int D>
     using nodes_t = std::unordered_map<
         topology::vertex_t, point_t<D>, utilities::hash_function<topology::vertex_t>>;
+
+    // alias for the collection of oriented simplex director vectors
+    // (e.g. an N-simplex has as N director vectors)
+    template <int N, int D>
+    using edge_simplex_directors_t = std::array<vector_t<D>, N>;
 
     // point cloud factory
     template <int D>

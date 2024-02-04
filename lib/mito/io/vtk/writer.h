@@ -26,12 +26,14 @@ namespace mito::io::vtk {
         return vtkSmartPointer<vtkLine>::New();
     }
 
-    template <int D>
-    auto insertVtkPoint(const geometry::coordinates_t<D> &, vtkSmartPointer<vtkPoints> &) -> void;
+    template <int D, geometry::CoordinateType coordT>
+    auto insertVtkPoint(const geometry::coordinates_t<D, coordT> &, vtkSmartPointer<vtkPoints> &)
+        -> void;
 
     template <>
     auto insertVtkPoint(
-        const geometry::coordinates_t<3> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::coordinates_t<3, geometry::EUCLIDEAN> & coord,
+        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], coord[2]);
@@ -39,14 +41,17 @@ namespace mito::io::vtk {
 
     template <>
     auto insertVtkPoint(
-        const geometry::coordinates_t<2> & coord, vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::coordinates_t<2, geometry::EUCLIDEAN> & coord,
+        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
     }
 
-    template <class cellT, int D>
-    auto createVtkUnstructuredGrid(const mito::mesh::mesh_t<cellT, D> & mesh)
+    template <class cellT, int D, geometry::CoordinateType coordT>
+    auto createVtkUnstructuredGrid(
+        const mito::mesh::mesh_t<cellT, D> & mesh,
+        const geometry::coordinate_system_t<D, coordT> & coordinate_system)
         -> vtkSmartPointer<vtkUnstructuredGrid>
     {
         // vtk unstructured grid
@@ -81,7 +86,7 @@ namespace mito::io::vtk {
                 // if the point is not present in the map
                 if (mapPoints.count(pPoint) == 0) {
                     // insert the new vtk point
-                    insertVtkPoint(pPoint->coordinates(), pointsVtk);
+                    insertVtkPoint(coordinate_system.coordinates(pPoint), pointsVtk);
                     // add the point to the map with its global index
                     mapPoints[pPoint] = indexPointVtk;
                     // update global index for the vtk point
@@ -119,19 +124,23 @@ namespace mito::io::vtk {
         writer->Write();
     }
 
-    template <class cellT, int D>
-    auto writer(std::string fileName, const mito::mesh::mesh_t<cellT, D> & mesh) -> void
+    template <class cellT, int D, geometry::CoordinateType coordT>
+    auto writer(
+        std::string fileName, const mito::mesh::mesh_t<cellT, D> & mesh,
+        const geometry::coordinate_system_t<D, coordT> & coordinate_system) -> void
     {
         // create vtk unstructured grid
-        const auto gridVtk = createVtkUnstructuredGrid(mesh);
+        const auto gridVtk = createVtkUnstructuredGrid(mesh, coordinate_system);
 
         // write grid to file
         write(fileName, gridVtk);
     }
 
 
-    template <int D>
-    auto writer(std::string fileName, const geometry::point_cloud_t<D> & cloud) -> void
+    template <int D, geometry::CoordinateType coordT>
+    auto writer(
+        std::string fileName, const geometry::point_cloud_t<D> & cloud,
+        const geometry::coordinate_system_t<D, coordT> & coordinate_system) -> void
     {
         // get point cloud compositions
         const auto & points = cloud.points();
@@ -143,7 +152,7 @@ namespace mito::io::vtk {
 
         // iterate over the points
         for (const auto & point : points) {
-            insertVtkPoint(point->coordinates(), pointsVtk);
+            insertVtkPoint(coordinate_system.coordinates(point), pointsVtk);
         }
 
         // set the grid points

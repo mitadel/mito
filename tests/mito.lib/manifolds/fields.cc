@@ -4,7 +4,7 @@
 
 
 // alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
 
 
 TEST(Manifolds, VectorFields)
@@ -25,7 +25,7 @@ TEST(Manifolds, VectorFields)
     });
 
     // check value of field at {x}
-    static_assert(g(x) == mito::vector_t<2> { 1.0, 1.0 });
+    static_assert(g(x) == mito::vector_t<2>{ 1.0, 1.0 });
 }
 
 

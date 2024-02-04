@@ -15,11 +15,7 @@ namespace mito::topology {
     template <int N>
     using vertex_simplex_composition_t = std::array<vertex_t, N + 1>;
 
-    // alias for the collection of oriented simplex director vectors
-    // (e.g. an N-simplex has as N director vectors)
-    template <int N, int D>
-    using edge_simplex_directors_t = std::array<vector_t<D>, N>;
-
+    // TOFIX: move concepts to separate header
     // concept for a class supporting the {insert} method for a {vertex_t} argument
     template <class T>
     concept VertexInsertable = requires(T instance, const vertex_t & v) { instance.insert(v); };

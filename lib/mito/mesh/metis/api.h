@@ -5,10 +5,13 @@
 
 namespace mito::mesh::metis {
 
-    template <class meshT>
-    auto partition(const meshT & mesh, int n_partitions, int n_rank) -> meshT
+    template <class meshT, geometry::CoordinateType coordT>
+    auto partition(
+        const meshT & mesh,
+        const geometry::coordinate_system_t<meshT::dim, coordT> & coordinate_system,
+        int n_partitions, int n_rank) -> meshT
     {
-        return Partitioner<meshT>::partition(mesh, n_partitions, n_rank);
+        return Partitioner<meshT, coordT>::partition(mesh, coordinate_system, n_partitions, n_rank);
     }
 }
 

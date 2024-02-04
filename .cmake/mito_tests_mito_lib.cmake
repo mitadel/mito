@@ -1,6 +1,10 @@
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
-mito_test_driver(tests/mito.lib/geometry/cell_barycenter.cc)
+mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_segment.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_triangle.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_tetrahedron.cc)
+mito_test_driver(tests/mito.lib/geometry/cell_directors.cc)
 mito_test_driver(tests/mito.lib/geometry/point.cc)
 
 # io
@@ -16,6 +20,7 @@ endif()
 
 # manifolds
 mito_test_driver(tests/mito.lib/manifolds/cube_volume.cc)
+mito_test_driver(tests/mito.lib/manifolds/disk_volume_polar_cartesian.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_gradient.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_3D.cc)
@@ -25,7 +30,6 @@ mito_test_driver(tests/mito.lib/manifolds/fields.cc)
 mito_test_driver(tests/mito.lib/manifolds/fields_traits.cc)
 mito_test_driver(tests/mito.lib/manifolds/one_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/metric.cc)
-# mito_test_driver(tests/mito.lib/manifolds/polar_manifold_2D.cc) # TOFIX: this test now fails
 mito_test_driver(tests/mito.lib/manifolds/polar_metric.cc)
 mito_test_driver(tests/mito.lib/manifolds/contractions.cc)
 mito_test_driver(tests/mito.lib/manifolds/tensor_product_forms.cc)

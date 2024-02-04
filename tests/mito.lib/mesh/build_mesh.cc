@@ -30,27 +30,18 @@ TEST(Mesh, BuildMesh)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
-    auto point0 = point_cloud.point({ 0.0, 0.0 });
-    auto point1 = point_cloud.point({ 1.0, 0.0 });
-    auto point2 = point_cloud.point({ 1.0, 1.0 });
-    auto point3 = point_cloud.point({ 0.5, 0.5 });
-    auto point4 = point_cloud.point({ 0.0, 1.0 });
-
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
-    auto vertex3 = topology.vertex();
-    auto vertex4 = topology.vertex();
-
-    // add nodes to geometry
-    geometry.node(vertex0, point0);
-    geometry.node(vertex1, point1);
-    geometry.node(vertex2, point2);
-    geometry.node(vertex3, point3);
-    geometry.node(vertex4, point4);
+    // build nodes
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
+    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     auto segment0 = topology.segment({ vertex0, vertex1 });
     auto segment1 = topology.segment({ vertex1, vertex3 });

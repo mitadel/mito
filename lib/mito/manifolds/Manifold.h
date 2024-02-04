@@ -6,7 +6,7 @@
 namespace mito::manifolds {
 
     template <
-        geometry::CoordinateSystem coordsT, class cellT /* the type of cell */,
+        geometry::CoordinateType coordsT, class cellT /* the type of cell */,
         int D /* spatial dimension */>
     class Manifold {
 
@@ -14,7 +14,7 @@ namespace mito::manifolds {
         // typedef for vertex
         using vertex_type = topology::vertex_t;
         // the coordinates type
-        static constexpr geometry::CoordinateSystem coords_type = coordsT;
+        static constexpr geometry::CoordinateType coords_type = coordsT;
         // the dimension of the manifold (that is the order of the cell)
         static constexpr int N = topology::order<cellT>();
         // the dimension of the parametric space
@@ -32,19 +32,21 @@ namespace mito::manifolds {
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
         // typedef for a set of coordinates
-        using coordinates_type = geometry::coordinates_t<D>;
+        using coordinates_type = geometry::coordinates_t<D, coords_type>;
+        // typedef for a coordinates system
+        using coordinate_system_type = geometry::coordinate_system_t<D, coords_type>;
 
       private:
         // the metric field
         static constexpr auto _metric = metric<coords_type, N, D>::field();
         // basis for vector fields
         template <int I>
-        static constexpr auto _e = uniform_field<D>(mito::e<I, N>);
+        static constexpr auto _e = uniform_field<D, coords_type>(mito::e<I, N>);
         // basis for one-form fields
         // QUESTION: does it make sense to use the metric here since it cancels out with the inverse
         //  metric?
         template <int I>
-        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D>);
+        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<N, D, coords_type>);
         // helper function wedging the N basis 1-forms
         template <int... J>
         static constexpr auto _wedge(integer_sequence<J...>)
@@ -55,10 +57,14 @@ namespace mito::manifolds {
         }
         // the metric volume form
         static constexpr auto _volume_form =
-            sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N> {});
+            sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N>{});
 
       public:
-        constexpr Manifold(const mesh_type & mesh) : _mesh(mesh) {}
+        constexpr Manifold(
+            const mesh_type & mesh, const coordinate_system_type & coordinate_system) :
+            _mesh(mesh),
+            _coordinate_system(coordinate_system)
+        {}
 
         constexpr ~Manifold() {}
 
@@ -86,7 +92,7 @@ namespace mito::manifolds {
         constexpr auto coordinates(const vertex_type & v) const -> const coordinates_type &
         {
             // get the coordinates of the point attached to vertex {v}
-            return _mesh.geometry().point(v)->coordinates();
+            return _coordinate_system.coordinates(_mesh.geometry().point(v));
         }
 
         constexpr auto parametrization(
@@ -151,25 +157,22 @@ namespace mito::manifolds {
             return result;
         }
 
-        // computes the volume of {cell} with the metric volume at {point}
-        constexpr auto volume(
-            const cell_type & cell, const coordinates_type & point = mito::vector_t<D>()) const
-            -> scalar_t
+        // computes the volume of {cell}
+        constexpr auto volume(const cell_type & cell) const -> scalar_t
         {
             // all done
-            return _volume(cell, point, make_integer_sequence<N> {});
+            return _volume(cell, make_integer_sequence<N>{});
         }
 
       private:
         // computes the volume of a cell
         template <int... J>
-        constexpr auto _volume(
-            const cell_type & cell, const coordinates_type & point, integer_sequence<J...>) const
-            -> scalar_t
+        constexpr auto _volume(const cell_type & cell, integer_sequence<J...>) const -> scalar_t
         requires(sizeof...(J) == N)
         {
-            // get the director edges of this cell
-            auto directors = _mesh.geometry().directors(cell);
+            // get the director edges of this cell and the point where they stem from
+            auto [point, directors] =
+                mito::geometry::directors(cell, _mesh.geometry(), _coordinate_system);
             // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
             // contracted with the cell directors
             auto volume = 1.0 / pyre::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
@@ -180,9 +183,11 @@ namespace mito::manifolds {
       private:
         // the underlying mesh
         const mesh_type & _mesh;
+        // the coordinate system
+        const coordinate_system_type & _coordinate_system;
     };
 
-    template <geometry::CoordinateSystem coordsT, class cellT, int D>
+    template <geometry::CoordinateType coordsT, class cellT, int D>
     std::ostream & operator<<(std::ostream & os, const manifold_t<coordsT, cellT, D> & manifold)
     {
         // print the manifold

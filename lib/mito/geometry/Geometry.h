@@ -20,8 +20,6 @@ namespace mito::geometry {
         using nodes_type = nodes_t<D>;
         // typedef for a node
         using node_type = node_t<D>;
-        // typedef for a set of coordinates
-        using coordinates_type = coordinates_t<D>;
 
       private:
         // constructor
@@ -46,13 +44,10 @@ namespace mito::geometry {
         }
 
         // instantiate a new vertex and a new point at {coord} and bind them into a node
-        inline auto node(coordinates_type && coord) -> vertex_type
+        inline auto node(const point_type & point) -> vertex_type
         {
             // ask the topology for a new vertex
             auto vertex = _topology.vertex();
-
-            // ask the point cloud for a point with coordinates {coord}
-            auto point = _point_cloud.point(std::move(coord));
 
             // register the node with the geometry
             _nodes.emplace(node_type(vertex, point));
@@ -70,53 +65,8 @@ namespace mito::geometry {
             return _nodes.find(vertex)->second;
         }
 
-        // construct the vector that goes from the first to the second end of this segment
-        inline auto vector(const topology::segment_t & segment) const -> vector_t<D>
-        {
-            // get the segment composition
-            auto composition = segment->composition();
-
-            // get the coordinates of the first end of the segment
-            auto point0 = point(composition[0]->footprint())->coordinates();
-
-            // get the coordinates of the second end of the segment
-            auto point1 = point(composition[1]->footprint())->coordinates();
-
-            // construct the vector from {point0} to {point1} and return it
-            return point1 - point0;
-        }
-
         // TOFIX: split this header into interface and implementation
-      private:
-        template <int N, int... J>
-        inline auto _directors(const topology::simplex_t<N> & simplex, integer_sequence<J...>) const
-            -> topology::edge_simplex_directors_t<N, D>
-        requires(sizeof...(J) == N)
-        {
-            // get the simplex vertices
-            auto vertices = simplex->vertices();
-
-            // get the coordinates of the first vertex
-            // TOFIX: const auto &
-            auto p0 = point(vertices[0])->coordinates();
-
-            // compute the director vectors associated with each director edge
-            // auto directors = std::array { _mesh.geometry().vector(edge_directors[J])... };
-            auto directors = std::array { (point(vertices[J + 1])->coordinates() - p0)... };
-
-            // all done
-            return directors;
-        }
-
       public:
-        // return the array of director vectors of the simplex
-        template <int N>
-        inline auto directors(const topology::simplex_t<N> & simplex) const
-            -> topology::edge_simplex_directors_t<N, D>
-        {
-            return _directors(simplex, make_integer_sequence<N> {});
-        }
-
         // accessor for topology
         inline auto topology() noexcept -> topology_type & { return _topology; }
 

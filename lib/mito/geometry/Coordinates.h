@@ -9,22 +9,22 @@
 namespace mito::geometry {
 
     // addition of coordinates xA + xB
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator+(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
         -> Coordinates<D, coordT>;
 
     // multiplication of coordinates a * xB
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator*(const scalar_t &, const Coordinates<D, coordT> &)
         -> Coordinates<D, coordT>;
 
     // coordinates subtraction returning vectors
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
         -> mito::vector_t<D>;
 
     // operator less than
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     constexpr auto operator<(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
         -> bool;
 }
@@ -34,7 +34,7 @@ namespace mito::geometry {
 
     // class for a set of coordinates in a {coordT} coordinates system (e.g. CARTESIAN, POLAR, ...)
     // in {D} dimensions
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     class Coordinates {
       private:
         // my underlying array type
@@ -60,7 +60,7 @@ namespace mito::geometry {
         template <class... T>
         constexpr Coordinates(T... coords)
         requires(sizeof...(T) == D)
-            : _array { coords... }
+            : _array{ coords... }
         {}
 
         // destructor
@@ -117,7 +117,7 @@ namespace mito::geometry {
         array_t _array;
     };
 
-    template <int D, CoordinateSystem coordT>
+    template <int D, CoordinateType coordT>
     std::ostream & operator<<(std::ostream & os, const Coordinates<D, coordT> & coord) noexcept
     {
         // print the coordinates

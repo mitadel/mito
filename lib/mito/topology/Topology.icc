@@ -9,9 +9,10 @@ mito::topology::Topology::Topology() :
     _vertex_factory(),
     _segment_factory(),
     _triangle_factory(),
-    _tetrahedron_factory() {};
+    _tetrahedron_factory()
+{}
 
-mito::topology::Topology::~Topology() {};
+mito::topology::Topology::~Topology() {}
 
 template <>
 inline auto

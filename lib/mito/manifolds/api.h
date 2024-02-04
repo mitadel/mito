@@ -10,7 +10,7 @@ namespace mito::manifolds {
     using parametric_point_t = std::array<double, D>;
 
     // manifold alias
-    template <geometry::CoordinateSystem coordsT, class cellT, int D>
+    template <geometry::CoordinateType coordsT, class cellT, int D>
     using manifold_t = Manifold<coordsT, cellT, D>;
 
     // form alias
@@ -26,8 +26,11 @@ namespace mito::manifolds {
     using field_t = Field<F>;
 
     // factory manifolds
-    template <geometry::CoordinateSystem coordsT = geometry::EUCLIDEAN, class cellT, int D>
-    constexpr auto manifold(const mesh::mesh_t<cellT, D> & mesh) -> manifold_t<coordsT, cellT, D>;
+    template <geometry::CoordinateType coordsT = geometry::EUCLIDEAN, class cellT, int D>
+    constexpr auto manifold(
+        const mesh::mesh_t<cellT, D> & mesh,
+        const geometry::coordinate_system_t<D, coordsT> & coordinate_system)
+        -> manifold_t<coordsT, cellT, D>;
 
     // factory for one-forms
     template <class F>
@@ -42,16 +45,18 @@ namespace mito::manifolds {
     constexpr auto field(F && f) -> field_t<F>;
 
     // uniform field
-    template <int D, class Y>
+    template <int D, geometry::CoordinateType coordsT = geometry::EUCLIDEAN, class Y>
     constexpr auto uniform_field(const Y & constant)
     {
-        return field([constant](const geometry::coordinates_t<D> &) -> Y { return constant; });
+        return field(
+            [constant](const geometry::coordinates_t<D, coordsT> &) -> Y { return constant; });
     }
 
     // the order N identity tensor in D dimensions
-    template <int N, int D>
-    constexpr auto identity_tensor_field = uniform_field<D>(mito::identity<N>);
+    template <int N, int D, geometry::CoordinateType coordsT = geometry::EUCLIDEAN>
+    constexpr auto identity_tensor_field = uniform_field<D, coordsT>(mito::identity<N>);
 
+    // TOFIX:
     template <class F, class G, int D = field_t<F>::dim>
     constexpr auto one_form(
         const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<D, D>)

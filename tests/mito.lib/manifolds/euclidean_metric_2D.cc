@@ -10,17 +10,19 @@ static constexpr auto e_y = mito::e_1<2>;
 
 auto
 area(
-    const auto & w, mito::topology::topology_t & topology,
-    const mito::geometry::geometry_t<2> & geometry, const mito::topology::vertex_t & v0,
-    const mito::topology::vertex_t & v1, const mito::topology::vertex_t & v2) -> mito::scalar_t
+    const auto & w, const mito::geometry::geometry_t<2> & geometry,
+    const mito::geometry::coordinate_system_t<2, mito::geometry::EUCLIDEAN> & coordinate_system,
+    const mito::topology::vertex_t & v0, const mito::topology::vertex_t & v1,
+    const mito::topology::vertex_t & v2) -> mito::scalar_t
 {
-    // build director segments
-    auto segment0 = topology.segment({ v0, v1 });
-    auto segment1 = topology.segment({ v1, v2 });
+    // get vertex coordinates
+    auto x0 = coordinate_system.coordinates(geometry.point(v0));
+    auto x1 = coordinate_system.coordinates(geometry.point(v1));
+    auto x2 = coordinate_system.coordinates(geometry.point(v2));
 
     // build director vectors
-    auto director0 = geometry.vector(segment0);
-    auto director1 = geometry.vector(segment1);
+    auto director0 = x1 - x0;
+    auto director1 = x2 - x0;
 
     // compute volume of triangle
     auto area = 1. / 2. * w(director0, director1);
@@ -54,20 +56,23 @@ TEST(Manifolds, EuclideanMetric2D)
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // build nodes of a triangle (counterclockwise order)
-    auto vertex0 = geometry.node({ 0.0, 0.0 });
-    auto vertex1 = geometry.node({ 1.0, 0.0 });
-    auto vertex2 = geometry.node({ 0.0, 1.0 });
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     // check that even permutations of the vertices give a positive area
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex0, vertex1, vertex2), 0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex1, vertex2, vertex0), 0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex2, vertex0, vertex1), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex0, vertex1, vertex2), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex1, vertex2, vertex0), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex2, vertex0, vertex1), 0.5);
 
     // check that odd permutations of the vertices give a negative area
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex0, vertex2, vertex1), -0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex2, vertex1, vertex0), -0.5);
-    EXPECT_DOUBLE_EQ(area(w, topology, geometry, vertex1, vertex0, vertex2), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex0, vertex2, vertex1), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex2, vertex1, vertex0), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex1, vertex0, vertex2), -0.5);
 }
 
 

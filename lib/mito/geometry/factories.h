@@ -6,10 +6,17 @@
 namespace mito::geometry {
 
     // factory for coordinates from brace-enclosed initializer list
-    template <int D>
+    template <CoordinateType coordT = EUCLIDEAN, int D>
     constexpr auto coordinates(const mito::scalar_t (&&coords)[D])
     {
-        return coordinates_t<D>(coords);
+        return coordinates_t<D, coordT>(coords);
+    }
+
+    // factory for coordinate system
+    template <int D, CoordinateType coordT = EUCLIDEAN>
+    constexpr auto coordinate_system()
+    {
+        return coordinate_system_t<D, coordT>();
     }
 
     // point cloud factory
@@ -25,6 +32,18 @@ namespace mito::geometry {
         -> geometry_t<D> &
     {
         return utilities::Singleton<geometry_t<D>>::GetInstance(topology, point_cloud);
+    }
+
+    // node factory
+    template <int D, CoordinateType coordT>
+    constexpr auto node(
+        geometry_t<D> & geometry, coordinate_system_t<D, coordT> & coordinate_system,
+        const coordinates_t<D, coordT> & coords) -> topology::vertex_t
+    {
+        // create and place two points
+        auto point = geometry.point_cloud().point();
+        coordinate_system.place(point, coords);
+        return geometry.node(point);
     }
 }
 

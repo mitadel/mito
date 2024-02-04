@@ -93,7 +93,7 @@ main(int argc, char * argv[])
 {
 
     // a vector
-    constexpr vector_t<3> x { 1, 1, 1 };
+    constexpr vector_t<3> x{ 1, 1, 1 };
 
     // assert all components of the vector are equal to 1
     constexpr_for_1<vector_t<3>::size>([x]<int i>() {
@@ -102,7 +102,7 @@ main(int argc, char * argv[])
     });
 
     // a matrix
-    constexpr matrix_t<3, 3> A { 2, 2, 2, 2, 2, 2, 2, 2, 2 };
+    constexpr matrix_t<3, 3> A{ 2, 2, 2, 2, 2, 2, 2, 2, 2 };
 
     // assert all components of the matrix are equal to 2
     constexpr_for_2<3, 3>([A]<int i, int j>() {
@@ -111,7 +111,7 @@ main(int argc, char * argv[])
     });
 
     // a symmetric matrix
-    constexpr matrix_t<3, 3> A_sym { 1, 2, 3, 2, 1, 2, 3, 2, 1 };
+    constexpr matrix_t<3, 3> A_sym{ 1, 2, 3, 2, 1, 2, 3, 2, 1 };
 
     // assert all components of the matrix are equal to 2
     constexpr_for_2<3, 3>([A_sym]<int i, int j>() {
@@ -121,9 +121,9 @@ main(int argc, char * argv[])
 
 
     // a symmetric matrix
-    constexpr matrix_t<3, 3> B { 1, 0, 0, 0, 2, 0, 0, 0, 3 };
+    constexpr matrix_t<3, 3> B{ 1, 0, 0, 0, 2, 0, 0, 0, 3 };
 
-    constexpr matrix_t<3, 3> BB { 1, 0, 0, 0, 4, 0, 0, 0, 9 };
+    constexpr matrix_t<3, 3> BB{ 1, 0, 0, 0, 4, 0, 0, 0, 9 };
 
     // assert all components of the matrix are equal to 2
     constexpr_for_3<3, 1, 2>(

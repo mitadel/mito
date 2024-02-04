@@ -5,11 +5,12 @@
 
 
 using geometry_t = mito::geometry::geometry_t<2>;
+using coord_system_t = mito::geometry::coordinate_system_t<2, mito::geometry::EUCLIDEAN>;
 using mesh_t = mito::mesh::mesh_t<mito::topology::triangle_t, 2>;
 
 
 auto
-build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
+build_mesh(geometry_t & geometry, coord_system_t & coord_system, mesh_t & mesh) -> void
 {
     /**
      * Mesh with four cells:
@@ -28,31 +29,17 @@ build_mesh(geometry_t & geometry, mesh_t & mesh) -> void
         (0,0)           (1,0)
     */
 
-    auto & point_cloud = geometry.point_cloud();
     auto & topology = geometry.topology();
 
-    auto point0 = point_cloud.point({ 0.0, 0.0 });
-    auto point1 = point_cloud.point({ 1.0, 0.0 });
-    auto point2 = point_cloud.point({ 1.0, 1.0 });
-    auto point3 = point_cloud.point({ 0.5, 0.5 });
-    auto point4 = point_cloud.point({ 0.0, 1.0 });
-
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
-    auto vertex3 = topology.vertex();
-    auto vertex4 = topology.vertex();
+    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
+    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
+    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
+    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
 
     // print the vertices ids in order of construction
     // std::cout << vertex0.id() << "\t" << vertex1.id() << "\t" << vertex2.id() << "\t"
     //           << vertex3.id() << "\t" << vertex4.id() << std::endl;
-
-    // add nodes to geometry
-    geometry.node(vertex0, point0);
-    geometry.node(vertex1, point1);
-    geometry.node(vertex2, point2);
-    geometry.node(vertex3, point3);
-    geometry.node(vertex4, point4);
 
     auto segment0 = topology.segment({ vertex0, vertex1 });
     auto segment1 = topology.segment({ vertex1, vertex3 });
@@ -94,11 +81,14 @@ TEST(MetisPartitioner, Base)
     // a geometry binding the topology {topology} to the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // populate the mesh
-    build_mesh(geometry, mesh);
+    build_mesh(geometry, coord_system, mesh);
 
     // number of partitions
     int n_partitions = 2;
@@ -107,7 +97,7 @@ TEST(MetisPartitioner, Base)
     int n_rank = 0;
 
     // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, coord_system, n_partitions, n_rank);
 
     // expect that the mesh was partitioned equally
     // (this check assumes that the number of cells of the original mesh is divisible by the number

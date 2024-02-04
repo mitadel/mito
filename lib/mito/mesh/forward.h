@@ -12,7 +12,6 @@ namespace mito::mesh {
     // mesh alias
     template <class cellT, int D>
     using mesh_t = Mesh<cellT, D>;
-
 }
 
 

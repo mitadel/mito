@@ -13,10 +13,15 @@
 #include "api.h"
 
 // classes implementation
+#include "Coordinates.h"
+#include "CoordinateSystem.h"
 #include "Point.h"
 #include "PointCloud.h"
 #include "Node.h"
 #include "Geometry.h"
+
+// algebra
+#include "algebra_coordinates.h"
 
 // factories implementation
 #include "factories.h"

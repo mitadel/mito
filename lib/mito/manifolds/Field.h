@@ -23,13 +23,13 @@ namespace mito::manifolds {
         // the type of coordinates
         using coordinates_type = input_type;
         // publish the dimension of the physical space
-        static constexpr int dim = mito::size<coordinates_type>();
+        static constexpr int dim = coordinates_type::dim;
         // publish my template parameter
         using function_type = F;
 
       public:
         // constructor
-        constexpr Field(F f) : _f { f } {}
+        constexpr Field(F f) : _f{ f } {}
 
         // the value of the field at position {x}
         constexpr auto operator()(const coordinates_type & x) const -> output_type { return _f(x); }

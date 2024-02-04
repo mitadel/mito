@@ -25,7 +25,7 @@ namespace mito::manifolds {
 
       public:
         // constructor
-        constexpr Form(F f) : _f { f } {}
+        constexpr Form(F f) : _f{ f } {}
 
         // contraction operator
         template <typename... argsT>
@@ -53,7 +53,7 @@ namespace mito::manifolds {
 
       public:
         // constructor
-        constexpr Form(F f) : _f { f } {}
+        constexpr Form(F f) : _f{ f } {}
 
         // contraction with a vector
         template <class X>

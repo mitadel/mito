@@ -14,11 +14,14 @@ TEST(Manifolds, Euclidean2D)
     // a geometry binding the topology {topology} on the cloud of points {point_cloud}
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
+    // a Euclidean coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+
     // an empty mesh of triangles
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
 
     // create a manifold on {mesh} with Euclidean metric
-    auto manifold = mito::manifolds::manifold(mesh);
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // get the 0-th basis element for vector fields
     constexpr auto e0 = manifold.e<0>();
