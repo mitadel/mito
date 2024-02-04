@@ -20,7 +20,7 @@ TEST(Point, TestPoint)
     auto point_1 = cloud.point();
     coord_system.place(point_1, { 1.0, 1.0 });
 
-    EXPECT_EQ(mito::geometry::distance(point_0, point_1, coord_system), std::sqrt(2.0));
+    EXPECT_DOUBLE_EQ(mito::geometry::distance(point_0, point_1, coord_system), std::sqrt(2.0));
 
     // print point cloud
     std::cout << cloud << std::endl;
