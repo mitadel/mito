@@ -26,6 +26,7 @@ Copyright notice:
 Technische Universiteit Delft hereby disclaims all copyright interest in the program MiTo 
 (C++/Python framework for high performance computational modeling of multi-physics systems)
 written by the Author(s).
+
 Henri Werij, Dean of Faculty of Aerospace Engineering, Technische Universiteit Delft.
 
 © 2024, the MiTo Authors
