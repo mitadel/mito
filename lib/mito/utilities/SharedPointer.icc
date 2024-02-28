@@ -146,7 +146,7 @@ mito::utilities::SharedPointer<resourceT>::operator=(
 template <class resourceT>
 mito::utilities::SharedPointer<resourceT> &
 mito::utilities::SharedPointer<resourceT>::operator=(
-    mito::utilities::SharedPointer<resourceT> && other)
+    mito::utilities::SharedPointer<resourceT> && other) noexcept
 {
     // if {other} and I point to different handles
     if (other._handle != _handle) {

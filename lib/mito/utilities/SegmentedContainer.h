@@ -245,13 +245,13 @@ namespace mito::utilities {
         SegmentedContainer(const SegmentedContainer &) = delete;
 
         // delete move constructor
-        SegmentedContainer(SegmentedContainer &&) = delete;
+        SegmentedContainer(SegmentedContainer &&) noexcept = delete;
 
         // delete assignment operator
         SegmentedContainer & operator=(const SegmentedContainer &) = delete;
 
         // delete move assignment operator
-        SegmentedContainer & operator=(SegmentedContainer &&) = delete;
+        SegmentedContainer & operator=(SegmentedContainer &&) noexcept = delete;
 
         // the segment size
         const int _segment_size;

@@ -38,13 +38,13 @@ namespace mito::topology {
         Simplex(const Simplex &) = delete;
 
         // delete move constructor
-        Simplex(Simplex &&) = delete;
+        Simplex(Simplex &&) noexcept = delete;
 
         // delete assignment operator
         Simplex & operator=(const Simplex &) = delete;
 
         // delete move assignment operator
-        Simplex & operator=(Simplex &&) = delete;
+        Simplex & operator=(Simplex &&) noexcept = delete;
 
       public:
         // accessor for the subsimplices
@@ -207,13 +207,13 @@ namespace mito::topology {
         Simplex(const Simplex &) = delete;
 
         // delete move constructor
-        Simplex(Simplex &&) = delete;
+        Simplex(Simplex &&) noexcept = delete;
 
         // delete assignment operator
         Simplex & operator=(const Simplex &) = delete;
 
         // delete move assignment operator
-        Simplex & operator=(Simplex &&) = delete;
+        Simplex & operator=(Simplex &&) noexcept = delete;
 
       public:
         // perform a sanity check

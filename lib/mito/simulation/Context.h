@@ -20,7 +20,7 @@ namespace mito::simulation {
 
       private:
         // delete move constructor
-        Context(context_type &&) = delete;
+        Context(context_type &&) noexcept = delete;
 
         // delete copy constructor
         Context(const context_type &) = delete;
@@ -29,7 +29,7 @@ namespace mito::simulation {
         Context & operator=(const context_type &) = delete;
 
         // delete move assignment operator
-        Context & operator=(context_type &&) = delete;
+        Context & operator=(context_type &&) noexcept = delete;
 
       public:
         // accessor for my process' rank
