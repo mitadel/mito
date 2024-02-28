@@ -48,7 +48,7 @@ namespace mito::mesh {
             : _geometry(geometry), _cells()
         {}
 
-        inline ~Mesh() {}
+        inline ~Mesh() = default;
 
         // move constructor
         inline Mesh(Mesh &&) noexcept = default;
