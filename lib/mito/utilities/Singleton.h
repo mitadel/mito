@@ -14,7 +14,7 @@ namespace mito::utilities {
         template <class... Args>
         static auto GetInstance(Args &&... args) -> resource_t &
         {
-            static resource_t resource(args...);
+            static resource_t resource(std::forward<Args>(args)...);
             return resource;
         }
 

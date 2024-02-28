@@ -80,7 +80,7 @@ namespace mito::utilities {
             auto location = _resources.location_for_placement();
 
             // create a new instance of {resource_t} at location {location} with placement new
-            resource_t * resource = new (location) resource_t(args...);
+            resource_t * resource = new (location) resource_t(std::forward<Args>(args)...);
 
             // add resource to the collection of resources
             _resources.insert(resource);
