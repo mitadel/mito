@@ -101,6 +101,30 @@ namespace mito::geometry {
         // {nodes}
         return _build_geometric_simplex(make_integer_sequence<N + 1>());
     }
+
+    template <int D>
+    auto flip_diagonal(
+        const std::pair<geometric_simplex_t<2, D>, geometric_simplex_t<2, D>> & simplex_pair)
+        -> std::pair<geometric_simplex_t<2, D>, geometric_simplex_t<2, D>>
+    {
+        // get the two geometric simplices
+        auto simplex_0 = simplex_pair.first;
+        auto simplex_1 = simplex_pair.second;
+
+        // flip the topological simplices
+        auto flipped_simplex_pair =
+            mito::topology::flip_diagonal({ simplex_0.simplex(), simplex_1.simplex() });
+
+        // concatenate in {nodes} the nodes of the two simplices
+        using node_type = node_t<D>;
+        std::vector<node_type> nodes;
+        nodes.insert(nodes.begin(), simplex_0.nodes().begin(), simplex_0.nodes().end());
+        nodes.insert(nodes.begin(), simplex_1.nodes().begin(), simplex_1.nodes().end());
+
+        // build the new geometric simplices and return them
+        return { geometric_simplex<D>(flipped_simplex_pair.first, nodes),
+                 geometric_simplex<D>(flipped_simplex_pair.second, nodes) };
+    }
 }
 
 
