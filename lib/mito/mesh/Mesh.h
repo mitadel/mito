@@ -85,32 +85,8 @@ namespace mito::mesh {
             const cell_topological_family_type<J> & cell, const nodes_type & nodes) const -> void
         requires(I == J)
         {
-            // helper function to {node_t<D>(vertex, *std::find(vertex))}
-            constexpr auto _subcell_nodes =
-                []<int... K>(
-                    const cell_topological_family_type<J> & cell, const nodes_type & nodes,
-                    integer_sequence<K...>) -> cell_family_type<I, D>::nodes_type {
-                // get the vertices
-                auto vertices = cell->vertices();
-
-                auto has_vertex = [](const vertex_type & vertex) {
-                    auto lambda = [&vertex](const node_type & node) {
-                        return node.vertex() == vertex;
-                    };
-                    return lambda;
-                };
-
-                // all done
-                return { node_type(
-                    vertices[K], std::find_if(nodes.begin(), nodes.end(), has_vertex(vertices[K]))
-                                     ->point())... };
-            };
-
-            // add {subcell} to the boundary mesh
-            boundary_mesh.insert(_subcell_nodes(
-                cell, nodes,
-                make_integer_sequence<topology::n_vertices<cell_topological_family_type<J>>()>()));
-
+            // add {cell} to the boundary mesh
+            boundary_mesh.insert(mito::geometry::geometric_simplex<D>(cell, nodes));
             // all done
             return;
         }

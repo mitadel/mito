@@ -64,6 +64,43 @@ namespace mito::geometry {
 
         return _directors(simplex, coordinate_system, make_integer_sequence<N> {});
     }
+
+    // builds a geometric simplex based on a topological simplex {simplex} with the vertex-point
+    // pairing as appears in {nodes}
+    template <int D, int N, class nodesT>
+    auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
+        -> geometric_simplex_t<N, D>
+    {
+        using vertex_type = topology::vertex_t;
+        using node_type = node_t<D>;
+        using geometric_simplex_type = geometric_simplex_t<N, D>;
+
+        // helper function to expand {node_type(vertex, *std::find(vertex))} as many times as the
+        // vertices of {simplex}
+        auto _build_geometric_simplex =
+            [&simplex, &nodes]<int... K>(integer_sequence<K...>) -> geometric_simplex_type {
+            // get the vertices
+            auto vertices = simplex->vertices();
+
+            // helper function that returns a lambda function checking if a node corresponds to a
+            // given vertex
+            auto has_vertex = [](const vertex_type & vertex) {
+                auto lambda = [&vertex](const node_type & node) {
+                    return node.vertex() == vertex;
+                };
+                return lambda;
+            };
+
+            // return the geometric simplex
+            return geometric_simplex_type({ node_type(
+                vertices[K],
+                std::find_if(nodes.begin(), nodes.end(), has_vertex(vertices[K]))->point())... });
+        };
+
+        // build a geometric simplex based on {simplex} with the vertex-point pair as appears in
+        // {nodes}
+        return _build_geometric_simplex(make_integer_sequence<N + 1>());
+    }
 }
 
 
