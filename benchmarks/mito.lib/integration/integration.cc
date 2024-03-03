@@ -36,20 +36,13 @@ main()
     auto cell0 = mesh.insert({ node_0, node_1, node_3 });
     auto cell1 = mesh.insert({ node_1, node_2, node_3 });
 
-// TOFIX
-#if 0
     // flip the common edge of the two triangles
-    auto simplex_pair =
-        mito::topology::flip_diagonal(std::make_pair(cell0->simplex(), cell1->simplex()));
+    auto simplex_pair = mito::geometry::flip_diagonal<2>({ *cell0, *cell1 });
 
     mesh.insert(simplex_pair.first);
     mesh.erase(cell0);
-    topology.erase(cell0->simplex());
-
     mesh.insert(simplex_pair.second);
     mesh.erase(cell1);
-    topology.erase(cell1->simplex());
-#endif
 
     // do tetra mesh refinement
     const auto subdivisions = 2;
