@@ -176,15 +176,6 @@ mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & ve
     return tetrahedron;
 }
 
-template <int D>
-inline auto
-mito::topology::Topology::simplices() const
-    -> const oriented_simplex_factory_t<D>::oriented_simplex_repository_t &
-{
-    // ask the factory of oriented simplices
-    return _get_factory<D>().simplices();
-}
-
 template <int N>
 inline auto
 mito::topology::Topology::n_simplices() const -> int

@@ -67,11 +67,6 @@ namespace mito::topology {
         // instantiate a tetrahedron
         inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices) -> simplex_t<3>;
 
-        // TOFIX: is this ever needed?
-        template <int D>
-        inline auto simplices() const
-            -> const oriented_simplex_factory_t<D>::oriented_simplex_repository_t &;
-
         // returns the number of simplices of dimension {N}
         template <int N>
         inline auto n_simplices() const -> int;
