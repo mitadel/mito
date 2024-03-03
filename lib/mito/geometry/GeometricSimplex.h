@@ -107,7 +107,7 @@ namespace mito::geometry {
         constexpr auto simplex() noexcept -> simplex_type & { return _simplex; }
 
         // return the composition of this simplex in terms of its vertices
-        constexpr auto nodes() const -> nodes_type { return _nodes; }
+        constexpr auto nodes() const -> const nodes_type & { return _nodes; }
 
       private:
         // the simplex nodes
