@@ -84,8 +84,8 @@ TEST(Manifolds, CubeVolume)
     auto mesh =
         mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
 
-    mito::scalar_t volume_new = 0.0;
-    mito::scalar_t volume_old = 0.0;
+    auto volume_new = 0.0;
+    auto volume_old = 0.0;
     for (const auto & cell : mesh.cells()) {
         volume_new += volume_form(w, coord_system, cell);
         volume_old += volume_determinant(coord_system, cell);

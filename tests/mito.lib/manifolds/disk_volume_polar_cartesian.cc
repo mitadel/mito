@@ -17,7 +17,7 @@ area(std::string mesh_file_name) -> mito::scalar_t
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // compute the area of the disk
-    mito::scalar_t area = manifold.volume();
+    auto area = manifold.volume();
 
     // all done
     return area;
@@ -27,15 +27,16 @@ area(std::string mesh_file_name) -> mito::scalar_t
 TEST(Manifolds, Disk)
 {
     // compute the area of the disk parametrized in polar coordinates
-    mito::scalar_t area_polar = area<mito::geometry::POLAR>("disk_polar.summit");
+    auto area_polar = area<mito::geometry::POLAR>("disk_polar.summit");
+
     // compute the area of the disk parametrized in cartesian coordinates
-    mito::scalar_t area_cartesian = area<mito::geometry::EUCLIDEAN>("disk_cartesian.summit");
+    auto area_cartesian = area<mito::geometry::EUCLIDEAN>("disk_cartesian.summit");
 
     // expect to get the same result
     EXPECT_DOUBLE_EQ(area_cartesian, area_polar);
 
     // exact area: the area of a disk with unit radius is {pi}
-    mito::scalar_t exact = std::numbers::pi;
+    auto exact = std::numbers::pi;
 
     // expect a reasonable match with the exact solution
     // (the error depends on the poor approximation of the boundary of the disk)
