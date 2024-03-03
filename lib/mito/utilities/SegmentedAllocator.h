@@ -84,7 +84,8 @@ namespace mito::utilities {
             _end_allocation(std::move(other._end_allocation)),
             _n_segments(std::move(other._n_segments)),
             _n_elements(std::move(other._n_elements)),
-            _available_locations(std::move(other._available_locations))
+            _available_locations(std::move(other._available_locations)),
+            _start_of_segment(std::move(other._start_of_segment))
         {
             // invalidate the source
             other._begin = nullptr;
@@ -145,6 +146,8 @@ namespace mito::utilities {
             if (_begin == _end) {
                 // point {_begin} to the beginning of the allocated memory
                 _begin = segment;
+                // take note of the beginning of the segment
+                _start_of_segment[_n_segments] = _begin;
             }
             // otherwise
             else {
@@ -153,6 +156,8 @@ namespace mito::utilities {
                     reinterpret_cast<unqualified_pointer *>(_end_allocation);
                 // leave behind a pointer with the location of the next segment
                 *tail = segment;
+                // take note of the beginning of the segment
+                _start_of_segment[_n_segments] = *tail;
             }
             // increment the number of segments
             ++_n_segments;
@@ -184,27 +189,6 @@ namespace mito::utilities {
 
             // otherwise the next available location is given by {_end}
             return _end;
-        }
-
-        auto _start_of_segment(int n_segment) const -> unqualified_pointer
-        {
-            // start from the beginning
-            auto ptr = _begin;
-
-            // browse segments until you get to the right segment
-            for (int a = 0; a < n_segment; ++a) {
-                // go to the last element of the segment
-                ptr = ptr + _segment_size;
-
-                // fetch the pointer to the start of the next segment
-                unqualified_pointer * tail = reinterpret_cast<unqualified_pointer *>(ptr);
-
-                // point {ptr} to the start of the next segment
-                ptr = *tail;
-            }
-
-            // all done
-            return ptr;
         }
 
       public:
@@ -295,7 +279,7 @@ namespace mito::utilities {
             int position_in_segment = i % _segment_size;
 
             // start from the beginning of the {n_segment} segment
-            auto ptr = _start_of_segment(n_segment);
+            auto ptr = _start_of_segment.at(n_segment);
 
             // found it
             return *(ptr + position_in_segment);
@@ -309,7 +293,7 @@ namespace mito::utilities {
             int position_in_segment = i % _segment_size;
 
             // start from the beginning of the {n_segment} segment
-            auto ptr = _start_of_segment(n_segment);
+            auto ptr = _start_of_segment.at(n_segment);
 
             // found it
             return *(ptr + position_in_segment);
@@ -340,6 +324,8 @@ namespace mito::utilities {
         int _n_elements;
         // a queue with the available locations for writing
         std::queue<unqualified_pointer> _available_locations;
+        // a map with pointers to the start of each segment
+        std::map<int, unqualified_pointer> _start_of_segment;
 
       private:
         // non-const iterator
