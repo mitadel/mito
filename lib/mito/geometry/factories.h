@@ -40,8 +40,6 @@ namespace mito::geometry {
         coordinate_system_t<D, coordT> & coordinate_system, const coordinates_t<D, coordT> & coords)
         -> node_t<D>
     {
-        // fetch the topology
-        auto & topology = mito::topology::topology();
         // fetch the point cloud
         auto & point_cloud = mito::geometry::point_cloud<D>();
         // instantiate a point
@@ -49,7 +47,7 @@ namespace mito::geometry {
         // place it in space
         coordinate_system.place(point, coords);
         // instantiate a vertex
-        auto vertex = topology.vertex();
+        auto vertex = mito::topology::vertex();
         // instantiate a node binding a vertex to a point
         return node_t<D>(vertex, point);
     }
