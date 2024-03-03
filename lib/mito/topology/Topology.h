@@ -67,6 +67,24 @@ namespace mito::topology {
         // instantiate a tetrahedron
         inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices) -> simplex_t<3>;
 
+      private:
+        template <int N>
+        inline auto _erase(simplex_t<N> & simplex) -> void
+        requires(N == 0);
+
+        template <int N>
+        inline auto _erase(simplex_t<N> & simplex) -> void
+        requires(N > 0);
+
+        // mutator for the simplex factory of dimension N
+        template <int N>
+        inline auto _get_factory() noexcept -> oriented_simplex_factory_t<N> &;
+
+        // accessor for the simplex factory of dimension N
+        template <int N>
+        inline auto _get_factory() const noexcept -> const oriented_simplex_factory_t<N> &;
+
+      public:
         // returns the number of simplices of dimension {N}
         template <int N>
         inline auto n_simplices() const -> int;
@@ -86,24 +104,6 @@ namespace mito::topology {
         template <int N>
         inline auto flip(const simplex_t<N> & simplex) -> simplex_t<N>;
 
-      private:
-        template <int N>
-        inline auto _erase(simplex_t<N> & simplex) -> void
-        requires(N == 0);
-
-        template <int N>
-        inline auto _erase(simplex_t<N> & simplex) -> void
-        requires(N > 0);
-
-        // mutator for the simplex factory of dimension N
-        template <int N>
-        inline auto _get_factory() noexcept -> oriented_simplex_factory_t<N> &;
-
-        // accessor for the simplex factory of dimension N
-        template <int N>
-        inline auto _get_factory() const noexcept -> const oriented_simplex_factory_t<N> &;
-
-      public:
         template <int N>
         inline auto erase(simplex_t<N> & simplex) -> void;
 
