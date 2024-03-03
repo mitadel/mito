@@ -186,6 +186,27 @@ namespace mito::utilities {
             return _end;
         }
 
+        auto _start_of_segment(int n_segment) const -> unqualified_pointer
+        {
+            // start from the beginning
+            auto ptr = _begin;
+
+            // browse segments until you get to the right segment
+            for (int a = 0; a < n_segment; ++a) {
+                // go to the last element of the segment
+                ptr = ptr + _segment_size;
+
+                // fetch the pointer to the start of the next segment
+                unqualified_pointer * tail = reinterpret_cast<unqualified_pointer *>(ptr);
+
+                // point {ptr} to the start of the next segment
+                ptr = *tail;
+            }
+
+            // all done
+            return ptr;
+        }
+
       public:
         auto location_for_placement() -> unqualified_pointer
         {
@@ -264,6 +285,34 @@ namespace mito::utilities {
             // make an {iterator} that points to the end of my segmented container
             return iterator(
                 _end /* ptr */, _end_allocation /* segment_end */, _segment_size, _end /* end */);
+        }
+
+        // const components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) -> resource_type &
+        {
+            // find in what segment and in what position within that segment is the i-th resource
+            int n_segment = i / _segment_size;
+            int position_in_segment = i % _segment_size;
+
+            // start from the beginning of the {n_segment} segment
+            auto ptr = _start_of_segment(n_segment);
+
+            // found it
+            return *(ptr + position_in_segment);
+        }
+
+        // components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) const -> const resource_type &
+        {
+            // find in what segment and in what position within that segment is the i-th resource
+            int n_segment = i / _segment_size;
+            int position_in_segment = i % _segment_size;
+
+            // start from the beginning of the {n_segment} segment
+            auto ptr = _start_of_segment(n_segment);
+
+            // found it
+            return *(ptr + position_in_segment);
         }
 
       private:

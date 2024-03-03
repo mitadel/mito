@@ -54,6 +54,20 @@ namespace mito::utilities {
             }
         }
 
+        // const components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) -> resource_type &
+        {
+            // delegate the answer to the allocator
+            return _resources[i];
+        }
+
+        // components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) const -> const resource_type &
+        {
+            // delegate the answer to the allocator
+            return _resources[i];
+        }
+
         // build a resource passing down {args...} to the resource constructor
         template <class... Args>
         inline auto emplace_back(Args &&... args) -> iterator
