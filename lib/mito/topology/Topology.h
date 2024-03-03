@@ -72,6 +72,10 @@ namespace mito::topology {
         inline auto simplices() const
             -> const oriented_simplex_factory_t<D>::oriented_simplex_repository_t &;
 
+        // returns the number of simplices of dimension {N}
+        template <int N>
+        inline auto n_simplices() const -> int;
+
         // returns whether the oriented simplex exists in the factory
         template <int N>
         inline auto exists(const simplex_composition_t<N> & simplices) const -> bool;

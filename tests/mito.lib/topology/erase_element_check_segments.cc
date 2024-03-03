@@ -42,7 +42,7 @@ TEST(Topology, EraseElement)
     auto cell_1 = topology.triangle({ segment_3, segment_4, segment_5 });
 
     // assert that the topology now contains 2 simplices
-    EXPECT_EQ(std::size(topology.simplices<2>()), 2);
+    EXPECT_EQ(topology.n_simplices<2>(), 2);
 
     // assert that a cell with the composition of {cell_0} does exist within the topology
     EXPECT_TRUE(topology.exists<2>({ segment_0, segment_1, segment_2 }));
@@ -54,7 +54,7 @@ TEST(Topology, EraseElement)
     topology.erase(cell_0);
 
     // assert that the topology now contains 1 simplex
-    EXPECT_EQ(std::size(topology.simplices<2>()), 1);
+    EXPECT_EQ(topology.n_simplices<2>(), 1);
 
     // assert that a cell with the composition of {cell_0} does not exist any more
     EXPECT_FALSE(topology.exists<2>({ segment_0, segment_1, segment_2 }));
@@ -63,7 +63,7 @@ TEST(Topology, EraseElement)
     topology.erase(cell_1);
 
     // assert that the topology now contains 0 simplices
-    EXPECT_EQ(std::size(topology.simplices<2>()), 0);
+    EXPECT_EQ(topology.n_simplices<2>(), 0);
 
     // assert that the cell with the composition of {cell_1} does not exist any more
     EXPECT_FALSE(topology.exists<2>({ segment_3, segment_4, segment_5 }));

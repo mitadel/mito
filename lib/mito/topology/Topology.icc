@@ -187,6 +187,13 @@ mito::topology::Topology::simplices() const
 
 template <int N>
 inline auto
+mito::topology::Topology::n_simplices() const -> int
+{
+    return std::size(_get_factory<N>().simplices());
+}
+
+template <int N>
+inline auto
 mito::topology::Topology::exists_flipped(const simplex_t<N> & simplex) const -> bool
 {
     return _get_factory<N>().existsOrientedSimplex(simplex->footprint(), -simplex->orientation());
