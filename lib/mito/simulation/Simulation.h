@@ -24,7 +24,7 @@ namespace mito::simulation {
 
       private:
         // delete move constructor
-        Simulation(simulation_type &&) = delete;
+        Simulation(simulation_type &&) noexcept = delete;
 
         // delete copy constructor
         Simulation(const simulation_type &) = delete;
@@ -33,7 +33,7 @@ namespace mito::simulation {
         Simulation & operator=(const simulation_type &) = delete;
 
         // delete move assignment operator
-        Simulation & operator=(simulation_type &&) = delete;
+        Simulation & operator=(simulation_type &&) noexcept = delete;
 
       public:
         // accessor for the simulation execution context

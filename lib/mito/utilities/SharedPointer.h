@@ -57,7 +57,7 @@ namespace mito::utilities {
         inline shared_ptr_type & operator=(const shared_ptr_type &);
 
         // move assignment operator
-        inline shared_ptr_type & operator=(shared_ptr_type &&);
+        inline shared_ptr_type & operator=(shared_ptr_type &&) noexcept;
 
       private:
         // accessor for {handle}

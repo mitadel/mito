@@ -25,7 +25,7 @@ namespace mito::manifolds {
 
       public:
         // constructor
-        constexpr Form(F f) : _f{ f } {}
+        constexpr Form(F f) : _f{ std::move(f) } {}
 
         // contraction operator
         template <typename... argsT>
