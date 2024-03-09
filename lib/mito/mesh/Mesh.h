@@ -112,17 +112,6 @@ namespace mito::mesh {
             return;
         }
 
-        inline auto _insert_nodes(
-            Mesh<cell_family_type<0, D>> & boundary_mesh,
-            const cell_topological_family_type<0> & cell, const nodes_type & nodes) const -> void
-        {
-            // insert {node} into {boundary_mesh}
-            boundary_mesh.insert(mito::geometry::geometric_simplex<D>(cell, nodes));
-
-            // all done
-            return;
-        }
-
         inline auto _register_cell_orientation(const cell_type & cell) -> void
         {
             // loop on the subcells of {cell}
@@ -242,11 +231,7 @@ namespace mito::mesh {
                     // if {subcell} does not have a counterpart in {topology} with opposite
                     // orientation
                     if (isOnBoundary(subcell)) {
-                        if constexpr (I == 0) {
-                            _insert_nodes(boundary_mesh, subcell, cell.nodes());
-                        } else {
-                            _insert_subcells(boundary_mesh, subcell, cell.nodes());
-                        }
+                        _insert_subcells(boundary_mesh, subcell, cell.nodes());
                     }
                 }
             }
