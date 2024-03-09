@@ -75,6 +75,7 @@ namespace mito::geometry {
     template <int D, int N, class nodesT>
     auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
         -> geometric_simplex_t<N, D>
+    requires(N > 0)
     {
         using vertex_type = topology::vertex_t;
         using node_type = node_t<D>;
@@ -104,6 +105,31 @@ namespace mito::geometry {
         // build a geometric simplex based on {simplex} with the vertex-point pair as appears in
         // {nodes}
         return _build_geometric_simplex(make_integer_sequence<N + 1>());
+    }
+
+    // builds the node based on vertex {vertex} with the vertex-point pairing as appears in {nodes}
+    template <int D, int N, class nodesT>
+    auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
+        -> geometric_simplex_t<N, D>
+    requires(N == 0)
+    {
+        using vertex_type = topology::vertex_t;
+        using node_type = node_t<D>;
+
+        // get the vertex
+        auto vertex = simplex->footprint();
+
+        // helper function that returns a lambda function checking if a node corresponds to a
+        // given vertex
+        auto has_vertex = [](const vertex_type & vertex) {
+            auto lambda = [&vertex](const node_type & node) {
+                return node.vertex() == vertex;
+            };
+            return lambda;
+        };
+
+        // return the node
+        return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
     }
 
     template <int D>

@@ -116,25 +116,8 @@ namespace mito::mesh {
             Mesh<cell_family_type<0, D>> & boundary_mesh,
             const cell_topological_family_type<0> & cell, const nodes_type & nodes) const -> void
         {
-            // helper function to {node_t<D>(vertex, *std::find(vertex))}
-            constexpr auto _subcell_node = [](const cell_topological_family_type<0> & cell,
-                                              const nodes_type & nodes) -> node_type {
-                // get the vertex footprint
-                auto vertex = cell->footprint();
-
-                auto has_vertex = [](const vertex_type & vertex) {
-                    auto lambda = [&vertex](const node_type & node) {
-                        return node.vertex() == vertex;
-                    };
-                    return lambda;
-                };
-
-                // all done
-                return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
-            };
-
             // insert {node} into {boundary_mesh}
-            boundary_mesh.insert(_subcell_node(cell, nodes));
+            boundary_mesh.insert(mito::geometry::geometric_simplex<D>(cell, nodes));
 
             // all done
             return;
