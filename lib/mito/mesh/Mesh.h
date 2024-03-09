@@ -207,11 +207,11 @@ namespace mito::mesh {
             // instantiate a new mesh for the boundary elements
             Mesh<cell_family_type<I, D>> boundary_mesh;
 
-            // loop on the (N-1)-dimensional cells
+            // loop on the mesh cells
             for (const auto & cell : cells()) {
-                // loop on the subcells of {cell}
+                // loop on the topological composition of {cell}
                 for (const auto & subcell : cell.simplex()->composition()) {
-                    // if {subcell} does not have a counterpart in {topology} with opposite
+                    // if {subcell} does not have a counterpart in the mesh with opposite
                     // orientation
                     if (isOnBoundary(subcell)) {
                         _insert_subcells(boundary_mesh, subcell, cell.nodes());
