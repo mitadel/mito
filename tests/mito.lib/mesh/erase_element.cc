@@ -34,7 +34,7 @@ TEST(Mesh, EraseElement)
     EXPECT_EQ(mesh.nCells(), 4);
 
     // assert the boundary is made of 4 cells
-    EXPECT_EQ(mesh.boundary().nCells(), 4);
+    EXPECT_EQ(mito::mesh::boundary_size(mesh), 4);
 
     // assert that there exists a segment connecting vertex 0 and 1
     EXPECT_TRUE(topology.exists({ node_0.vertex(), node_1.vertex() }));
@@ -52,7 +52,7 @@ TEST(Mesh, EraseElement)
     EXPECT_EQ(mesh.nCells(), 3);
 
     // assert the boundary is now made of 5 cells
-    EXPECT_EQ(mesh.boundary().nCells(), 5);
+    EXPECT_EQ(mito::mesh::boundary_size(mesh), 5);
 
     // assert that a segment connecting vertex 0 and 1 no longer exists in the topology
     EXPECT_FALSE(topology.exists({ node_0.vertex(), node_1.vertex() }));
@@ -72,7 +72,7 @@ TEST(Mesh, EraseElement)
     EXPECT_EQ(mesh.nCells(), 2);
 
     // assert the boundary is now made of 4 cells
-    EXPECT_EQ(mesh.boundary().nCells(), 4);
+    EXPECT_EQ(mito::mesh::boundary_size(mesh), 4);
 
     // assert that a segment connecting vertex 1 and 2 no longer exists in the topology
     EXPECT_FALSE(topology.exists({ node_1.vertex(), node_2.vertex() }));

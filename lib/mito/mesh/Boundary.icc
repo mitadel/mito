@@ -1,0 +1,57 @@
+// code guard
+#if !defined(mito_mesh_boundary_icc)
+#error this file contains implementation details for mesh boundary
+#else
+
+
+template <class meshT>
+auto
+mito::mesh::Boundary<meshT>::boundary_size(const mesh_type & mesh) -> int
+requires(N > 0)
+{
+    // number of boundary cells
+    int count = 0;
+
+    // loop on the mesh cells
+    for (const auto & cell : mesh.cells()) {
+        // loop on the topological composition of {cell}
+        for (const auto & subcell : cell.simplex()->composition()) {
+            // if {subcell} is on the boundary of the mesh
+            if (mesh.isOnBoundary(subcell)) {
+                // increment counter for boundary cells
+                ++count;
+            }
+        }
+    }
+
+    // return the count of boundary cells
+    return count;
+}
+
+template <class meshT>
+auto
+mito::mesh::Boundary<meshT>::boundary(const mesh_type & mesh) -> mesh_boundary_type
+requires(N > 0)
+{
+    // instantiate a new mesh for the boundary elements
+    mesh_boundary_type boundary_mesh;
+
+    // loop on the mesh cells
+    for (const auto & cell : mesh.cells()) {
+        // loop on the topological composition of {cell}
+        for (const auto & subcell : cell.simplex()->composition()) {
+            // if {subcell} is on the boundary of the mesh
+            if (mesh.isOnBoundary(subcell)) {
+                // add {cell} to the boundary mesh
+                boundary_mesh.insert(mito::geometry::geometric_simplex<D>(subcell, cell.nodes()));
+            }
+        }
+    }
+
+    // return the boundary mesh
+    return boundary_mesh;
+}
+
+#endif
+
+// end of file

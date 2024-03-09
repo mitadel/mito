@@ -49,9 +49,6 @@ namespace mito::mesh {
         static constexpr int N = order;
         // the dimension of physical space
         static constexpr int D = dim;
-        // get the family this cell type belongs to (e.g. geometric simplices)
-        template <int I, int DD>
-        using cell_family_type = typename cell_type::cell_family_type<I, DD>;
         // get the topological family this cell type belongs to (e.g. simplicial cells)
         template <int I>
         using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
@@ -157,61 +154,6 @@ namespace mito::mesh {
             }
 
             return false;
-        }
-
-        /**
-         * @brief Returns a mesh with all boundary cells of dimension I
-         */
-        template <int I = N - 1>
-        inline auto boundary_size() const -> int
-        requires(N > 0 && I >= 0)
-        {
-            // number of boundary cells
-            int count = 0;
-
-            // loop on the (N-1)-dimensional cells
-            for (const auto & cell : cells()) {
-                // loop on the subcells of {cell}
-                for (const auto & subcell : cell.composition()) {
-                    // if {subcell} does not have a counterpart in {topology} with opposite
-                    // orientation
-                    if (isOnBoundary(subcell)) {
-                        // increment counter for boundary cells
-                        ++count;
-                    }
-                }
-            }
-
-            // return the count of boundary cells
-            return count;
-        }
-
-        /**
-         * @brief Returns a mesh with all boundary cells of dimension I
-         */
-        template <int I = N - 1>
-        inline auto boundary() const -> Mesh<cell_family_type<I, D>> const
-        requires(N > 0 && I >= 0)
-        {
-            // instantiate a new mesh for the boundary elements
-            Mesh<cell_family_type<I, D>> boundary_mesh;
-
-            // loop on the mesh cells
-            for (const auto & cell : cells()) {
-                // loop on the topological composition of {cell}
-                for (const auto & subcell : cell.simplex()->composition()) {
-                    // if {subcell} does not have a counterpart in the mesh with opposite
-                    // orientation
-                    if (isOnBoundary(subcell)) {
-                        // add {cell} to the boundary mesh
-                        boundary_mesh.insert(
-                            mito::geometry::geometric_simplex<D>(subcell, cell.nodes()));
-                    }
-                }
-            }
-
-            // return the boundary mesh
-            return boundary_mesh;
         }
 
         // insert {cell} in mesh
