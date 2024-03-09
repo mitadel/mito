@@ -117,9 +117,8 @@ namespace mito::mesh {
             const cell_topological_family_type<0> & cell, const nodes_type & nodes) const -> void
         {
             // helper function to {node_t<D>(vertex, *std::find(vertex))}
-            constexpr auto _subcell_node =
-                [](const cell_topological_family_type<0> & cell,
-                   const nodes_type & nodes) -> cell_family_type<0, D>::node_type {
+            constexpr auto _subcell_node = [](const cell_topological_family_type<0> & cell,
+                                              const nodes_type & nodes) -> node_type {
                 // get the vertex footprint
                 auto vertex = cell->footprint();
 
