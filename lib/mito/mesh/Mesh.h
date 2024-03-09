@@ -84,30 +84,13 @@ namespace mito::mesh {
         Mesh & operator=(Mesh &&) noexcept = delete;
 
       private:
-        template <int I, int J>
+        template <int I>
         inline auto _insert_subcells(
             Mesh<cell_family_type<I, D>> & boundary_mesh,
-            const cell_topological_family_type<J> & cell, const nodes_type & nodes) const -> void
-        requires(I == J)
+            const cell_topological_family_type<I> & cell, const nodes_type & nodes) const -> void
         {
             // add {cell} to the boundary mesh
             boundary_mesh.insert(mito::geometry::geometric_simplex<D>(cell, nodes));
-            // all done
-            return;
-        }
-
-        template <int I, int J>
-        inline auto _insert_subcells(
-            Mesh<cell_family_type<I, D>> & boundary_mesh,
-            const cell_topological_family_type<J> & cell, const nodes_type & nodes) const -> void
-        requires(I < J)
-        {
-            // loop on the subcells of {cell}
-            for (const auto & subcell : cell.composition()) {
-                // recursively add subcells of {subcell} to {boundary_mesh}
-                _insert_subcells(boundary_mesh, subcell, nodes);
-            }
-
             // all done
             return;
         }
