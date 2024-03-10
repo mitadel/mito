@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_topology_SimplexFactory_h)
 #define mito_topology_SimplexFactory_h
@@ -43,7 +48,7 @@ namespace mito::topology {
 
       private:
         // default constructor
-        SimplexFactory() : _simplices(100 /*segment size */), _compositions() {};
+        SimplexFactory() : _simplices(100 /*segment size */), _compositions() {}
 
         // destructor
         ~SimplexFactory() {}
@@ -144,8 +149,8 @@ namespace mito::topology {
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { composition[0]->footprint().id(),
-                                       composition[1]->footprint().id() };
+        composition_t representative{ composition[0]->footprint().id(),
+                                      composition[1]->footprint().id() };
         // pick a representative (factor out equivalence relation)
         std::sort(std::begin(representative), std::end(representative));
         // all done
@@ -158,9 +163,9 @@ namespace mito::topology {
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { composition[0]->footprint().id(),
-                                       composition[1]->footprint().id(),
-                                       composition[2]->footprint().id() };
+        composition_t representative{ composition[0]->footprint().id(),
+                                      composition[1]->footprint().id(),
+                                      composition[2]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
         std::sort(std::begin(representative), std::end(representative));
@@ -175,10 +180,10 @@ namespace mito::topology {
         -> composition_t
     {
         // initialize representative with footprints of simplices in current composition
-        composition_t representative { composition[0]->footprint().id(),
-                                       composition[1]->footprint().id(),
-                                       composition[2]->footprint().id(),
-                                       composition[3]->footprint().id() };
+        composition_t representative{ composition[0]->footprint().id(),
+                                      composition[1]->footprint().id(),
+                                      composition[2]->footprint().id(),
+                                      composition[3]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
         std::sort(std::begin(representative), std::end(representative));
@@ -196,7 +201,7 @@ namespace mito::topology {
 
       private:
         // default constructor
-        SimplexFactory() : _simplices(100 /*segment size */) {};
+        SimplexFactory() : _simplices(100 /*segment size */) {}
 
         // destructor
         ~SimplexFactory() {}

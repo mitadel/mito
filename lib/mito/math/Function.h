@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 
 // code guard
 #if !defined(mito_math_Function_h)
@@ -29,7 +34,7 @@ namespace mito::math {
 
       public:
         // constructor
-        constexpr Function(F f) : _f { f } {}
+        constexpr Function(F f) : _f{ f } {}
 
         // call operator
         constexpr auto operator()(X x) const -> Y { return _f(x); }

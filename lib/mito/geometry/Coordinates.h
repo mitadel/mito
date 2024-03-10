@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_geometry_Coordinates_h)
 #define mito_geometry_Coordinates_h
@@ -51,7 +56,7 @@ namespace mito::geometry {
         constexpr Coordinates() : _array() {}
 
         // constructor
-        constexpr Coordinates(const mito::scalar_t (&&coords)[D]) : _array(coords) {}
+        constexpr Coordinates(mito::scalar_t (&&coords)[D]) : _array(std::move(coords)) {}
 
         // constructor
         constexpr Coordinates(const array_t coords) : _array(coords) {}
@@ -60,7 +65,7 @@ namespace mito::geometry {
         template <class... T>
         constexpr Coordinates(T... coords)
         requires(sizeof...(T) == D)
-            : _array { coords... }
+            : _array{ coords... }
         {}
 
         // destructor

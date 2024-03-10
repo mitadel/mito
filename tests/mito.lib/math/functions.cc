@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/math.h>
@@ -63,7 +68,7 @@ TEST(Functions, Sanity)
     [[maybe_unused]] auto function14 = function13 + function1;
 
     auto my_other_function =
-        mito::math::function(std::function<mito::real(const mito::vector_t<2> &)> { my_function });
+        mito::math::function(std::function<mito::real(const mito::vector_t<2> &)>{ my_function });
     auto function15 = my_other_function + function1;
 
     // a vector function

@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/geometry.h>
@@ -20,7 +25,7 @@ TEST(Director, Segment)
     auto [_, directors] = mito::geometry::directors(segment, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE((directors[0] == mito::vector_t<2> { 1.0, 0.0 }));
+    EXPECT_TRUE((directors[0] == mito::vector_t<2>{ 1.0, 0.0 }));
 
     // all done
     return;

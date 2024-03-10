@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // For simplicity, here are both the c++ function and the binding code.
 // In practice, implementation and binding code will generally be located in separate files.
 
@@ -30,7 +35,7 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1, x2] = data;
                 // instantiate
-                return coordinates_3D_t { x0, x1, x2 };
+                return coordinates_3D_t{ x0, x1, x2 };
             }))
         // operator[]
         .def(
@@ -55,7 +60,7 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1] = data;
                 // instantiate
-                return mito::vector_t<2> { x0, x1 };
+                return mito::vector_t<2>{ x0, x1 };
             }))
         // operator[]
         .def(

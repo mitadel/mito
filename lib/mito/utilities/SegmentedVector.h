@@ -1,3 +1,9 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+
 // code guard
 #if !defined(mito_utilities_SegmentedVector_h)
 #define mito_utilities_SegmentedVector_h
@@ -34,7 +40,7 @@ namespace mito::utilities {
 
       public:
         // default constructor
-        SegmentedVector(int segment_size) : _resources(segment_size) {};
+        SegmentedVector(int segment_size) : _resources(segment_size){};
 
         // default move constructor
         SegmentedVector(SegmentedVector &&) = default;

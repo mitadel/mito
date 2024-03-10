@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_manifolds_Manifold_h)
 #define mito_manifolds_Manifold_h
@@ -57,7 +62,7 @@ namespace mito::manifolds {
         }
         // the metric volume form
         static constexpr auto _volume_form =
-            sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N> {});
+            sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N>{});
 
       public:
         constexpr Manifold(
@@ -161,7 +166,7 @@ namespace mito::manifolds {
         constexpr auto volume(const cell_type & cell) const -> scalar_t
         {
             // all done
-            return _volume(cell, make_integer_sequence<N> {});
+            return _volume(cell, make_integer_sequence<N>{});
         }
 
       private:

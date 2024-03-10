@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 
 // code guard
 #if !defined(mito_manifolds_Field_h)
@@ -29,7 +34,7 @@ namespace mito::manifolds {
 
       public:
         // constructor
-        constexpr Field(F f) : _f { f } {}
+        constexpr Field(F f) : _f{ std::move(f) } {}
 
         // the value of the field at position {x}
         constexpr auto operator()(const coordinates_type & x) const -> output_type { return _f(x); }

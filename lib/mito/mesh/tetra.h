@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_mesh_tetra_h)
 #define mito_mesh_tetra_h
@@ -195,7 +200,7 @@ namespace mito::mesh {
             // recursively subdivide the cell identified by these vertices
             _subdivide(
                 nodes, coordinate_system, subdivided_mesh, n_refinements,
-                std::make_index_sequence<cellT::order + 1> {});
+                std::make_index_sequence<cellT::order + 1>{});
         }
 
         // return the refined mesh

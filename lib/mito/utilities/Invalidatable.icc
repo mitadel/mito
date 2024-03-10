@@ -1,5 +1,8 @@
-// -*- C++ -*-
+// -*- c++ -*-
 //
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 
 #if !defined(mito_utilities_Invalidatable_icc)
 #error This header file contains implementation details of class mito::utilities::Invalidatable

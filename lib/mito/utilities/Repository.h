@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_utilities_Repository_h)
 #define mito_utilities_Repository_h
@@ -60,7 +65,7 @@ namespace mito::utilities {
 
       public:
         // default constructor
-        Repository(int segment_size) : _resources(segment_size) {};
+        Repository(int segment_size) : _resources(segment_size) {}
 
         // destructor
         ~Repository()
@@ -80,7 +85,7 @@ namespace mito::utilities {
             auto location = _resources.location_for_placement();
 
             // create a new instance of {resource_type} at location {location} with placement new
-            resource_type * resource = new (location) resource_type(args...);
+            resource_type * resource = new (location) resource_type(std::forward<Args>(args)...);
 
             // add resource to the collection of resources
             _resources.insert(resource);

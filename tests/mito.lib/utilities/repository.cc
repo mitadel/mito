@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/utilities.h>

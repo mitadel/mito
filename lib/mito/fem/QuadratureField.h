@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_fem_QuadratureField_h)
 #define mito_fem_QuadratureField_h
@@ -24,12 +29,12 @@ namespace mito::fem {
          * @param[in] elements number of elements for which data are stored
          */
         inline QuadratureField(int nElements, std::string name = "") :
-            QuadratureField(nElements, pack_t { { nElements, Q } }, name)
+            QuadratureField(nElements, pack_t{ { nElements, Q } }, name)
         {}
 
       private:
         inline QuadratureField(int /*nElements*/, const pack_t & packing, std::string name = "") :
-            _grid { packing, packing.cells() },
+            _grid{ packing, packing.cells() },
             _name(name)
         {}
 

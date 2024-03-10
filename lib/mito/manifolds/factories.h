@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_manifolds_factories_h)
 #define mito_manifolds_factories_h
@@ -19,14 +24,14 @@ namespace mito::manifolds {
     template <class F>
     constexpr auto one_form(F && f) -> one_form_t<F>
     {
-        return one_form_t<F>(f);
+        return one_form_t<F>(std::forward<F>(f));
     }
 
     // factory for P-forms
     template <int P, class F>
     constexpr auto form(F && f) -> form_t<P, F>
     {
-        return form_t<P, F>(f);
+        return form_t<P, F>(std::forward<F>(f));
     }
 
     // construct a one-form based on its metric-equivalent vector (case: symmetric metric)
@@ -58,7 +63,7 @@ namespace mito::manifolds {
     template <class F>
     constexpr auto field(F && f) -> mito::manifolds::field_t<F>
     {
-        return mito::manifolds::field_t<F>(f);
+        return mito::manifolds::field_t<F>(std::forward<F>(f));
     }
 
     // construct a one-form based on its metric-equivalent vector field

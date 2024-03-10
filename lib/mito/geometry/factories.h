@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_geometry_factories_h)
 #define mito_geometry_factories_h
@@ -7,17 +12,17 @@ namespace mito::geometry {
 
     // factory for coordinates from brace-enclosed initializer list (case D > 1)
     template <CoordinateType coordT = EUCLIDEAN, int D>
-    constexpr auto coordinates(const mito::scalar_t (&&coords)[D])
+    constexpr auto coordinates(mito::scalar_t (&&coords)[D])
     requires(D > 1)
     {
-        return coordinates_t<D, coordT>(coords);
+        return coordinates_t<D, coordT>(std::move(coords));
     }
 
     // factory for coordinates from brace-enclosed initializer list (case D = 1)
     template <CoordinateType coordT = EUCLIDEAN>
-    constexpr auto coordinates(const mito::scalar_t && coords)
+    constexpr auto coordinates(mito::scalar_t && coords)
     {
-        return coordinates_t<1, coordT>(coords);
+        return coordinates_t<1, coordT>(std::move(coords));
     }
 
     // factory for coordinate system

@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_utilities_Singleton_h)
 #define mito_utilities_Singleton_h
@@ -14,7 +19,7 @@ namespace mito::utilities {
         template <class... Args>
         static auto GetInstance(Args &&... args) -> resource_t &
         {
-            static resource_t resource(args...);
+            static resource_t resource(std::forward<Args>(args)...);
             return resource;
         }
 

@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_topology_OrientedSimplex_h)
 #define mito_topology_OrientedSimplex_h
@@ -51,13 +56,13 @@ namespace mito::topology {
         OrientedSimplex(const OrientedSimplex &) = delete;
 
         // delete move constructor
-        OrientedSimplex(OrientedSimplex &&) = delete;
+        OrientedSimplex(OrientedSimplex &&) noexcept = delete;
 
         // delete assignment operator
         OrientedSimplex & operator=(const OrientedSimplex &) = delete;
 
         // delete move assignment operator
-        OrientedSimplex & operator=(OrientedSimplex &&) = delete;
+        OrientedSimplex & operator=(OrientedSimplex &&) noexcept = delete;
 
       public:
         // accessor for the unoriented footprint

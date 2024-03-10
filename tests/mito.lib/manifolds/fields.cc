@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/manifolds.h>
@@ -25,7 +30,7 @@ TEST(Manifolds, VectorFields)
     });
 
     // check value of field at {x}
-    static_assert(g(x) == mito::vector_t<2> { 1.0, 1.0 });
+    static_assert(g(x) == mito::vector_t<2>{ 1.0, 1.0 });
 }
 
 

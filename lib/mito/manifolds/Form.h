@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 
 // code guard
 #if !defined(mito_manifolds_Form_h)
@@ -25,7 +30,7 @@ namespace mito::manifolds {
 
       public:
         // constructor
-        constexpr Form(F f) : _f { f } {}
+        constexpr Form(F f) : _f{ std::move(f) } {}
 
         // contraction operator
         template <typename... argsT>
@@ -53,7 +58,7 @@ namespace mito::manifolds {
 
       public:
         // constructor
-        constexpr Form(F f) : _f { f } {}
+        constexpr Form(F f) : _f{ f } {}
 
         // contraction with a vector
         template <class X>

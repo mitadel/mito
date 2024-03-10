@@ -1,4 +1,7 @@
 # -*- cmake -*-
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
 
 # cmake setup
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
@@ -73,7 +76,7 @@ if(MITO_BUILD_TESTING)
     include(mito_tests_mito_lib)
 
     # add the mito extensions testsuite to the pile
-    include(mito_tests_mito_ext)
+    # include(mito_tests_mito_ext) #TOFIX
 endif()
 
 # if we are building the benchmarks

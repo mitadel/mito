@@ -1,3 +1,9 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+
 // code guard
 #if !defined(mito_geometry_GeometricSimplex_h)
 #define mito_geometry_GeometricSimplex_h
@@ -69,13 +75,13 @@ namespace mito::geometry {
         {
             // check that the vertices in {nodes} match the vertices of the {simplex} within a
             // positive permutation
-            _check_vertices(make_integer_sequence<N + 1> {});
+            _check_vertices(make_integer_sequence<N + 1>{});
         }
 
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const nodes_type & nodes) :
             _nodes(nodes),
-            _simplex(_create_simplex(make_integer_sequence<n_vertices> {}))
+            _simplex(_create_simplex(make_integer_sequence<n_vertices>{}))
         {}
 
         // move constructor

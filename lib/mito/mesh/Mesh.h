@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_mesh_Mesh_h)
 #define mito_mesh_Mesh_h
@@ -63,7 +68,7 @@ namespace mito::mesh {
             : _cells(100)
         {}
 
-        inline ~Mesh() {}
+        inline ~Mesh() = default;
 
         // move constructor
         inline Mesh(Mesh &&) noexcept = default;
@@ -186,7 +191,7 @@ namespace mito::mesh {
                          _orientations[subcell->footprint().id()][1] -= 1);
 
                     // cleanup orientation map
-                    if (_orientations[subcell->footprint().id()] == std::array<int, 2> { 0, 0 }) {
+                    if (_orientations[subcell->footprint().id()] == std::array<int, 2>{ 0, 0 }) {
                         _orientations.erase(subcell->footprint().id());
                     }
                 }

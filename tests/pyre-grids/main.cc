@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 #include <gtest/gtest.h>
 // get the grid
 #include <pyre/grid.h>
@@ -17,7 +22,7 @@ namespace mito {
         // putting it all together
         using grid_t = pyre::grid::grid_t<pack_t, storage_t>;
 
-        inline Vector() : _packing { { D } }, _grid { _packing, _packing.cells() } {}
+        inline Vector() : _packing{ { D } }, _grid{ _packing, _packing.cells() } {}
 
         // inline Vector(const Vector &) = delete;
         // inline Vector(const Vector &&) = delete;
@@ -53,8 +58,8 @@ namespace mito {
          * @param[in] elements number of elements for which data are stored
          */
         inline QuadratureFieldGrid(int nElements) :
-            _packing { { nElements, Q, D } },
-            _grid { _packing, _packing.cells() }
+            _packing{ { nElements, Q, D } },
+            _grid{ _packing, _packing.cells() }
         {
             for (const auto & idx : _grid.layout()) {
                 _grid[idx] = 10.0;
@@ -77,10 +82,10 @@ namespace mito {
         inline Y operator()(int e, int q)
         {
             // slices at {e, q}
-            pack_t::index_type index { e, q, 0 };
+            pack_t::index_type index{ e, q, 0 };
 
             // shape dictated by D (Y::size())
-            pack_t::shape_type shape { 0, 0, D };
+            pack_t::shape_type shape{ 0, 0, D };
 
             // slice the grid
             auto sliced_grid = _grid.template slice<1>(index, shape);
@@ -94,10 +99,10 @@ namespace mito {
         inline const Y operator()(int e, int q) const
         {
             // slices at {e, q}
-            pack_t::index_type index { e, q, 0 };
+            pack_t::index_type index{ e, q, 0 };
 
             // shape dictated by D (Y::size())
-            pack_t::shape_type shape { 0, 0, D };
+            pack_t::shape_type shape{ 0, 0, D };
 
             // slice the grid
             auto sliced_grid = _grid.template slice<1>(index, shape);
@@ -162,14 +167,14 @@ TEST(PyreGrids, TestPyreGrids)
     using grid_t = pyre::grid::grid_t<pack_t, storage_t>;
 
     // packing: 1024x1024x8
-    pack_t packing { { 1024, 1024, 8 } };
+    pack_t packing{ { 1024, 1024, 8 } };
     // instantiate the grid
-    grid_t grid { packing, packing.cells() };
+    grid_t grid{ packing, packing.cells() };
 
     // tryout slices
-    pack_t::index_type index { 0, 0, 1 };
+    pack_t::index_type index{ 0, 0, 1 };
     // QUESTION: What if shape {8, 0, 0} and slice<2> ?
-    pack_t::shape_type shape { 0, 0, 8 };
+    pack_t::shape_type shape{ 0, 0, 8 };
 
     // slice of rank 1 (directly grid)
     auto sliced_grid = grid.slice<1>(index, shape);

@@ -1,5 +1,8 @@
-// -*- C++ -*-
+// -*- c++ -*-
 //
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 
 #if !defined(mito_topology_Topology_icc)
 #error This header file contains implementation details of class mito::topology::Topology
@@ -9,9 +12,10 @@ mito::topology::Topology::Topology() :
     _vertex_factory(),
     _segment_factory(),
     _triangle_factory(),
-    _tetrahedron_factory() {};
+    _tetrahedron_factory()
+{}
 
-mito::topology::Topology::~Topology() {};
+mito::topology::Topology::~Topology() {}
 
 template <>
 inline auto

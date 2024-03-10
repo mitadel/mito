@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_simulation_Context_h)
 #define mito_simulation_Context_h
@@ -20,7 +25,7 @@ namespace mito::simulation {
 
       private:
         // delete move constructor
-        Context(context_type &&) = delete;
+        Context(context_type &&) noexcept = delete;
 
         // delete copy constructor
         Context(const context_type &) = delete;
@@ -29,7 +34,7 @@ namespace mito::simulation {
         Context & operator=(const context_type &) = delete;
 
         // delete move assignment operator
-        Context & operator=(context_type &&) = delete;
+        Context & operator=(context_type &&) noexcept = delete;
 
       public:
         // accessor for my process' rank

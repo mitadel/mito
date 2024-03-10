@@ -3,7 +3,7 @@
 // a sample singleton class
 class SingletonClass {
 
-private:
+  private:
     // default constructor
     inline SingletonClass() {}
 
@@ -22,11 +22,11 @@ private:
     // destructor
     inline ~SingletonClass() {}
 
-public:
+  public:
     // do something
     inline void foo() const {}
 
-private:
+  private:
     // friendship with the singleton
     friend mito::utilities::Singleton<SingletonClass>;
 };
@@ -37,13 +37,16 @@ using singleton_t = SingletonClass;
 
 
 // the singleton factory
-auto singleton_instance() -> singleton_t &
+auto
+singleton_instance() -> singleton_t &
 {
     return mito::utilities::Singleton<singleton_t>::GetInstance();
 }
 
 
-int main() {
+int
+main()
+{
 
     // create an instance of the singleton class
     singleton_t & singleton = singleton_instance();

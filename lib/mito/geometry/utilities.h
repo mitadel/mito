@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_geometry_utilities_h)
 #define mito_geometry_utilities_h
@@ -55,14 +60,14 @@ namespace mito::geometry {
             const auto & p0 = coordinate_system.coordinates(nodes[0].point());
 
             // compute the director vectors associated with each director edge
-            auto directors = edge_simplex_directors_t<N, D> { (
+            auto directors = edge_simplex_directors_t<N, D>{ (
                 coordinate_system.coordinates(nodes[J + 1].point()) - p0)... };
 
             // all done
             return { p0, directors };
         };
 
-        return _directors(simplex, coordinate_system, make_integer_sequence<N> {});
+        return _directors(simplex, coordinate_system, make_integer_sequence<N>{});
     }
 
     // builds a geometric simplex based on a topological simplex {simplex} with the vertex-point

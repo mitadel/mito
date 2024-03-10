@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_geometry_CoordinateSystem_h)
 #define mito_geometry_CoordinateSystem_h
@@ -33,8 +38,14 @@ namespace mito::geometry {
         // delete copy constructor
         CoordinateSystem(const CoordinateSystem<D, coordT> &) = delete;
 
+        // delete move constructor
+        CoordinateSystem(CoordinateSystem<D, coordT> &&) noexcept = delete;
+
         // delete assignment operator
         void operator=(const CoordinateSystem<D, coordT> &) = delete;
+
+        // delete move assignment operator
+        void operator=(CoordinateSystem<D, coordT> &&) noexcept = delete;
 
       public:
         // place the {point} at location {coord}

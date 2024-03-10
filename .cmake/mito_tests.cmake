@@ -1,4 +1,8 @@
 # -*- cmake -*-
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
+
 
 # setup the test suite
 function(mito_testsInit)
