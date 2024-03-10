@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
+
+
 mito_test_python_testcase(tests/mito.ext/integrate_2D.py)
 mito_test_python_testcase(tests/mito.ext/scalar_field_2D.py)
 mito_test_python_testcase(tests/mito.ext/scalar_field_3D.py)

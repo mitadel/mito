@@ -1,4 +1,7 @@
 # -*- cmake -*-
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
 
 # cmake setup
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)

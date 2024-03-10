@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
+
+
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)

@@ -1,4 +1,6 @@
-// -*- C++ -*-
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
 
@@ -96,7 +98,7 @@ namespace mito::utilities {
         segmented_iterator_type _segmented_iterator;
 
         // befriend operator==
-        friend constexpr auto operator== <RepositoryT>(
+        friend constexpr auto operator==<RepositoryT>(
             const RepositoryIterator<RepositoryT> & it1,
             const RepositoryIterator<RepositoryT> & it2) noexcept -> bool;
 

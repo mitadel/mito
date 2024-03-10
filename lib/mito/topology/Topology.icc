@@ -1,5 +1,8 @@
-// -*- C++ -*-
+// -*- c++ -*-
 //
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 
 #if !defined(mito_topology_Topology_icc)
 #error This header file contains implementation details of class mito::topology::Topology

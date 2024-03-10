@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
+
 import os
 import vtk
 
