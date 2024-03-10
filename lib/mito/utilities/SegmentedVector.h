@@ -70,7 +70,7 @@ namespace mito::utilities {
 
         // build a resource passing down {args...} to the resource constructor
         template <class... Args>
-        inline auto emplace_back(Args &&... args) -> resource_type &
+        inline auto emplace(Args &&... args) -> resource_type &
         {
             // get a spare location for the placement of the new resource
             auto location = _resources.location_for_placement();

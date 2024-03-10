@@ -32,9 +32,9 @@ TEST(Utilities, RepositoryIterator)
     EXPECT_EQ(std::size(collection), 0);
 
     // emplace three simplices in the container
-    auto & simplex0 = collection.emplace_back(0);
-    auto & simplex1 = collection.emplace_back(1);
-    auto & simplex2 = collection.emplace_back(2);
+    auto & simplex0 = collection.emplace(0);
+    auto & simplex1 = collection.emplace(1);
+    auto & simplex2 = collection.emplace(2);
 
     std::vector<int> store_elements;
     for (const auto & el : collection) {
@@ -86,14 +86,14 @@ TEST(Utilities, RepositoryIterator)
     store_elements.clear();
 
     // emplace 5 reusing the slot of the first erased simplex (1)
-    auto simplex5 = collection.emplace_back(5);
+    auto simplex5 = collection.emplace(5);
     // emplace 6 reusing the slot of the first erased simplex (0)
-    auto simplex6 = collection.emplace_back(6);
+    auto simplex6 = collection.emplace(6);
     // emplace 7 reusing the slot of the first erased simplex (2)
-    auto simplex7 = collection.emplace_back(7);
+    auto simplex7 = collection.emplace(7);
 
     // emplace another simplex (trigger allocation of new segment)
-    auto simplex4 = collection.emplace_back(4);
+    auto simplex4 = collection.emplace(4);
 
     for (const auto & el : collection) {
         store_elements.emplace_back(el.foo());

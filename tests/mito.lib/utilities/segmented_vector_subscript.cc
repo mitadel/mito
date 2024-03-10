@@ -26,27 +26,27 @@ TEST(Utilities, SegmentedVectorSubscript)
     mito::utilities::segmented_vector_t<resource_t> collection(segmentSize);
 
     // emplace resource in the container
-    collection.emplace_back(0);
+    collection.emplace(0);
     EXPECT_TRUE(collection[0].foo() == 0);
 
     // emplace resource in the container
-    collection.emplace_back(1);
+    collection.emplace(1);
     EXPECT_TRUE(collection[1].foo() == 1);
 
     // emplace resource in the container
-    auto & resource = collection.emplace_back(2);
+    auto & resource = collection.emplace(2);
     EXPECT_TRUE(collection[2].foo() == 2);
 
     // emplace resource in the container
-    collection.emplace_back(3);
+    collection.emplace(3);
     EXPECT_TRUE(collection[3].foo() == 3);
 
     // emplace resource in the container
-    collection.emplace_back(4);
+    collection.emplace(4);
     EXPECT_TRUE(collection[4].foo() == 4);
 
     // emplace resource in the container
-    collection.emplace_back(5);
+    collection.emplace(5);
     EXPECT_TRUE(collection[5].foo() == 5);
 
     // erase a resource

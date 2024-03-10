@@ -151,7 +151,7 @@ namespace mito::mesh {
             _register_cell_orientation(cell);
 
             // add the cell to the collection of cells
-            return _cells.emplace_back(cell);
+            return _cells.emplace(cell);
         }
 
         // build a cell based with nodes {nodes} and insert it in mesh
@@ -159,7 +159,7 @@ namespace mito::mesh {
         requires(N > 0)
         {
             // instantiate cell and add it to the collection of cells
-            auto & cell = _cells.emplace_back(nodes);
+            auto & cell = _cells.emplace(nodes);
 
             // register {cell} in the orientation map
             _register_cell_orientation(cell);
@@ -173,7 +173,7 @@ namespace mito::mesh {
         requires(N == 0)
         {
             // add the cell to the collection of cells
-            return _cells.emplace_back(cell);
+            return _cells.emplace(cell);
         }
 
       private:

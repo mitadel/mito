@@ -41,12 +41,12 @@ TEST(Utilities, SegmentedVectorSubscript)
     segmented_vector_t collection(segmentSize);
 
     // fill in the container
-    collection.emplace_back(0);
-    collection.emplace_back(1);
-    collection.emplace_back(2);
-    collection.emplace_back(3);
-    collection.emplace_back(4);
-    collection.emplace_back(5);
+    collection.emplace(0);
+    collection.emplace(1);
+    collection.emplace(2);
+    collection.emplace(3);
+    collection.emplace(4);
+    collection.emplace(5);
 
     // show me
     print(collection);
