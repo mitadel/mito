@@ -17,13 +17,13 @@ All authors are listed in file [AUTHORS](AUTHORS), see also the MiTo [contributo
 
 ## License
 
-This work is distributed under the terms of a BSD-3-Clause OSS license. 
+This work is distributed under the terms of a BSD-3-Clause OSS license.
 All new contributions must be made under this license.
 See [LICENSE](LICENSE) for details.
 
 Copyright notice:
 
-Technische Universiteit Delft hereby disclaims all copyright interest in the program MiTo 
+Technische Universiteit Delft hereby disclaims all copyright interest in the program MiTo
 (C++/Python framework for high performance computational modeling of multi-physics systems)
 written by the Author(s).
 
