@@ -48,6 +48,10 @@ namespace mito::geometry {
         template <int NN, int DD>
         using cell_family_type = geometric_simplex_t<NN, DD>;
 
+        // typedef for the topological family type (simplicial)
+        template <int I>
+        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
+
       private:
         template <int... J>
         constexpr auto _check_vertices(integer_sequence<J...>) const -> void
@@ -150,6 +154,10 @@ namespace mito::geometry {
 
         // the point type
         using point_type = point_t<D>;
+
+        // typedef for the topological family type (simplicial)
+        template <int I>
+        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
 
       public:
         // get the coordinates of the point
