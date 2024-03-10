@@ -29,13 +29,6 @@ namespace mito::mesh {
         // publish the dimension of physical space
         static constexpr int dim = cell_type::dim;
         // typedef for a collection of cells
-        // QUESTION: we may consider switching this to a container that is faster to iterate on
-        //  e.g. {vector}, if we decide to base {Manifold} on a {Mesh}. In this case, in fact,
-        //  iterating on a manifold would iterate on the mesh elements. It is true that
-        //  inserting/erasing elements in a vector is more expensive than in a set. However, we
-        //  insert/erase much less frequently than we iterate. Also, this vector does not contain
-        //  the full cell objects, but just their addresses, so perhaps it would not even be that
-        //  expensive to allocate/deallocate the memory.
         using cells_type = utilities::segmented_vector_t<cell_type>;
         // iterator to the cells datastructure
         using cells_iterator = cells_type::iterator;
