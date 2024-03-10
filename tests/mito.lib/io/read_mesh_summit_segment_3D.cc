@@ -26,29 +26,19 @@ TEST(SummitReader, LoadSummitSegmentsMesh3D)
         EXPECT_EQ(boundary_mesh.nCells(), 2);
     }
 
-#if 0    // TOFIX
     // show me the cells
     std::cout << "Initial mesh: " << std::endl;
-    int count = 0;
-    decltype(mesh)::cells_iterator * segment;
-    for (auto & simplex = mesh.cells().begin(); simplex != mesh.cells().end(); ++simplex) {
-        ++count;
-        if (count == 5) {
-            segment = simplex;
-        }
-    }
+    auto & cell = mesh.cells()[5];
 
     // erase a simplex
-    mesh.erase(segment);
-    // topology.erase(segment->simplex());
+    mesh.erase(cell);
 
     // assert you read 9 cells
     EXPECT_EQ(mesh.nCells(), 9);
 
-    // // assert you found 4 nodes on the boundary
-    // {
-    //     auto boundary_mesh = mito::mesh::boundary(mesh);
-    //     EXPECT_EQ(boundary_mesh.nCells(), 4);
-    // }
-#endif
+    // assert you found 4 nodes on the boundary
+    {
+        auto boundary_mesh = mito::mesh::boundary(mesh);
+        EXPECT_EQ(boundary_mesh.nCells(), 4);
+    }
 }
