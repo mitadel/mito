@@ -86,14 +86,14 @@ TEST(Utilities, RepositoryIterator)
     store_elements.clear();
 
     // emplace 5 reusing the slot of the first erased simplex (1)
-    auto simplex5 = collection.emplace(5);
+    collection.emplace(5);
     // emplace 6 reusing the slot of the first erased simplex (0)
-    auto simplex6 = collection.emplace(6);
+    collection.emplace(6);
     // emplace 7 reusing the slot of the first erased simplex (2)
-    auto simplex7 = collection.emplace(7);
+    collection.emplace(7);
 
     // emplace another simplex (trigger allocation of new segment)
-    auto simplex4 = collection.emplace(4);
+    collection.emplace(4);
 
     for (const auto & el : collection) {
         store_elements.emplace_back(el.foo());

@@ -29,10 +29,10 @@ TEST(Utilities, SegmentedVectorMove)
     mito::utilities::segmented_vector_t<resource_t> collection(segmentSize);
 
     // emplace resources in the container
-    auto resource_0 = collection.emplace(0);
-    auto resource_1 = collection.emplace(1);
-    auto resource_2 = collection.emplace(2);
-    auto resource_3 = collection.emplace(3);
+    collection.emplace(0);
+    collection.emplace(1);
+    collection.emplace(2);
+    collection.emplace(3);
 
     EXPECT_EQ(collection.size(), 4);
     EXPECT_EQ(collection.capacity(), 6);
