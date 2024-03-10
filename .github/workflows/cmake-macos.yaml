@@ -1,4 +1,7 @@
 # -*- yaml -*-
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
 
 name: cmake-macos
 on:

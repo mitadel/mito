@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
 #if !defined(mito_py_external_h)
 #define mito_py_external_h

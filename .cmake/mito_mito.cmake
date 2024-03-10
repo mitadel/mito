@@ -1,4 +1,8 @@
 # -*- cmake -*-
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
+
 
 # build the mito libraries
 function(mito_mitoLib)

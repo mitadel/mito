@@ -1,3 +1,8 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // For simplicity, here are both the c++ function and the binding code.
 // In practice, implementation and binding code will generally be located in separate files.
 

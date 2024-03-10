@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+#
+
 import pytest
 
 from utilities import load_vtk_mesh, cleanup
