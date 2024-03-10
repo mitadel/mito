@@ -58,6 +58,7 @@ mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)
 mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
+mito_test_driver(tests/mito.lib/mesh/filter_ball.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_segment_1D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_triangle_2D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_triangle_3D.cc)

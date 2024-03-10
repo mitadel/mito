@@ -28,6 +28,13 @@ namespace mito::mesh {
     {
         return Boundary<mesh_t<cellT<N, D>>>::boundary_size(mesh);
     }
+
+    // get the mesh of the I-cells that compose {mesh}
+    template <int I, int N, int D, template <int, int> class cellT>
+    auto filter(const mesh_t<cellT<N, D>> & mesh) -> mesh_t<cellT<I, D>>
+    {
+        return Filter<mesh_t<cellT<N, D>>, I>::filter(mesh);
+    }
 }
 
 

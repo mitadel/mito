@@ -21,6 +21,10 @@ namespace mito::mesh {
     // class boundary
     template <class meshT>
     class Boundary;
+
+    // class filter
+    template <class meshT, int I>
+    class Filter;
 }
 
 
