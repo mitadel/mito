@@ -15,14 +15,14 @@ namespace mito::mesh {
     auto mesh() -> mesh_t<cellT>;
 
 
-    //
+    // assemble boundary mesh of {mesh}
     template <int N, int D, template <int, int> class cellT>
     auto boundary(const mesh_t<cellT<N, D>> & mesh) -> mesh_t<cellT<N - 1, D>>
     {
         return Boundary<mesh_t<cellT<N, D>>>::boundary(mesh);
     }
 
-    //
+    // get the number of boundary cells of {mesh} (without assembling its boundary mesh)
     template <int N, int D, template <int, int> class cellT>
     auto boundary_size(const mesh_t<cellT<N, D>> & mesh) -> int
     {
