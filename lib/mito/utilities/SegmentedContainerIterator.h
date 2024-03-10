@@ -3,9 +3,6 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
-// -*- C++ -*-
-//
-
 
 // code guard
 #if !defined(mito_utilities_SegmentedContainerIterator_h)

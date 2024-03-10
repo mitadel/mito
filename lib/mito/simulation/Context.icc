@@ -3,8 +3,6 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
-// -*- C++ -*-
-//
 
 #if !defined(mito_simulation_Context_icc)
 #error This header file contains implementation details of class mito::simulation::Context
