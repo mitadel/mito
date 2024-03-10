@@ -148,10 +148,6 @@ namespace mito::geometry {
         // a collection of nodes
         using nodes_type = std::array<node_type, order + 1>;
 
-        // typedef for the family type (simplicial)
-        template <int NN, int DD>
-        using cell_family_type = geometric_simplex_t<NN, DD>;
-
         // the point type
         using point_type = point_t<D>;
 
