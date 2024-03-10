@@ -54,8 +54,8 @@ namespace mito::mesh {
         using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
         // id type of unoriented cell
         using cell_id_type = utilities::index_t<cell_type>;
-        // this map maps a simplex id to a tuple of two integers counting how many times a simplex
-        // appears with - or + orientation
+        // this map maps a cell id to a tuple of two integers counting how many times a cell appears
+        // with - or + orientation
         using orientation_map_type = std::unordered_map<cell_id_type, std::array<int, 2>>;
 
       public:
@@ -194,7 +194,7 @@ namespace mito::mesh {
         // container to store the mesh cells
         cells_type _cells;
 
-        // container to store how many times a simplex appears with a given orientation
+        // container to store how many times a cell appears with a given orientation
         orientation_map_type _orientations;
     };
 
