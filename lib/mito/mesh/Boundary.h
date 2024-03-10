@@ -13,8 +13,6 @@ namespace mito::mesh {
         using mesh_type = meshT;
         // typedef cell type
         using cell_type = typename mesh_type::cell_type;
-        // typedef for simplex type
-        using simplex_type = cell_type::simplex_type;
         // the dimension of physical space
         static constexpr int D = cell_type::dim;
         // get the order of the cell
