@@ -42,11 +42,11 @@ main()
     auto & cell1 = mesh.insert({ node_1, node_2, node_3 });
 
     // flip the common edge of the two triangles
-    auto simplex_pair = mito::geometry::flip_diagonal<2>({ cell0, cell1 });
+    auto [new_cell0, new_cell1] = mito::geometry::flip_diagonal<2>({ cell0, cell1 });
 
-    mesh.insert(simplex_pair.first);
+    mesh.insert(new_cell0);
     mesh.erase(cell0);
-    mesh.insert(simplex_pair.second);
+    mesh.insert(new_cell1);
     mesh.erase(cell1);
 
     // do tetra mesh refinement

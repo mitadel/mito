@@ -142,7 +142,7 @@ namespace mito::geometry {
         auto simplex_1 = simplex_pair.second;
 
         // flip the topological simplices
-        auto flipped_simplex_pair =
+        auto [new_simplex0, new_simplex1] =
             mito::topology::flip_diagonal({ simplex_0.simplex(), simplex_1.simplex() });
 
         // concatenate in {nodes} the nodes of the two simplices
@@ -152,8 +152,8 @@ namespace mito::geometry {
         nodes.insert(std::begin(nodes), std::begin(simplex_1.nodes()), std::end(simplex_1.nodes()));
 
         // build the new geometric simplices and return them
-        return { geometric_simplex<D>(flipped_simplex_pair.first, nodes),
-                 geometric_simplex<D>(flipped_simplex_pair.second, nodes) };
+        return { geometric_simplex<D>(new_simplex0, nodes),
+                 geometric_simplex<D>(new_simplex1, nodes) };
     }
 }
 
