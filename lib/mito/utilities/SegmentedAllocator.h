@@ -191,6 +191,23 @@ namespace mito::utilities {
             return _end;
         }
 
+        auto _erase_check(pointer element) const -> bool
+        {
+            // loop on segments
+            for (int i = 0; i < _n_segments; ++i) {
+                // get the start of the segment
+                const auto & segment = _start_of_segment.at(i);
+                // if I could find {element} within the range spanned by one of my segments
+                if (element >= segment && element < segment + _segment_size) {
+                    // then {element} belongs to my allocation
+                    return true;
+                }
+            }
+
+            // {element} does not belong to my allocation
+            return false;
+        }
+
       public:
         auto location_for_placement() -> unqualified_pointer
         {
@@ -243,6 +260,9 @@ namespace mito::utilities {
 
             // add the address of the element to the queue of the available locations for write
             _available_locations.push(const_cast<unqualified_pointer>(element));
+
+            // check if this element belongs to my allocation
+            assert(_erase_check(element));
 
             // all done
             return;
