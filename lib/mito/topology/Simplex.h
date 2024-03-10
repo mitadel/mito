@@ -28,7 +28,9 @@ namespace mito::topology {
         constexpr Simplex(const simplex_composition_t<N> & simplices) : _simplices(simplices) {}
 
         // constructor for a simplex based on its composition in terms of subsimplices
-        constexpr Simplex(simplex_composition_t<N> && simplices) : _simplices(simplices) {}
+        constexpr Simplex(simplex_composition_t<N> && simplices) noexcept :
+            _simplices(std::move(simplices))
+        {}
 
         // destructor
         constexpr ~Simplex() override {}
@@ -41,13 +43,13 @@ namespace mito::topology {
         Simplex(const Simplex &) = delete;
 
         // delete move constructor
-        Simplex(Simplex &&) = delete;
+        Simplex(Simplex &&) noexcept = delete;
 
         // delete assignment operator
         Simplex & operator=(const Simplex &) = delete;
 
         // delete move assignment operator
-        Simplex & operator=(Simplex &&) = delete;
+        Simplex & operator=(Simplex &&) noexcept = delete;
 
       public:
         // accessor for the subsimplices
@@ -210,13 +212,13 @@ namespace mito::topology {
         Simplex(const Simplex &) = delete;
 
         // delete move constructor
-        Simplex(Simplex &&) = delete;
+        Simplex(Simplex &&) noexcept = delete;
 
         // delete assignment operator
         Simplex & operator=(const Simplex &) = delete;
 
         // delete move assignment operator
-        Simplex & operator=(Simplex &&) = delete;
+        Simplex & operator=(Simplex &&) noexcept = delete;
 
       public:
         // perform a sanity check

@@ -43,12 +43,12 @@ TEST(Quadrature, Segment)
 
     // a scalar function
     using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::EUCLIDEAN>;
-    auto f_exp = mito::manifolds::field(
-        mito::math::function([](const coordinates_t & x) -> mito::scalar_t { return exp(-x[0]); }));
+    auto f_exp = mito::manifolds::field(mito::math::function(
+        [](const coordinates_t & x) -> mito::scalar_t { return std::exp(-x[0]); }));
 
     // integrate exp(-x) on (0, 1)
     auto integral = integrator.integrate(f_exp);
-    EXPECT_NEAR(integral, (exp(1) - 1) / exp(1), 1.e-13);
+    EXPECT_NEAR(integral, (std::exp(1) - 1) / std::exp(1), 1.e-13);
 }
 
 // end of file

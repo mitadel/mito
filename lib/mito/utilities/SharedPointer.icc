@@ -119,7 +119,7 @@ mito::utilities::SharedPointer<resourceT>::SharedPointer(
 template <class resourceT>
 mito::utilities::SharedPointer<resourceT>::SharedPointer(
     mito::utilities::SharedPointer<resourceT> && other) noexcept :
-    _handle(other._handle)
+    _handle(std::move(other._handle))
 {
     // invalidate other
     other._handle = nullptr;
@@ -149,14 +149,14 @@ mito::utilities::SharedPointer<resourceT>::operator=(
 template <class resourceT>
 mito::utilities::SharedPointer<resourceT> &
 mito::utilities::SharedPointer<resourceT>::operator=(
-    mito::utilities::SharedPointer<resourceT> && other)
+    mito::utilities::SharedPointer<resourceT> && other) noexcept
 {
     // if {other} and I point to different handles
     if (other._handle != _handle) {
         // release my current handle
         _release();
         // adopt the new shareable
-        _handle = other._handle;
+        _handle = std::move(other._handle);
     }
 
     // invalidate {other}

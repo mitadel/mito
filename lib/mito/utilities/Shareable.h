@@ -31,14 +31,14 @@ namespace mito::utilities {
         inline Shareable(Shareable &) = delete;
 
         // move constructor
-        inline Shareable(Shareable &&) = delete;
+        inline Shareable(Shareable &&) noexcept = delete;
 
         // assignment operator
         inline Shareable & operator=(const Shareable &) = delete;
         inline Shareable & operator=(Shareable &) = delete;
 
         // move assignment operator
-        inline Shareable & operator=(Shareable &&) = delete;
+        inline Shareable & operator=(Shareable &&) noexcept = delete;
 
       private:
         // accessor for the number of outstanding references

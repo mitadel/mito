@@ -56,7 +56,7 @@ namespace mito::geometry {
         constexpr Coordinates() : _array() {}
 
         // constructor
-        constexpr Coordinates(const mito::scalar_t (&&coords)[D]) : _array(coords) {}
+        constexpr Coordinates(mito::scalar_t (&&coords)[D]) : _array(std::move(coords)) {}
 
         // constructor
         constexpr Coordinates(const array_t coords) : _array(coords) {}

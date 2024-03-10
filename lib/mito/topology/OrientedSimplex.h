@@ -56,13 +56,13 @@ namespace mito::topology {
         OrientedSimplex(const OrientedSimplex &) = delete;
 
         // delete move constructor
-        OrientedSimplex(OrientedSimplex &&) = delete;
+        OrientedSimplex(OrientedSimplex &&) noexcept = delete;
 
         // delete assignment operator
         OrientedSimplex & operator=(const OrientedSimplex &) = delete;
 
         // delete move assignment operator
-        OrientedSimplex & operator=(OrientedSimplex &&) = delete;
+        OrientedSimplex & operator=(OrientedSimplex &&) noexcept = delete;
 
       public:
         // accessor for the unoriented footprint

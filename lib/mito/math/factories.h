@@ -28,7 +28,7 @@ namespace mito::math {
     template <class F>
     constexpr auto function(F && f)
     {
-        return function_t<F>(f);
+        return function_t<F>(std::forward<F>(f));
     }
 
     // TOFIX: do we need this?

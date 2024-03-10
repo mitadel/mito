@@ -12,9 +12,9 @@ namespace mito::geometry {
 
     // factory for coordinates from brace-enclosed initializer list
     template <CoordinateType coordT = EUCLIDEAN, int D>
-    constexpr auto coordinates(const mito::scalar_t (&&coords)[D])
+    constexpr auto coordinates(mito::scalar_t (&&coords)[D])
     {
-        return coordinates_t<D, coordT>(coords);
+        return coordinates_t<D, coordT>(std::move(coords));
     }
 
     // factory for coordinate system

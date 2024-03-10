@@ -29,7 +29,7 @@ namespace mito::quadrature {
 
       public:
         // constructor
-        constexpr Table(array_type && pairs) : _table{ pairs } {}
+        constexpr Table(array_type && pairs) noexcept : _table{ std::move(pairs) } {}
 
         // the number of entries in the table (i.e. the pairings in the table)
         constexpr auto size() const -> int { return Q; }
