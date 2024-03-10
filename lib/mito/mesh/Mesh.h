@@ -30,8 +30,6 @@ namespace mito::mesh {
         static constexpr int dim = cell_type::dim;
         // typedef for a collection of cells
         using cells_type = utilities::segmented_vector_t<cell_type>;
-        // iterator to the cells datastructure
-        using cells_iterator = cells_type::iterator;
 
       private:
         // get the order of the cell
@@ -104,14 +102,14 @@ namespace mito::mesh {
         }
 
         // erase cell at location {cell}
-        inline auto erase(cells_iterator & cell) -> void
+        inline auto erase(cell_type & cell) -> void
         {
             // erase the cell from the mesh
             bool cell_was_erased = _cells.erase(cell);
             // if the cell was in fact erased from the cell
             if (cell_was_erased) {
                 // loop on the subcells of {cell}
-                for (const auto & subcell : cell->simplex()->composition()) {
+                for (const auto & subcell : cell.simplex()->composition()) {
                     // decrement the orientations count for this cell footprint id, depending on
                     // the orientation
                     (subcell->orientation() == +1 ?
@@ -146,7 +144,7 @@ namespace mito::mesh {
         }
 
         // insert {cell} in mesh
-        inline auto insert(const cell_type & cell) -> cells_iterator
+        inline auto insert(const cell_type & cell) -> cell_type &
         requires(N > 0)
         {
             // register {cell} in the orientation map
@@ -157,22 +155,21 @@ namespace mito::mesh {
         }
 
         // build a cell based with nodes {nodes} and insert it in mesh
-        inline auto insert(const nodes_type & nodes) -> cells_iterator
+        inline auto insert(const nodes_type & nodes) -> cell_type &
         requires(N > 0)
         {
-
             // instantiate cell and add it to the collection of cells
-            auto cell = _cells.emplace_back(nodes);
+            auto & cell = _cells.emplace_back(nodes);
 
             // register {cell} in the orientation map
-            _register_cell_orientation(*cell);
+            _register_cell_orientation(cell);
 
             // all done
             return cell;
         }
 
         // insert {cell} in mesh
-        inline auto insert(const cell_type & cell) -> cells_iterator
+        inline auto insert(const cell_type & cell) -> cell_type &
         requires(N == 0)
         {
             // add the cell to the collection of cells

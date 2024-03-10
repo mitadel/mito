@@ -216,7 +216,7 @@ namespace mito::utilities {
         // insert an element in the container
         // (increment the number of elements and remove the address of the element from the pile of
         // the available locations for reuse)
-        auto insert(resource_type * element) -> iterator
+        auto insert(resource_type * element) -> void
         {
             // increment the size of the container
             ++_n_elements;
@@ -230,9 +230,7 @@ namespace mito::utilities {
             }
 
             // all done
-            return iterator(
-                element /* ptr */, std::next(_begin, _segment_size /* segment_end */),
-                _segment_size, _end /* end */);
+            return;
         }
 
         // erase an element from the container

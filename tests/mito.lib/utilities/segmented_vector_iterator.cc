@@ -32,9 +32,9 @@ TEST(Utilities, RepositoryIterator)
     EXPECT_EQ(std::size(collection), 0);
 
     // emplace three simplices in the container
-    auto simplex0 = collection.emplace_back(0);
-    auto simplex1 = collection.emplace_back(1);
-    auto simplex2 = collection.emplace_back(2);
+    auto & simplex0 = collection.emplace_back(0);
+    auto & simplex1 = collection.emplace_back(1);
+    auto & simplex2 = collection.emplace_back(2);
 
     std::vector<int> store_elements;
     for (const auto & el : collection) {

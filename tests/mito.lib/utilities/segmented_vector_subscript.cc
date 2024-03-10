@@ -34,7 +34,7 @@ TEST(Utilities, SegmentedVectorSubscript)
     EXPECT_TRUE(collection[1].foo() == 1);
 
     // emplace resource in the container
-    auto resource = collection.emplace_back(2);
+    auto & resource = collection.emplace_back(2);
     EXPECT_TRUE(collection[2].foo() == 2);
 
     // emplace resource in the container

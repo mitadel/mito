@@ -25,10 +25,10 @@ TEST(Mesh, EraseElement)
 
     // an empty mesh of triangles in 2D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();
-    auto geom_cell0 = mesh.insert({ node_0, node_1, node_3 });
-    auto geom_cell1 = mesh.insert({ node_1, node_2, node_3 });
-    auto geom_cell2 = mesh.insert({ node_2, node_4, node_3 });
-    auto geom_cell3 = mesh.insert({ node_4, node_0, node_3 });
+    auto & geom_cell0 = mesh.insert({ node_0, node_1, node_3 });
+    auto & geom_cell1 = mesh.insert({ node_1, node_2, node_3 });
+    mesh.insert({ node_2, node_4, node_3 });
+    mesh.insert({ node_4, node_0, node_3 });
 
     // assert you read 4 cells
     EXPECT_EQ(mesh.nCells(), 4);
@@ -46,7 +46,7 @@ TEST(Mesh, EraseElement)
     // erase a simplex
     std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(geom_cell0);
-    topology.erase(geom_cell0->simplex());
+    topology.erase(geom_cell0.simplex());
 
     // assert the mesh has now 3 cells
     EXPECT_EQ(mesh.nCells(), 3);
@@ -63,10 +63,10 @@ TEST(Mesh, EraseElement)
 
     // check that erasing a cell twice does not result in an error
     mesh.erase(geom_cell0);
-    topology.erase(geom_cell0->simplex());
+    topology.erase(geom_cell0.simplex());
 
     mesh.erase(geom_cell1);
-    topology.erase(geom_cell1->simplex());
+    topology.erase(geom_cell1.simplex());
 
     // assert the mesh has now 2 cells
     EXPECT_EQ(mesh.nCells(), 2);

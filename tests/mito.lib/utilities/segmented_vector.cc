@@ -33,15 +33,15 @@ TEST(Utilities, SegmentedVector)
     EXPECT_EQ(std::size(collection), 0);
 
     // emplace two resources in the container
-    auto resource_0 = collection.emplace_back(0);
-    auto resource_1 = collection.emplace_back(1);
+    collection.emplace_back(0);
+    collection.emplace_back(1);
 
     // assert that the container has 2 elements and its capacity is 3
     EXPECT_EQ(collection.capacity(), 3);
     EXPECT_EQ(std::size(collection), 2);
 
     // emplace one more resource
-    auto resource_2 = collection.emplace_back(2);
+    auto & resource_2 = collection.emplace_back(2);
 
     // assert that the container has 3 elements and its capacity is 3
     EXPECT_EQ(collection.capacity(), 3);
@@ -55,14 +55,14 @@ TEST(Utilities, SegmentedVector)
     EXPECT_EQ(std::size(collection), 2);
 
     // emplace one resource
-    auto resource_3 = collection.emplace_back(3);
+    auto & resource_3 = collection.emplace_back(3);
 
     // assert that the container has again 3 elements and its capacity is 3
     EXPECT_EQ(collection.capacity(), 3);
     EXPECT_EQ(std::size(collection), 3);
 
     // emplace another resource (trigger allocation of new segment)
-    auto resource_4 = collection.emplace_back(4);
+    auto & resource_4 = collection.emplace_back(4);
 
     // assert that the container has now 4 elements and its capacity is 6
     // (new memory allocation was in fact triggered)

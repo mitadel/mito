@@ -38,11 +38,11 @@ main()
     auto node_3 = mito::geometry::node(coord_system, { 0.0, 1.0 });
 
     // insert cells in the mesh
-    auto cell0 = mesh.insert({ node_0, node_1, node_3 });
-    auto cell1 = mesh.insert({ node_1, node_2, node_3 });
+    auto & cell0 = mesh.insert({ node_0, node_1, node_3 });
+    auto & cell1 = mesh.insert({ node_1, node_2, node_3 });
 
     // flip the common edge of the two triangles
-    auto simplex_pair = mito::geometry::flip_diagonal<2>({ *cell0, *cell1 });
+    auto simplex_pair = mito::geometry::flip_diagonal<2>({ cell0, cell1 });
 
     mesh.insert(simplex_pair.first);
     mesh.erase(cell0);
