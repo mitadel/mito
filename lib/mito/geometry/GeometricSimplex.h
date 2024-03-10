@@ -44,7 +44,7 @@ namespace mito::geometry {
         // a collection of nodes
         using nodes_type = std::array<node_type, N + 1>;
 
-        // typedef for the family type (simplicial)
+        // typedef for the family type (geometric simplicial)
         template <int NN, int DD>
         using cell_family_type = geometric_simplex_t<NN, DD>;
 
