@@ -15,7 +15,7 @@ All authors are listed in file [AUTHORS](AUTHORS), see also the MiTo [contributo
 - The [pyre](https://github.com/pyre/pyre) framework
 - C++20
 
-## License
+## License and Copyright
 
 This work is distributed under the terms of a BSD-3-Clause OSS license.
 All new contributions must be made under this license.
