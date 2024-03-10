@@ -19,13 +19,11 @@ namespace mito::mesh {
         static constexpr int N = cell_type::order;
         // a collection of nodes
         using nodes_type = cell_type::nodes_type;
-        // TOFIX: factor simplex_type into topology::cell_family
-        // typedef for simplex type
-        using simplex_type = cell_type::simplex_type;
-        // get the topological family this cell type belongs to (e.g. simplicial cells)
+        // get the (topological) family type that this cell type belongs to (e.g. simplicial cells)
         template <int J>
-        using cell_topological_family_type = typename topology::cell_family<simplex_type, J>;
-        // construct the filtered cell type belongs
+        using cell_topological_family_type = typename cell_type::cell_topological_family_type<J>;
+        // construct the (geometric) cell type that filtered cells belong to (e.g. geometric
+        // simplex)
         using filtered_cell_type = typename cell_type::cell_family_type<I, D>;
         // the filtered mesh type
         using mesh_filtered_type = mesh_t<filtered_cell_type>;

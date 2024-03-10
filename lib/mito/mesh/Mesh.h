@@ -16,14 +16,10 @@ namespace mito::mesh {
       public:
         // typedef for cell type
         using cell_type = cellT;
-        // TOFIX: below we make the assumption that the cell is always simplicial, remove this
-        //  assumption.
-        // typedef for simplex type
-        using simplex_type = cell_type::simplex_type;
         // publish the order of the cell
-        static constexpr int order = topology::order<simplex_type>();
+        static constexpr int order = cell_type::order;
         // publish the number of vertices per element
-        static constexpr int n_vertices = topology::n_vertices<simplex_type>();
+        static constexpr int n_vertices = cell_type::n_vertices;
         // the type of vertex
         using vertex_type = cell_type::vertex_type;
         // a collection of nodes
@@ -51,7 +47,7 @@ namespace mito::mesh {
         static constexpr int D = dim;
         // get the topological family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
+        using cell_topological_family_type = typename cell_type::cell_topological_family_type<I>;
         // id type of unoriented cell
         using cell_id_type = utilities::index_t<cell_type>;
         // this map maps a cell id to a tuple of two integers counting how many times a cell appears
