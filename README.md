@@ -7,8 +7,8 @@ C++/Python framework for high performance computational modeling of multi-physic
 All authors are listed in file [AUTHORS](AUTHORS), see also the MiTo [contributors](https://github.com/mitadel/mito/graphs/contributors).
 
 ## Maintainers
-- Bianca Giovanardi <bianca.giovanardi@mitdadel.com>
-- Anwar Koshakji <anwar.koshakji@mitdadel.com>
+- Bianca Giovanardi <bianca.giovanardi@mitadel.com>
+- Anwar Koshakji <anwar.koshakji@mitadel.com>
 
 ## Requirements
 
