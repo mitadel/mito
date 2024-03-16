@@ -47,7 +47,7 @@ namespace mito::geometry {
         }
 
         // destructor
-        ~CoordinateSystem() {}
+        ~CoordinateSystem() = default;
 
       private:
         // delete copy constructor
