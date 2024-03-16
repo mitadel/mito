@@ -88,8 +88,8 @@ namespace mito::utilities {
         {
             // invalidate the source
             other._begin = nullptr;
-            other._end = other._begin;
-            other._end_allocation = other._begin;
+            other._end = nullptr;
+            other._end_allocation = nullptr;
             other._n_segments = 0;
             other._n_elements = 0;
         }
