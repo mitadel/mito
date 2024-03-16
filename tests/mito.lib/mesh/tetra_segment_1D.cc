@@ -10,8 +10,8 @@
 
 TEST(Tetra, Segment)
 {
-    // a Euclidean coordinate system in 1D
-    auto coord_system = mito::geometry::coordinate_system<1, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 1D
+    auto coord_system = mito::geometry::coordinate_system<1, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 1D
     auto mesh = mito::mesh::mesh<mito::geometry::segment_t<1>>();

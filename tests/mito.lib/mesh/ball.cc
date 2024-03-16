@@ -11,8 +11,8 @@
 
 TEST(Mesh, Ball)
 {
-    // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // read the mesh of a ball
     std::ifstream fileStream("ball.summit");

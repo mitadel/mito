@@ -16,7 +16,7 @@ static constexpr auto e_y = mito::e_1<2>;
 auto
 area(
     const auto & w,
-    const mito::geometry::coordinate_system_t<2, mito::geometry::EUCLIDEAN> & coordinate_system,
+    const mito::geometry::coordinate_system_t<2, mito::geometry::CARTESIAN> & coordinate_system,
     const mito::geometry::node_t<2> & v0, const mito::geometry::node_t<2> & v1,
     const mito::geometry::node_t<2> & v2) -> mito::scalar_t
 {
@@ -52,8 +52,8 @@ TEST(Manifolds, EuclideanMetric2D)
     // the metric volume element
     constexpr auto w = mito::manifolds::wedge(dx, dy);
 
-    // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // build nodes of a triangle (counterclockwise order)
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });

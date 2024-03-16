@@ -13,10 +13,10 @@ static constexpr auto e_0 = mito::manifolds::uniform_field<2>(mito::e_0<2>);
 static constexpr auto e_1 = mito::manifolds::uniform_field<2>(mito::e_1<2>);
 
 // alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
-TEST(Manifolds, EuclideanGradient)
+TEST(Manifolds, CartesianGradient)
 {
     // a scalar field
     [[maybe_unused]] auto f = mito::manifolds::field(
@@ -31,7 +31,7 @@ TEST(Manifolds, EuclideanGradient)
         mito::manifolds::field([](const coordinates_t & x) -> mito::scalar_t { return x[0]; });
 
     // the Euclidean metric
-    constexpr auto g = mito::manifolds::metric<mito::geometry::EUCLIDEAN, 2, 2>::field();
+    constexpr auto g = mito::manifolds::metric<mito::geometry::CARTESIAN, 2, 2>::field();
 
     // the gradient form
     constexpr auto gradient = mito::manifolds::one_form(df0 * e_0 + df1 * e_1, g);

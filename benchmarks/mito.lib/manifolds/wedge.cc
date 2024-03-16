@@ -69,7 +69,7 @@ wedge_mito(int N)
     // make a timer
     pyre::timers::process_timer_t t("benchmarks.wedge");
 
-    // the euclidean metric in 3D space
+    // the Euclidean metric in 3D space
     constexpr auto metric = mito::identity<3>;
 
     // a vector field

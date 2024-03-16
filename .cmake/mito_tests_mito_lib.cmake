@@ -29,6 +29,7 @@ endif()
 # manifolds
 mito_test_driver(tests/mito.lib/manifolds/cube_volume.cc)
 mito_test_driver(tests/mito.lib/manifolds/disk_volume_polar_cartesian.cc)
+mito_test_driver(tests/mito.lib/manifolds/disk_volume_change_coordinates.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_gradient.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_3D.cc)

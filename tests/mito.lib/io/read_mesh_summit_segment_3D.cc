@@ -11,8 +11,8 @@
 
 TEST(SummitReader, LoadSummitSegmentsMesh3D)
 {
-    // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     std::ifstream fileStream("segment.summit");
     auto mesh = mito::io::summit::reader<mito::geometry::segment_t<3>>(fileStream, coord_system);

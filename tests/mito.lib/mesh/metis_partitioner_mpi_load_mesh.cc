@@ -15,8 +15,8 @@ TEST(MetisPartitionerMPI, LoadMesh)
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
 
-    // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // load mesh
     std::ifstream fileStream("rectangle.summit");

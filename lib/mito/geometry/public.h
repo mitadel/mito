@@ -26,6 +26,7 @@
 
 // algebra
 #include "algebra_coordinates.h"
+#include "coordinate_tranformation.h"
 
 // factories implementation
 #include "factories.h"

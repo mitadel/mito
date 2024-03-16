@@ -9,7 +9,7 @@
 
 TEST(Manifolds, OneForms)
 {
-    // the euclidean metric in 3D space
+    // the Euclidean metric in 3D space
     constexpr auto metric = mito::identity<3>;
 
     // a vector field

@@ -14,7 +14,7 @@ using mito::real;
 using mito::quadrature::GAUSS;
 
 // alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
 TEST(Quadrature, Square)
@@ -36,8 +36,8 @@ TEST(Quadrature, Square)
         (0,0)           (1,0)
     */
 
-    // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();

@@ -17,8 +17,8 @@ namespace mito::manifolds {
 
     // specialization for the Euclidean metric
     template <int N, int D>
-    struct metric<geometry::EUCLIDEAN, N, D> {
-        static constexpr auto field() { return identity_tensor_field<N, D, geometry::EUCLIDEAN>; }
+    struct metric<geometry::CARTESIAN, N, D> {
+        static constexpr auto field() { return identity_tensor_field<N, D, geometry::CARTESIAN>; }
     };
 
     // specialization for the polar metric in 2D

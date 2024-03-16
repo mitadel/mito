@@ -37,7 +37,7 @@ namespace mito::io::vtk {
 
     template <>
     auto insertVtkPoint(
-        const geometry::coordinates_t<3, geometry::EUCLIDEAN> & coord,
+        const geometry::coordinates_t<3, geometry::CARTESIAN> & coord,
         vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point
@@ -46,7 +46,7 @@ namespace mito::io::vtk {
 
     template <>
     auto insertVtkPoint(
-        const geometry::coordinates_t<2, geometry::EUCLIDEAN> & coord,
+        const geometry::coordinates_t<2, geometry::CARTESIAN> & coord,
         vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // add the point as new vtk point

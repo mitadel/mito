@@ -17,7 +17,7 @@ static constexpr auto e_z = mito::e_2<3>;
 auto
 volume(
     const auto & w,
-    const mito::geometry::coordinate_system_t<3, mito::geometry::EUCLIDEAN> & coordinate_system,
+    const mito::geometry::coordinate_system_t<3, mito::geometry::CARTESIAN> & coordinate_system,
     const mito::geometry::node_t<3> & v0, const mito::geometry::node_t<3> & v1,
     const mito::geometry::node_t<3> & v2, const mito::geometry::node_t<3> & v3) -> mito::scalar_t
 {
@@ -61,8 +61,8 @@ TEST(Manifolds, EuclideanMetric3D)
     // the metric volume element
     constexpr auto w = mito::manifolds::wedge(dx, dy, dz);
 
-    // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // build nodes of a tetrahedron
     auto node_1 = mito::geometry::node(coord_system, { 0.0, 0.0, 0.0 });

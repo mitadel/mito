@@ -19,7 +19,7 @@ static constexpr auto e_z = mito::e_2<3>;
 auto
 volume_form(
     const auto & w,
-    const mito::geometry::coordinate_system_t<3, mito::geometry::EUCLIDEAN> & coord_system,
+    const mito::geometry::coordinate_system_t<3, mito::geometry::CARTESIAN> & coord_system,
     const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::scalar_t
 {
     // get the directors of the tetrahedron
@@ -36,7 +36,7 @@ volume_form(
 // compute the volume of a tetrahedron as the determinant of the matrix of its vertices
 auto
 volume_determinant(
-    const mito::geometry::coordinate_system_t<3, mito::geometry::EUCLIDEAN> & coord_system,
+    const mito::geometry::coordinate_system_t<3, mito::geometry::CARTESIAN> & coord_system,
     const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::scalar_t
 {
     // number of element vertices
@@ -81,8 +81,8 @@ TEST(Manifolds, CubeVolume)
     // the metric volume element
     constexpr auto w = mito::manifolds::wedge(dx, dy, dz);
 
-    // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // read the cube mesh
     std::ifstream fileStream("cube.summit");
