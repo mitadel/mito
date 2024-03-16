@@ -66,7 +66,7 @@ TEST(Quadrature, Square)
     // integrate the field
     real result = bodyIntegrator.integrate(f);
     // the exact solution
-    real exact = 0.9460830607878437;
+    auto exact = real{ 0.9460830607878437 };
     // report
     std::cout << "Integration of cos(x*y): Result = " << result
               << ", Error = " << std::fabs(result - exact) << std::endl;

@@ -67,7 +67,7 @@ TEST(Quadrature, Square)
     // integrate the field
     real result = bodyIntegrator.integrate(f_xy);
     // the exact solution
-    real exact = 0.35355339059327384;
+    auto exact = real{ 0.35355339059327384 };
     // report
     std::cout << "Integration of x*y in 3D: Result = " << result
               << ", Error = " << std::fabs(result - exact) << std::endl;
