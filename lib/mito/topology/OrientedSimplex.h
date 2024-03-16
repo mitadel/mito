@@ -119,7 +119,7 @@ namespace mito::topology {
         requires(N == 0)
         {
             // search for the footprint of this oriented vertex in the vertex collection {vertices}
-            auto found = std::find(std::begin(vertices), std::end(vertices), _footprint);
+            auto found = std::ranges::find(vertices, _footprint);
 
             // if we have not collected it yet
             if (found == std::end(vertices)) {
@@ -149,7 +149,7 @@ namespace mito::topology {
             assert(std::size(vertices_subsimplices) == std::size(vertices));
 
             // populate the array of vertices
-            std::copy(vertices_subsimplices.begin(), vertices_subsimplices.end(), vertices.begin());
+            std::ranges::copy(vertices_subsimplices, std::begin(vertices));
 
             // return the array of vertices
             return vertices;

@@ -131,8 +131,7 @@ namespace mito::mesh {
                 };
 
                 // all done
-                return node_type(
-                    vertex, std::find_if(nodes.begin(), nodes.end(), has_vertex(vertex))->point());
+                return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
             };
 
             // insert {node} into {boundary_mesh}

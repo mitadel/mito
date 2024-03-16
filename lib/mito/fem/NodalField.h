@@ -62,7 +62,7 @@ namespace mito::fem {
         /**
          * Set the field to zero.
          */
-        inline void init() { std::fill(std::begin(_nodalField), std::end(_nodalField), 0.0); }
+        inline void init() { std::ranges::fill(_nodalField, 0.0); }
 
       private:
         /**

@@ -152,7 +152,7 @@ namespace mito::topology {
         composition_t representative{ composition[0]->footprint().id(),
                                       composition[1]->footprint().id() };
         // pick a representative (factor out equivalence relation)
-        std::sort(std::begin(representative), std::end(representative));
+        std::ranges::sort(representative);
         // all done
         return representative;
     }
@@ -168,7 +168,7 @@ namespace mito::topology {
                                       composition[2]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
-        std::sort(std::begin(representative), std::end(representative));
+        std::ranges::sort(representative);
 
         // all done
         return representative;
@@ -186,7 +186,7 @@ namespace mito::topology {
                                       composition[3]->footprint().id() };
 
         // pick a representative (factor out equivalence relation)
-        std::sort(std::begin(representative), std::end(representative));
+        std::ranges::sort(representative);
 
         // all done
         return representative;

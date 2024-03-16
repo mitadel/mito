@@ -98,8 +98,7 @@ namespace mito::geometry {
 
             // return the geometric simplex
             return geometric_simplex_type({ node_type(
-                vertices[K],
-                std::find_if(nodes.begin(), nodes.end(), has_vertex(vertices[K]))->point())... });
+                vertices[K], std::ranges::find_if(nodes, has_vertex(vertices[K]))->point())... });
         };
 
         // build a geometric simplex based on {simplex} with the vertex-point pair as appears in
