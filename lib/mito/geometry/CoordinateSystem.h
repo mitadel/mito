@@ -94,6 +94,10 @@ namespace mito::geometry {
             return 0.5 * (coordinates(point_a) + coordinates(point_b));
         }
 
+        // support for ranged for loops
+        inline auto begin() const { return std::cbegin(_coordinates_map); }
+        inline auto end() const { return std::cend(_coordinates_map); }
+
       private:
         // the coordinates of all points
         coordinates_map_type _coordinates_map;
