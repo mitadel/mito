@@ -12,13 +12,15 @@ namespace mito::geometry {
 
     template <int D, CoordinateType coordT>
     class CoordinateSystem {
+      public:
+        // a set of coordinates
+        using coordinates_type = coordinates_t<D, coordT>;
+
       private:
         // a point
         using point_type = point_t<D>;
         // id type of point
         using point_id_type = utilities::index_t<point_type>;
-        // a set of coordinates
-        using coordinates_type = coordinates_t<D, coordT>;
         // a map between points and their coordinates
         using coordinates_map_type = std::map<point_id_type, coordinates_type>;
 
