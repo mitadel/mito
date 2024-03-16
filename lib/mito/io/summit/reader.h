@@ -273,6 +273,9 @@ namespace mito::io::summit {
         // sanity check: the number of cells of highest dimension in the map is N_cells
         assert(mesh.nCells() == N_cells);
 
+        // sanity check: run sanity check for all mesh simplices in cascade
+        assert(mesh.sanityCheck());
+
         // all done
         return mesh;
     }
