@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_geometry_algebra_euclidean_coordinates_h)
-#define mito_geometry_algebra_euclidean_coordinates_h
+#if !defined(mito_geometry_algebra_cartesian_coordinates_h)
+#define mito_geometry_algebra_cartesian_coordinates_h
 
 
 namespace mito::geometry {
