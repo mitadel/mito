@@ -12,16 +12,13 @@ using edge_t = mito::topology::segment_t;
 
 TEST(CellEdges, Triangle)
 {
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
     // create three vertices
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
+    auto vertex0 = mito::topology::vertex();
+    auto vertex1 = mito::topology::vertex();
+    auto vertex2 = mito::topology::vertex();
 
     // create a triangle
-    auto triangle = topology.triangle({ vertex0, vertex1, vertex2 });
+    auto triangle = mito::topology::triangle({ vertex0, vertex1, vertex2 });
 
     // get the (oriented) edges of the triangle
     std::set<edge_t> edges;
@@ -29,9 +26,9 @@ TEST(CellEdges, Triangle)
 
     // build the (oriented) edges based on the vertices
     std::set<edge_t> segments;
-    segments.insert(topology.segment({ vertex0, vertex1 }));
-    segments.insert(topology.segment({ vertex1, vertex2 }));
-    segments.insert(topology.segment({ vertex2, vertex0 }));
+    segments.insert(mito::topology::segment({ vertex0, vertex1 }));
+    segments.insert(mito::topology::segment({ vertex1, vertex2 }));
+    segments.insert(mito::topology::segment({ vertex2, vertex0 }));
 
     // check that the edges fetched correspond with the segments connecting the vertices
     EXPECT_TRUE(edges == segments);
@@ -42,17 +39,14 @@ TEST(CellEdges, Triangle)
 
 TEST(CellEdges, Tetrahedron)
 {
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
     // create four vertices
-    auto vertex0 = topology.vertex();
-    auto vertex1 = topology.vertex();
-    auto vertex2 = topology.vertex();
-    auto vertex3 = topology.vertex();
+    auto vertex0 = mito::topology::vertex();
+    auto vertex1 = mito::topology::vertex();
+    auto vertex2 = mito::topology::vertex();
+    auto vertex3 = mito::topology::vertex();
 
     // create a tetrahedron
-    auto tetrahedron = topology.tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
+    auto tetrahedron = mito::topology::tetrahedron({ vertex0, vertex1, vertex2, vertex3 });
 
     // get the edges of the tetrahedron
     std::set<edge_t> edges;
@@ -60,18 +54,18 @@ TEST(CellEdges, Tetrahedron)
 
     // build the (oriented) edges based on the vertices
     std::set<edge_t> segments;
-    segments.insert(topology.segment({ vertex0, vertex1 }));
-    segments.insert(topology.segment({ vertex1, vertex3 }));
-    segments.insert(topology.segment({ vertex3, vertex0 }));
-    segments.insert(topology.segment({ vertex1, vertex2 }));
-    segments.insert(topology.segment({ vertex2, vertex0 }));
-    segments.insert(topology.segment({ vertex2, vertex3 }));
-    segments.insert(topology.segment({ vertex3, vertex1 }));
-    segments.insert(topology.segment({ vertex0, vertex3 }));
-    segments.insert(topology.segment({ vertex3, vertex2 }));
-    segments.insert(topology.segment({ vertex0, vertex2 }));
-    segments.insert(topology.segment({ vertex2, vertex1 }));
-    segments.insert(topology.segment({ vertex1, vertex0 }));
+    segments.insert(mito::topology::segment({ vertex0, vertex1 }));
+    segments.insert(mito::topology::segment({ vertex1, vertex3 }));
+    segments.insert(mito::topology::segment({ vertex3, vertex0 }));
+    segments.insert(mito::topology::segment({ vertex1, vertex2 }));
+    segments.insert(mito::topology::segment({ vertex2, vertex0 }));
+    segments.insert(mito::topology::segment({ vertex2, vertex3 }));
+    segments.insert(mito::topology::segment({ vertex3, vertex1 }));
+    segments.insert(mito::topology::segment({ vertex0, vertex3 }));
+    segments.insert(mito::topology::segment({ vertex3, vertex2 }));
+    segments.insert(mito::topology::segment({ vertex0, vertex2 }));
+    segments.insert(mito::topology::segment({ vertex2, vertex1 }));
+    segments.insert(mito::topology::segment({ vertex1, vertex0 }));
 
     // check that the edges fetched correspond with the segments connecting the vertices
     EXPECT_TRUE(edges == segments);

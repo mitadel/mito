@@ -22,26 +22,32 @@ namespace mito::geometry {
     template <int D>
     using point_t = utilities::shared_ptr<const Point<D>>;
 
+    // geometric simplex alias
+    template <int N, int D>
+    using geometric_simplex_t = GeometricSimplex<N, D>;
+
+    // node alias
+    template <int D>
+    using node_t = geometric_simplex_t<0, D>;
+
+    // segment alias
+    template <int D>
+    requires(D > 0)
+    using segment_t = geometric_simplex_t<1, D>;
+
+    // triangle alias
+    template <int D>
+    requires(D > 1)
+    using triangle_t = geometric_simplex_t<2, D>;
+
+    // tetrahedron alias
+    template <int D>
+    requires(D > 2)
+    using tetrahedron_t = geometric_simplex_t<3, D>;
+
     // point cloud alias
     template <int D>
     using point_cloud_t = PointCloud<D>;
-
-    // geometry alias
-    template <int D>
-    using geometry_t = Geometry<D>;
-
-    // a node is a pair of a vertex and a point
-    // template <int D>
-    // using node_t = Node<D>;
-    template <int D>
-    using node_t = std::pair<topology::vertex_t, point_t<D>>;
-
-    // mapping from vertices to points
-    // TOFIX: is this going to be an {unordered_multimap} when we do DG (i.e. when we have
-    // different nodes for the same vertex and same point)
-    template <int D>
-    using nodes_t = std::unordered_map<
-        topology::vertex_t, point_t<D>, utilities::hash_function<topology::vertex_t>>;
 
     // alias for the collection of oriented simplex director vectors
     // (e.g. an N-simplex has as N director vectors)

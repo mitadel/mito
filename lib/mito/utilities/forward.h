@@ -17,27 +17,39 @@ namespace mito::utilities {
     template <typename resourceT>
     concept ReferenceCountedObject = std::is_base_of<Shareable, resourceT>::value;
 
+    // base class for an invalidatable object
+    class Invalidatable;
+
+    // concept for an invalidatable object
+    template <typename resourceT>
+    concept InvalidatableObject = std::is_base_of<Invalidatable, resourceT>::value;
+
     // class shared pointer based on a reference counted resource
     template <class resourceT>
     // requires ReferenceCountedObject<resourceT>
     class SharedPointer;
 
-    // class segmented container
+    // class segmented allocator
     template <class resourceT>
-    class SegmentedContainer;
+    class SegmentedAllocator;
 
     // and its iterator
+    template <class SegmentedAllocatorT>
+    class SegmentedAllocatorIterator;
+
+    // class segmented container iterator
     template <class SegmentedContainerT>
     class SegmentedContainerIterator;
 
     // the repository
-    template <class sharedResourceT>
-    // requires ReferenceCountedObject<typename sharedResourceT::resource_type>
+    template <class sharedPointerT>
+    // requires ReferenceCountedObject<typename sharedPointerT::resource_type>
     class Repository;
 
-    // and its iterator
-    template <class RepositoryT>
-    class RepositoryIterator;
+    // class segmented vector
+    template <class resourceT>
+    requires InvalidatableObject<resourceT>
+    class SegmentedVector;
 }
 
 

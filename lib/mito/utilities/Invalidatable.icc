@@ -1,0 +1,34 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_utilities_Invalidatable_icc)
+#error This header file contains implementation details of class mito::utilities::Invalidatable
+#else
+
+// interface
+constexpr auto
+mito::utilities::Invalidatable::is_valid() const noexcept -> bool
+{
+    // easy enough
+    return _is_valid;
+}
+
+// interface
+constexpr auto
+mito::utilities::Invalidatable::invalidate() noexcept -> void
+{
+    // invalid state
+    _is_valid = false;
+
+    // all done
+    return;
+}
+
+// the default constructor
+constexpr mito::utilities::Invalidatable::Invalidatable() : _is_valid(true) {}
+
+#endif
+// end of file

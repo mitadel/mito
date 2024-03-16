@@ -12,9 +12,8 @@
 #include <mito/quadrature.h>
 #include <mito/simulation.h>
 
-using mito::vector_t;
-using mito::quadrature::GAUSS;
-using mito::topology::triangle_t;
+
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
 
 
 TEST(Quadrature, LoadMeshTrianglesMPI)
@@ -22,22 +21,12 @@ TEST(Quadrature, LoadMeshTrianglesMPI)
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
 
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Euclidean coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // load mesh
     std::ifstream fileStream("square.summit");
-    auto mesh =
-        mito::io::summit::reader<mito::topology::triangle_t, 2>(fileStream, geometry, coord_system);
+    auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
 
     // number of partitions
     auto n_tasks = simulation.context().n_tasks();
@@ -46,13 +35,12 @@ TEST(Quadrature, LoadMeshTrianglesMPI)
     auto task_id = simulation.context().task_id();
 
     // partition the mesh
-    auto mesh_partition = mito::mesh::metis::partition(mesh, coord_system, n_tasks, task_id);
+    auto mesh_partition = mito::mesh::metis::partition(mesh, n_tasks, task_id);
 
     // build the manifold on the partitioned mesh
     auto manifold = mito::manifolds::manifold(mesh_partition, coord_system);
 
     // instantiate a scalar field
-    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
     auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2

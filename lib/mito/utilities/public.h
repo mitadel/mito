@@ -21,10 +21,12 @@
 #include "Singleton.h"
 #include "Shareable.h"
 #include "SharedPointer.h"
-#include "SegmentedContainer.h"
-#include "SegmentedContainerIterator.h"
+#include "Invalidatable.h"
+#include "SegmentedAllocator.h"
+#include "SegmentedAllocatorIterator.h"
+#include "SegmentedVector.h"
 #include "Repository.h"
-#include "RepositoryIterator.h"
+#include "SegmentedContainerIterator.h"
 
 // factories implementation
 #include "factories.h"

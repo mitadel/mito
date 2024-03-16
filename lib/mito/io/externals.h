@@ -15,7 +15,6 @@
 // support
 #include "../geometry.h"
 #include "../mesh.h"
-#include "../topology.h"
 
 
 #endif

@@ -6,9 +6,12 @@
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)
-mito_test_driver(tests/mito.lib/geometry/barycenter_segment.cc)
-mito_test_driver(tests/mito.lib/geometry/barycenter_triangle.cc)
-mito_test_driver(tests/mito.lib/geometry/barycenter_tetrahedron.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_segment_1D.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_segment_2D.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_segment_3D.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_triangle_2D.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_triangle_3D.cc)
+mito_test_driver(tests/mito.lib/geometry/barycenter_tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/geometry/cell_directors.cc)
 mito_test_driver(tests/mito.lib/geometry/point.cc)
 
@@ -41,6 +44,8 @@ mito_test_driver(tests/mito.lib/manifolds/tensor_product_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/triangle_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/wedge_product_forms.cc)
+mito_test_driver(tests/mito.lib/manifolds/tetra_rectangle_2D.cc)
+mito_test_driver(tests/mito.lib/manifolds/tetra_cube_3D.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
@@ -51,12 +56,12 @@ mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
 mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
 
 # mesh
+mito_test_driver(tests/mito.lib/mesh/ball.cc)
 mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
-mito_test_driver(tests/mito.lib/mesh/tetra_1D.cc)
-mito_test_driver(tests/mito.lib/mesh/tetra_2D.cc)
-mito_test_driver(tests/mito.lib/mesh/tetra_2D_rectangle.cc)
-mito_test_driver(tests/mito.lib/mesh/tetra_3D.cc)
-mito_test_driver(tests/mito.lib/mesh/tetra_3D_cube.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_segment_1D.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_triangle_2D.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_triangle_3D.cc)
+mito_test_driver(tests/mito.lib/mesh/tetra_tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_zero_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_multiple_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/erase_element.cc)
@@ -74,7 +79,8 @@ endif()
 
 # topology
 mito_test_driver(tests/mito.lib/topology/cell_edges.cc)
-mito_test_driver(tests/mito.lib/topology/erase_element.cc)
+mito_test_driver(tests/mito.lib/topology/erase_element_check_vertices.cc)
+mito_test_driver(tests/mito.lib/topology/erase_element_check_segments.cc)
 mito_test_driver(tests/mito.lib/topology/flip_diagonal.cc)
 mito_test_driver(tests/mito.lib/topology/oriented_simplex_segment.cc)
 mito_test_driver(tests/mito.lib/topology/oriented_simplex_triangle.cc)
@@ -84,19 +90,23 @@ mito_test_driver(tests/mito.lib/topology/segment.cc)
 mito_test_driver(tests/mito.lib/topology/simplices.cc)
 
 # utilities
-mito_test_driver(tests/mito.lib/utilities/segmented_container.cc)
-mito_test_driver(tests/mito.lib/utilities/segmented_container_iterator.cc)
+mito_test_driver(tests/mito.lib/utilities/repository.cc)
+mito_test_driver(tests/mito.lib/utilities/repository_iterator.cc)
+mito_test_driver(tests/mito.lib/utilities/segmented_vector.cc)
+mito_test_driver(tests/mito.lib/utilities/segmented_vector_move.cc)
+mito_test_driver(tests/mito.lib/utilities/segmented_vector_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 
 # quadrature
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_triangle.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_tetrahedron.cc)
+mito_test_driver(tests/mito.lib/quadrature/quadrature_segment_1D.cc)
+mito_test_driver(tests/mito.lib/quadrature/quadrature_triangle_2D.cc)
+# mito_test_driver(tests/mito.lib/quadrature/quadrature_square_3D.cc) #TOFIX
 
 # integration
 # mito_test_driver(tests/mito.lib/integration/divergence_theorem.cc) #TOFIX
-mito_test_driver(tests/mito.lib/integration/quadrature_1D.cc)
-mito_test_driver(tests/mito.lib/integration/quadrature_2D.cc)
 mito_test_driver(tests/mito.lib/integration/quadrature_load_mesh_2D.cc)
 # mito_test_driver(tests/mito.lib/integration/quadrature_flip_segment_3D.cc) #TOFIX
 

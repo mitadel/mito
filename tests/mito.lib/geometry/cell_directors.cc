@@ -10,28 +10,19 @@
 
 TEST(Director, Segment)
 {
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Euclidean coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
-    // create two nodes
-    auto vertex_0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
-    auto vertex_1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
+    // build two nodes
+    auto vertex_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
+    auto vertex_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
 
-    // create a segment
-    auto segment = topology.segment({ vertex_0, vertex_1 });
+    // build a segment embedded in 2D
+    auto segment = mito::geometry::segment<2>({ vertex_0, vertex_1 });
 
     // compute the cell directors
-    // get the directors of the tetrahedron
-    auto [_, directors] = mito::geometry::directors(segment, geometry, coord_system);
+    // get the directors of the segment
+    auto [_, directors] = mito::geometry::directors(segment, coord_system);
 
     // check that the barycenter position is correct
     EXPECT_TRUE((directors[0] == mito::vector_t<2>{ 1.0, 0.0 }));

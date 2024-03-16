@@ -55,9 +55,10 @@ namespace mito::io::vtk {
 
     template <class cellT, int D, geometry::CoordinateType coordT>
     auto createVtkUnstructuredGrid(
-        const mito::mesh::mesh_t<cellT, D> & mesh,
+        const mito::mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<D, coordT> & coordinate_system)
         -> vtkSmartPointer<vtkUnstructuredGrid>
+    requires(mesh::mesh_t<cellT>::dim == D)
     {
         // vtk unstructured grid
         auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
@@ -76,18 +77,18 @@ namespace mito::io::vtk {
         // loop over the cells
         for (const auto & cell : mesh.cells()) {
             // create vtk cell
-            auto cellVtk = vtkCellPointer<cellT>();
+            auto cellVtk = vtkCellPointer<typename cellT::simplex_type>();
 
             // local index for the points of the cell
             auto indexLocalPointVtk = 0;
 
-            // retrieve vertices of the cell
-            auto vertices = cell->vertices();
+            // retrieve nodes of the cell
+            auto nodes = cell.nodes();
 
-            // loop over the vertices of the cell
-            for (const auto & vertex : vertices) {
+            // loop over the nodes of the cell
+            for (const auto & node : nodes) {
                 // retrieve the corresponding point
-                const auto pPoint = mesh.geometry().point(vertex);
+                const auto pPoint = node.point();
                 // if the point is not present in the map
                 if (mapPoints.count(pPoint) == 0) {
                     // insert the new vtk point
@@ -131,7 +132,7 @@ namespace mito::io::vtk {
 
     template <class cellT, int D, geometry::CoordinateType coordT>
     auto writer(
-        std::string fileName, const mito::mesh::mesh_t<cellT, D> & mesh,
+        std::string fileName, const mito::mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<D, coordT> & coordinate_system) -> void
     {
         // create vtk unstructured grid

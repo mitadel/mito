@@ -44,6 +44,13 @@ namespace mito::topology {
         inline auto simplex(orientation_t orientation) -> simplex_t<0>
         requires(N == 0);
 
+        // return a simplex with vertices {vertices} (either create a new simplex if such
+        // simplex does not exist in the factory or return the existing representative of the
+        // class of equivalence of simplices with this composition)
+        template <int N>
+        inline auto simplex(const vertex_simplex_composition_t<N> & vertices) -> simplex_t<N>
+        requires(N >= 1 && N <= 3);
+
         // instantiate a vertex
         inline auto vertex() -> vertex_t;
 
@@ -65,25 +72,6 @@ namespace mito::topology {
         // instantiate a tetrahedron
         inline auto tetrahedron(const vertex_simplex_composition_t<3> & vertices) -> simplex_t<3>;
 
-        template <int D>
-        inline auto simplices() const
-            -> const oriented_simplex_factory_t<D>::oriented_simplex_repository_t &;
-
-        // returns whether the oriented simplex exists in the factory
-        template <int N>
-        inline auto exists(const simplex_composition_t<N> & simplices) const -> bool;
-
-        // returns whether the segment exists in the factory
-        inline auto exists(const vertex_simplex_composition_t<1> & vertices) const -> bool;
-
-        // returns whether there exists the flipped oriented simplex in the factory
-        template <int N>
-        inline auto exists_flipped(const simplex_t<N> & simplex) const -> bool;
-
-        // returns the simplex with opposite orientation
-        template <int N>
-        inline auto flip(const simplex_t<N> & simplex) -> simplex_t<N>;
-
       private:
         template <int N>
         inline auto _erase(simplex_t<N> & simplex) -> void
@@ -102,6 +90,25 @@ namespace mito::topology {
         inline auto _get_factory() const noexcept -> const oriented_simplex_factory_t<N> &;
 
       public:
+        // returns the number of simplices of dimension {N}
+        template <int N>
+        inline auto n_simplices() const -> int;
+
+        // returns whether the oriented simplex exists in the factory
+        template <int N>
+        inline auto exists(const simplex_composition_t<N> & simplices) const -> bool;
+
+        // returns whether the segment exists in the factory
+        inline auto exists(const vertex_simplex_composition_t<1> & vertices) const -> bool;
+
+        // returns whether there exists the flipped oriented simplex in the factory
+        template <int N>
+        inline auto exists_flipped(const simplex_t<N> & simplex) const -> bool;
+
+        // returns the simplex with opposite orientation
+        template <int N>
+        inline auto flip(const simplex_t<N> & simplex) -> simplex_t<N>;
+
         template <int N>
         inline auto erase(simplex_t<N> & simplex) -> void;
 

@@ -107,7 +107,7 @@ namespace mito::topology {
             // loop on the vertices of the second subsimplex
             for (const auto & vertex : subsimplex1->footprint()->vertices()) {
                 // search for {vertex} in the vertex collection {vertices}
-                auto found = std::find(std::begin(vertices), std::end(vertices), vertex);
+                auto found = std::ranges::find(vertices, vertex);
                 // if we have not collected {vertex} yet
                 if (found == std::end(vertices)) {
                     // add {vertex} to the collection

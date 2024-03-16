@@ -10,10 +10,9 @@
 
 
 // QUESTION: should these methods belong to the interface of class {Mesh}?
-template <class meshT, mito::geometry::CoordinateType coordT>
+template <class meshT>
 auto
-mito::mesh::metis::Partitioner<meshT, coordT>::_populate_vertices_map(const mesh_type & mesh)
-    -> auto
+mito::mesh::metis::Partitioner<meshT>::_populate_vertices_map(const mesh_type & mesh) -> auto
 {
     // a set collecting all the vertices (without repeated entries)
     std::set<vertex_type> vertex_collection;
@@ -22,7 +21,7 @@ mito::mesh::metis::Partitioner<meshT, coordT>::_populate_vertices_map(const mesh
     // loop on cells in {mesh}
     for (const auto & cell : mesh.cells()) {
         // append vertices of current cell to {vertex_collection}
-        cell->vertices(vertex_collection);
+        cell.simplex()->vertices(vertex_collection);
     }
 
     // a vector with all vertices
@@ -40,43 +39,10 @@ mito::mesh::metis::Partitioner<meshT, coordT>::_populate_vertices_map(const mesh
     return vertex_to_id;
 }
 
-template <class meshT, mito::geometry::CoordinateType coordT>
+template <class meshT>
 auto
-mito::mesh::metis::Partitioner<meshT, coordT>::_get_ordered_mesh_cells(
-    const mesh_type & mesh, const coordinate_system_type & coordinate_system) -> auto
-{
-    // extract the geometric information from mesh
-    const auto & geometry = mesh.geometry();
-
-    // define operator< for cells, given a geometry
-    auto cell_compare = [&geometry, &coordinate_system](
-                            const typename mesh_type::cell_type & cell_a,
-                            const typename mesh_type::cell_type & cell_b) -> bool {
-        // get the barycenter of {cell_a}
-        auto barycenter_a = mito::geometry::barycenter(cell_a, geometry, coordinate_system);
-        // get the barycenter of {cell_a}
-        auto barycenter_b = mito::geometry::barycenter(cell_b, geometry, coordinate_system);
-        // return lexicographical comparison of the barycenters
-        return barycenter_a < barycenter_b;
-    };
-
-    // an ordered set of cells
-    std::set<typename mesh_type::cell_type, decltype(cell_compare)> cells(cell_compare);
-
-    // insert mesh cells in ordered set
-    for (const auto & cell : mesh.cells()) {
-        cells.insert(cell);
-    }
-
-    // return ordered set of cells
-    return cells;
-}
-
-template <class meshT, mito::geometry::CoordinateType coordT>
-auto
-mito::mesh::metis::Partitioner<meshT, coordT>::_populate_element_connectivity(
-    const auto & cells, const auto & vertex_to_id, const geometry_type & geometry,
-    const coordinate_system_type & coordinate_system) -> auto
+mito::mesh::metis::Partitioner<meshT>::_populate_element_connectivity(
+    const auto & cells, const auto & vertex_to_id) -> auto
 {
     // get the total number of cells in the mesh
     int n_elements = std::size(cells);
@@ -87,36 +53,18 @@ mito::mesh::metis::Partitioner<meshT, coordT>::_populate_element_connectivity(
     // the element connectivity
     std::vector<int> element_connectivity(n_elements * n_vertices_per_element);
 
-    // define operator< for vertices, given a geometry
-    auto vertex_compare = [&geometry, &coordinate_system](
-                              const vertex_type & vertex_a, const vertex_type & vertex_b) -> bool {
-        auto position_a = coordinate_system.coordinates(geometry.point(vertex_a));
-        auto position_b = coordinate_system.coordinates(geometry.point(vertex_b));
-        // return lexicographical comparison of the positions
-        return position_a < position_b;
-    };
-    // a set to store the (lexicographically ordered) vertices of a cell
-    // note: the lexicographic ordering guarantees that all processors agree on the mesh partitions
-    std::set<vertex_type, decltype(vertex_compare)> vertices(vertex_compare);
-
     // cell counter
     int e = 0;
     // loop on cells
     for (const auto & cell : cells) {
-        // spatially order cell vertices
-        for (const auto & vertex : cell->vertices()) {
-            vertices.insert(vertex);
-        }
-        // vertices counter
+        // node counter
         int v = 0;
-        for (const auto & vertex : vertices) {
+        for (const auto & node : cell.nodes()) {
             // populate element connectivity with the id of each of its vertices
-            element_connectivity[n_vertices_per_element * e + v] = vertex_to_id.at(vertex);
+            element_connectivity[n_vertices_per_element * e + v] = vertex_to_id.at(node.vertex());
             // increment
             ++v;
         }
-        // clear cell vertices
-        vertices.clear();
 
         // increment
         ++e;
@@ -126,9 +74,9 @@ mito::mesh::metis::Partitioner<meshT, coordT>::_populate_element_connectivity(
     return element_connectivity;
 }
 
-template <class meshT, mito::geometry::CoordinateType coordT>
+template <class meshT>
 auto
-mito::mesh::metis::Partitioner<meshT, coordT>::_metis_paint_partition(
+mito::mesh::metis::Partitioner<meshT>::_metis_paint_partition(
     std::vector<int> & element_connectivity, int n_vertices, int n_elements, int n_partitions)
     -> auto
 {
@@ -169,13 +117,13 @@ mito::mesh::metis::Partitioner<meshT, coordT>::_metis_paint_partition(
     return painting;
 }
 
-template <class meshT, mito::geometry::CoordinateType coordT>
+template <class meshT>
 auto
-mito::mesh::metis::Partitioner<meshT, coordT>::_create_partitioned_mesh(
-    const mesh_type & mesh, const auto & cells, const auto & painting, int n_rank) -> mesh_type
+mito::mesh::metis::Partitioner<meshT>::_create_partitioned_mesh(
+    const auto & cells, const auto & painting, int n_rank) -> mesh_type
 {
     // an empty mesh of same type of the original mesh
-    auto partitioned_mesh = mesh_type(mesh.geometry());
+    mesh_type partitioned_mesh;
 
     // fill in partitioned mesh with the element with painting {n_rank}
     int e = 0;
@@ -191,37 +139,34 @@ mito::mesh::metis::Partitioner<meshT, coordT>::_create_partitioned_mesh(
     return partitioned_mesh;
 }
 
-template <class meshT, mito::geometry::CoordinateType coordT>
+template <class meshT>
 auto
-mito::mesh::metis::Partitioner<meshT, coordT>::partition(
-    const mesh_type & mesh, const coordinate_system_type & coordinate_system, int n_partitions,
-    int n_rank) -> mesh_type
+mito::mesh::metis::Partitioner<meshT>::partition(
+    const mesh_type & mesh, int n_partitions, int n_rank) -> mesh_type
 {
     // if it is a single partition, return a copy of the mesh
     if (n_partitions == 1) {
-        // make a copy of the original mesh
-        mesh_type mesh_copy(mesh.geometry());
+        // instantiate an empty mesh
+        mesh_type mesh_copy;
 
         // loop over all the cells of the original mesh
         for (const auto & cell : mesh.cells()) {
-            // populate the copy
-            mesh_copy.insert(cell);
+            // populate {mesh_copy} with identical cells to {mesh}
+            mesh_copy.insert(cell.nodes());
         }
 
-        // all done
+        // return a copy of the original mesh
         return mesh_copy;
     }
 
     // populate a map between vertices and a continuous integer id = 0, ..., n_vertices - 1
     auto vertex_to_id = _populate_vertices_map(mesh);
 
-    // get the mesh cells in with a lexicographic order on the barycenter
-    // note: the lexicographic ordering guarantees that all processors agree on the mesh partitions
-    auto cells = _get_ordered_mesh_cells(mesh, coordinate_system);
+    // get the mesh cells
+    auto & cells = mesh.cells();
 
     // populate elements connectivity
-    auto connectivity =
-        _populate_element_connectivity(cells, vertex_to_id, mesh.geometry(), coordinate_system);
+    auto connectivity = _populate_element_connectivity(cells, vertex_to_id);
 
     // get the total number of cells in the mesh
     int n_elements = std::size(cells);
@@ -233,7 +178,7 @@ mito::mesh::metis::Partitioner<meshT, coordT>::partition(
     auto painting = _metis_paint_partition(connectivity, n_vertices, n_elements, n_partitions);
 
     // create a subdivision of {mesh} with the computed {painting}
-    auto partitioned_mesh = _create_partitioned_mesh(mesh, cells, painting, n_rank);
+    auto partitioned_mesh = _create_partitioned_mesh(cells, painting, n_rank);
 
     // all done
     return partitioned_mesh;

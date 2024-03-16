@@ -11,6 +11,12 @@
 
 namespace mito::utilities {
 
+    // forward declaration of segmented container iterator equality
+    template <class SegmentedContainerT>
+    constexpr auto operator==(
+        const SegmentedContainerIterator<SegmentedContainerT> & it1,
+        const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
+
     template <class SegmentedContainerT>
     class SegmentedContainerIterator {
         // types
@@ -19,71 +25,75 @@ namespace mito::utilities {
         using segmented_container_type = SegmentedContainerT;
         // me
         using iterator = SegmentedContainerIterator<segmented_container_type>;
+        // a reference to me
         using iterator_reference = iterator &;
         // what I point to
-        using pointer = typename SegmentedContainerT::pointer;
-        using reference = typename SegmentedContainerT::reference;
+        using pointer_type = typename segmented_container_type::pointer_type;
+        // the resource stored
+        using resource_type = typename segmented_container_type::resource_type;
+
+        // the segmented allocator type
+        using segmented_type = typename segmented_container_type::resource_collection_type;
+
+        // a reference to an iterator on the segmented allocator
+        using segmented_iterator_type = segmented_type::iterator;
+        using segmented_iterator_const_reference_type = segmented_type::iterator_const_reference;
 
         // metamethods
       public:
         // constructor
         constexpr SegmentedContainerIterator(
-            pointer ptr, pointer segment_end, int segment_size, pointer end) :
-            _ptr(ptr),
-            _segment_end(segment_end),
-            _segment_size(segment_size),
-            _end(end)
-        {}
+            segmented_iterator_const_reference_type segmented_iterator) :
+            _segmented_iterator(segmented_iterator)
+        {
+            if (_segmented_iterator.ptr() != std::end(_segmented_iterator)) {
+                // if you found an invalid element
+                if (!_segmented_iterator->is_valid()) {
+                    // move on to the next one
+                    operator++();
+                }
+            }
+        }
 
         // iterator protocol
       public:
-        // dereference
-        constexpr auto operator*() const -> reference
+        // dereference (case reference-counted object)
+        constexpr auto operator*() const -> pointer_type
+        requires(ReferenceCountedObject<resource_type>)
         {
-            // easy enough
-            return *_ptr;
+            // wrap the resource in a shared pointer and return it
+            return pointer_type(_segmented_iterator.ptr());
         }
 
-        // accessors
-        constexpr auto ptr() const noexcept -> pointer
+        // dereference (case non reference-counted object)
+        constexpr auto operator*() const -> resource_type &
+        requires(!ReferenceCountedObject<resource_type>)
         {
-            // easy enough
-            return _ptr;
-        }
-
-        // accessors
-        constexpr auto end() const noexcept -> pointer
-        {
-            // easy enough
-            return _end;
+            // return the resource
+            return *(_segmented_iterator.ptr());
         }
 
         // operator->
-        constexpr auto operator->() const noexcept -> pointer
+        constexpr auto operator->() const noexcept -> pointer_type
         {
             // return the pointer
-            return ptr();
+            return _segmented_iterator.ptr();
         }
 
         // arithmetic: prefix
         constexpr auto operator++() -> iterator_reference
         {
-            // move on to the next item
-            ++_ptr;
+            // increment the iterator to the segmented allocator
+            ++_segmented_iterator;
 
-            // if you reached the end of the container
-            if (_ptr == _end) {
-                // return the end
+            if (_segmented_iterator.ptr() == std::end(_segmented_iterator)) {
                 return *this;
             }
 
-            // if you reached the end of the segment
-            if (_ptr == _segment_end) {
-                // retrieve the location of the next segment (which is left behind
-                // by the segmented container right at the end of the current segment)
-                _ptr = *(reinterpret_cast<const pointer *>(_ptr));
-                // take note of the end of the next segment
-                _segment_end = _ptr + _segment_size;
+            // if you found an invalid element
+            if (!_segmented_iterator->is_valid()) {
+                // move on to the next one
+                return operator++();
             }
 
             // all done
@@ -96,23 +106,20 @@ namespace mito::utilities {
             // make a copy of me
             auto clone = *this;
             // increment me
-            ++(*this);
+            ++_segmented_iterator;
             // and return the clone
             return clone;
         }
 
         // implementation details: data
       private:
-        // pointer to an element of the segments
-        pointer _ptr;
-        // pointer to the end of the current segment
-        pointer _segment_end;
-        // the size of a segment
-        const int _segment_size;
-        // pointer to the end of the segmented container
-        // (this is necessary as the end of the container may not coincide with the end of the
-        // allocated memory)
-        pointer _end;
+        // a segmented allocator iterator
+        segmented_iterator_type _segmented_iterator;
+
+        // befriend operator==
+        friend constexpr auto operator== <SegmentedContainerT>(
+            const SegmentedContainerIterator<SegmentedContainerT> & it1,
+            const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
 
         // default metamethods
       public:
@@ -134,8 +141,8 @@ namespace mito::utilities {
         const SegmentedContainerIterator<SegmentedContainerT> & it1,
         const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool
     {
-        // iterators are equal if they point to the same segmented container
-        return it1.ptr() == it2.ptr();
+        // iterators are equal if they point to the same thing
+        return it1._segmented_iterator == it2._segmented_iterator;
     }
 
     // and not

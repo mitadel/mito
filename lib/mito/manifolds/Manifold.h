@@ -10,20 +10,20 @@
 
 namespace mito::manifolds {
 
-    template <
-        geometry::CoordinateType coordsT, class cellT /* the type of cell */,
-        int D /* spatial dimension */>
+    template <class cellT, geometry::CoordinateType coordsT>
     class Manifold {
 
       private:
-        // typedef for vertex
-        using vertex_type = topology::vertex_t;
+        // typedef for node
+        using node_type = cellT::node_type;
         // the coordinates type
         static constexpr geometry::CoordinateType coords_type = coordsT;
-        // the dimension of the manifold (that is the order of the cell)
-        static constexpr int N = topology::order<cellT>();
+        // the physical dimension of the manifold (that is that of the cell)
+        static constexpr int D = cellT::dim;
+        // the dimension of the manifold (that is that of the cell)
+        static constexpr int N = cellT::order;
         // the dimension of the parametric space
-        static constexpr int parametricDim = parametric_dim<cellT>();
+        static constexpr int parametricDim = parametric_dim<typename cellT::simplex_type>();
         // typedef for a point in parametric coordinates
         using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
 
@@ -33,7 +33,7 @@ namespace mito::manifolds {
         // typedef for cell type
         using cell_type = cellT;
         // typedef for mesh type
-        using mesh_type = mesh::mesh_t<cell_type, D>;
+        using mesh_type = mesh::mesh_t<cell_type>;
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
         // typedef for a set of coordinates
@@ -94,21 +94,21 @@ namespace mito::manifolds {
 
         constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
-        constexpr auto coordinates(const vertex_type & v) const -> const coordinates_type &
+        constexpr auto coordinates(const node_type & v) const -> const coordinates_type &
         {
             // get the coordinates of the point attached to vertex {v}
-            return _coordinate_system.coordinates(_mesh.geometry().point(v));
+            return _coordinate_system.coordinates(v.point());
         }
 
         constexpr auto parametrization(
             const cell_type & cell, const parametric_point_type & point) const -> coordinates_type
         {
             coordinates_type coord;
-            // loop on the element vertices
+            // loop on the element nodes
             int v = 0;
-            for (const auto & vertex : cell->vertices()) {
-                const auto & vertexCoordinates = coordinates(vertex);
-                coord += point[v] * vertexCoordinates;
+            for (const auto & node : cell.nodes()) {
+                const auto & nodeCoordinates = coordinates(node);
+                coord += point[v] * nodeCoordinates;
 
                 ++v;
             }
@@ -127,8 +127,8 @@ namespace mito::manifolds {
                 std::cout << e;
                 // and the coordinates of the vertices
                 std::cout << "Vertices: " << std::endl;
-                auto vertices = e->vertices();
-                for (const auto & v : vertices) {
+                auto nodes = e.nodes();
+                for (const auto & v : nodes) {
                     std::cout << coordinates(v) << std::endl;
                 }
                 std::cout << std::endl;
@@ -176,8 +176,7 @@ namespace mito::manifolds {
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell and the point where they stem from
-            auto [point, directors] =
-                mito::geometry::directors(cell, _mesh.geometry(), _coordinate_system);
+            auto [point, directors] = mito::geometry::directors(cell, _coordinate_system);
             // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
             // contracted with the cell directors
             auto volume = 1.0 / pyre::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
@@ -192,8 +191,8 @@ namespace mito::manifolds {
         const coordinate_system_type & _coordinate_system;
     };
 
-    template <geometry::CoordinateType coordsT, class cellT, int D>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<coordsT, cellT, D> & manifold)
+    template <class cellT, geometry::CoordinateType coordsT>
+    std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, coordsT> & manifold)
     {
         // print the manifold
         manifold.print();

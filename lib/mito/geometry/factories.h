@@ -10,11 +10,19 @@
 
 namespace mito::geometry {
 
-    // factory for coordinates from brace-enclosed initializer list
+    // factory for coordinates from brace-enclosed initializer list (case D > 1)
     template <CoordinateType coordT = EUCLIDEAN, int D>
     constexpr auto coordinates(mito::scalar_t (&&coords)[D])
+    requires(D > 1)
     {
         return coordinates_t<D, coordT>(std::move(coords));
+    }
+
+    // factory for coordinates from brace-enclosed initializer list (case D = 1)
+    template <CoordinateType coordT = EUCLIDEAN>
+    constexpr auto coordinates(mito::scalar_t && coords)
+    {
+        return coordinates_t<1, coordT>(std::move(coords));
     }
 
     // factory for coordinate system
@@ -31,24 +39,52 @@ namespace mito::geometry {
         return utilities::Singleton<point_cloud_t<D>>::GetInstance();
     }
 
-    // geometry factory
-    template <int D>
-    auto geometry(topology::topology_t & topology, point_cloud_t<D> & point_cloud)
-        -> geometry_t<D> &
-    {
-        return utilities::Singleton<geometry_t<D>>::GetInstance(topology, point_cloud);
-    }
-
     // node factory
     template <int D, CoordinateType coordT>
     constexpr auto node(
-        geometry_t<D> & geometry, coordinate_system_t<D, coordT> & coordinate_system,
-        const coordinates_t<D, coordT> & coords) -> topology::vertex_t
+        coordinate_system_t<D, coordT> & coordinate_system, const coordinates_t<D, coordT> & coords)
+        -> node_t<D>
     {
-        // create and place two points
-        auto point = geometry.point_cloud().point();
+        // fetch the point cloud
+        auto & point_cloud = mito::geometry::point_cloud<D>();
+        // instantiate a point
+        auto point = point_cloud.point();
+        // place it in space
         coordinate_system.place(point, coords);
-        return geometry.node(point);
+        // instantiate a vertex
+        auto vertex = mito::topology::vertex();
+        // instantiate a node binding a vertex to a point
+        return node_t<D>(vertex, point);
+    }
+
+    // segment factory
+    template <int D>
+    constexpr auto segment(typename geometric_simplex_t<1, D>::nodes_type && nodes)
+        -> geometric_simplex_t<1, D>
+    requires(D >= 1)
+    {
+        // all done
+        return geometric_simplex_t<1, D>(std::move(nodes));
+    }
+
+    // triangle factory
+    template <int D>
+    constexpr auto triangle(typename geometric_simplex_t<2, D>::nodes_type && nodes)
+        -> geometric_simplex_t<2, D>
+    requires(D >= 2)
+    {
+        // all done
+        return geometric_simplex_t<2, D>(std::move(nodes));
+    }
+
+    // tetrahedron factory
+    template <int D>
+    constexpr auto tetrahedron(typename geometric_simplex_t<3, D>::nodes_type && nodes)
+        -> geometric_simplex_t<3, D>
+    requires(D >= 3)
+    {
+        // all done
+        return geometric_simplex_t<3, D>(std::move(nodes));
     }
 }
 

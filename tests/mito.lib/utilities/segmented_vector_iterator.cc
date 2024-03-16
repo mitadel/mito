@@ -8,7 +8,7 @@
 #include <mito/utilities.h>
 
 
-class Resource : public mito::utilities::Shareable {
+class Resource : public mito::utilities::Invalidatable {
   public:
     Resource(int foo) : _foo(foo) {}
 
@@ -19,27 +19,26 @@ class Resource : public mito::utilities::Shareable {
 };
 
 // the resource type
-using resource_t = mito::utilities::shared_ptr<Resource>;
+using resource_t = Resource;
 
 
-// TOFIX: these tests now really test Repository. Rename the tests
-TEST(Utilities, SegmentedContainerIterator)
+TEST(Utilities, RepositoryIterator)
 {
-    // instantiate a repository of {Resource} resources
-    mito::utilities::repository_t<resource_t> collection(3 /*segment size */);
+    // instantiate a segmented vector of {resource_t} resources
+    mito::utilities::segmented_vector_t<resource_t> collection(3 /*segment size */);
 
     // assert that the container is empty and with no capacity
-    EXPECT_EQ(collection.resources().capacity(), 0);
-    EXPECT_EQ(std::size(collection.resources()), 0);
+    EXPECT_EQ(collection.capacity(), 0);
+    EXPECT_EQ(std::size(collection), 0);
 
     // emplace three simplices in the container
-    auto simplex0 = collection.emplace(0);
-    auto simplex1 = collection.emplace(1);
-    auto simplex2 = collection.emplace(2);
+    auto simplex0 = collection.emplace_back(0);
+    auto simplex1 = collection.emplace_back(1);
+    auto simplex2 = collection.emplace_back(2);
 
     std::vector<int> store_elements;
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -53,7 +52,7 @@ TEST(Utilities, SegmentedContainerIterator)
     collection.erase(simplex1);
 
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 0);
@@ -66,7 +65,7 @@ TEST(Utilities, SegmentedContainerIterator)
     collection.erase(simplex0);
 
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(store_elements[0], 2);
@@ -79,7 +78,7 @@ TEST(Utilities, SegmentedContainerIterator)
 
     // loop on an empty repository
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     EXPECT_EQ(std::size(store_elements), 0);
@@ -87,17 +86,17 @@ TEST(Utilities, SegmentedContainerIterator)
     store_elements.clear();
 
     // emplace 5 reusing the slot of the first erased simplex (1)
-    auto simplex5 = collection.emplace(5);
+    auto simplex5 = collection.emplace_back(5);
     // emplace 6 reusing the slot of the first erased simplex (0)
-    auto simplex6 = collection.emplace(6);
+    auto simplex6 = collection.emplace_back(6);
     // emplace 7 reusing the slot of the first erased simplex (2)
-    auto simplex7 = collection.emplace(7);
+    auto simplex7 = collection.emplace_back(7);
 
     // emplace another simplex (trigger allocation of new segment)
-    auto simplex4 = collection.emplace(4);
+    auto simplex4 = collection.emplace_back(4);
 
     for (const auto & el : collection) {
-        store_elements.emplace_back(el->foo());
+        store_elements.emplace_back(el.foo());
     }
 
     // the order of the values depends on the order elimination of the previous simplices

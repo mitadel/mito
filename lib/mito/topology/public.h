@@ -32,7 +32,7 @@
 #include "factories.h"
 
 // support for flip diagonal
-#include "flipdiagonal.h"
+#include "FlipDiagonal.h"
 
 #endif
 

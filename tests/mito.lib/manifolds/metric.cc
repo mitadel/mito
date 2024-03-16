@@ -11,7 +11,7 @@
 TEST(Manifolds, Metric)
 {
     // a point in space
-    constexpr mito::scalar_t a = 2.0;
+    constexpr auto a = mito::scalar_t{ 2.0 };
     constexpr auto point1 = mito::geometry::coordinates({ a, 0.0 });
 
     // the Euclidean metric

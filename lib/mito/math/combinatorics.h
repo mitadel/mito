@@ -54,8 +54,8 @@ namespace mito::math {
     constexpr auto same_elements(T array1, T array2) -> bool
     {
         // sort the two data structures
-        std::sort(array1.begin(), array1.end());
-        std::sort(array2.begin(), array2.end());
+        std::ranges::sort(array1);
+        std::ranges::sort(array2);
 
         // return whether the two data structures are now identical
         return array1 == array2;

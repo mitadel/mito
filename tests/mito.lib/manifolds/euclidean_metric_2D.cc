@@ -15,15 +15,15 @@ static constexpr auto e_y = mito::e_1<2>;
 
 auto
 area(
-    const auto & w, const mito::geometry::geometry_t<2> & geometry,
+    const auto & w,
     const mito::geometry::coordinate_system_t<2, mito::geometry::EUCLIDEAN> & coordinate_system,
-    const mito::topology::vertex_t & v0, const mito::topology::vertex_t & v1,
-    const mito::topology::vertex_t & v2) -> mito::scalar_t
+    const mito::geometry::node_t<2> & v0, const mito::geometry::node_t<2> & v1,
+    const mito::geometry::node_t<2> & v2) -> mito::scalar_t
 {
     // get vertex coordinates
-    auto x0 = coordinate_system.coordinates(geometry.point(v0));
-    auto x1 = coordinate_system.coordinates(geometry.point(v1));
-    auto x2 = coordinate_system.coordinates(geometry.point(v2));
+    auto x0 = coordinate_system.coordinates(v0.point());
+    auto x1 = coordinate_system.coordinates(v1.point());
+    auto x2 = coordinate_system.coordinates(v2.point());
 
     // build director vectors
     auto director0 = x1 - x0;
@@ -52,32 +52,23 @@ TEST(Manifolds, EuclideanMetric2D)
     // the metric volume element
     constexpr auto w = mito::manifolds::wedge(dx, dy);
 
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points in 2D
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} on the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Euclidean coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
 
     // build nodes of a triangle (counterclockwise order)
-    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
+    auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
+    auto node_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto node_2 = mito::geometry::node(coord_system, { 0.0, 1.0 });
 
     // check that even permutations of the vertices give a positive area
-    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex0, vertex1, vertex2), 0.5);
-    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex1, vertex2, vertex0), 0.5);
-    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex2, vertex0, vertex1), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, coord_system, node_0, node_1, node_2), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, coord_system, node_1, node_2, node_0), 0.5);
+    EXPECT_DOUBLE_EQ(area(w, coord_system, node_2, node_0, node_1), 0.5);
 
     // check that odd permutations of the vertices give a negative area
-    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex0, vertex2, vertex1), -0.5);
-    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex2, vertex1, vertex0), -0.5);
-    EXPECT_DOUBLE_EQ(area(w, geometry, coord_system, vertex1, vertex0, vertex2), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, coord_system, node_0, node_2, node_1), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, coord_system, node_2, node_1, node_0), -0.5);
+    EXPECT_DOUBLE_EQ(area(w, coord_system, node_1, node_0, node_2), -0.5);
 }
 
 

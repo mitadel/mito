@@ -11,7 +11,7 @@
 namespace mito::manifolds {
 
     // class manifold
-    template <geometry::CoordinateType coordsT, class cellT, int D>
+    template <class cellT, geometry::CoordinateType coordsT>
     class Manifold;
 
     // class P-form
