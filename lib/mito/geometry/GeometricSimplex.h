@@ -85,7 +85,7 @@ namespace mito::geometry {
         {}
 
         // move constructor
-        constexpr GeometricSimplex(GeometricSimplex &&) = default;
+        constexpr GeometricSimplex(GeometricSimplex &&) noexcept = default;
 
         // copy constructor
         constexpr GeometricSimplex(const GeometricSimplex &) = default;
@@ -97,7 +97,7 @@ namespace mito::geometry {
         constexpr GeometricSimplex & operator=(const GeometricSimplex &) = default;
 
         // default move assignment operator
-        constexpr GeometricSimplex & operator=(GeometricSimplex &&) = default;
+        constexpr GeometricSimplex & operator=(GeometricSimplex &&) noexcept = default;
 
       private:
         // delete default constructor
@@ -163,7 +163,7 @@ namespace mito::geometry {
         {}
 
         // move constructor
-        constexpr GeometricSimplex(GeometricSimplex &&) = default;
+        constexpr GeometricSimplex(GeometricSimplex &&) noexcept = default;
 
         // copy constructor
         constexpr GeometricSimplex(const GeometricSimplex &) = default;
@@ -175,7 +175,7 @@ namespace mito::geometry {
         constexpr GeometricSimplex & operator=(const GeometricSimplex &) = default;
 
         // default move assignment operator
-        constexpr GeometricSimplex & operator=(GeometricSimplex &&) = default;
+        constexpr GeometricSimplex & operator=(GeometricSimplex &&) noexcept = default;
 
       private:
         // delete default constructor

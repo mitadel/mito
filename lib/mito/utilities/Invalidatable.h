@@ -34,14 +34,14 @@ namespace mito::utilities {
         constexpr Invalidatable(Invalidatable &) = default;
 
         // move constructor
-        constexpr Invalidatable(Invalidatable &&) = default;
+        constexpr Invalidatable(Invalidatable &&) noexcept = default;
 
         // assignment operator
         constexpr Invalidatable & operator=(const Invalidatable &) = default;
         constexpr Invalidatable & operator=(Invalidatable &) = default;
 
         // move assignment operator
-        constexpr Invalidatable & operator=(Invalidatable &&) = default;
+        constexpr Invalidatable & operator=(Invalidatable &&) noexcept = default;
 
         // data members
       private:

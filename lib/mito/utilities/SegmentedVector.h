@@ -43,7 +43,7 @@ namespace mito::utilities {
         SegmentedVector(int segment_size) : _resources(segment_size){};
 
         // default move constructor
-        SegmentedVector(SegmentedVector &&) = default;
+        SegmentedVector(SegmentedVector &&) noexcept = default;
 
         // destructor
         ~SegmentedVector()

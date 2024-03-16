@@ -77,7 +77,7 @@ namespace mito::utilities {
         {}
 
         //  move constructor
-        SegmentedAllocator(SegmentedAllocator && other) :
+        SegmentedAllocator(SegmentedAllocator && other) noexcept :
             _segment_size(other._segment_size),
             _begin(other._begin),
             _end(other._end),
@@ -274,7 +274,7 @@ namespace mito::utilities {
         SegmentedAllocator & operator=(const SegmentedAllocator &) = delete;
 
         // delete move assignment operator
-        SegmentedAllocator & operator=(SegmentedAllocator &&) = delete;
+        SegmentedAllocator & operator=(SegmentedAllocator &&) noexcept = delete;
 
         // the segment size
         const int _segment_size;
