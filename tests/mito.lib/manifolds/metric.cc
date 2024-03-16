@@ -16,7 +16,7 @@ TEST(Manifolds, Metric)
 
     // the Euclidean metric
     constexpr auto euclidean_metric =
-        mito::manifolds::metric<mito::geometry::EUCLIDEAN, 2, 2>::field();
+        mito::manifolds::metric<mito::geometry::CARTESIAN, 2, 2>::field();
     // check that the metric field at a point is the identity
     static_assert(euclidean_metric(point1) == mito::diagonal_matrix_t<2>({ 1.0, 1.0 }));
 

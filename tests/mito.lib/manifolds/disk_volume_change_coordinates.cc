@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates type
-using mito::geometry::EUCLIDEAN;
+using mito::geometry::CARTESIAN;
 // polar coordinates type
 using mito::geometry::POLAR;
 
@@ -41,10 +41,10 @@ area_change_coordinates(std::string mesh_file_name) -> mito::scalar_t
 TEST(Manifolds, Disk)
 {
     // compute the area in polar coordinates on a cartesian mesh
-    auto area_polar = area_change_coordinates<EUCLIDEAN, POLAR>("disk_cartesian.summit");
+    auto area_polar = area_change_coordinates<CARTESIAN, POLAR>("disk_cartesian.summit");
 
     // compute the area in polar coordinates on a cartesian mesh
-    auto area_cartesian = area_change_coordinates<POLAR, EUCLIDEAN>("disk_polar.summit");
+    auto area_cartesian = area_change_coordinates<POLAR, CARTESIAN>("disk_polar.summit");
 
     // expect to get the same result
     EXPECT_DOUBLE_EQ(area_cartesian, area_polar);

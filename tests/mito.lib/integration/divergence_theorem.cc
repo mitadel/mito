@@ -73,7 +73,7 @@ TEST(DivergenceTheorem, Mesh2D)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);

@@ -9,7 +9,7 @@
 
 
 // alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
 TEST(Manifolds, VectorFields)

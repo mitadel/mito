@@ -15,8 +15,8 @@ namespace mito::geometry {
         -> coordinates_t<D, coordT2>;
 
     template <>
-    constexpr auto transform_coordinates<POLAR, 2, EUCLIDEAN>(
-        const coordinates_t<2, EUCLIDEAN> & coordinates) -> coordinates_t<2, POLAR>
+    constexpr auto transform_coordinates<POLAR, 2, CARTESIAN>(
+        const coordinates_t<2, CARTESIAN> & coordinates) -> coordinates_t<2, POLAR>
     {
         scalar_t x = coordinates[0];
         scalar_t y = coordinates[1];
@@ -26,8 +26,8 @@ namespace mito::geometry {
     }
 
     template <>
-    constexpr auto transform_coordinates<EUCLIDEAN, 2, POLAR>(
-        const coordinates_t<2, POLAR> & coordinates) -> coordinates_t<2, EUCLIDEAN>
+    constexpr auto transform_coordinates<CARTESIAN, 2, POLAR>(
+        const coordinates_t<2, POLAR> & coordinates) -> coordinates_t<2, CARTESIAN>
     {
         scalar_t r = coordinates[0];
         scalar_t theta = coordinates[1];

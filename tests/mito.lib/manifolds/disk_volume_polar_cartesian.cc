@@ -35,7 +35,7 @@ TEST(Manifolds, Disk)
     auto area_polar = area<mito::geometry::POLAR>("disk_polar.summit");
 
     // compute the area of the disk parametrized in cartesian coordinates
-    auto area_cartesian = area<mito::geometry::EUCLIDEAN>("disk_cartesian.summit");
+    auto area_cartesian = area<mito::geometry::CARTESIAN>("disk_cartesian.summit");
 
     // expect to get the same result
     EXPECT_DOUBLE_EQ(area_cartesian, area_polar);

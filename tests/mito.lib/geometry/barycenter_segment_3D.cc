@@ -11,7 +11,7 @@
 TEST(Barycenter, Segment3D)
 {
     // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // build two nodes
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0, 1.0 });

@@ -50,7 +50,7 @@ namespace mito::manifolds {
     constexpr auto field(F && f) -> field_t<F>;
 
     // uniform field
-    template <int D, geometry::CoordinateType coordsT = geometry::EUCLIDEAN, class Y>
+    template <int D, geometry::CoordinateType coordsT = geometry::CARTESIAN, class Y>
     constexpr auto uniform_field(const Y & constant)
     {
         return field(
@@ -58,7 +58,7 @@ namespace mito::manifolds {
     }
 
     // the order N identity tensor in D dimensions
-    template <int N, int D, geometry::CoordinateType coordsT = geometry::EUCLIDEAN>
+    template <int N, int D, geometry::CoordinateType coordsT = geometry::CARTESIAN>
     constexpr auto identity_tensor_field = uniform_field<D, coordsT>(mito::identity<N>);
 
     // TOFIX:

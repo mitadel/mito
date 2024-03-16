@@ -25,7 +25,7 @@ TEST(Quadrature, FlipSegment)
     auto & geometry = mito::geometry::geometry(topology, point_cloud);
 
     // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // a segment
     auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0, 0.0 });
@@ -33,7 +33,7 @@ TEST(Quadrature, FlipSegment)
     auto segment0 = topology.segment({ vertex0, vertex1 });
 
     // the integrand
-    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
+    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
     auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // integrate the integrand on {segment0}

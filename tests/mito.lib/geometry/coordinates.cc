@@ -11,11 +11,11 @@
 TEST(Coordinates, Euclidean)
 {
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::EUCLIDEAN>({ 0.0, 1.0 });
-    constexpr auto coord_B = mito::geometry::coordinates<mito::geometry::EUCLIDEAN>({ 1.0, 0.0 });
+    constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::CARTESIAN>({ 0.0, 1.0 });
+    constexpr auto coord_B = mito::geometry::coordinates<mito::geometry::CARTESIAN>({ 1.0, 0.0 });
 
     // the exact value of {coord_A + coord_B} / 2
-    constexpr auto coord_C = mito::geometry::coordinates<mito::geometry::EUCLIDEAN>({ 0.5, 0.5 });
+    constexpr auto coord_C = mito::geometry::coordinates<mito::geometry::CARTESIAN>({ 0.5, 0.5 });
 
     // compute {coord_A + coord_B} / 2.0
     constexpr auto coord_D = (coord_A + coord_B) / 2.0;

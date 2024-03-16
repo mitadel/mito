@@ -11,7 +11,7 @@
 TEST(Tetra, Triangle3D)
 {
     // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // an empty mesh of triangles in 3D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<3>>();
