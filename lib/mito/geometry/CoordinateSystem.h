@@ -57,7 +57,7 @@ namespace mito::geometry {
             // record the new point-coordinates pair
             auto ret = _coordinates_map.emplace(point.id(), coord);
 
-            // if the point was not insterted, then it is a duplicate
+            // if the point was not inserted, then it is a duplicate
             if (ret.second == false) {
                 // report
                 pyre::journal::firewall_t firewall("geometry::CoordinateSystem::place");
