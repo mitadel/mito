@@ -46,7 +46,7 @@ namespace mito::utilities {
             segmented_iterator_const_reference_type segmented_iterator) :
             _segmented_iterator(segmented_iterator)
         {
-            if (_segmented_iterator.ptr() != _segmented_iterator.end()) {
+            if (_segmented_iterator.ptr() != std::end(_segmented_iterator)) {
                 // if you found an invalid element
                 if (!_segmented_iterator->is_valid()) {
                     // move on to the next one
@@ -86,7 +86,7 @@ namespace mito::utilities {
             // increment the iterator to the segmented allocator
             ++_segmented_iterator;
 
-            if (_segmented_iterator.ptr() == _segmented_iterator.end()) {
+            if (_segmented_iterator.ptr() == std::end(_segmented_iterator)) {
                 return *this;
             }
 
@@ -117,7 +117,7 @@ namespace mito::utilities {
         segmented_iterator_type _segmented_iterator;
 
         // befriend operator==
-        friend constexpr auto operator==<SegmentedContainerT>(
+        friend constexpr auto operator== <SegmentedContainerT>(
             const SegmentedContainerIterator<SegmentedContainerT> & it1,
             const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
 

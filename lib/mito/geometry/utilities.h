@@ -122,8 +122,8 @@ namespace mito::geometry {
         // concatenate in {nodes} the nodes of the two simplices
         using node_type = node_t<D>;
         std::vector<node_type> nodes;
-        nodes.insert(nodes.begin(), simplex_0.nodes().begin(), simplex_0.nodes().end());
-        nodes.insert(nodes.begin(), simplex_1.nodes().begin(), simplex_1.nodes().end());
+        nodes.insert(std::begin(nodes), std::begin(simplex_0.nodes()), std::end(simplex_0.nodes()));
+        nodes.insert(std::begin(nodes), std::begin(simplex_1.nodes()), std::end(simplex_1.nodes()));
 
         // build the new geometric simplices and return them
         return { geometric_simplex<D>(flipped_simplex_pair.first, nodes),
