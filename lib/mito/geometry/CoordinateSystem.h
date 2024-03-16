@@ -107,8 +107,8 @@ namespace mito::geometry {
         }
 
         // support for ranged for loops
-        inline auto begin() const { return std::cbegin(_coordinates_map); }
-        inline auto end() const { return std::cend(_coordinates_map); }
+        inline auto begin() const { return std::begin(_coordinates_map); }
+        inline auto end() const { return std::end(_coordinates_map); }
 
       private:
         // the coordinates of all points
