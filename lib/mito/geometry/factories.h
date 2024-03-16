@@ -64,7 +64,7 @@ namespace mito::geometry {
     requires(D >= 1)
     {
         // all done
-        return geometric_simplex_t<1, D>(nodes);
+        return geometric_simplex_t<1, D>(std::move(nodes));
     }
 
     // triangle factory
@@ -74,7 +74,7 @@ namespace mito::geometry {
     requires(D >= 2)
     {
         // all done
-        return geometric_simplex_t<2, D>(nodes);
+        return geometric_simplex_t<2, D>(std::move(nodes));
     }
 
     // tetrahedron factory
@@ -84,7 +84,7 @@ namespace mito::geometry {
     requires(D >= 3)
     {
         // all done
-        return geometric_simplex_t<3, D>(nodes);
+        return geometric_simplex_t<3, D>(std::move(nodes));
     }
 }
 
