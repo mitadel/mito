@@ -16,7 +16,7 @@ static constexpr auto e_1 = mito::manifolds::uniform_field<2>(mito::e_1<2>);
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
-TEST(Manifolds, EuclideanGradient)
+TEST(Manifolds, CartesianGradient)
 {
     // a scalar field
     [[maybe_unused]] auto f = mito::manifolds::field(

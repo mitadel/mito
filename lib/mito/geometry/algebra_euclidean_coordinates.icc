@@ -10,7 +10,7 @@
 
 namespace mito::geometry {
 
-    // addition of Euclidean coordinates xA + xB
+    // addition of Cartesian coordinates xA + xB
     template <>
     constexpr auto operator+(
         const Coordinates<1, CARTESIAN> & xA, const Coordinates<1, CARTESIAN> & xB)
@@ -20,7 +20,7 @@ namespace mito::geometry {
         return Coordinates<1, CARTESIAN>(xA._array + xB._array);
     }
 
-    // multiplication of Euclidean coordinates a * xB
+    // multiplication of Cartesian coordinates a * xB
     template <>
     constexpr auto operator*(const scalar_t & a, const Coordinates<1, CARTESIAN> & xB)
         -> Coordinates<1, CARTESIAN>
@@ -39,7 +39,7 @@ namespace mito::geometry {
     }
 
 
-    // addition of Euclidean coordinates xA + xB
+    // addition of Cartesian coordinates xA + xB
     template <>
     constexpr auto operator+(
         const Coordinates<2, CARTESIAN> & xA, const Coordinates<2, CARTESIAN> & xB)
@@ -49,7 +49,7 @@ namespace mito::geometry {
         return Coordinates<2, CARTESIAN>(xA._array + xB._array);
     }
 
-    // multiplication of Euclidean coordinates a * xB
+    // multiplication of Cartesian coordinates a * xB
     template <>
     constexpr auto operator*(const scalar_t & a, const Coordinates<2, CARTESIAN> & xB)
         -> Coordinates<2, CARTESIAN>
@@ -68,7 +68,7 @@ namespace mito::geometry {
     }
 
 
-    // addition of Euclidean coordinates xA + xB
+    // addition of Cartesian coordinates xA + xB
     template <>
     constexpr auto operator+(
         const Coordinates<3, CARTESIAN> & xA, const Coordinates<3, CARTESIAN> & xB)
@@ -78,7 +78,7 @@ namespace mito::geometry {
         return Coordinates<3, CARTESIAN>(xA._array + xB._array);
     }
 
-    // multiplication of Euclidean coordinates a * xB
+    // multiplication of Cartesian coordinates a * xB
     template <>
     constexpr auto operator*(const scalar_t & a, const Coordinates<3, CARTESIAN> & xB)
         -> Coordinates<3, CARTESIAN>

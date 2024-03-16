@@ -52,7 +52,7 @@ TEST(Manifolds, EuclideanMetric2D)
     // the metric volume element
     constexpr auto w = mito::manifolds::wedge(dx, dy);
 
-    // a Euclidean coordinate system in 2D
+    // a Cartesian coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // build nodes of a triangle (counterclockwise order)

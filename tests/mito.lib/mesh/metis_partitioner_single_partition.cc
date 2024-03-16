@@ -15,7 +15,7 @@ using mesh_t = mito::mesh::mesh_t<mito::geometry::triangle_t<2>>;
 
 TEST(MetisPartitioner, Base)
 {
-    // a Euclidean coordinate system in 2D
+    // a Cartesian coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 2D

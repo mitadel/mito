@@ -8,12 +8,12 @@
 #include <mito/geometry.h>
 
 
-TEST(CoordinateSystem, Euclidean)
+TEST(CoordinateSystem, Cartesian)
 {
     // an empty cloud of points in 2D
     auto & point_cloud = mito::geometry::point_cloud<2>();
 
-    // a Euclidean coordinate system in 2D
+    // a Cartesian coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // create and place two points

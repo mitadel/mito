@@ -8,7 +8,7 @@
 #include <mito/geometry.h>
 
 
-TEST(Coordinates, Euclidean)
+TEST(Coordinates, Cartesian)
 {
     // create two sets of coordinates
     constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::CARTESIAN>({ 0.0, 1.0 });

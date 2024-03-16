@@ -61,7 +61,7 @@ TEST(Manifolds, EuclideanMetric3D)
     // the metric volume element
     constexpr auto w = mito::manifolds::wedge(dx, dy, dz);
 
-    // a Euclidean coordinate system in 3D
+    // a Cartesian coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // build nodes of a tetrahedron

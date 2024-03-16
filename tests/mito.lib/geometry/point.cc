@@ -12,7 +12,7 @@ TEST(Point, TestPoint)
 {
     auto & cloud = mito::geometry::point_cloud<2>();
 
-    // a Euclidean coordinate system in 2D
+    // a Cartesian coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // create and place two points

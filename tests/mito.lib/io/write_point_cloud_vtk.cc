@@ -14,7 +14,7 @@ TEST(VtkWriter, WritePointCloudToVtk)
     // an empty point cloud
     auto & cloud = mito::geometry::point_cloud<3>();
 
-    // a Euclidean coordinate system in 3D
+    // a Cartesian coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // add points to the point cloud

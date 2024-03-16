@@ -25,7 +25,7 @@ main()
             (0,0)           (1,0)
         */
 
-    // a Euclidean coordinate system in 2D
+    // a Cartesian coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 2D

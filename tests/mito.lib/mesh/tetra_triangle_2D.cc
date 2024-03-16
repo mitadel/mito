@@ -10,7 +10,7 @@
 
 TEST(Tetra, Triangle2D)
 {
-    // a Euclidean coordinate system in 2D
+    // a Cartesian coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of triangles in 2D
