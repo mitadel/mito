@@ -43,6 +43,12 @@ TEST(Manifolds, Disk)
     // compute the area in polar coordinates on a cartesian mesh
     auto area_polar = area_change_coordinates<EUCLIDEAN, POLAR>("disk_cartesian.summit");
 
+    // compute the area in polar coordinates on a cartesian mesh
+    auto area_cartesian = area_change_coordinates<POLAR, EUCLIDEAN>("disk_polar.summit");
+
+    // expect to get the same result
+    EXPECT_DOUBLE_EQ(area_cartesian, area_polar);
+
     // exact area: the area of a disk with unit radius is {pi}
     auto exact = std::numbers::pi;
 
