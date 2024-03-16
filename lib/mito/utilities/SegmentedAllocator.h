@@ -78,12 +78,12 @@ namespace mito::utilities {
 
         //  move constructor
         SegmentedAllocator(SegmentedAllocator && other) noexcept :
-            _segment_size(other._segment_size),
-            _begin(other._begin),
-            _end(other._end),
-            _end_allocation(other._end_allocation),
-            _n_segments(other._n_segments),
-            _n_elements(other._n_elements),
+            _segment_size(std::move(other._segment_size)),
+            _begin(std::move(other._begin)),
+            _end(std::move(other._end)),
+            _end_allocation(std::move(other._end_allocation)),
+            _n_segments(std::move(other._n_segments)),
+            _n_elements(std::move(other._n_elements)),
             _available_locations(std::move(other._available_locations))
         {
             // invalidate the source
