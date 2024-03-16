@@ -51,11 +51,11 @@ namespace mito::geometry {
         void operator=(CoordinateSystem<D, coordT> &&) noexcept = delete;
 
       public:
-        // place the {point} at location {coord}
-        auto place(const point_type & point, const coordinates_type & coord) -> void
+        // place the point with id {point_id} at location {coord}
+        auto place(const point_id_type & point_id, const coordinates_type & coord) -> void
         {
             // record the new point-coordinates pair
-            auto ret = _coordinates_map.emplace(point.id(), coord);
+            auto ret = _coordinates_map.emplace(point_id, coord);
 
             // if the point was not inserted, then it is a duplicate
             if (ret.second == false) {
@@ -70,6 +70,13 @@ namespace mito::geometry {
 
             // all done
             return;
+        }
+
+        // place the {point} at location {coord}
+        auto place(const point_type & point, const coordinates_type & coord) -> void
+        {
+            // all done
+            return place(point.id(), coord);
         }
 
         // fetch the coordinates at point {point}
