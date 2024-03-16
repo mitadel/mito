@@ -32,6 +32,15 @@ namespace mito::geometry {
         return coordinate_system_t<D, coordT>();
     }
 
+    // factory for building a new coordinate system of coordinate type {coordT2} from an existing
+    // coordinate system of coordinate type {coordT1}
+    template <CoordinateType coordT2, int D, CoordinateType coordT1>
+    constexpr auto coordinate_system(const coordinate_system_t<D, coordT1> & coord_sys)
+        -> coordinate_system_t<D, coordT2>
+    {
+        return coordinate_system_t<D, coordT2>(coord_sys);
+    }
+
     // point cloud factory
     template <int D>
     auto point_cloud() -> point_cloud_t<D> &

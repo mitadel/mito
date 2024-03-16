@@ -34,6 +34,18 @@ namespace mito::geometry {
         // constructor
         CoordinateSystem() : _coordinates_map() {}
 
+        // constructor for change of coordinates
+        template <CoordinateType otherCoordT>
+        CoordinateSystem(const CoordinateSystem<D, otherCoordT> & other_coord_sys) :
+            _coordinates_map()
+        {
+            // loop on the points and coordinates of the other coordinate system
+            for (const auto & [point, coord] : other_coord_sys) {
+                // store the same point with the transformed coordinates
+                place(point, transform_coordinates<coordT>(coord));
+            }
+        }
+
         // destructor
         ~CoordinateSystem() {}
 
