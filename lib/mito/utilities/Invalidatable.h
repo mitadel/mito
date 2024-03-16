@@ -24,7 +24,7 @@ namespace mito::utilities {
         // meta methods
       public:
         // destructor
-        constexpr virtual ~Invalidatable();
+        constexpr virtual ~Invalidatable() = default;
 
         // default constructor
         constexpr Invalidatable();

@@ -27,9 +27,6 @@ mito::utilities::Invalidatable::invalidate() noexcept -> void
     return;
 }
 
-// destructor
-constexpr mito::utilities::Invalidatable::~Invalidatable() {}
-
 // the default constructor
 constexpr mito::utilities::Invalidatable::Invalidatable() : _is_valid(true) {}
 

@@ -91,7 +91,7 @@ namespace mito::geometry {
         constexpr GeometricSimplex(const GeometricSimplex &) = default;
 
         // destructor
-        constexpr ~GeometricSimplex() {}
+        constexpr ~GeometricSimplex() = default;
 
         // default assignment operator
         constexpr GeometricSimplex & operator=(const GeometricSimplex &) = default;
@@ -169,7 +169,7 @@ namespace mito::geometry {
         constexpr GeometricSimplex(const GeometricSimplex &) = default;
 
         // destructor
-        constexpr ~GeometricSimplex() {}
+        constexpr ~GeometricSimplex() = default;
 
         // default assignment operator
         constexpr GeometricSimplex & operator=(const GeometricSimplex &) = default;
