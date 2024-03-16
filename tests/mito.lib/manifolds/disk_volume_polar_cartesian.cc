@@ -11,7 +11,7 @@ template <mito::geometry::CoordinateType coordT>
 auto
 area(std::string mesh_file_name) -> mito::scalar_t
 {
-    // a Euclidean coordinate system in 2D
+    // a {coordT} coordinate system in 2D
     auto coord_system = mito::geometry::coordinate_system<2, coordT>();
 
     // read the mesh

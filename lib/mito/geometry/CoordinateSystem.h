@@ -17,7 +17,7 @@ namespace mito::geometry {
         using point_type = point_t<D>;
         // id type of point
         using point_id_type = utilities::index_t<point_type>;
-        // a point
+        // a set of coordinates
         using coordinates_type = coordinates_t<D, coordT>;
         // a map between points and their coordinates
         using coordinates_map_type = std::map<point_id_type, coordinates_type>;
@@ -29,6 +29,7 @@ namespace mito::geometry {
         static constexpr auto e = pyre::tensor::unit<pyre::tensor::vector_t<D>, I>;
 
       public:
+        // constructor
         CoordinateSystem() : _coordinates_map() {}
 
         // destructor
