@@ -21,7 +21,7 @@ area(std::string mesh_file_name) -> mito::scalar_t
     // create a manifold on {mesh}
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
-    // compute the area of the disk
+    // compute the area of the manifold
     auto area = manifold.volume();
 
     // all done
