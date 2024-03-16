@@ -226,8 +226,8 @@ namespace mito::utilities {
 
             // all done
             return iterator(
-                element /* ptr */, _begin + _segment_size /* segment_end */, _segment_size,
-                _end /* end */);
+                element /* ptr */, std::next(_begin, _segment_size /* segment_end */),
+                _segment_size, _end /* end */);
         }
 
         // erase an element from the container
@@ -253,7 +253,7 @@ namespace mito::utilities {
         {
             // get an iterator to the first element
             return iterator(
-                _begin /* ptr */, _begin + _segment_size /* segment_end */, _segment_size,
+                _begin /* ptr */, std::next(_begin, _segment_size /* segment_end */), _segment_size,
                 _end /* end */);
         }
 

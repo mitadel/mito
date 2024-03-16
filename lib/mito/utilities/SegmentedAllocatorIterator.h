@@ -83,7 +83,7 @@ namespace mito::utilities {
                 // by the segmented container right at the end of the current segment)
                 _ptr = *(reinterpret_cast<const pointer *>(_ptr));
                 // take note of the end of the next segment
-                _segment_end = _ptr + _segment_size;
+                _segment_end = std::next(_ptr, _segment_size);
             }
 
             // all done
