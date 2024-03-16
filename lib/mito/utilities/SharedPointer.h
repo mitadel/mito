@@ -94,10 +94,11 @@ namespace mito::utilities {
     }
 
     template <class resourceT>
-    inline bool operator<(
+    inline auto operator<=>(
         const SharedPointer<resourceT> & lhs, const SharedPointer<resourceT> & rhs)
     {
-        return lhs.id() < rhs.id();
+        // delegate to ids
+        return lhs.id() <=> rhs.id();
     }
 }
 
