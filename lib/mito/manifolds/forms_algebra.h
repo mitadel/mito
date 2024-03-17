@@ -34,6 +34,13 @@ namespace mito::manifolds {
         return one_form([fA, fB]<class X>(const X & x) { return fA(x) + fB(x); });
     }
 
+    // product of forms fa * fb (returns the tensor product of one-forms)
+    template <class F1, class F2>
+    constexpr auto operator*(const one_form_t<F1> & fA, const one_form_t<F2> & fB)
+    {
+        return tensor(fA, fB);
+    }
+
     // scalar * form (specialization for one-forms)
     template <class F>
     constexpr auto operator*(const real & a, const one_form_t<F> & f)
