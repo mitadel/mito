@@ -74,12 +74,7 @@ namespace mito::manifolds {
     template <class F1, class F2>
     constexpr auto wedge(const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda)
     {
-        // return a {form} that, when contracted with {x} and {y}...
-        return mito::manifolds::form<2>(
-            [a_tilda, b_tilda]<class X, class Y>(const X & x, const Y & y) -> auto {
-                // ... returns the {scalar} prescribed by the wedge product
-                return a_tilda(x) * b_tilda(y) - b_tilda(x) * a_tilda(y);
-            });
+        return tensor(a_tilda, b_tilda) - tensor(b_tilda, a_tilda);
     }
 
     // the wedge product of three one-forms
