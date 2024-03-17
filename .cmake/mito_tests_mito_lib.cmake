@@ -44,6 +44,7 @@ mito_test_driver(tests/mito.lib/tensor/wedge_product_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/tensor_product_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/euclidean_metric_2D.cc)
 mito_test_driver(tests/mito.lib/tensor/euclidean_metric_3D.cc)
+mito_test_driver(tests/mito.lib/tensor/euclidean_submanifold_metric_3D.cc)
 mito_test_driver(tests/mito.lib/tensor/cube_volume.cc)
 
 # fields
