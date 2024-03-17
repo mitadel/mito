@@ -233,7 +233,7 @@ namespace mito::utilities {
         // insert an element in the container
         // (increment the number of elements and remove the address of the element from the pile of
         // the available locations for reuse)
-        auto insert(resource_type * element) -> void
+        auto insert([[maybe_unused]] resource_type * element) -> void
         {
             // increment the size of the container
             ++_n_elements;
