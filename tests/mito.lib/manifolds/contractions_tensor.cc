@@ -11,7 +11,7 @@
 using mito::manifolds::_;
 
 
-TEST(Manifolds, Contractions)
+TEST(Manifolds, ContractionsTensor)
 {
     // a vector
     constexpr auto a = mito::e_0<3>;
