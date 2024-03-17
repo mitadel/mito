@@ -54,9 +54,23 @@ namespace mito::utilities {
             }
         }
 
+        // const components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) -> resource_type &
+        {
+            // delegate the answer to the allocator
+            return _resources[i];
+        }
+
+        // components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) const -> const resource_type &
+        {
+            // delegate the answer to the allocator
+            return _resources[i];
+        }
+
         // build a resource passing down {args...} to the resource constructor
         template <class... Args>
-        inline auto emplace_back(Args &&... args) -> iterator
+        inline auto emplace(Args &&... args) -> resource_type &
         {
             // get a spare location for the placement of the new resource
             auto location = _resources.location_for_placement();
@@ -65,21 +79,25 @@ namespace mito::utilities {
             resource_type * resource = new (location) resource_type(std::forward<Args>(args)...);
 
             // add resource to the collection of resources
-            return iterator(_resources.insert(resource));
+            _resources.insert(resource);
+
+            // return the newly added resource
+            return *resource;
         }
 
         // erase a resource from the vector
-        inline auto erase(iterator & resource) -> bool
+        inline auto erase(resource_type & resource) -> bool
         {
             // in the resource is already invalid, there is nothing to erase
-            if (!resource->is_valid()) {
+            if (!resource.is_valid()) {
                 return false;
             }
 
             // invalidate the resource
-            resource->invalidate();
+            resource.invalidate();
+
             // remove this resource from the collection of resources
-            _resources.erase(&*resource);
+            _resources.erase(&resource);
 
             // all done
             return true;

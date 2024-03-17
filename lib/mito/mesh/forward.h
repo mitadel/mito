@@ -17,6 +17,14 @@ namespace mito::mesh {
     // mesh alias
     template <class cellT>
     using mesh_t = Mesh<cellT>;
+
+    // class boundary
+    template <class meshT>
+    class Boundary;
+
+    // class filter
+    template <class meshT, int I>
+    class Filter;
 }
 
 

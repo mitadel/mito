@@ -16,14 +16,10 @@ namespace mito::mesh {
       public:
         // typedef for cell type
         using cell_type = cellT;
-        // TOFIX: below we make the assumption that the cell is always simplicial, remove this
-        //  assumption.
-        // typedef for simplex type
-        using simplex_type = cell_type::simplex_type;
         // publish the order of the cell
-        static constexpr int order = topology::order<simplex_type>();
+        static constexpr int order = cell_type::order;
         // publish the number of vertices per element
-        static constexpr int n_vertices = topology::n_vertices<simplex_type>();
+        static constexpr int n_vertices = cell_type::n_vertices;
         // the type of vertex
         using vertex_type = cell_type::vertex_type;
         // a collection of nodes
@@ -33,32 +29,20 @@ namespace mito::mesh {
         // publish the dimension of physical space
         static constexpr int dim = cell_type::dim;
         // typedef for a collection of cells
-        // QUESTION: we may consider switching this to a container that is faster to iterate on
-        //  e.g. {vector}, if we decide to base {Manifold} on a {Mesh}. In this case, in fact,
-        //  iterating on a manifold would iterate on the mesh elements. It is true that
-        //  inserting/erasing elements in a vector is more expensive than in a set. However, we
-        //  insert/erase much less frequently than we iterate. Also, this vector does not contain
-        //  the full cell objects, but just their addresses, so perhaps it would not even be that
-        //  expensive to allocate/deallocate the memory.
         using cells_type = utilities::segmented_vector_t<cell_type>;
-        // iterator to the cells datastructure
-        using cells_iterator = cells_type::iterator;
 
       private:
         // get the order of the cell
         static constexpr int N = order;
         // the dimension of physical space
         static constexpr int D = dim;
-        // get the family this cell type belongs to (e.g. geometric simplices)
-        template <int I, int DD>
-        using cell_family_type = typename cell_type::cell_family_type<I, DD>;
         // get the topological family this cell type belongs to (e.g. simplicial cells)
         template <int I>
-        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
+        using cell_topological_family_type = typename cell_type::cell_topological_family_type<I>;
         // id type of unoriented cell
         using cell_id_type = utilities::index_t<cell_type>;
-        // this map maps a simplex id to a tuple of two integers counting how many times a simplex
-        // appears with - or + orientation
+        // this map maps a cell id to a tuple of two integers counting how many times a cell appears
+        // with - or + orientation
         using orientation_map_type = std::unordered_map<cell_id_type, std::array<int, 2>>;
 
       public:
@@ -84,63 +68,6 @@ namespace mito::mesh {
         Mesh & operator=(Mesh &&) noexcept = delete;
 
       private:
-        template <int I, int J>
-        inline auto _insert_subcells(
-            Mesh<cell_family_type<I, D>> & boundary_mesh,
-            const cell_topological_family_type<J> & cell, const nodes_type & nodes) const -> void
-        requires(I == J)
-        {
-            // add {cell} to the boundary mesh
-            boundary_mesh.insert(mito::geometry::geometric_simplex<D>(cell, nodes));
-            // all done
-            return;
-        }
-
-        template <int I, int J>
-        inline auto _insert_subcells(
-            Mesh<cell_family_type<I, D>> & boundary_mesh,
-            const cell_topological_family_type<J> & cell, const nodes_type & nodes) const -> void
-        requires(I < J)
-        {
-            // loop on the subcells of {cell}
-            for (const auto & subcell : cell.composition()) {
-                // recursively add subcells of {subcell} to {boundary_mesh}
-                _insert_subcells(boundary_mesh, subcell, nodes);
-            }
-
-            // all done
-            return;
-        }
-
-        inline auto _insert_nodes(
-            Mesh<cell_family_type<0, D>> & boundary_mesh,
-            const cell_topological_family_type<0> & cell, const nodes_type & nodes) const -> void
-        {
-            // helper function to {node_t<D>(vertex, *std::find(vertex))}
-            constexpr auto _subcell_node =
-                [](const cell_topological_family_type<0> & cell,
-                   const nodes_type & nodes) -> cell_family_type<0, D>::node_type {
-                // get the vertex footprint
-                auto vertex = cell->footprint();
-
-                auto has_vertex = [](const vertex_type & vertex) {
-                    auto lambda = [&vertex](const node_type & node) {
-                        return node.vertex() == vertex;
-                    };
-                    return lambda;
-                };
-
-                // all done
-                return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
-            };
-
-            // insert {node} into {boundary_mesh}
-            boundary_mesh.insert(_subcell_node(cell, nodes));
-
-            // all done
-            return;
-        }
-
         inline auto _register_cell_orientation(const cell_type & cell) -> void
         {
             // loop on the subcells of {cell}
@@ -175,14 +102,14 @@ namespace mito::mesh {
         }
 
         // erase cell at location {cell}
-        inline auto erase(cells_iterator & cell) -> void
+        inline auto erase(cell_type & cell) -> void
         {
             // erase the cell from the mesh
             bool cell_was_erased = _cells.erase(cell);
             // if the cell was in fact erased from the cell
             if (cell_was_erased) {
                 // loop on the subcells of {cell}
-                for (const auto & subcell : cell->simplex()->composition()) {
+                for (const auto & subcell : cell.simplex()->composition()) {
                     // decrement the orientations count for this cell footprint id, depending on
                     // the orientation
                     (subcell->orientation() == +1 ?
@@ -216,102 +143,44 @@ namespace mito::mesh {
             return false;
         }
 
-        /**
-         * @brief Returns a mesh with all boundary cells of dimension I
-         */
-        template <int I = N - 1>
-        inline auto boundary_size() const -> int
-        requires(N > 0 && I >= 0)
-        {
-            // number of boundary cells
-            int count = 0;
-
-            // loop on the (N-1)-dimensional cells
-            for (const auto & cell : cells()) {
-                // loop on the subcells of {cell}
-                for (const auto & subcell : cell.composition()) {
-                    // if {subcell} does not have a counterpart in {topology} with opposite
-                    // orientation
-                    if (isOnBoundary(subcell)) {
-                        // increment counter for boundary cells
-                        ++count;
-                    }
-                }
-            }
-
-            // return the count of boundary cells
-            return count;
-        }
-
-        /**
-         * @brief Returns a mesh with all boundary cells of dimension I
-         */
-        template <int I = N - 1>
-        inline auto boundary() const -> Mesh<cell_family_type<I, D>> const
-        requires(N > 0 && I >= 0)
-        {
-            // instantiate a new mesh for the boundary elements
-            Mesh<cell_family_type<I, D>> boundary_mesh;
-
-            // loop on the (N-1)-dimensional cells
-            for (const auto & cell : cells()) {
-                // loop on the subcells of {cell}
-                for (const auto & subcell : cell.simplex()->composition()) {
-                    // if {subcell} does not have a counterpart in {topology} with opposite
-                    // orientation
-                    if (isOnBoundary(subcell)) {
-                        if constexpr (I == 0) {
-                            _insert_nodes(boundary_mesh, subcell, cell.nodes());
-                        } else {
-                            _insert_subcells(boundary_mesh, subcell, cell.nodes());
-                        }
-                    }
-                }
-            }
-
-            // return the boundary mesh
-            return boundary_mesh;
-        }
-
         // insert {cell} in mesh
-        inline auto insert(const cell_type & cell) -> cells_iterator
+        inline auto insert(const cell_type & cell) -> cell_type &
         requires(N > 0)
         {
             // register {cell} in the orientation map
             _register_cell_orientation(cell);
 
             // add the cell to the collection of cells
-            return _cells.emplace_back(cell);
+            return _cells.emplace(cell);
         }
 
         // build a cell based with nodes {nodes} and insert it in mesh
-        inline auto insert(const nodes_type & nodes) -> cells_iterator
+        inline auto insert(const nodes_type & nodes) -> cell_type &
         requires(N > 0)
         {
-
             // instantiate cell and add it to the collection of cells
-            auto cell = _cells.emplace_back(nodes);
+            auto & cell = _cells.emplace(nodes);
 
             // register {cell} in the orientation map
-            _register_cell_orientation(*cell);
+            _register_cell_orientation(cell);
 
             // all done
             return cell;
         }
 
         // insert {cell} in mesh
-        inline auto insert(const cell_type & cell) -> cells_iterator
+        inline auto insert(const cell_type & cell) -> cell_type &
         requires(N == 0)
         {
             // add the cell to the collection of cells
-            return _cells.emplace_back(cell);
+            return _cells.emplace(cell);
         }
 
       private:
         // container to store the mesh cells
         cells_type _cells;
 
-        // container to store how many times a simplex appears with a given orientation
+        // container to store how many times a cell appears with a given orientation
         orientation_map_type _orientations;
     };
 

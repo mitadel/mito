@@ -59,6 +59,7 @@ mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)
 mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
+mito_test_driver(tests/mito.lib/mesh/filter_ball.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_segment_1D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_triangle_2D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_triangle_3D.cc)
@@ -96,6 +97,8 @@ mito_test_driver(tests/mito.lib/utilities/repository_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_move.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_iterator.cc)
+mito_test_driver(tests/mito.lib/utilities/segmented_vector_subscript.cc)
+mito_test_driver(tests/mito.lib/utilities/segmented_vector_print.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 
 # quadrature

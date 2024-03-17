@@ -44,17 +44,26 @@ namespace mito::geometry {
         // a collection of nodes
         using nodes_type = std::array<node_type, N + 1>;
 
-        // typedef for the family type (simplicial)
+        // typedef for the family type (geometric simplicial)
         template <int NN, int DD>
         using cell_family_type = geometric_simplex_t<NN, DD>;
 
+        // typedef for the topological family type (simplicial)
+        template <int I>
+        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
+
       private:
-        template <int... J>
-        constexpr auto _check_vertices(integer_sequence<J...>) const -> void
+        constexpr auto _sanity_check() const -> bool
         {
-            assert(
-                mito::math::permutation_sign(_simplex->vertices(), { _nodes[J].vertex()... })
-                == +1);
+            // helper function to check that the order of vertices in {_simplex} matches the order
+            // of nodes in {_nodes}
+            auto _check_vertices = [this]<int... J>(integer_sequence<J...>) -> bool {
+                return (
+                    mito::math::permutation_sign(_simplex->vertices(), { _nodes[J].vertex()... })
+                    == +1);
+            };
+
+            return _check_vertices(make_integer_sequence<N + 1>{});
         }
 
         template <int... J>
@@ -75,7 +84,7 @@ namespace mito::geometry {
         {
             // check that the vertices in {nodes} match the vertices of the {simplex} within a
             // positive permutation
-            _check_vertices(make_integer_sequence<N + 1>{});
+            assert(_sanity_check());
         }
 
         // constructor with an existing oriented simplex and a collection of nodes
@@ -148,12 +157,12 @@ namespace mito::geometry {
         // a collection of nodes
         using nodes_type = std::array<node_type, order + 1>;
 
-        // typedef for the family type (simplicial)
-        template <int NN, int DD>
-        using cell_family_type = geometric_simplex_t<NN, DD>;
-
         // the point type
         using point_type = point_t<D>;
+
+        // typedef for the topological family type (simplicial)
+        template <int I>
+        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
 
       public:
         // get the coordinates of the point

@@ -1,0 +1,58 @@
+// code guard
+#if !defined(mito_mesh_filter_icc)
+#error this file contains implementation details for mesh filter
+#else
+
+
+template <class meshT, int I>
+template <int J>
+auto
+mito::mesh::Filter<meshT, I>::_insert_filtered_subcells(
+    mesh_filtered_type & filtered_mesh, const cell_topological_family_type<J> & cell,
+    const nodes_type & nodes) -> void
+requires(I == J)
+{
+    // add {cell} to the filtered mesh
+    filtered_mesh.insert(mito::geometry::geometric_simplex<D>(cell, nodes));
+    // all done
+    return;
+}
+
+template <class meshT, int I>
+template <int J>
+auto
+mito::mesh::Filter<meshT, I>::_insert_filtered_subcells(
+    mesh_filtered_type & filtered_mesh, const cell_topological_family_type<J> & cell,
+    const nodes_type & nodes) -> void
+requires(I < J)
+{
+    // loop on the subcells of {cell}
+    for (const auto & subcell : cell->composition()) {
+        // recursively add subcells of {subcell} to {filtered_mesh}
+        _insert_filtered_subcells(filtered_mesh, subcell, nodes);
+    }
+
+    // all done
+    return;
+}
+
+template <class meshT, int I>
+auto
+mito::mesh::Filter<meshT, I>::filter(const mesh_type & mesh) -> mesh_filtered_type
+requires(I < N)
+{
+    // instantiate a new mesh for the filtered cells
+    mesh_filtered_type filtered_mesh;
+
+    // loop on the mesh cells
+    for (const auto & cell : mesh.cells()) {
+        _insert_filtered_subcells(filtered_mesh, cell.simplex(), cell.nodes());
+    }
+
+    // return the filtered mesh
+    return filtered_mesh;
+}
+
+#endif
+
+// end of file

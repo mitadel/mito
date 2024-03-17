@@ -20,10 +20,10 @@ TEST(Mesh, Ball)
         mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
 
     // fetch the boundary of the ball (a sphere)
-    auto boundary_mesh = mesh.boundary();
+    auto boundary_mesh = mito::mesh::boundary(mesh);
 
     // fetch the boundary of the sphere
-    auto boundary_boundary_mesh = boundary_mesh.boundary();
+    auto boundary_boundary_mesh = mito::mesh::boundary(boundary_mesh);
 
     // check that the boundary of a sphere is an empty mesh (the empty set)
     EXPECT_EQ(0, boundary_boundary_mesh.nCells());
