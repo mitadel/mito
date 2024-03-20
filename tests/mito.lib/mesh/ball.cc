@@ -22,6 +22,11 @@ TEST(Mesh, Ball)
     // fetch the boundary of the ball (a sphere)
     auto boundary_mesh = mito::mesh::boundary(mesh);
 
+#ifdef WITH_VTK
+    // write mesh to vtk file
+    mito::io::vtk::writer("sphere", boundary_mesh, coord_system);
+#endif
+
     // fetch the boundary of the sphere
     auto boundary_boundary_mesh = mito::mesh::boundary(boundary_mesh);
 
