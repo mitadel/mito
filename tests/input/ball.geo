@@ -1,4 +1,3 @@
-Mesh.ElementOrder = 2;
 cl__1 = 1;
 r = 1;
 h = 0.5;
