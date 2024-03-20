@@ -82,6 +82,7 @@ mito_test_driver(tests/mito.lib/mesh/tetra_tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_zero_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_multiple_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/erase_element.cc)
+mito_test_driver(tests/mito.lib/mesh/sphere.cc)
 
 if(WITH_METIS)
     mito_test_driver(tests/mito.lib/mesh/metis_partitioner.cc)
