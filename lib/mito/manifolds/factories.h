@@ -77,7 +77,7 @@ namespace mito::manifolds {
     }
 
     // construct a one-form based on its metric-equivalent vector field
-    template <class F, class G, int D>
+    template <class F, class G>
     constexpr auto one_form(const field_t<F> & vector, const field_t<G> & metric)
     requires(
         // the vector and the metric are defined on the same coordinates

@@ -72,10 +72,12 @@ namespace mito::manifolds {
     template <int N, int D, geometry::CoordinateType coordsT = geometry::CARTESIAN>
     constexpr auto identity_tensor_field = uniform_field<D, coordsT>(mito::identity<N>);
 
-    // TOFIX:
-    template <class F, class G, int D = field_t<F>::dim>
+    // construct a one-form based on its metric-equivalent vector field
+    template <class F, class G>
     constexpr auto one_form(
-        const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<D, D>)
+        const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<
+                                       field_t<F>::coordinates_type::dim,
+                                       field_t<F>::coordinates_type::dim, geometry::CARTESIAN>)
     requires(
         // the vector and the metric are defined on the same coordinates
         std::is_same_v<typename field_t<F>::coordinates_type, typename field_t<G>::coordinates_type>
