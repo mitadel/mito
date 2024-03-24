@@ -44,22 +44,6 @@ namespace mito::geometry {
         return xA;
     }
 
-    // operator==
-    template <int D, CoordinateType coordT>
-    constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
-        -> bool
-    {
-        return xA._array == xB._array;
-    }
-
-    // operator<
-    template <int D, CoordinateType coordT>
-    constexpr auto operator<(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
-        -> bool
-    {
-        return xA._array < xB._array;
-    }
-
     template <int D, CoordinateType coordT>
     constexpr auto distance(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
         -> scalar_t
