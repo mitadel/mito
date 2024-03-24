@@ -20,6 +20,16 @@ namespace mito::manifolds {
         return manifold_t<cellT, coordsT>(mesh, coordinate_system);
     }
 
+    // factory submanifolds
+    template <class cellT, geometry::CoordinateType coordsT, class volumeFormT>
+    constexpr auto submanifold(
+        const mesh::mesh_t<cellT> & mesh,
+        const geometry::coordinate_system_t<cellT::dim, coordsT> & coordinate_system,
+        volumeFormT volume_form) -> submanifold_t<cellT, coordsT, volumeFormT>
+    {
+        return submanifold_t<cellT, coordsT, volumeFormT>(mesh, coordinate_system, volume_form);
+    }
+
     // factory for one-forms
     template <class F>
     constexpr auto one_form(F && f) -> one_form_t<F>
@@ -67,7 +77,7 @@ namespace mito::manifolds {
     }
 
     // construct a one-form based on its metric-equivalent vector field
-    template <class F, class G, int D>
+    template <class F, class G>
     constexpr auto one_form(const field_t<F> & vector, const field_t<G> & metric)
     requires(
         // the vector and the metric are defined on the same coordinates

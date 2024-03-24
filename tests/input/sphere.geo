@@ -1,6 +1,6 @@
 cl__1 = 1;
 r = 1;
-h = 0.5;
+h = 0.25;
 Point(1) = {0, 0, 0, h};
 Point(2) = {r, 0, 0, h};
 Point(3) = {-r, 0, 0, h};
@@ -37,5 +37,4 @@ Ruled Surface(26) = {26};
 Line Loop(28) = {1, -12, 8};
 Ruled Surface(28) = {-28};
 Surface Loop(30) = {14, 16, 18, 20, 22, 24, 26, 28};
-Volume(30) = {30};
-Physical Volume(1) = {30};
+Physical Surface(1) = {30};

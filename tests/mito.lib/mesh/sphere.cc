@@ -9,27 +9,23 @@
 #include <mito/mesh.h>
 
 
-TEST(Mesh, Ball)
+TEST(Mesh, Sphere)
 {
     // a Cartesian coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
-    // read the mesh of a ball
-    std::ifstream fileStream("ball.summit");
-    auto mesh =
-        mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
-
-    // fetch the boundary of the ball (a sphere)
-    auto boundary_mesh = mesh.boundary();
+    // read the mesh of a sphere
+    std::ifstream fileStream("sphere.summit");
+    auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
 #ifdef WITH_VTK
     // write mesh to vtk file
-    mito::io::vtk::writer("sphere", boundary_mesh, coord_system);
+    mito::io::vtk::writer("sphere", mesh, coord_system);
 #endif
 
     // fetch the boundary of the sphere
-    auto boundary_boundary_mesh = boundary_mesh.boundary();
+    auto boundary_mesh = mesh.boundary();
 
     // check that the boundary of a sphere is an empty mesh (the empty set)
-    EXPECT_EQ(0, boundary_boundary_mesh.nCells());
+    EXPECT_EQ(0, boundary_mesh.nCells());
 }

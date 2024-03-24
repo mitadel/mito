@@ -34,6 +34,13 @@ namespace mito::manifolds {
         return one_form([fA, fB]<class X>(const X & x) { return fA(x) + fB(x); });
     }
 
+    // product of forms fa * fb (returns the tensor product of one-forms)
+    template <class F1, class F2>
+    constexpr auto operator*(const one_form_t<F1> & fA, const one_form_t<F2> & fB)
+    {
+        return tensor(fA, fB);
+    }
+
     // scalar * form (specialization for one-forms)
     template <class F>
     constexpr auto operator*(const real & a, const one_form_t<F> & f)
@@ -74,12 +81,7 @@ namespace mito::manifolds {
     template <class F1, class F2>
     constexpr auto wedge(const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda)
     {
-        // return a {form} that, when contracted with {x} and {y}...
-        return mito::manifolds::form<2>(
-            [a_tilda, b_tilda]<class X, class Y>(const X & x, const Y & y) -> auto {
-                // ... returns the {scalar} prescribed by the wedge product
-                return a_tilda(x) * b_tilda(y) - b_tilda(x) * a_tilda(y);
-            });
+        return tensor(a_tilda, b_tilda) - tensor(b_tilda, a_tilda);
     }
 
     // the wedge product of three one-forms
@@ -97,6 +99,47 @@ namespace mito::manifolds {
                      + b_tilda(x) * wedge(c_tilda, a_tilda)(y, z)
                      + c_tilda(x) * wedge(a_tilda, b_tilda)(y, z);
             });
+    }
+
+    // wedge of a scalar with a p-form
+    template <int P, class F>
+    constexpr auto wedge(const real & a, const form_t<P, F> & a_tilda)
+    {
+        return a * a_tilda;
+    }
+
+    // wedge of a scalar with a p-form
+    template <int P, class F>
+    constexpr auto wedge(const form_t<P, F> & a_tilda, const real & a)
+    {
+        return a * a_tilda;
+    }
+
+    // TOFIX: this wedge product could be implemented in general for any two p1- and p2-forms
+    // in a similar fashion to the {split_variadic} example in the sandbox, as the sum of two
+    // (p1+p2)-forms where the first contracts the firs p1 parameters (...) with b_tilda and the
+    // rest with wedge(b_tilda(...), a_tilda), while the second contracts the first p2 parameters
+    // (...) with a_tilda and the rest with wedge(b_tilda, a_tilda(...))
+
+    // wedge of a p1-form with a p2-form
+    template <int P1, class F1, int P2, class F2>
+    constexpr auto wedge(const form_t<P1, F1> & b_tilda, const form_t<P2, F2> & a_tilda)
+    requires(P1 == 1 && P2 == 2)
+    {
+        // positive sign if P1 is even, negative sign if P1 is odd
+        constexpr int sign = (P1 % 2 ? +1 : -1);
+
+        return mito::manifolds::form<P1 + P2>(
+                   [a_tilda, b_tilda]<class X, class Y, class Z>(
+                       const X & x, const Y & y, const Z & z) -> auto {
+                       return wedge(b_tilda(x), a_tilda)(y, z);
+                   })
+             + sign
+                   * mito::manifolds::form<P1 + P2>(
+                       [a_tilda, b_tilda]<class X, class Y, class Z>(
+                           const X & x, const Y & y, const Z & z) -> auto {
+                           return wedge(b_tilda, a_tilda(x, y))(z);
+                       });
     }
 
     // the tensor product of two one-forms

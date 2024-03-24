@@ -18,6 +18,10 @@ namespace mito::manifolds {
     template <class cellT, geometry::CoordinateType coordsT>
     using manifold_t = Manifold<cellT, coordsT>;
 
+    // submanifold alias
+    template <class cellT, geometry::CoordinateType coordsT, class volumeFormT>
+    using submanifold_t = Submanifold<cellT, coordsT, volumeFormT>;
+
     // form alias
     template <int N, class F>
     using form_t = Form<N, F>;
@@ -36,6 +40,13 @@ namespace mito::manifolds {
         const mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<cellT::dim, coordsT> & coordinate_system)
         -> manifold_t<cellT, coordsT>;
+
+    // factory submanifolds
+    template <class cellT, geometry::CoordinateType coordsT, class volumeFormT>
+    constexpr auto submanifold(
+        const mesh::mesh_t<cellT> & mesh,
+        const geometry::coordinate_system_t<cellT::dim, coordsT> & coordinate_system,
+        volumeFormT volume_form) -> submanifold_t<cellT, coordsT, volumeFormT>;
 
     // factory for one-forms
     template <class F>
@@ -61,10 +72,12 @@ namespace mito::manifolds {
     template <int N, int D, geometry::CoordinateType coordsT = geometry::CARTESIAN>
     constexpr auto identity_tensor_field = uniform_field<D, coordsT>(mito::identity<N>);
 
-    // TOFIX:
-    template <class F, class G, int D = field_t<F>::dim>
+    // construct a one-form based on its metric-equivalent vector field
+    template <class F, class G>
     constexpr auto one_form(
-        const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<D, D>)
+        const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<
+                                       field_t<F>::coordinates_type::dim,
+                                       field_t<F>::coordinates_type::dim, geometry::CARTESIAN>)
     requires(
         // the vector and the metric are defined on the same coordinates
         std::is_same_v<typename field_t<F>::coordinates_type, typename field_t<G>::coordinates_type>

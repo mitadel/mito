@@ -85,19 +85,19 @@ namespace mito::geometry {
 
       public:
         // friendship with addition of coordinates
-        friend constexpr auto operator+ <>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator+<>(const coordinates_type &, const coordinates_type &)
             -> coordinates_type;
 
         // friendship with scaling of coordinates
-        friend constexpr auto operator* <>(const scalar_t &, const coordinates_type &)
+        friend constexpr auto operator*<>(const scalar_t &, const coordinates_type &)
             -> coordinates_type;
 
         // friendship with {operator==} for coordinates
-        friend constexpr auto operator== <>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator==<>(const coordinates_type &, const coordinates_type &)
             -> bool;
 
         // friendship with {operator-} for coordinates
-        friend constexpr auto operator- <>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator-<>(const coordinates_type &, const coordinates_type &)
             -> mito::vector_t<D>;
 
         // friendship with {operator<} for coordinates
@@ -111,7 +111,7 @@ namespace mito::geometry {
         auto print() const -> void
         {
             // print the coordinates of the point
-            std::cout << "Coordinates: " << _array << std::endl;
+            std::cout << _array;
 
             // all done
             return;
@@ -130,6 +130,22 @@ namespace mito::geometry {
 
         // all done
         return os;
+    }
+
+    // operator==
+    template <int D, CoordinateType coordT>
+    constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> bool
+    {
+        return xA._array == xB._array;
+    }
+
+    // operator<
+    template <int D, CoordinateType coordT>
+    constexpr auto operator<(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> bool
+    {
+        return xA._array < xB._array;
     }
 
 }    // namespace mito

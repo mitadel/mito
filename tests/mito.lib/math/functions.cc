@@ -8,7 +8,7 @@
 #include <mito/math.h>
 
 
-static constexpr mito::real PI = 4.0 * std::atan(1.0);
+static constexpr mito::real PI = std::numbers::pi;
 
 //
 mito::scalar_t
