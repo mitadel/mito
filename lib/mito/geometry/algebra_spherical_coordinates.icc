@@ -83,7 +83,7 @@ namespace mito::geometry {
         const auto sin_theta_B = std::sin(theta_B);
         const auto cos_theta_A = std::cos(theta_A);
         const auto cos_theta_B = std::cos(theta_B);
-        const auto cos_phi_A_B = std::cos(phi_A - phi_B);
+        const auto cos_phi_A_B = std::cos(phi_B - phi_A);
         const auto sin_phi_A_B = std::sin(phi_B - phi_A);
 
         return { r_B * (sin_theta_A * sin_theta_B * cos_phi_A_B + cos_theta_A * cos_theta_B) - r_A,
