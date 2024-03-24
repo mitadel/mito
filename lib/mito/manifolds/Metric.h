@@ -34,6 +34,21 @@ namespace mito::manifolds {
                 });
         }
     };
+
+    // specialization for the spherical metric in 3D
+    template <>
+    struct metric<geometry::SPHERICAL, 3, 3> {
+        static constexpr auto field()
+        {
+            return mito::manifolds::field(
+                [](const mito::geometry::coordinates_t<3, geometry::SPHERICAL> & x)
+                    -> mito::diagonal_matrix_t<3> {
+                    // e_rr + r^2 * e_tt + r^2 sin^2(theta) * e_pp
+                    return mito::e_00<3> + (x[0] * x[0]) * mito::e_11<3>
+                         + x[0] * std::sin(x[1]) * x[0] * std::sin(x[1]) * mito::e_22<3>;
+                });
+        }
+    };
 }
 
 
