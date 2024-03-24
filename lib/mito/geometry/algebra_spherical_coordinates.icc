@@ -42,9 +42,9 @@ namespace mito::geometry {
         // {theta_AB} can be obtained through two equivalent formulae:
         // choose the one that divides by the greatest number
         if (std::fabs(std::sin(phi_AB)) > std::fabs(std::cos(phi_AB))) {
-            theta_AB = std::atan2(r_AB_s, std::cos(phi_AB) * r_AB_p);
+            theta_AB = std::atan2(r_AB_s, std::sin(phi_AB) * r_AB_p);
         } else {
-            theta_AB = std::atan2(r_AB_c, std::sin(phi_AB) * r_AB_p);
+            theta_AB = std::atan2(r_AB_c, std::cos(phi_AB) * r_AB_p);
         }
 
         // all done
@@ -84,7 +84,7 @@ namespace mito::geometry {
         const auto cos_theta_A = std::cos(theta_A);
         const auto cos_theta_B = std::cos(theta_B);
         const auto cos_phi_A_B = std::cos(phi_A - phi_B);
-        const auto sin_phi_A_B = std::sin(phi_A + phi_B);
+        const auto sin_phi_A_B = std::sin(phi_B - phi_A);
 
         return { r_B * (sin_theta_A * sin_theta_B * cos_phi_A_B + cos_theta_A * cos_theta_B) - r_A,
                  r_B / r_A * (sin_theta_B * cos_theta_A * cos_phi_A_B - sin_theta_A * cos_theta_B),
