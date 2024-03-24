@@ -20,7 +20,7 @@ TEST(Manifolds, Ball)
     auto coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
 
     // read the mesh of a ball
-    std::ifstream fileStream("half_ball.summit");
+    std::ifstream fileStream("bottom_half_ball.summit");
     auto mesh =
         mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
 
