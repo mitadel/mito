@@ -24,16 +24,25 @@ TEST(Manifolds, Ball)
     auto mesh =
         mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
 
+    // create a manifold on {mesh}
+    auto manifold_cartesian = mito::manifolds::manifold(mesh, coord_system);
+
+    // compute the area of the manifold
+    auto volume_cartesian = manifold_cartesian.volume();
+
     // perform change of coordinates from {CARTESIAN} to {SPHERICAL}
     auto spherical_coord_system = mito::geometry::coordinate_system<SPHERICAL>(coord_system);
 
     // create a manifold on {mesh}
-    auto manifold = mito::manifolds::manifold(mesh, spherical_coord_system);
+    auto manifold_spherical = mito::manifolds::manifold(mesh, spherical_coord_system);
 
     // compute the area of the manifold
-    auto volume = manifold.volume();
+    auto volume_spherical = manifold_spherical.volume();
+
+    // expect the same result in cartesian and spherical coordinates
+    EXPECT_DOUBLE_EQ(volume_cartesian, volume_spherical);
 
     // expect a reasonable match with the exact solution
     // (the error depends on the poor approximation of the boundary of the ball)
-    EXPECT_NEAR(4.0 / 3.0 * std::numbers::pi / 2.0, volume, 0.11);
+    EXPECT_NEAR(4.0 / 3.0 * std::numbers::pi / 2.0, volume_spherical, 0.11);
 }
