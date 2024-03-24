@@ -24,27 +24,38 @@ namespace mito::geometry {
         const auto & phi_A = xA._array[2];
         const auto & phi_B = xB._array[2];
 
+        const auto sin_theta_A = std::sin(theta_A);
+        const auto sin_theta_B = std::sin(theta_B);
+        const auto cos_theta_A = std::cos(theta_A);
+        const auto cos_theta_B = std::cos(theta_B);
+        const auto sin_phi_A = std::sin(phi_A);
+        const auto sin_phi_B = std::sin(phi_B);
+        const auto cos_phi_A = std::cos(phi_A);
+        const auto cos_phi_B = std::cos(phi_B);
+        const auto cos_phi_A_B = std::cos(phi_B - phi_A);
+
         // the angle phi of the sum of the two points
-        auto r_AB_s =
-            r_A * std::sin(theta_A) * std::sin(phi_A) + r_B * std::sin(theta_B) * std::sin(phi_B);
-        auto r_AB_c =
-            r_A * std::sin(theta_A) * std::cos(phi_A) + r_B * std::sin(theta_B) * std::cos(phi_B);
-        auto phi_AB = std::atan2(r_AB_s, r_AB_c);
+        const auto r_AB_s = r_A * sin_theta_A * sin_phi_A + r_B * sin_theta_B * sin_phi_B;
+        const auto r_AB_c = r_A * sin_theta_A * cos_phi_A + r_B * sin_theta_B * cos_phi_B;
+        const auto phi_AB = std::atan2(r_AB_s, r_AB_c);
+        const auto sin_phi_AB = std::sin(phi_AB);
+        const auto cos_phi_AB = std::cos(phi_AB);
 
         // the radius of the sum of the two points
-        auto r_AB = std::sqrt(
-            r_A * r_A + r_B * r_B + 2.0 * r_A * r_B * std::cos(theta_A) * std::cos(theta_B)
-            + 2.0 * r_A * r_B * std::sin(theta_A) * std::sin(theta_B) * std::cos(phi_A - phi_B));
+        const auto r_AB = std::sqrt(
+            r_A * r_A + r_B * r_B
+            + 2.0 * r_A * r_B
+                  * (cos_theta_A * cos_theta_B + sin_theta_A * sin_theta_B * cos_phi_A_B));
 
         // the angle theta of the sum of the two points
         auto theta_AB = 0.0;
-        auto r_AB_p = r_A * std::cos(theta_A) + r_B * std::cos(theta_B);
+        const auto r_AB_p = r_A * cos_theta_A + r_B * cos_theta_B;
         // {theta_AB} can be obtained through two equivalent formulae:
         // choose the one that divides by the greatest number
-        if (std::fabs(std::sin(phi_AB)) > std::fabs(std::cos(phi_AB))) {
-            theta_AB = std::atan2(r_AB_s, std::sin(phi_AB) * r_AB_p);
+        if (std::fabs(sin_phi_AB) > std::fabs(cos_phi_AB)) {
+            theta_AB = std::atan2(r_AB_s, sin_phi_AB * r_AB_p);
         } else {
-            theta_AB = std::atan2(r_AB_c, std::cos(phi_AB) * r_AB_p);
+            theta_AB = std::atan2(r_AB_c, cos_phi_AB * r_AB_p);
         }
 
         // all done
