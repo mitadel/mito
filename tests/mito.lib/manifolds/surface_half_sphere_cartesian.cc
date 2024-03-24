@@ -29,7 +29,7 @@ TEST(Manifolds, Sphere)
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // read the mesh of a sphere
-    std::ifstream fileStream("sphere.summit");
+    std::ifstream fileStream("bottom_half_sphere.summit");
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
     // the normal field to the submanifold
@@ -63,7 +63,7 @@ TEST(Manifolds, Sphere)
 
     // expect a reasonable match with the exact solution
     // (the error depends on the poor approximation of the sphere in the mesh)
-    EXPECT_NEAR(4.0 * std::numbers::pi, area, 0.23);
+    EXPECT_NEAR(4.0 * std::numbers::pi / 2.0, area, 0.23);
 }
 
 
