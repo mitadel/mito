@@ -6,6 +6,7 @@
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)
+mito_test_driver(tests/mito.lib/geometry/coordinate_transformation.cc)
 mito_test_driver(tests/mito.lib/geometry/barycenter_segment_1D.cc)
 mito_test_driver(tests/mito.lib/geometry/barycenter_segment_2D.cc)
 mito_test_driver(tests/mito.lib/geometry/barycenter_segment_3D.cc)
