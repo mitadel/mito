@@ -63,7 +63,7 @@ TEST(Manifolds, Sphere)
 
     // expect a reasonable match with the exact solution
     // (the error depends on the poor approximation of the sphere in the mesh)
-    EXPECT_NEAR(16.0 * std::atan(1.0), area, 0.23);
+    EXPECT_NEAR(4.0 * std::numbers::pi, area, 0.23);
 }
 
 
