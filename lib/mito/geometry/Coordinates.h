@@ -114,7 +114,7 @@ namespace mito::geometry {
         auto print() const -> void
         {
             // print the coordinates of the point
-            std::cout << "Coordinates: " << _array << std::endl;
+            std::cout << _array;
 
             // all done
             return;
