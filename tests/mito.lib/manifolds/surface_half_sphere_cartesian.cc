@@ -9,22 +9,24 @@
 #include <mito/io.h>
 
 
+// strip the namespace
+using mito::geometry::CARTESIAN;
+// the placeholder for empty slots in contractions
+using mito::manifolds::_;
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
+
+
 // the basis for vector fields
 static constexpr auto e_x = mito::manifolds::uniform_field<3>(mito::e_0<3>);
 static constexpr auto e_y = mito::manifolds::uniform_field<3>(mito::e_1<3>);
 static constexpr auto e_z = mito::manifolds::uniform_field<3>(mito::e_2<3>);
 
 
-// the placeholder for empty slots in contractions
-using mito::manifolds::_;
-// the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
-
-
-TEST(Manifolds, Sphere)
+TEST(Manifolds, HalfSphereCartesian)
 {
     // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    auto coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
 
     // read the mesh of a sphere
     std::ifstream fileStream("bottom_half_sphere.summit");
