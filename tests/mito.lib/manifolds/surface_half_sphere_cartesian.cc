@@ -10,12 +10,9 @@
 
 
 // the basis for vector fields
-static constexpr auto e_x =
-    mito::manifolds::uniform_field<3, mito::geometry::CARTESIAN>(mito::e_0<3>);
-static constexpr auto e_y =
-    mito::manifolds::uniform_field<3, mito::geometry::CARTESIAN>(mito::e_1<3>);
-static constexpr auto e_z =
-    mito::manifolds::uniform_field<3, mito::geometry::CARTESIAN>(mito::e_2<3>);
+static constexpr auto e_x = mito::manifolds::uniform_field<3>(mito::e_0<3>);
+static constexpr auto e_y = mito::manifolds::uniform_field<3>(mito::e_1<3>);
+static constexpr auto e_z = mito::manifolds::uniform_field<3>(mito::e_2<3>);
 
 
 // the placeholder for empty slots in contractions
