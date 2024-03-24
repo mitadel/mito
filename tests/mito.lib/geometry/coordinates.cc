@@ -8,14 +8,20 @@
 #include <mito/geometry.h>
 
 
+// strip the namespace
+using mito::geometry::CARTESIAN;
+using mito::geometry::POLAR;
+using mito::geometry::SPHERICAL;
+
+
 TEST(Coordinates, Cartesian)
 {
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::CARTESIAN>({ 0.0, 1.0 });
-    constexpr auto coord_B = mito::geometry::coordinates<mito::geometry::CARTESIAN>({ 1.0, 0.0 });
+    constexpr auto coord_A = mito::geometry::coordinates<CARTESIAN>({ 0.0, 1.0 });
+    constexpr auto coord_B = mito::geometry::coordinates<CARTESIAN>({ 1.0, 0.0 });
 
     // the exact value of {coord_A + coord_B} / 2
-    constexpr auto coord_C = mito::geometry::coordinates<mito::geometry::CARTESIAN>({ 0.5, 0.5 });
+    constexpr auto coord_C = mito::geometry::coordinates<CARTESIAN>({ 0.5, 0.5 });
 
     // compute {coord_A + coord_B} / 2.0
     constexpr auto coord_D = (coord_A + coord_B) / 2.0;
@@ -31,13 +37,12 @@ TEST(Coordinates, Cartesian)
 TEST(Coordinates, POLAR)
 {
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::POLAR>({ 1.0, 0.0 });
-    constexpr auto coord_B =
-        mito::geometry::coordinates<mito::geometry::POLAR>({ 1.0, 0.5 * std::numbers::pi });
+    constexpr auto coord_A = mito::geometry::coordinates<POLAR>({ 1.0, 0.0 });
+    constexpr auto coord_B = mito::geometry::coordinates<POLAR>({ 1.0, 0.5 * std::numbers::pi });
 
     // the exact value of {coord_A + coord_B} / 2.0
-    constexpr auto coord_C = mito::geometry::coordinates<mito::geometry::POLAR>(
-        { std::sqrt(2.0) / 2.0, 0.25 * std::numbers::pi });
+    constexpr auto coord_C =
+        mito::geometry::coordinates<POLAR>({ std::sqrt(2.0) / 2.0, 0.25 * std::numbers::pi });
 
     // compute {coord_A + coord_B} / 2.0
     constexpr auto coord_D = (coord_A + coord_B) / 2.0;
@@ -53,13 +58,13 @@ TEST(Coordinates, POLAR)
 TEST(Coordinates, SPHERICAL_Z)
 {
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
-        { 1.0, 0.5 * std::numbers::pi, 0.0 });
-    constexpr auto coord_B = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
+    constexpr auto coord_A =
+        mito::geometry::coordinates<SPHERICAL>({ 1.0, 0.5 * std::numbers::pi, 0.0 });
+    constexpr auto coord_B = mito::geometry::coordinates<SPHERICAL>(
         { 1.0, 0.5 * std::numbers::pi, 0.5 * std::numbers::pi });
 
     // the exact value of {coord_A + coord_B} / 2.0
-    constexpr auto coord_C = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
+    constexpr auto coord_C = mito::geometry::coordinates<SPHERICAL>(
         { 0.5 * std::sqrt(2.0), 0.5 * std::numbers::pi, 0.25 * std::numbers::pi });
 
     // compute {coord_A + coord_B} / 2.0
@@ -76,13 +81,13 @@ TEST(Coordinates, SPHERICAL_Z)
 TEST(Coordinates, SPHERICAL_Y)
 {
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
-        { 1.0, 0.25 * std::numbers::pi, 0.0 });
-    constexpr auto coord_B = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
-        { 1.0, 0.75 * std::numbers::pi, 0.0 });
+    constexpr auto coord_A =
+        mito::geometry::coordinates<SPHERICAL>({ 1.0, 0.25 * std::numbers::pi, 0.0 });
+    constexpr auto coord_B =
+        mito::geometry::coordinates<SPHERICAL>({ 1.0, 0.75 * std::numbers::pi, 0.0 });
 
     // the exact value of {coord_A + coord_B} / 2.0
-    constexpr auto coord_C = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
+    constexpr auto coord_C = mito::geometry::coordinates<SPHERICAL>(
         { 0.5 * std::sqrt(2.0), 0.5 * std::numbers::pi, 0.0 });
 
     // compute {coord_A + coord_B} / 2.0
@@ -99,13 +104,13 @@ TEST(Coordinates, SPHERICAL_Y)
 TEST(Coordinates, SPHERICAL_X)
 {
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
+    constexpr auto coord_A = mito::geometry::coordinates<SPHERICAL>(
         { 1.0, 0.25 * std::numbers::pi, 0.5 * std::numbers::pi });
-    constexpr auto coord_B = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
+    constexpr auto coord_B = mito::geometry::coordinates<SPHERICAL>(
         { 1.0, 0.75 * std::numbers::pi, 0.5 * std::numbers::pi });
 
     // the exact value of {coord_A + coord_B} / 2.0
-    constexpr auto coord_C = mito::geometry::coordinates<mito::geometry::SPHERICAL>(
+    constexpr auto coord_C = mito::geometry::coordinates<SPHERICAL>(
         { 0.5 * std::sqrt(2.0), 0.5 * std::numbers::pi, 0.5 * std::numbers::pi });
 
     // compute {coord_A + coord_B} / 2.0
