@@ -21,10 +21,10 @@ using mito::tensor::_;
 using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
 
 
-// the basis for vector fields
-static constexpr auto e_x = mito::fields::uniform_field<coordinates_t>(mito::e_0<3>);
-static constexpr auto e_y = mito::fields::uniform_field<coordinates_t>(mito::e_1<3>);
-static constexpr auto e_z = mito::fields::uniform_field<coordinates_t>(mito::e_2<3>);
+// the basis for vectors
+static constexpr auto e_x = mito::e_0<3>;
+static constexpr auto e_y = mito::e_1<3>;
+static constexpr auto e_z = mito::e_2<3>;
 
 
 TEST(Quadrature, Square)
@@ -77,19 +77,16 @@ TEST(Quadrature, Square)
     constexpr auto normal_vector = cross / pyre::tensor::norm(cross);
 
     // the basis one-forms
-    constexpr auto dx =
-        mito::fields::one_form_field(e_x, mito::fields::identity_tensor_field<coordinates_t, 3>);
-    constexpr auto dy =
-        mito::fields::one_form_field(e_y, mito::fields::identity_tensor_field<coordinates_t, 3>);
-    constexpr auto dz =
-        mito::fields::one_form_field(e_z, mito::fields::identity_tensor_field<coordinates_t, 3>);
+    constexpr auto dx = mito::tensor::one_form(e_x);
+    constexpr auto dy = mito::tensor::one_form(e_y);
+    constexpr auto dz = mito::tensor::one_form(e_z);
 
     // the 3D metric volume element
-    constexpr auto w = mito::fields::wedge(dx, dy, dz);
+    constexpr auto w = mito::tensor::wedge(dx, dy, dz);
 
     // the 2D restriction of the 3D metric volume element
     constexpr auto wS = mito::fields::field(
-        [w, normal_vector](const coordinates_t & x) -> auto { return w(x)(normal_vector, _, _); });
+        [w, normal_vector](const coordinates_t &) -> auto { return w(normal_vector, _, _); });
 
     // create a submanifold on {mesh} with the appropriate metric volume element {wS}
     auto manifold = mito::manifolds::submanifold(mesh, coord_system, wS);
