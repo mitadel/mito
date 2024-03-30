@@ -61,7 +61,7 @@ TEST(Quadrature, FlipSegment)
     // the 3D metric volume element
     constexpr auto w = mito::tensor::wedge(dx, dy, dz);
 
-    // the 2D restriction of the 3D metric volume element
+    // the 1D restriction of the 3D metric volume element
     constexpr auto wS = mito::fields::field(
         [w, v_2, v_3](const coordinates_t &) -> auto { return w(v_2, v_3, _); });
 
