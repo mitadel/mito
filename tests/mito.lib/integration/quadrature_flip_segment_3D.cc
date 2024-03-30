@@ -24,6 +24,9 @@ static constexpr auto e_z = mito::e_2<3>;
 
 TEST(Quadrature, FlipSegment)
 {
+    // make a channel
+    pyre::journal::info_t channel("tests.integration");
+
     // a Cartesian coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
 
@@ -76,6 +79,10 @@ TEST(Quadrature, FlipSegment)
     auto manifold_flip = mito::manifolds::submanifold(mesh_flip, coord_system, wS);
     auto integrator_flip = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold_flip);
     auto result_flip = integrator_flip.integrate(f);
+
+    // report
+    channel << "result from integration on segment: " << result << pyre::journal::newline
+            << "result from integration on flipped segment: " << result_flip << pyre::journal::endl;
 
     // expect that the results obtained are opposite
     EXPECT_DOUBLE_EQ(result, -result_flip);
