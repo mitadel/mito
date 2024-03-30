@@ -9,7 +9,7 @@
 #include <mito/tensor.h>
 
 
-// the basis for vector fields
+// the basis for vectors
 static constexpr auto e_x = mito::e_0<3>;
 static constexpr auto e_y = mito::e_1<3>;
 static constexpr auto e_z = mito::e_2<3>;
