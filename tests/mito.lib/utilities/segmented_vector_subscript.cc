@@ -27,31 +27,31 @@ TEST(Utilities, SegmentedVectorSubscript)
 
     // emplace resource in the container
     collection.emplace(0);
-    EXPECT_TRUE(collection[0].foo() == 0);
+    EXPECT_EQ(0, collection[0].foo());
 
     // emplace resource in the container
     collection.emplace(1);
-    EXPECT_TRUE(collection[1].foo() == 1);
+    EXPECT_EQ(1, collection[1].foo());
 
     // emplace resource in the container
     auto & resource = collection.emplace(2);
-    EXPECT_TRUE(collection[2].foo() == 2);
+    EXPECT_EQ(2, collection[2].foo());
 
     // emplace resource in the container
     collection.emplace(3);
-    EXPECT_TRUE(collection[3].foo() == 3);
+    EXPECT_EQ(3, collection[3].foo());
 
     // emplace resource in the container
     collection.emplace(4);
-    EXPECT_TRUE(collection[4].foo() == 4);
+    EXPECT_EQ(4, collection[4].foo());
 
     // emplace resource in the container
     collection.emplace(5);
-    EXPECT_TRUE(collection[5].foo() == 5);
+    EXPECT_EQ(5, collection[5].foo());
 
     // erase a resource
     collection.erase(resource);
 
     // check that the resource erased has been marked as invalid
-    EXPECT_TRUE(collection[2].is_valid() == false);
+    EXPECT_FALSE(collection[2].is_valid());
 }
