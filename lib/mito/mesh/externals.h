@@ -8,6 +8,7 @@
 #define mito_mesh_externals_h
 
 // externals
+#include <ranges>
 #include <unordered_map>
 
 // support

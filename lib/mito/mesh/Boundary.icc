@@ -14,14 +14,12 @@ requires(N > 0)
 
     // loop on the mesh cells
     for (const auto & cell : mesh.cells()) {
-        // loop on the topological composition of {cell}
-        for (const auto & subcell : cell.simplex()->composition()) {
-            // if {subcell} is on the boundary of the mesh
-            if (mesh.isOnBoundary(subcell)) {
-                // increment counter for boundary cells
-                ++count;
-            }
-        }
+        // loop on the topological composition of {cell} and
+        // increment counter if {subcell} is on the boundary of the mesh
+        count +=
+            std::ranges::count_if(cell.simplex()->composition(), [&mesh](const auto & subcell) {
+                return mesh.isOnBoundary(subcell);
+            });
     }
 
     // return the count of boundary cells
