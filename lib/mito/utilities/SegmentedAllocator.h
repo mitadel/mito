@@ -343,7 +343,7 @@ namespace mito::utilities {
         // a queue with the available locations for writing
         std::queue<unqualified_pointer> _available_locations;
         // a map with pointers to the start of each segment
-        std::map<int, unqualified_pointer> _start_of_segment;
+        std::unordered_map<int, unqualified_pointer> _start_of_segment;
 
       private:
         // non-const iterator
