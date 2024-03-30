@@ -132,6 +132,14 @@ namespace mito::geometry {
         return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
     }
 
+    // returns the geometric simplex with opposite orientation to {simplex}
+    template <int N, int D>
+    constexpr auto flip(const geometric_simplex_t<N, D> & simplex) -> geometric_simplex_t<N, D>
+    {
+        // build a new geometric simplex on top of the flipped topological simplex and return it
+        return geometric_simplex<D>(mito::topology::flip(simplex.simplex()), simplex.nodes());
+    }
+
     template <int D>
     auto flip_diagonal(
         const std::pair<geometric_simplex_t<2, D>, geometric_simplex_t<2, D>> & simplex_pair)

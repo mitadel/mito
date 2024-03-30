@@ -198,6 +198,13 @@ namespace mito::topology {
 
         return true;
     }
+
+    // returns the topological simplex with opposite orientation to {simplex}
+    template <int N>
+    constexpr auto flip(const simplex_t<N> & simplex) -> simplex_t<N>
+    {
+        return topology().flip(simplex);
+    }
 }
 
 
