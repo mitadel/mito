@@ -36,13 +36,15 @@ requires(N > 0)
 
     // loop on the mesh cells
     for (const auto & cell : mesh.cells()) {
-        // loop on the topological composition of {cell}
-        for (const auto & subcell : cell.simplex()->composition()) {
-            // if {subcell} is on the boundary of the mesh
-            if (mesh.isOnBoundary(subcell)) {
-                // add {cell} to the boundary mesh
-                boundary_mesh.insert(mito::geometry::geometric_simplex<D>(subcell, cell.nodes()));
-            }
+        // create view of {subcell}s on the boundary of the mesh
+        auto subcellsOnBoundary =
+            cell.simplex()->composition() | std::views::filter([&mesh](const auto & subcell) {
+                return mesh.isOnBoundary(subcell);
+            });
+        // loop on the {subcell} on the boundary
+        for (const auto & subcell : subcellsOnBoundary) {
+            // add {cell} to the boundary mesh
+            boundary_mesh.insert(mito::geometry::geometric_simplex<D>(subcell, cell.nodes()));
         }
     }
 
