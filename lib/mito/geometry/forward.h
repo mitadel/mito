@@ -11,7 +11,7 @@
 namespace mito::geometry {
 
     // available coordinate types
-    enum CoordinateType { EUCLIDEAN, POLAR };
+    enum CoordinateType { CARTESIAN, POLAR };
 
     // class coordinates
     template <int D, CoordinateType coordT>

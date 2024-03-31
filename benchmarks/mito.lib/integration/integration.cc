@@ -25,8 +25,8 @@ main()
             (0,0)           (1,0)
         */
 
-    // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();
@@ -57,7 +57,7 @@ main()
     auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system);
 
     // instantiate a scalar field
-    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
+    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
     auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2

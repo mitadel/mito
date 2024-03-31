@@ -72,7 +72,7 @@ namespace mito::geometry {
 
 
 // implementation of custom {operator+}, {operator-} {operator*}
-#include "algebra_euclidean_coordinates.icc"
+#include "algebra_cartesian_coordinates.icc"
 #include "algebra_polar_coordinates.icc"
 
 #endif    // mito_geometry_Coordinates_h

@@ -1,0 +1,104 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#if !defined(mito_geometry_algebra_cartesian_coordinates_h)
+#define mito_geometry_algebra_cartesian_coordinates_h
+
+
+namespace mito::geometry {
+
+    // addition of Cartesian coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<1, CARTESIAN> & xA, const Coordinates<1, CARTESIAN> & xB)
+        -> Coordinates<1, CARTESIAN>
+    {
+        // easy enough
+        return Coordinates<1, CARTESIAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Cartesian coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<1, CARTESIAN> & xB)
+        -> Coordinates<1, CARTESIAN>
+    {
+        // easy enough
+        return Coordinates<1, CARTESIAN>(a * xB._array);
+    }
+
+    // subtraction of coordinates xA - xB
+    template <>
+    constexpr auto operator-(
+        const Coordinates<1, CARTESIAN> & xA, const Coordinates<1, CARTESIAN> & xB)
+        -> mito::vector_t<1>
+    {
+        return mito::vector_t<1>(xA._array - xB._array);
+    }
+
+
+    // addition of Cartesian coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<2, CARTESIAN> & xA, const Coordinates<2, CARTESIAN> & xB)
+        -> Coordinates<2, CARTESIAN>
+    {
+        // easy enough
+        return Coordinates<2, CARTESIAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Cartesian coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<2, CARTESIAN> & xB)
+        -> Coordinates<2, CARTESIAN>
+    {
+        // easy enough
+        return Coordinates<2, CARTESIAN>(a * xB._array);
+    }
+
+    // subtraction of coordinates xA - xB
+    template <>
+    constexpr auto operator-(
+        const Coordinates<2, CARTESIAN> & xA, const Coordinates<2, CARTESIAN> & xB)
+        -> mito::vector_t<2>
+    {
+        return mito::vector_t<2>(xA._array - xB._array);
+    }
+
+
+    // addition of Cartesian coordinates xA + xB
+    template <>
+    constexpr auto operator+(
+        const Coordinates<3, CARTESIAN> & xA, const Coordinates<3, CARTESIAN> & xB)
+        -> Coordinates<3, CARTESIAN>
+    {
+        // easy enough
+        return Coordinates<3, CARTESIAN>(xA._array + xB._array);
+    }
+
+    // multiplication of Cartesian coordinates a * xB
+    template <>
+    constexpr auto operator*(const scalar_t & a, const Coordinates<3, CARTESIAN> & xB)
+        -> Coordinates<3, CARTESIAN>
+    {
+        // easy enough
+        return Coordinates<3, CARTESIAN>(a * xB._array);
+    }
+
+    // subtraction of coordinates xA - xB
+    template <>
+    constexpr auto operator-(
+        const Coordinates<3, CARTESIAN> & xA, const Coordinates<3, CARTESIAN> & xB)
+        -> mito::vector_t<3>
+    {
+        return mito::vector_t<3>(xA._array - xB._array);
+    }
+
+}
+
+
+#endif
+
+// end of file

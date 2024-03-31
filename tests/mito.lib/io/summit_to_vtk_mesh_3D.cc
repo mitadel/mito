@@ -11,8 +11,8 @@
 
 TEST(SummitToVTK, Mesh3D)
 {
-    // a Euclidean coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 3D
+    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
 
     // read summit mesh
     std::ifstream fileStream("cube.summit");

@@ -22,7 +22,7 @@ PYBIND11_MODULE(mito, m)
     m.doc() = "pybind11 mito plugin";    // optional module docstring
 
     // the mito cartesian coordinates interface
-    using coordinates_3D_t = mito::geometry::coordinates_t<3, mito::geometry::EUCLIDEAN>;
+    using coordinates_3D_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
     mito::py::class_<coordinates_3D_t>(m, "Coordinates3D")
         // the default constructor
         .def(
@@ -47,7 +47,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito vector interface
-    using coordinates_2D_t = mito::geometry::coordinates_t<2, mito::geometry::EUCLIDEAN>;
+    using coordinates_2D_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
     mito::py::class_<coordinates_2D_t>(m, "Coordinates2D")
         // the default constructor
         .def(
@@ -102,7 +102,7 @@ PYBIND11_MODULE(mito, m)
 
     // alias for a mesh of triangles embedded in 2D
     using mesh_triangle_2D_t =
-        mito::mesh::mesh_t<mito::topology::triangle_t, 2, mito::geometry::EUCLIDEAN>;
+        mito::mesh::mesh_t<mito::topology::triangle_t, 2, mito::geometry::CARTESIAN>;
 
     // the mito Mesh interface
     mito::py::class_<mesh_triangle_2D_t>(m, "SimplicialMesh2D")
@@ -129,7 +129,7 @@ PYBIND11_MODULE(mito, m)
 
     // alias for a manifold of triangles embedded in 2D
     using manifold_triangle_2D_t =
-        mito::manifolds::manifold_t<mito::geometry::EUCLIDEAN, mito::topology::triangle_t, 2>;
+        mito::manifolds::manifold_t<mito::geometry::CARTESIAN, mito::topology::triangle_t, 2>;
 
     // the mito manifold interface
     mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")

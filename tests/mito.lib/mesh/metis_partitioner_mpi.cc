@@ -10,7 +10,7 @@
 #include <mito/simulation.h>
 
 
-using coord_system_t = mito::geometry::coordinate_system_t<2, mito::geometry::EUCLIDEAN>;
+using coord_system_t = mito::geometry::coordinate_system_t<2, mito::geometry::CARTESIAN>;
 using mesh_t = mito::mesh::mesh_t<mito::geometry::triangle_t<2>>;
 
 
@@ -19,8 +19,8 @@ TEST(MetisPartitionerMPI, Base)
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
 
-    // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();

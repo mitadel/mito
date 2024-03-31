@@ -11,7 +11,7 @@
 namespace mito::geometry {
 
     // factory for coordinates from brace-enclosed initializer list (case D > 1)
-    template <CoordinateType coordT = EUCLIDEAN, int D>
+    template <CoordinateType coordT = CARTESIAN, int D>
     constexpr auto coordinates(mito::scalar_t (&&coords)[D])
     requires(D > 1)
     {
@@ -19,17 +19,26 @@ namespace mito::geometry {
     }
 
     // factory for coordinates from brace-enclosed initializer list (case D = 1)
-    template <CoordinateType coordT = EUCLIDEAN>
+    template <CoordinateType coordT = CARTESIAN>
     constexpr auto coordinates(mito::scalar_t && coords)
     {
         return coordinates_t<1, coordT>(std::move(coords));
     }
 
     // factory for coordinate system
-    template <int D, CoordinateType coordT = EUCLIDEAN>
+    template <int D, CoordinateType coordT = CARTESIAN>
     constexpr auto coordinate_system()
     {
         return coordinate_system_t<D, coordT>();
+    }
+
+    // factory for building a new coordinate system of coordinate type {coordT2} from an existing
+    // coordinate system of coordinate type {coordT1}
+    template <CoordinateType coordT2, int D, CoordinateType coordT1>
+    constexpr auto coordinate_system(const coordinate_system_t<D, coordT1> & coord_sys)
+        -> coordinate_system_t<D, coordT2>
+    {
+        return coordinate_system_t<D, coordT2>(coord_sys);
     }
 
     // point cloud factory

@@ -15,8 +15,8 @@ using mito::quadrature::GAUSS;
 
 TEST(Quadrature, Segment)
 {
-    // a Euclidean coordinate system in 1D
-    auto coord_system = mito::geometry::coordinate_system<1, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 1D
+    auto coord_system = mito::geometry::coordinate_system<1, mito::geometry::CARTESIAN>();
 
     // an empty mesh of simplicial topology in 1D
     auto mesh = mito::mesh::mesh<mito::geometry::segment_t<1>>();
@@ -32,7 +32,7 @@ TEST(Quadrature, Segment)
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
     // a scalar function
-    using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::EUCLIDEAN>;
+    using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
     auto f_exp = mito::manifolds::field(mito::math::function(
         [](const coordinates_t & x) -> mito::scalar_t { return std::exp(-x[0]); }));
 

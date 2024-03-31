@@ -10,8 +10,8 @@
 
 TEST(Manifolds, Triangle2D)
 {
-    // a Euclidean coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::EUCLIDEAN>();
+    // a Cartesian coordinate system in 2D
+    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
 
     // an empty mesh of triangles
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();
