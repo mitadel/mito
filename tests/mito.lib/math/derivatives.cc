@@ -77,7 +77,7 @@ main()
 
     constexpr auto f = cos(x_0);
 
-    std::cout << f(mito::vector_t<2>{ 0.0, 1.0 }) << std::endl;
+    std::cout << f({ 0.0, 1.0 }) << std::endl;
 
     // all done
     return 0;
