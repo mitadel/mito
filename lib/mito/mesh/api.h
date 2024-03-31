@@ -14,7 +14,6 @@ namespace mito::mesh {
     template <class cellT>
     auto mesh() -> mesh_t<cellT>;
 
-
     // assemble boundary mesh of {mesh}
     template <int N, int D, template <int, int> class cellT>
     auto boundary(const mesh_t<cellT<N, D>> & mesh) -> mesh_t<cellT<N - 1, D>>
