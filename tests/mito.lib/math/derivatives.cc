@@ -44,7 +44,7 @@ class Function {
     // call operator
     template <class G>
     constexpr auto operator()(const Function<G> & g) const -> auto
-    requires(std::is_same_v<typename Function<G>::Y, X>)
+    requires(std::convertible_to<typename Function<G>::Y, X>)
     {
         auto f = _f;
         return function([f, g](Function<G>::X x) -> Y { return f(g(x)); });
