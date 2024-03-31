@@ -66,18 +66,22 @@ requires(std::is_same_v<typename Function<F1>::X, typename Function<F2>::X>)
 }
 
 
-// using mito::math;
+namespace mito::math {
+
+    constexpr auto cos =
+        ::function([](mito::vector_t<1> x) -> mito::vector_t<1> { return { std::cos(x[0]) }; });
+    constexpr auto x_0 =
+        ::function([](mito::vector_t<2> x) -> mito::vector_t<1> { return { x[0] }; });
+    constexpr auto x_1 =
+        ::function([](mito::vector_t<2> x) -> mito::vector_t<1> { return { x[1] }; });
+}
+
 
 int
 main()
 {
-    constexpr auto cos =
-        function([](mito::vector_t<1> x) -> mito::vector_t<1> { return { std::cos(x[0]) }; });
-    constexpr auto x_0 =
-        function([](mito::vector_t<2> x) -> mito::vector_t<1> { return { x[0] }; });
-    // auto x_1 = function([](const mito::vector_t<2> & x) { return x[1]; });
 
-    constexpr auto f = cos(x_0);
+    constexpr auto f = mito::math::cos(mito::math::x_0);
 
     std::cout << f({ 0.0, 1.0 }) << std::endl;
 
