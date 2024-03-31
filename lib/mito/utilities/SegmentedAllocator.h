@@ -84,7 +84,8 @@ namespace mito::utilities {
             _end_allocation(std::move(other._end_allocation)),
             _n_segments(std::move(other._n_segments)),
             _n_elements(std::move(other._n_elements)),
-            _available_locations(std::move(other._available_locations))
+            _available_locations(std::move(other._available_locations)),
+            _start_of_segment(std::move(other._start_of_segment))
         {
             // invalidate the source
             other._begin = nullptr;
@@ -145,6 +146,8 @@ namespace mito::utilities {
             if (_begin == _end) {
                 // point {_begin} to the beginning of the allocated memory
                 _begin = segment;
+                // take note of the beginning of the segment
+                _start_of_segment[_n_segments] = _begin;
             }
             // otherwise
             else {
@@ -153,6 +156,8 @@ namespace mito::utilities {
                     reinterpret_cast<unqualified_pointer *>(_end_allocation);
                 // leave behind a pointer with the location of the next segment
                 *tail = segment;
+                // take note of the beginning of the segment
+                _start_of_segment[_n_segments] = *tail;
             }
             // increment the number of segments
             ++_n_segments;
@@ -186,6 +191,23 @@ namespace mito::utilities {
             return _end;
         }
 
+        auto _erase_check(pointer element) const -> bool
+        {
+            // loop on segments
+            for (int i = 0; i < _n_segments; ++i) {
+                // get the start of the segment
+                const auto & segment = _start_of_segment.at(i);
+                // if I could find {element} within the range spanned by one of my segments
+                if (element >= segment && element < segment + _segment_size) {
+                    // then {element} belongs to my allocation
+                    return true;
+                }
+            }
+
+            // {element} does not belong to my allocation
+            return false;
+        }
+
       public:
         auto location_for_placement() -> unqualified_pointer
         {
@@ -211,7 +233,7 @@ namespace mito::utilities {
         // insert an element in the container
         // (increment the number of elements and remove the address of the element from the pile of
         // the available locations for reuse)
-        auto insert(resource_type * element) -> iterator
+        auto insert([[maybe_unused]] resource_type * element) -> void
         {
             // increment the size of the container
             ++_n_elements;
@@ -225,9 +247,7 @@ namespace mito::utilities {
             }
 
             // all done
-            return iterator(
-                element /* ptr */, std::next(_begin, _segment_size /* segment_end */),
-                _segment_size, _end /* end */);
+            return;
         }
 
         // erase an element from the container
@@ -240,6 +260,9 @@ namespace mito::utilities {
 
             // add the address of the element to the queue of the available locations for write
             _available_locations.push(const_cast<unqualified_pointer>(element));
+
+            // check if this element belongs to my allocation
+            assert(_erase_check(element));
 
             // all done
             return;
@@ -264,6 +287,34 @@ namespace mito::utilities {
             // make an {iterator} that points to the end of my segmented container
             return iterator(
                 _end /* ptr */, _end_allocation /* segment_end */, _segment_size, _end /* end */);
+        }
+
+        // const components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) -> resource_type &
+        {
+            // find in what segment and in what position within that segment is the i-th resource
+            int n_segment = i / _segment_size;
+            int position_in_segment = i % _segment_size;
+
+            // start from the beginning of the {n_segment} segment
+            auto ptr = _start_of_segment.at(n_segment);
+
+            // found it
+            return *(ptr + position_in_segment);
+        }
+
+        // components accessor (random access, may return an invalid resource)
+        inline auto operator[](int i) const -> const resource_type &
+        {
+            // find in what segment and in what position within that segment is the i-th resource
+            int n_segment = i / _segment_size;
+            int position_in_segment = i % _segment_size;
+
+            // start from the beginning of the {n_segment} segment
+            auto ptr = _start_of_segment.at(n_segment);
+
+            // found it
+            return *(ptr + position_in_segment);
         }
 
       private:
@@ -291,6 +342,8 @@ namespace mito::utilities {
         int _n_elements;
         // a queue with the available locations for writing
         std::queue<unqualified_pointer> _available_locations;
+        // a map with pointers to the start of each segment
+        std::unordered_map<int, unqualified_pointer> _start_of_segment;
 
       private:
         // non-const iterator

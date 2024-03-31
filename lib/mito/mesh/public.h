@@ -19,6 +19,8 @@
 
 // classes implementation
 #include "Mesh.h"
+#include "Boundary.h"
+#include "Filter.h"
 
 // factories implementation
 #include "factories.h"

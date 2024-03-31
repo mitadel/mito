@@ -51,7 +51,7 @@ TEST(Mesh, BuildMesh)
 
     // assert you found 4 cells (segments) on the boundary
     {
-        auto boundary_mesh = mesh.boundary();
+        auto boundary_mesh = mito::mesh::boundary(mesh);
         EXPECT_EQ(boundary_mesh.nCells(), 4);
     }
 

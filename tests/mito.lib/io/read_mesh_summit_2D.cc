@@ -23,6 +23,6 @@ TEST(SummitReader, LoadMesh2D)
     std::cout << "Loaded mesh in " << clock() - t << std::endl;
 
     t = clock();
-    auto boundary_mesh = mesh.boundary();
+    auto boundary_mesh = mito::mesh::boundary(mesh);
     std::cout << "Fetched boundary in " << clock() - t << std::endl;
 }

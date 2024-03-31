@@ -75,6 +75,7 @@ namespace mito::geometry {
     template <int D, int N, class nodesT>
     auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
         -> geometric_simplex_t<N, D>
+    requires(N > 0)
     {
         using vertex_type = topology::vertex_t;
         using node_type = node_t<D>;
@@ -106,6 +107,31 @@ namespace mito::geometry {
         return _build_geometric_simplex(make_integer_sequence<N + 1>());
     }
 
+    // builds the node based on vertex {vertex} with the vertex-point pairing as appears in {nodes}
+    template <int D, int N, class nodesT>
+    auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
+        -> geometric_simplex_t<N, D>
+    requires(N == 0)
+    {
+        using vertex_type = topology::vertex_t;
+        using node_type = node_t<D>;
+
+        // get the vertex
+        auto vertex = simplex->footprint();
+
+        // helper function that returns a lambda function checking if a node corresponds to a
+        // given vertex
+        auto has_vertex = [](const vertex_type & vertex) {
+            auto lambda = [&vertex](const node_type & node) {
+                return node.vertex() == vertex;
+            };
+            return lambda;
+        };
+
+        // return the node
+        return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
+    }
+
     template <int D>
     auto flip_diagonal(
         const std::pair<geometric_simplex_t<2, D>, geometric_simplex_t<2, D>> & simplex_pair)
@@ -116,7 +142,7 @@ namespace mito::geometry {
         auto simplex_1 = simplex_pair.second;
 
         // flip the topological simplices
-        auto flipped_simplex_pair =
+        auto [new_simplex0, new_simplex1] =
             mito::topology::flip_diagonal({ simplex_0.simplex(), simplex_1.simplex() });
 
         // concatenate in {nodes} the nodes of the two simplices
@@ -126,8 +152,8 @@ namespace mito::geometry {
         nodes.insert(std::begin(nodes), std::begin(simplex_1.nodes()), std::end(simplex_1.nodes()));
 
         // build the new geometric simplices and return them
-        return { geometric_simplex<D>(flipped_simplex_pair.first, nodes),
-                 geometric_simplex<D>(flipped_simplex_pair.second, nodes) };
+        return { geometric_simplex<D>(new_simplex0, nodes),
+                 geometric_simplex<D>(new_simplex1, nodes) };
     }
 }
 
