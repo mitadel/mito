@@ -68,9 +68,12 @@ requires(std::is_same_v<typename Function<F1>::X, typename Function<F2>::X>)
 
 namespace mito::math {
 
-    constexpr auto cos = ::function([](mito::scalar_t x) -> mito::scalar_t { return std::cos(x); });
-    constexpr auto x_0 = ::function([](mito::vector_t<2> x) -> mito::scalar_t { return x[0]; });
-    constexpr auto x_1 = ::function([](mito::vector_t<2> x) -> mito::scalar_t { return x[1]; });
+    constexpr auto cos =
+        ::function([](const mito::vector_t<1> & x) -> mito::scalar_t { return std::cos(x); });
+    constexpr auto x_0 =
+        ::function([](const mito::vector_t<2> & x) -> mito::scalar_t { return x[0]; });
+    constexpr auto x_1 =
+        ::function([](const mito::vector_t<2> & x) -> mito::scalar_t { return x[1]; });
 }
 
 
