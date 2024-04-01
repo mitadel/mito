@@ -41,7 +41,7 @@ class Function {
     // call operator
     constexpr auto operator()(X x) const -> Y { return _f(x); }
 
-    // call operator
+    // call operator for function composition
     template <class G>
     constexpr auto operator()(const Function<G> & g) const -> auto
     requires(std::convertible_to<typename Function<G>::Y, X>)
