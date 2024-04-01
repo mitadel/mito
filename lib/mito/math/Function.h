@@ -39,6 +39,15 @@ namespace mito::math {
         // call operator
         constexpr auto operator()(X x) const -> Y { return _f(x); }
 
+        // call operator for function composition
+        template <class G>
+        constexpr auto operator()(const Function<G> & g) const -> auto
+        requires(std::convertible_to<typename Function<G>::Y, X>)
+        {
+            auto f = _f;
+            return function([f, g](Function<G>::X x) -> Y { return f(g(x)); });
+        }
+
       private:
         // the function wrapped
         F _f;
