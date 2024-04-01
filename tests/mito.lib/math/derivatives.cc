@@ -33,6 +33,8 @@ class Function {
     using X = typename traits::argument_type;
     // the output type
     using Y = typename traits::result_type;
+    // the function pointer type
+    using function_pointer_type = Y (*)(X);
 
   public:
     // constructor
@@ -49,6 +51,9 @@ class Function {
         auto f = _f;
         return function([f, g](Function<G>::X x) -> Y { return f(g(x)); });
     }
+
+    // cast to point to function
+    operator function_pointer_type() const { return _f; };
 
   private:
     // the function wrapped
