@@ -16,6 +16,19 @@ namespace mito::math {
     template <class F>
     constexpr auto _derivative();
 
+    // the first derivative of {f}
+    constexpr auto derivative(const Function auto & f)
+    {
+        return _derivative<std::remove_cvref_t<decltype(f)>>();
+    }
+
+    // the first derivative of the negative of a function {f}
+    template <class F>
+    constexpr auto derivative(const Negative<F> &)
+    {
+        return -_derivative<F>();
+    }
+
     template <>
     constexpr auto _derivative<Sin>()
     {
@@ -26,23 +39,6 @@ namespace mito::math {
     constexpr auto _derivative<Cos>()
     {
         return -Sin();
-    }
-
-    template <>
-    constexpr auto _derivative<Negative<Sin>>()
-    {
-        return -_derivative<Sin>();
-    }
-
-    template <>
-    constexpr auto _derivative<Negative<Cos>>()
-    {
-        return -_derivative<Cos>();
-    }
-
-    constexpr auto derivative(const Function auto & f)
-    {
-        return _derivative<std::remove_cvref_t<decltype(f)>>();
     }
 }
 
