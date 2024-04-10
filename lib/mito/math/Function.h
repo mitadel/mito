@@ -30,6 +30,28 @@ namespace mito::math {
     };
 
 
+    template <class F, class G>
+    requires(Function<F> && Function<G>)
+    class Sum : public ScalarFunction {
+      public:
+        // constructor
+        constexpr Sum(const F & f, const G & g) : _f(f), _g(g) {}
+
+        // call operator
+        constexpr auto operator()(X x) const -> Y { return _f(x) + _g(x); }
+
+        // the first in the sum
+        constexpr auto f1() const -> F { return _f; }
+
+        // the second in the sum
+        constexpr auto f2() const -> G { return _g; }
+
+      private:
+        F _f;
+        G _g;
+    };
+
+
     template <class F>
     requires Function<F>
     class Negative : public ScalarFunction {

@@ -14,6 +14,12 @@
 
 namespace mito::math {
 
+    // fa + fb
+    constexpr auto operator+(const Function auto & f1, const Function auto & f2)
+    {
+        return Sum<std::remove_cvref_t<decltype(f1)>, std::remove_cvref_t<decltype(f2)>>(f1, f2);
+    }
+
     // -f
     constexpr auto operator-(const Function auto & f)
     {
@@ -22,13 +28,6 @@ namespace mito::math {
 
 // TOFIX
 #if 0
-    // fa + fb (identical return type for fa and fb)
-    template <class F1, class F2>
-    constexpr auto operator+(const function_t<F1> & fA, const function_t<F2> & fB)
-    requires(std::convertible_to<typename function_t<F1>::X, typename function_t<F2>::X>)
-    {
-        return function([fA, fB](function_t<F1>::X x) { return fA(x) + fB(x); });
-    }
 
     // fa * fb
     template <class F1, class F2>

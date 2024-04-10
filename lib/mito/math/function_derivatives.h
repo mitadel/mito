@@ -23,6 +23,13 @@ namespace mito::math {
         return _derivative<std::remove_cvref_t<decltype(f)>>();
     }
 
+    // the first derivative of a function sum {f}
+    template <class F1, class F2>
+    constexpr auto derivative(const Sum<F1, F2> & f)
+    {
+        return derivative(f.f1()) + derivative(f.f2());
+    }
+
     // the first derivative of the negative of a function {f}
     template <class F>
     constexpr auto derivative(const Negative<F> &)
