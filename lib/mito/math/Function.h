@@ -16,13 +16,16 @@ namespace mito::math {
     concept Function = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
 
 
+    // a function mapping a {real} to a {real}
     class ScalarFunction {
       protected:
+        // the input type
         using X = real;
+        // the output type
         using Y = real;
 
       public:
-        // constructor
+        // default constructor
         constexpr ScalarFunction() = default;
     };
 

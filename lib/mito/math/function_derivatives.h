@@ -13,6 +13,7 @@
 
 namespace mito::math {
 
+    // the derivative of a function of class {F}
     template <class F>
     constexpr auto _derivative();
 
