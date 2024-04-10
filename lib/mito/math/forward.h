@@ -10,13 +10,13 @@
 
 namespace mito::math {
 
-    // class function
-    template <class F>
-    class Function;
+    // class for a scalar function
+    class ScalarFunction;
 
-    // alias for function
-    template <class F>
-    using function_t = Function<F>;
+    // function sine
+    class Sin;
+    // function cosine
+    class Cos;
 }
 
 

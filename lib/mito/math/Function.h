@@ -11,45 +11,33 @@
 
 namespace mito::math {
 
-    // This class provides a single interface to lambda functions, {std::function}, and pointers to
-    // functions. The class template parameter is the type of the function wrapped.
 
     template <class F>
-    class Function {
-      private:
-        // type traits on function type
-        using traits = std::conditional<
-            // if {F} is a pointer to function
-            std::is_pointer<F>::value,
-            // use the traits for pointer to functions
-            pointer_function_traits<F>,
-            // otherwise use the traits for a lambda (these traits also work on {std::function})
-            lambda_traits<F>>::type;
+    concept Function = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
 
-      public:
-        // the input type
-        using X = typename traits::argument_type;
-        // the output type
-        using Y = typename traits::result_type;
+
+    class ScalarFunction {
+      protected:
+        using X = real;
+        using Y = real;
 
       public:
         // constructor
-        constexpr Function(F f) : _f{ f } {}
+        constexpr ScalarFunction() = default;
+    };
+
+
+    template <class F>
+    requires Function<F>
+    class Negative : public ScalarFunction {
+      public:
+        // constructor
+        constexpr Negative(const F & f) : _f(f) {}
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return _f(x); }
-
-        // call operator for function composition
-        template <class G>
-        constexpr auto operator()(const Function<G> & g) const -> auto
-        requires(std::convertible_to<typename Function<G>::Y, X>)
-        {
-            auto f = _f;
-            return function([f, g](Function<G>::X x) -> Y { return f(g(x)); });
-        }
+        constexpr auto operator()(X x) const -> Y { return -1.0 * _f(x); }
 
       private:
-        // the function wrapped
         F _f;
     };
 }

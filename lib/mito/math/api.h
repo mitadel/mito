@@ -17,6 +17,10 @@ namespace mito::math {
     // // make a vector-valued function from N scalar-valued functions
     // template <class X, int N>
     // constexpr auto function(const function_t<X, scalar_t> (&f_list)[N]);
+
+    // supported math functions
+    constexpr auto sin();
+    constexpr auto cos();
 }
 
 

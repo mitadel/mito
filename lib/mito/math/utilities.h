@@ -9,6 +9,8 @@
 
 
 #include "function_algebra.h"
+#include "function_library.h"
+#include "function_derivatives.h"
 #include "lambda_traits.h"
 #include "combinatorics.h"
 

@@ -8,35 +8,39 @@
 #include <mito/math.h>
 
 
-namespace mito::math {
-
-    constexpr auto cos =
-        function([](const mito::vector_t<1> & x) -> mito::scalar_t { return std::cos(x); });
-    constexpr auto sin =
-        function([](const mito::vector_t<1> & x) -> mito::scalar_t { return std::sin(x); });
-    constexpr auto x_0 =
-        function([](const mito::vector_t<2> & x) -> mito::scalar_t { return x[0]; });
-    constexpr auto x_1 =
-        function([](const mito::vector_t<2> & x) -> mito::scalar_t { return x[1]; });
-}
+// pi
+using std::numbers::pi;
 
 
-// typedef
-using scalar_function_type = mito::scalar_t (*)(const mito::vector_t<1> &);
+// TOFIX: make {constexpr}
 
-
-int
-main()
+TEST(Derivatives, Sin)
 {
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
 
-    constexpr auto f = mito::math::cos(mito::math::x_0 * mito::math::x_1);
+    // a sine function
+    constexpr auto sin = mito::math::sin();
+    // a cosine function
+    constexpr auto cos = mito::math::cos();
 
-    std::cout << f({ 0.0, 1.0 }) << std::endl;
-    std::map<scalar_function_type, scalar_function_type> derivatives;
-    derivatives[mito::math::sin] = mito::math::cos;
+    // the first derivative of {sin}
+    auto sin_i = mito::math::derivative(sin);
+    // check that it is equal to {cos}
+    EXPECT_DOUBLE_EQ(cos(pi_fourth), sin_i(pi_fourth));
 
-    std::cout << derivatives[mito::math::sin]({ std::numbers::pi }) << std::endl;
+    // the second derivative of {sin}
+    auto sin_ii = mito::math::derivative(sin_i);
+    // check that it is equal to -{sin}
+    EXPECT_DOUBLE_EQ(-sin(pi_fourth), sin_ii(pi_fourth));
 
-    // all done
-    return 0;
+    // the third derivative of {sin}
+    auto sin_iii = mito::math::derivative(sin_ii);
+    // check that it is equal to -{cos}
+    EXPECT_DOUBLE_EQ(-cos(pi_fourth), sin_iii(pi_fourth));
+
+    // the fourth derivative of {sin}
+    auto sin_iiii = mito::math::derivative(sin_iii);
+    // check that it is equal to {sin}
+    EXPECT_DOUBLE_EQ(sin(pi_fourth), sin_iiii(pi_fourth));
 }

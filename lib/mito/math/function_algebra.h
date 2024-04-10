@@ -14,6 +14,14 @@
 
 namespace mito::math {
 
+    // -f
+    constexpr auto operator-(const Function auto & f)
+    {
+        return Negative<std::remove_cvref_t<decltype(f)>>(f);
+    }
+
+// TOFIX
+#if 0
     // fa + fb (identical return type for fa and fb)
     template <class F1, class F2>
     constexpr auto operator+(const function_t<F1> & fA, const function_t<F2> & fB)
@@ -139,6 +147,8 @@ namespace mito::math {
     {
         return f + (-a);
     }
+
+#endif
 }
 
 
