@@ -45,6 +45,32 @@ namespace mito::functions {
     };
 
 
+    // the component function (x_i)
+    template <int N, int D>
+    requires(N >= 0 && D > 1)
+    class Component : public VectorFunction<D> {
+
+        // the input type
+        using X = VectorFunction<D>::X;
+        // the output type
+        using Y = VectorFunction<D>::Y;
+
+        // the N-th unit vector in dim D
+        static constexpr auto e = e<N, D>;
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(X x) const -> Y { return x * e; }
+    };
+
+
     // the sine function
     class Sin : public ScalarFunction {
 

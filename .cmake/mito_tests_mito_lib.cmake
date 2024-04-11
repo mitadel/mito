@@ -5,6 +5,7 @@
 
 # functions
 mito_test_driver(tests/mito.lib/functions/functions.cc)
+mito_test_driver(tests/mito.lib/functions/vector_functions.cc)
 mito_test_driver(tests/mito.lib/functions/tensor_functions.cc)
 mito_test_driver(tests/mito.lib/functions/derivatives.cc)
 

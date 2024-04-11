@@ -34,6 +34,10 @@ namespace mito::functions {
 
     // the cosecant function
     constexpr auto csec = 1.0 / sin;
+
+    // the function associating to a D-dimensional x its N-th component
+    template <int N, int D>
+    constexpr auto x = Component<N, D>();
 }
 
 

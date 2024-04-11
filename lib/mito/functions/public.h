@@ -16,6 +16,8 @@
 
 // the functions definitions
 #include "function.h"
+// the vector functions definitions
+#include "vector_function.h"
 // the algebra of functions
 #include "algebra.h"
 // the library of functions
