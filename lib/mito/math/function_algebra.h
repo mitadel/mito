@@ -81,30 +81,17 @@ namespace mito::math {
             f1, f2);
     }
 
-// TOFIX
-#if 0
-
-
-    // Special algebraic functions for scalar functions
     // a / f
-    template <class F>
-    constexpr auto operator/(const real & a, const function_t<F> & f)
-    requires(std::convertible_to<typename function_t<F>::Y, scalar_t>)
+    constexpr auto operator/(const real & a, const Function auto & f)
     {
-        return function([a, f](function_t<F>::X x) { return a / f(x); });
+        return a * Reciprocal<std::remove_cvref_t<decltype(f)>>(f);
     }
 
     // f1 / f2
-    template <class F1, class F2>
-    constexpr auto operator/(const function_t<F1> & fa, const function_t<F2> & fb)
-    requires(
-        std::convertible_to<typename function_t<F1>::X, typename function_t<F2>::X>
-        && std::convertible_to<typename function_t<F2>::Y, scalar_t>)
+    constexpr auto operator/(const Function auto & f1, const Function auto & f2)
     {
-        return function([fa, fb](function_t<F1>::X x) { return fa(x) / fb(x); });
+        return f1 * Reciprocal<std::remove_cvref_t<decltype(f2)>>(f2);
     }
-
-#endif
 }
 
 

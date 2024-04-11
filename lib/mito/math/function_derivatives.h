@@ -51,6 +51,13 @@ namespace mito::math {
         return f.f1() * derivative(f.f2()) + derivative(f.f1()) * f.f2();
     }
 
+    // the first derivative of an inverse function {f}
+    template <class F>
+    constexpr auto derivative(const Reciprocal<F> & f)
+    {
+        return -1.0 * derivative(f.f()) / (f.f() * f.f());
+    }
+
     template <>
     constexpr auto _derivative<Sin>()
     {

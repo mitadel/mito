@@ -120,6 +120,24 @@ namespace mito::math {
         F _f;
         G _g;
     };
+
+
+    template <class F>
+    requires Function<F>
+    class Reciprocal : public ScalarFunction {
+      public:
+        // constructor
+        constexpr Reciprocal(const F & f) : _f(f) {}
+
+        // call operator
+        constexpr auto operator()(X x) const -> Y { return 1.0 / _f(x); }
+
+        // the base function
+        constexpr auto f() const -> F { return _f; }
+
+      private:
+        F _f;
+    };
 }
 
 #endif    // mito_math_Function_h

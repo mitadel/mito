@@ -300,6 +300,32 @@ TEST(Derivatives, Product)
 }
 
 
+TEST(Derivatives, Reciprocal)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // a cosine function
+    constexpr auto cos = mito::math::cos();
+    // the reciprocal of cos
+    constexpr auto sec = 1.0 / cos;
+    // sanity check
+    EXPECT_DOUBLE_EQ(1.0 / cos(pi_fourth), sec(pi_fourth));
+
+    // a tangent function
+    constexpr auto tan = mito::math::sin() / mito::math::cos();
+    // the first derivative of the secant
+    auto sec_i = mito::math::derivative(sec);
+    // sanity check
+    EXPECT_DOUBLE_EQ(tan(pi_fourth) * sec(pi_fourth), sec_i(pi_fourth));
+
+    // the first derivative of the tangent
+    auto tan_i = mito::math::derivative(tan);
+    // sanity check
+    EXPECT_DOUBLE_EQ(sec(pi_fourth) * sec(pi_fourth), tan_i(pi_fourth));
+}
+
+
 TEST(Derivatives, Zero)
 {
     // pi fourths
