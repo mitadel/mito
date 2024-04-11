@@ -54,6 +54,30 @@ namespace mito::math {
 
     template <class F>
     requires Function<F>
+    class FunctionPlusConstant : public ScalarFunction {
+      public:
+        // constructor
+        constexpr FunctionPlusConstant(const F & f, const double & a) : _f(f), _a(a) {}
+
+        // get the scalar
+        constexpr auto scalar() const -> double { return _a; }
+
+        // call operator
+        constexpr auto operator()(X x) const -> Y { return _f(x) + _a; }
+
+        // the base function
+        constexpr auto f() const -> F { return _f; }
+
+      private:
+        // the function
+        F _f;
+        // the scalar
+        double _a;
+    };
+
+
+    template <class F>
+    requires Function<F>
     class FunctionTimesConstant : public ScalarFunction {
       public:
         // constructor

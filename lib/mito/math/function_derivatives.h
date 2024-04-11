@@ -30,6 +30,13 @@ namespace mito::math {
         return derivative(f.f1()) + derivative(f.f2());
     }
 
+    // the first derivative of a constant plus a function {f}
+    template <class F>
+    constexpr auto derivative(const FunctionPlusConstant<F> & f)
+    {
+        return derivative(f.f());
+    }
+
     // the first derivative of a constant times a function {f}
     template <class F>
     constexpr auto derivative(const FunctionTimesConstant<F> & f)

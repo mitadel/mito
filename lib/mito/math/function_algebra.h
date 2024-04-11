@@ -20,6 +20,18 @@ namespace mito::math {
         return Sum<std::remove_cvref_t<decltype(f1)>, std::remove_cvref_t<decltype(f2)>>(f1, f2);
     }
 
+    // a + f
+    constexpr auto operator+(const real & a, const Function auto & f)
+    {
+        return FunctionPlusConstant<std::remove_cvref_t<decltype(f)>>(f, a);
+    }
+
+    // f + a
+    constexpr auto operator+(const Function auto & f, const real & a)
+    {
+        return a + f;
+    }
+
     // a * f
     constexpr auto operator*(const real & a, const Function auto & f)
     {
@@ -50,6 +62,18 @@ namespace mito::math {
         return f1 + (-f2);
     }
 
+    // a - f
+    constexpr auto operator-(const real & a, const Function auto & f)
+    {
+        return a + (-f);
+    }
+
+    // f - a
+    constexpr auto operator-(const Function auto & f, const real & a)
+    {
+        return f + (-a);
+    }
+
     // f1 * f2
     constexpr auto operator*(const Function auto & f1, const Function auto & f2)
     {
@@ -78,38 +102,6 @@ namespace mito::math {
         && std::convertible_to<typename function_t<F2>::Y, scalar_t>)
     {
         return function([fa, fb](function_t<F1>::X x) { return fa(x) / fb(x); });
-    }
-
-    // a + f
-    template <class F>
-    constexpr auto operator+(const real & a, const function_t<F> & f)
-    requires(std::convertible_to<typename function_t<F>::Y, scalar_t>)
-    {
-        return function([a, f](function_t<F>::X x) { return a + f(x); });
-    }
-
-    // f + a
-    template <class F>
-    constexpr auto operator+(const function_t<F> & f, const real & a)
-    requires(std::convertible_to<typename function_t<F>::Y, scalar_t>)
-    {
-        return a + f;
-    }
-
-    // a - f
-    template <class F>
-    constexpr auto operator-(const real & a, const function_t<F> & f)
-    requires(std::convertible_to<typename function_t<F>::Y, scalar_t>)
-    {
-        return a + (-f);
-    }
-
-    // f - a
-    template <class F>
-    constexpr auto operator-(const function_t<F> & f, const real & a)
-    requires(std::convertible_to<typename function_t<F>::Y, scalar_t>)
-    {
-        return f + (-a);
     }
 
 #endif

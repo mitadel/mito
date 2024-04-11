@@ -80,6 +80,45 @@ TEST(Derivatives, Sum)
 }
 
 
+TEST(Derivatives, FunctionPlusConstant)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // a sine function
+    constexpr auto sin = mito::math::sin();
+    // a constant
+    constexpr auto a = 0.1;
+    // the constant plus the function
+    constexpr auto a_sin = a + sin;
+    // the function plus the constant
+    constexpr auto sin_a = sin + a;
+    // sanity checks
+    EXPECT_DOUBLE_EQ(a + sin(pi_fourth), a_sin(pi_fourth));
+    EXPECT_DOUBLE_EQ(a + sin(pi_fourth), sin_a(pi_fourth));
+
+    // the first derivative of {sin}
+    auto sin_i = mito::math::derivative(sin);
+    // the first derivative of {a_sin}
+    auto a_sin_i = mito::math::derivative(a_sin);
+    // the first derivative of {a_sin}
+    auto sin_a_i = mito::math::derivative(sin_a);
+    // sanity checks
+    EXPECT_DOUBLE_EQ(sin_i(pi_fourth), a_sin_i(pi_fourth));
+    EXPECT_DOUBLE_EQ(sin_i(pi_fourth), sin_a_i(pi_fourth));
+
+    // the second derivative of {sin}
+    auto sin_ii = mito::math::derivative(sin_i);
+    // the second derivative of {a_sin}
+    auto a_sin_ii = mito::math::derivative(a_sin_i);
+    // the first derivative of {a_sin}
+    auto sin_a_ii = mito::math::derivative(sin_a_i);
+    // sanity checks
+    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth), a_sin_ii(pi_fourth));
+    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth), sin_a_ii(pi_fourth));
+}
+
+
 TEST(Derivatives, FunctionTimesConstant)
 {
     // pi fourths
@@ -180,6 +219,45 @@ TEST(Derivatives, Subtraction)
     auto sub_ii = mito::math::derivative(sub_i);
     // check that it is equal to {sin_ii + cos_ii}
     EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) - cos_ii(pi_fourth), sub_ii(pi_fourth));
+}
+
+
+TEST(Derivatives, FunctionMinusConstant)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // a sine function
+    constexpr auto sin = mito::math::sin();
+    // a constant
+    constexpr auto a = 0.1;
+    // the constant minus the function
+    constexpr auto a_sin = a - sin;
+    // the function minus the constant
+    constexpr auto sin_a = sin - a;
+    // sanity checks
+    EXPECT_DOUBLE_EQ(a - sin(pi_fourth), a_sin(pi_fourth));
+    EXPECT_DOUBLE_EQ(sin(pi_fourth) - a, sin_a(pi_fourth));
+
+    // the first derivative of {sin}
+    auto sin_i = mito::math::derivative(sin);
+    // the first derivative of {a_sin}
+    auto a_sin_i = mito::math::derivative(a_sin);
+    // the first derivative of {a_sin}
+    auto sin_a_i = mito::math::derivative(sin_a);
+    // sanity checks
+    EXPECT_DOUBLE_EQ(-sin_i(pi_fourth), a_sin_i(pi_fourth));
+    EXPECT_DOUBLE_EQ(sin_i(pi_fourth), sin_a_i(pi_fourth));
+
+    // the second derivative of {sin}
+    auto sin_ii = mito::math::derivative(sin_i);
+    // the second derivative of {a_sin}
+    auto a_sin_ii = mito::math::derivative(a_sin_i);
+    // the first derivative of {a_sin}
+    auto sin_a_ii = mito::math::derivative(sin_a_i);
+    // sanity checks
+    EXPECT_DOUBLE_EQ(-sin_ii(pi_fourth), a_sin_ii(pi_fourth));
+    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth), sin_a_ii(pi_fourth));
 }
 
 
