@@ -17,13 +17,13 @@ namespace mito::functions {
     // f1 + f2
     constexpr auto operator+(const function_c auto & f1, const function_c auto & f2)
     {
-        return Sum<std::remove_cvref_t<decltype(f1)>, std::remove_cvref_t<decltype(f2)>>(f1, f2);
+        return Sum(f1, f2);
     }
 
     // a + f
     constexpr auto operator+(const real & a, const function_c auto & f)
     {
-        return FunctionPlusConstant<std::remove_cvref_t<decltype(f)>>(f, a);
+        return FunctionPlusConstant(f, a);
     }
 
     // f + a
@@ -35,7 +35,7 @@ namespace mito::functions {
     // a * f
     constexpr auto operator*(const real & a, const function_c auto & f)
     {
-        return FunctionTimesConstant<std::remove_cvref_t<decltype(f)>>(f, a);
+        return FunctionTimesConstant(f, a);
     }
 
     // f * a
@@ -77,20 +77,19 @@ namespace mito::functions {
     // f1 * f2
     constexpr auto operator*(const function_c auto & f1, const function_c auto & f2)
     {
-        return Product<std::remove_cvref_t<decltype(f1)>, std::remove_cvref_t<decltype(f2)>>(
-            f1, f2);
+        return Product(f1, f2);
     }
 
     // a / f
     constexpr auto operator/(const real & a, const function_c auto & f)
     {
-        return a * Reciprocal<std::remove_cvref_t<decltype(f)>>(f);
+        return a * Reciprocal(f);
     }
 
     // f1 / f2
     constexpr auto operator/(const function_c auto & f1, const function_c auto & f2)
     {
-        return f1 * Reciprocal<std::remove_cvref_t<decltype(f2)>>(f2);
+        return f1 * Reciprocal(f2);
     }
 }
 
