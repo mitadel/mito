@@ -431,3 +431,5 @@ TEST(Derivatives, Composition)
     // sanity check
     EXPECT_DOUBLE_EQ(2.0 * pow1(sin(pi_fourth)) * cos(pi_fourth), pow2_sin_i(pi_fourth));
 }
+
+// end of file
