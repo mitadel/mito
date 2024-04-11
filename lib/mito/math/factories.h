@@ -10,20 +10,6 @@
 
 namespace mito::math {
 
-    // factory returning a constant function
-    template <class X, real c>
-    constexpr auto constant()
-    {
-        return function([](const X &) { return c; });
-    }
-
-    // factory returning the function {f(x) = 1.0}
-    template <class X>
-    constexpr auto one()
-    {
-        return constant<X, 1.0>();
-    }
-
     // functions factory
     template <class F>
     constexpr auto function(F && f)
@@ -42,6 +28,11 @@ namespace mito::math {
     constexpr auto zero()
     {
         return Zero();
+    }
+
+    constexpr auto one()
+    {
+        return One();
     }
 
     constexpr auto sin()

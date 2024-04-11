@@ -213,3 +213,24 @@ TEST(Derivatives, Zero)
     EXPECT_DOUBLE_EQ(mito::math::zero()(pi_fourth), zero_ii(pi_fourth));
 }
 
+
+TEST(Derivatives, One)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // identity function
+    constexpr auto one = mito::math::one();
+    // sanity check
+    EXPECT_DOUBLE_EQ(1.0, one(pi_fourth));
+
+    // the first derivative of {one}
+    auto one_i = mito::math::derivative(one);
+    // sanity check
+    EXPECT_DOUBLE_EQ(mito::math::zero()(pi_fourth), one_i(pi_fourth));
+
+    // the second derivative of {one}
+    auto one_ii = mito::math::derivative(one_i);
+    // sanity check
+    EXPECT_DOUBLE_EQ(mito::math::zero()(pi_fourth), one_ii(pi_fourth));
+}

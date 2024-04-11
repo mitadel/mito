@@ -62,6 +62,11 @@ namespace mito::math {
         return Zero();
     }
 
+    template <>
+    constexpr auto _derivative<One>()
+    {
+        return Zero();
+    }
 }
 
 

@@ -22,6 +22,15 @@ namespace mito::math {
         constexpr auto operator()(X) const -> Y { return 0.0; }
     };
 
+    class One : public ScalarFunction {
+      public:
+        // constructor
+        constexpr One() = default;
+
+        // call operator
+        constexpr auto operator()(X) const -> Y { return 1.0; }
+    };
+
     class Sin : public ScalarFunction {
       public:
         // constructor

@@ -15,6 +15,8 @@ namespace mito::math {
 
     // zero function
     class Zero;
+    // one function
+    class One;
     // sine function
     class Sin;
     // cosine function
