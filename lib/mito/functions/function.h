@@ -5,8 +5,8 @@
 
 
 // code guard
-#if !defined(mito_functions_Function_h)
-#define mito_functions_Function_h
+#if !defined(mito_functions_function_h)
+#define mito_functions_function_h
 
 
 namespace mito::functions {
