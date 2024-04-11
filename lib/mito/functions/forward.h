@@ -21,18 +21,6 @@ namespace mito::functions {
     template <function_c F, function_c G>
     class Composition;
 
-    // zero function
-    class Zero;
-    // one function
-    class One;
-    // power function
-    template <int N>
-    requires(N >= 1)
-    class Power;
-    // sine function
-    class Sin;
-    // cosine function
-    class Cos;
 }
 
 
