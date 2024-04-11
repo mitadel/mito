@@ -22,6 +22,18 @@ namespace mito::functions {
         return zero;
     }
 
+    template <int N>
+    constexpr auto derivative(const Power<N> &)
+    {
+        return N * pow<N - 1>;
+    }
+
+    template <>
+    constexpr auto derivative(const Power<1> &)
+    {
+        return one;
+    }
+
     template <>
     constexpr auto _derivative<Sin>()
     {

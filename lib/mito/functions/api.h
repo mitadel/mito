@@ -13,6 +13,8 @@ namespace mito::functions {
     // supported math functions
     constexpr auto zero = Zero();
     constexpr auto one = One();
+    template <int N>
+    constexpr auto pow = Power<N>();
     constexpr auto sin = Sin();
     constexpr auto cos = Cos();
     constexpr auto tan = sin / cos;

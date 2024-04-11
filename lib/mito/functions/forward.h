@@ -17,6 +17,10 @@ namespace mito::functions {
     class Zero;
     // one function
     class One;
+    // power function
+    template <int N>
+    requires(N >= 1)
+    class Power;
     // sine function
     class Sin;
     // cosine function

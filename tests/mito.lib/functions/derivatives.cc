@@ -370,3 +370,32 @@ TEST(Derivatives, One)
     // sanity check
     EXPECT_DOUBLE_EQ(zero(pi_fourth), one_ii(pi_fourth));
 }
+
+
+TEST(Derivatives, Power)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // power of two function
+    constexpr auto pow2 = mito::functions::pow<2>;
+    // sanity check
+    static_assert(pi_fourth * pi_fourth == pow2(pi_fourth));
+    EXPECT_DOUBLE_EQ(pi_fourth * pi_fourth, pow2(pi_fourth));
+
+    // the first derivative of {pow2}
+    constexpr auto pow2_i = mito::functions::derivative(pow2);
+    // linear function
+    constexpr auto pow1 = mito::functions::pow<1>;
+    // sanity check
+    static_assert(2.0 * pow1(pi_fourth) == pow2_i(pi_fourth));
+    EXPECT_DOUBLE_EQ(2.0 * pow1(pi_fourth), pow2_i(pi_fourth));
+
+    // the second derivative of {pow2}
+    constexpr auto pow2_ii = mito::functions::derivative(pow2_i);
+    // sanity check
+    static_assert(2.0 == pow2_ii(pi_fourth));
+    EXPECT_DOUBLE_EQ(2.0, pow2_ii(pi_fourth));
+}
+
+

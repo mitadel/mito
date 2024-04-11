@@ -49,6 +49,26 @@ namespace mito::functions {
         constexpr auto operator()(X x) const -> Y { return std::cos(x); }
     };
 
+    template <int N>
+    requires(N >= 1)
+    class Power : public ScalarFunction {
+      private:
+        template <int I>
+        constexpr auto _power(X x) const
+        {
+            if constexpr (I == 0)
+                return 1.0;
+            else
+                return _power<I - 1>(x) * x;
+        }
+
+      public:
+        // constructor
+        constexpr Power() = default;
+
+        // call operator
+        constexpr auto operator()(X x) const -> Y { return _power<N>(x); }
+    };
 }
 
 
