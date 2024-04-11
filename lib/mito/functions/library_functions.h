@@ -13,6 +13,7 @@
 
 namespace mito::functions {
 
+    // the zero function
     class Zero : public ScalarFunction {
       public:
         // constructor
@@ -29,6 +30,8 @@ namespace mito::functions {
         constexpr auto operator()(X) const -> Y { return 0.0; }
     };
 
+
+    // the identity function
     class One : public ScalarFunction {
       public:
         // constructor
@@ -45,6 +48,8 @@ namespace mito::functions {
         constexpr auto operator()(X) const -> Y { return 1.0; }
     };
 
+
+    // the sine function
     class Sin : public ScalarFunction {
       public:
         // constructor
@@ -61,6 +66,8 @@ namespace mito::functions {
         constexpr auto operator()(X x) const -> Y { return std::sin(x); }
     };
 
+
+    // the cosine function
     class Cos : public ScalarFunction {
       public:
         // constructor
@@ -77,6 +84,8 @@ namespace mito::functions {
         constexpr auto operator()(X x) const -> Y { return std::cos(x); }
     };
 
+
+    // the power to integer functions
     template <int N>
     requires(N >= 1)
     class Power : public ScalarFunction {
