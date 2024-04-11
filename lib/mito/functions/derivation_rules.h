@@ -53,6 +53,13 @@ namespace mito::functions {
     {
         return -1.0 * derivative(f.f()) / (f.f() * f.f());
     }
+
+    // the chain rule
+    template <class F1, class F2>
+    constexpr auto derivative(const Composition<F1, F2> & f)
+    {
+        return derivative(f.f1())(f.f2()) * derivative(f.f2());
+    }
 }
 
 

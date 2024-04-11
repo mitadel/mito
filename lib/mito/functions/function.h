@@ -11,9 +11,12 @@
 
 namespace mito::functions {
 
-
     template <class F>
     concept function_c = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
+
+
+    template <function_c F, function_c G>
+    class Composition;
 
 
     // a function mapping a {real} to a {real}
@@ -31,6 +34,13 @@ namespace mito::functions {
       public:
         // constructor
         constexpr Sum(const F & f, const G & g) : _f(f), _g(g) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
 
         // call operator
         constexpr auto operator()(X x) const -> Y { return _f(x) + _g(x); }
@@ -56,6 +66,13 @@ namespace mito::functions {
         // get the scalar
         constexpr auto scalar() const -> double { return _a; }
 
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
         // call operator
         constexpr auto operator()(X x) const -> Y { return _f(x) + _a; }
 
@@ -79,6 +96,13 @@ namespace mito::functions {
         // get the scalar
         constexpr auto scalar() const -> double { return _a; }
 
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
         // call operator
         constexpr auto operator()(X x) const -> Y { return _a * _f(x); }
 
@@ -98,6 +122,13 @@ namespace mito::functions {
       public:
         // constructor
         constexpr Product(const F & f, const G & g) : _f(f), _g(g) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
 
         // call operator
         constexpr auto operator()(X x) const -> Y { return _f(x) * _g(x); }
@@ -120,6 +151,13 @@ namespace mito::functions {
         // constructor
         constexpr Reciprocal(const F & f) : _f(f) {}
 
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
         // call operator
         constexpr auto operator()(X x) const -> Y { return 1.0 / _f(x); }
 
@@ -128,6 +166,34 @@ namespace mito::functions {
 
       private:
         F _f;
+    };
+
+
+    template <function_c F, function_c G>
+    class Composition : public ScalarFunction {
+      public:
+        // constructor
+        constexpr Composition(const F & f, const G & g) : _f(f), _g(g) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(X x) const -> Y { return _f(_g(x)); }
+
+        // the outer in the composition
+        constexpr auto f1() const -> F { return _f; }
+
+        // the inner in the composition
+        constexpr auto f2() const -> G { return _g; }
+
+      private:
+        F _f;
+        G _g;
     };
 }
 

@@ -18,6 +18,13 @@ namespace mito::functions {
         // constructor
         constexpr Zero() = default;
 
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
         // call operator
         constexpr auto operator()(X) const -> Y { return 0.0; }
     };
@@ -26,6 +33,13 @@ namespace mito::functions {
       public:
         // constructor
         constexpr One() = default;
+
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
 
         // call operator
         constexpr auto operator()(X) const -> Y { return 1.0; }
@@ -36,6 +50,13 @@ namespace mito::functions {
         // constructor
         constexpr Sin() = default;
 
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
         // call operator
         constexpr auto operator()(X x) const -> Y { return std::sin(x); }
     };
@@ -44,6 +65,13 @@ namespace mito::functions {
       public:
         // constructor
         constexpr Cos() = default;
+
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
 
         // call operator
         constexpr auto operator()(X x) const -> Y { return std::cos(x); }
@@ -65,6 +93,13 @@ namespace mito::functions {
       public:
         // constructor
         constexpr Power() = default;
+
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
 
         // call operator
         constexpr auto operator()(X x) const -> Y { return _power<N>(x); }
