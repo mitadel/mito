@@ -62,6 +62,9 @@ namespace mito::math {
         // call operator
         constexpr auto operator()(X x) const -> Y { return -1.0 * _f(x); }
 
+        // the base function
+        constexpr auto f() const -> F { return _f; }
+
       private:
         F _f;
     };
