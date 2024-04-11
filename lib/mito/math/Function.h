@@ -23,10 +23,6 @@ namespace mito::math {
         using X = real;
         // the output type
         using Y = real;
-
-      public:
-        // default constructor
-        constexpr ScalarFunction() = default;
     };
 
 
