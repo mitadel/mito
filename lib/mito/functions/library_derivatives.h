@@ -10,14 +10,12 @@
 
 namespace mito::functions {
 
-    template <>
-    constexpr auto _derivative<Zero>()
+    constexpr auto derivative(const Zero &)
     {
         return zero;
     }
 
-    template <>
-    constexpr auto _derivative<One>()
+    constexpr auto derivative(const One &)
     {
         return zero;
     }
@@ -34,14 +32,12 @@ namespace mito::functions {
         return one;
     }
 
-    template <>
-    constexpr auto _derivative<Sin>()
+    constexpr auto derivative(const Sin &)
     {
         return cos;
     }
 
-    template <>
-    constexpr auto _derivative<Cos>()
+    constexpr auto derivative(const Cos &)
     {
         return -sin;
     }

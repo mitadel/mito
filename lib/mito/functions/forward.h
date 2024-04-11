@@ -33,10 +33,6 @@ namespace mito::functions {
     class Sin;
     // cosine function
     class Cos;
-
-    // the derivative of a function of class {F}
-    template <class F>
-    constexpr auto _derivative();
 }
 
 

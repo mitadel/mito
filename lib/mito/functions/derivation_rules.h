@@ -13,12 +13,6 @@
 
 namespace mito::functions {
 
-    // the first derivative of a base function
-    constexpr auto derivative(const function_c auto & f)
-    {
-        return _derivative<std::remove_cvref_t<decltype(f)>>();
-    }
-
     // the first derivative of a function sum
     template <class F1, class F2>
     constexpr auto derivative(const Sum<F1, F2> & f)
