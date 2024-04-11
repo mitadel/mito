@@ -23,7 +23,7 @@ namespace mito::math {
     // a * f
     constexpr auto operator*(const real & a, const Function auto & f)
     {
-        return FunctionTimesScalar<std::remove_cvref_t<decltype(f)>>(f, a);
+        return FunctionTimesConstant<std::remove_cvref_t<decltype(f)>>(f, a);
     }
 
     // f * a

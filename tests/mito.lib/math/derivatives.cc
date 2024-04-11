@@ -80,18 +80,18 @@ TEST(Derivatives, Sum)
 }
 
 
-TEST(Derivatives, FunctionTimesScalar)
+TEST(Derivatives, FunctionTimesConstant)
 {
     // pi fourths
     constexpr auto pi_fourth = 0.25 * pi;
 
     // a sine function
     constexpr auto sin = mito::math::sin();
-    // a scalar
+    // a constant
     constexpr auto a = 0.1;
-    // the scalar times function product
+    // the constant times function product
     constexpr auto a_sin = a * sin;
-    // the function times scalar product
+    // the function times constant product
     constexpr auto sin_a = sin * a;
     // sanity checks
     EXPECT_DOUBLE_EQ(a * sin(pi_fourth), a_sin(pi_fourth));
@@ -119,16 +119,16 @@ TEST(Derivatives, FunctionTimesScalar)
 }
 
 
-TEST(Derivatives, FunctionDividedByScalar)
+TEST(Derivatives, FunctionDividedByConstant)
 {
     // pi fourths
     constexpr auto pi_fourth = 0.25 * pi;
 
     // a sine function
     constexpr auto sin = mito::math::sin();
-    // a scalar
+    // a constant
     constexpr auto a = 0.1;
-    // the function times scalar product
+    // the function times constant product
     constexpr auto sin_a = sin / a;
     // sanity check
     EXPECT_DOUBLE_EQ(sin(pi_fourth) / a, sin_a(pi_fourth));
