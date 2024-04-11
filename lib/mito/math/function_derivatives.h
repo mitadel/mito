@@ -32,9 +32,9 @@ namespace mito::math {
 
     // the first derivative of the negative of a function {f}
     template <class F>
-    constexpr auto derivative(const Negative<F> & f)
+    constexpr auto derivative(const FunctionTimesScalar<F> & f)
     {
-        return -derivative(f.f());
+        return f.scalar() * derivative(f.f());
     }
 
     template <>

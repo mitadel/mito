@@ -78,3 +78,76 @@ TEST(Derivatives, Sum)
     // check that it is equal to {sin_ii + cos_ii}
     EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) + cos_ii(pi_fourth), sum_ii(pi_fourth));
 }
+
+
+TEST(Derivatives, FunctionTimesScalar)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // a sine function
+    constexpr auto sin = mito::math::sin();
+    // a scalar
+    constexpr auto a = 0.1;
+    // the scalar times function product
+    constexpr auto a_sin = a * sin;
+    // the function times scalar product
+    constexpr auto sin_a = sin * a;
+    // sanity checks
+    EXPECT_DOUBLE_EQ(a * sin(pi_fourth), a_sin(pi_fourth));
+    EXPECT_DOUBLE_EQ(a * sin(pi_fourth), sin_a(pi_fourth));
+
+    // the first derivative of {sin}
+    auto sin_i = mito::math::derivative(sin);
+    // the first derivative of {a_sin}
+    auto a_sin_i = mito::math::derivative(a_sin);
+    // the first derivative of {a_sin}
+    auto sin_a_i = mito::math::derivative(sin_a);
+    // sanity checks
+    EXPECT_DOUBLE_EQ(a * sin_i(pi_fourth), a_sin_i(pi_fourth));
+    EXPECT_DOUBLE_EQ(a * sin_i(pi_fourth), sin_a_i(pi_fourth));
+
+    // the second derivative of {sin}
+    auto sin_ii = mito::math::derivative(sin_i);
+    // the second derivative of {a_sin}
+    auto a_sin_ii = mito::math::derivative(a_sin_i);
+    // the first derivative of {a_sin}
+    auto sin_a_ii = mito::math::derivative(sin_a_i);
+    // sanity checks
+    EXPECT_DOUBLE_EQ(a * sin_ii(pi_fourth), a_sin_ii(pi_fourth));
+    EXPECT_DOUBLE_EQ(a * sin_ii(pi_fourth), sin_a_ii(pi_fourth));
+}
+
+
+TEST(Derivatives, Subtraction)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // a sine function
+    constexpr auto sin = mito::math::sin();
+    // a cosine function
+    constexpr auto cos = mito::math::cos();
+    // the functions sub
+    constexpr auto sub = sin - cos;
+    // check that it is equal to {sin + cos}
+    EXPECT_DOUBLE_EQ(sin(pi_fourth) - cos(pi_fourth), sub(pi_fourth));
+
+    // the first derivative of {sin}
+    auto sin_i = mito::math::derivative(sin);
+    // the first derivative of {cos}
+    auto cos_i = mito::math::derivative(cos);
+    // the first derivative of the sub
+    auto sub_i = mito::math::derivative(sub);
+    // check that it is equal to {cos}
+    EXPECT_DOUBLE_EQ(sin_i(pi_fourth) - cos_i(pi_fourth), sub_i(pi_fourth));
+
+    // the second derivative of {sin}
+    auto sin_ii = mito::math::derivative(sin_i);
+    // the second derivative of {cos}
+    auto cos_ii = mito::math::derivative(cos_i);
+    // the second derivative of the sub
+    auto sub_ii = mito::math::derivative(sub_i);
+    // check that it is equal to {sin_ii + cos_ii}
+    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) - cos_ii(pi_fourth), sub_ii(pi_fourth));
+}

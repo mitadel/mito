@@ -14,16 +14,34 @@
 
 namespace mito::math {
 
-    // fa + fb
+    // f1 + f2
     constexpr auto operator+(const Function auto & f1, const Function auto & f2)
     {
         return Sum<std::remove_cvref_t<decltype(f1)>, std::remove_cvref_t<decltype(f2)>>(f1, f2);
     }
 
+    // a * f
+    constexpr auto operator*(const real & a, const Function auto & f)
+    {
+        return FunctionTimesScalar<std::remove_cvref_t<decltype(f)>>(f, a);
+    }
+
+    // f * a
+    constexpr auto operator*(const Function auto & f, const real & a)
+    {
+        return a * f;
+    }
+
     // -f
     constexpr auto operator-(const Function auto & f)
     {
-        return Negative<std::remove_cvref_t<decltype(f)>>(f);
+        return -1.0 * f;
+    }
+
+    // f1 - f2
+    constexpr auto operator-(const Function auto & f1, const Function auto & f2)
+    {
+        return f1 + (-f2);
     }
 
 // TOFIX
@@ -37,63 +55,12 @@ namespace mito::math {
         return function([fA, fB](function_t<F1>::X x) { return fA(x) * fB(x); });
     }
 
-    // y * f (inner product)
-    template <class F>
-    constexpr auto operator*(const typename function_t<F>::Y & y, const function_t<F> & f)
-    requires(function_t<F>::Y::size != 1)
-    {
-        return function([y, f](function_t<F>::X x) { return y * f(x); });
-    }
-
-    // f * y (inner product)
-    template <class F>
-    constexpr auto operator*(const function_t<F> & f, const typename function_t<F>::Y & y)
-    requires(function_t<F>::Y::size != 1)
-    {
-        return y * f;
-    }
-
-    // a * f
-    template <class F>
-    constexpr auto operator*(const real & a, const function_t<F> & f)
-    {
-        return function([a, f](function_t<F>::X x) { return a * f(x); });
-    }
-
-    // f * a
-    template <class F>
-    constexpr auto operator*(const function_t<F> & f, const real & a)
-    {
-        return a * f;
-    }
-
-    // scalar function times tensor
-    template <class F, typename T, class packingT, int... I>
-    constexpr auto operator*(
-        const function_t<F> & f, const pyre::tensor::Tensor<T, packingT, I...> & A)
-    {
-        return function([f, A](function_t<F>::X x) { return f(x) * A; });
-    }
 
     // f / a
     template <class F>
     constexpr auto operator/(const function_t<F> & f, const real & a)
     {
         return (1.0 / a) * f;
-    }
-
-    // -f
-    template <class F>
-    constexpr auto operator-(const function_t<F> & f)
-    {
-        return -1.0 * f;
-    }
-
-    // fa - fb
-    template <class F1, class F2>
-    constexpr auto operator-(const function_t<F1> & fA, const function_t<F2> & fB)
-    {
-        return fA + (-fB);
     }
 
     // Special algebraic functions for scalar functions

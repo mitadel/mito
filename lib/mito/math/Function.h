@@ -54,19 +54,25 @@ namespace mito::math {
 
     template <class F>
     requires Function<F>
-    class Negative : public ScalarFunction {
+    class FunctionTimesScalar : public ScalarFunction {
       public:
         // constructor
-        constexpr Negative(const F & f) : _f(f) {}
+        constexpr FunctionTimesScalar(const F & f, const double & a) : _f(f), _a(a) {}
+
+        // get the scalar
+        constexpr auto scalar() const -> double { return _a; }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return -1.0 * _f(x); }
+        constexpr auto operator()(X x) const -> Y { return _a * _f(x); }
 
         // the base function
         constexpr auto f() const -> F { return _f; }
 
       private:
+        // the function
         F _f;
+        // the scalar
+        double _a;
     };
 }
 
