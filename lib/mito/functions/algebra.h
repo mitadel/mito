@@ -9,7 +9,6 @@
 
 
 // Algebraic operations on functions
-// TODO: see if expression templates can be used to avoid copies with intermediate results
 
 
 namespace mito::functions {
