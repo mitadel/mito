@@ -18,7 +18,7 @@ namespace mito::math {
     constexpr auto _derivative();
 
     // the first derivative of {f}
-    constexpr auto derivative(const Function auto & f)
+    constexpr auto derivative(const function_c auto & f)
     {
         return _derivative<std::remove_cvref_t<decltype(f)>>();
     }

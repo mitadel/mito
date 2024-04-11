@@ -13,7 +13,7 @@ namespace mito::math {
 
 
     template <class F>
-    concept Function = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
+    concept function_c = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
 
 
     // a function mapping a {real} to a {real}
@@ -26,8 +26,7 @@ namespace mito::math {
     };
 
 
-    template <class F, class G>
-    requires(Function<F> && Function<G>)
+    template <function_c F, function_c G>
     class Sum : public ScalarFunction {
       public:
         // constructor
@@ -48,8 +47,7 @@ namespace mito::math {
     };
 
 
-    template <class F>
-    requires Function<F>
+    template <function_c F>
     class FunctionPlusConstant : public ScalarFunction {
       public:
         // constructor
@@ -72,8 +70,7 @@ namespace mito::math {
     };
 
 
-    template <class F>
-    requires Function<F>
+    template <function_c F>
     class FunctionTimesConstant : public ScalarFunction {
       public:
         // constructor
@@ -96,8 +93,7 @@ namespace mito::math {
     };
 
 
-    template <class F, class G>
-    requires(Function<F> && Function<G>)
+    template <function_c F, function_c G>
     class Product : public ScalarFunction {
       public:
         // constructor
@@ -118,8 +114,7 @@ namespace mito::math {
     };
 
 
-    template <class F>
-    requires Function<F>
+    template <function_c F>
     class Reciprocal : public ScalarFunction {
       public:
         // constructor
