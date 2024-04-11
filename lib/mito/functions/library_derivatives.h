@@ -41,6 +41,17 @@ namespace mito::functions {
     {
         return -sin;
     }
+
+    template <int I, int N, int D>
+    requires(I <= D)
+    constexpr auto derivative(const Component<N, D> &)
+    {
+        // the dirac delta
+        if constexpr (I == N)
+            return 1.0;
+        else
+            return 0.0;
+    }
 }
 
 

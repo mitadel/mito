@@ -22,6 +22,20 @@ TEST(VectorFunctions, Components)
     constexpr auto x1 = mito::functions::x<1, 2>;
     // sanity check
     EXPECT_DOUBLE_EQ(1.0, x1(x));
+
+    // the partial derivatives of x0
+    constexpr auto x0_0 = mito::functions::derivative<0>(x0);
+    constexpr auto x0_1 = mito::functions::derivative<1>(x0);
+    // sanity check
+    EXPECT_DOUBLE_EQ(1.0, x0_0);
+    EXPECT_DOUBLE_EQ(0.0, x0_1);
+
+    // the partial derivatives of x1
+    constexpr auto x1_0 = mito::functions::derivative<0>(x1);
+    constexpr auto x1_1 = mito::functions::derivative<1>(x1);
+    // sanity check
+    EXPECT_DOUBLE_EQ(0.0, x1_0);
+    EXPECT_DOUBLE_EQ(1.0, x1_1);
 }
 
 // end of file
