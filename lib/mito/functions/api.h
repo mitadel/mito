@@ -10,15 +10,29 @@
 
 namespace mito::functions {
 
-    // supported math functions
+    // the zero function
     constexpr auto zero = Zero();
+
+    // the identity function
     constexpr auto one = One();
+
+    // the power to integer function
     template <int N>
     constexpr auto pow = Power<N>();
+
+    // the sine function
     constexpr auto sin = Sin();
+
+    // the cosine function
     constexpr auto cos = Cos();
+
+    // the tangent function
     constexpr auto tan = sin / cos;
+
+    // the secant function
     constexpr auto sec = 1.0 / cos;
+
+    // the cosecant function
     constexpr auto csec = 1.0 / sin;
 }
 
