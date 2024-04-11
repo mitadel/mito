@@ -11,14 +11,6 @@
 
 namespace mito::functions {
 
-    template <class F>
-    concept function_c = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
-
-
-    template <function_c F, function_c G>
-    class Composition;
-
-
     // a function mapping a {real} to a {real}
     class ScalarFunction {
       protected:
