@@ -190,3 +190,26 @@ TEST(Derivatives, Product)
             + 2.0 * sin_i(pi_fourth) * cos_i(pi_fourth),
         product_ii(pi_fourth));
 }
+
+
+TEST(Derivatives, Zero)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // zero function
+    constexpr auto zero = mito::math::zero();
+    // sanity check
+    EXPECT_DOUBLE_EQ(0.0, zero(pi_fourth));
+
+    // the first derivative of {zero}
+    auto zero_i = mito::math::derivative(zero);
+    // sanity check
+    EXPECT_DOUBLE_EQ(mito::math::zero()(pi_fourth), zero_i(pi_fourth));
+
+    // the second derivative of {zero}
+    auto zero_ii = mito::math::derivative(zero_i);
+    // sanity check
+    EXPECT_DOUBLE_EQ(mito::math::zero()(pi_fourth), zero_ii(pi_fourth));
+}
+

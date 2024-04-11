@@ -55,6 +55,13 @@ namespace mito::math {
     {
         return -Sin();
     }
+
+    template <>
+    constexpr auto _derivative<Zero>()
+    {
+        return Zero();
+    }
+
 }
 
 
