@@ -30,7 +30,7 @@ namespace mito::math {
         return derivative(f.f1()) + derivative(f.f2());
     }
 
-    // the first derivative of the negative of a function {f}
+    // the first derivative of a scalar times a function {f}
     template <class F>
     constexpr auto derivative(const FunctionTimesScalar<F> & f)
     {
