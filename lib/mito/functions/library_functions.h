@@ -15,10 +15,8 @@ namespace mito::functions {
 
     // the zero function
     class Zero : public ScalarFunction {
-      public:
-        // constructor
-        constexpr Zero() = default;
 
+      public:
         // call operator for function composition
         template <function_c F>
         constexpr auto operator()(const F & f) const
@@ -33,10 +31,8 @@ namespace mito::functions {
 
     // the identity function
     class One : public ScalarFunction {
-      public:
-        // constructor
-        constexpr One() = default;
 
+      public:
         // call operator for function composition
         template <function_c F>
         constexpr auto operator()(const F & f) const
@@ -51,10 +47,8 @@ namespace mito::functions {
 
     // the sine function
     class Sin : public ScalarFunction {
-      public:
-        // constructor
-        constexpr Sin() = default;
 
+      public:
         // call operator for function composition
         template <function_c F>
         constexpr auto operator()(const F & f) const
@@ -69,10 +63,8 @@ namespace mito::functions {
 
     // the cosine function
     class Cos : public ScalarFunction {
-      public:
-        // constructor
-        constexpr Cos() = default;
 
+      public:
         // call operator for function composition
         template <function_c F>
         constexpr auto operator()(const F & f) const
@@ -89,6 +81,7 @@ namespace mito::functions {
     template <int N>
     requires(N >= 1)
     class Power : public ScalarFunction {
+
       private:
         template <int I>
         constexpr auto _power(X x) const
@@ -100,9 +93,6 @@ namespace mito::functions {
         }
 
       public:
-        // constructor
-        constexpr Power() = default;
-
         // call operator for function composition
         template <function_c F>
         constexpr auto operator()(const F & f) const
