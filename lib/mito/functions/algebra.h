@@ -4,15 +4,15 @@
 //
 
 // code guard
-#if !defined(mito_math_function_algebra_h)
-#define mito_math_function_algebra_h
+#if !defined(mito_functions_algebra_h)
+#define mito_functions_algebra_h
 
 
 // Algebraic operations on functions
 // TODO: see if expression templates can be used to avoid copies with intermediate results
 
 
-namespace mito::math {
+namespace mito::functions {
 
     // f1 + f2
     constexpr auto operator+(const function_c auto & f1, const function_c auto & f2)

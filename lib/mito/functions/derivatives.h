@@ -4,14 +4,14 @@
 //
 
 // code guard
-#if !defined(mito_math_function_derivatives_h)
-#define mito_math_function_derivatives_h
+#if !defined(mito_functions_derivatives_h)
+#define mito_functions_derivatives_h
 
 
 // Derivatives of Functions
 
 
-namespace mito::math {
+namespace mito::functions {
 
     // the derivative of a function of class {F}
     template <class F>

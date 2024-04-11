@@ -4,13 +4,14 @@
 //
 
 // code guard
-#if !defined(mito_math_h)
-#define mito_math_h
+#if !defined(mito_functions_externals_h)
+#define mito_functions_externals_h
 
 
-// publish the interface
-#include "math/public.h"
+// external
+#include <algorithm>
 
+// support
 
 #endif
 

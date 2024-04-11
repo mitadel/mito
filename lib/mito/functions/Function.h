@@ -5,11 +5,11 @@
 
 
 // code guard
-#if !defined(mito_math_Function_h)
-#define mito_math_Function_h
+#if !defined(mito_functions_Function_h)
+#define mito_functions_Function_h
 
 
-namespace mito::math {
+namespace mito::functions {
 
 
     template <class F>
@@ -131,6 +131,6 @@ namespace mito::math {
     };
 }
 
-#endif    // mito_math_Function_h
+#endif    // mito_functions_Function_h
 
 // end of file

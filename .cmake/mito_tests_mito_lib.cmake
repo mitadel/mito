@@ -3,6 +3,11 @@
 #
 
 
+# functions
+mito_test_driver(tests/mito.lib/functions/functions.cc)
+mito_test_driver(tests/mito.lib/functions/tensor_functions.cc)
+mito_test_driver(tests/mito.lib/functions/derivatives.cc)
+
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)
@@ -52,10 +57,7 @@ mito_test_driver(tests/mito.lib/manifolds/tetra_cube_3D.cc)
 mito_test_driver(tests/mito.lib/materials/gent.cc)
 
 # math
-mito_test_driver(tests/mito.lib/math/functions.cc)
 mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
-mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
-mito_test_driver(tests/mito.lib/math/derivatives.cc)
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)

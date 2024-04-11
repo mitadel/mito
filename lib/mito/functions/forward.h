@@ -4,11 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_math_forward_h)
-#define mito_math_forward_h
+#if !defined(mito_functions_forward_h)
+#define mito_functions_forward_h
 
 
-namespace mito::math {
+namespace mito::functions {
 
     // class for a scalar function
     class ScalarFunction;

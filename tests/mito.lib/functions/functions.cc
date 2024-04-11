@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/math.h>
+#include <mito/functions.h>
 
 
 static constexpr mito::real PI = 4.0 * std::atan(1.0);

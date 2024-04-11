@@ -4,11 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_math_api_h)
-#define mito_math_api_h
+#if !defined(mito_functions_api_h)
+#define mito_functions_api_h
 
 
-namespace mito::math {
+namespace mito::functions {
 
     // functions factory
     template <class F>

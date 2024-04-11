@@ -9,6 +9,7 @@
 
 // support
 #include "base.h"
+#include "functions.h"
 #include "fem.h"
 #include "geometry.h"
 #include "io.h"

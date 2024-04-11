@@ -4,14 +4,14 @@
 //
 
 // code guard
-#if !defined(mito_math_function_library_h)
-#define mito_math_function_library_h
+#if !defined(mito_functions_library_h)
+#define mito_functions_library_h
 
 
 // Library of Functions
 
 
-namespace mito::math {
+namespace mito::functions {
 
     class Zero : public ScalarFunction {
       public:
