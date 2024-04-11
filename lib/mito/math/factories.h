@@ -39,6 +39,11 @@ namespace mito::math {
     //     return function_t<X, vector_t<N>>(f_list);
     // }
 
+    constexpr auto zero()
+    {
+        return Zero();
+    }
+
     constexpr auto sin()
     {
         return Sin();

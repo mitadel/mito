@@ -13,9 +13,11 @@ namespace mito::math {
     // class for a scalar function
     class ScalarFunction;
 
-    // function sine
+    // zero function
+    class Zero;
+    // sine function
     class Sin;
-    // function cosine
+    // cosine function
     class Cos;
 }
 

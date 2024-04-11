@@ -13,6 +13,15 @@
 
 namespace mito::math {
 
+    class Zero : public ScalarFunction {
+      public:
+        // constructor
+        constexpr Zero() = default;
+
+        // call operator
+        constexpr auto operator()(X) const -> Y { return 0.0; }
+    };
+
     class Sin : public ScalarFunction {
       public:
         // constructor
