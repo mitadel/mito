@@ -9,7 +9,6 @@
 
 
 // external
-#include <algorithm>
 
 // support
 
