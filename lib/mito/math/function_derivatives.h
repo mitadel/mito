@@ -37,6 +37,13 @@ namespace mito::math {
         return f.scalar() * derivative(f.f());
     }
 
+    // the first derivative of a product {f}
+    template <class F1, class F2>
+    constexpr auto derivative(const Product<F1, F2> & f)
+    {
+        return f.f1() * derivative(f.f2()) + derivative(f.f1()) * f.f2();
+    }
+
     template <>
     constexpr auto _derivative<Sin>()
     {

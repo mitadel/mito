@@ -44,17 +44,15 @@ namespace mito::math {
         return f1 + (-f2);
     }
 
-// TOFIX
-#if 0
-
-    // fa * fb
-    template <class F1, class F2>
-    constexpr auto operator*(const function_t<F1> & fA, const function_t<F2> & fB)
-    requires(std::convertible_to<typename function_t<F1>::X, typename function_t<F2>::X>)
+    // f1 * f2
+    constexpr auto operator*(const Function auto & f1, const Function auto & f2)
     {
-        return function([fA, fB](function_t<F1>::X x) { return fA(x) * fB(x); });
+        return Product<std::remove_cvref_t<decltype(f1)>, std::remove_cvref_t<decltype(f2)>>(
+            f1, f2);
     }
 
+// TOFIX
+#if 0
 
     // f / a
     template <class F>

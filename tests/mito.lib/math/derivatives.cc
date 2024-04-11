@@ -151,3 +151,42 @@ TEST(Derivatives, Subtraction)
     // check that it is equal to {sin_ii + cos_ii}
     EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) - cos_ii(pi_fourth), sub_ii(pi_fourth));
 }
+
+
+TEST(Derivatives, Product)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // a sine function
+    constexpr auto sin = mito::math::sin();
+    // a cosine function
+    constexpr auto cos = mito::math::cos();
+    // the functions product
+    constexpr auto product = sin * cos;
+    // sanity check
+    EXPECT_DOUBLE_EQ(sin(pi_fourth) * cos(pi_fourth), product(pi_fourth));
+
+    // the first derivative of {sin}
+    auto sin_i = mito::math::derivative(sin);
+    // the first derivative of {cos}
+    auto cos_i = mito::math::derivative(cos);
+    // the first derivative of the product
+    auto product_i = mito::math::derivative(product);
+    // sanity check
+    EXPECT_DOUBLE_EQ(
+        sin(pi_fourth) * cos_i(pi_fourth) + sin_i(pi_fourth) * cos(pi_fourth),
+        product_i(pi_fourth));
+
+    // the second derivative of {sin}
+    auto sin_ii = mito::math::derivative(sin_i);
+    // the second derivative of {cos}
+    auto cos_ii = mito::math::derivative(cos_i);
+    // the second derivative of the product
+    auto product_ii = mito::math::derivative(product_i);
+    // sanity check
+    EXPECT_DOUBLE_EQ(
+        sin(pi_fourth) * cos_ii(pi_fourth) + sin_ii(pi_fourth) * cos(pi_fourth)
+            + 2.0 * sin_i(pi_fourth) * cos_i(pi_fourth),
+        product_ii(pi_fourth));
+}
