@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_functions_library_h)
-#define mito_functions_library_h
+#if !defined(mito_functions_functions_library_h)
+#define mito_functions_functions_library_h
 
 
 // Library of Functions

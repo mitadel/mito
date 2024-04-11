@@ -10,17 +10,14 @@
 
 namespace mito::functions {
 
-    // functions factory
-    template <class F>
-    constexpr auto function(F && f);
-
-    // // make a vector-valued function from N scalar-valued functions
-    // template <class X, int N>
-    // constexpr auto function(const function_t<X, scalar_t> (&f_list)[N]);
-
     // supported math functions
-    constexpr auto sin();
-    constexpr auto cos();
+    constexpr auto zero = Zero();
+    constexpr auto one = One();
+    constexpr auto sin = Sin();
+    constexpr auto cos = Cos();
+    constexpr auto tan = sin / cos;
+    constexpr auto sec = 1.0 / cos;
+    constexpr auto csec = 1.0 / sin;
 }
 
 

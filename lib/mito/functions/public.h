@@ -14,14 +14,20 @@
 // get the forward declarations
 #include "forward.h"
 
+// the functions definitions
+#include "function.h"
+// the algebra of functions
+#include "algebra.h"
+// the library of functions
+#include "library_functions.h"
+
 // published type aliases; this is the file you are looking for...
 #include "api.h"
 
-// classes implementation
-#include "Function.h"
-
-// utilities
-#include "utilities.h"
+// the library of first derivatives
+#include "library_derivatives.h"
+// the derivation rules
+#include "derivation_rules.h"
 
 // factories implementation
 #include "factories.h"
