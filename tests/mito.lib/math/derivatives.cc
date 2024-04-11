@@ -14,7 +14,7 @@ using std::numbers::pi;
 
 // TOFIX: make {constexpr}
 
-TEST(Derivatives, Sin)
+TEST(Derivatives, HigherOrder)
 {
     // pi fourths
     constexpr auto pi_fourth = 0.25 * pi;
