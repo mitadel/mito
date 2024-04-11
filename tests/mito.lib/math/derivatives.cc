@@ -119,6 +119,36 @@ TEST(Derivatives, FunctionTimesScalar)
 }
 
 
+TEST(Derivatives, FunctionDividedByScalar)
+{
+    // pi fourths
+    constexpr auto pi_fourth = 0.25 * pi;
+
+    // a sine function
+    constexpr auto sin = mito::math::sin();
+    // a scalar
+    constexpr auto a = 0.1;
+    // the function times scalar product
+    constexpr auto sin_a = sin / a;
+    // sanity check
+    EXPECT_DOUBLE_EQ(sin(pi_fourth) / a, sin_a(pi_fourth));
+
+    // the first derivative of {sin}
+    auto sin_i = mito::math::derivative(sin);
+    // the first derivative of {a_sin}
+    auto sin_a_i = mito::math::derivative(sin_a);
+    // sanity check
+    EXPECT_DOUBLE_EQ(sin_i(pi_fourth) / a, sin_a_i(pi_fourth));
+
+    // the second derivative of {sin}
+    auto sin_ii = mito::math::derivative(sin_i);
+    // the first derivative of {a_sin}
+    auto sin_a_ii = mito::math::derivative(sin_a_i);
+    // sanity check
+    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) / a, sin_a_ii(pi_fourth));
+}
+
+
 TEST(Derivatives, Subtraction)
 {
     // pi fourths

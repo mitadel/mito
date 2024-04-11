@@ -32,6 +32,12 @@ namespace mito::math {
         return a * f;
     }
 
+    // f / a
+    constexpr auto operator/(const Function auto & f, const real & a)
+    {
+        return (1.0 / a) * f;
+    }
+
     // -f
     constexpr auto operator-(const Function auto & f)
     {
@@ -54,12 +60,6 @@ namespace mito::math {
 // TOFIX
 #if 0
 
-    // f / a
-    template <class F>
-    constexpr auto operator/(const function_t<F> & f, const real & a)
-    {
-        return (1.0 / a) * f;
-    }
 
     // Special algebraic functions for scalar functions
     // a / f
