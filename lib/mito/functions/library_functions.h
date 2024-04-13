@@ -50,10 +50,11 @@ namespace mito::functions {
     requires(N >= 0 && D > 1)
     class Component : public VectorFunction<D> {
 
+      public:
         // the input type
-        using X = VectorFunction<D>::X;
+        using input_type = VectorFunction<D>::input_type;
         // the output type
-        using Y = VectorFunction<D>::Y;
+        using output_type = VectorFunction<D>::output_type;
 
         // the N-th unit vector in dim D
         static constexpr auto e = e<N, D>;
@@ -67,7 +68,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return x * e; }
+        constexpr auto operator()(input_type x) const -> output_type { return x * e; }
     };
 
 

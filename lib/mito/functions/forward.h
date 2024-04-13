@@ -17,6 +17,11 @@ namespace mito::functions {
     // a function mapping a {real} to a {real}
     using ScalarFunction = Function<real, real>;
 
+    // a function mapping a {vector_t<D>} to a {real}
+    template <int D>
+    requires(D > 1)
+    using VectorFunction = Function<vector_t<D>, real>;
+
     // concept of a scalar function
     template <class F>
     concept function_c = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
