@@ -17,6 +17,10 @@ namespace mito::functions {
     // a function mapping a {real} to a {real}
     using ScalarFunction = Function<real, real>;
 
+    // a function mapping a type {X} to a {real}
+    template <class X>
+    using ScalarValuedFunction = Function<X, real>;
+
     // concept of a function
     template <class F>
     concept function_c = requires(F c) {
@@ -25,11 +29,11 @@ namespace mito::functions {
         }(c);
     };
 
-    // concept of a scalar function
+    // concept of a scalar-valued function
     template <class F>
     concept scalar_function_c = requires(F c) {
-        // require that F only binds to ScalarFunction or derived classes
-        [](ScalarFunction &) {
+        // require that F only binds to {ScalarValuedFunction} or derived classes
+        []<class X>(ScalarValuedFunction<X> &) {
         }(c);
     };
 
