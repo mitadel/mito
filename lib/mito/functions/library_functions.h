@@ -48,13 +48,13 @@ namespace mito::functions {
     // the component function (x_i)
     template <int N, int D>
     requires(N >= 0 && D > 1)
-    class Component : public VectorFunction<D> {
+    class Component : public Function<vector_t<D>, real> {
 
       public:
         // the input type
-        using input_type = VectorFunction<D>::input_type;
+        using input_type = Function<vector_t<D>, real>::input_type;
         // the output type
-        using output_type = VectorFunction<D>::output_type;
+        using output_type = Function<vector_t<D>, real>::output_type;
 
         // the N-th unit vector in dim D
         static constexpr auto e = e<N, D>;
