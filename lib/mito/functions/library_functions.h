@@ -45,19 +45,18 @@ namespace mito::functions {
     };
 
 
-    // the component function (x_i)
-    template <int N, int D>
-    requires(N >= 0 && D > 1)
-    class Component : public Function<vector_t<D>, real> {
+    // function extracting the {I...} component of a tensor
+    template <tensor_c T, int... I>
+    class Component : public Function<T, typename T::type> {
 
       public:
         // the input type
-        using input_type = Function<vector_t<D>, real>::input_type;
+        using input_type = Function<T, typename T::type>::input_type;
         // the output type
-        using output_type = Function<vector_t<D>, real>::output_type;
+        using output_type = Function<T, typename T::type>::output_type;
 
-        // the N-th unit vector in dim D
-        static constexpr auto e = e<N, D>;
+        // the tensor of type {T} with a one in the entry whose indices are specified in {J...}
+        static constexpr auto e = pyre::tensor::unit<T, I...>;
 
       public:
         // call operator for function composition

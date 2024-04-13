@@ -30,6 +30,14 @@ namespace mito {
     template <int D, typename T = real>
     using diagonal_matrix_t = pyre::tensor::diagonal_matrix_t<D, T>;
 
+    // concept of a tensor
+    template <class F>
+    concept tensor_c = requires(F c) {
+        // require that F only binds to Tensor<T, packingT, I...> specializations
+        []<typename T, class packingT, int... I>(pyre::tensor::Tensor<T, packingT, I...> &) {
+        }(c);
+    };
+
     template <typename X>
     std::ostream & operator<<(std::ostream & os, const std::vector<X> & x)
     {

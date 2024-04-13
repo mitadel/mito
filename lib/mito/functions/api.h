@@ -37,7 +37,7 @@ namespace mito::functions {
 
     // the function associating to a D-dimensional x its N-th component
     template <int N, int D>
-    constexpr auto x = Component<N, D>();
+    constexpr auto x = Component<vector_t<D>, N>();
 }
 
 

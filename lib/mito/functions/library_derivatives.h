@@ -42,12 +42,11 @@ namespace mito::functions {
         return -sin;
     }
 
-    template <int I, int N, int D>
-    requires(I <= D)
-    constexpr auto derivative(const Component<N, D> &)
+    template <int... I, tensor_c T, int... N>
+    constexpr auto derivative(const Component<T, N...> &)
     {
         // the dirac delta
-        if constexpr (I == N)
+        if constexpr (std::make_tuple(I...) == std::make_tuple(N...))
             return 1.0;
         else
             return 0.0;
