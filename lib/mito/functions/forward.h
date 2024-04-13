@@ -22,9 +22,13 @@ namespace mito::functions {
     requires(D > 1)
     using VectorFunction = Function<vector_t<D>, real>;
 
-    // concept of a scalar function
+    // concept of a function
     template <class F>
-    concept function_c = std::is_base_of_v<ScalarFunction, std::remove_cvref_t<F>>;
+    concept function_c = requires(F c) {
+        // require that F only binds to Function<X, Y> specializations or derived classes
+        []<class X, class Y>(Function<X, Y> &) {
+        }(c);
+    };
 
     // function composition
     template <function_c F, function_c G>
