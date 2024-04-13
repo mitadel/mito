@@ -14,7 +14,7 @@ namespace mito::functions {
     // a function mapping a {X} instance to a {Y} instance
     template <class X, class Y>
     class Function {
-      protected:
+      public:
         // the input type
         using input_type = X;
         // the output type
@@ -22,9 +22,17 @@ namespace mito::functions {
     };
 
 
-    // the sum of two scalar functions
+    // the sum of two functions
     template <function_c F, function_c G>
-    class Sum : public ScalarFunction {
+    class Sum : public function_sum<F, G>::type {
+      public:
+        // the type of sum function (what I derive from)
+        using sum_type = function_sum<F, G>::type;
+        // the input type of the sum
+        using input_type = sum_type::input_type;
+        // the output type of the sum
+        using output_type = sum_type::output_type;
+
       public:
         // constructor
         constexpr Sum(const F & f, const G & g) : _f(f), _g(g) {}
@@ -49,6 +57,13 @@ namespace mito::functions {
         F _f;
         G _g;
     };
+
+
+    template <class F, class G>
+    constexpr auto sum(const F & f1, const G & f2)
+    {
+        return Sum<F, G>(f1, f2);
+    }
 
 
     // the sum of a scalar function with a constant

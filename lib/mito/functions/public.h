@@ -14,6 +14,9 @@
 // get the forward declarations
 #include "forward.h"
 
+// get the type traits for functions
+#include "traits.h"
+
 // the functions definitions
 #include "function.h"
 // the vector functions definitions
