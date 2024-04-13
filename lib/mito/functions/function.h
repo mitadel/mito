@@ -11,13 +11,14 @@
 
 namespace mito::functions {
 
-    // a function mapping a {real} to a {real}
-    class ScalarFunction {
+    // a function mapping a {X} instance to a {Y} instance
+    template <class X, class Y>
+    class Function {
       protected:
         // the input type
-        using X = real;
+        using input_type = X;
         // the output type
-        using Y = real;
+        using output_type = Y;
     };
 
 
@@ -36,7 +37,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return _f(x) + _g(x); }
+        constexpr auto operator()(input_type x) const -> output_type { return _f(x) + _g(x); }
 
         // the first in the sum
         constexpr auto f1() const -> F { return _f; }
@@ -68,7 +69,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return _f(x) + _a; }
+        constexpr auto operator()(input_type x) const -> output_type { return _f(x) + _a; }
 
         // the base function
         constexpr auto f() const -> F { return _f; }
@@ -96,7 +97,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return _f(x) * _g(x); }
+        constexpr auto operator()(input_type x) const -> output_type { return _f(x) * _g(x); }
 
         // the first in the sum
         constexpr auto f1() const -> F { return _f; }
@@ -128,7 +129,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return _a * _f(x); }
+        constexpr auto operator()(input_type x) const -> output_type { return _a * _f(x); }
 
         // the base function
         constexpr auto f() const -> F { return _f; }
@@ -156,7 +157,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return 1.0 / _f(x); }
+        constexpr auto operator()(input_type x) const -> output_type { return 1.0 / _f(x); }
 
         // the base function
         constexpr auto f() const -> F { return _f; }
@@ -181,7 +182,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return _f(_g(x)); }
+        constexpr auto operator()(input_type x) const -> output_type { return _f(_g(x)); }
 
         // the outer in the composition
         constexpr auto f1() const -> F { return _f; }

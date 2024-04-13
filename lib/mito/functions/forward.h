@@ -11,7 +11,11 @@
 namespace mito::functions {
 
     // class for a scalar function
-    class ScalarFunction;
+    template <class X, class Y>
+    class Function;
+
+    // a function mapping a {real} to a {real}
+    using ScalarFunction = Function<real, real>;
 
     // concept of a scalar function
     template <class F>

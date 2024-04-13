@@ -25,7 +25,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X) const -> Y { return 0.0; }
+        constexpr auto operator()(input_type) const -> output_type { return 0.0; }
     };
 
 
@@ -41,7 +41,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X) const -> Y { return 1.0; }
+        constexpr auto operator()(input_type) const -> output_type { return 1.0; }
     };
 
 
@@ -83,7 +83,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return std::sin(x); }
+        constexpr auto operator()(input_type x) const -> output_type { return std::sin(x); }
     };
 
 
@@ -99,7 +99,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return std::cos(x); }
+        constexpr auto operator()(input_type x) const -> output_type { return std::cos(x); }
     };
 
 
@@ -110,7 +110,7 @@ namespace mito::functions {
 
       private:
         template <int I>
-        constexpr auto _power(X x) const
+        constexpr auto _power(input_type x) const
         {
             if constexpr (I == 0)
                 return 1.0;
@@ -127,7 +127,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(X x) const -> Y { return _power<N>(x); }
+        constexpr auto operator()(input_type x) const -> output_type { return _power<N>(x); }
     };
 }
 
