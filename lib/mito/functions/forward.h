@@ -10,7 +10,7 @@
 
 namespace mito::functions {
 
-    // class for a scalar function
+    // class {Function}
     template <class X, class Y>
     class Function;
 
@@ -20,7 +20,7 @@ namespace mito::functions {
     // concept of a function
     template <class F>
     concept function_c = requires(F c) {
-        // require that F only binds to Function<X, Y> specializations or derived classes
+        // require that F only binds to {Function<X, Y>} specializations or derived classes
         []<class X, class Y>(Function<X, Y> &) {
         }(c);
     };
