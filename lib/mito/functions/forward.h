@@ -30,6 +30,14 @@ namespace mito::functions {
         }(c);
     };
 
+    // concept of a scalar function
+    template <class F>
+    concept scalar_function_c = requires(F c) {
+        // require that F only binds to ScalarFunction or derived classes
+        [](ScalarFunction &) {
+        }(c);
+    };
+
     // function composition
     template <function_c F, function_c G>
     class Composition;
