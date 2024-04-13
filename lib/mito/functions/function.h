@@ -59,13 +59,6 @@ namespace mito::functions {
     };
 
 
-    template <class F, class G>
-    constexpr auto sum(const F & f1, const G & f2)
-    {
-        return Sum<F, G>(f1, f2);
-    }
-
-
     // the sum of a scalar function with a constant
     template <function_c F>
     class FunctionPlusConstant : public ScalarFunction {

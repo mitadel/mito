@@ -16,7 +16,7 @@ namespace mito::functions {
     // f1 + f2
     constexpr auto operator+(const function_c auto & f1, const function_c auto & f2)
     {
-        return sum(f1, f2);
+        return Sum(f1, f2);
     }
 
     // a + f
