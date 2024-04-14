@@ -10,40 +10,49 @@
 
 namespace mito::functions {
 
-    template <class T>
+    // the {I...}-th first partial derivative of the {Zero} function
+    template <int... I, class T>
     constexpr auto derivative(const Zero<T> &)
     {
-        return zero;
+        return Zero<T>();
     }
 
-    template <class T>
+    // the {I...}-th first partial derivative of the {One} function
+    template <int... I, class T>
     constexpr auto derivative(const One<T> &)
     {
-        return zero;
+        return Zero<T>();
     }
 
-    template <int N>
+    // the {I...}-th first partial derivative of the {Power<N>} function
+    template <int... I, int N>
     constexpr auto derivative(const Power<N> &)
     {
         return N * pow<N - 1>;
     }
 
-    template <>
+    // the {I...}-th first partial derivative of the {Power<1>} function
+    template <int... I>
     constexpr auto derivative(const Power<1> &)
     {
         return one;
     }
 
+    // the {I...}-th first partial derivative of the {Sin} function
+    template <int... I>
     constexpr auto derivative(const Sin &)
     {
         return cos;
     }
 
+    // the {I...}-th first partial derivative of the {Cos} function
+    template <int... I>
     constexpr auto derivative(const Cos &)
     {
         return -sin;
     }
 
+    // the {I...}-th first partial derivative of the {Component} function
     template <int... I, tensor_c T, int... N>
     constexpr auto derivative(const Component<T, N...> &)
     {

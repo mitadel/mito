@@ -36,6 +36,28 @@ TEST(VectorFunctions, Components)
     // sanity check
     static_assert(0.0 == x1_0(x));
     static_assert(1.0 == x1_1(x));
+
+    // the second partial derivatives of x0
+    constexpr auto x0_00 = mito::functions::derivative<0>(x0_0);
+    constexpr auto x0_01 = mito::functions::derivative<1>(x0_0);
+    constexpr auto x0_10 = mito::functions::derivative<0>(x0_1);
+    constexpr auto x0_11 = mito::functions::derivative<1>(x0_1);
+    // sanity check
+    static_assert(0.0 == x0_00(x));
+    static_assert(0.0 == x0_01(x));
+    static_assert(0.0 == x0_10(x));
+    static_assert(0.0 == x0_11(x));
+
+    // the second partial derivatives of x1
+    constexpr auto x1_00 = mito::functions::derivative<0>(x1_0);
+    constexpr auto x1_01 = mito::functions::derivative<1>(x1_0);
+    constexpr auto x1_10 = mito::functions::derivative<0>(x1_1);
+    constexpr auto x1_11 = mito::functions::derivative<1>(x1_1);
+    // sanity check
+    static_assert(0.0 == x1_00(x));
+    static_assert(0.0 == x1_01(x));
+    static_assert(0.0 == x1_10(x));
+    static_assert(0.0 == x1_11(x));
 }
 
 
@@ -51,6 +73,16 @@ TEST(VectorFunctions, Sum)
 
     // sanity check
     static_assert(1.1 == (x0 + x1)(x));
+
+    // the partial derivatives of x0 + x1 wrt to x0
+    constexpr auto x0px1_0 = mito::functions::derivative<0>(x0 + x1);
+    // sanity check
+    static_assert(1.0 == x0px1_0(x));
+
+    // the partial derivatives of x0 + x1 wrt to x1
+    constexpr auto x0px1_1 = mito::functions::derivative<1>(x0 + x1);
+    // sanity check
+    static_assert(1.0 == x0px1_1(x));
 }
 
 
