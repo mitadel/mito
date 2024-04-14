@@ -10,12 +10,14 @@
 
 namespace mito::functions {
 
-    constexpr auto derivative(const Zero &)
+    template <class T>
+    constexpr auto derivative(const Zero<T> &)
     {
         return zero;
     }
 
-    constexpr auto derivative(const One &)
+    template <class T>
+    constexpr auto derivative(const One<T> &)
     {
         return zero;
     }

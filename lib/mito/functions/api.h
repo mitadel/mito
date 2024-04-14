@@ -11,10 +11,10 @@
 namespace mito::functions {
 
     // the zero function
-    constexpr auto zero = Zero();
+    constexpr auto zero = Zero<scalar_t>();
 
     // the identity function
-    constexpr auto one = One();
+    constexpr auto one = One<scalar_t>();
 
     // the power to integer function
     template <int N>

@@ -13,8 +13,15 @@
 
 namespace mito::functions {
 
-    // the zero function
-    class Zero : public ScalarFunction {
+    // the scalar-valued function returning 0.0 for any input argument of class {T}
+    template <class T>
+    class Zero : public Function<T, scalar_t> {
+
+      public:
+        // the input type
+        using input_type = Function<T, scalar_t>::input_type;
+        // the output type
+        using output_type = Function<T, scalar_t>::output_type;
 
       public:
         // call operator for function composition
@@ -29,8 +36,15 @@ namespace mito::functions {
     };
 
 
-    // the identity function
-    class One : public ScalarFunction {
+    // the scalar-valued function returning 1.0 for any input argument of class {T}
+    template <class T>
+    class One : public Function<T, scalar_t> {
+
+      public:
+        // the input type
+        using input_type = Function<T, scalar_t>::input_type;
+        // the output type
+        using output_type = Function<T, scalar_t>::output_type;
 
       public:
         // call operator for function composition
