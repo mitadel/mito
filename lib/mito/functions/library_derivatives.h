@@ -49,9 +49,9 @@ namespace mito::functions {
     {
         // the dirac delta
         if constexpr (std::make_tuple(I...) == std::make_tuple(N...))
-            return 1.0;
+            return One<T>();
         else
-            return 0.0;
+            return Zero<T>();
     }
 }
 

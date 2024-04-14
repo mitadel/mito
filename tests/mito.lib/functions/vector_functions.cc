@@ -27,15 +27,15 @@ TEST(VectorFunctions, Components)
     constexpr auto x0_0 = mito::functions::derivative<0>(x0);
     constexpr auto x0_1 = mito::functions::derivative<1>(x0);
     // sanity check
-    static_assert(1.0 == x0_0);
-    static_assert(0.0 == x0_1);
+    static_assert(1.0 == x0_0(x));
+    static_assert(0.0 == x0_1(x));
 
     // the partial derivatives of x1
     constexpr auto x1_0 = mito::functions::derivative<0>(x1);
     constexpr auto x1_1 = mito::functions::derivative<1>(x1);
     // sanity check
-    static_assert(0.0 == x1_0);
-    static_assert(1.0 == x1_1);
+    static_assert(0.0 == x1_0(x));
+    static_assert(1.0 == x1_1(x));
 }
 
 
