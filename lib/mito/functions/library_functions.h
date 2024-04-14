@@ -45,6 +45,32 @@ namespace mito::functions {
     };
 
 
+    // function of a tensor returning the constant {I...} unit tensor
+    template <tensor_c T1, tensor_c T2, int... I>
+    class Unit : public Function<T1, T2> {
+
+      public:
+        // the input type
+        using input_type = Function<T1, T2>::input_type;
+        // the output type
+        using output_type = Function<T1, T2>::output_type;
+
+        // the tensor of type {T} with a one in the entry whose indices are specified in {J...}
+        static constexpr auto e = pyre::tensor::unit<T2, I...>;
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type) const -> output_type { return e; }
+    };
+
+
     // function extracting the {I...} component of a tensor
     template <tensor_c T, int... I>
     class Component : public Function<T, typename T::type> {

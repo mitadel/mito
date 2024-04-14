@@ -35,6 +35,11 @@ namespace mito::functions {
     // the cosecant function
     constexpr auto csec = 1.0 / sin;
 
+    // the vector-valued vector function returning the constant D-dimensional vector that has all
+    // zeros but a one component at entry N
+    template <int N, int D>
+    constexpr auto unit = Unit<vector_t<D>, vector_t<D>, N>();
+
     // the function associating to a D-dimensional x its N-th component
     template <int N, int D>
     constexpr auto x = Component<vector_t<D>, N>();
