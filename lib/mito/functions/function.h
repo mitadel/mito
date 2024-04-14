@@ -92,7 +92,15 @@ namespace mito::functions {
 
     // the product of two scalar functions
     template <function_c F, function_c G>
-    class Product : public ScalarFunction {
+    class Product : public function_product<F, G>::type {
+      public:
+        // the type of product function (what I derive from)
+        using product_type = function_product<F, G>::type;
+        // the input type of the sum
+        using input_type = product_type::input_type;
+        // the output type of the sum
+        using output_type = product_type::output_type;
+
       public:
         // constructor
         constexpr Product(const F & f, const G & g) : _f(f), _g(g) {}

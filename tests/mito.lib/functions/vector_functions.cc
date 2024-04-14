@@ -54,4 +54,25 @@ TEST(VectorFunctions, Sum)
 }
 
 
+TEST(VectorFunctions, Product)
+{
+    // a 2D vector
+    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
+
+    // the function returning the constant e0 unit vector in 2D
+    constexpr auto e0 = mito::functions::unit<0, 2>;
+
+    // sanity check
+    static_assert(1.0 == (e0 * e0)(x));
+
+    // the function extracting the x_0 component
+    constexpr auto x0 = mito::functions::x<0, 2>;
+    // the function extracting the x_1 component
+    constexpr auto x1 = mito::functions::x<1, 2>;
+
+    // sanity check
+    static_assert(0.1 == (x0 * x1)(x));
+}
+
+
 // end of file
