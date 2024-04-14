@@ -22,6 +22,38 @@ namespace mito::functions {
     };
 
 
+    // the constant function
+    template <class X, class Y>
+    class Constant : public Function<X, Y> {
+      public:
+        // the input type
+        using input_type = Function<X, Y>::input_type;
+        // the output type
+        using output_type = Function<X, Y>::output_type;
+
+      public:
+        // constructor
+        constexpr Constant(const output_type & c) : _c(c) {}
+
+        // get the constant
+        constexpr auto constant() const -> output_type { return _c; }
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type) const -> output_type { return _c; }
+
+      private:
+        // the constant
+        output_type _c;
+    };
+
+
     // the sum of two functions
     template <function_c F, function_c G>
     class Sum : public function_sum<F, G>::type {

@@ -11,10 +11,12 @@
 namespace mito::functions {
 
     // the zero function
-    constexpr auto zero = Zero<scalar_t>();
+    template <class T>
+    constexpr auto zero = Constant<T, scalar_t>(0.0);
 
-    // the identity function
-    constexpr auto one = One<scalar_t>();
+    // the one function
+    template <class T>
+    constexpr auto one = Constant<T, scalar_t>(1.0);
 
     // the power to integer function
     template <int N>
@@ -38,7 +40,7 @@ namespace mito::functions {
     // the vector-valued vector function returning the constant D-dimensional vector that has all
     // zeros but a one component at entry N
     template <int N, int D>
-    constexpr auto unit = Unit<vector_t<D>, vector_t<D>, N>();
+    constexpr auto unit = Constant<vector_t<D>, vector_t<D>>(pyre::tensor::unit<vector_t<D>, N>);
 
     // the function associating to a D-dimensional x its N-th component
     template <int N, int D>

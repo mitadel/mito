@@ -10,18 +10,11 @@
 
 namespace mito::functions {
 
-    // the {I...}-th first partial derivative of the {Zero} function
-    template <int... I, class T>
-    constexpr auto derivative(const Zero<T> &)
+    // the {I...}-th first partial derivative of the {Constant} function
+    template <int... I, class X, class Y>
+    constexpr auto derivative(const Constant<X, Y> &)
     {
-        return Zero<T>();
-    }
-
-    // the {I...}-th first partial derivative of the {One} function
-    template <int... I, class T>
-    constexpr auto derivative(const One<T> &)
-    {
-        return Zero<T>();
+        return zero<X>;
     }
 
     // the {I...}-th first partial derivative of the {Power<N>} function
@@ -35,7 +28,7 @@ namespace mito::functions {
     template <int... I>
     constexpr auto derivative(const Power<1> &)
     {
-        return one;
+        return one<scalar_t>;
     }
 
     // the {I...}-th first partial derivative of the {Sin} function
@@ -58,9 +51,9 @@ namespace mito::functions {
     {
         // the dirac delta
         if constexpr (std::make_tuple(I...) == std::make_tuple(N...))
-            return One<T>();
+            return one<T>;
         else
-            return Zero<T>();
+            return zero<T>;
     }
 }
 

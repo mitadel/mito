@@ -10,6 +10,8 @@
 
 // pi
 using std::numbers::pi;
+// mito scalars
+using mito::scalar_t;
 
 
 TEST(Derivatives, HigherOrder)
@@ -330,7 +332,7 @@ TEST(Derivatives, Zero)
     constexpr auto pi_fourth = 0.25 * pi;
 
     // zero function
-    constexpr auto zero = mito::functions::zero;
+    constexpr auto zero = mito::functions::zero<scalar_t>;
     // sanity check
     EXPECT_DOUBLE_EQ(0.0, zero(pi_fourth));
 
@@ -352,14 +354,14 @@ TEST(Derivatives, One)
     constexpr auto pi_fourth = 0.25 * pi;
 
     // identity function
-    constexpr auto one = mito::functions::one;
+    constexpr auto one = mito::functions::one<scalar_t>;
     // sanity check
     EXPECT_DOUBLE_EQ(1.0, one(pi_fourth));
 
     // the first derivative of {one}
     constexpr auto one_i = mito::functions::derivative(one);
     // zero function
-    constexpr auto zero = mito::functions::zero;
+    constexpr auto zero = mito::functions::zero<scalar_t>;
     // sanity check
     EXPECT_DOUBLE_EQ(zero(pi_fourth), one_i(pi_fourth));
 
