@@ -31,7 +31,7 @@ namespace mito::functions {
     template <int... I, class F>
     constexpr auto derivative(const FunctionTimesConstant<F> & f)
     {
-        return f.scalar() * derivative<I...>(f.f());
+        return f.constant() * derivative<I...>(f.f());
     }
 
     // the {I...}-th first partial derivative of a product of functions

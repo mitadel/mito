@@ -66,8 +66,8 @@ namespace mito::functions {
         // constructor
         constexpr FunctionPlusConstant(const F & f, const double & a) : _f(f), _a(a) {}
 
-        // get the scalar
-        constexpr auto scalar() const -> double { return _a; }
+        // get the constant
+        constexpr auto constant() const -> double { return _a; }
 
         // call operator for function composition
         template <function_c H>
@@ -85,7 +85,7 @@ namespace mito::functions {
       private:
         // the function
         F _f;
-        // the scalar
+        // the constant
         double _a;
     };
 
@@ -134,8 +134,8 @@ namespace mito::functions {
         // constructor
         constexpr FunctionTimesConstant(const F & f, const double & a) : _f(f), _a(a) {}
 
-        // get the scalar
-        constexpr auto scalar() const -> double { return _a; }
+        // get the constant
+        constexpr auto constant() const -> double { return _a; }
 
         // call operator for function composition
         template <function_c H>
@@ -153,7 +153,7 @@ namespace mito::functions {
       private:
         // the function
         F _f;
-        // the scalar
+        // the constant
         double _a;
     };
 
