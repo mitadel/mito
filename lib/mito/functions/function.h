@@ -90,7 +90,7 @@ namespace mito::functions {
     };
 
 
-    // the product of two scalar functions
+    // the product of two functions
     template <function_c F, function_c G>
     class Product : public function_product<F, G>::type {
       public:
@@ -183,7 +183,7 @@ namespace mito::functions {
     };
 
 
-    // the composition of two scalar functions
+    // the composition of two functions
     template <function_c F, function_c G>
     class Composition : public function_composition<F, G>::type {
 
