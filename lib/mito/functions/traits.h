@@ -33,6 +33,16 @@ namespace mito::functions {
             typename F::input_type, typename std::result_of<std::multiplies<>(
                                         typename F::output_type, typename G::output_type)>::type>;
     };
+
+    // the type of the composition of two functions (F external, G internal)...
+    template <function_c F, function_c G>
+    // ... which take compatible input types (i.e. output of G is convertible to input of F)...
+    requires(std::convertible_to<typename G::output_type, typename F::input_type>)
+    struct function_composition {
+        // ... is the function that takes the {input_type} of G in input and returns the output type
+        // of F
+        using type = Function<typename G::input_type, typename F::output_type>;
+    };
 }
 
 

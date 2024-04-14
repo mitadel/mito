@@ -107,4 +107,30 @@ TEST(VectorFunctions, Product)
 }
 
 
+TEST(VectorFunctions, Sin)
+{
+    // a 2D vector
+    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
+
+    // the function extracting the x_0 component
+    constexpr auto x0 = mito::functions::x<0, 2>;
+    // the function extracting the x_1 component
+    constexpr auto x1 = mito::functions::x<1, 2>;
+
+    // sin(x0 * x1)
+    constexpr auto sin = mito::functions::sin(x0 * x1);
+
+    // the partial derivative of sin(x0 * x1) wrt to x0
+    constexpr auto sin_0 = mito::functions::derivative<0>(sin);
+    // the partial derivative of sin(x0 * x1) wrt to x1
+    constexpr auto sin_1 = mito::functions::derivative<1>(sin);
+
+    // cos(x0 * x1)
+    constexpr auto cos = mito::functions::cos(x0 * x1);
+
+    // check result
+    static_assert((cos * x1)(x) == sin_0(x));
+    static_assert((cos * x0)(x) == sin_1(x));
+}
+
 // end of file

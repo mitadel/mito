@@ -185,7 +185,16 @@ namespace mito::functions {
 
     // the composition of two scalar functions
     template <function_c F, function_c G>
-    class Composition : public ScalarFunction {
+    class Composition : public function_composition<F, G>::type {
+
+      public:
+        // the type of composition function (what I derive from)
+        using composition_type = function_composition<F, G>::type;
+        // the input type of the composition
+        using input_type = composition_type::input_type;
+        // the output type of the composition
+        using output_type = composition_type::output_type;
+
       public:
         // constructor
         constexpr Composition(const F & f, const G & g) : _f(f), _g(g) {}
