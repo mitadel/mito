@@ -20,31 +20,31 @@ namespace mito::functions {
     }
 
     // a + f
-    constexpr auto operator+(const real & a, const scalar_function_c auto & f)
+    constexpr auto operator+(const tensor_or_scalar_c auto & a, const function_c auto & f)
     {
         return FunctionPlusConstant(f, a);
     }
 
     // f + a
-    constexpr auto operator+(const scalar_function_c auto & f, const real & a)
+    constexpr auto operator+(const function_c auto & f, const tensor_or_scalar_c auto & a)
     {
         return a + f;
     }
 
     // a * f
-    constexpr auto operator*(const real & a, const function_c auto & f)
+    constexpr auto operator*(const tensor_or_scalar_c auto & a, const function_c auto & f)
     {
         return FunctionTimesConstant(f, a);
     }
 
     // f * a
-    constexpr auto operator*(const function_c auto & f, const real & a)
+    constexpr auto operator*(const function_c auto & f, const tensor_or_scalar_c auto & a)
     {
         return a * f;
     }
 
     // f / a
-    constexpr auto operator/(const function_c auto & f, const real & a)
+    constexpr auto operator/(const function_c auto & f, const scalar_t & a)
     {
         return (1.0 / a) * f;
     }
@@ -62,13 +62,13 @@ namespace mito::functions {
     }
 
     // a - f
-    constexpr auto operator-(const real & a, const scalar_function_c auto & f)
+    constexpr auto operator-(const tensor_or_scalar_c auto & a, const function_c auto & f)
     {
         return a + (-f);
     }
 
     // f - a
-    constexpr auto operator-(const scalar_function_c auto & f, const real & a)
+    constexpr auto operator-(const function_c auto & f, const tensor_or_scalar_c auto & a)
     {
         return f + (-a);
     }
@@ -80,7 +80,7 @@ namespace mito::functions {
     }
 
     // a / f
-    constexpr auto operator/(const real & a, const scalar_function_c auto & f)
+    constexpr auto operator/(const tensor_or_scalar_c auto & a, const scalar_function_c auto & f)
     {
         return a * Reciprocal(f);
     }

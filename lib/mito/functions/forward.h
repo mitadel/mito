@@ -10,16 +10,20 @@
 
 namespace mito::functions {
 
+    // concept for a tensor (vector, matrix, higher-order, ...) or a scalar
+    template <class F>
+    concept tensor_or_scalar_c = tensor_c<F> or std::convertible_to<F, scalar_t>;
+
     // class {Function}
-    template <class X, class Y>
+    template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     class Function;
 
-    // a function mapping a {real} to a {real}
-    using ScalarFunction = Function<real, real>;
+    // a function mapping a {scalar_t} to a {scalar_t}
+    using ScalarFunction = Function<scalar_t, scalar_t>;
 
-    // a function mapping a type {X} to a {real}
-    template <class X>
-    using ScalarValuedFunction = Function<X, real>;
+    // a function mapping a type {X} to a {scalar_t}
+    template <tensor_or_scalar_c X>
+    using ScalarValuedFunction = Function<X, scalar_t>;
 
     // concept of a function
     template <class F>

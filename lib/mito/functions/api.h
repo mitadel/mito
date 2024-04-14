@@ -11,11 +11,11 @@
 namespace mito::functions {
 
     // the zero function
-    template <class T>
+    template <tensor_or_scalar_c T>
     constexpr auto zero = Constant<T, scalar_t>(0.0);
 
     // the one function
-    template <class T>
+    template <tensor_or_scalar_c T>
     constexpr auto one = Constant<T, scalar_t>(1.0);
 
     // the power to integer function

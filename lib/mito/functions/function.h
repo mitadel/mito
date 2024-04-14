@@ -12,7 +12,7 @@
 namespace mito::functions {
 
     // a function mapping a {X} instance to a {Y} instance
-    template <class X, class Y>
+    template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     class Function {
       public:
         // the input type
@@ -23,7 +23,7 @@ namespace mito::functions {
 
 
     // the constant function
-    template <class X, class Y>
+    template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     class Constant : public Function<X, Y> {
       public:
         // the input type
@@ -91,15 +91,24 @@ namespace mito::functions {
     };
 
 
-    // the sum of a scalar function with a constant
-    template <function_c F>
-    class FunctionPlusConstant : public ScalarFunction {
+    // the sum of a function with a constant
+    template <tensor_or_scalar_c T, function_c F>
+    class FunctionPlusConstant : public function_type<F> {
+
+      public:
+        // the type of function (what I derive from)
+        using my_function_type = function_type<F>;
+        // the input type of the sum
+        using input_type = my_function_type::input_type;
+        // the output type of the sum
+        using output_type = my_function_type::output_type;
+
       public:
         // constructor
-        constexpr FunctionPlusConstant(const F & f, const double & a) : _f(f), _a(a) {}
+        constexpr FunctionPlusConstant(const F & f, const T & a) : _f(f), _a(a) {}
 
         // get the constant
-        constexpr auto constant() const -> double { return _a; }
+        constexpr auto constant() const -> T { return _a; }
 
         // call operator for function composition
         template <function_c H>
@@ -118,7 +127,7 @@ namespace mito::functions {
         // the function
         F _f;
         // the constant
-        double _a;
+        T _a;
     };
 
 
@@ -159,15 +168,66 @@ namespace mito::functions {
     };
 
 
-    // the product of a scalar function with a constant
-    template <function_c F>
-    class FunctionTimesConstant : public ScalarFunction {
+    // the product of a function with a constant
+    template <tensor_or_scalar_c T, function_c F>
+    class FunctionTimesConstant :
+        public function_product<F, Constant<typename F::input_type, T>>::type {
+
+      public:
+        // the type of function (what I derive from)
+        using my_function_type = function_product<F, Constant<typename F::input_type, T>>::type;
+        // the input type of the sum
+        using input_type = my_function_type::input_type;
+        // the output type of the sum
+        using output_type = my_function_type::output_type;
+
       public:
         // constructor
-        constexpr FunctionTimesConstant(const F & f, const double & a) : _f(f), _a(a) {}
+        constexpr FunctionTimesConstant(const F & f, const T & a) : _f(f), _a(a) {}
 
         // get the constant
-        constexpr auto constant() const -> double { return _a; }
+        constexpr auto constant() const -> T { return _a; }
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return _f(x) * _a; }
+
+        // the base function
+        constexpr auto f() const -> F { return _f; }
+
+      private:
+        // the function
+        F _f;
+        // the constant
+        T _a;
+    };
+
+
+    // the product of a function with a constant
+    template <tensor_or_scalar_c T, function_c F>
+    class ConstantTimesFunction :
+        public function_product<Constant<typename F::input_type, T>, F>::type {
+
+      public:
+        // the type of function (what I derive from)
+        using my_function_type = function_product<Constant<typename F::input_type, T>, F>::type;
+        // the input type of the sum
+        using input_type = my_function_type::input_type;
+        // the output type of the sum
+        using output_type = my_function_type::output_type;
+
+      public:
+        // constructor
+        constexpr ConstantTimesFunction(const T & a, const F & f) : _f(f), _a(a) {}
+
+        // get the constant
+        constexpr auto constant() const -> T { return _a; }
 
         // call operator for function composition
         template <function_c H>
@@ -186,7 +246,7 @@ namespace mito::functions {
         // the function
         F _f;
         // the constant
-        double _a;
+        T _a;
     };
 
 

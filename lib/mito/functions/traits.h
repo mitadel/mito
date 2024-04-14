@@ -43,6 +43,10 @@ namespace mito::functions {
         // of F
         using type = Function<typename G::input_type, typename F::output_type>;
     };
+
+    // the type of function for a function of class {F}
+    template <function_c F>
+    using function_type = Function<typename F::input_type, typename F::output_type>;
 }
 
 
