@@ -251,8 +251,17 @@ namespace mito::functions {
 
 
     // the reciprocal of a scalar function
-    template <function_c F>
-    class Reciprocal : public ScalarFunction {
+    template <scalar_function_c F>
+    class Reciprocal : public function_type<F> {
+
+      public:
+        // the type of function (what I derive from)
+        using my_function_type = function_type<F>;
+        // the input type of the sum
+        using input_type = my_function_type::input_type;
+        // the output type of the sum
+        using output_type = my_function_type::output_type;
+
       public:
         // constructor
         constexpr Reciprocal(const F & f) : _f(f) {}

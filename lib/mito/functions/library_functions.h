@@ -40,7 +40,7 @@ namespace mito::functions {
 
 
     // the sine function
-    class Sin : public ScalarFunction {
+    class Sin : public Function<scalar_t, scalar_t> {
 
       public:
         // call operator for function composition
@@ -56,7 +56,7 @@ namespace mito::functions {
 
 
     // the cosine function
-    class Cos : public ScalarFunction {
+    class Cos : public Function<scalar_t, scalar_t> {
 
       public:
         // call operator for function composition
@@ -74,7 +74,7 @@ namespace mito::functions {
     // the power to integer functions
     template <int N>
     requires(N >= 1)
-    class Power : public ScalarFunction {
+    class Power : public Function<scalar_t, scalar_t> {
 
       private:
         template <int I>

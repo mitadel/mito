@@ -18,9 +18,6 @@ namespace mito::functions {
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     class Function;
 
-    // a function mapping a {scalar_t} to a {scalar_t}
-    using ScalarFunction = Function<scalar_t, scalar_t>;
-
     // a function mapping a type {X} to a {scalar_t}
     template <tensor_or_scalar_c X>
     using ScalarValuedFunction = Function<X, scalar_t>;
