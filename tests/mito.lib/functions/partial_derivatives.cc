@@ -61,53 +61,7 @@ TEST(VectorFunctions, Components)
 }
 
 
-TEST(VectorFunctions, Sum)
-{
-    // a 2D vector
-    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
-
-    // the function extracting the x_0 component
-    constexpr auto x0 = mito::functions::x<0, 2>;
-    // the function extracting the x_1 component
-    constexpr auto x1 = mito::functions::x<1, 2>;
-
-    // check result
-    static_assert(1.1 == (x0 + x1)(x));
-
-    // the partial derivatives of x0 + x1 wrt to x0
-    constexpr auto x0px1_0 = mito::functions::derivative<0>(x0 + x1);
-    // check result
-    static_assert(1.0 == x0px1_0(x));
-
-    // the partial derivatives of x0 + x1 wrt to x1
-    constexpr auto x0px1_1 = mito::functions::derivative<1>(x0 + x1);
-    // check result
-    static_assert(1.0 == x0px1_1(x));
-}
-
-
-TEST(VectorFunctions, Product)
-{
-    // a 2D vector
-    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
-
-    // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::functions::unit<0, 2>;
-
-    // check result
-    static_assert(1.0 == (e0 * e0)(x));
-
-    // the function extracting the x_0 component
-    constexpr auto x0 = mito::functions::x<0, 2>;
-    // the function extracting the x_1 component
-    constexpr auto x1 = mito::functions::x<1, 2>;
-
-    // check result
-    static_assert(0.1 == (x0 * x1)(x));
-}
-
-
-TEST(VectorFunctions, Sin)
+TEST(Derivatives, PartialDerivatives)
 {
     // a 2D vector
     constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
@@ -132,5 +86,6 @@ TEST(VectorFunctions, Sin)
     static_assert((cos * x1)(x) == sin_0(x));
     static_assert((cos * x0)(x) == sin_1(x));
 }
+
 
 // end of file

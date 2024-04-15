@@ -4,10 +4,13 @@
 
 
 # functions
-mito_test_driver(tests/mito.lib/functions/functions.cc)
-mito_test_driver(tests/mito.lib/functions/vector_functions.cc)
-mito_test_driver(tests/mito.lib/functions/tensor_functions.cc)
-mito_test_driver(tests/mito.lib/functions/derivatives.cc)
+mito_test_driver(tests/mito.lib/functions/algebra.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_constants.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_chain_rule.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_higher_order.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_sum.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_product.cc)
+mito_test_driver(tests/mito.lib/functions/partial_derivatives.cc)
 
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
