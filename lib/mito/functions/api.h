@@ -16,38 +16,38 @@ namespace mito::functions {
 
     // the function mapping an input of type {T} to the zero scalar
     template <tensor_or_scalar_c T>
-    constexpr auto zero = Constant<T, scalar_t>(0.0);
+    [[maybe_unused]] constexpr auto zero = Constant<T, scalar_t>(0.0);
 
     // the function mapping an input of type {T} to the zero scalar
     template <tensor_or_scalar_c T>
-    constexpr auto one = Constant<T, scalar_t>(1.0);
+    [[maybe_unused]] constexpr auto one = Constant<T, scalar_t>(1.0);
 
     // the scalar power to integer function
     template <int N>
-    constexpr auto pow = Power<N>();
+    [[maybe_unused]] constexpr auto pow = Power<N>();
 
     // the scalar sine function
-    constexpr auto sin = Sin();
+    [[maybe_unused]] constexpr auto sin = Sin();
 
     // the scalar cosine function
-    constexpr auto cos = Cos();
+    [[maybe_unused]] constexpr auto cos = Cos();
 
     // the scalar tangent function
-    constexpr auto tan = sin / cos;
+    [[maybe_unused]] constexpr auto tan = sin / cos;
 
     // the scalar secant function
-    constexpr auto sec = 1.0 / cos;
+    [[maybe_unused]] constexpr auto sec = 1.0 / cos;
 
     // the scalar cosecant function
-    constexpr auto csec = 1.0 / sin;
+    [[maybe_unused]] constexpr auto csec = 1.0 / sin;
 
     // the function mapping an input of type {X} to the constant {c}
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
-    constexpr auto constant(const Y & c);
+    [[maybe_unused]] constexpr auto constant(const Y & c);
 
     // the function associating to a D-dimensional vector its N-th component
     template <int N, int D>
-    constexpr auto x = Component<vector_t<D>, N>();
+    [[maybe_unused]] constexpr auto x = Component<vector_t<D>, N>();
 }
 
 
