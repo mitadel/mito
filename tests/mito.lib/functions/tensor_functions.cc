@@ -8,11 +8,19 @@
 #include <mito/functions.h>
 
 
-TEST(Math, TensorFunctions)
+TEST(TensorFunctions, Algebra)
 {
+    // the function extracting the x_0 component of a 3D vector
+    constexpr auto x0 = mito::functions::x<0, 3>;
+    // the function extracting the x_1 component of a 3D vector
+    constexpr auto x1 = mito::functions::x<1, 3>;
+    // the function extracting the x_2 component of a 3D vector
+    constexpr auto x2 = mito::functions::x<2, 3>;
+    // the cosine function
+    constexpr auto cos = mito::functions::cos;
+
     // a scalar function
-    constexpr auto f = mito::math::function(
-        [](const mito::vector_t<3> & x) -> mito::scalar_t { return x[1] * x[2] * std::cos(x[0]); });
+    constexpr auto f = x1 * x2 * cos(x0);
 
     // a point in space
     constexpr auto x = 2.0 * mito::e_1<3> + mito::e_2<3>;
@@ -27,8 +35,7 @@ TEST(Math, TensorFunctions)
     constexpr auto B1 = f * mito::e_12<3> + g * mito::e_22<3>;
 
     // a tensor function
-    constexpr auto B2 = mito::math::function(
-        [](const mito::vector_t<3> &) -> mito::matrix_t<3> { return mito::e_12<3>; });
+    constexpr auto B2 = mito::functions::constant<mito::vector_t<3>>(mito::e_12<3>);
 
     // add the two tensor functions
     constexpr auto B = B1 + B2;
