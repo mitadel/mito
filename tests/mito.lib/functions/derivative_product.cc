@@ -106,4 +106,37 @@ TEST(Derivatives, Power)
 }
 
 
+TEST(Derivatives, ScalarProduct)
+{
+    // a 2D vector
+    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
+
+    // a 2D vector
+    constexpr auto a = mito::vector_t<2>{ -1.0, 1.0 };
+
+    // the function returning the constant e0 unit vector in 2D
+    constexpr auto e0 = mito::functions::constant<mito::vector_t<2>>(mito::e_0<2>);
+
+    // the function returning the constant e1 unit vector in 2D
+    constexpr auto e1 = mito::functions::constant<mito::vector_t<2>>(mito::e_1<2>);
+
+    // the function extracting the x_0 component of a 2D vector
+    constexpr auto x0 = mito::functions::x<0, 2>;
+
+    // the function extracting the x_1 component of a 2D vector
+    constexpr auto x1 = mito::functions::x<1, 2>;
+
+    // a function {f}
+    constexpr auto f = a * (x0 * e0 + x1 * e1);
+
+    // the derivative of f with respect to x0
+    constexpr auto f_0 = mito::functions::derivative<0>(f);
+    constexpr auto f_1 = mito::functions::derivative<1>(f);
+
+    // check result
+    static_assert(a * e0(x) == f_0(x));
+    static_assert(a * e1(x) == f_1(x));
+}
+
+
 // end of file

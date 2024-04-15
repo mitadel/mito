@@ -14,7 +14,8 @@ namespace mito::functions {
     template <int... I, class X, class Y>
     constexpr auto derivative(const Constant<X, Y> &)
     {
-        return zero<X>;
+        // the zero constant
+        return Constant<X, Y>({});
     }
 
     // the {I...}-th first partial derivative of the {Power<N>} function
