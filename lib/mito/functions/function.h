@@ -36,7 +36,7 @@ namespace mito::functions {
         constexpr Constant(const output_type & c) : _c(c) {}
 
         // get the constant
-        constexpr auto constant() const -> output_type { return _c; }
+        constexpr auto constant() const -> const output_type & { return _c; }
 
         // call operator for function composition
         template <function_c H>
@@ -80,10 +80,10 @@ namespace mito::functions {
         constexpr auto operator()(input_type x) const -> output_type { return _f(x) + _g(x); }
 
         // the first in the sum
-        constexpr auto f1() const -> F { return _f; }
+        constexpr auto f1() const -> const F & { return _f; }
 
         // the second in the sum
-        constexpr auto f2() const -> G { return _g; }
+        constexpr auto f2() const -> const G & { return _g; }
 
       private:
         F _f;
@@ -108,7 +108,7 @@ namespace mito::functions {
         constexpr FunctionPlusConstant(const F & f, const T & a) : _f(f), _a(a) {}
 
         // get the constant
-        constexpr auto constant() const -> T { return _a; }
+        constexpr auto constant() const -> const T & { return _a; }
 
         // call operator for function composition
         template <function_c H>
@@ -121,7 +121,7 @@ namespace mito::functions {
         constexpr auto operator()(input_type x) const -> output_type { return _f(x) + _a; }
 
         // the base function
-        constexpr auto f() const -> F { return _f; }
+        constexpr auto f() const -> const F & { return _f; }
 
       private:
         // the function
@@ -157,10 +157,10 @@ namespace mito::functions {
         constexpr auto operator()(input_type x) const -> output_type { return _f(x) * _g(x); }
 
         // the first in the sum
-        constexpr auto f1() const -> F { return _f; }
+        constexpr auto f1() const -> const F & { return _f; }
 
         // the second in the sum
-        constexpr auto f2() const -> G { return _g; }
+        constexpr auto f2() const -> const G & { return _g; }
 
       private:
         F _f;
@@ -186,7 +186,7 @@ namespace mito::functions {
         constexpr FunctionTimesConstant(const F & f, const T & a) : _f(f), _a(a) {}
 
         // get the constant
-        constexpr auto constant() const -> T { return _a; }
+        constexpr auto constant() const -> const T & { return _a; }
 
         // call operator for function composition
         template <function_c H>
@@ -199,7 +199,7 @@ namespace mito::functions {
         constexpr auto operator()(input_type x) const -> output_type { return _f(x) * _a; }
 
         // the base function
-        constexpr auto f() const -> F { return _f; }
+        constexpr auto f() const -> const F & { return _f; }
 
       private:
         // the function
@@ -227,7 +227,7 @@ namespace mito::functions {
         constexpr ConstantTimesFunction(const T & a, const F & f) : _f(f), _a(a) {}
 
         // get the constant
-        constexpr auto constant() const -> T { return _a; }
+        constexpr auto constant() const -> const T & { return _a; }
 
         // call operator for function composition
         template <function_c H>
@@ -240,7 +240,7 @@ namespace mito::functions {
         constexpr auto operator()(input_type x) const -> output_type { return _a * _f(x); }
 
         // the base function
-        constexpr auto f() const -> F { return _f; }
+        constexpr auto f() const -> const F & { return _f; }
 
       private:
         // the function
@@ -277,7 +277,7 @@ namespace mito::functions {
         constexpr auto operator()(input_type x) const -> output_type { return 1.0 / _f(x); }
 
         // the base function
-        constexpr auto f() const -> F { return _f; }
+        constexpr auto f() const -> const F & { return _f; }
 
       private:
         F _f;
@@ -311,10 +311,10 @@ namespace mito::functions {
         constexpr auto operator()(input_type x) const -> output_type { return _f(_g(x)); }
 
         // the outer in the composition
-        constexpr auto f1() const -> F { return _f; }
+        constexpr auto f1() const -> const F & { return _f; }
 
         // the inner in the composition
-        constexpr auto f2() const -> G { return _g; }
+        constexpr auto f2() const -> const G & { return _g; }
 
       private:
         F _f;
