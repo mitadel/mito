@@ -45,11 +45,6 @@ namespace mito::functions {
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     constexpr auto constant(const Y & c);
 
-    // the vector-valued vector function returning the constant D-dimensional vector that has all
-    // zeros but a one component at entry N
-    template <int N, int D>
-    constexpr auto unit = constant<vector_t<D>>(pyre::tensor::unit<vector_t<D>, N>);
-
     // the function associating to a D-dimensional vector its N-th component
     template <int N, int D>
     constexpr auto x = Component<vector_t<D>, N>();

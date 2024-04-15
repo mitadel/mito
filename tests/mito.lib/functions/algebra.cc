@@ -123,7 +123,7 @@ TEST(Algebra, ScalarProduct)
     constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
 
     // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::functions::unit<0, 2>;
+    constexpr auto e0 = mito::functions::constant<mito::vector_t<2>>(mito::e_0<2>);
 
     // check result
     static_assert(1.0 == (e0 * e0)(x));
