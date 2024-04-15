@@ -10,6 +10,11 @@
 
 namespace mito::functions {
 
+    template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
+    constexpr auto constant(const Y & c)
+    {
+        return Constant<X, Y>(c);
+    }
 }
 
 
