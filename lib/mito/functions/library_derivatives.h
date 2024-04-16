@@ -39,18 +39,18 @@ namespace mito::functions {
         return cos;
     }
 
-    // the {I...}-th first partial derivative of the {Tan} function
-    template <int... I>
-    constexpr auto derivative(const Tan &)
-    {
-        return 1.0 / pow<2>(cos);
-    }
-
     // the {I...}-th first partial derivative of the {Cos} function
     template <int... I>
     constexpr auto derivative(const Cos &)
     {
         return -sin;
+    }
+
+    // the {I...}-th first partial derivative of the {Tan} function
+    template <int... I>
+    constexpr auto derivative(const Tan &)
+    {
+        return 1.0 / pow<2>(cos);
     }
 
     // the {I...}-th first partial derivative of the {Component} function
