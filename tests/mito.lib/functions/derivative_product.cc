@@ -60,10 +60,8 @@ TEST(Derivatives, Reciprocal)
 
     // a cosine function
     constexpr auto cos = mito::functions::cos;
-    // the reciprocal of cos
-    constexpr auto sec = mito::functions::sec;
-    // sanity check
-    EXPECT_DOUBLE_EQ(1.0 / cos(pi_fourth), sec(pi_fourth));
+    // the secant function (reciprocal of cos)
+    constexpr auto sec = 1.0 / cos;
 
     // a tangent function
     constexpr auto tan = mito::functions::tan;
