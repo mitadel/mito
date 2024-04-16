@@ -33,7 +33,7 @@ namespace mito::functions {
     [[maybe_unused]] constexpr auto cos = Cos();
 
     // the scalar tangent function
-    [[maybe_unused]] constexpr auto tan = sin / cos;
+    [[maybe_unused]] constexpr auto tan = Tan();
 
     // the function mapping an input of type {X} to the constant {c}
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>

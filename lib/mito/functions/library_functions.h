@@ -71,6 +71,22 @@ namespace mito::functions {
     };
 
 
+    // the sine function
+    class Tan : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::tan(x); }
+    };
+
+
     // the power to integer functions
     template <int N>
     requires(N >= 1)
