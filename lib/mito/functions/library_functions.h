@@ -71,7 +71,7 @@ namespace mito::functions {
     };
 
 
-    // the sine function
+    // the tangent function
     class Tan : public Function<scalar_t, scalar_t> {
 
       public:
