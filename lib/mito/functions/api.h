@@ -8,10 +8,6 @@
 #define mito_functions_api_h
 
 
-// TODO: define this in terms of {std::tan} directly (and derivative)
-// {cmath} supported functions
-
-
 namespace mito::functions {
 
     // the function mapping an input of type {T} to the zero scalar
