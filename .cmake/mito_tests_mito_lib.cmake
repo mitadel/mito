@@ -10,6 +10,7 @@ mito_test_driver(tests/mito.lib/functions/derivative_chain_rule.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_higher_order.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_sum.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_product.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_inverse.cc)
 mito_test_driver(tests/mito.lib/functions/partial_derivatives.cc)
 
 #  geometry

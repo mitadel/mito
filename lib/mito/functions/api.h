@@ -35,6 +35,27 @@ namespace mito::functions {
     // the scalar tangent function
     [[maybe_unused]] constexpr auto tan = Tan();
 
+    // the scalar arc cosine function
+    [[maybe_unused]] constexpr auto acos = ArcCos();
+
+    // the scalar arc sine function
+    [[maybe_unused]] constexpr auto asin = ArcSin();
+
+    // the scalar arc tangent function
+    [[maybe_unused]] constexpr auto atan = ArcTan();
+
+    // the scalar exponential function
+    [[maybe_unused]] constexpr auto exp = Exp();
+
+    // the scalar natural logarithm function
+    [[maybe_unused]] constexpr auto log = Log();
+
+    // the scalar square root function
+    [[maybe_unused]] constexpr auto sqrt = Sqrt();
+
+    // the scalar cubic root function
+    [[maybe_unused]] constexpr auto cbrt = Cbrt();
+
     // the function mapping an input of type {X} to the constant {c}
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     [[maybe_unused]] constexpr auto constant(const Y & c);

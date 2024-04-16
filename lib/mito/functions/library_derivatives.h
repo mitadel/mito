@@ -53,6 +53,55 @@ namespace mito::functions {
         return 1.0 / pow<2>(cos);
     }
 
+    // the {I...}-th first partial derivative of the {ArcCos} function
+    template <int... I>
+    constexpr auto derivative(const ArcCos &)
+    {
+        return -1.0 / sqrt(1.0 - pow<2>);
+    }
+
+    // the {I...}-th first partial derivative of the {ArcSin} function
+    template <int... I>
+    constexpr auto derivative(const ArcSin &)
+    {
+        return 1.0 / sqrt(1.0 - pow<2>);
+    }
+
+    // the {I...}-th first partial derivative of the {ArcTan} function
+    template <int... I>
+    constexpr auto derivative(const ArcTan &)
+    {
+        return 1.0 / (1.0 + pow<2>);
+    }
+
+    // the {I...}-th first partial derivative of the {Exp} function
+    template <int... I>
+    constexpr auto derivative(const Exp &)
+    {
+        return exp;
+    }
+
+    // the {I...}-th first partial derivative of the {Log} function
+    template <int... I>
+    constexpr auto derivative(const Log &)
+    {
+        return 1.0 / pow<1>;
+    }
+
+    // the {I...}-th first partial derivative of the {Sqrt} function
+    template <int... I>
+    constexpr auto derivative(const Sqrt &)
+    {
+        return 0.5 / sqrt;
+    }
+
+    // the {I...}-th first partial derivative of the {Cbrt} function
+    template <int... I>
+    constexpr auto derivative(const Cbrt &)
+    {
+        return (1.0 / 3.0) / pow<2>(cbrt);
+    }
+
     // the {I...}-th first partial derivative of the {Component} function
     template <int... I, tensor_c T, int... N>
     constexpr auto derivative(const Component<T, N...> &)

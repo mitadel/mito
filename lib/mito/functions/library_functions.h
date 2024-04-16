@@ -87,6 +87,118 @@ namespace mito::functions {
     };
 
 
+    // the arc cosine function
+    class ArcCos : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::acos(x); }
+    };
+
+
+    // the arc sine function
+    class ArcSin : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::asin(x); }
+    };
+
+
+    // the arc tangent function
+    class ArcTan : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::atan(x); }
+    };
+
+
+    // the exponential function
+    class Exp : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::exp(x); }
+    };
+
+
+    // the natural logarithm function
+    class Log : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::log(x); }
+    };
+
+
+    // the square root function
+    class Sqrt : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::sqrt(x); }
+    };
+
+
+    // the cubic root function
+    class Cbrt : public Function<scalar_t, scalar_t> {
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return std::cbrt(x); }
+    };
+
+
     // the power to integer functions
     template <int N>
     requires(N >= 1)
