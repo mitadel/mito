@@ -26,8 +26,8 @@ TEST(Derivatives, Composition)
 
     // the function sin(pow<2>)
     constexpr auto sin_pow2 = sin(pow2);
-    // sanity check
-    EXPECT_DOUBLE_EQ(sin(pow2(pi_fourth)), sin_pow2(pi_fourth));
+    // check result
+    static_assert(sin(pow2(pi_fourth)) == sin_pow2(pi_fourth));
 
     // the derivative of sin(pow<2>)
     constexpr auto sin_pow2_i = mito::functions::derivative(sin_pow2);
@@ -35,18 +35,18 @@ TEST(Derivatives, Composition)
     constexpr auto cos = mito::functions::cos;
     // power of one function
     constexpr auto pow1 = mito::functions::pow<1>;
-    // sanity check
-    EXPECT_DOUBLE_EQ(2.0 * cos(pow2(pi_fourth)) * pow1(pi_fourth), sin_pow2_i(pi_fourth));
+    // check result
+    static_assert(2.0 * cos(pow2(pi_fourth)) * pow1(pi_fourth) == sin_pow2_i(pi_fourth));
 
     // the function pow<2>(sin)
     constexpr auto pow2_sin = pow2(sin);
-    // sanity check
-    EXPECT_DOUBLE_EQ(pow2(sin(pi_fourth)), pow2_sin(pi_fourth));
+    // check result
+    static_assert(pow2(sin(pi_fourth)) == pow2_sin(pi_fourth));
 
     // the derivative of sin(pow<2>)
     constexpr auto pow2_sin_i = mito::functions::derivative(pow2_sin);
-    // sanity check
-    EXPECT_DOUBLE_EQ(2.0 * pow1(sin(pi_fourth)) * cos(pi_fourth), pow2_sin_i(pi_fourth));
+    // check result
+    static_assert(2.0 * pow1(sin(pi_fourth)) * cos(pi_fourth) == pow2_sin_i(pi_fourth));
 }
 
 

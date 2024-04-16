@@ -25,8 +25,8 @@ TEST(Derivatives, Product)
     constexpr auto cos = mito::functions::cos;
     // the functions product
     constexpr auto product = sin * cos;
-    // sanity check
-    EXPECT_DOUBLE_EQ(sin(pi_fourth) * cos(pi_fourth), product(pi_fourth));
+    // check result
+    static_assert(sin(pi_fourth) * cos(pi_fourth) == product(pi_fourth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
@@ -34,10 +34,10 @@ TEST(Derivatives, Product)
     constexpr auto cos_i = mito::functions::derivative(cos);
     // the first derivative of the product
     constexpr auto product_i = mito::functions::derivative(product);
-    // sanity check
-    EXPECT_DOUBLE_EQ(
-        sin(pi_fourth) * cos_i(pi_fourth) + sin_i(pi_fourth) * cos(pi_fourth),
-        product_i(pi_fourth));
+    // check result
+    static_assert(
+        sin(pi_fourth) * cos_i(pi_fourth) + sin_i(pi_fourth) * cos(pi_fourth)
+        == product_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
@@ -45,11 +45,11 @@ TEST(Derivatives, Product)
     constexpr auto cos_ii = mito::functions::derivative(cos_i);
     // the second derivative of the product
     constexpr auto product_ii = mito::functions::derivative(product_i);
-    // sanity check
-    EXPECT_DOUBLE_EQ(
+    // check result
+    static_assert(
         sin(pi_fourth) * cos_ii(pi_fourth) + sin_ii(pi_fourth) * cos(pi_fourth)
-            + 2.0 * sin_i(pi_fourth) * cos_i(pi_fourth),
-        product_ii(pi_fourth));
+            + 2.0 * sin_i(pi_fourth) * cos_i(pi_fourth)
+        == product_ii(pi_fourth));
 }
 
 
@@ -67,13 +67,13 @@ TEST(Derivatives, Reciprocal)
     constexpr auto tan = mito::functions::tan;
     // the first derivative of the secant
     constexpr auto sec_i = mito::functions::derivative(sec);
-    // sanity check
-    EXPECT_DOUBLE_EQ(tan(pi_fourth) * sec(pi_fourth), sec_i(pi_fourth));
+    // check result
+    static_assert(tan(pi_fourth) * sec(pi_fourth) == sec_i(pi_fourth));
 
     // the first derivative of the tangent
     constexpr auto tan_i = mito::functions::derivative(tan);
-    // sanity check
-    EXPECT_DOUBLE_EQ(sec(pi_fourth) * sec(pi_fourth), tan_i(pi_fourth));
+    // check result
+    static_assert(sec(pi_fourth) * sec(pi_fourth) == tan_i(pi_fourth));
 }
 
 
@@ -84,23 +84,20 @@ TEST(Derivatives, Power)
 
     // power of two function
     constexpr auto pow2 = mito::functions::pow<2>;
-    // sanity check
+    // check result
     static_assert(pi_fourth * pi_fourth == pow2(pi_fourth));
-    EXPECT_DOUBLE_EQ(pi_fourth * pi_fourth, pow2(pi_fourth));
 
     // the first derivative of {pow2}
     constexpr auto pow2_i = mito::functions::derivative(pow2);
     // linear function
     constexpr auto pow1 = mito::functions::pow<1>;
-    // sanity check
+    // check result
     static_assert(2.0 * pow1(pi_fourth) == pow2_i(pi_fourth));
-    EXPECT_DOUBLE_EQ(2.0 * pow1(pi_fourth), pow2_i(pi_fourth));
 
     // the second derivative of {pow2}
     constexpr auto pow2_ii = mito::functions::derivative(pow2_i);
-    // sanity check
+    // check result
     static_assert(2.0 == pow2_ii(pi_fourth));
-    EXPECT_DOUBLE_EQ(2.0, pow2_ii(pi_fourth));
 }
 
 

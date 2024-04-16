@@ -27,9 +27,9 @@ TEST(Derivatives, FunctionPlusConstant)
     constexpr auto a_sin = a + sin;
     // the function plus the constant
     constexpr auto sin_a = sin + a;
-    // sanity checks
-    EXPECT_DOUBLE_EQ(a + sin(pi_fourth), a_sin(pi_fourth));
-    EXPECT_DOUBLE_EQ(a + sin(pi_fourth), sin_a(pi_fourth));
+    // check results
+    static_assert(a + sin(pi_fourth) == a_sin(pi_fourth));
+    static_assert(a + sin(pi_fourth) == sin_a(pi_fourth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
@@ -37,9 +37,9 @@ TEST(Derivatives, FunctionPlusConstant)
     constexpr auto a_sin_i = mito::functions::derivative(a_sin);
     // the first derivative of {a_sin}
     constexpr auto sin_a_i = mito::functions::derivative(sin_a);
-    // sanity checks
-    EXPECT_DOUBLE_EQ(sin_i(pi_fourth), a_sin_i(pi_fourth));
-    EXPECT_DOUBLE_EQ(sin_i(pi_fourth), sin_a_i(pi_fourth));
+    // check results
+    static_assert(sin_i(pi_fourth) == a_sin_i(pi_fourth));
+    static_assert(sin_i(pi_fourth) == sin_a_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
@@ -47,9 +47,9 @@ TEST(Derivatives, FunctionPlusConstant)
     constexpr auto a_sin_ii = mito::functions::derivative(a_sin_i);
     // the first derivative of {a_sin}
     constexpr auto sin_a_ii = mito::functions::derivative(sin_a_i);
-    // sanity checks
-    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth), a_sin_ii(pi_fourth));
-    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth), sin_a_ii(pi_fourth));
+    // check results
+    static_assert(sin_ii(pi_fourth) == a_sin_ii(pi_fourth));
+    static_assert(sin_ii(pi_fourth) == sin_a_ii(pi_fourth));
 }
 
 
@@ -66,9 +66,9 @@ TEST(Derivatives, FunctionTimesConstant)
     constexpr auto a_sin = a * sin;
     // the function times constant product
     constexpr auto sin_a = sin * a;
-    // sanity checks
-    EXPECT_DOUBLE_EQ(a * sin(pi_fourth), a_sin(pi_fourth));
-    EXPECT_DOUBLE_EQ(a * sin(pi_fourth), sin_a(pi_fourth));
+    // check results
+    static_assert(a * sin(pi_fourth) == a_sin(pi_fourth));
+    static_assert(a * sin(pi_fourth) == sin_a(pi_fourth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
@@ -76,9 +76,9 @@ TEST(Derivatives, FunctionTimesConstant)
     constexpr auto a_sin_i = mito::functions::derivative(a_sin);
     // the first derivative of {a_sin}
     constexpr auto sin_a_i = mito::functions::derivative(sin_a);
-    // sanity checks
-    EXPECT_DOUBLE_EQ(a * sin_i(pi_fourth), a_sin_i(pi_fourth));
-    EXPECT_DOUBLE_EQ(a * sin_i(pi_fourth), sin_a_i(pi_fourth));
+    // check results
+    static_assert(a * sin_i(pi_fourth) == a_sin_i(pi_fourth));
+    static_assert(a * sin_i(pi_fourth) == sin_a_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
@@ -86,9 +86,9 @@ TEST(Derivatives, FunctionTimesConstant)
     constexpr auto a_sin_ii = mito::functions::derivative(a_sin_i);
     // the first derivative of {a_sin}
     constexpr auto sin_a_ii = mito::functions::derivative(sin_a_i);
-    // sanity checks
-    EXPECT_DOUBLE_EQ(a * sin_ii(pi_fourth), a_sin_ii(pi_fourth));
-    EXPECT_DOUBLE_EQ(a * sin_ii(pi_fourth), sin_a_ii(pi_fourth));
+    // check results
+    static_assert(a * sin_ii(pi_fourth) == a_sin_ii(pi_fourth));
+    static_assert(a * sin_ii(pi_fourth) == sin_a_ii(pi_fourth));
 }
 
 
@@ -103,22 +103,22 @@ TEST(Derivatives, FunctionDividedByConstant)
     constexpr auto a = 0.1;
     // the function times constant product
     constexpr auto sin_a = sin / a;
-    // sanity check
-    EXPECT_DOUBLE_EQ(sin(pi_fourth) / a, sin_a(pi_fourth));
+    // check result
+    static_assert(sin(pi_fourth) / a == sin_a(pi_fourth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
     // the first derivative of {a_sin}
     constexpr auto sin_a_i = mito::functions::derivative(sin_a);
-    // sanity check
-    EXPECT_DOUBLE_EQ(sin_i(pi_fourth) / a, sin_a_i(pi_fourth));
+    // check result
+    static_assert(sin_i(pi_fourth) / a == sin_a_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
     // the first derivative of {a_sin}
     constexpr auto sin_a_ii = mito::functions::derivative(sin_a_i);
-    // sanity check
-    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) / a, sin_a_ii(pi_fourth));
+    // check result
+    static_assert(sin_ii(pi_fourth) / a == sin_a_ii(pi_fourth));
 }
 
 
@@ -135,9 +135,9 @@ TEST(Derivatives, FunctionMinusConstant)
     constexpr auto a_sin = a - sin;
     // the function minus the constant
     constexpr auto sin_a = sin - a;
-    // sanity checks
-    EXPECT_DOUBLE_EQ(a - sin(pi_fourth), a_sin(pi_fourth));
-    EXPECT_DOUBLE_EQ(sin(pi_fourth) - a, sin_a(pi_fourth));
+    // check results
+    static_assert(a - sin(pi_fourth) == a_sin(pi_fourth));
+    static_assert(sin(pi_fourth) - a == sin_a(pi_fourth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
@@ -145,9 +145,9 @@ TEST(Derivatives, FunctionMinusConstant)
     constexpr auto a_sin_i = mito::functions::derivative(a_sin);
     // the first derivative of {a_sin}
     constexpr auto sin_a_i = mito::functions::derivative(sin_a);
-    // sanity checks
-    EXPECT_DOUBLE_EQ(-sin_i(pi_fourth), a_sin_i(pi_fourth));
-    EXPECT_DOUBLE_EQ(sin_i(pi_fourth), sin_a_i(pi_fourth));
+    // check results
+    static_assert(-sin_i(pi_fourth) == a_sin_i(pi_fourth));
+    static_assert(sin_i(pi_fourth) == sin_a_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
@@ -155,9 +155,9 @@ TEST(Derivatives, FunctionMinusConstant)
     constexpr auto a_sin_ii = mito::functions::derivative(a_sin_i);
     // the first derivative of {a_sin}
     constexpr auto sin_a_ii = mito::functions::derivative(sin_a_i);
-    // sanity checks
-    EXPECT_DOUBLE_EQ(-sin_ii(pi_fourth), a_sin_ii(pi_fourth));
-    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth), sin_a_ii(pi_fourth));
+    // check results
+    static_assert(-sin_ii(pi_fourth) == a_sin_ii(pi_fourth));
+    static_assert(sin_ii(pi_fourth) == sin_a_ii(pi_fourth));
 }
 
 
@@ -168,18 +168,18 @@ TEST(Derivatives, Zero)
 
     // zero function
     constexpr auto zero = mito::functions::zero<scalar_t>;
-    // sanity check
-    EXPECT_DOUBLE_EQ(0.0, zero(pi_fourth));
+    // check result
+    static_assert(0.0 == zero(pi_fourth));
 
     // the first derivative of {zero}
     constexpr auto zero_i = mito::functions::derivative(zero);
-    // sanity check
-    EXPECT_DOUBLE_EQ(zero(pi_fourth), zero_i(pi_fourth));
+    // check result
+    static_assert(zero(pi_fourth) == zero_i(pi_fourth));
 
     // the second derivative of {zero}
     constexpr auto zero_ii = mito::functions::derivative(zero_i);
-    // sanity check
-    EXPECT_DOUBLE_EQ(zero(pi_fourth), zero_ii(pi_fourth));
+    // check result
+    static_assert(zero(pi_fourth) == zero_ii(pi_fourth));
 }
 
 
@@ -190,20 +190,20 @@ TEST(Derivatives, One)
 
     // identity function
     constexpr auto one = mito::functions::one<scalar_t>;
-    // sanity check
-    EXPECT_DOUBLE_EQ(1.0, one(pi_fourth));
+    // check result
+    static_assert(1.0 == one(pi_fourth));
 
     // the first derivative of {one}
     constexpr auto one_i = mito::functions::derivative(one);
     // zero function
     constexpr auto zero = mito::functions::zero<scalar_t>;
-    // sanity check
-    EXPECT_DOUBLE_EQ(zero(pi_fourth), one_i(pi_fourth));
+    // check result
+    static_assert(zero(pi_fourth) == one_i(pi_fourth));
 
     // the second derivative of {one}
     constexpr auto one_ii = mito::functions::derivative(one_i);
-    // sanity check
-    EXPECT_DOUBLE_EQ(zero(pi_fourth), one_ii(pi_fourth));
+    // check result
+    static_assert(zero(pi_fourth) == one_ii(pi_fourth));
 }
 
 

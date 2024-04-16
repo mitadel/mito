@@ -27,22 +27,22 @@ TEST(Derivatives, HigherOrder)
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
     // check that it is equal to {cos}
-    EXPECT_DOUBLE_EQ(cos(pi_fourth), sin_i(pi_fourth));
+    static_assert(cos(pi_fourth) == sin_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
     // check that it is equal to -{sin}
-    EXPECT_DOUBLE_EQ(-sin(pi_fourth), sin_ii(pi_fourth));
+    static_assert(-sin(pi_fourth) == sin_ii(pi_fourth));
 
     // the third derivative of {sin}
     constexpr auto sin_iii = mito::functions::derivative(sin_ii);
     // check that it is equal to -{cos}
-    EXPECT_DOUBLE_EQ(-cos(pi_fourth), sin_iii(pi_fourth));
+    static_assert(-cos(pi_fourth) == sin_iii(pi_fourth));
 
     // the fourth derivative of {sin}
     constexpr auto sin_iiii = mito::functions::derivative(sin_iii);
     // check that it is equal to {sin}
-    EXPECT_DOUBLE_EQ(sin(pi_fourth), sin_iiii(pi_fourth));
+    static_assert(sin(pi_fourth) == sin_iiii(pi_fourth));
 }
 
 

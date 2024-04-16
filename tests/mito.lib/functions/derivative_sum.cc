@@ -26,7 +26,7 @@ TEST(Derivatives, Sum)
     // the functions sum
     constexpr auto sum = sin + cos;
     // check that it is equal to {sin + cos}
-    EXPECT_DOUBLE_EQ(sin(pi_fourth) + cos(pi_fourth), sum(pi_fourth));
+    static_assert(sin(pi_fourth) + cos(pi_fourth) == sum(pi_fourth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
@@ -35,7 +35,7 @@ TEST(Derivatives, Sum)
     // the first derivative of the sum
     constexpr auto sum_i = mito::functions::derivative(sum);
     // check that it is equal to {cos}
-    EXPECT_DOUBLE_EQ(sin_i(pi_fourth) + cos_i(pi_fourth), sum_i(pi_fourth));
+    static_assert(sin_i(pi_fourth) + cos_i(pi_fourth) == sum_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
@@ -44,7 +44,7 @@ TEST(Derivatives, Sum)
     // the second derivative of the sum
     constexpr auto sum_ii = mito::functions::derivative(sum_i);
     // check that it is equal to {sin_ii + cos_ii}
-    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) + cos_ii(pi_fourth), sum_ii(pi_fourth));
+    static_assert(sin_ii(pi_fourth) + cos_ii(pi_fourth) == sum_ii(pi_fourth));
 }
 
 
@@ -60,7 +60,7 @@ TEST(Derivatives, Subtraction)
     // the functions sub
     constexpr auto sub = sin - cos;
     // check that it is equal to {sin + cos}
-    EXPECT_DOUBLE_EQ(sin(pi_fourth) - cos(pi_fourth), sub(pi_fourth));
+    static_assert(sin(pi_fourth) - cos(pi_fourth) == sub(pi_fourth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
@@ -69,7 +69,7 @@ TEST(Derivatives, Subtraction)
     // the first derivative of the sub
     constexpr auto sub_i = mito::functions::derivative(sub);
     // check that it is equal to {cos}
-    EXPECT_DOUBLE_EQ(sin_i(pi_fourth) - cos_i(pi_fourth), sub_i(pi_fourth));
+    static_assert(sin_i(pi_fourth) - cos_i(pi_fourth) == sub_i(pi_fourth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
@@ -78,7 +78,7 @@ TEST(Derivatives, Subtraction)
     // the second derivative of the sub
     constexpr auto sub_ii = mito::functions::derivative(sub_i);
     // check that it is equal to {sin_ii + cos_ii}
-    EXPECT_DOUBLE_EQ(sin_ii(pi_fourth) - cos_ii(pi_fourth), sub_ii(pi_fourth));
+    static_assert(sin_ii(pi_fourth) - cos_ii(pi_fourth) == sub_ii(pi_fourth));
 }
 
 
