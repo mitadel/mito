@@ -10,6 +10,10 @@
 
 namespace mito::functions {
 
+    // functions
+    template <class X, class Y>
+    using function_t = Function<X, Y>;
+
     // the function mapping an input of type {T} to the zero scalar
     template <tensor_or_scalar_c T>
     [[maybe_unused]] constexpr auto zero = Constant<T, scalar_t>(0.0);
