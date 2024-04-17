@@ -12,7 +12,7 @@
 namespace mito::functions {
 
     // a function mapping a {X} instance to a {Y} instance
-    template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
+    template <class X, class Y>
     class Function {
       public:
         // the input type
