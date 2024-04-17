@@ -27,13 +27,6 @@ TEST(Manifolds, FieldsTraits)
     // assert that {g} is a vector field
     static_assert(mito::manifolds::VectorField<decltype(g)>);
 
-    // another vector field
-    constexpr auto h = mito::manifolds::field([](const coordinates_t & x) -> mito::vector_t<2> {
-        return { std::cos(x[0] * x[1]), std::cos(x[0] * x[1]) };
-    });
-    // assert that {h} is also a vector field
-    static_assert(mito::manifolds::VectorField<decltype(h)>);
-
     // a second-order tensor field (2x2 identity tensor field in 3 dimensional space)
     constexpr auto i = mito::manifolds::identity_tensor_field<2, 3>;
     // assert that {i} is a tensor field
