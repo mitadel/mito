@@ -60,6 +60,9 @@ namespace mito::functions {
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     constexpr auto constant(const Y & c);
 
+    template <functor_c F>
+    constexpr auto function(F && f);
+
     // the function associating to a D-dimensional vector its N-th component
     template <int N, int D>
     [[maybe_unused]] constexpr auto x = Component<vector_t<D>, N>();

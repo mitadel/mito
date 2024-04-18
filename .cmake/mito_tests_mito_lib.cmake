@@ -5,6 +5,7 @@
 
 # functions
 mito_test_driver(tests/mito.lib/functions/algebra.cc)
+mito_test_driver(tests/mito.lib/functions/function_from_functor.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_constants.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_chain_rule.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_higher_order.cc)

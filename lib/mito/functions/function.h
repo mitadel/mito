@@ -22,6 +22,37 @@ namespace mito::functions {
     };
 
 
+    // a function wrapping a functor (i.e. a type that implements the call operator)
+    template <functor_c F>
+    class FunctionFromFunctor : public function_from_functor<F>::type {
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_from_functor<F>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+
+      public:
+        // constructor
+        constexpr FunctionFromFunctor(F && f) : _f(std::move(f)) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return _f(x); }
+
+      private:
+        // the functor
+        F _f;
+    };
+
+
     // the constant function
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
     class Constant : public Function<X, Y> {

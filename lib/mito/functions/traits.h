@@ -47,6 +47,27 @@ namespace mito::functions {
     // the type of function for a function of class {F}
     template <function_c F>
     using function_type = Function<typename F::input_type, typename F::output_type>;
+
+    // the functor concept
+    template <class F>
+    concept functor_c = requires { &F::operator(); };
+
+    // traits for functors
+    template <typename T>
+    struct functor_traits : public functor_traits<decltype(&T::operator())> {};
+
+    template <typename ClassT, typename ReturnT, typename ArgumentT>
+    struct functor_traits<ReturnT (ClassT::*)(ArgumentT) const> {
+        using output_type = ReturnT;
+        using input_type = ArgumentT;
+    };
+
+    // the function type of a functor
+    template <functor_c F>
+    struct function_from_functor {
+        using type = Function<
+            typename functor_traits<F>::input_type, typename functor_traits<F>::output_type>;
+    };
 }
 
 

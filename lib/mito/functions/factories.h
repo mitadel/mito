@@ -16,6 +16,13 @@ namespace mito::functions {
     {
         return Constant<X, Y>(c);
     }
+
+    // returns the function wrapping the functor {f}
+    template <functor_c F>
+    constexpr auto function(F && f)
+    {
+        return FunctionFromFunctor<F>(std::move(f));
+    }
 }
 
 
