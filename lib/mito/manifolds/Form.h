@@ -18,6 +18,11 @@ namespace mito::manifolds {
     static constexpr dummy_vector _;
 
 
+    // concept of an extended vector (vector or dummy vector)
+    template <class F>
+    concept vector_or_dummy_c = vector_c<F> or std::is_same_v<F, dummy_vector>;
+
+
     // class for P-forms
     template <int P, class F>
     class Form {
@@ -33,7 +38,7 @@ namespace mito::manifolds {
         constexpr Form(F f) : _f{ std::move(f) } {}
 
         // contraction operator
-        template <typename... argsT>
+        template <vector_or_dummy_c... argsT>
         constexpr auto operator()(argsT... args) const
         requires(sizeof...(argsT) == P)
         {
