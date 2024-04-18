@@ -58,7 +58,7 @@ namespace mito::functions {
 
     // the function mapping an input of type {X} to the constant {c}
     template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
-    [[maybe_unused]] constexpr auto constant(const Y & c);
+    constexpr auto constant(const Y & c);
 
     // the function associating to a D-dimensional vector its N-th component
     template <int N, int D>
