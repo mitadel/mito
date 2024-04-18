@@ -48,10 +48,6 @@ namespace mito::functions {
     template <function_c F>
     using function_type = Function<typename F::input_type, typename F::output_type>;
 
-    // the functor concept
-    template <class F>
-    concept functor_c = requires { &F::operator(); };
-
     // traits for functors
     template <typename T>
     struct functor_traits : public functor_traits<decltype(&T::operator())> {};

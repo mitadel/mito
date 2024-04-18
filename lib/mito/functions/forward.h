@@ -14,6 +14,10 @@ namespace mito::functions {
     template <class F>
     concept tensor_or_scalar_c = tensor_c<F> or std::convertible_to<F, scalar_t>;
 
+    // the functor concept
+    template <class F>
+    concept functor_c = requires { &F::operator(); };
+
     // class {Function}
     template <class X, class Y>
     class Function;
