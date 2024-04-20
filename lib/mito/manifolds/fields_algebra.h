@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_math_fields_algebra_h)
-#define mito_math_fields_algebra_h
+#if !defined(mito_manifolds_fields_algebra_h)
+#define mito_manifolds_fields_algebra_h
 
 
 // Algebraic operations on Fields
