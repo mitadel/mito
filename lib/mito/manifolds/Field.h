@@ -18,9 +18,7 @@ namespace mito::manifolds {
 
     template <geometry::CoordinateType coordT, functions::function_c F>
     requires(vector_c<typename F::input_type>)
-    class Field :
-        public functions::function_t<
-            geometry::coordinates_t<F::input_type::size, coordT>, typename F::output_type> {
+    class Field {
       private:
         // the type of underlying function
         using function_type = F;
@@ -32,6 +30,8 @@ namespace mito::manifolds {
         using output_type = function_type::output_type;
         // publish the dimension of the physical space
         static constexpr int dim = input_type::size;
+        // the coordinate type
+        static constexpr geometry::CoordinateType coordinate_type = coordT;
         // the type of coordinates
         using coordinates_type = geometry::coordinates_t<dim, coordT>;
 
@@ -41,6 +41,9 @@ namespace mito::manifolds {
 
         // the value of the field at position {x}
         constexpr auto operator()(const coordinates_type & x) const -> output_type { return _f(x); }
+
+        // accessor to the underlying function
+        constexpr auto function() const -> const function_type & { return _f; }
 
       private:
         // the function assigning the value of the field at each point

@@ -12,54 +12,46 @@
 namespace mito::manifolds {
 
     // addition of fields fa + fb
-    template <class F1, class F2>
-    constexpr auto operator+(const field_t<F1> & fA, const field_t<F2> & fB)
+    template <field_c F1, field_c F2>
+    constexpr auto operator+(const F1 & fA, const F2 & fB)
     requires(
         // {fA} and {fB} are defined on the same coordinates
-        std::is_same_v<
-            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>)
+        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
     {
-        using coordinates_type = typename field_t<F1>::coordinates_type;
-        return field([fA, fB](const coordinates_type & x) { return fA(x) + fB(x); });
+        return field<F1::coordinate_type>(fA.function() + fB.function());
     }
 
     // scalar * fields
-    template <class F>
-    constexpr auto operator*(const real & a, const field_t<F> & f)
+    template <field_c F>
+    constexpr auto operator*(const real & a, const F & f)
     {
-        using coordinates_type = typename field_t<F>::coordinates_type;
-        return field([a, f](const coordinates_type & x) { return a * f(x); });
+        return field<F::coordinate_type>(a * f.function());
     }
 
     // field * scalar
-    template <class F>
-    constexpr auto operator*(const field_t<F> & f, const real & a)
+    constexpr auto operator*(const field_c auto & f, const real & a)
     {
         return a * f;
     }
 
     // product of fields
-    template <class F1, class F2>
-    constexpr auto operator*(const field_t<F1> & fA, const field_t<F2> & fB)
+    template <field_c F1, field_c F2>
+    constexpr auto operator*(const F1 & fA, const F2 & fB)
     requires(
         // {fA} and {fB} are defined on the same coordinates
-        std::is_same_v<
-            typename field_t<F1>::coordinates_type, typename field_t<F2>::coordinates_type>)
+        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
     {
-        using coordinates_type = typename field_t<F1>::coordinates_type;
-        return field([fA, fB](const coordinates_type & x) { return fA(x) * fB(x); });
+        return field<F1::coordinate_type>(fA.function() * fB.function());
     }
 
     // unary operator- for fields
-    template <class F>
-    constexpr auto operator-(const field_t<F> & f)
+    constexpr auto operator-(const field_c auto & f)
     {
         return -1.0 * f;
     }
 
     // subtraction of fields fa - fb
-    template <class F1, class F2>
-    constexpr auto operator-(const field_t<F1> & fA, const field_t<F2> & fB)
+    constexpr auto operator-(const field_c auto & fA, const field_c auto & fB)
     {
         return fA + (-fB);
     }
