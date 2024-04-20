@@ -81,39 +81,6 @@ namespace mito::manifolds {
         return field([f](const coordinates_type & x) -> mito::scalar_t { return std::sqrt(f(x)); });
     }
 
-    // the wedge product of one field of one-forms (trivial case)
-    constexpr auto wedge(const one_form_field_c auto & fA)
-    {
-        // return a {fA}
-        return fA;
-    }
-
-    // the wedge product of two fields of one-forms
-    template <one_form_field_c F1, one_form_field_c F2>
-    constexpr auto wedge(const F1 & fA, const F1 & fB)
-    requires(
-        // {fA} and {fB} are defined on the same coordinates
-        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
-    {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function(
-            [fA, fB](const coordinates_type & x) -> auto { return wedge(fA(x), fB(x)); }));
-    }
-
-    // the wedge product of three fields of one-forms
-    template <one_form_field_c F1, one_form_field_c F2, one_form_field_c F3>
-    constexpr auto wedge(const F1 & fA, const F2 & fB, const F3 & fC)
-    requires(
-        // {fA}, {fB} and {fC} are defined on the same coordinates
-        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>
-        && std::is_same_v<typename F2::coordinates_type, typename F3::coordinates_type>)
-    {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function([fA, fB, fC](const coordinates_type & x) -> auto {
-            return wedge(fA(x), fB(x), fC(x));
-        }));
-    }
-
     // the tensor product of two fields of one-forms
     template <one_form_field_c F1, one_form_field_c F2>
     constexpr auto tensor(const F1 & fA, const F2 & fB)

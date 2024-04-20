@@ -31,7 +31,8 @@
 #include "fields_algebra.h"
 // algebraic operations on forms
 #include "forms_algebra.h"
-
+// wedge operator on forms
+#include "wedge.h"
 
 #endif
 
