@@ -11,30 +11,41 @@
 
 namespace mito::manifolds {
 
+    // concept of a field
+    template <class FIELD>
+    concept field_c = requires(FIELD c) {
+        // require that F only binds to {Field<coordT, F>} specializations or derived classes
+        []<geometry::CoordinateType coordT, functions::function_c F>(Field<coordT, F> &) {
+        }(c);
+    };
+
     // concept of a field {FIELD} being a scalar field on a D-dimensional manifold
     template <class FIELD>
     // a scalar field on a D-dimensional manifold is a field returning a scalar
-    concept scalar_field_c = scalar_c<typename FIELD::output_type>;
+    concept scalar_field_c = field_c<FIELD> and scalar_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a vector field on a D-dimensional manifold
     template <class FIELD>
     // a vector field on a D-dimensional manifold is a field returning a vector
-    concept vector_field_c = vector_c<typename FIELD::output_type>;
+    concept vector_field_c = field_c<FIELD> and vector_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a tensor field on a D-dimensional manifold
     template <class FIELD>
     // a tensor field on a D-dimensional manifold is a field returning a matrix
-    concept tensor_field_c = matrix_c<typename FIELD::output_type>;
+    concept tensor_field_c = field_c<FIELD> and matrix_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a symmetric tensor field on a D-dimensional manifold
     template <class FIELD>
     // a symmetric tensor field on a D-dimensional manifold is a field returning a symmetric matrix
-    concept symmetric_tensor_field_c = symmetric_matrix_c<typename FIELD::output_type>;
+    concept symmetric_tensor_field_c =
+        field_c<FIELD> and symmetric_matrix_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a diagonal tensor field on a D-dimensional manifold
     template <class FIELD>
     // a diagonal tensor field on a D-dimensional manifold is a field returning a diagonal matrix
-    concept diagonal_tensor_field_c = diagonal_matrix_c<typename FIELD::output_type>;
+    concept diagonal_tensor_field_c =
+        field_c<FIELD> and diagonal_matrix_c<typename FIELD::output_type>;
+
 }
 
 
