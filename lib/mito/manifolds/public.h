@@ -11,9 +11,6 @@
 // external packages
 #include "externals.h"
 
-// manifolds utilities
-#include "utilities.h"
-
 // get the forward declarations
 #include "forward.h"
 
