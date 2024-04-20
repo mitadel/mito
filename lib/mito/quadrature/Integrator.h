@@ -63,7 +63,7 @@ namespace mito::quadrature {
             _computeQuadPointCoordinates();
         }
 
-        auto integrate(const manifolds::ScalarField auto & f) const -> scalar_t
+        auto integrate(const manifolds::scalar_field_c auto & f) const -> scalar_t
         {
             auto result = scalar_t(0.0);
             // assemble elementary contributions
