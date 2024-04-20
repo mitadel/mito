@@ -46,6 +46,31 @@ namespace mito::manifolds {
     concept diagonal_tensor_field_c =
         field_c<FIELD> and diagonal_matrix_c<typename FIELD::output_type>;
 
+    // concept of a one-form
+    template <class F>
+    concept one_form_c = requires(F c) {
+        // require that F only binds to {one_form_t} specializations
+        []<class T>(Form<1, T> &) {
+        }(c);
+    };
+
+    // concept of a field {FIELD} of one-forms
+    template <class FIELD>
+    // a one-form field on a D-dimensional manifold is a field returning a one-form
+    concept one_form_field_c = field_c<FIELD> and one_form_c<typename FIELD::output_type>;
+
+    // concept of a p-form
+    template <class F>
+    concept p_form_c = requires(F c) {
+        // require that F only binds to {p_form_t} specializations
+        []<int P, class T>(Form<P, T> &) {
+        }(c);
+    };
+
+    // concept of a field {FIELD} of p-forms
+    template <class FIELD>
+    // a p-form field on a D-dimensional manifold is a field returning a p-form
+    concept p_form_field_c = field_c<FIELD> and p_form_c<typename FIELD::output_type>;
 }
 
 
