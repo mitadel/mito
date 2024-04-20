@@ -28,37 +28,32 @@ namespace mito::manifolds {
     }
 
     // form * scalar
-    template <int P, class F>
-    constexpr auto operator*(const form_t<P, F> & f, const real & a)
+    constexpr auto operator*(const p_form_c auto & f, const real & a)
     {
         return a * f;
     }
 
     // unary operator- for forms
-    template <int P, class F>
-    constexpr auto operator-(const form_t<P, F> & f)
+    constexpr auto operator-(const p_form_c auto & f)
     {
         return -1.0 * f;
     }
 
     // subtraction of forms fa - fb
-    template <int P, class F1, class F2>
-    constexpr auto operator-(const form_t<P, F1> & fA, const form_t<P, F2> & fB)
+    constexpr auto operator-(const p_form_c auto & fA, const p_form_c auto & fB)
     {
         return fA + (-fB);
     }
 
     // the wedge product of one one-form (trivial case)
-    template <class F1>
-    constexpr auto wedge(const one_form_t<F1> & a_tilda)
+    constexpr auto wedge(const one_form_c auto & a_tilda)
     {
         // return a {a_tilda}
         return a_tilda;
     }
 
     // the wedge product of two one-forms
-    template <class F1, class F2>
-    constexpr auto wedge(const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda)
+    constexpr auto wedge(const one_form_c auto & a_tilda, const one_form_c auto & b_tilda)
     {
         // return a {form} that, when contracted with {x} and {y}...
         return mito::manifolds::form<2>(
@@ -70,10 +65,9 @@ namespace mito::manifolds {
     }
 
     // the wedge product of three one-forms
-    template <class F1, class F2, class F3>
     constexpr auto wedge(
-        const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda,
-        const one_form_t<F3> & c_tilda)
+        const one_form_c auto & a_tilda, const one_form_c auto & b_tilda,
+        const one_form_c auto & c_tilda)
     {
         // return a {form} that, when contracted with {x}, {y} and {z}...
         return mito::manifolds::form<3>(
@@ -88,8 +82,7 @@ namespace mito::manifolds {
     }
 
     // the tensor product of two one-forms
-    template <class F1, class F2>
-    constexpr auto tensor(const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda)
+    constexpr auto tensor(const one_form_c auto & a_tilda, const one_form_c auto & b_tilda)
     {
         // return a {form} that, when contracted with {x} and {y}...
         return mito::manifolds::form<2>(
@@ -101,10 +94,9 @@ namespace mito::manifolds {
     }
 
     // the tensor product of three one-forms
-    template <class F1, class F2, class F3>
     constexpr auto tensor(
-        const one_form_t<F1> & a_tilda, const one_form_t<F2> & b_tilda,
-        const one_form_t<F3> & c_tilda)
+        const one_form_c auto & a_tilda, const one_form_c auto & b_tilda,
+        const one_form_c auto & c_tilda)
     {
         // return a {form} that, when contracted with {x}, {y} and {z}...
         return mito::manifolds::form<3>(
