@@ -8,22 +8,29 @@
 #include <mito/manifolds.h>
 
 
-// alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// use CARTESIAN coordinates
+using mito::geometry::CARTESIAN;
 
 
 TEST(Manifolds, FieldsTraits)
 {
+    // cos(x0 * x1)
+    constexpr auto cos = mito::functions::cos(mito::functions::x<0, 2> * mito::functions::x<1, 2>);
+
     // a scalar field
-    constexpr auto f = mito::manifolds::field(
-        [](const coordinates_t & x) -> mito::scalar_t { return std::cos(x[0] * x[1]); });
+    constexpr auto f = mito::manifolds::field<CARTESIAN>(cos);
+
     // assert that {f} is a scalar field
     static_assert(mito::manifolds::ScalarField<decltype(f)>);
 
+    // the function returning the constant e0 unit vector in 2D
+    constexpr auto e0 = mito::functions::constant<mito::vector_t<2>>(mito::e_0<2>);
+
+    // the function returning the constant e1 unit vector in 2D
+    constexpr auto e1 = mito::functions::constant<mito::vector_t<2>>(mito::e_1<2>);
+
     // a vector field
-    constexpr auto g = mito::manifolds::field([](const coordinates_t & x) -> mito::vector_t<2> {
-        return { std::cos(x[0] * x[1]), std::cos(x[0] * x[1]) };
-    });
+    constexpr auto g = mito::manifolds::field<CARTESIAN>(cos * (e0 + e1));
     // assert that {g} is a vector field
     static_assert(mito::manifolds::VectorField<decltype(g)>);
 

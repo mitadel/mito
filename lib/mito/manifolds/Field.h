@@ -16,32 +16,35 @@ namespace mito::manifolds {
      * {coordinates_t}, which returns the value of the field at that physical location.
      */
 
-    template <class F>
-    class Field {
+    template <geometry::CoordinateType coordT, functions::function_c F>
+    requires(vector_c<typename F::input_type>)
+    class Field :
+        public functions::function_t<
+            geometry::coordinates_t<F::input_type::size, coordT>, typename F::output_type> {
       private:
-        // the type in input to the field (e.g. where the field is defined)
-        using input_type = input<F>::input_type;
-        // the type of field (e.g. vector field, form field, ...)
-        using output_type = input<F>::output_type;
-
-      public:
-        // the type of coordinates
-        using coordinates_type = input_type;
-        // publish the dimension of the physical space
-        static constexpr int dim = coordinates_type::dim;
-        // publish my template parameter
+        // the type of underlying function
         using function_type = F;
 
       public:
+        // the type in input to the field (e.g. where the field is defined)
+        using input_type = function_type::input_type;
+        // the type of field (e.g. vector field, form field, ...)
+        using output_type = function_type::output_type;
+        // publish the dimension of the physical space
+        static constexpr int dim = input_type::size;
+        // the type of coordinates
+        using coordinates_type = geometry::coordinates_t<dim, coordT>;
+
+      public:
         // constructor
-        constexpr Field(F f) : _f{ std::move(f) } {}
+        constexpr Field(function_type f) : _f{ std::move(f) } {}
 
         // the value of the field at position {x}
         constexpr auto operator()(const coordinates_type & x) const -> output_type { return _f(x); }
 
       private:
         // the function assigning the value of the field at each point
-        F _f;
+        function_type _f;
     };
 }
 

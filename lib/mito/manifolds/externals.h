@@ -11,7 +11,7 @@
 // externals
 
 // support
-#include "../math.h"
+#include "../functions.h"
 #include "../mesh.h"
 #include "../utilities.h"
 

@@ -27,8 +27,8 @@ namespace mito::manifolds {
     using one_form_t = Form<1, F>;
 
     // field alias
-    template <class F>
-    using field_t = Field<F>;
+    template <geometry::CoordinateType coordT, functions::function_c F>
+    using field_t = Field<coordT, F>;
 
     // factory manifolds
     template <class cellT, geometry::CoordinateType coordsT>
@@ -46,15 +46,18 @@ namespace mito::manifolds {
     constexpr auto form(F && f) -> form_t<P, F>;
 
     // factory for fields
-    template <class F>
-    constexpr auto field(F && f) -> field_t<F>;
+    template <geometry::CoordinateType coordT, functions::function_c F>
+    constexpr auto field(const F & f) -> field_t<coordT, F>;
+
+    // factory for fields
+    template <geometry::CoordinateType coordT, functions::function_c F>
+    constexpr auto field(F && f) -> field_t<coordT, F>;
 
     // uniform field
     template <int D, geometry::CoordinateType coordsT = geometry::CARTESIAN, class Y>
     constexpr auto uniform_field(const Y & constant)
     {
-        return field(
-            [constant](const geometry::coordinates_t<D, coordsT> &) -> Y { return constant; });
+        return field<coordsT>(mito::functions::constant<mito::vector_t<D>>(constant));
     }
 
     // the order N identity tensor in D dimensions

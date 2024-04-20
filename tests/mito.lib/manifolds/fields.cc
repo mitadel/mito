@@ -8,26 +8,37 @@
 #include <mito/manifolds.h>
 
 
-// alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// alias for cartesian coordinates
+using mito::geometry::CARTESIAN;
 
 
 TEST(Manifolds, VectorFields)
 {
-    // a point in space
-    constexpr auto x = mito::geometry::coordinates({ 0.0, 0.0 });
+    // the cosine function
+    constexpr auto cos = mito::functions::cos;
+    // the function extracting the x_0 component of 2D vector
+    constexpr auto x0 = mito::functions::x<0, 2>;
+    // the function extracting the x_1 component of a 2D vector
+    constexpr auto x1 = mito::functions::x<1, 2>;
 
     // a scalar field
-    constexpr auto f = mito::manifolds::field(
-        [](const coordinates_t & x) -> mito::scalar_t { return std::cos(x[0] * x[1]); });
+    // TOFIX: default value to CARTESIAN?
+    constexpr auto f = mito::manifolds::field<CARTESIAN>(cos(x0 * x1));
+
+    // a point in space
+    constexpr auto x = mito::geometry::coordinates<CARTESIAN>({ 0.0, 0.0 });
 
     // check value of field at {x}
     static_assert(f(x) == 1.0);
 
+    // the function returning the constant e0 unit vector in 2D
+    constexpr auto e0 = mito::functions::constant<mito::vector_t<2>>(mito::e_0<2>);
+
+    // the function returning the constant e1 unit vector in 2D
+    constexpr auto e1 = mito::functions::constant<mito::vector_t<2>>(mito::e_1<2>);
+
     // a vector field
-    constexpr auto g = mito::manifolds::field([](const coordinates_t & x) -> mito::vector_t<2> {
-        return { std::cos(x[0] * x[1]), std::cos(x[0] * x[1]) };
-    });
+    constexpr auto g = mito::manifolds::field<CARTESIAN>(cos(x0 * x1) * (e0 + e1));
 
     // check value of field at {x}
     static_assert(g(x) == mito::vector_t<2>{ 1.0, 1.0 });

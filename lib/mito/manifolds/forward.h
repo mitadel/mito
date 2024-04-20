@@ -19,7 +19,8 @@ namespace mito::manifolds {
     class Form;
 
     // class field
-    template <class F>
+    template <geometry::CoordinateType coordT, functions::function_c F>
+    requires(vector_c<typename F::input_type>)
     class Field;
 }
 

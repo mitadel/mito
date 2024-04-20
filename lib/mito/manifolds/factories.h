@@ -60,10 +60,17 @@ namespace mito::manifolds {
     }
 
     // factory for fields
-    template <class F>
-    constexpr auto field(F && f) -> mito::manifolds::field_t<F>
+    template <geometry::CoordinateType coordT, functions::function_c F>
+    constexpr auto field(const F & f) -> mito::manifolds::field_t<coordT, F>
     {
-        return mito::manifolds::field_t<F>(std::forward<F>(f));
+        return mito::manifolds::field_t<coordT, F>(f);
+    }
+
+    // factory for fields
+    template <geometry::CoordinateType coordT, functions::function_c F>
+    constexpr auto field(F && f) -> mito::manifolds::field_t<coordT, F>
+    {
+        return mito::manifolds::field_t<coordT, F>(std::forward<F>(f));
     }
 
     // construct a one-form based on its metric-equivalent vector field
