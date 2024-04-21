@@ -18,10 +18,6 @@ namespace mito::functions {
     template <class X, class Y>
     class Function;
 
-    // a function mapping a type {X} to a {scalar_t}
-    template <tensor_or_scalar_c X>
-    using ScalarValuedFunction = Function<X, scalar_t>;
-
     // concept of a function
     template <class F>
     concept function_c = requires(F c) {
@@ -32,11 +28,7 @@ namespace mito::functions {
 
     // concept of a scalar-valued function
     template <class F>
-    concept scalar_function_c = requires(F c) {
-        // require that F only binds to {ScalarValuedFunction} or derived classes
-        []<class X>(ScalarValuedFunction<X> &) {
-        }(c);
-    };
+    concept scalar_function_c = function_c<F> and scalar_c<typename F::output_type>;
 
     // function composition
     template <function_c F, function_c G>
