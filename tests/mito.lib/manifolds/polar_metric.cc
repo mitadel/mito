@@ -11,6 +11,14 @@
 // use polar coordinates
 using mito::geometry::POLAR;
 
+// the type of coordinates
+using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
+
+// the function extracting the x_0 (i.e. the radial) component of 2D vector
+// static constexpr auto r = mito::manifolds::field<POLAR>(mito::functions::x<0, 2>);
+static constexpr auto r =
+    mito::manifolds::field<POLAR>(mito::functions::coordinate<coordinates_t, 0>);
+
 // the basis for vector fields (e_r and e_theta)
 static constexpr auto e_r = mito::manifolds::uniform_field<2, POLAR>(mito::e_0<2>);
 static constexpr auto e_t = mito::manifolds::uniform_field<2, POLAR>(mito::e_1<2>);
@@ -19,33 +27,37 @@ static constexpr auto e_t = mito::manifolds::uniform_field<2, POLAR>(mito::e_1<2
 static constexpr auto e_rr = mito::manifolds::uniform_field<2, POLAR>(mito::e_00<2>);
 static constexpr auto e_tt = mito::manifolds::uniform_field<2, POLAR>(mito::e_11<2>);
 
-// alias for a set of polar coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
 
+// construct a one-form based on its metric-equivalent vector field
+template <
+    mito::manifolds::vector_field_c vectorFieldT,
+    mito::manifolds::symmetric_tensor_field_c tensorFieldT>
+constexpr auto
+one_form_hello(const vectorFieldT & vector, const tensorFieldT & metric)
+requires(
+    // the vector and the metric are defined on the same coordinates
+    std::is_same_v<
+        typename vectorFieldT::coordinates_type, typename tensorFieldT::coordinates_type>)
+{
+    // return a one-form that, when contracted with {x}...
+    return mito::manifolds::field<POLAR>(mito::functions::function(
+        [vector, metric](const mito::geometry::coordinates_t<2, POLAR> & x) {
+            // ... returns the contraction of {vector} with {x}
+            return mito::manifolds::one_form(vector(x), metric(x));
+        }));
+}
 
 TEST(Manifolds, PolarCoordinates)
 {
     // the metric field
-    constexpr auto g =
-        // x[0] -> r
-        // x[1] -> theta
-        mito::manifolds::field([](const coordinates_t & x) -> mito::diagonal_matrix_t<2> {
-            // e_rr + r^2 * e_tt
-            return e_rr(x) + (x[0] * x[0]) * e_tt(x);
-        });
+    constexpr auto g = e_rr + r * r * e_tt;
 
     // the inverse metric field
-    constexpr auto g_inv =
-        // x[0] -> r
-        // x[1] -> theta
-        mito::manifolds::field([](const coordinates_t & x) -> mito::diagonal_matrix_t<2> {
-            // e_r + 1/r^2 * e_theta
-            return e_rr(x) + 1.0 / (x[0] * x[0]) * e_tt(x);
-        });
+    constexpr auto g_inv = e_rr + 1.0 / (r * r) * e_tt;
 
     // the basis one-forms
-    constexpr auto dr = mito::manifolds::one_form(g_inv * e_r, g);
-    constexpr auto dt = mito::manifolds::one_form(g_inv * e_t, g);
+    constexpr auto dr = one_form_hello(g_inv * e_r, g);
+    constexpr auto dt = one_form_hello(g_inv * e_t, g);
 
     // a point in space
     constexpr auto r = 2.0;
