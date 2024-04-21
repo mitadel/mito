@@ -39,6 +39,29 @@ namespace mito::functions {
     };
 
 
+    // function extracting the I-th coordinate of a set of coordinates
+    template <class T, int I>
+    class Coordinate : public Function<T, scalar_t> {
+
+      public:
+        // the input type
+        using input_type = Function<T, scalar_t>::input_type;
+        // the output type
+        using output_type = Function<T, scalar_t>::output_type;
+
+      public:
+        // call operator for function composition
+        template <function_c F>
+        constexpr auto operator()(const F & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(input_type x) const -> output_type { return x[I]; }
+    };
+
+
     // the sine function
     class Sin : public Function<scalar_t, scalar_t> {
 

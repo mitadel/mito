@@ -112,6 +112,17 @@ namespace mito::functions {
         else
             return zero<T>;
     }
+
+    // the I-th first partial derivative of the {Coordinate} function
+    template <int I, class T, int N>
+    constexpr auto derivative(const Coordinate<T, N> &)
+    {
+        // the dirac delta
+        if constexpr (I == N)
+            return one<T>;
+        else
+            return zero<T>;
+    }
 }
 
 

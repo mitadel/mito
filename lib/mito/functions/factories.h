@@ -11,7 +11,7 @@
 namespace mito::functions {
 
     // returns the function mapping an input of type {X} to the constant {c}
-    template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
+    template <class X, class Y>
     constexpr auto constant(const Y & c)
     {
         return Constant<X, Y>(c);

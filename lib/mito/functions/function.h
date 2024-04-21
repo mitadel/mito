@@ -54,7 +54,7 @@ namespace mito::functions {
 
 
     // the constant function
-    template <tensor_or_scalar_c X, tensor_or_scalar_c Y>
+    template <class X, class Y>
     class Constant : public Function<X, Y> {
       public:
         // the input type
