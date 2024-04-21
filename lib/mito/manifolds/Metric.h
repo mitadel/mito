@@ -26,15 +26,20 @@ namespace mito::manifolds {
     struct metric<geometry::POLAR, 2, 2> {
         static constexpr auto field()
         {
+            // the type of coordinates
+            using coordinates_t = mito::geometry::coordinates_t<2, geometry::POLAR>;
+
             // the function extracting the x_0 component of 2D vector
-            constexpr auto x0 = mito::functions::x<0, 2>;
+            constexpr auto x0 =
+                manifolds::field<geometry::POLAR>(mito::functions::coordinate<coordinates_t, 0>);
+
             // the function returning the constant e00 tensor in 2D
-            constexpr auto e00 = mito::functions::constant<mito::vector_t<2>>(mito::e_00<2>);
+            constexpr auto e00 = manifolds::uniform_field<2, geometry::POLAR>(e_00<2>);
             // the function returning the constant e11 tensor in 2D
-            constexpr auto e11 = mito::functions::constant<mito::vector_t<2>>(mito::e_11<2>);
+            constexpr auto e11 = manifolds::uniform_field<2, geometry::POLAR>(e_11<2>);
 
             // return the field e_rr + r^2 * e_tt
-            return mito::manifolds::field<geometry::POLAR>(e00 + (x0 * x0) * e11);
+            return e00 + (x0 * x0) * e11;
         }
     };
 }

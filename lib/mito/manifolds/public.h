@@ -21,8 +21,6 @@
 #include "parametric.h"
 #include "Form.h"
 #include "Field.h"
-#include "Metric.h"
-#include "Manifold.h"
 
 // factories implementation
 #include "factories.h"
@@ -35,6 +33,10 @@
 #include "wedge.h"
 // tensor operator on forms
 #include "tensor.h"
+
+// more classes implementation
+#include "Metric.h"
+#include "Manifold.h"
 
 #endif
 
