@@ -56,14 +56,14 @@ namespace mito::manifolds {
 
     // the wedge product of two fields of one-forms
     template <one_form_field_c F1, one_form_field_c F2>
-    constexpr auto wedge(const F1 & fA, const F1 & fB)
+    constexpr auto wedge(const F1 & fA, const F2 & fB)
     requires(
         // {fA} and {fB} are defined on the same coordinates
         std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
     {
         using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function(
-            [fA, fB](const coordinates_type & x) -> auto { return wedge(fA(x), fB(x)); }));
+        return field<F1::coordinate_type>(functions::function(
+            [fA, fB](const coordinates_type & x) { return wedge(fA(x), fB(x)); }));
     }
 
     // the wedge product of three fields of one-forms
@@ -75,9 +75,8 @@ namespace mito::manifolds {
         && std::is_same_v<typename F2::coordinates_type, typename F3::coordinates_type>)
     {
         using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function([fA, fB, fC](const coordinates_type & x) -> auto {
-            return wedge(fA(x), fB(x), fC(x));
-        }));
+        return field<F1::coordinate_type>(functions::function(
+            [fA, fB, fC](const coordinates_type & x) { return wedge(fA(x), fB(x), fC(x)); }));
     }
 
 }
