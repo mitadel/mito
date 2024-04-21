@@ -20,7 +20,7 @@ namespace mito::manifolds {
 
     // class field
     template <geometry::CoordinateType coordT, functions::function_c F>
-    requires(vector_c<typename F::input_type>)
+    requires(geometry::coordinates_c<typename F::input_type>)
     class Field;
 
     // concept of a field

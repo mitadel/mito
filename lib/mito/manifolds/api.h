@@ -57,7 +57,8 @@ namespace mito::manifolds {
     template <int D, geometry::CoordinateType coordsT = geometry::CARTESIAN, class Y>
     constexpr auto uniform_field(const Y & constant)
     {
-        return field<coordsT>(mito::functions::constant<mito::vector_t<D>>(constant));
+        using coordinates_type = geometry::coordinates_t<D, coordsT>;
+        return field<coordsT>(mito::functions::constant<coordinates_type>(constant));
     }
 
     // the order N identity tensor in D dimensions
