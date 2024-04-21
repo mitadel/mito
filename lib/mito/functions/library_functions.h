@@ -35,7 +35,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return x * e; }
+        constexpr auto operator()(const input_type & x) const -> output_type { return x * e; }
     };
 
 
@@ -58,7 +58,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return x[I]; }
+        constexpr auto operator()(const input_type & x) const -> output_type { return x[I]; }
     };
 
 
@@ -74,7 +74,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::sin(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type { return std::sin(x); }
     };
 
 
@@ -90,7 +90,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::cos(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type { return std::cos(x); }
     };
 
 
@@ -106,7 +106,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::tan(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type { return std::tan(x); }
     };
 
 
@@ -122,7 +122,10 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::acos(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return std::acos(x);
+        }
     };
 
 
@@ -138,7 +141,10 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::asin(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return std::asin(x);
+        }
     };
 
 
@@ -154,7 +160,10 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::atan(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return std::atan(x);
+        }
     };
 
 
@@ -170,7 +179,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::exp(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type { return std::exp(x); }
     };
 
 
@@ -186,7 +195,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::log(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type { return std::log(x); }
     };
 
 
@@ -202,7 +211,10 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::sqrt(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return std::sqrt(x);
+        }
     };
 
 
@@ -218,7 +230,10 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return std::cbrt(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return std::cbrt(x);
+        }
     };
 
 
@@ -229,7 +244,7 @@ namespace mito::functions {
 
       private:
         template <int I>
-        constexpr auto _power(input_type x) const
+        constexpr auto _power(const input_type & x) const
         {
             if constexpr (I == 0)
                 return 1.0;
@@ -246,7 +261,10 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(input_type x) const -> output_type { return _power<N>(x); }
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return _power<N>(x);
+        }
     };
 }
 
