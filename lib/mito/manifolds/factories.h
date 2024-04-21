@@ -73,6 +73,14 @@ namespace mito::manifolds {
         return mito::manifolds::field_t<coordT, F>(std::forward<F>(f));
     }
 
+    // uniform field
+    template <int D, geometry::CoordinateType coordsT, class Y>
+    constexpr auto uniform_field(const Y & constant)
+    {
+        using coordinates_type = geometry::coordinates_t<D, coordsT>;
+        return field<coordsT>(mito::functions::constant<coordinates_type>(constant));
+    }
+
     // construct a one-form based on its metric-equivalent vector field
     template <class F, class G, int D>
     constexpr auto one_form(const field_t<F> & vector, const field_t<G> & metric)
