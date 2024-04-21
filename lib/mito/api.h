@@ -64,7 +64,8 @@ namespace mito {
 
     // concept of a symmetric matrix
     template <class F>
-    concept symmetric_matrix_c = (matrix_c<F> and requires { F::symmetric; }) or diagonal_matrix_c<F>;
+    concept symmetric_matrix_c =
+        (matrix_c<F> and requires { F::symmetric; }) or diagonal_matrix_c<F>;
 
     template <typename X>
     std::ostream & operator<<(std::ostream & os, const std::vector<X> & x)
