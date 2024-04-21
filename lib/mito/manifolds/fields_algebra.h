@@ -21,15 +21,28 @@ namespace mito::manifolds {
         return field<F1::coordinate_type>(fA.function() + fB.function());
     }
 
+    // scalar + field
+    template <field_c F>
+    constexpr auto operator+(const tensor_or_scalar_c auto & a, const F & f)
+    {
+        return field<F::coordinate_type>(a + f.function());
+    }
+
+    // field + scalar
+    constexpr auto operator+(const field_c auto & f, const tensor_or_scalar_c auto & a)
+    {
+        return a + f;
+    }
+
     // scalar * fields
     template <field_c F>
-    constexpr auto operator*(const real & a, const F & f)
+    constexpr auto operator*(const tensor_or_scalar_c auto & a, const F & f)
     {
         return field<F::coordinate_type>(a * f.function());
     }
 
     // field * scalar
-    constexpr auto operator*(const field_c auto & f, const real & a)
+    constexpr auto operator*(const field_c auto & f, const tensor_or_scalar_c auto & a)
     {
         return a * f;
     }
@@ -44,6 +57,12 @@ namespace mito::manifolds {
         return field<F1::coordinate_type>(fA.function() * fB.function());
     }
 
+    // field / a
+    constexpr auto operator/(const field_c auto & f, const scalar_t & a)
+    {
+        return (1.0 / a) * f;
+    }
+
     // unary operator- for fields
     constexpr auto operator-(const field_c auto & f)
     {
@@ -54,6 +73,35 @@ namespace mito::manifolds {
     constexpr auto operator-(const field_c auto & fA, const field_c auto & fB)
     {
         return fA + (-fB);
+    }
+
+    // a - field
+    constexpr auto operator-(const tensor_or_scalar_c auto & a, const field_c auto & f)
+    {
+        return a + (-f);
+    }
+
+    // field - a
+    constexpr auto operator-(const field_c auto & f, const tensor_or_scalar_c auto & a)
+    {
+        return f + (-a);
+    }
+
+    // a / field
+    template <scalar_field_c F>
+    constexpr auto operator/(const tensor_or_scalar_c auto & a, const F & f)
+    {
+        return field<F::coordinate_type>(a / f.function());
+    }
+
+    // field1 / field2
+    template <field_c F1, scalar_field_c F2>
+    constexpr auto operator/(const F1 & f1, const F2 & f2)
+    requires(
+        // {f1} and {f2} are defined on the same coordinates
+        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
+    {
+        return field<F1::coordinate_type>(f1.function() / f2.function());
     }
 
     // f^(-1)
