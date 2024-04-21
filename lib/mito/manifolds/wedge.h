@@ -62,7 +62,7 @@ namespace mito::manifolds {
         std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
     {
         using coordinates_type = typename F1::coordinates_type;
-        return field<F1::coordinate_type>(functions::function(
+        return field(functions::function(
             [fA, fB](const coordinates_type & x) { return wedge(fA(x), fB(x)); }));
     }
 
@@ -75,7 +75,7 @@ namespace mito::manifolds {
         && std::is_same_v<typename F2::coordinates_type, typename F3::coordinates_type>)
     {
         using coordinates_type = typename F1::coordinates_type;
-        return field<F1::coordinate_type>(functions::function(
+        return field(functions::function(
             [fA, fB, fC](const coordinates_type & x) { return wedge(fA(x), fB(x), fC(x)); }));
     }
 

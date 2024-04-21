@@ -19,15 +19,15 @@ namespace mito::manifolds {
     class Form;
 
     // class field
-    template <geometry::CoordinateType coordT, functions::function_c F>
+    template <functions::function_c F>
     requires(geometry::coordinates_c<typename F::input_type>)
     class Field;
 
     // concept of a field
     template <class FIELD>
     concept field_c = requires(FIELD c) {
-        // require that F only binds to {Field<coordT, F>} specializations or derived classes
-        []<geometry::CoordinateType coordT, functions::function_c F>(const Field<coordT, F> &) {
+        // require that F only binds to {Field<F>} specializations or derived classes
+        []<functions::function_c F>(const Field<F> &) {
         }(c);
     };
 

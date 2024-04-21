@@ -16,7 +16,7 @@ namespace mito::manifolds {
      * {coordinates_t}, which returns the value of the field at that physical location.
      */
 
-    template <geometry::CoordinateType coordT, functions::function_c F>
+    template <functions::function_c F>
     requires(geometry::coordinates_c<typename F::input_type>)
     class Field {
       private:
@@ -28,8 +28,6 @@ namespace mito::manifolds {
         using input_type = function_type::input_type;
         // the type of field (e.g. vector field, form field, ...)
         using output_type = function_type::output_type;
-        // the coordinate type
-        static constexpr geometry::CoordinateType coordinate_type = coordT;
         // the type of coordinates
         using coordinates_type = input_type;
 

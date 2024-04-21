@@ -27,8 +27,8 @@ namespace mito::manifolds {
     using one_form_t = Form<1, F>;
 
     // field alias
-    template <geometry::CoordinateType coordT, functions::function_c F>
-    using field_t = Field<coordT, F>;
+    template <functions::function_c F>
+    using field_t = Field<F>;
 
     // factory manifolds
     template <class cellT, geometry::CoordinateType coordsT>
@@ -46,33 +46,29 @@ namespace mito::manifolds {
     constexpr auto form(F && f) -> form_t<P, F>;
 
     // factory for fields
-    template <geometry::CoordinateType coordT, functions::function_c F>
-    constexpr auto field(const F & f) -> field_t<coordT, F>;
+    template <functions::function_c F>
+    constexpr auto field(const F & f) -> field_t<F>;
 
     // factory for fields
-    template <geometry::CoordinateType coordT, functions::function_c F>
-    constexpr auto field(F && f) -> field_t<coordT, F>;
+    template <functions::function_c F>
+    constexpr auto field(F && f) -> field_t<F>;
 
     // uniform field
-    template <int D, geometry::CoordinateType coordsT = geometry::CARTESIAN, class Y>
+    template <geometry::coordinates_c coordType, class Y>
     constexpr auto uniform_field(const Y & constant);
 
     // the order N identity tensor in D dimensions
-    template <int N, int D, geometry::CoordinateType coordsT = geometry::CARTESIAN>
-    constexpr auto identity_tensor_field = uniform_field<D, coordsT>(mito::identity<N>);
+    template <geometry::coordinates_c coordType, int N>
+    constexpr auto identity_tensor_field = uniform_field<coordType>(mito::identity<N>);
 
-    // // TOFIX:
-    // template <class F, class G, int D = field_t<F>::dim>
-    // constexpr auto one_form(
-    //     const field_t<F> & vector, const field_t<G> & metric = identity_tensor_field<D, D>)
-    // requires(
-    //     // the vector and the metric are defined on the same coordinates
-    //     std::is_same_v<typename field_t<F>::coordinates_type, typename
-    //     field_t<G>::coordinates_type>
-    //     // {vector} is a vector field
-    //     && vector_field_c<field_t<F>>
-    //     // {metric} is a symmetric tensor field
-    //     && symmetric_tensor_field_c<field_t<G>>);
+    // construct a one-form based on its metric-equivalent vector field
+    template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
+    constexpr auto one_form(const vectorFieldT & vector, const tensorFieldT & metric)
+    requires(
+        // the vector and the metric are defined on the same coordinates
+        std::is_same_v<
+            typename vectorFieldT::coordinates_type, typename tensorFieldT::coordinates_type>);
+
 }
 
 

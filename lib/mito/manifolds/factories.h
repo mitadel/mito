@@ -60,45 +60,44 @@ namespace mito::manifolds {
     }
 
     // factory for fields
-    template <geometry::CoordinateType coordT, functions::function_c F>
-    constexpr auto field(const F & f) -> mito::manifolds::field_t<coordT, F>
+    template <functions::function_c F>
+    constexpr auto field(const F & f) -> mito::manifolds::field_t<F>
     {
-        return mito::manifolds::field_t<coordT, F>(f);
+        return mito::manifolds::field_t<F>(f);
     }
 
     // factory for fields
-    template <geometry::CoordinateType coordT, functions::function_c F>
-    constexpr auto field(F && f) -> mito::manifolds::field_t<coordT, F>
+    template <functions::function_c F>
+    constexpr auto field(F && f) -> mito::manifolds::field_t<F>
     {
-        return mito::manifolds::field_t<coordT, F>(std::forward<F>(f));
+        return mito::manifolds::field_t<F>(std::forward<F>(f));
     }
 
     // uniform field
-    template <int D, geometry::CoordinateType coordsT, class Y>
+    template <geometry::coordinates_c coordType, class Y>
     constexpr auto uniform_field(const Y & constant)
     {
-        using coordinates_type = geometry::coordinates_t<D, coordsT>;
-        return field<coordsT>(mito::functions::constant<coordinates_type>(constant));
+        return field(mito::functions::constant<coordType>(constant));
     }
 
-    // // construct a one-form based on its metric-equivalent vector field
-    // template <class F, class G, int D>
-    // constexpr auto one_form(const field_t<F> & vector, const field_t<G> & metric)
-    // requires(
-    //     // the vector and the metric are defined on the same coordinates
-    //     std::is_same_v<typename field_t<F>::coordinates_type, typename
-    //     field_t<G>::coordinates_type>
-    //     // {vector} is a vector field
-    //     && VectorField<field_t<F>>
-    //     // {metric} is a symmetric tensor field
-    //     && SymmetricTensorField<field_t<G>>)
-    // {
-    //     // return a one-form that, when contracted with {x}...
-    //     return field([vector, metric](const field_t<F>::coordinates_type & x) -> auto {
-    //         // ... returns the contraction of {vector} with {x}
-    //         return one_form(vector(x), metric(x));
-    //     });
-    // }
+    // construct a one-form based on its metric-equivalent vector field
+    template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
+    constexpr auto one_form(const vectorFieldT & vector, const tensorFieldT & metric)
+    requires(
+        // the vector and the metric are defined on the same coordinates
+        std::is_same_v<
+            typename vectorFieldT::coordinates_type, typename tensorFieldT::coordinates_type>)
+    {
+        // the coordinate type
+        using coordinates_t = typename vectorFieldT::coordinates_type;
+
+        // return a one-form that, when contracted with {x}...
+        return mito::manifolds::field(
+            mito::functions::function([vector, metric](const coordinates_t & x) {
+                // ... returns the contraction of {vector} with {x}
+                return mito::manifolds::one_form(vector(x), metric(x));
+            }));
+    }
 }
 
 

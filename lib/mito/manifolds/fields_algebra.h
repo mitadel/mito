@@ -18,14 +18,14 @@ namespace mito::manifolds {
         // {fA} and {fB} are defined on the same coordinates
         std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
     {
-        return field<F1::coordinate_type>(fA.function() + fB.function());
+        return field(fA.function() + fB.function());
     }
 
     // scalar + field
     template <field_c F>
     constexpr auto operator+(const tensor_or_scalar_c auto & a, const F & f)
     {
-        return field<F::coordinate_type>(a + f.function());
+        return field(a + f.function());
     }
 
     // field + scalar
@@ -38,7 +38,7 @@ namespace mito::manifolds {
     template <field_c F>
     constexpr auto operator*(const tensor_or_scalar_c auto & a, const F & f)
     {
-        return field<F::coordinate_type>(a * f.function());
+        return field(a * f.function());
     }
 
     // field * scalar
@@ -54,7 +54,7 @@ namespace mito::manifolds {
         // {fA} and {fB} are defined on the same coordinates
         std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
     {
-        return field<F1::coordinate_type>(fA.function() * fB.function());
+        return field(fA.function() * fB.function());
     }
 
     // field / a
@@ -91,7 +91,7 @@ namespace mito::manifolds {
     template <scalar_field_c F>
     constexpr auto operator/(const tensor_or_scalar_c auto & a, const F & f)
     {
-        return field<F::coordinate_type>(a / f.function());
+        return field(a / f.function());
     }
 
     // field1 / field2
@@ -101,7 +101,7 @@ namespace mito::manifolds {
         // {f1} and {f2} are defined on the same coordinates
         std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
     {
-        return field<F1::coordinate_type>(f1.function() / f2.function());
+        return field(f1.function() / f2.function());
     }
 
     // f^(-1)
@@ -109,7 +109,7 @@ namespace mito::manifolds {
     constexpr auto inverse(const F & f)
     {
         using coordinates_type = typename F::coordinates_type;
-        return field<F::coordinate_type>(
+        return field(
             functions::function([f](const coordinates_type & x) { return inverse(f(x)); }));
     }
 
@@ -118,7 +118,7 @@ namespace mito::manifolds {
     constexpr auto determinant(const F & f)
     {
         using coordinates_type = typename F::coordinates_type;
-        return field<F::coordinate_type>(functions::function(
+        return field(functions::function(
             [f](const coordinates_type & x) -> mito::scalar_t { return determinant(f(x)); }));
     }
 
@@ -127,7 +127,7 @@ namespace mito::manifolds {
     constexpr auto sqrt(const F & f)
     {
         using coordinates_type = typename F::coordinates_type;
-        return field<F::coordinate_type>(functions::function(
+        return field(functions::function(
             [f](const coordinates_type & x) -> mito::scalar_t { return std::sqrt(f(x)); }));
     }
 }
