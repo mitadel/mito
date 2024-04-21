@@ -105,28 +105,30 @@ namespace mito::manifolds {
     }
 
     // f^(-1)
-    template <class F>
-    constexpr auto inverse(const field_t<F> & f)
+    template <tensor_field_c F>
+    constexpr auto inverse(const F & f)
     {
-        using coordinates_type = typename field_t<F>::coordinates_type;
-        return function([f](const coordinates_type & x) { return inverse(f(x)); });
+        using coordinates_type = typename F::coordinates_type;
+        return field<F::coordinate_type>(
+            functions::function([f](const coordinates_type & x) { return inverse(f(x)); }));
     }
 
     // det(f)
-    template <class F>
-    constexpr auto determinant(const field_t<F> & f)
+    template <tensor_field_c F>
+    constexpr auto determinant(const F & f)
     {
-        using coordinates_type = typename field_t<F>::coordinates_type;
-        return field(
-            [f](const coordinates_type & x) -> mito::scalar_t { return determinant(f(x)); });
+        using coordinates_type = typename F::coordinates_type;
+        return field<F::coordinate_type>(functions::function(
+            [f](const coordinates_type & x) -> mito::scalar_t { return determinant(f(x)); }));
     }
 
     // sqrt(f)
-    template <class F>
-    constexpr auto sqrt(const field_t<F> & f)
+    template <scalar_field_c F>
+    constexpr auto sqrt(const F & f)
     {
-        using coordinates_type = typename field_t<F>::coordinates_type;
-        return field([f](const coordinates_type & x) -> mito::scalar_t { return std::sqrt(f(x)); });
+        using coordinates_type = typename F::coordinates_type;
+        return field<F::coordinate_type>(functions::function(
+            [f](const coordinates_type & x) -> mito::scalar_t { return std::sqrt(f(x)); }));
     }
 }
 
