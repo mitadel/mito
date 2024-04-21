@@ -38,7 +38,7 @@ namespace mito {
     template <class F>
     concept vector_c = requires(F c) {
         // require that F only binds to {vector_t} specializations
-        []<int D, typename T>(vector_t<D, T> &) {
+        []<int D, typename T>(const vector_t<D, T> &) {
         }(c);
     };
 
@@ -46,7 +46,7 @@ namespace mito {
     template <class F>
     concept tensor_c = requires(F c) {
         // require that F only binds to Tensor<T, packingT, I...> specializations
-        []<typename T, class packingT, int... I>(pyre::tensor::Tensor<T, packingT, I...> &) {
+        []<typename T, class packingT, int... I>(const pyre::tensor::Tensor<T, packingT, I...> &) {
         }(c);
     };
 

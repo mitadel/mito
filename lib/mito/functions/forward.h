@@ -22,7 +22,7 @@ namespace mito::functions {
     template <class F>
     concept function_c = requires(F c) {
         // require that F only binds to {Function<X, Y>} specializations or derived classes
-        []<class X, class Y>(Function<X, Y> &) {
+        []<class X, class Y>(const Function<X, Y> &) {
         }(c);
     };
 

@@ -27,7 +27,7 @@ namespace mito::manifolds {
     template <class FIELD>
     concept field_c = requires(FIELD c) {
         // require that F only binds to {Field<coordT, F>} specializations or derived classes
-        []<geometry::CoordinateType coordT, functions::function_c F>(Field<coordT, F> &) {
+        []<geometry::CoordinateType coordT, functions::function_c F>(const Field<coordT, F> &) {
         }(c);
     };
 
@@ -62,7 +62,7 @@ namespace mito::manifolds {
     template <class F>
     concept one_form_c = requires(F c) {
         // require that F only binds to {one_form_t} specializations
-        []<class T>(Form<1, T> &) {
+        []<class T>(const Form<1, T> &) {
         }(c);
     };
 
@@ -75,7 +75,7 @@ namespace mito::manifolds {
     template <class F>
     concept p_form_c = requires(F c) {
         // require that F only binds to {p_form_t} specializations
-        []<int P, class T>(Form<P, T> &) {
+        []<int P, class T>(const Form<P, T> &) {
         }(c);
     };
 
