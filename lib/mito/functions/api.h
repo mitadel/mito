@@ -63,9 +63,13 @@ namespace mito::functions {
     template <functor_c F>
     constexpr auto function(F && f);
 
+    // the function extracting the N-th component from an input argument of type {T}
+    template <class T, int N>
+    constexpr auto component();
+
     // the function associating to a D-dimensional vector its N-th component
     template <int N, int D>
-    [[maybe_unused]] constexpr auto x = Component<vector_t<D>, N>();
+    [[maybe_unused]] constexpr auto x = component<vector_t<D>, N>();
 
 }
 

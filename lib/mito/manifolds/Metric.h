@@ -37,7 +37,7 @@ namespace mito::manifolds {
             using coordinates_t = mito::geometry::coordinates_t<2, geometry::POLAR>;
 
             // the function extracting the x_0 component of 2D vector
-            constexpr auto x0 = manifolds::field(mito::functions::coordinate<coordinates_t, 0>);
+            constexpr auto x0 = manifolds::field(mito::manifolds::coordinate<coordinates_t, 0>);
 
             // the function returning the constant e00 tensor in 2D
             constexpr auto e00 = manifolds::uniform_field<coordinates_t>(e_00<2>);

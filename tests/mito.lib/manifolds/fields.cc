@@ -19,9 +19,9 @@ TEST(Manifolds, VectorFields)
     // the cosine function
     constexpr auto cos = mito::functions::cos;
     // the function extracting the x_0 component of 2D vector
-    constexpr auto x0 = mito::functions::coordinate<coordinates_t, 0>;
+    constexpr auto x0 = mito::manifolds::coordinate<coordinates_t, 0>;
     // the function extracting the x_1 component of a 2D vector
-    constexpr auto x1 = mito::functions::coordinate<coordinates_t, 1>;
+    constexpr auto x1 = mito::manifolds::coordinate<coordinates_t, 1>;
 
     // a scalar field
     constexpr auto f = mito::manifolds::field(cos(x0 * x1));

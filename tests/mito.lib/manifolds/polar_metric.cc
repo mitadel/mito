@@ -15,7 +15,7 @@ using mito::geometry::POLAR;
 using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
 
 // the function extracting the x_0 (i.e. the radial) component of 2D vector
-static constexpr auto r = mito::manifolds::field(mito::functions::coordinate<coordinates_t, 0>);
+static constexpr auto r = mito::manifolds::field(mito::manifolds::coordinate<coordinates_t, 0>);
 
 // the basis for vector fields (e_r and e_theta)
 static constexpr auto e_r = mito::manifolds::uniform_field<coordinates_t>(mito::e_0<2>);

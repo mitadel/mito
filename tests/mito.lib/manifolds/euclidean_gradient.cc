@@ -16,8 +16,8 @@ static constexpr auto e_0 = mito::manifolds::uniform_field<coordinates_t>(mito::
 static constexpr auto e_1 = mito::manifolds::uniform_field<coordinates_t>(mito::e_1<2>);
 
 // the function extracting the components of 2D vector
-static constexpr auto x0 = mito::manifolds::field(mito::functions::coordinate<coordinates_t, 0>);
-static constexpr auto x1 = mito::manifolds::field(mito::functions::coordinate<coordinates_t, 1>);
+static constexpr auto x0 = mito::manifolds::field(mito::manifolds::coordinate<coordinates_t, 0>);
+static constexpr auto x1 = mito::manifolds::field(mito::manifolds::coordinate<coordinates_t, 1>);
 
 TEST(Manifolds, CartesianGradient)
 {

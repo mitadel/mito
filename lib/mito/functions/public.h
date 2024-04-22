@@ -24,6 +24,9 @@
 // the library of functions
 #include "library_functions.h"
 
+// factories implementation
+#include "factories.h"
+
 // published type aliases; this is the file you are looking for...
 #include "api.h"
 
@@ -31,10 +34,6 @@
 #include "library_derivatives.h"
 // the derivation rules
 #include "derivation_rules.h"
-
-// factories implementation
-#include "factories.h"
-
 
 #endif
 

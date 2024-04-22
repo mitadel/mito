@@ -23,6 +23,13 @@ namespace mito::functions {
     {
         return FunctionFromFunctor<F>(std::move(f));
     }
+
+    // the function extracting the N-th component from an input argument of type {T}
+    template <class T, int N>
+    constexpr auto component()
+    {
+        return Component<T, N>();
+    }
 }
 
 
