@@ -46,7 +46,7 @@ namespace mito::manifolds {
         static constexpr auto _metric = metric<coords_type, N, D>::field();
         // basis for vector fields
         template <int I>
-        static constexpr auto _e = uniform_field<D, coords_type>(mito::e<I, N>);
+        static constexpr auto _e = uniform_field<coordinates_type>(mito::e<I, N>);
         // basis for one-form fields
         // QUESTION: does it make sense to use the metric here since it cancels out with the inverse
         //  metric?

@@ -8,27 +8,27 @@
 #include <mito/manifolds.h>
 
 
-// the basis for vector fields
-static constexpr auto e_0 = mito::manifolds::uniform_field<2>(mito::e_0<2>);
-static constexpr auto e_1 = mito::manifolds::uniform_field<2>(mito::e_1<2>);
-
 // alias for a set of cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
+// the basis for vector fields
+static constexpr auto e_0 = mito::manifolds::uniform_field<coordinates_t>(mito::e_0<2>);
+static constexpr auto e_1 = mito::manifolds::uniform_field<coordinates_t>(mito::e_1<2>);
+
+// the function extracting the components of 2D vector
+static constexpr auto x0 = mito::manifolds::field(mito::functions::coordinate<coordinates_t, 0>);
+static constexpr auto x1 = mito::manifolds::field(mito::functions::coordinate<coordinates_t, 1>);
 
 TEST(Manifolds, CartesianGradient)
 {
     // a scalar field
-    [[maybe_unused]] auto f = mito::manifolds::field(
-        [](const coordinates_t & x) -> mito::scalar_t { return x[0] * x[1]; });
+    constexpr auto f = x0 * x1;
 
     // df/dx[0]
-    constexpr auto df0 =
-        mito::manifolds::field([](const coordinates_t & x) -> mito::scalar_t { return x[1]; });
+    constexpr auto df0 = mito::manifolds::field(mito::functions::derivative<0>(f.function()));
 
     // df/dx[1]
-    constexpr auto df1 =
-        mito::manifolds::field([](const coordinates_t & x) -> mito::scalar_t { return x[0]; });
+    constexpr auto df1 = mito::manifolds::field(mito::functions::derivative<1>(f.function()));
 
     // the Euclidean metric
     constexpr auto g = mito::manifolds::metric<mito::geometry::CARTESIAN, 2, 2>::field();

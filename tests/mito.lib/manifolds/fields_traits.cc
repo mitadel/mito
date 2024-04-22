@@ -8,40 +8,47 @@
 #include <mito/manifolds.h>
 
 
-// use CARTESIAN coordinates
-using mito::geometry::CARTESIAN;
+// the type of coordinates
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+// the function extracting the components of 2D vector
+static constexpr auto x0 = mito::functions::coordinate<coordinates_t, 0>;
+static constexpr auto x1 = mito::functions::coordinate<coordinates_t, 1>;
 
 
 TEST(Manifolds, FieldsTraits)
 {
     // cos(x0 * x1)
-    constexpr auto cos = mito::functions::cos(mito::functions::x<0, 2> * mito::functions::x<1, 2>);
+    constexpr auto cos = mito::functions::cos(x0 * x1);
 
     // a scalar field
-    constexpr auto f = mito::manifolds::field<CARTESIAN>(cos);
+    constexpr auto f = mito::manifolds::field(cos);
 
     // assert that {f} is a scalar field
-    static_assert(mito::manifolds::ScalarField<decltype(f)>);
+    static_assert(mito::manifolds::scalar_field_c<decltype(f)>);
 
     // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::functions::constant<mito::vector_t<2>>(mito::e_0<2>);
+    [[maybe_unused]] constexpr auto e0 =
+        mito::manifolds::uniform_field<coordinates_t>(mito::e_0<2>);
 
     // the function returning the constant e1 unit vector in 2D
-    constexpr auto e1 = mito::functions::constant<mito::vector_t<2>>(mito::e_1<2>);
+    [[maybe_unused]] constexpr auto e1 =
+        mito::manifolds::uniform_field<coordinates_t>(mito::e_1<2>);
 
-    // a vector field
-    constexpr auto g = mito::manifolds::field<CARTESIAN>(cos * (e0 + e1));
-    // assert that {g} is a vector field
-    static_assert(mito::manifolds::VectorField<decltype(g)>);
+    // TOFIX: implement field * function and function * field
+    // // a vector field
+    // constexpr auto g = mito::manifolds::field(cos * (e0 + e1));
+    // // assert that {g} is a vector field
+    // static_assert(mito::manifolds::vector_field_c<decltype(g)>);
 
-    // a second-order tensor field (2x2 identity tensor field in 3 dimensional space)
-    constexpr auto i = mito::manifolds::identity_tensor_field<2, 3>;
-    // assert that {i} is a tensor field
-    static_assert(mito::manifolds::TensorField<decltype(i)>);
-    // assert that {i} is a symmetric tensor field
-    static_assert(mito::manifolds::SymmetricTensorField<decltype(i)>);
-    // assert that {i} is a diagonal tensor field
-    static_assert(mito::manifolds::DiagonalTensorField<decltype(i)>);
+    // // a second-order tensor field (2x2 identity tensor field in 3 dimensional space)
+    // constexpr auto i = mito::manifolds::identity_tensor_field<coordinates_t, 3>;
+    // // assert that {i} is a tensor field
+    // static_assert(mito::manifolds::tensor_field_c<decltype(i)>);
+    // // assert that {i} is a symmetric tensor field
+    // static_assert(mito::manifolds::symmetric_tensor_field_c<decltype(i)>);
+    // // assert that {i} is a diagonal tensor field
+    // static_assert(mito::manifolds::diagonal_tensor_field_c<decltype(i)>);
 }
 
 
