@@ -103,7 +103,7 @@ namespace mito::functions {
     }
 
     // the {I...}-th first partial derivative of the {Component} function
-    template <int... I, tensor_c T, int... N>
+    template <int... I, class T, int... N>
     constexpr auto derivative(const Component<T, N...> &)
     {
         // the dirac delta
@@ -113,16 +113,6 @@ namespace mito::functions {
             return zero<T>;
     }
 
-    // the I-th first partial derivative of the {Coordinate} function
-    template <int I, class T, int N>
-    constexpr auto derivative(const Coordinate<T, N> &)
-    {
-        // the dirac delta
-        if constexpr (I == N)
-            return one<T>;
-        else
-            return zero<T>;
-    }
 }
 
 

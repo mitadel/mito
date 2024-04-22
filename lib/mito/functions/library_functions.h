@@ -14,34 +14,8 @@
 namespace mito::functions {
 
     // function extracting the {I...} component of a tensor
-    template <tensor_c T, int... I>
-    class Component : public Function<T, typename T::type> {
-
-      public:
-        // the input type
-        using input_type = Function<T, typename T::type>::input_type;
-        // the output type
-        using output_type = Function<T, typename T::type>::output_type;
-
-        // the tensor of type {T} with a one in the entry whose indices are specified in {J...}
-        static constexpr auto e = pyre::tensor::unit<T, I...>;
-
-      public:
-        // call operator for function composition
-        template <function_c F>
-        constexpr auto operator()(const F & f) const
-        {
-            return Composition(*this, f);
-        }
-
-        // call operator
-        constexpr auto operator()(const input_type & x) const -> output_type { return x * e; }
-    };
-
-
-    // function extracting the I-th coordinate of a set of coordinates
-    template <class T, int I>
-    class Coordinate : public Function<T, scalar_t> {
+    template <class T, int... I>
+    class Component : public Function<T, scalar_t> {
 
       public:
         // the input type
@@ -58,7 +32,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(const input_type & x) const -> output_type { return x[I]; }
+        constexpr auto operator()(const input_type & x) const -> output_type { return x[{ I... }]; }
     };
 
 

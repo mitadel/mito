@@ -67,9 +67,6 @@ namespace mito::functions {
     template <int N, int D>
     [[maybe_unused]] constexpr auto x = Component<vector_t<D>, N>();
 
-    // the function associating to a D-dimensional set of coordinates its N-th coordinate
-    template <class T, int N>
-    [[maybe_unused]] constexpr auto coordinate = Coordinate<T, N>();
 }
 
 
