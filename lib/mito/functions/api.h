@@ -60,6 +60,7 @@ namespace mito::functions {
     template <class X, class Y>
     constexpr auto constant(const Y & c);
 
+    // returns the function wrapping the functor {f}
     template <functor_c F>
     constexpr auto function(F && f);
 
