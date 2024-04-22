@@ -64,10 +64,7 @@ namespace mito::manifolds {
     // construct a one-form based on its metric-equivalent vector field
     template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
     constexpr auto one_form(const vectorFieldT & vector, const tensorFieldT & metric)
-    requires(
-        // the vector and the metric are defined on the same coordinates
-        std::is_same_v<
-            typename vectorFieldT::coordinates_type, typename tensorFieldT::coordinates_type>);
+    requires(compatible_fields_c<vectorFieldT, tensorFieldT>);
 
 }
 

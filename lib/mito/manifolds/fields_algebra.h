@@ -14,9 +14,7 @@ namespace mito::manifolds {
     // addition of fields fa + fb
     template <field_c F1, field_c F2>
     constexpr auto operator+(const F1 & fA, const F2 & fB)
-    requires(
-        // {fA} and {fB} are defined on the same coordinates
-        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
+    requires(compatible_fields_c<F1, F2>)
     {
         return field(fA.function() + fB.function());
     }
@@ -50,9 +48,7 @@ namespace mito::manifolds {
     // product of fields
     template <field_c F1, field_c F2>
     constexpr auto operator*(const F1 & fA, const F2 & fB)
-    requires(
-        // {fA} and {fB} are defined on the same coordinates
-        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
+    requires(compatible_fields_c<F1, F2>)
     {
         return field(fA.function() * fB.function());
     }
@@ -97,9 +93,7 @@ namespace mito::manifolds {
     // field1 / field2
     template <field_c F1, scalar_field_c F2>
     constexpr auto operator/(const F1 & f1, const F2 & f2)
-    requires(
-        // {f1} and {f2} are defined on the same coordinates
-        std::is_same_v<typename F1::coordinates_type, typename F2::coordinates_type>)
+    requires(compatible_fields_c<F1, F2>)
     {
         return field(f1.function() / f2.function());
     }

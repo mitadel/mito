@@ -83,6 +83,13 @@ namespace mito::manifolds {
     template <class FIELD>
     // a p-form field on a D-dimensional manifold is a field returning a p-form
     concept p_form_field_c = field_c<FIELD> and p_form_c<typename FIELD::output_type>;
+
+    // concept of two fields being compatible with each other (i.e. defined on the same coordinates)
+    template <class FIELD1, class FIELD2>
+    // a scalar field on a D-dimensional manifold is a field returning a scalar
+    concept compatible_fields_c = requires {
+        std::is_same_v<typename FIELD1::coordinates_type, typename FIELD2::coordinates_type>;
+    };
 }
 
 
