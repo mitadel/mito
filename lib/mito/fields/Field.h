@@ -5,11 +5,11 @@
 
 
 // code guard
-#if !defined(mito_manifolds_Field_h)
-#define mito_manifolds_Field_h
+#if !defined(mito_fields_Field_h)
+#define mito_fields_Field_h
 
 
-namespace mito::manifolds {
+namespace mito::fields {
 
     /*
      * A field of vectors or forms. The fields implements {operator()} for an input type
@@ -48,6 +48,6 @@ namespace mito::manifolds {
 }
 
 
-#endif    // mito_manifolds_Field_h
+#endif
 
 // end of file

@@ -11,9 +11,7 @@
 // externals
 
 // support
-#include "../fields.h"
-#include "../mesh.h"
-#include "../utilities.h"
+#include "../utilities.h"    // TOFIX: do we need this?
 
 #endif
 

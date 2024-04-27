@@ -4,12 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_wedge_h)
-#define mito_manifolds_wedge_h
+#if !defined(mito_tensor_wedge_h)
+#define mito_tensor_wedge_h
 
 
 // wedge operator on forms
-namespace mito::manifolds {
+namespace mito::tensor {
 
     // the wedge product of one one-form (trivial case)
     constexpr auto wedge(const one_form_c auto & a_tilda)
@@ -46,34 +46,6 @@ namespace mito::manifolds {
                      + c_tilda(x) * wedge(a_tilda, b_tilda)(y, z);
             });
     }
-
-    // the wedge product of one field of one-forms (trivial case)
-    constexpr auto wedge(const one_form_field_c auto & fA)
-    {
-        // return a {fA}
-        return fA;
-    }
-
-    // the wedge product of two fields of one-forms
-    template <one_form_field_c F1, one_form_field_c F2>
-    constexpr auto wedge(const F1 & fA, const F2 & fB)
-    requires(compatible_fields_c<F1, F2>)
-    {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function(
-            [fA, fB](const coordinates_type & x) { return wedge(fA(x), fB(x)); }));
-    }
-
-    // the wedge product of three fields of one-forms
-    template <one_form_field_c F1, one_form_field_c F2, one_form_field_c F3>
-    constexpr auto wedge(const F1 & fA, const F2 & fB, const F3 & fC)
-    requires(compatible_fields_c<F1, F2> && compatible_fields_c<F1, F3>)
-    {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function(
-            [fA, fB, fC](const coordinates_type & x) { return wedge(fA(x), fB(x), fC(x)); }));
-    }
-
 }
 
 

@@ -1,0 +1,94 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#if !defined(mito_fields_fields_algebra_h)
+#define mito_fields_fields_algebra_h
+
+
+// Algebraic operations on Fields
+namespace mito::fields {
+
+    // f^(-1)
+    template <tensor_field_c F>
+    constexpr auto inverse(const F & f)
+    {
+        using coordinates_type = typename F::coordinates_type;
+        return field(
+            functions::function([f](const coordinates_type & x) { return inverse(f(x)); }));
+    }
+
+    // det(f)
+    template <tensor_field_c F>
+    constexpr auto determinant(const F & f)
+    {
+        using coordinates_type = typename F::coordinates_type;
+        return field(functions::function(
+            [f](const coordinates_type & x) -> mito::scalar_t { return determinant(f(x)); }));
+    }
+
+    // sqrt(f)
+    template <scalar_field_c F>
+    constexpr auto sqrt(const F & f)
+    {
+        using coordinates_type = typename F::coordinates_type;
+        return field(functions::function(
+            [f](const coordinates_type & x) -> mito::scalar_t { return std::sqrt(f(x)); }));
+    }
+
+    // the tensor product of two fields of one-forms
+    template <one_form_field_c F1, one_form_field_c F2>
+    constexpr auto tensor(const F1 & fA, const F2 & fB)
+    requires(compatible_fields_c<F1, F2>)
+    {
+        using coordinates_type = typename F1::coordinates_type;
+        return field(functions::function(
+            [fA, fB](const coordinates_type & x) -> auto { return tensor::tensor(fA(x), fB(x)); }));
+    }
+
+    // the tensor product of three fields of one-forms
+    template <one_form_field_c F1, one_form_field_c F2, one_form_field_c F3>
+    constexpr auto tensor(const F1 & fA, const F2 & fB, const F3 & fC)
+    requires(compatible_fields_c<F1, F2> && compatible_fields_c<F1, F3>)
+    {
+        using coordinates_type = typename F1::coordinates_type;
+        return field(functions::function([fA, fB, fC](const coordinates_type & x) -> auto {
+            return tensor::tensor(fA(x), fB(x), fC(x));
+        }));
+    }
+
+    // the wedge product of one field of one-forms (trivial case)
+    constexpr auto wedge(const one_form_field_c auto & fA)
+    {
+        // return a {fA}
+        return fA;
+    }
+
+    // the wedge product of two fields of one-forms
+    template <one_form_field_c F1, one_form_field_c F2>
+    constexpr auto wedge(const F1 & fA, const F2 & fB)
+    requires(compatible_fields_c<F1, F2>)
+    {
+        using coordinates_type = typename F1::coordinates_type;
+        return field(functions::function(
+            [fA, fB](const coordinates_type & x) { return tensor::wedge(fA(x), fB(x)); }));
+    }
+
+    // the wedge product of three fields of one-forms
+    template <one_form_field_c F1, one_form_field_c F2, one_form_field_c F3>
+    constexpr auto wedge(const F1 & fA, const F2 & fB, const F3 & fC)
+    requires(compatible_fields_c<F1, F2> && compatible_fields_c<F1, F3>)
+    {
+        using coordinates_type = typename F1::coordinates_type;
+        return field(functions::function([fA, fB, fC](const coordinates_type & x) {
+            return tensor::wedge(fA(x), fB(x), fC(x));
+        }));
+    }
+}
+
+
+#endif
+
+// end of file

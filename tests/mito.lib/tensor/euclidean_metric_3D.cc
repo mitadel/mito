@@ -5,7 +5,8 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/geometry.h>
+#include <mito/tensor.h>
 
 
 // the basis for vector fields
@@ -43,9 +44,9 @@ volume(
 TEST(Manifolds, EuclideanMetric3D)
 {
     // the basis one-forms
-    constexpr auto dx = mito::manifolds::one_form(e_x);
-    constexpr auto dy = mito::manifolds::one_form(e_y);
-    constexpr auto dz = mito::manifolds::one_form(e_z);
+    constexpr auto dx = mito::tensor::one_form(e_x);
+    constexpr auto dy = mito::tensor::one_form(e_y);
+    constexpr auto dz = mito::tensor::one_form(e_z);
 
     // assert that at a(ny) point the basis for one-forms is dual to that of vectors
     static_assert(dx(e_x) == 1.0);
@@ -59,7 +60,7 @@ TEST(Manifolds, EuclideanMetric3D)
     static_assert(dz(e_z) == 1.0);
 
     // the metric volume element
-    constexpr auto w = mito::manifolds::wedge(dx, dy, dz);
+    constexpr auto w = mito::tensor::wedge(dx, dy, dz);
 
     // a Cartesian coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();

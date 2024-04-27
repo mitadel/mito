@@ -4,12 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_tensor_h)
-#define mito_manifolds_tensor_h
+#if !defined(mito_tensor_tensor_h)
+#define mito_tensor_tensor_h
 
 
 // tensor operations on forms
-namespace mito::manifolds {
+namespace mito::tensor {
 
     // the tensor product of two one-forms
     constexpr auto tensor(const one_form_c auto & a_tilda, const one_form_c auto & b_tilda)
@@ -36,27 +36,6 @@ namespace mito::manifolds {
                 // ... returns the {scalar} prescribed by the tensor product
                 return a_tilda(x) * b_tilda(y) * c_tilda(z);
             });
-    }
-
-    // the tensor product of two fields of one-forms
-    template <one_form_field_c F1, one_form_field_c F2>
-    constexpr auto tensor(const F1 & fA, const F2 & fB)
-    requires(compatible_fields_c<F1, F2>)
-    {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function(
-            [fA, fB](const coordinates_type & x) -> auto { return tensor(fA(x), fB(x)); }));
-    }
-
-    // the tensor product of three fields of one-forms
-    template <one_form_field_c F1, one_form_field_c F2, one_form_field_c F3>
-    constexpr auto tensor(const F1 & fA, const F2 & fB, const F3 & fC)
-    requires(compatible_fields_c<F1, F2> && compatible_fields_c<F1, F3>)
-    {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function([fA, fB, fC](const coordinates_type & x) -> auto {
-            return tensor(fA(x), fB(x), fC(x));
-        }));
     }
 }
 

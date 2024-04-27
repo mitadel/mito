@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_public_h)
-#define mito_manifolds_public_h
+#if !defined(mito_tensor_public_h)
+#define mito_tensor_public_h
 
 
 // external packages
@@ -18,12 +18,17 @@
 #include "api.h"
 
 // classes implementation
-#include "parametric.h"
-#include "Metric.h"
-#include "Manifold.h"
+#include "Form.h"
 
 // factories implementation
 #include "factories.h"
+
+// algebraic operations on forms
+#include "forms_algebra.h"
+// wedge operator on forms
+#include "wedge.h"
+// tensor operator on forms
+#include "tensor.h"
 
 
 #endif

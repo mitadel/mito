@@ -5,11 +5,11 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/tensor.h>
 #include <mito/io.h>
 
 
-// the basis for vector fields
+// the basis vectors
 static constexpr auto e_x = mito::e_0<3>;
 static constexpr auto e_y = mito::e_1<3>;
 static constexpr auto e_z = mito::e_2<3>;
@@ -74,12 +74,12 @@ volume_determinant(
 TEST(Manifolds, CubeVolume)
 {
     // the basis one-forms
-    constexpr auto dx = mito::manifolds::one_form(e_x);
-    constexpr auto dy = mito::manifolds::one_form(e_y);
-    constexpr auto dz = mito::manifolds::one_form(e_z);
+    constexpr auto dx = mito::tensor::one_form(e_x);
+    constexpr auto dy = mito::tensor::one_form(e_y);
+    constexpr auto dz = mito::tensor::one_form(e_z);
 
     // the metric volume element
-    constexpr auto w = mito::manifolds::wedge(dx, dy, dz);
+    constexpr auto w = mito::tensor::wedge(dx, dy, dz);
 
     // a Cartesian coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();

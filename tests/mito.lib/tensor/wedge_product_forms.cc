@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/tensor.h>
 
 
 TEST(Manifolds, FormsWedgeProduct)
@@ -13,20 +13,20 @@ TEST(Manifolds, FormsWedgeProduct)
     // the Euclidean metric in 3D space
     constexpr auto metric = mito::identity<3>;
 
-    // a vector field
+    // a vector
     constexpr auto a = mito::e_0<3>;
 
     // the corresponding one-form
-    constexpr auto a_tilda = mito::manifolds::one_form(a, metric);
+    constexpr auto a_tilda = mito::tensor::one_form(a, metric);
 
-    // another vector field
+    // another vector
     constexpr auto b = mito::e_1<3>;
 
     // the corresponding one-form
-    constexpr auto b_tilda = mito::manifolds::one_form(b, metric);
+    constexpr auto b_tilda = mito::tensor::one_form(b, metric);
 
     // the wedge product of {a_tilda} and {b_tilda} (a two-form)
-    constexpr auto ab_two_form = mito::manifolds::wedge(a_tilda, b_tilda);
+    constexpr auto ab_two_form = mito::tensor::wedge(a_tilda, b_tilda);
 
     // a vector
     constexpr auto xi0 = mito::e_0<3>;
@@ -40,14 +40,14 @@ TEST(Manifolds, FormsWedgeProduct)
     // check anti-symmetry property
     static_assert(ab_two_form(xi0, xi1) == -ab_two_form(xi1, xi0));
 
-    // another vector field
+    // another vector
     constexpr auto c = mito::e_2<3>;
 
     // the corresponding one-form
-    constexpr auto c_tilda = mito::manifolds::one_form(c, metric);
+    constexpr auto c_tilda = mito::tensor::one_form(c, metric);
 
     // the wedge product of {ab_two_form} and {c_tilda} (a three-form)
-    constexpr auto abc_three_form = mito::manifolds::wedge(a_tilda, b_tilda, c_tilda);
+    constexpr auto abc_three_form = mito::tensor::wedge(a_tilda, b_tilda, c_tilda);
 
     // another vector
     constexpr auto xi2 = mito::e_2<3>;

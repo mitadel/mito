@@ -5,11 +5,11 @@
 
 
 // code guard
-#if !defined(mito_manifolds_Form_h)
-#define mito_manifolds_Form_h
+#if !defined(mito_tensor_Form_h)
+#define mito_tensor_Form_h
 
 
-namespace mito::manifolds {
+namespace mito::tensor {
 
     // empty class for dummy vector for contraction
     class dummy_vector {};
@@ -82,6 +82,6 @@ namespace mito::manifolds {
     };
 }
 
-#endif    // mito_manifolds_Form_h
+#endif    // mito_tensor_Form_h
 
 // end of file

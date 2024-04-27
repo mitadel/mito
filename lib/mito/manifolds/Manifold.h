@@ -46,23 +46,24 @@ namespace mito::manifolds {
         static constexpr auto _metric = metric<coords_type, N, D>::field();
         // basis for vector fields
         template <int I>
-        static constexpr auto _e = uniform_field<coordinates_type>(mito::e<I, N>);
+        static constexpr auto _e = fields::uniform_field<coordinates_type>(mito::e<I, N>);
         // basis for one-form fields
         // QUESTION: does it make sense to use the metric here since it cancels out with the inverse
         //  metric?
         template <int I>
-        static constexpr auto _dx = one_form(_e<I>, identity_tensor_field<coordinates_type, N>);
+        static constexpr auto _dx =
+            fields::one_form(_e<I>, fields::identity_tensor_field<coordinates_type, N>);
         // helper function wedging the N basis 1-forms
         template <int... J>
         static constexpr auto _wedge(integer_sequence<J...>)
         requires(sizeof...(J) == N)
         {
             // return the basis N-form
-            return wedge(_dx<J>...);
+            return fields::wedge(_dx<J>...);
         }
         // the metric volume form
         static constexpr auto _volume_form =
-            sqrt(determinant(_metric)) * _wedge(make_integer_sequence<N>{});
+            fields::sqrt(fields::determinant(_metric)) * _wedge(make_integer_sequence<N>{});
 
       public:
         constexpr Manifold(

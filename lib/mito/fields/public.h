@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_public_h)
-#define mito_manifolds_public_h
+#if !defined(mito_fields_public_h)
+#define mito_fields_public_h
 
 
 // external packages
@@ -18,12 +18,15 @@
 #include "api.h"
 
 // classes implementation
-#include "parametric.h"
-#include "Metric.h"
-#include "Manifold.h"
+#include "Field.h"
 
 // factories implementation
 #include "factories.h"
+
+// arithmetic operations on fields
+#include "fields_arithmetic.h"
+// algebraic operations on fields
+#include "fields_algebra.h"
 
 
 #endif

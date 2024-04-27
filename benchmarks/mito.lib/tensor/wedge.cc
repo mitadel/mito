@@ -4,7 +4,7 @@
 //
 
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/tensor.h>
 #include <pyre/timers.h>
 
 
@@ -76,16 +76,16 @@ wedge_mito(int N)
     auto a = 2.0 * mito::e_0<3> + mito::e_1<3>;
 
     // the corresponding one-form
-    auto a_tilda = mito::manifolds::one_form(a, metric);
+    auto a_tilda = mito::tensor::one_form(a, metric);
 
     // another vector field
     auto b = mito::e_2<3>;
 
     // the corresponding one-form
-    auto b_tilda = mito::manifolds::one_form(b, metric);
+    auto b_tilda = mito::tensor::one_form(b, metric);
 
     // the wedge product of {a_tilda} and {b_tilda} (a two-form)
-    auto ab_two_form = mito::manifolds::wedge(a_tilda, b_tilda);
+    auto ab_two_form = mito::tensor::wedge(a_tilda, b_tilda);
 
     // a vector
     auto xi1 = mito::e_2<3>;

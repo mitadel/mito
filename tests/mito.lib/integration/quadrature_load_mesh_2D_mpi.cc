@@ -41,7 +41,7 @@ TEST(Quadrature, LoadMeshTrianglesMPI)
     auto manifold = mito::manifolds::manifold(mesh_partition, coord_system);
 
     // instantiate a scalar field
-    auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
+    auto f = mito::fields::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);

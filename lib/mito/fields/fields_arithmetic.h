@@ -4,12 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_fields_arithmetic_h)
-#define mito_manifolds_fields_arithmetic_h
+#if !defined(mito_fields_fields_arithmetic_h)
+#define mito_fields_fields_arithmetic_h
 
 
 // Arithmetic operations on Fields
-namespace mito::manifolds {
+namespace mito::fields {
 
     // addition of fields fa + fb
     template <field_c F1, field_c F2>

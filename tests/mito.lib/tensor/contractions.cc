@@ -5,10 +5,10 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/tensor.h>
 
 
-using mito::manifolds::_;
+using mito::tensor::_;
 
 
 TEST(Manifolds, Contractions)
@@ -17,16 +17,16 @@ TEST(Manifolds, Contractions)
     constexpr auto a = mito::e_0<3>;
 
     // the corresponding one-form
-    constexpr auto a_tilda = mito::manifolds::one_form(a);
+    constexpr auto a_tilda = mito::tensor::one_form(a);
 
     // another vector
     constexpr auto b = mito::e_1<3>;
 
     // the corresponding one-form
-    constexpr auto b_tilda = mito::manifolds::one_form(b);
+    constexpr auto b_tilda = mito::tensor::one_form(b);
 
     // tensor product of two one-forms
-    constexpr auto a_tensor_b = mito::manifolds::tensor(a_tilda, b_tilda);
+    constexpr auto a_tensor_b = mito::tensor::tensor(a_tilda, b_tilda);
 
     // a vector
     constexpr auto xi0 = mito::e_0<3>;

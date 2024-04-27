@@ -8,7 +8,7 @@
 #define mito_manifold_forms_h
 
 
-namespace mito::manifolds {
+namespace mito::tensor {
 
     // addition of forms fa + fb
     template <int P, class F1, class F2>

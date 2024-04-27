@@ -62,7 +62,7 @@ TEST(Quadrature, Square)
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     // a scalar field
-    auto f_xy = mito::manifolds::field([](const coordinates_t & x) -> real { return x[0] * x[1]; });
+    auto f_xy = mito::fields::field([](const coordinates_t & x) -> real { return x[0] * x[1]; });
 
     // integrate the field
     real result = bodyIntegrator.integrate(f_xy);

@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/fields.h>
 
 
 // alias for cartesian coordinates
@@ -19,12 +19,12 @@ TEST(Manifolds, VectorFields)
     // the cosine function
     constexpr auto cos = mito::functions::cos;
     // the function extracting the x_0 component of 2D vector
-    constexpr auto x0 = mito::manifolds::coordinate<coordinates_t, 0>;
+    constexpr auto x0 = mito::fields::coordinate<coordinates_t, 0>;
     // the function extracting the x_1 component of a 2D vector
-    constexpr auto x1 = mito::manifolds::coordinate<coordinates_t, 1>;
+    constexpr auto x1 = mito::fields::coordinate<coordinates_t, 1>;
 
     // a scalar field
-    constexpr auto f = mito::manifolds::field(cos(x0 * x1));
+    constexpr auto f = mito::fields::field(cos(x0 * x1));
 
     // a point in space
     constexpr auto x = mito::geometry::coordinates<CARTESIAN>({ 0.0, 0.0 });
@@ -39,7 +39,7 @@ TEST(Manifolds, VectorFields)
     constexpr auto e1 = mito::functions::constant<coordinates_t>(mito::e_1<2>);
 
     // a vector field
-    constexpr auto g = mito::manifolds::field(cos(x0 * x1) * (e0 + e1));
+    constexpr auto g = mito::fields::field(cos(x0 * x1) * (e0 + e1));
 
     // check value of field at {x}
     static_assert(g(x) == mito::vector_t<2>{ 1.0, 1.0 });

@@ -34,7 +34,7 @@ TEST(Quadrature, FlipSegment)
 
     // the integrand
     using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-    auto f = mito::manifolds::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
+    auto f = mito::fields::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // integrate the integrand on {segment0}
     auto mesh = mito::mesh::mesh<mito::topology::segment_t>(geometry);

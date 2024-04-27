@@ -4,7 +4,9 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/mito.h>
+#include <mito/base.h>
+#include <mito/io.h>
+#include <mito/manifolds.h>
 
 
 template <mito::geometry::CoordinateType coordT>

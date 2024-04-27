@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/fields.h>
 
 
 // use polar coordinates
@@ -15,15 +15,15 @@ using mito::geometry::POLAR;
 using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
 
 // the function extracting the x_0 (i.e. the radial) component of 2D vector
-static constexpr auto r = mito::manifolds::field(mito::manifolds::coordinate<coordinates_t, 0>);
+static constexpr auto r = mito::fields::field(mito::fields::coordinate<coordinates_t, 0>);
 
 // the basis for vector fields (e_r and e_theta)
-static constexpr auto e_r = mito::manifolds::uniform_field<coordinates_t>(mito::e_0<2>);
-static constexpr auto e_t = mito::manifolds::uniform_field<coordinates_t>(mito::e_1<2>);
+static constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
+static constexpr auto e_t = mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
 
 // the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
-static constexpr auto e_rr = mito::manifolds::uniform_field<coordinates_t>(mito::e_00<2>);
-static constexpr auto e_tt = mito::manifolds::uniform_field<coordinates_t>(mito::e_11<2>);
+static constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<2>);
+static constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<2>);
 
 
 TEST(Manifolds, PolarCoordinates)
@@ -35,8 +35,8 @@ TEST(Manifolds, PolarCoordinates)
     constexpr auto g_inv = e_rr + 1.0 / (r * r) * e_tt;
 
     // the basis one-forms
-    constexpr auto dr = mito::manifolds::one_form(g_inv * e_r, g);
-    constexpr auto dt = mito::manifolds::one_form(g_inv * e_t, g);
+    constexpr auto dr = mito::fields::one_form(g_inv * e_r, g);
+    constexpr auto dt = mito::fields::one_form(g_inv * e_t, g);
 
     // a point in space
     constexpr auto r = 2.0;
@@ -51,7 +51,7 @@ TEST(Manifolds, PolarCoordinates)
 
     // the metric volume element
     constexpr auto w =
-        mito::manifolds::sqrt(mito::manifolds::determinant(g)) * mito::manifolds::wedge(dr, dt);
+        mito::fields::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt);
 
     constexpr auto dr_scalar = mito::scalar_t{ 0.01 };
     constexpr auto dt_scalar = mito::scalar_t{ 0.01 };
