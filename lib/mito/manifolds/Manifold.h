@@ -25,7 +25,7 @@ namespace mito::manifolds {
         // the dimension of the parametric space
         static constexpr int parametricDim = parametric_dim<typename cellT::simplex_type>();
         // typedef for a point in parametric coordinates
-        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
+        using parametric_point_type = parametric_point_t<parametricDim>;
 
       public:
         // the dimension of the physical space

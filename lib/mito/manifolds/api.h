@@ -55,7 +55,7 @@ namespace mito::manifolds {
 
     // factory for fields (from functors)
     template <functions::functor_c F>
-    constexpr auto field(F && f) -> mito::manifolds::field_t<F>;
+    constexpr auto field(F && f) -> field_t<F>;
 
     // uniform field
     template <geometry::coordinates_c coordType, class Y>

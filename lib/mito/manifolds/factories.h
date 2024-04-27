@@ -61,23 +61,23 @@ namespace mito::manifolds {
 
     // factory for fields
     template <functions::function_c F>
-    constexpr auto field(const F & f) -> mito::manifolds::field_t<F>
+    constexpr auto field(const F & f) -> field_t<F>
     {
-        return mito::manifolds::field_t<F>(f);
+        return field_t<F>(f);
     }
 
     // factory for fields
     template <functions::function_c F>
-    constexpr auto field(F && f) -> mito::manifolds::field_t<F>
+    constexpr auto field(F && f) -> field_t<F>
     {
-        return mito::manifolds::field_t<F>(std::forward<F>(f));
+        return field_t<F>(std::forward<F>(f));
     }
 
     // factory for fields (from functors)
     template <functions::functor_c F>
     constexpr auto field(F && f)
     {
-        return mito::manifolds::field(mito::functions::function(std::move(f)));
+        return field(mito::functions::function(std::move(f)));
     }
 
     // uniform field
@@ -96,11 +96,10 @@ namespace mito::manifolds {
         using coordinates_t = typename vectorFieldT::coordinates_type;
 
         // return a one-form that, when contracted with {x}...
-        return mito::manifolds::field(
-            mito::functions::function([vector, metric](const coordinates_t & x) {
-                // ... returns the contraction of {vector} with {x}
-                return mito::manifolds::one_form(vector(x), metric(x));
-            }));
+        return field(mito::functions::function([vector, metric](const coordinates_t & x) {
+            // ... returns the contraction of {vector} with {x}
+            return mito::manifolds::one_form(vector(x), metric(x));
+        }));
     }
 }
 
