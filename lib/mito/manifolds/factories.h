@@ -73,6 +73,13 @@ namespace mito::manifolds {
         return mito::manifolds::field_t<F>(std::forward<F>(f));
     }
 
+    // factory for fields (from functors)
+    template <functions::functor_c F>
+    constexpr auto field(F && f)
+    {
+        return mito::manifolds::field(mito::functions::function(std::move(f)));
+    }
+
     // uniform field
     template <geometry::coordinates_c coordType, class Y>
     constexpr auto uniform_field(const Y & constant)

@@ -33,8 +33,8 @@ TEST(Quadrature, Segment)
 
     // a scalar function
     using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
-    auto f_exp = mito::manifolds::field(mito::math::function(
-        [](const coordinates_t & x) -> mito::scalar_t { return std::exp(-x[0]); }));
+    auto f_exp = mito::manifolds::field(
+        [](const coordinates_t & x) -> mito::scalar_t { return std::exp(-x[0]); });
 
     // integrate exp(-x) on (0, 1)
     auto integral = integrator.integrate(f_exp);
