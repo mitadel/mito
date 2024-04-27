@@ -33,20 +33,19 @@ TEST(Manifolds, FieldsTraits)
     // the function returning the constant e1 unit vector in 2D
     [[maybe_unused]] constexpr auto e1 = mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
 
-    // TOFIX: implement field * function and function * field
-    // // a vector field
-    // constexpr auto g = mito::fields::field(cos * (e0 + e1));
-    // // assert that {g} is a vector field
-    // static_assert(mito::fields::vector_field_c<decltype(g)>);
+    // a vector field
+    constexpr auto g = mito::fields::field(cos * (e0 + e1));
+    // assert that {g} is a vector field
+    static_assert(mito::fields::vector_field_c<decltype(g)>);
 
-    // // a second-order tensor field (2x2 identity tensor field in 3 dimensional space)
-    // constexpr auto i = mito::fields::identity_tensor_field<coordinates_t, 3>;
-    // // assert that {i} is a tensor field
-    // static_assert(mito::fields::tensor_field_c<decltype(i)>);
-    // // assert that {i} is a symmetric tensor field
-    // static_assert(mito::fields::symmetric_tensor_field_c<decltype(i)>);
-    // // assert that {i} is a diagonal tensor field
-    // static_assert(mito::fields::diagonal_tensor_field_c<decltype(i)>);
+    // a second-order tensor field (2x2 identity tensor field in 3 dimensional space)
+    constexpr auto i = mito::fields::identity_tensor_field<coordinates_t, 3>;
+    // assert that {i} is a tensor field
+    static_assert(mito::fields::tensor_field_c<decltype(i)>);
+    // assert that {i} is a symmetric tensor field
+    static_assert(mito::fields::symmetric_tensor_field_c<decltype(i)>);
+    // assert that {i} is a diagonal tensor field
+    static_assert(mito::fields::diagonal_tensor_field_c<decltype(i)>);
 }
 
 

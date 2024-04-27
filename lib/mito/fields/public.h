@@ -25,6 +25,7 @@
 
 // arithmetic operations on fields
 #include "fields_arithmetic.h"
+#include "fields_functions_arithmetic.h"
 // algebraic operations on fields
 #include "fields_algebra.h"
 
