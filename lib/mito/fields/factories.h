@@ -28,7 +28,7 @@ namespace mito::fields {
     template <functions::functor_c F>
     constexpr auto field(F && f)
     {
-        return field(mito::functions::function(std::move(f)));
+        return field(mito::functions::function(std::forward<F>(f)));
     }
 
     // uniform field

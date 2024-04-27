@@ -21,7 +21,7 @@ namespace mito::functions {
     template <functor_c F>
     constexpr auto function(F && f)
     {
-        return FunctionFromFunctor<F>(std::move(f));
+        return FunctionFromFunctor<F>(std::forward<F>(f));
     }
 
     // the function extracting the N-th component from an input argument of type {T}

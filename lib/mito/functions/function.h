@@ -35,7 +35,7 @@ namespace mito::functions {
 
       public:
         // constructor
-        constexpr FunctionFromFunctor(F && f) : _f(std::move(f)) {}
+        constexpr FunctionFromFunctor(F && f) : _f(std::forward<F>(f)) {}
 
         // call operator for function composition
         template <function_c H>
