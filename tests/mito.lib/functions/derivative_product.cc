@@ -17,7 +17,7 @@ using mito::scalar_t;
 TEST(Derivatives, Product)
 {
     // pi fourths
-    constexpr auto pi_fourth = 0.25 * pi;
+    constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
     constexpr auto sin = mito::functions::sin;
@@ -26,7 +26,7 @@ TEST(Derivatives, Product)
     // the functions product
     constexpr auto product = sin * cos;
     // check result
-    static_assert(sin(pi_fourth) * cos(pi_fourth) == product(pi_fourth));
+    static_assert(sin(pi_sixth) * cos(pi_sixth) == product(pi_sixth));
 
     // the first derivative of {sin}
     constexpr auto sin_i = mito::functions::derivative(sin);
@@ -36,8 +36,7 @@ TEST(Derivatives, Product)
     constexpr auto product_i = mito::functions::derivative(product);
     // check result
     static_assert(
-        sin(pi_fourth) * cos_i(pi_fourth) + sin_i(pi_fourth) * cos(pi_fourth)
-        == product_i(pi_fourth));
+        sin(pi_sixth) * cos_i(pi_sixth) + sin_i(pi_sixth) * cos(pi_sixth) == product_i(pi_sixth));
 
     // the second derivative of {sin}
     constexpr auto sin_ii = mito::functions::derivative(sin_i);
@@ -47,9 +46,9 @@ TEST(Derivatives, Product)
     constexpr auto product_ii = mito::functions::derivative(product_i);
     // check result
     static_assert(
-        sin(pi_fourth) * cos_ii(pi_fourth) + sin_ii(pi_fourth) * cos(pi_fourth)
-            + 2.0 * sin_i(pi_fourth) * cos_i(pi_fourth)
-        == product_ii(pi_fourth));
+        sin(pi_sixth) * cos_ii(pi_sixth) + sin_ii(pi_sixth) * cos(pi_sixth)
+            + 2.0 * sin_i(pi_sixth) * cos_i(pi_sixth)
+        == product_ii(pi_sixth));
 }
 
 
@@ -80,24 +79,24 @@ TEST(Derivatives, Reciprocal)
 TEST(Derivatives, Power)
 {
     // pi fourths
-    constexpr auto pi_fourth = 0.25 * pi;
+    constexpr auto pi_sixth = pi / 6.0;
 
     // power of two function
     constexpr auto pow2 = mito::functions::pow<2>;
     // check result
-    static_assert(pi_fourth * pi_fourth == pow2(pi_fourth));
+    static_assert(pi_sixth * pi_sixth == pow2(pi_sixth));
 
     // the first derivative of {pow2}
     constexpr auto pow2_i = mito::functions::derivative(pow2);
     // linear function
     constexpr auto pow1 = mito::functions::pow<1>;
     // check result
-    static_assert(2.0 * pow1(pi_fourth) == pow2_i(pi_fourth));
+    static_assert(2.0 * pow1(pi_sixth) == pow2_i(pi_sixth));
 
     // the second derivative of {pow2}
     constexpr auto pow2_ii = mito::functions::derivative(pow2_i);
     // check result
-    static_assert(2.0 == pow2_ii(pi_fourth));
+    static_assert(2.0 == pow2_ii(pi_sixth));
 }
 
 
