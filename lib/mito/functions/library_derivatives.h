@@ -112,7 +112,6 @@ namespace mito::functions {
         else
             return zero<T>;
     }
-
 }
 
 
