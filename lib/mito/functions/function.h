@@ -49,7 +49,7 @@ namespace mito::functions {
 
       private:
         // the functor
-        F _f;
+        const F _f;
     };
 
 
@@ -81,7 +81,7 @@ namespace mito::functions {
 
       private:
         // the constant
-        output_type _c;
+        const output_type _c;
     };
 
 
@@ -120,8 +120,8 @@ namespace mito::functions {
         constexpr auto f2() const -> const G & { return _g; }
 
       private:
-        F _f;
-        G _g;
+        const F _f;
+        const G _g;
     };
 
 
@@ -159,9 +159,9 @@ namespace mito::functions {
 
       private:
         // the function
-        F _f;
+        const F _f;
         // the constant
-        T _a;
+        const T _a;
     };
 
 
@@ -200,8 +200,8 @@ namespace mito::functions {
         constexpr auto f2() const -> const G & { return _g; }
 
       private:
-        F _f;
-        G _g;
+        const F _f;
+        const G _g;
     };
 
 
@@ -240,9 +240,9 @@ namespace mito::functions {
 
       private:
         // the function
-        F _f;
+        const F _f;
         // the constant
-        T _a;
+        const T _a;
     };
 
 
@@ -281,9 +281,9 @@ namespace mito::functions {
 
       private:
         // the function
-        F _f;
+        const F _f;
         // the constant
-        T _a;
+        const T _a;
     };
 
 
@@ -317,7 +317,7 @@ namespace mito::functions {
         constexpr auto f() const -> const F & { return _f; }
 
       private:
-        F _f;
+        const F _f;
     };
 
 
@@ -354,8 +354,8 @@ namespace mito::functions {
         constexpr auto f2() const -> const G & { return _g; }
 
       private:
-        F _f;
-        G _g;
+        const F _f;
+        const G _g;
     };
 }
 
