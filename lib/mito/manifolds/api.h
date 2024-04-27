@@ -65,9 +65,9 @@ namespace mito::manifolds {
     template <geometry::coordinates_c coordType, int N>
     constexpr auto identity_tensor_field = uniform_field<coordType>(mito::identity<N>);
 
-    // the function associating to a D-dimensional set of coordinates its N-th coordinate
-    template <class T, int N>
-    [[maybe_unused]] constexpr auto coordinate = mito::functions::component<T, N>;
+    // the function associating to a set of coordinates of type {coordType} its N-th coordinate
+    template <geometry::coordinates_c coordType, int N>
+    [[maybe_unused]] constexpr auto coordinate = mito::functions::component<coordType, N>();
 
     // construct a one-form based on its metric-equivalent vector field
     template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
