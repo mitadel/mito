@@ -35,8 +35,8 @@ TEST(Manifolds, PolarCoordinates)
     constexpr auto g_inv = e_rr + 1.0 / (r * r) * e_tt;
 
     // the basis one-forms
-    constexpr auto dr = mito::fields::one_form(g_inv * e_r, g);
-    constexpr auto dt = mito::fields::one_form(g_inv * e_t, g);
+    constexpr auto dr = mito::fields::one_form_field(g_inv * e_r, g);
+    constexpr auto dt = mito::fields::one_form_field(g_inv * e_t, g);
 
     // a point in space
     constexpr auto r = 2.0;

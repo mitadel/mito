@@ -52,7 +52,7 @@ namespace mito::manifolds {
         //  metric?
         template <int I>
         static constexpr auto _dx =
-            fields::one_form(_e<I>, fields::identity_tensor_field<coordinates_type, N>);
+            fields::one_form_field(_e<I>, fields::identity_tensor_field<coordinates_type, N>);
         // helper function wedging the N basis 1-forms
         template <int... J>
         static constexpr auto _wedge(integer_sequence<J...>)

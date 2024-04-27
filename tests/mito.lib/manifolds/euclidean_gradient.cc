@@ -35,7 +35,7 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto g = mito::manifolds::metric<mito::geometry::CARTESIAN, 2, 2>::field();
 
     // the gradient form
-    constexpr auto gradient = mito::fields::one_form(df0 * e_0 + df1 * e_1, g);
+    constexpr auto gradient = mito::fields::one_form_field(df0 * e_0 + df1 * e_1, g);
 
     // a point in space
     constexpr auto x = mito::geometry::coordinates({ 1.0, 1.0 });

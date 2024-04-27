@@ -38,10 +38,9 @@ namespace mito::fields {
         return field(mito::functions::constant<coordType>(constant));
     }
 
-    // TOFIX: rename this to {one_form_field}
     // construct a one-form based on its metric-equivalent vector field
     template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
-    constexpr auto one_form(const vectorFieldT & vector, const tensorFieldT & metric)
+    constexpr auto one_form_field(const vectorFieldT & vector, const tensorFieldT & metric)
     requires(compatible_fields_c<vectorFieldT, tensorFieldT>)
     {
         // the coordinate type
