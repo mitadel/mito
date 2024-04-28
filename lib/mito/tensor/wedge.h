@@ -22,12 +22,7 @@ namespace mito::tensor {
     constexpr auto wedge(const one_form_c auto & a_tilda, const one_form_c auto & b_tilda)
     {
         // return a {form} that, when contracted with {x} and {y}...
-        return form<2>(
-            [a_tilda, b_tilda]<vector_or_dummy_c X, vector_or_dummy_c Y>(
-                const X & x, const Y & y) -> auto {
-                // ... returns the {scalar} prescribed by the wedge product
-                return a_tilda(x) * b_tilda(y) - b_tilda(x) * a_tilda(y);
-            });
+        return tensor(a_tilda, b_tilda) - tensor(b_tilda, a_tilda);
     }
 
     // the wedge product of three one-forms
