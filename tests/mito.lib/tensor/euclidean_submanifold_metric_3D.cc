@@ -82,6 +82,15 @@ TEST(Tensor, EuclideanSubmanifoldMetric3D)
     EXPECT_DOUBLE_EQ(-0.5 * std::sqrt(2.0), area(wS, coord_system, node_0, node_2, node_1));
     EXPECT_DOUBLE_EQ(-0.5 * std::sqrt(2.0), area(wS, coord_system, node_2, node_1, node_0));
     EXPECT_DOUBLE_EQ(-0.5 * std::sqrt(2.0), area(wS, coord_system, node_1, node_0, node_2));
+
+    // the normal form to the submanifold
+    constexpr auto normal_form = mito::tensor::one_form(normal_vector);
+
+    // rebuild the volume form as wV = wedge(normal_form, wS)
+    constexpr auto wV = mito::tensor::wedge(normal_form, wS);
+
+    // check that wV coincides with w
+    EXPECT_DOUBLE_EQ(w(e_x, e_y, e_z), wV(e_x, e_y, e_z));
 }
 
 
