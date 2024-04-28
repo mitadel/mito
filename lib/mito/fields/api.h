@@ -32,7 +32,7 @@ namespace mito::fields {
 
     // the function associating to a set of coordinates of type {coordType} its N-th coordinate
     template <geometry::coordinates_c coordType, int N>
-    [[maybe_unused]] constexpr auto coordinate = mito::functions::component<coordType, N>();
+    [[maybe_unused]] constexpr auto coordinate = mito::functions::component<coordType, N>;
 
     // construct a one-form based on its metric-equivalent vector field
     template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
