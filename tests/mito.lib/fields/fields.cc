@@ -14,7 +14,7 @@ using mito::geometry::CARTESIAN;
 using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
 
 
-TEST(Manifolds, VectorFields)
+TEST(Fields, VectorFields)
 {
     // the cosine function
     constexpr auto cos = mito::functions::cos;

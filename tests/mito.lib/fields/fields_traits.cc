@@ -16,7 +16,7 @@ static constexpr auto x0 = mito::fields::coordinate<coordinates_t, 0>;
 static constexpr auto x1 = mito::fields::coordinate<coordinates_t, 1>;
 
 
-TEST(Manifolds, FieldsTraits)
+TEST(Fields, Traits)
 {
     // cos(x0 * x1)
     constexpr auto cos = mito::functions::cos(x0 * x1);

@@ -8,7 +8,7 @@
 #include <mito/tensor.h>
 
 
-TEST(Manifolds, OneForms)
+TEST(Tensor, OneForms)
 {
     // the Euclidean metric in 3D space
     constexpr auto metric = mito::identity<3>;

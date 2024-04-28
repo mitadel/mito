@@ -38,7 +38,7 @@ area(
 }
 
 
-TEST(Manifolds, EuclideanMetric2D)
+TEST(Tensor, EuclideanMetric2D)
 {
     // the basis one-forms
     constexpr auto dx = mito::tensor::one_form(e_x);
