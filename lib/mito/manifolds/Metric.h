@@ -18,7 +18,14 @@ namespace mito::manifolds {
     // specialization for the Euclidean metric
     template <int N, int D>
     struct metric<geometry::CARTESIAN, N, D> {
-        static constexpr auto field() { return identity_tensor_field<N, D, geometry::CARTESIAN>; }
+        static constexpr auto field()
+        {
+            // the type of coordinates
+            using coordinates_t = geometry::coordinates_t<D, geometry::CARTESIAN>;
+
+            // return the identity field
+            return fields::identity_tensor_field<coordinates_t, N>;
+        }
     };
 
     // specialization for the polar metric in 2D
@@ -26,12 +33,19 @@ namespace mito::manifolds {
     struct metric<geometry::POLAR, 2, 2> {
         static constexpr auto field()
         {
-            return mito::manifolds::field(
-                [](const mito::geometry::coordinates_t<2, geometry::POLAR> & x)
-                    -> mito::diagonal_matrix_t<2> {
-                    // e_rr + r^2 * e_tt
-                    return mito::e_00<2> + (x[0] * x[0]) * mito::e_11<2>;
-                });
+            // the type of coordinates
+            using coordinates_t = geometry::coordinates_t<2, geometry::POLAR>;
+
+            // the function extracting the x_0 component of 2D vector
+            constexpr auto x0 = fields::field(fields::coordinate<coordinates_t, 0>);
+
+            // the function returning the constant e00 tensor in 2D
+            constexpr auto e00 = fields::uniform_field<coordinates_t>(e_00<2>);
+            // the function returning the constant e11 tensor in 2D
+            constexpr auto e11 = fields::uniform_field<coordinates_t>(e_11<2>);
+
+            // return the field e_rr + r^2 * e_tt
+            return e00 + (x0 * x0) * e11;
         }
     };
 }

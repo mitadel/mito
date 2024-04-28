@@ -9,9 +9,12 @@
 
 // support
 #include "base.h"
+#include "functions.h"
 #include "fem.h"
 #include "geometry.h"
 #include "io.h"
+#include "tensor.h"
+#include "fields.h"
 #include "manifolds.h"
 #include "materials.h"
 #include "math.h"

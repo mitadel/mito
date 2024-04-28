@@ -11,9 +11,6 @@
 // external packages
 #include "externals.h"
 
-// manifolds utilities
-#include "utilities.h"
-
 // get the forward declarations
 #include "forward.h"
 
@@ -22,18 +19,11 @@
 
 // classes implementation
 #include "parametric.h"
-#include "Form.h"
-#include "Field.h"
 #include "Metric.h"
 #include "Manifold.h"
 
 // factories implementation
 #include "factories.h"
-
-// algebraic operations on fields
-#include "fields_algebra.h"
-// algebraic operations on forms
-#include "forms_algebra.h"
 
 
 #endif

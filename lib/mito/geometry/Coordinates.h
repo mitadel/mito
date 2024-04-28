@@ -85,24 +85,27 @@ namespace mito::geometry {
 
       public:
         // friendship with addition of coordinates
-        friend constexpr auto operator+ <>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator+<>(const coordinates_type &, const coordinates_type &)
             -> coordinates_type;
 
         // friendship with scaling of coordinates
-        friend constexpr auto operator* <>(const scalar_t &, const coordinates_type &)
+        friend constexpr auto operator*<>(const scalar_t &, const coordinates_type &)
             -> coordinates_type;
 
         // friendship with {operator==} for coordinates
-        friend constexpr auto operator== <>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator==<>(const coordinates_type &, const coordinates_type &)
             -> bool;
 
         // friendship with {operator-} for coordinates
-        friend constexpr auto operator- <>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator-<>(const coordinates_type &, const coordinates_type &)
             -> mito::vector_t<D>;
 
         // friendship with {operator<} for coordinates
         friend constexpr auto operator< <>(const coordinates_type &, const coordinates_type &)
             -> bool;
+
+        // cast to the underlying array of coordinates
+        constexpr operator array_t() const { return _array; }
 
       public:
         // components accessor

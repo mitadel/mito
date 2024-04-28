@@ -3,6 +3,17 @@
 #
 
 
+# functions
+mito_test_driver(tests/mito.lib/functions/algebra.cc)
+mito_test_driver(tests/mito.lib/functions/function_from_functor.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_constants.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_chain_rule.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_higher_order.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_sum.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_product.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_inverse.cc)
+mito_test_driver(tests/mito.lib/functions/partial_derivatives.cc)
+
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)
@@ -26,25 +37,29 @@ if(WITH_VTK)
     mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_2D.cc)
 endif()
 
+# tensor
+mito_test_driver(tests/mito.lib/tensor/one_forms.cc)
+mito_test_driver(tests/mito.lib/tensor/contractions.cc)
+mito_test_driver(tests/mito.lib/tensor/wedge_product_forms.cc)
+mito_test_driver(tests/mito.lib/tensor/tensor_product_forms.cc)
+mito_test_driver(tests/mito.lib/tensor/euclidean_metric_2D.cc)
+mito_test_driver(tests/mito.lib/tensor/euclidean_metric_3D.cc)
+mito_test_driver(tests/mito.lib/tensor/cube_volume.cc)
+
+# fields
+mito_test_driver(tests/mito.lib/fields/fields.cc)
+mito_test_driver(tests/mito.lib/fields/fields_traits.cc)
+mito_test_driver(tests/mito.lib/fields/polar_metric_field.cc)
+
 # manifolds
-mito_test_driver(tests/mito.lib/manifolds/cube_volume.cc)
 mito_test_driver(tests/mito.lib/manifolds/disk_volume_polar_cartesian.cc)
 mito_test_driver(tests/mito.lib/manifolds/disk_volume_change_coordinates.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_gradient.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_3D.cc)
-mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_2D.cc)
-mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_3D.cc)
-mito_test_driver(tests/mito.lib/manifolds/fields.cc)
-mito_test_driver(tests/mito.lib/manifolds/fields_traits.cc)
-mito_test_driver(tests/mito.lib/manifolds/one_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/metric.cc)
-mito_test_driver(tests/mito.lib/manifolds/polar_metric.cc)
-mito_test_driver(tests/mito.lib/manifolds/contractions.cc)
-mito_test_driver(tests/mito.lib/manifolds/tensor_product_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/triangle_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetrahedron_3D.cc)
-mito_test_driver(tests/mito.lib/manifolds/wedge_product_forms.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetra_rectangle_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetra_cube_3D.cc)
 
@@ -52,9 +67,7 @@ mito_test_driver(tests/mito.lib/manifolds/tetra_cube_3D.cc)
 mito_test_driver(tests/mito.lib/materials/gent.cc)
 
 # math
-mito_test_driver(tests/mito.lib/math/functions.cc)
 mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
-mito_test_driver(tests/mito.lib/math/tensor_functions.cc)
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)

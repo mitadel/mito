@@ -30,6 +30,43 @@ namespace mito {
     template <int D, typename T = real>
     using diagonal_matrix_t = pyre::tensor::diagonal_matrix_t<D, T>;
 
+    // concept of a scalar
+    template <class F>
+    concept scalar_c = std::convertible_to<F, scalar_t>;
+
+    // concept of a vector
+    template <class F>
+    concept vector_c = requires(F c) {
+        // require that F only binds to {vector_t} specializations
+        []<int D, typename T>(const vector_t<D, T> &) {
+        }(c);
+    };
+
+    // concept of a tensor
+    template <class F>
+    concept tensor_c = requires(F c) {
+        // require that F only binds to Tensor<T, packingT, I...> specializations
+        []<typename T, class packingT, int... I>(const pyre::tensor::Tensor<T, packingT, I...> &) {
+        }(c);
+    };
+
+    // concept for a tensor (vector, matrix, higher-order, ...) or a scalar
+    template <class F>
+    concept tensor_or_scalar_c = tensor_c<F> or std::convertible_to<F, scalar_t>;
+
+    // concept of a matrix
+    template <class F>
+    concept matrix_c = tensor_c<F> and requires { F::rank == 2; };
+
+    // concept of a diagonal matrix
+    template <class F>
+    concept diagonal_matrix_c = matrix_c<F> and requires { F::diagonal; };
+
+    // concept of a symmetric matrix
+    template <class F>
+    concept symmetric_matrix_c =
+        (matrix_c<F> and requires { F::symmetric; }) or diagonal_matrix_c<F>;
+
     template <typename X>
     std::ostream & operator<<(std::ostream & os, const std::vector<X> & x)
     {
