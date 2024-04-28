@@ -26,6 +26,21 @@ namespace mito::tensor {
     template <int P, class F>
     constexpr auto form(F && f) -> form_t<P, F>;
 
+    // the tensor product of two one-forms
+    constexpr auto tensor(const one_form_c auto & a_tilda, const one_form_c auto & b_tilda);
+
+    // the tensor product of three one-forms
+    constexpr auto tensor(
+        const one_form_c auto & a_tilda, const one_form_c auto & b_tilda,
+        const one_form_c auto & c_tilda);
+
+    // the wedge product of two one-forms
+    constexpr auto wedge(const one_form_c auto & a_tilda, const one_form_c auto & b_tilda);
+
+    // the wedge product of three one-forms
+    constexpr auto wedge(
+        const one_form_c auto & a_tilda, const one_form_c auto & b_tilda,
+        const one_form_c auto & c_tilda);
 }
 
 
