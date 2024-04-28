@@ -64,6 +64,7 @@ mito_test_driver(tests/mito.lib/manifolds/triangle_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetra_rectangle_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetra_cube_3D.cc)
+mito_test_driver(tests/mito.lib/manifolds/sphere_cartesian_coordinates.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
