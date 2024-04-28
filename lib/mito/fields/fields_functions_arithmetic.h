@@ -45,7 +45,6 @@ namespace mito::fields {
         return fA + (-fB);
     }
 
-
     // subtraction of fields fa - fb
     constexpr auto operator-(const functions::function_c auto & fA, const field_c auto & fB)
     {
