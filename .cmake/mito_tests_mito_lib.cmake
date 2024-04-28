@@ -68,6 +68,7 @@ mito_test_driver(tests/mito.lib/manifolds/tetra_rectangle_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetra_cube_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/volume_half_ball.cc)
 mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_cartesian.cc)
+mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_spherical.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
