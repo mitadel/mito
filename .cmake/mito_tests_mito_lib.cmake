@@ -133,7 +133,7 @@ mito_test_driver(tests/mito.lib/quadrature/quadrature_square_3D.cc)
 # integration
 # mito_test_driver(tests/mito.lib/integration/divergence_theorem.cc) #TOFIX
 mito_test_driver(tests/mito.lib/integration/quadrature_load_mesh_2D.cc)
-# mito_test_driver(tests/mito.lib/integration/quadrature_flip_segment_3D.cc) #TOFIX
+mito_test_driver(tests/mito.lib/integration/quadrature_flip_segment_3D.cc)
 
 if(${WITH_METIS} AND ${WITH_MPI})
     mito_test_driver_mpi(tests/mito.lib/integration/quadrature_load_mesh_2D_mpi.cc 2)
