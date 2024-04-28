@@ -51,6 +51,7 @@ mito_test_driver(tests/mito.lib/tensor/cube_volume.cc)
 mito_test_driver(tests/mito.lib/fields/fields.cc)
 mito_test_driver(tests/mito.lib/fields/fields_traits.cc)
 mito_test_driver(tests/mito.lib/fields/polar_metric_field.cc)
+mito_test_driver(tests/mito.lib/fields/spherical_metric_field.cc)
 
 # manifolds
 mito_test_driver(tests/mito.lib/manifolds/disk_volume_polar_cartesian.cc)
