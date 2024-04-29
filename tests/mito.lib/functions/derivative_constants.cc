@@ -16,7 +16,7 @@ using mito::scalar_t;
 
 TEST(Derivatives, FunctionPlusConstant)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
@@ -55,7 +55,7 @@ TEST(Derivatives, FunctionPlusConstant)
 
 TEST(Derivatives, FunctionTimesConstant)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
@@ -94,7 +94,7 @@ TEST(Derivatives, FunctionTimesConstant)
 
 TEST(Derivatives, FunctionDividedByConstant)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
@@ -124,7 +124,7 @@ TEST(Derivatives, FunctionDividedByConstant)
 
 TEST(Derivatives, FunctionMinusConstant)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
@@ -163,7 +163,7 @@ TEST(Derivatives, FunctionMinusConstant)
 
 TEST(Derivatives, Zero)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // zero function
@@ -185,7 +185,7 @@ TEST(Derivatives, Zero)
 
 TEST(Derivatives, One)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // identity function

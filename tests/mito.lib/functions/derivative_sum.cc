@@ -16,7 +16,7 @@ using mito::scalar_t;
 
 TEST(Derivatives, Sum)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
@@ -50,7 +50,7 @@ TEST(Derivatives, Sum)
 
 TEST(Derivatives, Subtraction)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
