@@ -18,6 +18,9 @@ using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
 static constexpr auto e_0 = mito::e_0<2>;
 static constexpr auto e_1 = mito::e_1<2>;
 
+// pi sixth
+constexpr auto pi_sixth = std::numbers::pi / 6.0;
+
 
 TEST(Fields, Gradient)
 {
@@ -37,8 +40,14 @@ TEST(Fields, Gradient)
     constexpr auto gradient = mito::fields::gradient(f);
 
     // a point in space
-    constexpr auto x = mito::geometry::coordinates<CARTESIAN>({ 0.0, 1.0 });
+    constexpr auto x = mito::geometry::coordinates<CARTESIAN>({ pi_sixth, 1.0 });
 
     // check result
     static_assert(gradient(x) == (cos(x0 * x1) * x1 * e_0 + cos(x0 * x1) * x0 * e_1)(x));
+
+    // the laplacian (divergence of gradient)
+    constexpr auto laplacian = mito::fields::divergence(gradient);
+
+    // check result
+    static_assert(laplacian(x) == (-sin(x0 * x1) * x1 * x1 - sin(x0 * x1) * x0 * x0)(x));
 }
