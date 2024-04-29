@@ -26,10 +26,10 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto f = mito::fields::field(x0 * x1);
 
     // df/dx[0]
-    constexpr auto df0 = mito::fields::field(mito::functions::derivative<0>(f.function()));
+    constexpr auto df0 = mito::fields::derivative<0>(f);
 
     // df/dx[1]
-    constexpr auto df1 = mito::fields::field(mito::functions::derivative<1>(f.function()));
+    constexpr auto df1 = mito::fields::derivative<1>(f);
 
     // the Euclidean metric
     constexpr auto g = mito::manifolds::metric<mito::geometry::CARTESIAN, 2, 2>::field();
