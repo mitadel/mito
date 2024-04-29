@@ -16,6 +16,10 @@ namespace mito::fields {
 
     // factory for fields
     template <functions::function_c F>
+    constexpr auto field(const F & f) -> field_t<F>;
+
+    // factory for fields
+    template <functions::function_c F>
     constexpr auto field(F && f) -> field_t<F>;
 
     // factory for fields (from functors)
