@@ -52,7 +52,8 @@ namespace mito::manifolds {
             _volume_form(volume_form)
         {}
 
-        constexpr ~Submanifold() {}
+        // destructor
+        constexpr ~Submanifold() = default;
 
         // default move constructor
         Submanifold(Submanifold &&) noexcept = default;
