@@ -41,7 +41,7 @@ volume(
 }
 
 
-TEST(Manifolds, EuclideanMetric3D)
+TEST(Tensor, EuclideanMetric3D)
 {
     // the basis one-forms
     constexpr auto dx = mito::tensor::one_form(e_x);

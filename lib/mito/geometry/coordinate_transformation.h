@@ -35,6 +35,34 @@ namespace mito::geometry {
         scalar_t y = r * std::sin(theta);
         return { x, y };
     }
+
+    template <>
+    constexpr auto transform_coordinates<SPHERICAL, 3, CARTESIAN>(
+        const coordinates_t<3, CARTESIAN> & coordinates) -> coordinates_t<3, SPHERICAL>
+    {
+        scalar_t x = coordinates[0];
+        scalar_t y = coordinates[1];
+        scalar_t z = coordinates[2];
+
+        scalar_t r = std::sqrt(x * x + y * y + z * z);
+        mito::scalar_t theta = std::atan2(std::hypot(y, x), z);
+        mito::scalar_t phi = std::atan2(y, x);
+
+        return { r, theta, phi };
+    }
+
+    template <>
+    constexpr auto transform_coordinates<CARTESIAN, 3, SPHERICAL>(
+        const coordinates_t<3, SPHERICAL> & coordinates) -> coordinates_t<3, CARTESIAN>
+    {
+        scalar_t r = coordinates[0];
+        scalar_t theta = coordinates[1];
+        scalar_t phi = coordinates[2];
+        scalar_t x = r * std::sin(theta) * std::cos(phi);
+        scalar_t y = r * std::sin(theta) * std::sin(phi);
+        scalar_t z = r * std::cos(theta);
+        return { x, y, z };
+    }
 }
 
 

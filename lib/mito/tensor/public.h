@@ -25,10 +25,10 @@
 
 // algebraic operations on forms
 #include "forms_algebra.h"
-// wedge operator on forms
-#include "wedge.h"
 // tensor operator on forms
 #include "tensor.h"
+// wedge operator on forms
+#include "wedge.h"
 
 
 #endif

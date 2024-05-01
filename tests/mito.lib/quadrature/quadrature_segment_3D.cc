@@ -4,7 +4,8 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/mito.h>
+#include <mito/base.h>
+#include <mito/quadrature.h>
 
 
 // strip the namespace
@@ -22,10 +23,10 @@ static constexpr auto e_y = mito::e_1<3>;
 static constexpr auto e_z = mito::e_2<3>;
 
 
-TEST(Quadrature, FlipSegment)
+TEST(Quadrature, Segment3D)
 {
     // make a channel
-    pyre::journal::info_t channel("tests.integration");
+    pyre::journal::info_t channel("tests.quadrature");
 
     // a Cartesian coordinate system in 3D
     auto coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
@@ -47,7 +48,7 @@ TEST(Quadrature, FlipSegment)
     constexpr auto v_3 = cross / pyre::tensor::norm(cross);
 
     // the integrand
-    auto f = mito::fields::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
+    auto f = mito::fields::field([](const coordinates_t & x) { return x[0] * x[1]; });
 
     // a mesh with {segment0}
     auto mesh = mito::mesh::mesh<mito::geometry::segment_t<3>>();
@@ -70,22 +71,19 @@ TEST(Quadrature, FlipSegment)
 
     // a second degree-of-exactness integrator on the submanifold
     auto integrator = mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(manifold);
+
     // integrate {f} on the submanifold
     auto result = integrator.integrate(f);
 
-    // integrate the integrand on the opposite of {segment0}
-    auto mesh_flip = mito::mesh::mesh<mito::geometry::segment_t<3>>();
-    mesh_flip.insert(mito::geometry::flip(segment0));
-    auto manifold_flip = mito::manifolds::submanifold(mesh_flip, coord_system, wS);
-    auto integrator_flip = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold_flip);
-    auto result_flip = integrator_flip.integrate(f);
+    // the exact result (from mathematica notebook)
+    auto exact = 0.5773502691896265;
 
     // report
-    channel << "result from integration on segment: " << result << pyre::journal::newline
-            << "result from integration on flipped segment: " << result_flip << pyre::journal::endl;
+    channel << "result: " << result << pyre::journal::endl;
+    channel << "exact: " << exact << pyre::journal::endl;
 
-    // expect that the results obtained are opposite
-    EXPECT_DOUBLE_EQ(result, -result_flip);
+    // expect a decent match with the exact solution
+    EXPECT_NEAR(exact, result, 1.e-15);
 }
 
 // end of file

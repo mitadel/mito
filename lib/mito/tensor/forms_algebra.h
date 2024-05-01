@@ -19,6 +19,13 @@ namespace mito::tensor {
         });
     }
 
+    // product of forms fa * fb (returns the tensor product of one-forms)
+    template <class F1, class F2>
+    constexpr auto operator*(const one_form_t<F1> & fA, const one_form_t<F2> & fB)
+    {
+        return tensor(fA, fB);
+    }
+
     // scalar * form
     template <int P, class F>
     constexpr auto operator*(const real & a, const form_t<P, F> & f)

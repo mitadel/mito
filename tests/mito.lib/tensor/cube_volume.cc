@@ -71,7 +71,7 @@ volume_determinant(
     return volume;
 }
 
-TEST(Manifolds, CubeVolume)
+TEST(Tensor, CubeVolume)
 {
     // the basis one-forms
     constexpr auto dx = mito::tensor::one_form(e_x);

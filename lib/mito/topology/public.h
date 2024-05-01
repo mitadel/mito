@@ -22,14 +22,15 @@
 // class {OrientedSimplex} needs to be complete for the following forward declarations
 // (the concept {ReferenceCountedObject} requires to see full class header file)
 #include "OrientedSimplex.h"
-// simplex utilities
-#include "utilities.h"
 #include "SimplexFactory.h"
 #include "OrientedSimplexFactory.h"
 #include "Topology.h"
 
 // factories implementation
 #include "factories.h"
+
+// simplex utilities
+#include "utilities.h"
 
 // support for flip diagonal
 #include "FlipDiagonal.h"

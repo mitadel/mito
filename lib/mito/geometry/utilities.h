@@ -12,7 +12,8 @@ namespace mito::geometry {
 
     // compute the barycenter of a cell, given a geometry
     template <class cellT, int D, CoordinateType coordT>
-    auto barycenter(const cellT & cell, const coordinate_system_t<D, coordT> & coordinate_system)
+    constexpr auto barycenter(
+        const cellT & cell, const coordinate_system_t<D, coordT> & coordinate_system)
         -> coordinates_t<D, coordT>
     {
         // the barycenter
@@ -42,7 +43,7 @@ namespace mito::geometry {
     // return the array of director vectors of the simplex and the coordinates of the point
     // where they stem from
     template <int N, int D, CoordinateType coordT>
-    inline auto directors(
+    constexpr auto directors(
         const geometric_simplex_t<N, D> & simplex,
         const coordinate_system_t<D, coordT> & coordinate_system)
         -> std::pair<coordinates_t<D, coordT>, edge_simplex_directors_t<N, D>>
@@ -73,7 +74,7 @@ namespace mito::geometry {
     // builds a geometric simplex based on a topological simplex {simplex} with the vertex-point
     // pairing as appears in {nodes}
     template <int D, int N, class nodesT>
-    auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
+    constexpr auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
         -> geometric_simplex_t<N, D>
     requires(N > 0)
     {
@@ -132,8 +133,16 @@ namespace mito::geometry {
         return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
     }
 
+    // returns the geometric simplex with opposite orientation to {simplex}
+    template <int N, int D>
+    constexpr auto flip(const geometric_simplex_t<N, D> & simplex) -> geometric_simplex_t<N, D>
+    {
+        // build a new geometric simplex on top of the flipped topological simplex and return it
+        return geometric_simplex<D>(mito::topology::flip(simplex.simplex()), simplex.nodes());
+    }
+
     template <int D>
-    auto flip_diagonal(
+    constexpr auto flip_diagonal(
         const std::pair<geometric_simplex_t<2, D>, geometric_simplex_t<2, D>> & simplex_pair)
         -> std::pair<geometric_simplex_t<2, D>, geometric_simplex_t<2, D>>
     {

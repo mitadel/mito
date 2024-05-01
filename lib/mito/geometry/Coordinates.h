@@ -114,7 +114,7 @@ namespace mito::geometry {
         auto print() const -> void
         {
             // print the coordinates of the point
-            std::cout << "Coordinates: " << _array << std::endl;
+            std::cout << _array;
 
             // all done
             return;
@@ -133,6 +133,22 @@ namespace mito::geometry {
 
         // all done
         return os;
+    }
+
+    // operator==
+    template <int D, CoordinateType coordT>
+    constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> bool
+    {
+        return xA._array == xB._array;
+    }
+
+    // operator<
+    template <int D, CoordinateType coordT>
+    constexpr auto operator<(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> bool
+    {
+        return xA._array < xB._array;
     }
 
 }    // namespace mito

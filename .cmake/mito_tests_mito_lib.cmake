@@ -17,6 +17,7 @@ mito_test_driver(tests/mito.lib/functions/partial_derivatives.cc)
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
 mito_test_driver(tests/mito.lib/geometry/coordinate_system.cc)
+mito_test_driver(tests/mito.lib/geometry/coordinate_transformation.cc)
 mito_test_driver(tests/mito.lib/geometry/barycenter_segment_1D.cc)
 mito_test_driver(tests/mito.lib/geometry/barycenter_segment_2D.cc)
 mito_test_driver(tests/mito.lib/geometry/barycenter_segment_3D.cc)
@@ -44,24 +45,30 @@ mito_test_driver(tests/mito.lib/tensor/wedge_product_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/tensor_product_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/euclidean_metric_2D.cc)
 mito_test_driver(tests/mito.lib/tensor/euclidean_metric_3D.cc)
+mito_test_driver(tests/mito.lib/tensor/euclidean_submanifold_metric_3D.cc)
 mito_test_driver(tests/mito.lib/tensor/cube_volume.cc)
 
 # fields
 mito_test_driver(tests/mito.lib/fields/fields.cc)
 mito_test_driver(tests/mito.lib/fields/fields_traits.cc)
 mito_test_driver(tests/mito.lib/fields/polar_metric_field.cc)
+mito_test_driver(tests/mito.lib/fields/spherical_metric_field.cc)
 
 # manifolds
-mito_test_driver(tests/mito.lib/manifolds/disk_volume_polar_cartesian.cc)
-mito_test_driver(tests/mito.lib/manifolds/disk_volume_change_coordinates.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_gradient.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/metric.cc)
 mito_test_driver(tests/mito.lib/manifolds/triangle_2D.cc)
+mito_test_driver(tests/mito.lib/manifolds/triangle_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetra_rectangle_2D.cc)
 mito_test_driver(tests/mito.lib/manifolds/tetra_cube_3D.cc)
+mito_test_driver(tests/mito.lib/manifolds/volume_half_ball.cc)
+mito_test_driver(tests/mito.lib/manifolds/volume_disk_polar_cartesian.cc)
+mito_test_driver(tests/mito.lib/manifolds/volume_disk_change_coordinates.cc)
+mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_cartesian.cc)
+mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_spherical.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
@@ -80,6 +87,7 @@ mito_test_driver(tests/mito.lib/mesh/tetra_tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_zero_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_multiple_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/erase_element.cc)
+mito_test_driver(tests/mito.lib/mesh/sphere.cc)
 
 if(WITH_METIS)
     mito_test_driver(tests/mito.lib/mesh/metis_partitioner.cc)
@@ -119,13 +127,14 @@ mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_triangle.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_tetrahedron.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_segment_1D.cc)
+mito_test_driver(tests/mito.lib/quadrature/quadrature_segment_3D.cc)
 mito_test_driver(tests/mito.lib/quadrature/quadrature_triangle_2D.cc)
-# mito_test_driver(tests/mito.lib/quadrature/quadrature_square_3D.cc) #TOFIX
+mito_test_driver(tests/mito.lib/quadrature/quadrature_square_3D.cc)
 
 # integration
 # mito_test_driver(tests/mito.lib/integration/divergence_theorem.cc) #TOFIX
 mito_test_driver(tests/mito.lib/integration/quadrature_load_mesh_2D.cc)
-# mito_test_driver(tests/mito.lib/integration/quadrature_flip_segment_3D.cc) #TOFIX
+mito_test_driver(tests/mito.lib/integration/quadrature_flip_segment_3D.cc)
 
 if(${WITH_METIS} AND ${WITH_MPI})
     mito_test_driver_mpi(tests/mito.lib/integration/quadrature_load_mesh_2D_mpi.cc 2)
