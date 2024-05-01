@@ -124,7 +124,7 @@ main()
     int N = 1 << 25;
 
     // make a channel
-    pyre::journal::info_t channel("tests.timer.gent");
+    pyre::journal::info_t channel("tests.timer.wedge");
 
     // report
     channel << "Computing " << N << " wedge products of one forms" << pyre::journal::endl;
