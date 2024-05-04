@@ -16,7 +16,7 @@ using mito::scalar_t;
 
 TEST(Derivatives, Product)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function
@@ -78,7 +78,7 @@ TEST(Derivatives, Reciprocal)
 
 TEST(Derivatives, Power)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // power of two function

@@ -7,36 +7,33 @@
 #include <mito/mito.h>
 
 
-using mito::math::function_t;
-using mito::vector_t;
-using mito::real;
+// strip namespace
 using mito::quadrature::GAUSS;
-using mito::topology::segment_t;
-using mito::topology::triangle_t;
+// strip namespace
+using mito::tensor::_;
+// alias for cartesian coordinates
+using mito::geometry::CARTESIAN;
+// the type of coordinates
+using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
 
+// the function extracting the x_0 component of 2D vector
+constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
+// the function extracting the x_1 component of a 2D vector
+constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
+// the function returning the constant e0 unit vector in 2D
+constexpr auto e0 = mito::functions::constant<coordinates_t>(mito::e_0<2>);
+// the function returning the constant e1 unit vector in 2D
+constexpr auto e1 = mito::functions::constant<coordinates_t>(mito::e_1<2>);
+// euclidean metric
+constexpr auto metric = mito::fields::identity_tensor_field<coordinates_t, 2>;
 
 TEST(DivergenceTheorem, Mesh2D)
 {
     // a scalar function
-    auto f = mito::math::function([](const vector_t<2> & x) -> vector_t<2> {
-        return { x[0] * x[1], x[0] * x[0] };
-    });
-
-    // df/dx[0]
-    auto Dx = mito::math::function([](const vector_t<2> & x) -> vector_t<2> {
-        return { x[1], 2.0 * x[0] };
-    });
-
-    // df/dx[1]
-    auto Dy = mito::math::function([](const vector_t<2> & x) -> vector_t<2> {
-        return { x[0], 0.0 };
-    });
-
-    // instantiate a vector field
-    auto field = mito::math::field(f, { Dx, Dy });
+    constexpr auto f = mito::fields::field(x0 * x1 * e0 + x0 * x0 * e1);
 
     // build a scalar field with divergence of field
-    auto divergence = mito::math::div(field);
+    constexpr auto div = mito::fields::divergence(f);
 
     // analytic solution
     // int_{int} (div f) = int_0^1 int_0^1 y dx dy = 0.5
@@ -63,99 +60,94 @@ TEST(DivergenceTheorem, Mesh2D)
         (0,0)           (1,0)
     */
 
-    // an empty topology
-    auto & topology = mito::topology::topology();
-
-    // an empty cloud of points in 2D
-    auto & point_cloud = mito::geometry::point_cloud<2>();
-
-    // a geometry binding the topology {topology} to the cloud of points {point_cloud}
-    auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
     // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    auto coord_system = mito::geometry::coordinate_system<2, CARTESIAN>();
 
     // an empty mesh of simplicial topology in 2D
-    auto mesh = mito::mesh::mesh<mito::topology::triangle_t>(geometry);
+    auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();
 
-    auto vertex0 = mito::geometry::node(geometry, coord_system, { 0.0, 0.0 });
-    auto vertex1 = mito::geometry::node(geometry, coord_system, { 1.0, 0.0 });
-    auto vertex2 = mito::geometry::node(geometry, coord_system, { 1.0, 1.0 });
-    auto vertex3 = mito::geometry::node(geometry, coord_system, { 0.5, 0.5 });
-    auto vertex4 = mito::geometry::node(geometry, coord_system, { 0.0, 1.0 });
+    // build nodes
+    auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
+    auto node_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto node_2 = mito::geometry::node(coord_system, { 1.0, 1.0 });
+    auto node_3 = mito::geometry::node(coord_system, { 0.5, 0.5 });
+    auto node_4 = mito::geometry::node(coord_system, { 0.0, 1.0 });
 
-    auto segment0 = topology.segment({ vertex0, vertex1 });
-    auto segment1 = topology.segment({ vertex1, vertex3 });
-    auto segment2 = topology.segment({ vertex3, vertex0 });
-    auto cell0 = topology.triangle({ segment0, segment1, segment2 });
+    // populate the mesh
+    mesh.insert({ node_0, node_1, node_3 });
+    mesh.insert({ node_1, node_2, node_3 });
+    mesh.insert({ node_2, node_4, node_3 });
+    mesh.insert({ node_4, node_0, node_3 });
 
-    auto segment3 = topology.segment({ vertex1, vertex2 });
-    auto segment4 = topology.segment({ vertex2, vertex3 });
-    auto segment5 = topology.segment({ vertex3, vertex1 });
-    auto cell1 = topology.triangle({ segment3, segment4, segment5 });
-
-    auto segment6 = topology.segment({ vertex2, vertex4 });
-    auto segment7 = topology.segment({ vertex4, vertex3 });
-    auto segment8 = topology.segment({ vertex3, vertex2 });
-    auto cell2 = topology.triangle({ segment6, segment7, segment8 });
-
-    auto segment9 = topology.segment({ vertex4, vertex0 });
-    auto segment10 = topology.segment({ vertex0, vertex3 });
-    auto segment11 = topology.segment({ vertex3, vertex4 });
-    auto cell3 = topology.triangle({ segment9, segment10, segment11 });
-
-    mesh.insert(cell0);
-    mesh.insert(cell1);
-    mesh.insert(cell2);
-    mesh.insert(cell3);
-
-    auto bodyManifold = mito::manifolds::manifold(mesh);
-    // This instantiates a quad rule on the elements (pairing element type and degree of exactness)
+    // create the body manifold
+    auto bodyManifold = mito::manifolds::manifold(mesh, coord_system);
+    // create the body integrator
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
-    real resultBody = bodyIntegrator.integrate(divergence);
+    // the integral of the divergence on the body
+    auto resultBody = bodyIntegrator.integrate(div);
+    // report
     std::cout << "Result of body integration = " << resultBody << std::endl;
 
+    // the 2D metric volume element
+    constexpr auto dx = mito::fields::one_form_field(mito::fields::field(e0), metric);
+    constexpr auto dy = mito::fields::one_form_field(mito::fields::field(e1), metric);
+    constexpr auto w = mito::fields::wedge(dx, dy);
+
     // TOFIX: Include normal notion on the boundary element set, so that we can avoid hardcoding
-    // the normals calculations (we might need std::inner_product to do the inner product)
+    // the normals calculations
+    // the normals to the boundary
+    constexpr auto n_bot = -e1;
+    constexpr auto n_right = e0;
+    constexpr auto n_top = e1;
+    constexpr auto n_left = -e0;
+
+    // the 1D restrictions of the 2D metric volume element for each of the boundaries
+    constexpr auto w_bot = mito::fields::field(
+        [w, n_bot](const coordinates_t & x) -> auto { return w(x)(n_bot(x), _); });
+    constexpr auto w_right = mito::fields::field(
+        [w, n_right](const coordinates_t & x) -> auto { return w(x)(n_right(x), _); });
+    constexpr auto w_top = mito::fields::field(
+        [w, n_top](const coordinates_t & x) -> auto { return w(x)(n_top(x), _); });
+    constexpr auto w_left = mito::fields::field(
+        [w, n_left](const coordinates_t & x) -> auto { return w(x)(n_left(x), _); });
 
     // integrator on the bottom boundary
-    auto meshBot = mito::mesh::mesh<mito::topology::segment_t>(geometry);
-    meshBot.insert(segment0);
-    auto boundaryBot = mito::manifolds::manifold(meshBot);
+    auto meshBot = mito::mesh::mesh<mito::geometry::segment_t<2>>();
+    meshBot.insert({ node_0, node_1 });
+    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
+    auto boundaryBot = mito::manifolds::submanifold(meshBot, coord_system, w_bot);
     auto boundaryBotIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryBot);
 
     // integrator on the right boundary
-    auto meshRight = mito::mesh::mesh<mito::topology::segment_t>(geometry);
-    meshRight.insert(segment3);
-    auto boundaryRight = mito::manifolds::manifold(meshRight);
+    auto meshRight = mito::mesh::mesh<mito::geometry::segment_t<2>>();
+    meshRight.insert({ node_1, node_2 });
+    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
+    auto boundaryRight = mito::manifolds::submanifold(meshRight, coord_system, w_right);
     auto boundaryRightIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryRight);
 
     // integrator on the top boundary
-    auto meshTop = mito::mesh::mesh<mito::topology::segment_t>(geometry);
-    meshTop.insert(segment6);
-    auto boundaryTop = mito::manifolds::manifold(meshTop);
+    auto meshTop = mito::mesh::mesh<mito::geometry::segment_t<2>>();
+    meshTop.insert({ node_2, node_4 });
+    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
+    auto boundaryTop = mito::manifolds::submanifold(meshTop, coord_system, w_top);
     auto boundaryTopIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryTop);
 
     // integrator on the left boundary
-    auto meshLeft = mito::mesh::mesh<mito::topology::segment_t>(geometry);
-    meshLeft.insert(segment9);
-    auto boundaryLeft = mito::manifolds::manifold(meshLeft);
+    auto meshLeft = mito::mesh::mesh<mito::geometry::segment_t<2>>();
+    meshLeft.insert({ node_4, node_0 });
+    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
+    auto boundaryLeft = mito::manifolds::submanifold(meshLeft, coord_system, w_left);
     auto boundaryLeftIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
 
-    auto fbot = mito::math::field(-f[1]);
-    auto fright = mito::math::field(f[0]);
-    auto ftop = mito::math::field(f[1]);
-    auto fleft = mito::math::field(-f[0]);
-
-    real resultBoundary =
-        boundaryBotIntegrator.integrate(fbot) + boundaryRightIntegrator.integrate(fright)
-        + boundaryTopIntegrator.integrate(ftop) + boundaryLeftIntegrator.integrate(fleft);
+    auto resultBoundary =
+        boundaryBotIntegrator.integrate(f * n_bot) + boundaryRightIntegrator.integrate(f * n_right)
+        + boundaryTopIntegrator.integrate(f * n_top) + boundaryLeftIntegrator.integrate(f * n_left);
 
     std::cout << "Result of boundary integration = " << resultBoundary << std::endl;
 

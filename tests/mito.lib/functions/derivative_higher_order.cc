@@ -16,7 +16,7 @@ using mito::scalar_t;
 
 TEST(Derivatives, HigherOrder)
 {
-    // pi fourths
+    // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
 
     // a sine function

@@ -12,8 +12,8 @@
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 // the function extracting the components of 2D vector
-static constexpr auto x0 = mito::fields::coordinate<coordinates_t, 0>;
-static constexpr auto x1 = mito::fields::coordinate<coordinates_t, 1>;
+static constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
+static constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 
 
 TEST(Fields, Traits)

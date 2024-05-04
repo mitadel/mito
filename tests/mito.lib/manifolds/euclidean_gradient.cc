@@ -16,20 +16,20 @@ static constexpr auto e_0 = mito::fields::uniform_field<coordinates_t>(mito::e_0
 static constexpr auto e_1 = mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
 
 // the function extracting the components of 2D vector
-static constexpr auto x0 = mito::fields::field(mito::fields::coordinate<coordinates_t, 0>);
-static constexpr auto x1 = mito::fields::field(mito::fields::coordinate<coordinates_t, 1>);
+static constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
+static constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 
 
 TEST(Manifolds, CartesianGradient)
 {
     // a scalar field
-    constexpr auto f = x0 * x1;
+    constexpr auto f = mito::fields::field(x0 * x1);
 
     // df/dx[0]
-    constexpr auto df0 = mito::fields::field(mito::functions::derivative<0>(f.function()));
+    constexpr auto df0 = mito::fields::derivative<0>(f);
 
     // df/dx[1]
-    constexpr auto df1 = mito::fields::field(mito::functions::derivative<1>(f.function()));
+    constexpr auto df1 = mito::fields::derivative<1>(f);
 
     // the Euclidean metric
     constexpr auto g = mito::manifolds::metric<mito::geometry::CARTESIAN, 2, 2>::field();
