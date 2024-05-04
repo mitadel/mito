@@ -8,10 +8,8 @@
 #include <pyre/timers.h>
 
 
-// alias for cartesian coordinates
-using mito::geometry::CARTESIAN;
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
 auto

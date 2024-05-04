@@ -11,10 +11,8 @@
 using mito::quadrature::GAUSS;
 // strip namespace
 using mito::tensor::_;
-// alias for cartesian coordinates
-using mito::geometry::CARTESIAN;
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 // the function extracting the x_0 component of 2D vector
 constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
