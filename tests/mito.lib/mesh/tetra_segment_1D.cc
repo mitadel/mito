@@ -8,10 +8,14 @@
 #include <mito/mesh.h>
 
 
+// cartesian coordinates in 1D
+using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
+
+
 TEST(Tetra, Segment)
 {
-    // a Cartesian coordinate system in 1D
-    auto coord_system = mito::geometry::coordinate_system<1, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // an empty mesh of simplicial topology in 1D
     auto mesh = mito::mesh::mesh<mito::geometry::segment_t<1>>();

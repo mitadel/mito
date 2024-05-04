@@ -22,7 +22,7 @@ random_number()
     // a truly random_number
     auto rand_num = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
     // a point in 2D space
-    return mito::geometry::coordinates<CARTESIAN>({ rand_num, rand_num });
+    return mito::geometry::coordinates<coordinates_t>({ rand_num, rand_num });
 }
 
 

@@ -25,8 +25,8 @@ using mito::tensor::_;
 
 TEST(Manifolds, HalfSphereCartesian)
 {
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // read the mesh of a sphere
     std::ifstream fileStream("bottom_half_sphere.summit");

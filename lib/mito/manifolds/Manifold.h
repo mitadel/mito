@@ -10,14 +10,13 @@
 
 namespace mito::manifolds {
 
-    template <class cellT, geometry::CoordinateType coordsT>
+    template <class cellT, geometry::coordinates_c coordsT>
+    requires(cellT::dim == coordsT::dim)
     class Manifold {
 
       private:
         // typedef for node
         using node_type = cellT::node_type;
-        // the coordinates type
-        static constexpr geometry::CoordinateType coords_type = coordsT;
         // the physical dimension of the manifold (that is that of the cell)
         static constexpr int D = cellT::dim;
         // the dimension of the manifold (that is that of the cell)
@@ -37,13 +36,13 @@ namespace mito::manifolds {
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
         // typedef for a set of coordinates
-        using coordinates_type = geometry::coordinates_t<D, coords_type>;
+        using coordinates_type = coordsT;
         // typedef for a coordinates system
-        using coordinate_system_type = geometry::coordinate_system_t<D, coords_type>;
+        using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
 
       private:
         // the metric field
-        static constexpr auto _metric = metric<coords_type, N, D>::field();
+        static constexpr auto _metric = metric<coordinates_type, N>::field();
         // basis for vector fields
         template <int I>
         static constexpr auto _e = fields::uniform_field<coordinates_type>(mito::e<I, N>);
@@ -192,7 +191,7 @@ namespace mito::manifolds {
         const coordinate_system_type & _coordinate_system;
     };
 
-    template <class cellT, geometry::CoordinateType coordsT>
+    template <class cellT, geometry::coordinates_c coordsT>
     std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, coordsT> & manifold)
     {
         // print the manifold

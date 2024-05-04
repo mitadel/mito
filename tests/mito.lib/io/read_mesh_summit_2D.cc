@@ -9,10 +9,14 @@
 #include <mito/mesh.h>
 
 
+// cartesian coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+
 TEST(SummitReader, LoadMesh2D)
 {
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     clock_t t;
 

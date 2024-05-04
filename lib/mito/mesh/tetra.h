@@ -10,20 +10,22 @@
 
 namespace mito::mesh {
 
-    template <int D, geometry::CoordinateType coordT>
+    template <int D /*spatial dimension*/, geometry::coordinates_c coordT>
+    requires(coordT::dim == D)
     auto midnode(
         const geometry::node_t<D> & node_a, const geometry::node_t<D> & node_b,
-        geometry::coordinate_system_t<D, coordT> & coordinate_system) -> geometry::node_t<D>
+        geometry::coordinate_system_t<coordT> & coordinate_system) -> geometry::node_t<D>
     {
         // return a new node at the midpoint between {node_a} and {node_b}
         return mito::geometry::node(
             coordinate_system, coordinate_system.midpoint(node_a.point(), node_b.point()));
     }
 
-    template <int D /*spatial dimension*/, geometry::CoordinateType coordT>
+    template <int D /*spatial dimension*/, geometry::coordinates_c coordT>
+    requires(coordT::dim == D)
     auto subdivide(
         const geometry::node_t<D> & node_0, const geometry::node_t<D> & node_1,
-        geometry::coordinate_system_t<D, coordT> & coordinate_system,
+        geometry::coordinate_system_t<coordT> & coordinate_system,
         mesh_t<geometry::segment_t<D>> & subdivided_mesh, int n_refinements) -> void
     {
         // compute the middle node of the segment 0->1
@@ -48,11 +50,12 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D /*spatial dimension*/, geometry::CoordinateType coordT>
+    template <int D /*spatial dimension*/, geometry::coordinates_c coordT>
+    requires(coordT::dim == D)
     auto subdivide(
         const geometry::node_t<D> & node_0, const geometry::node_t<D> & node_1,
         const geometry::node_t<D> & node_2,
-        geometry::coordinate_system_t<D, coordT> & coordinate_system,
+        geometry::coordinate_system_t<coordT> & coordinate_system,
         mesh_t<geometry::triangle_t<D>> & subdivided_mesh, int n_refinements) -> void
     {
         // compute the middle point of the segment 0->1
@@ -87,11 +90,12 @@ namespace mito::mesh {
         return;
     }
 
-    template <int D /*spatial dimension*/, geometry::CoordinateType coordT>
+    template <int D /*spatial dimension*/, geometry::coordinates_c coordT>
+    requires(coordT::dim == D)
     auto subdivide(
         const geometry::node_t<D> & node_0, const geometry::node_t<D> & node_1,
         const geometry::node_t<D> & node_2, const geometry::node_t<D> & node_3,
-        geometry::coordinate_system_t<D, coordT> & coordinate_system,
+        geometry::coordinate_system_t<coordT> & coordinate_system,
         mesh_t<geometry::tetrahedron_t<D>> & subdivided_mesh, int n_refinements) -> void
     {
         // compute the middle point of the segment 0->1
@@ -159,9 +163,9 @@ namespace mito::mesh {
         return;
     }
 
-    template <class cellT, int D /*spatial dimension*/, geometry::CoordinateType coordT>
+    template <class cellT, geometry::coordinates_c coordT>
     auto tetra(
-        const mesh_t<cellT> & mesh, geometry::coordinate_system_t<D, coordT> & coordinate_system,
+        const mesh_t<cellT> & mesh, geometry::coordinate_system_t<coordT> & coordinate_system,
         int n_refinements = 1) -> mesh_t<cellT>
     {
         // instantiate a new (empty) mesh for the refined mesh
@@ -190,8 +194,7 @@ namespace mito::mesh {
             // helper function to expand array to parameter pack
             constexpr auto _subdivide =
                 []<size_t... J>(
-                    const auto & nodes,
-                    geometry::coordinate_system_t<D, coordT> & coordinate_system,
+                    const auto & nodes, geometry::coordinate_system_t<coordT> & coordinate_system,
                     mesh_t<cellT> & subdivided_mesh, int n_refinements, std::index_sequence<J...>) {
                     return subdivide(
                         nodes[J]..., coordinate_system, subdivided_mesh, n_refinements);

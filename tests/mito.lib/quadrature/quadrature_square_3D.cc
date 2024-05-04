@@ -46,18 +46,18 @@ TEST(Quadrature, Square)
         (0,0)           (1,0)
     */
 
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // an empty mesh of simplicial topology in 3D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<3>>();
 
     // build coordinates
-    constexpr auto x_0 = mito::geometry::coordinates({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::coordinates({ 1.0, 0.0, 1.0 });
-    constexpr auto x_2 = mito::geometry::coordinates({ 1.0, 1.0, 1.0 });
-    constexpr auto x_3 = mito::geometry::coordinates({ 0.5, 0.5, 0.5 });
-    constexpr auto x_4 = mito::geometry::coordinates({ 0.0, 1.0, 0.0 });
+    constexpr auto x_0 = mito::geometry::coordinates<coordinates_t>({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::coordinates<coordinates_t>({ 1.0, 0.0, 1.0 });
+    constexpr auto x_2 = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0, 1.0 });
+    constexpr auto x_3 = mito::geometry::coordinates<coordinates_t>({ 0.5, 0.5, 0.5 });
+    constexpr auto x_4 = mito::geometry::coordinates<coordinates_t>({ 0.0, 1.0, 0.0 });
 
     // create nodes
     auto node_0 = mito::geometry::node(coord_system, x_0);

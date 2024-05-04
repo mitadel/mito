@@ -9,15 +9,16 @@
 #include <mito/manifolds.h>
 
 
-// strip the namespace
-using mito::geometry::SPHERICAL;
-using mito::geometry::CARTESIAN;
+// cartesian coordinates in 3D
+using cartesian_coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+// spherical coordinates
+using spherical_coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
 
 
 TEST(Manifolds, Ball)
 {
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<cartesian_coordinates_t>();
 
     // read the mesh of a ball
     std::ifstream fileStream("bottom_half_ball.summit");
@@ -30,8 +31,9 @@ TEST(Manifolds, Ball)
     // compute the area of the manifold
     auto volume_cartesian = manifold_cartesian.volume();
 
-    // perform change of coordinates from {CARTESIAN} to {SPHERICAL}
-    auto spherical_coord_system = mito::geometry::coordinate_system<SPHERICAL>(coord_system);
+    // perform change of coordinates from cartesian to spherical
+    auto spherical_coord_system =
+        mito::geometry::coordinate_system<spherical_coordinates_t>(coord_system);
 
     // create a manifold on {mesh}
     auto manifold_spherical = mito::manifolds::manifold(mesh, spherical_coord_system);

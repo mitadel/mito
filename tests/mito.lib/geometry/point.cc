@@ -8,12 +8,17 @@
 #include <mito/geometry.h>
 
 
+// cartesian coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+
 TEST(Point, TestPoint)
 {
+    // point cloud
     auto & cloud = mito::geometry::point_cloud<2>();
 
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // create and place two points
     auto point_0 = cloud.point();

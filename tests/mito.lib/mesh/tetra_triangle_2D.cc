@@ -8,10 +8,14 @@
 #include <mito/mesh.h>
 
 
+// cartesian coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+
 TEST(Tetra, Triangle2D)
 {
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // an empty mesh of triangles in 2D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();

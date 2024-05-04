@@ -27,7 +27,7 @@ TEST(Fields, VectorFields)
     constexpr auto f = mito::fields::field(cos(x0 * x1));
 
     // a point in space
-    constexpr auto x = mito::geometry::coordinates<CARTESIAN>({ 0.0, 0.0 });
+    constexpr auto x = mito::geometry::coordinates<coordinates_t>({ 0.0, 0.0 });
 
     // check value of field at {x}
     static_assert(f(x) == 1.0);

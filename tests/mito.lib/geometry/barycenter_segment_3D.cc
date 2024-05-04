@@ -8,10 +8,14 @@
 #include <mito/geometry.h>
 
 
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
+
 TEST(Barycenter, Segment3D)
 {
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // build two nodes
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0, 1.0 });
@@ -24,7 +28,7 @@ TEST(Barycenter, Segment3D)
     auto barycenter = mito::geometry::barycenter(segment, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::geometry::coordinates({ 0.5, 0.0, 0.5 }));
+    EXPECT_TRUE(barycenter == mito::geometry::coordinates<coordinates_t>({ 0.5, 0.0, 0.5 }));
 
     // all done
     return;

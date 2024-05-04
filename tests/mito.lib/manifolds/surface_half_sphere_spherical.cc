@@ -39,16 +39,17 @@ static constexpr auto e_pp = mito::fields::uniform_field<spherical_coordinates_t
 
 TEST(Manifolds, HalfSphereSpherical)
 {
-    // a Cartesian coordinate system in 3D
-    auto cartesian_coord_system = mito::geometry::coordinate_system<3, CARTESIAN>();
+    // the coordinate system
+    auto cartesian_coord_system = mito::geometry::coordinate_system<cartesian_coordinates_t>();
 
     // read the mesh of a sphere
     std::ifstream fileStream("bottom_half_sphere.summit");
     auto mesh =
         mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, cartesian_coord_system);
 
-    // perform change of coordinates from {CARTESIAN} to {SPHERICAL}
-    auto coord_system = mito::geometry::coordinate_system<SPHERICAL>(cartesian_coord_system);
+    // perform change of coordinates from cartesian to spherical
+    auto coord_system =
+        mito::geometry::coordinate_system<spherical_coordinates_t>(cartesian_coord_system);
 
     // the metric field
     // e_rr + r^2 * e_tt + r^2 sin^2(theta) * e_pp

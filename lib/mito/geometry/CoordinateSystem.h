@@ -10,13 +10,17 @@
 
 namespace mito::geometry {
 
-    template <int D, CoordinateType coordT>
+    template <coordinates_c coordT>
     class CoordinateSystem {
       public:
         // a set of coordinates
-        using coordinates_type = coordinates_t<D, coordT>;
+        using coordinates_type = coordT;
+        // the dimension of the physical space
+        static constexpr int dim = coordinates_type::dim;
 
       private:
+        // alias {dim} for internal purposes
+        static constexpr int D = dim;
         // a point
         using point_type = point_t<D>;
         // id type of point
@@ -25,6 +29,7 @@ namespace mito::geometry {
         using coordinates_map_type = std::map<point_id_type, coordinates_type>;
 
       public:
+        // TOFIX: is this ever used?
         // I-th basis vector in dimension D
         template <int I>
         requires(I >= 0 && I < D)
@@ -35,9 +40,9 @@ namespace mito::geometry {
         CoordinateSystem() : _coordinates_map() {}
 
         // constructor for change of coordinates
-        template <CoordinateType otherCoordT>
-        CoordinateSystem(const CoordinateSystem<D, otherCoordT> & other_coord_sys) :
-            _coordinates_map()
+        template <coordinates_c otherCoordT>
+        requires(coordT::dim == otherCoordT::dim)
+        CoordinateSystem(const CoordinateSystem<otherCoordT> & other_coord_sys) : _coordinates_map()
         {
             // loop on the points and coordinates of the other coordinate system
             for (const auto & [point, coord] : other_coord_sys) {
@@ -51,16 +56,16 @@ namespace mito::geometry {
 
       private:
         // delete copy constructor
-        CoordinateSystem(const CoordinateSystem<D, coordT> &) = delete;
+        CoordinateSystem(const CoordinateSystem<coordT> &) = delete;
 
         // delete move constructor
-        CoordinateSystem(CoordinateSystem<D, coordT> &&) noexcept = delete;
+        CoordinateSystem(CoordinateSystem<coordT> &&) noexcept = delete;
 
         // delete assignment operator
-        void operator=(const CoordinateSystem<D, coordT> &) = delete;
+        void operator=(const CoordinateSystem<coordT> &) = delete;
 
         // delete move assignment operator
-        void operator=(CoordinateSystem<D, coordT> &&) noexcept = delete;
+        void operator=(CoordinateSystem<coordT> &&) noexcept = delete;
 
       public:
         // place the point with id {point_id} at location {coord}

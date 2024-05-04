@@ -8,13 +8,17 @@
 #include <mito/mesh.h>
 
 
+// cartesian coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+
 TEST(Mesh, EraseElement)
 {
     // an empty topology
     auto & topology = mito::topology::topology();
 
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // instantiate four nodes
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });

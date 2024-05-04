@@ -10,14 +10,13 @@
 
 namespace mito::manifolds {
 
-    // the metric tensor field of type {coordsT} for an N-dimensional manifold embedded in
-    //  D-dimensional space
-    template <geometry::CoordinateType coordsT, int N, int D>
+    // the metric tensor field for an N-dimensional manifold in {coordsT} coordinates
+    template <geometry::coordinates_c coordsT, int N>
     struct metric {};
 
     // specialization for the Euclidean metric
-    template <int N, int D>
-    struct metric<geometry::CARTESIAN, N, D> {
+    template <int D, int N>
+    struct metric<geometry::coordinates_t<D, geometry::CARTESIAN>, N> {
         static constexpr auto field()
         {
             // the type of coordinates
@@ -30,7 +29,7 @@ namespace mito::manifolds {
 
     // specialization for the polar metric in 2D
     template <>
-    struct metric<geometry::POLAR, 2, 2> {
+    struct metric<geometry::coordinates_t<2, geometry::POLAR>, 2> {
         static constexpr auto field()
         {
             // the type of coordinates
@@ -51,7 +50,7 @@ namespace mito::manifolds {
 
     // specialization for the spherical metric in 3D
     template <>
-    struct metric<geometry::SPHERICAL, 3, 3> {
+    struct metric<geometry::coordinates_t<3, geometry::SPHERICAL>, 3> {
         static constexpr auto field()
         {
             // the type of coordinates

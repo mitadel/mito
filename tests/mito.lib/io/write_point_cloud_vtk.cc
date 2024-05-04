@@ -9,13 +9,17 @@
 #include <mito/geometry.h>
 
 
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
+
 TEST(VtkWriter, WritePointCloudToVtk)
 {
     // an empty point cloud
     auto & cloud = mito::geometry::point_cloud<3>();
 
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // add points to the point cloud
     const auto point_a = cloud.point();

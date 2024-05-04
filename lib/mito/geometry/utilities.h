@@ -11,13 +11,12 @@
 namespace mito::geometry {
 
     // compute the barycenter of a cell, given a geometry
-    template <class cellT, int D, CoordinateType coordT>
+    template <class cellT, coordinates_c coordT>
     constexpr auto barycenter(
-        const cellT & cell, const coordinate_system_t<D, coordT> & coordinate_system)
-        -> coordinates_t<D, coordT>
+        const cellT & cell, const coordinate_system_t<coordT> & coordinate_system) -> coordT
     {
         // the barycenter
-        coordinates_t<D, coordT> result;
+        coordT result;
 
         // average the position of each vertex
         for (const auto & node : cell.nodes()) {
@@ -30,10 +29,11 @@ namespace mito::geometry {
     }
 
     // compute the distance between two points
-    template <int D, CoordinateType coordT>
+    template <int D, coordinates_c coordT>
+    requires(coordT::dim == D)
     constexpr auto distance(
         const point_t<D> & pointA, const point_t<D> & pointB,
-        const coordinate_system_t<D, coordT> & coordinate_system) -> real
+        const coordinate_system_t<coordT> & coordinate_system) -> real
     {
         // return the distance between the two points
         return distance(
@@ -42,18 +42,19 @@ namespace mito::geometry {
 
     // return the array of director vectors of the simplex and the coordinates of the point
     // where they stem from
-    template <int N, int D, CoordinateType coordT>
+    template <int N, int D, coordinates_c coordT>
+    requires(coordT::dim == D)
     constexpr auto directors(
         const geometric_simplex_t<N, D> & simplex,
-        const coordinate_system_t<D, coordT> & coordinate_system)
-        -> std::pair<coordinates_t<D, coordT>, edge_simplex_directors_t<N, D>>
+        const coordinate_system_t<coordT> & coordinate_system)
+        -> std::pair<coordT, edge_simplex_directors_t<N, D>>
     {
         // helper function to expand {nodes[1] - nodes[0]}, ..., {nodes[N-1] - nodes[0]}
-        constexpr auto _directors = []<int... J>(
-                                        const geometric_simplex_t<N, D> & simplex,
-                                        const coordinate_system_t<D, coordT> & coordinate_system,
-                                        integer_sequence<J...>)
-            -> std::pair<coordinates_t<D, coordT>, edge_simplex_directors_t<N, D>> {
+        constexpr auto _directors =
+            []<int... J>(
+                const geometric_simplex_t<N, D> & simplex,
+                const coordinate_system_t<coordT> & coordinate_system,
+                integer_sequence<J...>) -> std::pair<coordT, edge_simplex_directors_t<N, D>> {
             // get the simplex nodes
             auto nodes = simplex.nodes();
 

@@ -7,10 +7,14 @@
 #include <mito/mito.h>
 
 
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
+
 TEST(VtkWriter, WriteTetraMeshToVtk)
 {
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // an empty mesh of simplicial topology in 3D
     auto mesh = mito::mesh::mesh<mito::geometry::tetrahedron_t<3>>();

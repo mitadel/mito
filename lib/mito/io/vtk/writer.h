@@ -31,9 +31,8 @@ namespace mito::io::vtk {
         return vtkSmartPointer<vtkLine>::New();
     }
 
-    template <int D, geometry::CoordinateType coordT>
-    auto insertVtkPoint(const geometry::coordinates_t<D, coordT> &, vtkSmartPointer<vtkPoints> &)
-        -> void;
+    template <geometry::coordinates_c coordT>
+    auto insertVtkPoint(const coordT &, vtkSmartPointer<vtkPoints> &) -> void;
 
     template <>
     auto insertVtkPoint(
@@ -53,13 +52,16 @@ namespace mito::io::vtk {
         pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
     }
 
-    template <class cellT, int D, geometry::CoordinateType coordT>
+    template <class cellT, geometry::coordinates_c coordT>
     auto createVtkUnstructuredGrid(
         const mito::mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<D, coordT> & coordinate_system)
+        const geometry::coordinate_system_t<coordT> & coordinate_system)
         -> vtkSmartPointer<vtkUnstructuredGrid>
-    requires(mesh::mesh_t<cellT>::dim == D)
+    requires(cellT::dim == coordT::dim)
     {
+        // the dimension of physical space
+        constexpr int D = cellT::dim;
+
         // vtk unstructured grid
         auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
         // vtk points and cells
@@ -130,10 +132,11 @@ namespace mito::io::vtk {
         writer->Write();
     }
 
-    template <class cellT, int D, geometry::CoordinateType coordT>
+    template <class cellT, geometry::coordinates_c coordT>
+    requires(cellT::dim == coordT::dim)
     auto writer(
         std::string fileName, const mito::mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<D, coordT> & coordinate_system) -> void
+        const geometry::coordinate_system_t<coordT> & coordinate_system) -> void
     {
         // create vtk unstructured grid
         const auto gridVtk = createVtkUnstructuredGrid(mesh, coordinate_system);
@@ -143,10 +146,11 @@ namespace mito::io::vtk {
     }
 
 
-    template <int D, geometry::CoordinateType coordT>
+    template <int D, geometry::coordinates_c coordT>
+    requires(D == coordT::dim)
     auto writer(
         std::string fileName, const geometry::point_cloud_t<D> & cloud,
-        const geometry::coordinate_system_t<D, coordT> & coordinate_system) -> void
+        const geometry::coordinate_system_t<coordT> & coordinate_system) -> void
     {
         // get point cloud compositions
         const auto & points = cloud.points();

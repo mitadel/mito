@@ -10,14 +10,13 @@
 
 namespace mito::manifolds {
 
-    template <class cellT, geometry::CoordinateType coordsT, class volumeFormT>
+    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
+    requires(cellT::dim == coordsT::dim)
     class Submanifold {
 
       private:
         // typedef for node
         using node_type = cellT::node_type;
-        // the coordinates type
-        static constexpr geometry::CoordinateType coords_type = coordsT;
         // the volume form type
         using volume_form_type = volumeFormT;
         // the physical dimension of the manifold (that is that of the cell)
@@ -39,9 +38,9 @@ namespace mito::manifolds {
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
         // typedef for a set of coordinates
-        using coordinates_type = geometry::coordinates_t<D, coords_type>;
+        using coordinates_type = coordsT;
         // typedef for a coordinates system
-        using coordinate_system_type = geometry::coordinate_system_t<D, coords_type>;
+        using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
 
       public:
         constexpr Submanifold(
