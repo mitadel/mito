@@ -36,8 +36,8 @@ TEST(Quadrature, Square)
         (0,0)           (1,0)
     */
 
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // an empty mesh of simplicial topology in 2D
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<2>>();

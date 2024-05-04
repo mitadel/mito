@@ -9,6 +9,9 @@
 #include <mito/io.h>
 
 
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
 // the basis vectors
 static constexpr auto e_x = mito::e_0<3>;
 static constexpr auto e_y = mito::e_1<3>;
@@ -18,8 +21,7 @@ static constexpr auto e_z = mito::e_2<3>;
 // compute the volume of a tetrahedron via the metric volume element
 auto
 volume_form(
-    const auto & w,
-    const mito::geometry::coordinate_system_t<3, mito::geometry::CARTESIAN> & coord_system,
+    const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coord_system,
     const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::scalar_t
 {
     // get the directors of the tetrahedron
@@ -36,7 +38,7 @@ volume_form(
 // compute the volume of a tetrahedron as the determinant of the matrix of its vertices
 auto
 volume_determinant(
-    const mito::geometry::coordinate_system_t<3, mito::geometry::CARTESIAN> & coord_system,
+    const mito::geometry::coordinate_system_t<coordinates_t> & coord_system,
     const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::scalar_t
 {
     // number of element vertices
@@ -81,8 +83,8 @@ TEST(Tensor, CubeVolume)
     // the metric volume element
     constexpr auto w = mito::tensor::wedge(dx, dy, dz);
 
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // read the cube mesh
     std::ifstream fileStream("cube.summit");

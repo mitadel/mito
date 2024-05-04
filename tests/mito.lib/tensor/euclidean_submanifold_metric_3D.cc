@@ -9,6 +9,9 @@
 #include <mito/tensor.h>
 
 
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
 // the basis for vectors
 static constexpr auto e_x = mito::e_0<3>;
 static constexpr auto e_y = mito::e_1<3>;
@@ -21,8 +24,7 @@ using mito::tensor::_;
 
 auto
 area(
-    const auto & w,
-    const mito::geometry::coordinate_system_t<3, mito::geometry::CARTESIAN> & coordinate_system,
+    const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coordinate_system,
     const mito::geometry::node_t<3> & v0, const mito::geometry::node_t<3> & v1,
     const mito::geometry::node_t<3> & v2) -> mito::scalar_t
 {
@@ -50,13 +52,13 @@ TEST(Tensor, EuclideanSubmanifoldMetric3D)
     constexpr auto dy = mito::tensor::one_form(e_y);
     constexpr auto dz = mito::tensor::one_form(e_z);
 
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // pick three sets of coordinates
-    constexpr auto x_0 = mito::geometry::coordinates({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::coordinates({ 1.0, 0.0, 1.0 });
-    constexpr auto x_2 = mito::geometry::coordinates({ 1.0, 1.0, 1.0 });
+    constexpr auto x_0 = mito::geometry::coordinates<coordinates_t>({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::coordinates<coordinates_t>({ 1.0, 0.0, 1.0 });
+    constexpr auto x_2 = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0, 1.0 });
 
     // the normal vector to the submanifold
     constexpr auto cross = pyre::tensor::cross(x_1 - x_0, x_2 - x_0);

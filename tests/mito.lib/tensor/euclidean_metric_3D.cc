@@ -9,6 +9,9 @@
 #include <mito/tensor.h>
 
 
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
 // the basis for vector fields
 static constexpr auto e_x = mito::e_0<3>;
 static constexpr auto e_y = mito::e_1<3>;
@@ -17,8 +20,7 @@ static constexpr auto e_z = mito::e_2<3>;
 
 auto
 volume(
-    const auto & w,
-    const mito::geometry::coordinate_system_t<3, mito::geometry::CARTESIAN> & coordinate_system,
+    const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coordinate_system,
     const mito::geometry::node_t<3> & v0, const mito::geometry::node_t<3> & v1,
     const mito::geometry::node_t<3> & v2, const mito::geometry::node_t<3> & v3) -> mito::scalar_t
 {
@@ -62,8 +64,8 @@ TEST(Tensor, EuclideanMetric3D)
     // the metric volume element
     constexpr auto w = mito::tensor::wedge(dx, dy, dz);
 
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // build nodes of a tetrahedron
     auto node_1 = mito::geometry::node(coord_system, { 0.0, 0.0, 0.0 });

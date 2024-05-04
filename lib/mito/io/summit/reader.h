@@ -9,9 +9,10 @@
 
 
 namespace mito::io::summit {
-    template <int D, geometry::CoordinateType coordT>
+    template <int D, geometry::coordinates_c coordT>
+    requires(coordT::dim == D)
     auto readVertices(
-        std::ifstream & fileStream, geometry::coordinate_system_t<D, coordT> & coordinate_system,
+        std::ifstream & fileStream, geometry::coordinate_system_t<coordT> & coordinate_system,
         int N_vertices, std::vector<geometry::node_t<D>> & nodes) -> void
     {
         // fill in nodes
@@ -23,9 +24,11 @@ namespace mito::io::summit {
                 fileStream >> coordinates[d];
             }
 
+            // the type of coordinates
+            using coordinates_t = coordT;
+
             // instantiate a new node
-            auto node = mito::geometry::node(
-                coordinate_system, mito::geometry::coordinates_t<D, coordT>(coordinates));
+            auto node = mito::geometry::node(coordinate_system, coordinates_t(coordinates));
 
             // add node to {nodes}
             nodes.push_back(node);
@@ -220,11 +223,11 @@ namespace mito::io::summit {
         return readTriangles(fileStream, mesh, N_cells, nodes);
     }
 
-    template <class cellT, int D, geometry::CoordinateType coordT>
+    template <class cellT, geometry::coordinates_c coordT>
     auto reader(
-        std::ifstream & fileStream, geometry::coordinate_system_t<D, coordT> & coordinate_system)
+        std::ifstream & fileStream, geometry::coordinate_system_t<coordT> & coordinate_system)
         -> mesh::mesh_t<cellT>
-    requires(mesh::mesh_t<cellT>::dim == D)
+    requires(cellT::dim == coordT::dim)
     {
         if (!fileStream.is_open()) {
             throw std::runtime_error("reader: Mesh file could not be opened");
@@ -236,8 +239,11 @@ namespace mito::io::summit {
         int dim = 0;
         fileStream >> dim;
 
+        // the dimension of the physical space
+        constexpr int D = cellT::dim;
+
         // assert this mesh object is of same dimension of the mesh being read
-        assert(int(D) == dim);
+        assert(D == dim);
 
         // instantiate mesh
         auto mesh = mesh::mesh<cellT>();

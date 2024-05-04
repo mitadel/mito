@@ -32,13 +32,13 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto df1 = mito::fields::derivative<1>(f);
 
     // the Euclidean metric
-    constexpr auto g = mito::manifolds::metric<mito::geometry::CARTESIAN, 2, 2>::field();
+    constexpr auto g = mito::manifolds::metric<coordinates_t, 2>::field();
 
     // the gradient form
     constexpr auto gradient = mito::fields::one_form_field(df0 * e_0 + df1 * e_1, g);
 
     // a point in space
-    constexpr auto x = mito::geometry::coordinates({ 1.0, 1.0 });
+    constexpr auto x = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0 });
 
     // check that the contractions of the gradient form with the basis vectors return the partial
     // derivatives of {f}

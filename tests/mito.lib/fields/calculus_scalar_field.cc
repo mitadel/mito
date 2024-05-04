@@ -40,7 +40,7 @@ TEST(Fields, Gradient)
     constexpr auto gradient = mito::fields::gradient(f);
 
     // a point in space
-    constexpr auto x = mito::geometry::coordinates<CARTESIAN>({ pi_sixth, 1.0 });
+    constexpr auto x = mito::geometry::coordinates<coordinates_t>({ pi_sixth, 1.0 });
 
     // check result
     static_assert(gradient(x) == (cos(x0 * x1) * x1 * e_0 + cos(x0 * x1) * x0 * e_1)(x));

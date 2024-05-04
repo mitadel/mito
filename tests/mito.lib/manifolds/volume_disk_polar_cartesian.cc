@@ -9,12 +9,18 @@
 #include <mito/manifolds.h>
 
 
-template <mito::geometry::CoordinateType coordT>
+// cartesian coordinates in 2D
+using cartesian_coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// polar coordinates
+using polar_coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
+
+
+template <mito::geometry::coordinates_c coordT>
 auto
 area(std::string mesh_file_name) -> mito::scalar_t
 {
-    // a {coordT} coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, coordT>();
+    // a {coordT} coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordT>();
 
     // read the mesh
     auto filestream = std::ifstream(mesh_file_name);
@@ -34,10 +40,10 @@ area(std::string mesh_file_name) -> mito::scalar_t
 TEST(Manifolds, Disk)
 {
     // compute the area of the disk parametrized in polar coordinates
-    auto area_polar = area<mito::geometry::POLAR>("disk_polar.summit");
+    auto area_polar = area<polar_coordinates_t>("disk_polar.summit");
 
     // compute the area of the disk parametrized in cartesian coordinates
-    auto area_cartesian = area<mito::geometry::CARTESIAN>("disk_cartesian.summit");
+    auto area_cartesian = area<cartesian_coordinates_t>("disk_cartesian.summit");
 
     // expect to get the same result
     EXPECT_DOUBLE_EQ(area_cartesian, area_polar);

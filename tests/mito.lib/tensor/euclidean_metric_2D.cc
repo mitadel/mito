@@ -9,6 +9,9 @@
 #include <mito/tensor.h>
 
 
+// cartesian coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
 // the basis for vector fields
 static constexpr auto e_x = mito::e_0<2>;
 static constexpr auto e_y = mito::e_1<2>;
@@ -16,8 +19,7 @@ static constexpr auto e_y = mito::e_1<2>;
 
 auto
 area(
-    const auto & w,
-    const mito::geometry::coordinate_system_t<2, mito::geometry::CARTESIAN> & coordinate_system,
+    const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coordinate_system,
     const mito::geometry::node_t<2> & v0, const mito::geometry::node_t<2> & v1,
     const mito::geometry::node_t<2> & v2) -> mito::scalar_t
 {
@@ -53,8 +55,8 @@ TEST(Tensor, EuclideanMetric2D)
     // the metric volume element
     constexpr auto w = mito::tensor::wedge(dx, dy);
 
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // build nodes of a triangle (counterclockwise order)
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });

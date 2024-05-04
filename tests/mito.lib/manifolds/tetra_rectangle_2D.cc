@@ -10,10 +10,14 @@
 #include <mito/manifolds.h>
 
 
+// cartesian coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+
 TEST(Tetra, Rectangle)
 {
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // load a mesh of triangles
     std::ifstream fileStream("rectangle.summit");

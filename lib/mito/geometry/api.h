@@ -14,9 +14,9 @@ namespace mito::geometry {
     template <int D, CoordinateType coordT>
     using coordinates_t = Coordinates<D, coordT>;
 
-    // coordinates alias in D-dimensions
-    template <int D, CoordinateType coordT>
-    using coordinate_system_t = CoordinateSystem<D, coordT>;
+    // coordinate system alias
+    template <coordinates_c coordT>
+    using coordinate_system_t = CoordinateSystem<coordT>;
 
     // point alias
     template <int D>

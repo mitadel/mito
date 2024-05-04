@@ -10,12 +10,11 @@
 
 namespace mito::geometry {
 
-    template <CoordinateType coordT2, int D, CoordinateType coordT1>
-    constexpr auto transform_coordinates(const coordinates_t<D, coordT1> & coordinates)
-        -> coordinates_t<D, coordT2>;
+    template <coordinates_c coordT2, coordinates_c coordT1>
+    constexpr auto transform_coordinates(const coordT1 & coordinates) -> coordT2;
 
     template <>
-    constexpr auto transform_coordinates<POLAR, 2, CARTESIAN>(
+    constexpr auto transform_coordinates<coordinates_t<2, POLAR>, coordinates_t<2, CARTESIAN>>(
         const coordinates_t<2, CARTESIAN> & coordinates) -> coordinates_t<2, POLAR>
     {
         scalar_t x = coordinates[0];
@@ -26,7 +25,7 @@ namespace mito::geometry {
     }
 
     template <>
-    constexpr auto transform_coordinates<CARTESIAN, 2, POLAR>(
+    constexpr auto transform_coordinates<coordinates_t<2, CARTESIAN>, coordinates_t<2, POLAR>>(
         const coordinates_t<2, POLAR> & coordinates) -> coordinates_t<2, CARTESIAN>
     {
         scalar_t r = coordinates[0];
@@ -37,7 +36,7 @@ namespace mito::geometry {
     }
 
     template <>
-    constexpr auto transform_coordinates<SPHERICAL, 3, CARTESIAN>(
+    constexpr auto transform_coordinates<coordinates_t<3, SPHERICAL>, coordinates_t<3, CARTESIAN>>(
         const coordinates_t<3, CARTESIAN> & coordinates) -> coordinates_t<3, SPHERICAL>
     {
         scalar_t x = coordinates[0];
@@ -52,7 +51,7 @@ namespace mito::geometry {
     }
 
     template <>
-    constexpr auto transform_coordinates<CARTESIAN, 3, SPHERICAL>(
+    constexpr auto transform_coordinates<coordinates_t<3, CARTESIAN>, coordinates_t<3, SPHERICAL>>(
         const coordinates_t<3, SPHERICAL> & coordinates) -> coordinates_t<3, CARTESIAN>
     {
         scalar_t r = coordinates[0];

@@ -10,13 +10,17 @@
 #include <mito/simulation.h>
 
 
+// cartesian coordinates in 2D
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+
 TEST(MetisPartitionerMPI, LoadMesh)
 {
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
 
-    // a Cartesian coordinate system in 2D
-    auto coord_system = mito::geometry::coordinate_system<2, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // load mesh
     std::ifstream fileStream("rectangle.summit");

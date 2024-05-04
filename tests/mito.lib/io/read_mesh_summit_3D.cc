@@ -9,12 +9,16 @@
 #include <mito/mesh.h>
 
 
+// cartesian coordinates in 3D
+using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
+
 // TODO: add test on triangle in 3D
 
 TEST(SummitReader, LoadMesh3D)
 {
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     clock_t t;
 

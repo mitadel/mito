@@ -25,16 +25,16 @@ using mito::tensor::_;
 
 TEST(Manifolds, Triangle3D)
 {
-    // a Cartesian coordinate system in 3D
-    auto coord_system = mito::geometry::coordinate_system<3, mito::geometry::CARTESIAN>();
+    // the coordinate system
+    auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // an empty mesh of triangles
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<3>>();
 
     // build nodes
-    constexpr auto x_0 = mito::geometry::coordinates({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::coordinates({ 1.0, 0.0, 1.0 });
-    constexpr auto x_2 = mito::geometry::coordinates({ 1.0, 1.0, 1.0 });
+    constexpr auto x_0 = mito::geometry::coordinates<coordinates_t>({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::coordinates<coordinates_t>({ 1.0, 0.0, 1.0 });
+    constexpr auto x_2 = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0, 1.0 });
 
     // the normal vector to the submanifold
     constexpr auto cross = pyre::tensor::cross(x_1 - x_0, x_2 - x_0);

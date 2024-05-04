@@ -10,35 +10,27 @@
 
 namespace mito::geometry {
 
-    // factory for coordinates from brace-enclosed initializer list (case D > 1)
-    template <CoordinateType coordT = CARTESIAN, int D>
-    constexpr auto coordinates(mito::scalar_t (&&coords)[D])
-    requires(D > 1)
+    // factory for coordinates from brace-enclosed initializer list
+    template <coordinates_c coordT>
+    constexpr auto coordinates(mito::scalar_t (&&coords)[coordT::dim])
     {
-        return coordinates_t<D, coordT>(std::move(coords));
-    }
-
-    // factory for coordinates from brace-enclosed initializer list (case D = 1)
-    template <CoordinateType coordT = CARTESIAN>
-    constexpr auto coordinates(mito::scalar_t && coords)
-    {
-        return coordinates_t<1, coordT>(std::move(coords));
+        return coordT(std::move(coords));
     }
 
     // factory for coordinate system
-    template <int D, CoordinateType coordT = CARTESIAN>
+    template <coordinates_c coordT>
     constexpr auto coordinate_system()
     {
-        return coordinate_system_t<D, coordT>();
+        return coordinate_system_t<coordT>();
     }
 
     // factory for building a new coordinate system of coordinate type {coordT2} from an existing
     // coordinate system of coordinate type {coordT1}
-    template <CoordinateType coordT2, int D, CoordinateType coordT1>
-    constexpr auto coordinate_system(const coordinate_system_t<D, coordT1> & coord_sys)
-        -> coordinate_system_t<D, coordT2>
+    template <coordinates_c coordT2, coordinates_c coordT1>
+    constexpr auto coordinate_system(const coordinate_system_t<coordT1> & coord_sys)
+        -> coordinate_system_t<coordT2>
     {
-        return coordinate_system_t<D, coordT2>(coord_sys);
+        return coordinate_system_t<coordT2>(coord_sys);
     }
 
     // point cloud factory
@@ -49,11 +41,12 @@ namespace mito::geometry {
     }
 
     // node factory
-    template <int D, CoordinateType coordT>
-    constexpr auto node(
-        coordinate_system_t<D, coordT> & coordinate_system, const coordinates_t<D, coordT> & coords)
-        -> node_t<D>
+    template <coordinates_c coordT>
+    constexpr auto node(coordinate_system_t<coordT> & coordinate_system, const coordT & coords)
+        -> node_t<coordT::dim>
     {
+        // the dimension of the physical space
+        constexpr int D = coordT::dim;
         // fetch the point cloud
         auto & point_cloud = mito::geometry::point_cloud<D>();
         // instantiate a point
