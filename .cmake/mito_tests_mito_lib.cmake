@@ -27,6 +27,9 @@ mito_test_driver(tests/mito.lib/geometry/barycenter_tetrahedron_3D.cc)
 mito_test_driver(tests/mito.lib/geometry/cell_directors.cc)
 mito_test_driver(tests/mito.lib/geometry/point.cc)
 
+# fem
+mito_test_driver(tests/mito.lib/fem/quadrature_field.cc)
+
 # io
 mito_test_driver(tests/mito.lib/io/read_mesh_summit_2D.cc)
 mito_test_driver(tests/mito.lib/io/read_mesh_summit_3D.cc)
@@ -143,6 +146,3 @@ endif()
 if(${WITH_VTK})
     mito_test_driver_pytest_check(tests/mito.lib/integration/write_tetra_mesh_to_vtk.cc)
 endif()
-
-# unsorted
-mito_test_driver(tests/pyre-grids/main.cc)
