@@ -19,7 +19,7 @@
 
 // classes implementation
 #include "parametric.h"
-#include "Metric.h"
+#include "metric.h"
 #include "Manifold.h"
 #include "Submanifold.h"
 
