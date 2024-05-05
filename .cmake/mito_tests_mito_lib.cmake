@@ -62,8 +62,6 @@ mito_test_driver(tests/mito.lib/fields/spherical_metric_field.cc)
 # manifolds
 mito_test_driver(tests/mito.lib/manifolds/euclidean_metric_space.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_gradient.cc)
-mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_2D.cc)
-mito_test_driver(tests/mito.lib/manifolds/euclidean_manifold_3D.cc)
 mito_test_driver(tests/mito.lib/manifolds/polar_metric_space.cc)
 mito_test_driver(tests/mito.lib/manifolds/spherical_metric_space.cc)
 mito_test_driver(tests/mito.lib/manifolds/metric.cc)
