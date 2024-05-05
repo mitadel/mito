@@ -32,7 +32,7 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto df1 = mito::fields::derivative<1>(f);
 
     // the Euclidean metric
-    constexpr auto g = mito::manifolds::metric<coordinates_t, 2>::field();
+    constexpr auto g = mito::manifolds::metric<coordinates_t>::field();
 
     // the gradient form
     constexpr auto gradient = mito::fields::one_form_field(df0 * e_0 + df1 * e_1, g);

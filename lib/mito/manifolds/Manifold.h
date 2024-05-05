@@ -42,7 +42,7 @@ namespace mito::manifolds {
 
       private:
         // the metric field
-        static constexpr auto _metric = metric<coordinates_type, N>::field();
+        static constexpr auto _metric = metric<coordinates_type>::field();
         // basis for vector fields
         template <int I>
         static constexpr auto _e = fields::uniform_field<coordinates_type>(mito::e<I, N>);
