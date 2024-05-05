@@ -19,12 +19,8 @@ namespace mito::manifolds {
     using parametric_point_t = std::array<double, D>;
 
     // manifold alias
-    template <class cellT, geometry::coordinates_c coordsT>
-    using manifold_t = Manifold<cellT, coordsT>;
-
-    // submanifold alias
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
-    using submanifold_t = Submanifold<cellT, coordsT, volumeFormT>;
+    using manifold_t = Manifold<cellT, coordsT, volumeFormT>;
 
     // factory manifolds
     template <class cellT, geometry::coordinates_c coordsT>
@@ -36,8 +32,7 @@ namespace mito::manifolds {
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     constexpr auto submanifold(
         const mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<coordsT> & coordinate_system, volumeFormT volume_form)
-        -> submanifold_t<cellT, coordsT, volumeFormT>;
+        const geometry::coordinate_system_t<coordsT> & coordinate_system, volumeFormT volume_form);
 }
 
 

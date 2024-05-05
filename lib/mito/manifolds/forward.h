@@ -15,14 +15,9 @@ namespace mito::manifolds {
     class MetricSpace;
 
     // class manifold
-    template <class cellT, geometry::coordinates_c coordsT>
-    requires(cellT::dim == coordsT::dim)
-    class Manifold;
-
-    // class manifold
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     requires(cellT::dim == coordsT::dim)
-    class Submanifold;
+    class Manifold;
 }
 
 

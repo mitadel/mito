@@ -22,9 +22,8 @@ namespace mito::manifolds {
     constexpr auto submanifold(
         const mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<coordsT> & coordinate_system, volumeFormT volume_form)
-        -> submanifold_t<cellT, coordsT, volumeFormT>
     {
-        return submanifold_t<cellT, coordsT, volumeFormT>(mesh, coordinate_system, volume_form);
+        return manifold_t<cellT, coordsT, volumeFormT>(mesh, coordinate_system, volume_form);
     }
 
     // factory manifolds

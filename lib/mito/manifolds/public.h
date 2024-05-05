@@ -23,7 +23,6 @@
 #include "metric.h"
 #include "MetricSpace.h"
 #include "Manifold.h"
-#include "Submanifold.h"
 
 // factories implementation
 #include "factories.h"

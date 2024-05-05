@@ -10,13 +10,15 @@
 
 namespace mito::manifolds {
 
-    template <class cellT, geometry::coordinates_c coordsT>
+    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     requires(cellT::dim == coordsT::dim)
     class Manifold {
 
       private:
         // typedef for node
         using node_type = cellT::node_type;
+        // the volume form type
+        using volume_form_type = volumeFormT;
         // the physical dimension of the manifold (that is that of the cell)
         static constexpr int D = cellT::dim;
         // the dimension of the manifold (that is that of the cell)
@@ -24,11 +26,9 @@ namespace mito::manifolds {
         // the dimension of the parametric space
         static constexpr int parametricDim = parametric_dim<typename cellT::simplex_type>();
         // typedef for a point in parametric coordinates
-        using parametric_point_type = parametric_point_t<parametricDim>;
+        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
 
       public:
-        // the dimension of the physical space
-        static constexpr int dim = D;
         // typedef for cell type
         using cell_type = cellT;
         // typedef for mesh type
@@ -40,38 +40,17 @@ namespace mito::manifolds {
         // typedef for a coordinates system
         using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
 
-      private:
-        // the metric field
-        static constexpr auto _metric = metric<coordinates_type>::field();
-        // basis for vector fields
-        template <int I>
-        static constexpr auto _e = fields::uniform_field<coordinates_type>(mito::e<I, N>);
-        // basis for one-form fields
-        // QUESTION: does it make sense to use the metric here since it cancels out with the inverse
-        //  metric?
-        template <int I>
-        static constexpr auto _dx =
-            fields::one_form_field(_e<I>, fields::identity_tensor_field<coordinates_type, N>);
-        // helper function wedging the N basis 1-forms
-        template <int... J>
-        static constexpr auto _wedge(integer_sequence<J...>)
-        requires(sizeof...(J) == N)
-        {
-            // return the basis N-form
-            return fields::wedge(_dx<J>...);
-        }
-        // the metric volume form
-        static constexpr auto _volume_form =
-            fields::sqrt(fields::determinant(_metric)) * _wedge(make_integer_sequence<N>{});
-
       public:
         constexpr Manifold(
-            const mesh_type & mesh, const coordinate_system_type & coordinate_system) :
+            const mesh_type & mesh, const coordinate_system_type & coordinate_system,
+            volume_form_type volume_form) :
             _mesh(mesh),
-            _coordinate_system(coordinate_system)
+            _coordinate_system(coordinate_system),
+            _volume_form(volume_form)
         {}
 
-        constexpr ~Manifold() {}
+        // destructor
+        constexpr ~Manifold() = default;
 
         // default move constructor
         Manifold(Manifold &&) noexcept = default;
@@ -135,22 +114,6 @@ namespace mito::manifolds {
             }
         }
 
-        // get the I-th basis element for vector fields
-        template <int I>
-        constexpr auto e() const
-        {
-            return _e<I>;
-        }
-
-        // get the I-th basis element for one-form fields
-        template <int I>
-        constexpr auto dx() const
-        {
-            return _dx<I>;
-        }
-
-        // QUESTION: we can precompute the element volumes and store them in a data structure. Shall
-        //  we do this here or at a higher level?
         constexpr auto volume() const -> scalar_t
         {
             scalar_t result = 0.0;
@@ -188,17 +151,9 @@ namespace mito::manifolds {
         const mesh_type & _mesh;
         // the coordinate system
         const coordinate_system_type & _coordinate_system;
+        // the volume form
+        volume_form_type _volume_form;
     };
-
-    template <class cellT, geometry::coordinates_c coordsT>
-    std::ostream & operator<<(std::ostream & os, const manifold_t<cellT, coordsT> & manifold)
-    {
-        // print the manifold
-        manifold.print();
-
-        // all done
-        return os;
-    }
 
 }    // namespace mito
 
