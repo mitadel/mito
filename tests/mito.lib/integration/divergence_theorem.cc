@@ -33,14 +33,6 @@ TEST(DivergenceTheorem, Mesh2D)
     // build a scalar field with divergence of field
     constexpr auto div = mito::fields::divergence(f);
 
-    // analytic solution
-    // int_{int} (div f) = int_0^1 int_0^1 y dx dy = 0.5
-    // int_{boundary} (f.n) = int_{right} (f.n) + int_{top} + int_{left} + int_{bot}
-    // int_{right} (f.n) = int_{right} (f0) = int_0^1 xy|(x=1) dy = int_0^1 y dy = 0.5
-    // int_{top} (f.n) = int_{top} (f1) = int_1^0 x^2 dx = int_0^1 x^2 dx = 1/3
-    // int_{left} (f.n) = - int_{left} (f0) = int_0^1 xy|(x=0) dy = 0
-    // int_{bot} (f.n) = - int_{bot} (f1) = - int_0^1 x^2 dx = - 1/3
-
     /**
      * Mesh with four cells:
         (0,1)           (1,1)
@@ -84,7 +76,9 @@ TEST(DivergenceTheorem, Mesh2D)
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     // the integral of the divergence on the body
+    //  int_{int} (div f) = int_0^1 int_0^1 y dx dy = 0.5
     auto resultBody = bodyIntegrator.integrate(div);
+
     // report
     std::cout << "Result of body integration = " << resultBody << std::endl;
 
@@ -117,6 +111,10 @@ TEST(DivergenceTheorem, Mesh2D)
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundary_manifold);
 
     // the integral of the original field on the boundary
+    //  int_{right} (f * n) = int_{right} (f0) = int_0^1 xy|(x=1) dy = int_0^1 y dy = 0.5
+    //  int_{top} (f * n) = int_{top} (f1) = int_1^0 x^2 dx = int_0^1 x^2 dx = 1/3
+    //  int_{left} (f * n) = - int_{left} (f0) = int_0^1 xy|(x=0) dy = 0
+    //  int_{bot} (f * n) = - int_{bot} (f1) = - int_0^1 x^2 dx = - 1/3
     auto resultBoundary = boundary_integrator.integrate(f * n);
 
     // report
