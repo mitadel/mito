@@ -98,8 +98,8 @@ namespace mito::geometry {
         const auto sin_phi_A_B = std::sin(phi_B - phi_A);
 
         return { r_B * (sin_theta_A * sin_theta_B * cos_phi_A_B + cos_theta_A * cos_theta_B) - r_A,
-                 r_B / r_A * (sin_theta_B * cos_theta_A * cos_phi_A_B - sin_theta_A * cos_theta_B),
-                 r_B * sin_theta_B / (r_A * sin_theta_A) * sin_phi_A_B };
+                 r_B * (sin_theta_B * cos_theta_A * cos_phi_A_B - sin_theta_A * cos_theta_B),
+                 r_B * sin_theta_B * sin_phi_A_B };
     }
 }
 
