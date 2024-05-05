@@ -19,16 +19,16 @@ constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
 // the function extracting the x_1 component of a 2D vector
 constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 // the function returning the constant e0 unit vector in 2D
-constexpr auto e0 = mito::functions::constant<coordinates_t>(mito::e_0<2>);
+constexpr auto e0 = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
 // the function returning the constant e1 unit vector in 2D
-constexpr auto e1 = mito::functions::constant<coordinates_t>(mito::e_1<2>);
+constexpr auto e1 = mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
 // euclidean metric
 constexpr auto metric = mito::fields::identity_tensor_field<coordinates_t, 2>;
 
 TEST(DivergenceTheorem, Mesh2D)
 {
-    // a scalar function
-    constexpr auto f = mito::fields::field(x0 * x1 * e0 + x0 * x0 * e1);
+    // a scalar field
+    constexpr auto f = x0 * x1 * e0 + x0 * x0 * e1;
 
     // build a scalar field with divergence of field
     constexpr auto div = mito::fields::divergence(f);
@@ -83,8 +83,8 @@ TEST(DivergenceTheorem, Mesh2D)
     std::cout << "Result of body integration = " << resultBody << std::endl;
 
     // the 2D metric volume element
-    constexpr auto dx = mito::fields::one_form_field(mito::fields::field(e0), metric);
-    constexpr auto dy = mito::fields::one_form_field(mito::fields::field(e1), metric);
+    constexpr auto dx = mito::fields::one_form_field(e0, metric);
+    constexpr auto dy = mito::fields::one_form_field(e1, metric);
     constexpr auto w = mito::fields::wedge(dx, dy);
 
     // TOFIX: Include normal notion on the boundary, so that we can avoid hardcoding
