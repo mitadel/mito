@@ -93,63 +93,36 @@ TEST(DivergenceTheorem, Mesh2D)
     constexpr auto dy = mito::fields::one_form_field(mito::fields::field(e1), metric);
     constexpr auto w = mito::fields::wedge(dx, dy);
 
-    // TOFIX: Include normal notion on the boundary element set, so that we can avoid hardcoding
+    // TOFIX: Include normal notion on the boundary, so that we can avoid hardcoding
     // the normals calculations
-    // the normals to the boundary
-    constexpr auto n_bot = -e1;
-    constexpr auto n_right = e0;
-    constexpr auto n_top = e1;
-    constexpr auto n_left = -e0;
 
-    // the 1D restrictions of the 2D metric volume element for each of the boundaries
-    constexpr auto w_bot = mito::fields::field(
-        [w, n_bot](const coordinates_t & x) -> auto { return w(x)(n_bot(x), _); });
-    constexpr auto w_right = mito::fields::field(
-        [w, n_right](const coordinates_t & x) -> auto { return w(x)(n_right(x), _); });
-    constexpr auto w_top = mito::fields::field(
-        [w, n_top](const coordinates_t & x) -> auto { return w(x)(n_top(x), _); });
-    constexpr auto w_left = mito::fields::field(
-        [w, n_left](const coordinates_t & x) -> auto { return w(x)(n_left(x), _); });
+    // the normal to the boundary
+    constexpr auto n = mito::fields::field([](const coordinates_t & x) {
+        return (x[0] == 0.0) * (-e0(x)) + (x[0] == 1.0) * e0(x) + (x[1] == 0.0) * (-e1(x))
+             + (x[1] == 1.0) * e1(x);
+    });
 
-    // integrator on the bottom boundary
-    auto meshBot = mito::mesh::mesh<mito::geometry::segment_t<2>>();
-    meshBot.insert({ node_0, node_1 });
-    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
-    auto boundaryBot = mito::manifolds::submanifold(meshBot, coord_system, w_bot);
-    auto boundaryBotIntegrator =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryBot);
+    // the 1D restrictions to the boundary of the 2D metric volume element
+    constexpr auto w_boundary =
+        mito::fields::field([w, n](const coordinates_t & x) -> auto { return w(x)(n(x), _); });
 
-    // integrator on the right boundary
-    auto meshRight = mito::mesh::mesh<mito::geometry::segment_t<2>>();
-    meshRight.insert({ node_1, node_2 });
-    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
-    auto boundaryRight = mito::manifolds::submanifold(meshRight, coord_system, w_right);
-    auto boundaryRightIntegrator =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryRight);
+    // the boundary mesh
+    auto boundary_mesh = mito::mesh::boundary(mesh);
 
-    // integrator on the top boundary
-    auto meshTop = mito::mesh::mesh<mito::geometry::segment_t<2>>();
-    meshTop.insert({ node_2, node_4 });
-    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
-    auto boundaryTop = mito::manifolds::submanifold(meshTop, coord_system, w_top);
-    auto boundaryTopIntegrator =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryTop);
+    // the boundary manifold
+    auto boundary_manifold = mito::manifolds::submanifold(boundary_mesh, coord_system, w_boundary);
 
-    // integrator on the left boundary
-    auto meshLeft = mito::mesh::mesh<mito::geometry::segment_t<2>>();
-    meshLeft.insert({ node_4, node_0 });
-    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
-    auto boundaryLeft = mito::manifolds::submanifold(meshLeft, coord_system, w_left);
-    auto boundaryLeftIntegrator =
-        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundaryLeft);
+    // the boundary integrator
+    auto boundary_integrator =
+        mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(boundary_manifold);
 
-    auto resultBoundary =
-        boundaryBotIntegrator.integrate(f * n_bot) + boundaryRightIntegrator.integrate(f * n_right)
-        + boundaryTopIntegrator.integrate(f * n_top) + boundaryLeftIntegrator.integrate(f * n_left);
+    // the integral of the original field on the boundary
+    auto resultBoundary = boundary_integrator.integrate(f * n);
 
+    // report
     std::cout << "Result of boundary integration = " << resultBoundary << std::endl;
 
-    // assert divergence theorem
+    // check that the divergence theorem holds
     EXPECT_DOUBLE_EQ(resultBody, resultBoundary);
 }
 
