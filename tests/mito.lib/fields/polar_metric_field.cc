@@ -26,7 +26,7 @@ static constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_
 static constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<2>);
 
 
-TEST(Manifolds, PolarCoordinates)
+TEST(Fields, PolarCoordinates)
 {
     // the metric field
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt;
