@@ -19,7 +19,7 @@ static constexpr auto r = mito::functions::component<coordinates_t, 0>;
 
 // the basis for vector fields (e_r and e_theta)
 static constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
-static constexpr auto e_t = mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
+static constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
 
 // the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
 static constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<2>);
@@ -29,14 +29,14 @@ static constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_
 TEST(Manifolds, PolarCoordinates)
 {
     // the metric field
-    constexpr auto g = e_rr + r * r * e_tt;
+    constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt;
 
     // the inverse metric field
-    constexpr auto g_inv = e_rr + 1.0 / (r * r) * e_tt;
+    constexpr auto g_inv = mito::fields::inverse(g);
 
     // the basis one-forms
-    constexpr auto dr = mito::fields::one_form_field(g_inv * e_r, g);
-    constexpr auto dt = mito::fields::one_form_field(g_inv * e_t, g);
+    constexpr auto dr = mito::fields::one_form_field(e_r, g_inv);
+    constexpr auto dt = mito::fields::one_form_field(e_t, g_inv);
 
     // a point in space
     constexpr auto r = 2.0;

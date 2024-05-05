@@ -28,8 +28,9 @@ static constexpr auto t = mito::functions::component<spherical_coordinates_t, 1>
 
 // the basis for vector fields
 static constexpr auto e_r = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_0<3>);
-static constexpr auto e_t = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_1<3>);
-static constexpr auto e_p = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_2<3>);
+static constexpr auto e_t = r * mito::fields::uniform_field<spherical_coordinates_t>(mito::e_1<3>);
+static constexpr auto e_p = r * mito::functions::sin(t)
+                          * mito::fields::uniform_field<spherical_coordinates_t>(mito::e_2<3>);
 
 // the basis for diagonal second-order tensor fields (e_rr, e_thetatheta, e_phiphi)
 static constexpr auto e_rr = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_00<3>);
@@ -52,23 +53,19 @@ TEST(Manifolds, HalfSphereSpherical)
         mito::geometry::coordinate_system<spherical_coordinates_t>(cartesian_coord_system);
 
     // the metric field
-    // e_rr + r^2 * e_tt + r^2 sin^2(theta) * e_pp
-    constexpr auto g =
-        e_rr + r * r * e_tt + r * mito::functions::sin(t) * r * mito::functions::sin(t) * e_pp;
+    constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt + (e_p * e_p) * e_pp;
 
     // the inverse metric field
-    // e_rr + 1/r^2 * e_tt + 1/(r^2 sin^2(theta)) * e_pp
-    constexpr auto g_inv = e_rr + 1.0 / (r * r) * e_tt
-                         + 1.0 / (r * mito::functions::sin(t) * r * mito::functions::sin(t)) * e_pp;
+    constexpr auto g_inv = mito::fields::inverse(g);
 
     // the normal field to the submanifold
     constexpr auto normal_field =
         mito::fields::field([](const spherical_coordinates_t & x) -> auto { return e_r(x); });
 
     // the basis one-forms
-    constexpr auto dr = mito::fields::one_form_field(g_inv * e_r, g);
-    constexpr auto dt = mito::fields::one_form_field(g_inv * e_t, g);
-    constexpr auto dp = mito::fields::one_form_field(g_inv * e_p, g);
+    constexpr auto dr = mito::fields::one_form_field(e_r, g_inv);
+    constexpr auto dt = mito::fields::one_form_field(e_t, g_inv);
+    constexpr auto dp = mito::fields::one_form_field(e_p, g_inv);
 
     // the 3D metric volume element
     constexpr auto w =
