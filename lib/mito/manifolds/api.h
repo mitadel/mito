@@ -10,6 +10,10 @@
 
 namespace mito::manifolds {
 
+    // metric space alias
+    template <geometry::coordinates_c coordsT>
+    using metric_space_t = MetricSpace<coordsT>;
+
     // a point in parametric coordinates
     template <int D>
     using parametric_point_t = std::array<double, D>;

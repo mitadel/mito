@@ -10,6 +10,10 @@
 
 namespace mito::manifolds {
 
+    // class metric space
+    template <geometry::coordinates_c coordsT>
+    class MetricSpace;
+
     // class manifold
     template <class cellT, geometry::coordinates_c coordsT>
     requires(cellT::dim == coordsT::dim)

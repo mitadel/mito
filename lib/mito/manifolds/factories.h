@@ -10,6 +10,13 @@
 
 namespace mito::manifolds {
 
+    // factory metric space
+    template <geometry::coordinates_c coordsT>
+    constexpr auto metric_space() -> metric_space_t<coordsT>
+    {
+        return metric_space_t<coordsT>();
+    }
+
     // factory manifolds
     template <class cellT, geometry::coordinates_c coordsT>
     constexpr auto manifold(
