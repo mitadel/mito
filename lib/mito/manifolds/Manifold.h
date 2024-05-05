@@ -151,7 +151,6 @@ namespace mito::manifolds {
 
         // QUESTION: we can precompute the element volumes and store them in a data structure. Shall
         //  we do this here or at a higher level?
-        // QUESTION: does this work for general metric tensors?
         constexpr auto volume() const -> scalar_t
         {
             scalar_t result = 0.0;
