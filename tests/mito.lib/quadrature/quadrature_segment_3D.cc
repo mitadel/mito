@@ -11,16 +11,8 @@
 // strip the namespace
 using mito::geometry::CARTESIAN;
 using mito::quadrature::GAUSS;
-// the placeholder for empty slots in contractions
-using mito::tensor::_;
 // cartesian coordinates in 3D
 using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
-
-
-// the basis for vector fields
-static constexpr auto e_x = mito::e_0<3>;
-static constexpr auto e_y = mito::e_1<3>;
-static constexpr auto e_z = mito::e_2<3>;
 
 
 TEST(Quadrature, Segment3D)
@@ -41,11 +33,14 @@ TEST(Quadrature, Segment3D)
 
     // construct an orthogonal set {v_1}, {v_2}, {v_3} such that {v_1} is parallel to the segment
     constexpr auto v_1 = (x_1 - x_0) / pyre::tensor::norm(x_1 - x_0);
-    constexpr auto v_2_try = e_x;
+    constexpr auto v_2_try = mito::e_0<3>;
     constexpr auto v_2 =
         (v_2_try - (v_2_try * v_1) * v_1) / pyre::tensor::norm(v_2_try - (v_2_try * v_1) * v_1);
     constexpr auto cross = pyre::tensor::cross(v_1, v_2);
     constexpr auto v_3 = cross / pyre::tensor::norm(cross);
+
+    constexpr auto normal_field_1 = mito::fields::uniform_field<coordinates_t>(v_2);
+    constexpr auto normal_field_2 = mito::fields::uniform_field<coordinates_t>(v_3);
 
     // the integrand
     auto f = mito::fields::field([](const coordinates_t & x) { return x[0] * x[1]; });
@@ -54,20 +49,9 @@ TEST(Quadrature, Segment3D)
     auto mesh = mito::mesh::mesh<mito::geometry::segment_t<3>>();
     mesh.insert(segment0);
 
-    // the basis one-forms
-    constexpr auto dx = mito::tensor::one_form(e_x);
-    constexpr auto dy = mito::tensor::one_form(e_y);
-    constexpr auto dz = mito::tensor::one_form(e_z);
-
-    // the 3D metric volume element
-    constexpr auto w = mito::tensor::wedge(dx, dy, dz);
-
-    // the 1D restriction of the 3D metric volume element
-    constexpr auto wS = mito::fields::field(
-        [w, v_2, v_3](const coordinates_t &) -> auto { return w(v_2, v_3, _); });
-
-    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
-    auto manifold = mito::manifolds::submanifold(mesh, coord_system, wS);
+    // create a submanifold on {mesh} with the appropriate normal fields
+    auto manifold =
+        mito::manifolds::submanifold(mesh, coord_system, normal_field_1, normal_field_2);
 
     // a second degree-of-exactness integrator on the submanifold
     auto integrator = mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(manifold);

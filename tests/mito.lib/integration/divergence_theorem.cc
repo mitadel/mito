@@ -22,8 +22,6 @@ constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 constexpr auto e0 = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
 // the function returning the constant e1 unit vector in 2D
 constexpr auto e1 = mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
-// euclidean metric
-constexpr auto metric = mito::fields::identity_tensor_field<coordinates_t, 2>;
 
 TEST(DivergenceTheorem, Mesh2D)
 {
@@ -82,29 +80,21 @@ TEST(DivergenceTheorem, Mesh2D)
     // report
     std::cout << "Result of body integration = " << resultBody << std::endl;
 
-    // the 2D metric volume element
-    constexpr auto dx = mito::fields::one_form_field(e0, metric);
-    constexpr auto dy = mito::fields::one_form_field(e1, metric);
-    constexpr auto w = mito::fields::wedge(dx, dy);
-
     // TOFIX: Include normal notion on the boundary, so that we can avoid hardcoding
     // the normals calculations
 
     // the normal to the boundary
     constexpr auto n = mito::fields::field([](const coordinates_t & x) {
+        // the left, right, bottom and top normals
         return (x[0] == 0.0) * (-e0(x)) + (x[0] == 1.0) * e0(x) + (x[1] == 0.0) * (-e1(x))
              + (x[1] == 1.0) * e1(x);
     });
-
-    // the 1D restrictions to the boundary of the 2D metric volume element
-    constexpr auto w_boundary =
-        mito::fields::field([w, n](const coordinates_t & x) -> auto { return w(x)(n(x), _); });
 
     // the boundary mesh
     auto boundary_mesh = mito::mesh::boundary(mesh);
 
     // the boundary manifold
-    auto boundary_manifold = mito::manifolds::submanifold(boundary_mesh, coord_system, w_boundary);
+    auto boundary_manifold = mito::manifolds::submanifold(boundary_mesh, coord_system, n);
 
     // the boundary integrator
     auto boundary_integrator =

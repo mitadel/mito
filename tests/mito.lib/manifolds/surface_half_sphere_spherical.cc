@@ -12,30 +12,14 @@
 // strip the namespace
 using mito::geometry::CARTESIAN;
 using mito::geometry::SPHERICAL;
-// the placeholder for empty slots in contractions
-using mito::tensor::_;
 
 // spherical coordinates in 3D
 using spherical_coordinates_t = mito::geometry::coordinates_t<3, SPHERICAL>;
 // cartesian coordinates in 3D
 using cartesian_coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
 
-
-// the function extracting the x_0 (i.e. the radial) component of a 3D vector
-static constexpr auto r = mito::functions::component<spherical_coordinates_t, 0>;
-// the function extracting the x_1 (i.e. the theta) component of a 3D vector
-static constexpr auto t = mito::functions::component<spherical_coordinates_t, 1>;
-
 // the basis for vector fields
 static constexpr auto e_r = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_0<3>);
-static constexpr auto e_t = r * mito::fields::uniform_field<spherical_coordinates_t>(mito::e_1<3>);
-static constexpr auto e_p = r * mito::functions::sin(t)
-                          * mito::fields::uniform_field<spherical_coordinates_t>(mito::e_2<3>);
-
-// the basis for diagonal second-order tensor fields (e_rr, e_thetatheta, e_phiphi)
-static constexpr auto e_rr = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_00<3>);
-static constexpr auto e_tt = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_11<3>);
-static constexpr auto e_pp = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_22<3>);
 
 
 TEST(Manifolds, HalfSphereSpherical)
@@ -52,33 +36,11 @@ TEST(Manifolds, HalfSphereSpherical)
     auto coord_system =
         mito::geometry::coordinate_system<spherical_coordinates_t>(cartesian_coord_system);
 
-    // the metric field
-    constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt + (e_p * e_p) * e_pp;
-
-    // the inverse metric field
-    constexpr auto g_inv = mito::fields::inverse(g);
-
     // the normal field to the submanifold
-    constexpr auto normal_field =
-        mito::fields::field([](const spherical_coordinates_t & x) -> auto { return e_r(x); });
+    constexpr auto normal_field = e_r;
 
-    // the basis one-forms
-    constexpr auto dr = mito::fields::one_form_field(e_r, g_inv);
-    constexpr auto dt = mito::fields::one_form_field(e_t, g_inv);
-    constexpr auto dp = mito::fields::one_form_field(e_p, g_inv);
-
-    // the 3D metric volume element
-    constexpr auto w =
-        mito::fields::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt, dp);
-
-    // the 2D restriction of the 3D metric volume element
-    constexpr auto wS =
-        mito::fields::field([w, normal_field](const spherical_coordinates_t & x) -> auto {
-            return w(x)(normal_field(x), _, _);
-        });
-
-    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
-    auto manifold = mito::manifolds::submanifold(mesh, coord_system, wS);
+    // create a submanifold on {mesh} with the appropriate normal field
+    auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
 
     // compute the area of the manifold
     mito::scalar_t area = manifold.volume();
