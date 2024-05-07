@@ -23,6 +23,35 @@ namespace mito::manifolds {
         // typedef for a set of coordinates
         using coordinates_type = coordsT;
 
+      public:
+        // get the I-th basis element for vector fields
+        template <int I>
+        constexpr auto e() const;
+
+        // get metric
+        constexpr auto g() const;
+
+        // get the I-th basis element for one-form fields
+        template <int I>
+        constexpr auto dx() const;
+
+        // get the metric volume form
+        constexpr auto w() const;
+
+        // get the metric equivalent vector field to a given one-form field
+        constexpr auto metric_equivalent_vector(
+            const fields::one_form_field_c auto & one_form) const;
+
+        // get the metric equivalent form field to a given vector field
+        constexpr auto metric_equivalent_form(const fields::vector_field_c auto & vector) const;
+
+      private:
+        // get the one form representing the contraction with {matrix} and {vector}
+        template <
+            fields::vector_field_c vectorFieldT, fields::symmetric_tensor_field_c tensorFieldT>
+        static constexpr auto _one_form(const vectorFieldT & vector, const tensorFieldT & matrix)
+        requires(fields::compatible_fields_c<vectorFieldT, tensorFieldT>);
+
       private:
         // the coordinate basis for vector fields
         template <int I>
@@ -38,7 +67,7 @@ namespace mito::manifolds {
         // the dual basis for one-form fields
         template <int I>
         requires(I >= 0 && I < D)
-        static constexpr auto _dx = metric_equivalent_form(_e<I>, _g_inv);
+        static constexpr auto _dx = _one_form(_e<I>, _g_inv);
 
         // helper function wedging the N basis 1-forms
         template <int... J>
@@ -52,66 +81,15 @@ namespace mito::manifolds {
         // the metric volume form
         static constexpr auto _w =
             fields::sqrt(fields::determinant(_g)) * _wedge(make_integer_sequence<D>{});
-
-      public:
-        // get the I-th basis element for vector fields
-        template <int I>
-        constexpr auto e() const
-        {
-            // all done
-            return _e<I>;
-        }
-
-        // get metric
-        constexpr auto g() const
-        {
-            // all done
-            return _g;
-        }
-
-        // get the I-th basis element for one-form fields
-        template <int I>
-        constexpr auto dx() const
-        {
-            // all done
-            return _dx<I>;
-        }
-
-        // get the metric volume form
-        constexpr auto w() const
-        {
-            // all done
-            return _w;
-        }
-
-        // get the metric equivalent vector field to a given one-form field
-        constexpr auto metric_equivalent_vector(
-            const fields::one_form_field_c auto & one_form) const
-        {
-            // return a vector field that, once evaluated at {x}...
-            return fields::field(functions::function([one_form, *this](const coordinates_type & x) {
-                // returns the contraction of the inverse metric with the components of the one form
-                auto _one_form_components = [one_form, x]<int... K>(integer_sequence<K...>) {
-                    return ((one_form(x)(_e<K>(x)) * _g_inv(x) * _e<K>(x)) + ...);
-                };
-
-                // all done
-                return _one_form_components(make_integer_sequence<D>{});
-            }));
-        }
-
-        // get the metric equivalent form field to a given vector field
-        constexpr auto metric_equivalent_form(const fields::vector_field_c auto & vector) const
-        {
-            // return a one form field that, once evaluated at {x}...
-            return fields::field(functions::function([vector, *this](const coordinates_type & x) {
-                // returns the metric equivalent form to {vector(x)}
-                return tensor::one_form(vector(x), _g(x));
-            }));
-        }
     };
 
 }    // namespace mito
+
+
+// get the inline definitions
+#define mito_manifolds_metric_space_icc
+#include "MetricSpace.icc"
+#undef mito_manifolds_metric_space_icc
 
 
 #endif
