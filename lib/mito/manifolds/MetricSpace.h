@@ -83,6 +83,22 @@ namespace mito::manifolds {
             // all done
             return _w;
         }
+
+        // get the metric equivalent vector field to a given one-form field
+        constexpr auto metric_equivalent_vector(
+            const fields::one_form_field_c auto & one_form) const
+        {
+            // return a vector field that, once evaluated at {x}...
+            return fields::field(functions::function([one_form, *this](const coordinates_type & x) {
+                // returns the contraction of the inverse metric with the components of the one form
+                auto _one_form_components = [one_form, x]<int... K>(integer_sequence<K...>) {
+                    return ((one_form(x)(_e<K>(x)) * _g_inv(x) * _e<K>(x)) + ...);
+                };
+
+                // all done
+                return _one_form_components(make_integer_sequence<D>{});
+            }));
+        }
     };
 
 }    // namespace mito
