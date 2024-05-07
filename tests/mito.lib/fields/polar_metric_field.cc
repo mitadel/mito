@@ -17,17 +17,17 @@ using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
 // the function extracting the x_0 (i.e. the radial) component of 2D vector
 static constexpr auto r = mito::functions::component<coordinates_t, 0>;
 
-// the basis for vector fields (e_r and e_theta)
-static constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
-static constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
-
-// the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
-static constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<2>);
-static constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<2>);
-
 
 TEST(Fields, PolarCoordinates)
 {
+    // the basis for vector fields (e_r and e_theta)
+    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
+    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
+
+    // the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
+    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<2>);
+    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<2>);
+
     // the metric field
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt;
 
@@ -35,8 +35,11 @@ TEST(Fields, PolarCoordinates)
     constexpr auto g_inv = mito::fields::inverse(g);
 
     // the basis one-forms
-    constexpr auto dr = mito::fields::one_form_field(e_r, g_inv);
-    constexpr auto dt = mito::fields::one_form_field(e_t, g_inv);
+    constexpr auto dr = mito::fields::field(
+        [e_r, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_r(x), g_inv(x)); });
+
+    constexpr auto dt = mito::fields::field(
+        [e_t, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_t(x), g_inv(x)); });
 
     // a point in space
     constexpr auto r = 2.0;

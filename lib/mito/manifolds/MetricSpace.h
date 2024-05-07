@@ -38,7 +38,7 @@ namespace mito::manifolds {
         // the dual basis for one-form fields
         template <int I>
         requires(I >= 0 && I < D)
-        static constexpr auto _dx = fields::one_form_field(_e<I>, _g_inv);
+        static constexpr auto _dx = metric_equivalent_form(_e<I>, _g_inv);
 
         // helper function wedging the N basis 1-forms
         template <int... J>
@@ -97,6 +97,16 @@ namespace mito::manifolds {
 
                 // all done
                 return _one_form_components(make_integer_sequence<D>{});
+            }));
+        }
+
+        // get the metric equivalent form field to a given vector field
+        constexpr auto metric_equivalent_form(const fields::vector_field_c auto & vector) const
+        {
+            // return a one form field that, once evaluated at {x}...
+            return fields::field(functions::function([vector, *this](const coordinates_type & x) {
+                // returns the metric equivalent form to {vector(x)}
+                return tensor::one_form(vector(x), _g(x));
             }));
         }
     };

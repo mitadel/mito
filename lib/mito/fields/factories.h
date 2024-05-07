@@ -37,21 +37,6 @@ namespace mito::fields {
     {
         return field(mito::functions::constant<coordType>(constant));
     }
-
-    // construct a one-form based on its metric-equivalent vector field
-    template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
-    constexpr auto one_form_field(const vectorFieldT & vector, const tensorFieldT & metric)
-    requires(compatible_fields_c<vectorFieldT, tensorFieldT>)
-    {
-        // the coordinate type
-        using coordinates_t = typename vectorFieldT::coordinates_type;
-
-        // return a one-form that, when contracted with {x}...
-        return field(functions::function([vector, metric](const coordinates_t & x) {
-            // ... returns the contraction of {vector} with {x}
-            return tensor::one_form(vector(x), metric(x));
-        }));
-    }
 }
 
 

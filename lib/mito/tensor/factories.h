@@ -24,28 +24,28 @@ namespace mito::tensor {
         return form_t<P, F>(std::forward<F>(f));
     }
 
-    // construct a one-form based on its metric-equivalent vector (case: symmetric metric)
+    // construct a one-form that, given a vector {vector} and a (symmetric) matrix {matrix},
+    // operates on vectors by contracting them with {matrix} and {vector}
     template <int D>
-    constexpr auto one_form(
-        const mito::vector_t<D> & vector, const mito::symmetric_matrix_t<D> & metric)
+    constexpr auto one_form(const vector_t<D> & vector, const symmetric_matrix_t<D> & matrix)
     {
         // return a one-form that, when contracted with {v}...
-        return one_form([vector, metric](const mito::vector_t<D> & v) -> mito::scalar_t {
-            // ... returns the contraction of {metric} with {vector} and {v}
-            return metric * vector * v;
+        return one_form([vector, matrix](const vector_t<D> & v) -> scalar_t {
+            // ... returns the contraction of {matrix} with {vector} and {v}
+            return matrix * vector * v;
         });
     }
 
-    // construct a one-form based on its metric-equivalent vector (case: diagonal metric)
+    // construct a one-form that, given a vector {vector} and a (diagonal) matrix {matrix},
+    // operates on vectors by contracting them with {matrix} and {vector}
     template <int D>
     constexpr auto one_form(
-        const mito::vector_t<D> & vector,
-        const mito::diagonal_matrix_t<D> & metric = mito::identity<D>)
+        const vector_t<D> & vector, const diagonal_matrix_t<D> & matrix = identity<D>)
     {
         // return a one-form that, when contracted with {v}...
-        return one_form([vector, metric](const mito::vector_t<D> & v) -> mito::scalar_t {
-            // ... returns the contraction of {metric} with {vector} and {v}
-            return metric * vector * v;
+        return one_form([vector, matrix](const vector_t<D> & v) -> scalar_t {
+            // ... returns the contraction of {matrix} with {vector} and {v}
+            return matrix * vector * v;
         });
     }
 }

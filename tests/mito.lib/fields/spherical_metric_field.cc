@@ -18,20 +18,20 @@ static constexpr auto r = mito::functions::component<coordinates_t, 0>;
 // the function extracting the x_1 (i.e. the theta) component of a 3D vector
 static constexpr auto t = mito::functions::component<coordinates_t, 1>;
 
-// the basis for vector fields (e_r, e_theta, e_phi)
-static constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<3>);
-static constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::e_1<3>);
-static constexpr auto e_p =
-    r * mito::functions::sin(t) * mito::fields::uniform_field<coordinates_t>(mito::e_2<3>);
-
-// the basis for diagonal second-order tensor fields (e_rr, e_thetatheta, e_phiphi)
-static constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<3>);
-static constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<3>);
-static constexpr auto e_pp = mito::fields::uniform_field<coordinates_t>(mito::e_22<3>);
-
 
 TEST(Manifolds, SphericalCoordinates)
 {
+    // the basis for vector fields (e_r, e_theta, e_phi)
+    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<3>);
+    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::e_1<3>);
+    constexpr auto e_p =
+        r * mito::functions::sin(t) * mito::fields::uniform_field<coordinates_t>(mito::e_2<3>);
+
+    // the basis for diagonal second-order tensor fields (e_rr, e_thetatheta, e_phiphi)
+    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<3>);
+    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<3>);
+    constexpr auto e_pp = mito::fields::uniform_field<coordinates_t>(mito::e_22<3>);
+
     // the metric field
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt + (e_p * e_p) * e_pp;
 
@@ -39,9 +39,12 @@ TEST(Manifolds, SphericalCoordinates)
     constexpr auto g_inv = mito::fields::inverse(g);
 
     // the basis one-forms
-    constexpr auto dr = mito::fields::one_form_field(e_r, g_inv);
-    constexpr auto dt = mito::fields::one_form_field(e_t, g_inv);
-    constexpr auto dp = mito::fields::one_form_field(e_p, g_inv);
+    constexpr auto dr = mito::fields::field(
+        [e_r, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_r(x), g_inv(x)); });
+    constexpr auto dt = mito::fields::field(
+        [e_t, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_t(x), g_inv(x)); });
+    constexpr auto dp = mito::fields::field(
+        [e_p, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_p(x), g_inv(x)); });
 
     // a point in space
     constexpr auto r = 2.0;
