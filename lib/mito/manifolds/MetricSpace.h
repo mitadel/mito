@@ -58,12 +58,14 @@ namespace mito::manifolds {
         template <int I>
         constexpr auto e() const
         {
+            // all done
             return _e<I>;
         }
 
         // get metric
         constexpr auto g() const
         {
+            // all done
             return _g;
         }
 
@@ -71,11 +73,16 @@ namespace mito::manifolds {
         template <int I>
         constexpr auto dx() const
         {
+            // all done
             return _dx<I>;
         }
 
         // get the metric volume form
-        constexpr auto w() const { return _w; }
+        constexpr auto w() const
+        {
+            // all done
+            return _w;
+        }
     };
 
 }    // namespace mito
