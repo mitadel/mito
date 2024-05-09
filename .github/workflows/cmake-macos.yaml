@@ -191,7 +191,7 @@ jobs:
         run: |
           echo " -- checking mito app template"
           cmake .; make; ./main
-        working-directory: ${{runner.temp}}/apps/template
+        working-directory: ${{github.workspace}}/mito/apps/template
 
       - name: create artifact
         if: ${{!cancelled()}}
