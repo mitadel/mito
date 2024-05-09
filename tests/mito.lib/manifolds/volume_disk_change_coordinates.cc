@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/mito.h>
+#include <mito.h>
 
 
 // cartesian coordinates in 2D

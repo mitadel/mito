@@ -8,7 +8,7 @@
 #define mito_py_external_h
 
 // mito support
-#include <mito/mito.h>
+#include <mito.h>
 
 // pybind11
 #include <pybind11/pybind11.h>

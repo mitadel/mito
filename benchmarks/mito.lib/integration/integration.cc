@@ -3,7 +3,7 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
-#include <mito/mito.h>
+#include <mito.h>
 
 
 // cartesian coordinates in 2D
