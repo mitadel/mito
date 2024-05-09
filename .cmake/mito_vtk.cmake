@@ -18,7 +18,7 @@ if(WITH_VTK)
     # include VTK headers
     target_include_directories(mito PUBLIC ${VTK_INCLUDE_DIRS})
     # link against VTK libraries
-    target_link_libraries(mito ${VTK_LIBRARIES})
+    target_link_libraries(mito PUBLIC ${VTK_LIBRARIES})
 endif()
 
 

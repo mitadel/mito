@@ -18,7 +18,7 @@ if(WITH_MPI)
     # include MPI headers
     target_include_directories(mito PUBLIC ${MPI_INCLUDE_PATH})
     # link against MPI libraries
-    target_link_libraries(mito MPI::MPI_CXX)
+    target_link_libraries(mito PUBLIC MPI::MPI_CXX)
 endif()
 
 
