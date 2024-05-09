@@ -16,7 +16,7 @@ if(WITH_METIS)
     # add compiler definitions
     add_definitions(-DWITH_METIS)
     # include METIS headers
-    include_directories(${METIS_INCLUDE_DIRS})
+    target_include_directories(mito PUBLIC ${METIS_INCLUDE_DIRS})
     # link against METIS libraries
     target_link_libraries(mito ${METIS_LIBRARIES})
 endif()
