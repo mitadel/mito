@@ -6,3 +6,24 @@
 
 include(${CMAKE_CURRENT_LIST_DIR}/mito-targets.cmake)
 check_required_components(mito)
+
+# support for searching dependencies
+include(CMakeFindDependencyMacro)
+
+# pyre dependency
+find_dependency(pyre)
+
+# mpi dependency
+if(@WITH_MPI@)
+  find_dependency(MPI)
+endif(@WITH_MPI@)
+
+# metis dependency
+if(@WITH_METIS@)
+  find_dependency(METIS)
+endif(@WITH_METIS@)
+
+# vtk dependency
+if(@WITH_VTK@)
+  find_dependency(VTK)
+endif(@WITH_VTK@)
