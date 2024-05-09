@@ -4,7 +4,9 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito.h>
+#include <mito/base.h>
+#include <mito/io.h>
+#include <mito/manifolds.h>
 
 
 // cartesian coordinates in 2D
