@@ -146,7 +146,6 @@ namespace mito::io::summit {
             int cell_type = 0;
             fileStream >> cell_type;
 
-            // TODO: add read segment
             if (cell_type == 2) {
                 readSegment(fileStream, mesh, nodes);
             } else {
@@ -167,7 +166,6 @@ namespace mito::io::summit {
             int cell_type = 0;
             fileStream >> cell_type;
 
-            // TODO: add read segment
             if (cell_type == 3) {
                 readTriangle(fileStream, mesh, nodes);
             } else {
