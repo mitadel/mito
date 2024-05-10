@@ -183,7 +183,7 @@ jobs:
           mkdir build_app
           cd build_app
           echo " -- configuring the build"
-          cmake -DCMAKE_MODULE_PATH="${CMAKE_MODULE_PATH} ${{github.workspace}}/mito/.cmake" -Dmito_DIR=${{runner.temp}}/mito_install/share/cmake/mito -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre ${{github.workspace}}/mito/apps/template
+          cmake -DCMAKE_MODULE_PATH="${{github.workspace}}/mito/.cmake" -Dmito_DIR=${{runner.temp}}/mito_install/share/cmake/mito -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre ${{github.workspace}}/mito/apps/template
           echo " -- building mito template app"
           make
           echo " -- running mito template app"
