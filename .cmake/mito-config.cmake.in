@@ -6,3 +6,30 @@
 
 include(${CMAKE_CURRENT_LIST_DIR}/mito-targets.cmake)
 check_required_components(mito)
+
+# request c++20
+set(CMAKE_CXX_STANDARD 20)
+
+# support for searching dependencies
+include(CMakeFindDependencyMacro)
+
+# pyre dependency
+find_dependency(pyre)
+
+# mpi dependency
+if(@WITH_MPI@)
+  find_dependency(MPI)
+  add_definitions(-DWITH_MPI)
+endif(@WITH_MPI@)
+
+# metis dependency
+if(@WITH_METIS@)
+  find_dependency(METIS)
+  add_definitions(-DWITH_METIS)
+endif(@WITH_METIS@)
+
+# vtk dependency
+if(@WITH_VTK@)
+  find_dependency(VTK)
+  add_definitions(-DWITH_VTK)
+endif(@WITH_VTK@)

@@ -40,7 +40,13 @@ function(mito_mitoLib)
         mito
     )
 
-    # install all the mito headers
+    # install the mito main header
+    install(
+        FILES ${CMAKE_CURRENT_SOURCE_DIR}/lib/mito.h
+        DESTINATION ${MITO_DEST_INCLUDE}
+    )
+
+    # install all the other mito headers
     install(
         DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/mito
         DESTINATION ${MITO_DEST_INCLUDE}

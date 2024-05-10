@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/mito.h>
+#include <mito.h>
 
 
 // strip the namespace

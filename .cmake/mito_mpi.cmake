@@ -16,9 +16,9 @@ if(WITH_MPI)
     # add compiler definitions
     add_definitions(-DWITH_MPI)
     # include MPI headers
-    include_directories(${MPI_INCLUDE_PATH})
+    target_include_directories(mito SYSTEM PUBLIC ${MPI_INCLUDE_PATH})
     # link against MPI libraries
-    target_link_libraries(mito MPI::MPI_CXX)
+    target_link_libraries(mito PUBLIC MPI::MPI_CXX)
 endif()
 
 

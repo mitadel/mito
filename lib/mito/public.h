@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_h)
-#define mito_h
+#if !defined(mito_public_h)
+#define mito_public_h
 
 // support
 #include "base.h"
