@@ -28,13 +28,13 @@ namespace mito::io::summit {
         // type of point
         using point_type = geometry::point_t<D>;
 
-        // id type of point
+        // type of point id
         using point_id_type = utilities::index_t<point_type>;
 
-        // allocate memory for points
+        // a map between point ids to points
         std::unordered_map<point_id_type, const point_type &> points;
 
-        // get the points corresponding to the mesh nodes
+        // insert the points corresponding to the mesh nodes
         for (const auto & cell : mesh.cells()) {
             for (const auto & node : cell.nodes()) {
                 const auto & point = node.point();
@@ -42,22 +42,24 @@ namespace mito::io::summit {
             }
         }
 
-        // populate the heading
+        // populate the file heading
+        // TOFIX: number of materials is always 1 for now
         outfile << D << std::endl;
         outfile << std::size(points) << " " << mesh.nCells() << " " << 1 << std::endl;
 
-        // write the points
+        // write the points to file
         for (const auto & [_, point] : points) {
             const auto & coord = coordinate_system.coordinates(point);
             outfile << std::setprecision(15) << coord << std::endl;
         }
 
-        // write the cells
+        // write the cells to file
         for (const auto & cell : mesh.cells()) {
             outfile << cellT::n_vertices << " ";
             for (const auto & node : cell.nodes()) {
                 outfile << distance(points.begin(), points.find(node.point().id())) + 1 << " ";
             }
+            // TOFIX: material label is always 1 for now
             outfile << 1 << std::endl;
         }
 
