@@ -19,14 +19,17 @@ find_dependency(pyre)
 # mpi dependency
 if(@WITH_MPI@)
   find_dependency(MPI)
+  add_definitions(-DWITH_MPI)
 endif(@WITH_MPI@)
 
 # metis dependency
 if(@WITH_METIS@)
   find_dependency(METIS)
+  add_definitions(-DWITH_METIS)
 endif(@WITH_METIS@)
 
 # vtk dependency
 if(@WITH_VTK@)
   find_dependency(VTK)
+  add_definitions(-DWITH_VTK)
 endif(@WITH_VTK@)
