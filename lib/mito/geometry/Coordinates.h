@@ -128,8 +128,17 @@ namespace mito::geometry {
     template <int D, CoordinateType coordT>
     std::ostream & operator<<(std::ostream & os, const Coordinates<D, coordT> & coord) noexcept
     {
+
+        // helper function to print D components
+        constexpr auto _print = []<size_t... I>(
+                                    std::ostream & os, const Coordinates<D, coordT> & coord,
+                                    std::index_sequence<I...>) {
+            // print the coordinates
+            ((os << coord[I] << " "), ...);
+        };
+
         // print the coordinates
-        coord.print();
+        _print(os, coord, std::make_index_sequence<D>{});
 
         // all done
         return os;
