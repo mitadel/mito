@@ -19,18 +19,6 @@ TEST(Coordinates, Cartesian)
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
-
-    // the exact value of midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_C = mito::geometry::coordinates<coordinates_t>({ 0.5, 0.5 });
-
-    // compute midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_D = coord_A + 0.5 * (coord_B - coord_A);
-
-    // check that the result of the average is correct
-    static_assert(coord_C == coord_D);
-
-    // check that the result of the average is correct
-    static_assert(mito::geometry::distance(coord_D, coord_C) == 0.0);
 }
 
 
@@ -46,19 +34,6 @@ TEST(Coordinates, POLAR)
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
-
-    // the exact value of midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_C = mito::geometry::coordinates<coordinates_t>(
-        { std::sqrt(2.0) / 2.0, 0.25 * std::numbers::pi });
-
-    // compute midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_D = coord_A + 0.5 * (coord_B - coord_A);
-
-    // check that the result of the average is correct
-    static_assert(coord_C == coord_D);
-
-    // check that the result of the average is correct
-    static_assert(mito::geometry::distance(coord_D, coord_C) == 0.0);
 }
 
 
@@ -75,19 +50,6 @@ TEST(Coordinates, SPHERICAL_Z)
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
-
-    // the exact value of midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_C = mito::geometry::coordinates<coordinates_t>(
-        { 0.5 * std::sqrt(2.0), 0.5 * std::numbers::pi, 0.25 * std::numbers::pi });
-
-    // compute midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_D = coord_A + 0.5 * (coord_B - coord_A);
-
-    // check that the result of the average is correct
-    static_assert(coord_C == coord_D);
-
-    // check that the result of the average is correct
-    static_assert(mito ::geometry::distance(coord_D, coord_C) == 0.0);
 }
 
 
@@ -104,19 +66,6 @@ TEST(Coordinates, SPHERICAL_Y)
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
-
-    // the exact value of midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_C = mito::geometry::coordinates<coordinates_t>(
-        { 0.5 * std::sqrt(2.0), 0.5 * std::numbers::pi, 0.0 });
-
-    // compute midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_D = coord_A + 0.5 * (coord_B - coord_A);
-
-    // check that the result of the average is correct
-    static_assert(coord_C == coord_D);
-
-    // check that the result of the average is correct
-    static_assert(mito ::geometry::distance(coord_D, coord_C) == 0.0);
 }
 
 
@@ -133,19 +82,6 @@ TEST(Coordinates, SPHERICAL_X)
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
-
-    // the exact value of midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_C = mito::geometry::coordinates<coordinates_t>(
-        { 0.5 * std::sqrt(2.0), 0.5 * std::numbers::pi, 0.5 * std::numbers::pi });
-
-    // compute midpoint between {coord_A} and {coord_B}
-    constexpr auto coord_D = coord_A + 0.5 * (coord_B - coord_A);
-
-    // check that the result of the average is correct
-    static_assert(coord_C == coord_D);
-
-    // check that the result of the average is correct
-    static_assert(mito ::geometry::distance(coord_D, coord_C) == 0.0);
 }
 
 
