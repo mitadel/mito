@@ -17,10 +17,10 @@ namespace mito::geometry {
     constexpr auto transform_coordinates<coordinates_t<2, POLAR>, coordinates_t<2, CARTESIAN>>(
         const coordinates_t<2, CARTESIAN> & coordinates) -> coordinates_t<2, POLAR>
     {
-        scalar_t x = coordinates[0];
-        scalar_t y = coordinates[1];
-        scalar_t r = std::sqrt(x * x + y * y);
-        scalar_t theta = std::atan2(y, x);
+        auto x = coordinates[0];
+        auto y = coordinates[1];
+        auto r = std::sqrt(x * x + y * y);
+        auto theta = std::atan2(y, x);
         return { r, theta };
     }
 
@@ -28,10 +28,10 @@ namespace mito::geometry {
     constexpr auto transform_coordinates<coordinates_t<2, CARTESIAN>, coordinates_t<2, POLAR>>(
         const coordinates_t<2, POLAR> & coordinates) -> coordinates_t<2, CARTESIAN>
     {
-        scalar_t r = coordinates[0];
-        scalar_t theta = coordinates[1];
-        scalar_t x = r * std::cos(theta);
-        scalar_t y = r * std::sin(theta);
+        auto r = coordinates[0];
+        auto theta = coordinates[1];
+        auto x = r * std::cos(theta);
+        auto y = r * std::sin(theta);
         return { x, y };
     }
 
@@ -39,13 +39,13 @@ namespace mito::geometry {
     constexpr auto transform_coordinates<coordinates_t<3, SPHERICAL>, coordinates_t<3, CARTESIAN>>(
         const coordinates_t<3, CARTESIAN> & coordinates) -> coordinates_t<3, SPHERICAL>
     {
-        scalar_t x = coordinates[0];
-        scalar_t y = coordinates[1];
-        scalar_t z = coordinates[2];
+        auto x = coordinates[0];
+        auto y = coordinates[1];
+        auto z = coordinates[2];
 
-        scalar_t r = std::sqrt(x * x + y * y + z * z);
-        mito::scalar_t theta = std::atan2(std::hypot(y, x), z);
-        mito::scalar_t phi = std::atan2(y, x);
+        auto r = std::sqrt(x * x + y * y + z * z);
+        auto theta = std::atan2(std::hypot(y, x), z);
+        auto phi = std::atan2(y, x);
 
         return { r, theta, phi };
     }
@@ -54,12 +54,12 @@ namespace mito::geometry {
     constexpr auto transform_coordinates<coordinates_t<3, CARTESIAN>, coordinates_t<3, SPHERICAL>>(
         const coordinates_t<3, SPHERICAL> & coordinates) -> coordinates_t<3, CARTESIAN>
     {
-        scalar_t r = coordinates[0];
-        scalar_t theta = coordinates[1];
-        scalar_t phi = coordinates[2];
-        scalar_t x = r * std::sin(theta) * std::cos(phi);
-        scalar_t y = r * std::sin(theta) * std::sin(phi);
-        scalar_t z = r * std::cos(theta);
+        auto r = coordinates[0];
+        auto theta = coordinates[1];
+        auto phi = coordinates[2];
+        auto x = r * std::sin(theta) * std::cos(phi);
+        auto y = r * std::sin(theta) * std::sin(phi);
+        auto z = r * std::cos(theta);
         return { x, y, z };
     }
 }
