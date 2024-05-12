@@ -10,38 +10,13 @@
 
 namespace mito::geometry {
 
-    // multiplication of coordinates xA * b
-    template <int D, CoordinateType coordT>
-    constexpr auto operator*(const Coordinates<D, coordT> & xA, const scalar_t & b)
-        -> Coordinates<D, coordT>
-    {
-        return b * xA;
-    }
-
-    // division of coordinates xA / b
-    template <int D, CoordinateType coordT>
-    constexpr auto operator/(const Coordinates<D, coordT> & xA, const scalar_t & b)
-        -> Coordinates<D, coordT>
-    {
-        return (1.0 / b) * xA;
-    }
-
     // operator+=
     template <int D, CoordinateType coordT>
-    constexpr auto operator+=(Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+    constexpr auto operator+=(Coordinates<D, coordT> & A, const vector_t<D> & v)
         -> Coordinates<D, coordT> &
     {
-        xA = xA + xB;
-        return xA;
-    }
-
-    // operator/=
-    template <int D, CoordinateType coordT>
-    constexpr auto operator/=(Coordinates<D, coordT> & xA, const scalar_t & b)
-        -> Coordinates<D, coordT> &
-    {
-        xA = xA / b;
-        return xA;
+        A = A + v;
+        return A;
     }
 
     template <int D, CoordinateType coordT>

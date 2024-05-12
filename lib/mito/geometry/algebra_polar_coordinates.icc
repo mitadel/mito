@@ -10,53 +10,37 @@
 
 namespace mito::geometry {
 
-    // addition of polar coordinates xA + xB
+    // addition of polar coordinates {A} and vector {v} stemming from point A
     template <>
-    constexpr auto operator+(const Coordinates<2, POLAR> & xA, const Coordinates<2, POLAR> & xB)
+    constexpr auto operator+(const Coordinates<2, POLAR> & A, const vector_t<2> & v)
         -> Coordinates<2, POLAR>
     {
-        // get the radius and angle of the two points
-        const auto & r_A = xA._array[0];
-        const auto & r_B = xB._array[0];
-        const auto & theta_A = xA._array[1];
-        const auto & theta_B = xB._array[1];
+        // get r and theta of point A
+        const auto & r_A = A._array[0];
+        const auto & theta_A = A._array[1];
 
-        // the angle of the sum of the two points
-        auto r_AB_c = r_A * std::cos(theta_A) + r_B * std::cos(theta_B);
-        auto r_AB_s = r_A * std::sin(theta_A) + r_B * std::sin(theta_B);
-        auto theta_AB = std::atan2(r_AB_s, r_AB_c);
+        // get the radial and hoop component of vector {v}
+        const auto & v_r = v[0];
+        const auto v_theta = v[1] / r_A;
 
-        // the radius of the sum of the two points
-        auto r_AB =
-            std::sqrt(r_A * r_A + r_B * r_B + 2.0 * r_A * r_B * std::cos(theta_A - theta_B));
+        // compute r and theta of point B, which is point A plus vector {v}
+        auto r_B = std::sqrt((r_A + v_r) * (r_A + v_r) + v_theta * r_A * v_theta * r_A);
+        auto theta_B = theta_A + std::atan2(v_theta * r_A, r_A + v_r);
 
         // all done
-        return Coordinates<2, POLAR>({ r_AB, theta_AB });
+        return Coordinates<2, POLAR>({ r_B, theta_B });
     }
 
-    // multiplication of polar coordinates a * xB
+    // subtraction of coordinates A - B, returns a vector stemming from B
     template <>
-    constexpr auto operator*(const scalar_t & a, const Coordinates<2, POLAR> & xB)
-        -> Coordinates<2, POLAR>
-    {
-        // get the radius and angle of the point
-        const auto r_B = xB._array[0];
-        const auto theta_B = xB._array[1];
-
-        // scale the radius and return
-        return Coordinates<2, POLAR>({ a * r_B, theta_B });
-    }
-
-    // subtraction of coordinates xA - xB
-    template <>
-    constexpr auto operator-(const Coordinates<2, POLAR> & xA, const Coordinates<2, POLAR> & xB)
+    constexpr auto operator-(const Coordinates<2, POLAR> & A, const Coordinates<2, POLAR> & B)
         -> mito::vector_t<2>
     {
         // get the radius and angle of the two points
-        const auto & r_A = xA._array[0];
-        const auto & r_B = xB._array[0];
-        const auto & theta_A = xA._array[1];
-        const auto & theta_B = xB._array[1];
+        const auto & r_A = A._array[0];
+        const auto & r_B = B._array[0];
+        const auto & theta_A = A._array[1];
+        const auto & theta_B = B._array[1];
 
         return { r_A * std::cos(theta_A - theta_B) - r_B, r_A * std::sin(theta_A - theta_B) };
     }

@@ -108,7 +108,7 @@ namespace mito::geometry {
             -> coordinates_type
         {
             // easy enough
-            return 0.5 * (coordinates(point_a) + coordinates(point_b));
+            return coordinates(point_a) + 0.5 * (coordinates(point_b) - coordinates(point_a));
         }
 
         // support for ranged for loops

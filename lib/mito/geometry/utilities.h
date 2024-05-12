@@ -15,17 +15,20 @@ namespace mito::geometry {
     constexpr auto barycenter(
         const cellT & cell, const coordinate_system_t<coordT> & coordinate_system) -> coordT
     {
-        // the barycenter
-        coordT result;
+        // get the coordinates of the first node
+        auto coord_0 = coordinate_system.coordinates(cell.nodes()[0].point());
+
+        // the vector going from {coord_0} to the barycenter (initialize with the zero vector)
+        auto result = coord_0 - coord_0;
 
         // average the position of each vertex
         for (const auto & node : cell.nodes()) {
-            result += coordinate_system.coordinates(node.point());
+            result += coordinate_system.coordinates(node.point()) - coord_0;
         }
         result /= cellT::n_vertices;
 
         // all done
-        return result;
+        return coord_0 + result;
     }
 
     // compute the distance between two points

@@ -13,17 +13,12 @@
 //       when we {friend} these functions with the class {Coordinates}
 namespace mito::geometry {
 
-    // addition of coordinates xA + xB
+    // addition of a set coordinate and a vector
     template <int D, CoordinateType coordT>
-    constexpr auto operator+(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
+    constexpr auto operator+(const Coordinates<D, coordT> &, const vector_t<D> &)
         -> Coordinates<D, coordT>;
 
-    // multiplication of coordinates a * xB
-    template <int D, CoordinateType coordT>
-    constexpr auto operator*(const scalar_t &, const Coordinates<D, coordT> &)
-        -> Coordinates<D, coordT>;
-
-    // coordinates subtraction returning vectors
+    // subtraction of coordinates (returns a vector)
     template <int D, CoordinateType coordT>
     constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
         -> mito::vector_t<D>;
@@ -85,11 +80,7 @@ namespace mito::geometry {
 
       public:
         // friendship with addition of coordinates
-        friend constexpr auto operator+<>(const coordinates_type &, const coordinates_type &)
-            -> coordinates_type;
-
-        // friendship with scaling of coordinates
-        friend constexpr auto operator*<>(const scalar_t &, const coordinates_type &)
+        friend constexpr auto operator+<>(const coordinates_type &, const vector_t<D> &)
             -> coordinates_type;
 
         // friendship with {operator==} for coordinates
