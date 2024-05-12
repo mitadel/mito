@@ -31,9 +31,9 @@ namespace mito::geometry {
         return Coordinates<2, POLAR>({ r_B, theta_B });
     }
 
-    // subtraction of coordinates A - B, returns a vector stemming from B
+    // subtraction of coordinates B - A, returns a vector stemming from A
     template <>
-    constexpr auto operator-(const Coordinates<2, POLAR> & A, const Coordinates<2, POLAR> & B)
+    constexpr auto operator-(const Coordinates<2, POLAR> & B, const Coordinates<2, POLAR> & A)
         -> mito::vector_t<2>
     {
         // get the radius and angle of the two points
@@ -42,7 +42,7 @@ namespace mito::geometry {
         const auto & theta_A = A._array[1];
         const auto & theta_B = B._array[1];
 
-        return { r_A * std::cos(theta_A - theta_B) - r_B, r_A * std::sin(theta_A - theta_B) };
+        return { r_B * std::cos(theta_B - theta_A) - r_A, r_B * std::sin(theta_B - theta_A) };
     }
 }
 
