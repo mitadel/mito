@@ -14,8 +14,8 @@ TEST(Coordinates, Cartesian)
     using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<coordinates_t>({ 0.0, 1.0 });
-    constexpr auto coord_B = mito::geometry::coordinates<coordinates_t>({ 1.0, 0.0 });
+    constexpr auto coord_A = mito::geometry::coordinates<coordinates_t>({ 0.0, 2.0 });
+    constexpr auto coord_B = mito::geometry::coordinates<coordinates_t>({ 2.0, 0.0 });
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
@@ -28,9 +28,9 @@ TEST(Coordinates, POLAR)
     using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
 
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::coordinates<coordinates_t>({ 1.0, 0.0 });
+    constexpr auto coord_A = mito::geometry::coordinates<coordinates_t>({ 2.0, 0.0 });
     constexpr auto coord_B =
-        mito::geometry::coordinates<coordinates_t>({ 1.0, 0.5 * std::numbers::pi });
+        mito::geometry::coordinates<coordinates_t>({ 2.0, 0.5 * std::numbers::pi });
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
@@ -44,9 +44,9 @@ TEST(Coordinates, SPHERICAL_Z)
 
     // create two sets of coordinates
     constexpr auto coord_A =
-        mito::geometry::coordinates<coordinates_t>({ 1.0, 0.5 * std::numbers::pi, 0.0 });
+        mito::geometry::coordinates<coordinates_t>({ 2.0, 0.5 * std::numbers::pi, 0.0 });
     constexpr auto coord_B = mito::geometry::coordinates<coordinates_t>(
-        { 1.0, 0.5 * std::numbers::pi, 0.5 * std::numbers::pi });
+        { 2.0, 0.5 * std::numbers::pi, 0.5 * std::numbers::pi });
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
@@ -60,9 +60,9 @@ TEST(Coordinates, SPHERICAL_Y)
 
     // create two sets of coordinates
     constexpr auto coord_A =
-        mito::geometry::coordinates<coordinates_t>({ 1.0, 0.25 * std::numbers::pi, 0.0 });
+        mito::geometry::coordinates<coordinates_t>({ 2.0, 0.25 * std::numbers::pi, 0.0 });
     constexpr auto coord_B =
-        mito::geometry::coordinates<coordinates_t>({ 1.0, 0.75 * std::numbers::pi, 0.0 });
+        mito::geometry::coordinates<coordinates_t>({ 2.0, 0.75 * std::numbers::pi, 0.0 });
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
@@ -76,9 +76,9 @@ TEST(Coordinates, SPHERICAL_X)
 
     // create two sets of coordinates
     constexpr auto coord_A = mito::geometry::coordinates<coordinates_t>(
-        { 1.0, 0.25 * std::numbers::pi, 0.5 * std::numbers::pi });
+        { 2.0, 0.25 * std::numbers::pi, 0.5 * std::numbers::pi });
     constexpr auto coord_B = mito::geometry::coordinates<coordinates_t>(
-        { 1.0, 0.75 * std::numbers::pi, 0.5 * std::numbers::pi });
+        { 2.0, 0.75 * std::numbers::pi, 0.5 * std::numbers::pi });
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);
