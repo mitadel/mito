@@ -48,7 +48,7 @@ mito::geometry::MetricSpace<coordsT>::w() const
 
 template <mito::geometry::coordinates_c coordsT>
 constexpr auto
-mito::geometry::MetricSpace<coordsT>::metric_equivalent_vector(
+mito::geometry::MetricSpace<coordsT>::metric_equivalent(
     const mito::fields::one_form_field_c auto & one_form) const
 {
     // return a vector field that, once evaluated at {x}...
@@ -67,7 +67,7 @@ mito::geometry::MetricSpace<coordsT>::metric_equivalent_vector(
 
 template <mito::geometry::coordinates_c coordsT>
 constexpr auto
-mito::geometry::MetricSpace<coordsT>::metric_equivalent_form(
+mito::geometry::MetricSpace<coordsT>::metric_equivalent(
     const mito::fields::vector_field_c auto & vector) const
 {
     // return a one form field that, once evaluated at {x}...

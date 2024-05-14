@@ -50,7 +50,7 @@ TEST(Manifolds, CartesianGradient)
     static_assert(gradient_form(x)(e_1(x)) == df1(x));
 
     // the gradient vector
-    constexpr auto grad_vector = space.metric_equivalent_vector(gradient_form);
+    constexpr auto grad_vector = space.metric_equivalent(gradient_form);
 
     //  the well-known formula for the gradient vector in euclidean coordinates
     constexpr auto formula = df0 * e_0 + df1 * e_1;

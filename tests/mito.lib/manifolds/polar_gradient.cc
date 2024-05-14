@@ -54,7 +54,7 @@ TEST(Manifolds, PolarGradient)
     static_assert(gradient_form(x)(e_t(x)) == df1(x));
 
     // the gradient vector
-    constexpr auto grad_vector = space.metric_equivalent_vector(gradient_form);
+    constexpr auto grad_vector = space.metric_equivalent(gradient_form);
 
     //  the well-known formula for the gradient vector in polar coordinates
     constexpr auto formula = df0 * e_r + (1.0 / (r * r)) * df1 * e_t;

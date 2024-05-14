@@ -39,11 +39,10 @@ namespace mito::geometry {
         constexpr auto w() const;
 
         // get the metric equivalent vector field to a given one-form field
-        constexpr auto metric_equivalent_vector(
-            const fields::one_form_field_c auto & one_form) const;
+        constexpr auto metric_equivalent(const fields::one_form_field_c auto & one_form) const;
 
         // get the metric equivalent form field to a given vector field
-        constexpr auto metric_equivalent_form(const fields::vector_field_c auto & vector) const;
+        constexpr auto metric_equivalent(const fields::vector_field_c auto & vector) const;
 
       private:
         // get the one form representing the contraction with {matrix} and {vector}
