@@ -10,13 +10,6 @@
 
 namespace mito::manifolds {
 
-    // factory metric space
-    template <geometry::coordinates_c coordsT>
-    constexpr auto metric_space() -> metric_space_t<coordsT>
-    {
-        return metric_space_t<coordsT>();
-    }
-
     // factory manifold
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     constexpr auto manifold(
@@ -40,7 +33,7 @@ namespace mito::manifolds {
         static_assert(mesh_type::dim == mesh_type::order);
 
         // get the metric space
-        constexpr auto space = metric_space<coordsT>();
+        constexpr auto space = geometry::metric_space<coordsT>();
 
         return manifold(mesh, coordinate_system, space.w());
     }
@@ -60,7 +53,7 @@ namespace mito::manifolds {
         static_assert(mesh_type::dim - mesh_type::order == sizeof...(fieldsT));
 
         // get the metric space
-        constexpr auto space = metric_space<coordsT>();
+        constexpr auto space = geometry::metric_space<coordsT>();
 
         // get the metric volume form
         constexpr auto w = space.w();

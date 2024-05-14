@@ -4,13 +4,13 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_MetricSpace_h)
-#define mito_manifolds_MetricSpace_h
+#if !defined(mito_geometry_MetricSpace_h)
+#define mito_geometry_MetricSpace_h
 
 
-namespace mito::manifolds {
+namespace mito::geometry {
 
-    template <geometry::coordinates_c coordsT>
+    template <coordinates_c coordsT>
     class MetricSpace {
 
       private:
@@ -87,9 +87,9 @@ namespace mito::manifolds {
 
 
 // get the inline definitions
-#define mito_manifolds_metric_space_icc
+#define mito_geometry_metric_space_icc
 #include "MetricSpace.icc"
-#undef mito_manifolds_metric_space_icc
+#undef mito_geometry_metric_space_icc
 
 
 #endif

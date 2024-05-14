@@ -17,7 +17,7 @@ using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
 
 TEST(Manifolds, PolarMetricSpace)
 {
-    constexpr auto space = mito::manifolds::metric_space<coordinates_t>();
+    constexpr auto space = mito::geometry::metric_space<coordinates_t>();
 
     // the basis vectors
     constexpr auto e_r = space.e<0>();

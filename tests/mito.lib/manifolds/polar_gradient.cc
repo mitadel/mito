@@ -18,7 +18,7 @@ constexpr auto pi_sixth = std::numbers::pi / 6.0;
 TEST(Manifolds, PolarGradient)
 {
     // the metric space
-    constexpr auto space = mito::manifolds::metric_space<coordinates_t>();
+    constexpr auto space = mito::geometry::metric_space<coordinates_t>();
 
     // the basis vectors
     constexpr auto e_r = space.e<0>();

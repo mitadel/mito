@@ -17,7 +17,7 @@ using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
 
 TEST(Manifolds, EuclideanMetricSpace)
 {
-    constexpr auto space = mito::manifolds::metric_space<coordinates_t>();
+    constexpr auto space = mito::geometry::metric_space<coordinates_t>();
 
     // a point in space
     constexpr auto x = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0 });

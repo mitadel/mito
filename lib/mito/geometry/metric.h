@@ -4,23 +4,23 @@
 //
 
 // code guard
-#if !defined(mito_manifold_Metric_h)
-#define mito_manifold_Metric_h
+#if !defined(mito_geometry_Metric_h)
+#define mito_geometry_Metric_h
 
 
-namespace mito::manifolds {
+namespace mito::geometry {
 
     // the metric tensor field in {coordsT} coordinates
-    template <geometry::coordinates_c coordsT>
+    template <coordinates_c coordsT>
     struct metric {};
 
     // specialization for the Euclidean metric
     template <int D>
-    struct metric<geometry::coordinates_t<D, geometry::CARTESIAN>> {
+    struct metric<coordinates_t<D, CARTESIAN>> {
         static constexpr auto field()
         {
             // the type of coordinates
-            using coordinates_t = geometry::coordinates_t<D, geometry::CARTESIAN>;
+            using coordinates_t = coordinates_t<D, CARTESIAN>;
 
             // return the identity field
             return fields::identity_tensor_field<coordinates_t, D>;
@@ -29,11 +29,11 @@ namespace mito::manifolds {
 
     // specialization for the polar metric in 2D
     template <>
-    struct metric<geometry::coordinates_t<2, geometry::POLAR>> {
+    struct metric<coordinates_t<2, POLAR>> {
         static constexpr auto field()
         {
             // the type of coordinates
-            using coordinates_t = geometry::coordinates_t<2, geometry::POLAR>;
+            using coordinates_t = coordinates_t<2, POLAR>;
 
             // the function extracting the x_0 component of a 2D vector
             constexpr auto r = functions::component<coordinates_t, 0>;
@@ -50,11 +50,11 @@ namespace mito::manifolds {
 
     // specialization for the spherical metric in 3D
     template <>
-    struct metric<geometry::coordinates_t<3, geometry::SPHERICAL>> {
+    struct metric<coordinates_t<3, SPHERICAL>> {
         static constexpr auto field()
         {
             // the type of coordinates
-            using coordinates_t = geometry::coordinates_t<3, geometry::SPHERICAL>;
+            using coordinates_t = coordinates_t<3, SPHERICAL>;
 
             // the function extracting the x_0 component of a 3D vector
             constexpr auto r = functions::component<coordinates_t, 0>;

@@ -13,6 +13,7 @@
 // support
 #include "../fields.h"
 #include "../mesh.h"
+#include "../geometry.h"
 #include "../utilities.h"
 
 #endif

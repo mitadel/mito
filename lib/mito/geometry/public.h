@@ -18,6 +18,9 @@
 #include "api.h"
 
 // classes implementation
+#include "coordinate_bases.h"
+#include "metric.h"
+#include "MetricSpace.h"
 #include "CoordinateSystem.h"
 #include "Point.h"
 #include "GeometricSimplex.h"

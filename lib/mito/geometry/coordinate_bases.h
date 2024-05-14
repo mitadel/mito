@@ -4,22 +4,22 @@
 //
 
 // code guard
-#if !defined(mito_manifold_coordinate_bases_h)
-#define mito_manifold_coordinate_bases_h
+#if !defined(mito_geometry_coordinate_bases_h)
+#define mito_geometry_coordinate_bases_h
 
 
-namespace mito::manifolds {
+namespace mito::geometry {
 
     // the basis for vectors in {coordsT} coordinates
-    template <geometry::coordinates_c coordsT>
+    template <coordinates_c coordsT>
     class Basis {};
 
     // cartesian coordinate basis in dimension D
     template <int D>
-    class Basis<geometry::coordinates_t<D, geometry::CARTESIAN>> {
+    class Basis<coordinates_t<D, CARTESIAN>> {
 
         // the type of coordinates
-        using coordinates_type = geometry::coordinates_t<D, geometry::CARTESIAN>;
+        using coordinates_type = coordinates_t<D, CARTESIAN>;
 
       public:
         // the coordinate basis for vector fields
@@ -33,10 +33,10 @@ namespace mito::manifolds {
 
     // polar coordinate basis in 2D
     template <>
-    class Basis<geometry::coordinates_t<2, geometry::POLAR>> {
+    class Basis<coordinates_t<2, POLAR>> {
 
         // the type of coordinates
-        using coordinates_type = geometry::coordinates_t<2, geometry::POLAR>;
+        using coordinates_type = coordinates_t<2, POLAR>;
 
         // the function extracting the 0th component
         static constexpr auto _r = functions::component<coordinates_type, 0>;
@@ -61,10 +61,10 @@ namespace mito::manifolds {
 
     // spherical coordinate basis in 3D
     template <>
-    class Basis<geometry::coordinates_t<3, geometry::SPHERICAL>> {
+    class Basis<coordinates_t<3, SPHERICAL>> {
 
         // the type of coordinates
-        using coordinates_type = geometry::coordinates_t<3, geometry::SPHERICAL>;
+        using coordinates_type = coordinates_t<3, SPHERICAL>;
 
         // the function extracting the 0th component
         static constexpr auto _r = functions::component<coordinates_type, 0>;

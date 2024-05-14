@@ -15,7 +15,7 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 TEST(Manifolds, CartesianGradient)
 {
     // the metric space
-    constexpr auto space = mito::manifolds::metric_space<coordinates_t>();
+    constexpr auto space = mito::geometry::metric_space<coordinates_t>();
 
     // the basis vectors
     constexpr auto e_0 = space.e<0>();
