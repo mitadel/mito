@@ -11,6 +11,7 @@
 #include "base.h"
 #include "functions.h"
 #include "fem.h"
+#include "coordinates.h"
 #include "geometry.h"
 #include "io.h"
 #include "tensor.h"

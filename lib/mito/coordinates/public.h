@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_geometry_public_h)
-#define mito_geometry_public_h
+#if !defined(mito_coordinates_public_h)
+#define mito_coordinates_public_h
 
 
 // external packages
@@ -18,20 +18,11 @@
 #include "api.h"
 
 // classes implementation
-#include "CoordinateSystem.h"
-#include "Point.h"
-#include "GeometricSimplex.h"
-#include "PointCloud.h"
-
-// algebra
-#include "algebra_coordinates.h"
-#include "coordinate_transformation.h"
+#include "Coordinates.h"
 
 // factories implementation
 #include "factories.h"
 
-// geometry utilities
-#include "utilities.h"
 
 #endif
 

@@ -10,13 +10,6 @@
 
 namespace mito::geometry {
 
-    // factory for coordinates from brace-enclosed initializer list
-    template <coordinates_c coordT>
-    constexpr auto coordinates(mito::scalar_t (&&coords)[coordT::dim])
-    {
-        return coordT(std::move(coords));
-    }
-
     // factory for coordinate system
     template <coordinates_c coordT>
     constexpr auto coordinate_system()
