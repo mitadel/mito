@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/base.h>
-#include <mito/manifolds.h>
+#include <mito/geometry.h>
 
 
 // use polar coordinates
