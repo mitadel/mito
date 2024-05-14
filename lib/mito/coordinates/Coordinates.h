@@ -8,28 +8,6 @@
 #define mito_geometry_Coordinates_h
 
 
-// forward declarations of {operator+} and {operator*}
-// NOTE: these forward declarations are needed so the compiler knows they are template functions
-//       when we {friend} these functions with the class {Coordinates}
-namespace mito::geometry {
-
-    // addition of a set coordinate and a vector
-    template <int D, CoordinateType coordT>
-    constexpr auto operator+(const Coordinates<D, coordT> &, const vector_t<D> &)
-        -> Coordinates<D, coordT>;
-
-    // subtraction of coordinates (returns a vector)
-    template <int D, CoordinateType coordT>
-    constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
-        -> mito::vector_t<D>;
-
-    // operator less than
-    template <int D, CoordinateType coordT>
-    constexpr auto operator<(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
-        -> bool;
-}
-
-
 namespace mito::geometry {
 
     // class for a set of coordinates in a {coordT} coordinates system (e.g. CARTESIAN, POLAR, ...)
@@ -79,17 +57,9 @@ namespace mito::geometry {
         constexpr Coordinates & operator=(Coordinates &&) noexcept = default;
 
       public:
-        // friendship with addition of coordinates
-        friend constexpr auto operator+<>(const coordinates_type &, const vector_t<D> &)
-            -> coordinates_type;
-
         // friendship with {operator==} for coordinates
         friend constexpr auto operator==<>(const coordinates_type &, const coordinates_type &)
             -> bool;
-
-        // friendship with {operator-} for coordinates
-        friend constexpr auto operator-<>(const coordinates_type &, const coordinates_type &)
-            -> mito::vector_t<D>;
 
         // friendship with {operator<} for coordinates
         friend constexpr auto operator< <>(const coordinates_type &, const coordinates_type &)

@@ -16,9 +16,9 @@ namespace mito::geometry {
         -> Coordinates<3, SPHERICAL>
     {
         // get r, theta and phi of point A
-        const auto & r_A = A._array[0];
-        const auto & theta_A = A._array[1];
-        const auto & phi_A = A._array[2];
+        const auto & r_A = A[0];
+        const auto & theta_A = A[1];
+        const auto & phi_A = A[2];
 
         // precompute handful variables
         const auto sin_theta_A = std::sin(theta_A);
@@ -66,12 +66,12 @@ namespace mito::geometry {
         -> mito::vector_t<3>
     {
         // get the radius and angle of the two points
-        const auto & r_A = A._array[0];
-        const auto & r_B = B._array[0];
-        const auto & theta_A = A._array[1];
-        const auto & theta_B = B._array[1];
-        const auto & phi_A = A._array[2];
-        const auto & phi_B = B._array[2];
+        const auto & r_A = A[0];
+        const auto & r_B = B[0];
+        const auto & theta_A = A[1];
+        const auto & theta_B = B[1];
+        const auto & phi_A = A[2];
+        const auto & phi_B = B[2];
 
         const auto sin_theta_A = std::sin(theta_A);
         const auto sin_theta_B = std::sin(theta_B);

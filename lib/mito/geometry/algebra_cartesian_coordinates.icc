@@ -16,7 +16,7 @@ namespace mito::geometry {
         -> Coordinates<1, CARTESIAN>
     {
         // easy enough
-        return Coordinates<1, CARTESIAN>(A._array + v);
+        return Coordinates<1, CARTESIAN>({ A[0] + v[0] });
     }
 
     // subtraction of coordinates A - B
@@ -25,7 +25,7 @@ namespace mito::geometry {
         const Coordinates<1, CARTESIAN> & A, const Coordinates<1, CARTESIAN> & B)
         -> mito::vector_t<1>
     {
-        return mito::vector_t<1>(A._array - B._array);
+        return mito::vector_t<1>{ A[0] - B[0] };
     }
 
 
@@ -35,7 +35,7 @@ namespace mito::geometry {
         -> Coordinates<2, CARTESIAN>
     {
         // easy enough
-        return Coordinates<2, CARTESIAN>(A._array + v);
+        return Coordinates<2, CARTESIAN>({ A[0] + v[0], A[1] + v[1] });
     }
 
     // subtraction of coordinates A - B
@@ -44,7 +44,7 @@ namespace mito::geometry {
         const Coordinates<2, CARTESIAN> & A, const Coordinates<2, CARTESIAN> & B)
         -> mito::vector_t<2>
     {
-        return mito::vector_t<2>(A._array - B._array);
+        return mito::vector_t<2>{ A[0] - B[0], A[1] - B[1] };
     }
 
 
@@ -54,7 +54,7 @@ namespace mito::geometry {
         -> Coordinates<3, CARTESIAN>
     {
         // easy enough
-        return Coordinates<3, CARTESIAN>(A._array + v);
+        return Coordinates<3, CARTESIAN>({ A[0] + v[0], A[1] + v[1], A[2] + v[2] });
     }
 
     // subtraction of coordinates A - B
@@ -63,7 +63,7 @@ namespace mito::geometry {
         const Coordinates<3, CARTESIAN> & A, const Coordinates<3, CARTESIAN> & B)
         -> mito::vector_t<3>
     {
-        return mito::vector_t<3>(A._array - B._array);
+        return mito::vector_t<3>{ A[0] - B[0], A[1] - B[1], A[2] - B[2] };
     }
 
 }

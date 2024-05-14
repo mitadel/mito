@@ -10,6 +10,16 @@
 
 namespace mito::geometry {
 
+    // addition of a set of coordinates and a vector
+    template <int D, CoordinateType coordT>
+    constexpr auto operator+(const Coordinates<D, coordT> &, const vector_t<D> &)
+        -> Coordinates<D, coordT>;
+
+    // subtraction of two sets of coordinates (returns a vector)
+    template <int D, CoordinateType coordT>
+    constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
+        -> mito::vector_t<D>;
+
     // operator+=
     template <int D, CoordinateType coordT>
     constexpr auto operator+=(Coordinates<D, coordT> & A, const vector_t<D> & v)
