@@ -13,6 +13,7 @@
 #include <unordered_map>
 
 // support
+#include "../geometry.h"
 #include "../mesh.h"
 
 
