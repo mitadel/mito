@@ -18,7 +18,7 @@
 #include "api.h"
 
 // classes implementation
-#include "coordinate_bases.h"
+#include "CoordinateBasis.h"
 #include "metric.h"
 #include "MetricSpace.h"
 #include "CoordinateSystem.h"
@@ -29,6 +29,11 @@
 // algebra
 #include "algebra_coordinates.h"
 #include "coordinate_transformation.h"
+
+// coordinate specialization
+#include "cartesian.h"
+#include "polar.h"
+#include "spherical.h"
 
 // factories implementation
 #include "factories.h"

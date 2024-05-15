@@ -4,15 +4,15 @@
 //
 
 // code guard
-#if !defined(mito_geometry_Metric_h)
-#define mito_geometry_Metric_h
+#if !defined(mito_geometry_coordinate_basis_h)
+#define mito_geometry_coordinate_basis_h
 
 
 namespace mito::geometry {
 
-    // the metric tensor field in {coordsT} coordinates
+    // the basis for vectors in {coordsT} coordinates
     template <coordinates_c coordsT>
-    struct metric {};
+    class Basis {};
 
 }
 

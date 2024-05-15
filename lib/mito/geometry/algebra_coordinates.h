@@ -40,11 +40,6 @@ namespace mito::geometry {
 }    // namespace mito
 
 
-// implementation of custom {operator+}, {operator-} {operator*}
-#include "algebra_cartesian_coordinates.icc"
-#include "algebra_polar_coordinates.icc"
-#include "algebra_spherical_coordinates.icc"
-
 #endif    // mito_geometry_Coordinates_h
 
 // end of file
