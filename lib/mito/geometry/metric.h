@@ -44,7 +44,7 @@ namespace mito::geometry {
             constexpr auto e_tt = fields::uniform_field<coordinates_t>(e_11<2>);
 
             // return the metric field in polar coordinates
-            return e_rr + mito::functions::pow<2>(r) * e_tt;
+            return e_rr + functions::pow<2>(r) * e_tt;
         }
     };
 
@@ -70,8 +70,8 @@ namespace mito::geometry {
             constexpr auto e_pp = fields::uniform_field<coordinates_t>(e_22<3>);
 
             // return the metric field in spherical coordinates
-            return e_rr + mito::functions::pow<2>(r) * e_tt
-                 + mito::functions::pow<2>(r * mito::functions::sin(t)) * e_pp;
+            return e_rr + functions::pow<2>(r) * e_tt
+                 + functions::pow<2>(r * functions::sin(t)) * e_pp;
         }
     };
 }

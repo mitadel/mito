@@ -142,7 +142,7 @@ namespace mito::geometry {
     constexpr auto flip(const geometric_simplex_t<N, D> & simplex) -> geometric_simplex_t<N, D>
     {
         // build a new geometric simplex on top of the flipped topological simplex and return it
-        return geometric_simplex<D>(mito::topology::flip(simplex.simplex()), simplex.nodes());
+        return geometric_simplex<D>(topology::flip(simplex.simplex()), simplex.nodes());
     }
 
     template <int D>
@@ -156,7 +156,7 @@ namespace mito::geometry {
 
         // flip the topological simplices
         auto [new_simplex0, new_simplex1] =
-            mito::topology::flip_diagonal({ simplex_0.simplex(), simplex_1.simplex() });
+            topology::flip_diagonal({ simplex_0.simplex(), simplex_1.simplex() });
 
         // concatenate in {nodes} the nodes of the two simplices
         using node_type = node_t<D>;

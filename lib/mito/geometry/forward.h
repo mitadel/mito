@@ -11,7 +11,7 @@
 namespace mito::geometry {
 
     // class metric space
-    template <geometry::coordinates_c coordsT>
+    template <coordinates_c coordsT>
     class MetricSpace;
 
     // class coordinate system

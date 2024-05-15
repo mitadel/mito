@@ -49,12 +49,12 @@ namespace mito::geometry {
         {
             if constexpr (I == 0) {
                 // return e_r
-                return mito::fields::uniform_field<coordinates_type>(mito::e_0<2>);
+                return fields::uniform_field<coordinates_type>(mito::e_0<2>);
             }
 
             if constexpr (I == 1) {
                 // e_theta
-                return _r * mito::fields::uniform_field<coordinates_type>(mito::e_1<2>);
+                return _r * fields::uniform_field<coordinates_type>(mito::e_1<2>);
             }
         }
     };
@@ -80,18 +80,18 @@ namespace mito::geometry {
         {
             if constexpr (I == 0) {
                 // return e_r
-                return mito::fields::uniform_field<coordinates_type>(mito::e_0<3>);
+                return fields::uniform_field<coordinates_type>(mito::e_0<3>);
             }
 
             if constexpr (I == 1) {
                 // return e_theta
-                return _r * mito::fields::uniform_field<coordinates_type>(mito::e_1<3>);
+                return _r * fields::uniform_field<coordinates_type>(mito::e_1<3>);
             }
 
             if constexpr (I == 2) {
                 // return e_phi
-                return _r * mito::functions::sin(_theta)
-                     * mito::fields::uniform_field<coordinates_type>(mito::e_2<3>);
+                return _r * functions::sin(_theta)
+                     * fields::uniform_field<coordinates_type>(mito::e_2<3>);
             }
         }
     };

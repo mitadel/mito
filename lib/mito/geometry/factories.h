@@ -11,7 +11,7 @@
 namespace mito::geometry {
 
     // factory metric space
-    template <geometry::coordinates_c coordsT>
+    template <coordinates_c coordsT>
     constexpr auto metric_space() -> metric_space_t<coordsT>
     {
         return metric_space_t<coordsT>();
@@ -48,13 +48,13 @@ namespace mito::geometry {
         // the dimension of the physical space
         constexpr int D = coordT::dim;
         // fetch the point cloud
-        auto & point_cloud = mito::geometry::point_cloud<D>();
+        auto & cloud = point_cloud<D>();
         // instantiate a point
-        auto point = point_cloud.point();
+        auto point = cloud.point();
         // place it in space
         coordinate_system.place(point, coords);
         // instantiate a vertex
-        auto vertex = mito::topology::vertex();
+        auto vertex = topology::vertex();
         // instantiate a node binding a vertex to a point
         return node_t<D>(vertex, point);
     }

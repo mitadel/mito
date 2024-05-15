@@ -18,7 +18,7 @@ namespace mito::geometry {
     // subtraction of two sets of coordinates (returns a vector)
     template <int D, CoordinateType coordT>
     constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
-        -> mito::vector_t<D>;
+        -> vector_t<D>;
 
     // operator+=
     template <int D, CoordinateType coordT>
