@@ -65,9 +65,6 @@ namespace mito::geometry {
         friend constexpr auto operator< <>(const coordinates_type &, const coordinates_type &)
             -> bool;
 
-        // cast to the underlying array of coordinates
-        constexpr operator array_t() const { return _array; }
-
       public:
         // components accessor
         constexpr auto operator[](int i) const -> scalar_t { return _array[i]; }
