@@ -11,27 +11,23 @@
 namespace mito::geometry {
 
     // addition of a set of coordinates and a vector
-    template <int D, CoordinateType coordT>
-    constexpr auto operator+(const Coordinates<D, coordT> &, const vector_t<D> &)
-        -> Coordinates<D, coordT>;
+    template <coordinates_c coordsT>
+    constexpr auto operator+(const coordsT &, const vector_t<coordsT::dim> &) -> coordsT;
 
     // subtraction of two sets of coordinates (returns a vector)
-    template <int D, CoordinateType coordT>
-    constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
-        -> vector_t<D>;
+    template <coordinates_c coordsT>
+    constexpr auto operator-(const coordsT &, const coordsT &) -> vector_t<coordsT::dim>;
 
     // operator+=
-    template <int D, CoordinateType coordT>
-    constexpr auto operator+=(Coordinates<D, coordT> & A, const vector_t<D> & v)
-        -> Coordinates<D, coordT> &
+    template <coordinates_c coordsT>
+    constexpr auto operator+=(coordsT & A, const vector_t<coordsT::dim> & v) -> coordsT &
     {
         A = A + v;
         return A;
     }
 
-    template <int D, CoordinateType coordT>
-    constexpr auto distance(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
-        -> scalar_t
+    template <coordinates_c coordsT>
+    constexpr auto distance(const coordsT & xA, const coordsT & xB) -> scalar_t
     {
         // return the distance between the two points
         return pyre::tensor::norm(xA - xB);
