@@ -12,8 +12,9 @@ namespace mito::geometry {
 
     // spherical coordinate basis in 3D
     template <>
-    class Basis<coordinates_t<3, SPHERICAL>> {
+    struct basis<coordinates_t<3, SPHERICAL>> {
 
+      private:
         // the type of coordinates
         using coordinates_type = coordinates_t<3, SPHERICAL>;
 

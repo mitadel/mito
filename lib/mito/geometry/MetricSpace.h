@@ -55,7 +55,7 @@ namespace mito::geometry {
         // the coordinate basis for vector fields
         template <int I>
         requires(I >= 0 && I < D)
-        static constexpr auto _e = Basis<coordinates_type>::template e<I>();
+        static constexpr auto _e = basis<coordinates_type>::template e<I>();
 
         // the metric field in coordinates {coordinates_type}
         static constexpr auto _g = metric<coordinates_type>::field();

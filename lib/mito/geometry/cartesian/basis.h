@@ -12,8 +12,9 @@ namespace mito::geometry {
 
     // cartesian coordinate basis in dimension D
     template <int D>
-    class Basis<coordinates_t<D, CARTESIAN>> {
+    struct basis<coordinates_t<D, CARTESIAN>> {
 
+      private:
         // the type of coordinates
         using coordinates_type = coordinates_t<D, CARTESIAN>;
 

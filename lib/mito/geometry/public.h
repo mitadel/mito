@@ -17,10 +17,12 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// classes implementation
-#include "CoordinateBasis.h"
+// support
+#include "basis.h"
 #include "metric.h"
 #include "MetricSpace.h"
+
+// classes implementation
 #include "CoordinateSystem.h"
 #include "Point.h"
 #include "GeometricSimplex.h"

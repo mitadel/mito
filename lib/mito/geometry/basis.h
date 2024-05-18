@@ -12,7 +12,7 @@ namespace mito::geometry {
 
     // the basis for vectors in {coordsT} coordinates
     template <coordinates_c coordsT>
-    class Basis {};
+    class basis {};
 
 }
 

@@ -9,7 +9,7 @@
 
 
 // get the coordinate basis
-#include "CoordinateBasis.h"
+#include "basis.h"
 // get the metric
 #include "metric.h"
 // get the algebra

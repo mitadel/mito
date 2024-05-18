@@ -12,8 +12,9 @@ namespace mito::geometry {
 
     // polar coordinate basis in 2D
     template <>
-    class Basis<coordinates_t<2, POLAR>> {
+    struct basis<coordinates_t<2, POLAR>> {
 
+      private:
         // the type of coordinates
         using coordinates_type = coordinates_t<2, POLAR>;
 
