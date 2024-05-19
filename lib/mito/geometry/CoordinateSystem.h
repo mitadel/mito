@@ -28,13 +28,6 @@ namespace mito::geometry {
         using coordinates_map_type = std::map<point_id_type, coordinates_type>;
 
       public:
-        // TOFIX: is this ever used?
-        // I-th basis vector in dimension D
-        template <int I>
-        requires(I >= 0 && I < D)
-        static constexpr auto e = pyre::tensor::unit<pyre::tensor::vector_t<D>, I>;
-
-      public:
         // constructor
         CoordinateSystem() : _coordinates_map() {}
 
