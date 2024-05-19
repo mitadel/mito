@@ -19,9 +19,13 @@ namespace mito::geometry {
         const auto & r_A = A[0];
         const auto & theta_A = A[1];
 
+        // evaluate {e_r} and {e_theta} at A
+        const auto e_r = polar::e_r(A);
+        const auto e_theta = polar::e_theta(A);
+
         // get the radial and hoop component of vector {v}
-        const auto & v_r = v[0];
-        const auto v_theta = v[1] / r_A;
+        const auto v_r = v * e_r;
+        const auto v_theta = v * e_theta / (e_theta * e_theta);
 
         // compute r and theta of point B, which is point A plus vector {v}
         auto r_B = std::sqrt((r_A + v_r) * (r_A + v_r) + v_theta * r_A * v_theta * r_A);
@@ -42,7 +46,8 @@ namespace mito::geometry {
         const auto & theta_A = A[1];
         const auto & theta_B = B[1];
 
-        return { r_B * std::cos(theta_B - theta_A) - r_A, r_B * std::sin(theta_B - theta_A) };
+        return (r_B * std::cos(theta_B - theta_A) - r_A) * polar::e_r(A)
+             + (r_B * std::sin(theta_B - theta_A)) * polar::e_theta(A) / r_A;
     }
 }
 

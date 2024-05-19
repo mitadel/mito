@@ -24,10 +24,15 @@ namespace mito::geometry {
         const auto sin_theta_A = std::sin(theta_A);
         const auto cos_theta_A = std::cos(theta_A);
 
+        // evaluate {e_r}, {e_theta} and {e_phi} at A
+        const auto e_r = spherical::e_r(A);
+        const auto e_theta = spherical::e_theta(A);
+        const auto e_phi = spherical::e_phi(A);
+
         // get the r, theta and phi components of vector {v}
-        const auto & v_r = v[0];
-        const auto v_theta = v[1] / r_A;
-        const auto v_phi = v[2] / (r_A * sin_theta_A);
+        const auto v_r = v * e_r;
+        const auto v_theta = v * e_theta / (e_theta * e_theta);
+        const auto v_phi = v * e_phi / (e_phi * e_phi);
 
         // compute phi of point B, which is point A plus vector {v}
         const auto phi_B =
@@ -79,9 +84,11 @@ namespace mito::geometry {
         const auto cos_phi_A_B = std::cos(phi_B - phi_A);
         const auto sin_phi_A_B = std::sin(phi_B - phi_A);
 
-        return { r_B * (sin_theta_A * sin_theta_B * cos_phi_A_B + cos_theta_A * cos_theta_B) - r_A,
-                 r_B * (sin_theta_B * cos_theta_A * cos_phi_A_B - sin_theta_A * cos_theta_B),
-                 r_B * sin_theta_B * sin_phi_A_B };
+        return (r_B * (sin_theta_A * sin_theta_B * cos_phi_A_B + cos_theta_A * cos_theta_B) - r_A)
+                 * spherical::e_r(A)
+             + r_B * (sin_theta_B * cos_theta_A * cos_phi_A_B - sin_theta_A * cos_theta_B)
+                   * spherical::e_theta(A) / r_A
+             + r_B * sin_theta_B * sin_phi_A_B * spherical::e_phi(A) / (r_A * sin_theta_A);
     }
 }
 

@@ -15,11 +15,12 @@
 #include "basis.h"
 // get the metric
 #include "metric.h"
-// get the algebra
-#include "algebra.h"
 
 // get the api
 #include "api.h"
+
+// get the algebra
+#include "algebra.h"
 
 
 #endif
