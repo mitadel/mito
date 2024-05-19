@@ -26,7 +26,7 @@ namespace mito::geometry::cartesian {
     template <int D>
     constexpr auto e_1 = basis<cartesian_coordinates_t<D>>::template e<1>();
 
-    // the basis for vector fields (e_1)
+    // the basis for vector fields (e_2)
     template <int D>
     constexpr auto e_2 = basis<cartesian_coordinates_t<D>>::template e<2>();
 
