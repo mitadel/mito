@@ -10,31 +10,30 @@
 
 namespace mito::manifolds {
 
+    // metric space alias
+    template <geometry::coordinates_c coordsT>
+    using metric_space_t = MetricSpace<coordsT>;
+
     // a point in parametric coordinates
     template <int D>
     using parametric_point_t = std::array<double, D>;
 
     // manifold alias
-    template <class cellT, geometry::coordinates_c coordsT>
-    using manifold_t = Manifold<cellT, coordsT>;
-
-    // submanifold alias
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
-    using submanifold_t = Submanifold<cellT, coordsT, volumeFormT>;
+    using manifold_t = Manifold<cellT, coordsT, volumeFormT>;
 
-    // factory manifolds
+    // factory of manifolds from a mesh and a coordinate system
     template <class cellT, geometry::coordinates_c coordsT>
     constexpr auto manifold(
         const mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<coordsT> & coordinate_system)
-        -> manifold_t<cellT, coordsT>;
+        const geometry::coordinate_system_t<coordsT> & coordinate_system);
 
-    // factory submanifolds
+    // factory submanifold from a mesh, a coordinate system and set of normal fields
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     constexpr auto submanifold(
         const mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<coordsT> & coordinate_system, volumeFormT volume_form)
-        -> submanifold_t<cellT, coordsT, volumeFormT>;
+        const geometry::coordinate_system_t<coordsT> & coordinate_system,
+        const mito::fields::vector_field_c auto & normal_field);
 }
 
 

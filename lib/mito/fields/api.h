@@ -33,11 +33,6 @@ namespace mito::fields {
     // the order N identity tensor in D dimensions
     template <geometry::coordinates_c coordType, int N>
     constexpr auto identity_tensor_field = uniform_field<coordType>(mito::identity<N>);
-
-    // construct a one-form based on its metric-equivalent vector field
-    template <vector_field_c vectorFieldT, symmetric_tensor_field_c tensorFieldT>
-    constexpr auto one_form_field(const vectorFieldT & vector, const tensorFieldT & metric)
-    requires(compatible_fields_c<vectorFieldT, tensorFieldT>);
 }
 
 

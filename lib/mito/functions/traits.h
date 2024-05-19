@@ -62,7 +62,8 @@ namespace mito::functions {
     template <functor_c F>
     struct function_from_functor {
         using type = Function<
-            typename functor_traits<F>::input_type, typename functor_traits<F>::output_type>;
+            std::remove_cvref_t<typename functor_traits<F>::input_type>,
+            typename functor_traits<F>::output_type>;
     };
 }
 

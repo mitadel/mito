@@ -11,15 +11,6 @@
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
-// the basis for vector fields
-static constexpr auto e_x = mito::fields::uniform_field<coordinates_t>(mito::e_0<3>);
-static constexpr auto e_y = mito::fields::uniform_field<coordinates_t>(mito::e_1<3>);
-static constexpr auto e_z = mito::fields::uniform_field<coordinates_t>(mito::e_2<3>);
-
-
-// the placeholder for empty slots in contractions
-using mito::tensor::_;
-
 
 TEST(Manifolds, Triangle3D)
 {
@@ -37,24 +28,10 @@ TEST(Manifolds, Triangle3D)
     // the normal vector to the submanifold
     constexpr auto cross = pyre::tensor::cross(x_1 - x_0, x_2 - x_0);
     constexpr auto normal_vector = cross / pyre::tensor::norm(cross);
+    constexpr auto normal_field = mito::fields::uniform_field<coordinates_t>(normal_vector);
 
-    // the basis one-forms
-    constexpr auto dx =
-        mito::fields::one_form_field(e_x, mito::fields::identity_tensor_field<coordinates_t, 3>);
-    constexpr auto dy =
-        mito::fields::one_form_field(e_y, mito::fields::identity_tensor_field<coordinates_t, 3>);
-    constexpr auto dz =
-        mito::fields::one_form_field(e_z, mito::fields::identity_tensor_field<coordinates_t, 3>);
-
-    // the 3D metric volume element
-    constexpr auto w = mito::fields::wedge(dx, dy, dz);
-
-    // the 2D restriction of the 3D metric volume element
-    constexpr auto wS = mito::fields::field(
-        [w, normal_vector](const coordinates_t & x) -> auto { return w(x)(normal_vector, _, _); });
-
-    // create a submanifold on {mesh} with the appropriate metric volume element {wS}
-    auto manifold = mito::manifolds::submanifold(mesh, coord_system, wS);
+    // create a submanifold on {mesh} with the appropriate normal field
+    auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
 
     // build nodes of a triangle (counterclockwise order)
     auto node_0 = mito::geometry::node(coord_system, x_0);

@@ -1,0 +1,96 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#if !defined(mito_manifolds_MetricSpace_icc)
+#define mito_manifolds_MetricSpace_icc
+
+
+// get the I-th basis element for vector fields
+template <mito::geometry::coordinates_c coordsT>
+template <int I>
+constexpr auto
+mito::manifolds::MetricSpace<coordsT>::e() const
+{
+    // all done
+    return _e<I>;
+}
+
+// get metric
+template <mito::geometry::coordinates_c coordsT>
+constexpr auto
+mito::manifolds::MetricSpace<coordsT>::g() const
+{
+    // all done
+    return _g;
+}
+
+// get the I-th basis element for one-form fields
+template <mito::geometry::coordinates_c coordsT>
+template <int I>
+constexpr auto
+mito::manifolds::MetricSpace<coordsT>::dx() const
+{
+    // all done
+    return _dx<I>;
+}
+
+// get the metric volume form
+template <mito::geometry::coordinates_c coordsT>
+constexpr auto
+mito::manifolds::MetricSpace<coordsT>::w() const
+{
+    // all done
+    return _w;
+}
+
+template <mito::geometry::coordinates_c coordsT>
+constexpr auto
+mito::manifolds::MetricSpace<coordsT>::metric_equivalent_vector(
+    const mito::fields::one_form_field_c auto & one_form) const
+{
+    // return a vector field that, once evaluated at {x}...
+    return mito::fields::field(
+        mito::functions::function([one_form, *this](const coordinates_type & x) {
+            // returns the contraction of the inverse metric with the components of the one
+            // form
+            auto _one_form_components = [one_form, x]<int... K>(mito::integer_sequence<K...>) {
+                return ((one_form(x)(_e<K>(x)) * _g_inv(x) * _e<K>(x)) + ...);
+            };
+
+            // all done
+            return _one_form_components(make_integer_sequence<D>{});
+        }));
+}
+
+template <mito::geometry::coordinates_c coordsT>
+constexpr auto
+mito::manifolds::MetricSpace<coordsT>::metric_equivalent_form(
+    const mito::fields::vector_field_c auto & vector) const
+{
+    // return a one form field that, once evaluated at {x}...
+    return _one_form(vector, _g_inv);
+}
+
+template <mito::geometry::coordinates_c coordsT>
+template <
+    mito::fields::vector_field_c vectorFieldT, mito::fields::symmetric_tensor_field_c tensorFieldT>
+constexpr auto
+mito::manifolds::MetricSpace<coordsT>::_one_form(
+    const vectorFieldT & vector, const tensorFieldT & matrix)
+requires(mito::fields::compatible_fields_c<vectorFieldT, tensorFieldT>)
+{
+    // return a one form field that, once evaluated at {x}...
+    return mito::fields::field(
+        mito::functions::function([vector, matrix](const coordinates_type & x) {
+            // returns the metric equivalent form to {vector(x)}
+            return mito::tensor::one_form(vector(x), matrix(x));
+        }));
+}
+
+
+#endif
+
+// end of file
