@@ -49,9 +49,6 @@ TEST(Manifolds, EuclideanMetricSpace)
     constexpr auto dx0_scalar = mito::scalar_t{ 0.01 };
     constexpr auto dx1_scalar = mito::scalar_t{ 0.01 };
     static_assert(w(x)(dx0_scalar * e_0(x), dx1_scalar * e_1(x)) == dx0_scalar * dx1_scalar);
-
-    // TOFIX: support this as well
-    // (dx1(e1))({ 0.0, 0.0 });
 }
 
 
