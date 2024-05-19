@@ -12,7 +12,7 @@ namespace mito::utilities {
 
     // declaration
     template <class resourceT>
-    // requires ReferenceCountedObject<resourceT>
+    // requires reference_countable_c<resourceT>
     class SharedPointer {
         // types
       public:

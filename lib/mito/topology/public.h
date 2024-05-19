@@ -19,7 +19,7 @@
 // other classes implementation
 #include "Simplex.h"
 // class {OrientedSimplex} needs to be complete for the following forward declarations
-// (the concept {ReferenceCountedObject} requires to see full class header file)
+// (the concept {reference_countable_c} requires to see full class header file)
 #include "OrientedSimplex.h"
 #include "SimplexFactory.h"
 #include "OrientedSimplexFactory.h"

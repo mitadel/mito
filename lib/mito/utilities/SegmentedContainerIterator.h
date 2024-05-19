@@ -58,7 +58,7 @@ namespace mito::utilities {
       public:
         // dereference (case reference-counted object)
         constexpr auto operator*() const -> pointer_type
-        requires(ReferenceCountedObject<resource_type>)
+        requires(reference_countable_c<resource_type>)
         {
             // wrap the resource in a shared pointer and return it
             return pointer_type(_segmented_iterator.ptr());
@@ -66,7 +66,7 @@ namespace mito::utilities {
 
         // dereference (case non reference-counted object)
         constexpr auto operator*() const -> resource_type &
-        requires(!ReferenceCountedObject<resource_type>)
+        requires(!reference_countable_c<resource_type>)
         {
             // return the resource
             return *(_segmented_iterator.ptr());

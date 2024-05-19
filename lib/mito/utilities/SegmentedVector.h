@@ -23,7 +23,7 @@
 namespace mito::utilities {
 
     template <class resourceT>
-    requires InvalidatableObject<resourceT>
+    requires invalidatable_c<resourceT>
     class SegmentedVector {
       public:
         // me
