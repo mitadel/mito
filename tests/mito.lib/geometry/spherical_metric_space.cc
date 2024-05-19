@@ -34,7 +34,7 @@ TEST(Manifolds, SphericalMetricSpace)
     constexpr auto r = 2.0;
     constexpr auto t = std::numbers::pi;
     constexpr auto p = 0.25 * std::numbers::pi;
-    constexpr auto x = mito::geometry::coordinates<coordinates_t>({ r, t, p });
+    constexpr auto x = mito::geometry::spherical::coordinates({ r, t, p });
 
     // assert that at a(ny) point the basis for one-forms is dual to that of vectors
     static_assert(dr(x)(e_r(x)) == 1.0);

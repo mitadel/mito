@@ -29,7 +29,7 @@ TEST(Barycenter, Triangle2D)
     auto barycenter = mito::geometry::barycenter(triangle, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::geometry::coordinates<coordinates_t>({ 0.5, 1.0 / 6.0 }));
+    EXPECT_TRUE(barycenter == mito::geometry::cartesian::coordinates({ 0.5, 1.0 / 6.0 }));
 
     // all done
     return;

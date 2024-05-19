@@ -16,6 +16,9 @@ using mito::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
 
+// the function extracting the {x_0} component of a 1D vector
+constexpr auto x_0 = mito::geometry::cartesian::x_0<1>;
+
 
 TEST(Quadrature, Segment)
 {
@@ -36,8 +39,7 @@ TEST(Quadrature, Segment)
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
     // a scalar function
-    auto f_exp = mito::fields::field(
-        [](const coordinates_t & x) -> mito::scalar_t { return std::exp(-x[0]); });
+    auto f_exp = mito::fields::field(mito::functions::exp(-x_0));
 
     // integrate exp(-x) on (0, 1)
     auto integral = integrator.integrate(f_exp);

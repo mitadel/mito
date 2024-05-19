@@ -25,12 +25,12 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto dx0 = metric_space_t::dx<0>;
     constexpr auto dx1 = metric_space_t::dx<1>;
 
-    // the function extracting the components of 2D vector
-    constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
-    constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
+    // the function extracting the components of a 2D vector
+    constexpr auto x_0 = mito::geometry::cartesian::x_0<2>;
+    constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
 
     // a scalar field
-    constexpr auto f = mito::fields::field(x0 * x1);
+    constexpr auto f = mito::fields::field(x_0 * x_1);
 
     // df/dx[0] = x1
     constexpr auto df0 = mito::fields::derivative<0>(f);
@@ -39,7 +39,7 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto df1 = mito::fields::derivative<1>(f);
 
     // a point in space
-    constexpr auto x = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0 });
+    constexpr auto x = mito::geometry::cartesian::coordinates({ 1.0, 1.0 });
 
     // the gradient form
     constexpr auto gradient_form = df0 * dx0 + df1 * dx1;

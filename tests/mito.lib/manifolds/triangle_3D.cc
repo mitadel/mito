@@ -21,9 +21,9 @@ TEST(Manifolds, Triangle3D)
     auto mesh = mito::mesh::mesh<mito::geometry::triangle_t<3>>();
 
     // build nodes
-    constexpr auto x_0 = mito::geometry::coordinates<coordinates_t>({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::coordinates<coordinates_t>({ 1.0, 0.0, 1.0 });
-    constexpr auto x_2 = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0, 1.0 });
+    constexpr auto x_0 = mito::geometry::cartesian::coordinates({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::cartesian::coordinates({ 1.0, 0.0, 1.0 });
+    constexpr auto x_2 = mito::geometry::cartesian::coordinates({ 1.0, 1.0, 1.0 });
 
     // the normal vector to the submanifold
     constexpr auto cross = pyre::tensor::cross(x_1 - x_0, x_2 - x_0);

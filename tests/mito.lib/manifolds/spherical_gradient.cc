@@ -22,21 +22,21 @@ constexpr auto pi_fourth = std::numbers::pi / 4.0;
 TEST(Manifolds, SphericalGradient)
 {
     // the basis vectors
-    constexpr auto e_r = metric_space_t::e<0>;
-    constexpr auto e_t = metric_space_t::e<1>;
-    constexpr auto e_p = metric_space_t::e<2>;
+    constexpr auto e_r = mito::geometry::spherical::e_r;
+    constexpr auto e_t = mito::geometry::spherical::e_theta;
+    constexpr auto e_p = mito::geometry::spherical::e_phi;
 
     // the basis one-forms
     constexpr auto dr = metric_space_t::dx<0>;
     constexpr auto dt = metric_space_t::dx<1>;
     constexpr auto dp = metric_space_t::dx<2>;
 
-    // the function extracting the 0th component (r)
-    constexpr auto r = mito::functions::component<coordinates_t, 0>;
-    // the function extracting the 1st component (theta)
-    constexpr auto theta = mito::functions::component<coordinates_t, 1>;
-    // the function extracting the 2nd component (phi)
-    constexpr auto phi = mito::functions::component<coordinates_t, 2>;
+    // the function extracting the component {r}
+    constexpr auto r = mito::geometry::spherical::r;
+    // the function extracting the component {theta}
+    constexpr auto theta = mito::geometry::spherical::theta;
+    // the function extracting the component {phi}
+    constexpr auto phi = mito::geometry::spherical::phi;
 
     // a scalar field
     constexpr auto f =
@@ -52,7 +52,7 @@ TEST(Manifolds, SphericalGradient)
     constexpr auto df2 = mito::fields::derivative<2>(f);
 
     // a point in space {r = 2.0, theta = pi / 6.0, phi = pi / 6.0}
-    constexpr auto x = mito::geometry::coordinates<coordinates_t>({ 2.0, pi_sixth, pi_fourth });
+    constexpr auto x = mito::geometry::spherical::coordinates({ 2.0, pi_sixth, pi_fourth });
 
     // the gradient form
     constexpr auto gradient_form = df0 * dr + df1 * dt + df2 * dp;

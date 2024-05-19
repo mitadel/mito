@@ -29,7 +29,7 @@ TEST(Barycenter, Segment1D)
     auto barycenter = mito::geometry::barycenter(segment, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::geometry::coordinates<coordinates_t>({ 0.5 }));
+    EXPECT_TRUE(barycenter == mito::geometry::cartesian::coordinates({ 0.5 }));
 
     // all done
     return;
