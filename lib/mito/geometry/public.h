@@ -22,12 +22,6 @@
 #include "metric.h"
 #include "metric_space.h"
 
-// classes implementation
-#include "CoordinateSystem.h"
-#include "Point.h"
-#include "GeometricSimplex.h"
-#include "PointCloud.h"
-
 // algebra
 #include "algebra_coordinates.h"
 #include "coordinate_transformation.h"
@@ -36,6 +30,12 @@
 #include "cartesian.h"
 #include "polar.h"
 #include "spherical.h"
+
+// classes implementation
+#include "CoordinateSystem.h"
+#include "Point.h"
+#include "GeometricSimplex.h"
+#include "PointCloud.h"
 
 // factories implementation
 #include "factories.h"
