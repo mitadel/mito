@@ -10,16 +10,16 @@
 
 namespace mito::geometry {
 
+    // polar coordinates type
+    using polar_coordinates_t = coordinates_t<2, POLAR>;
+
     // polar coordinate basis in 2D
     template <>
-    struct basis<coordinates_t<2, POLAR>> {
+    struct basis<polar_coordinates_t> {
 
       private:
-        // the type of coordinates
-        using coordinates_type = coordinates_t<2, POLAR>;
-
         // the function extracting the 0th component
-        static constexpr auto _r = functions::component<coordinates_type, 0>;
+        static constexpr auto _r = functions::component<polar_coordinates_t, 0>;
 
       public:
         // the coordinate basis for vector fields
@@ -29,12 +29,12 @@ namespace mito::geometry {
         {
             if constexpr (I == 0) {
                 // return e_r
-                return fields::uniform_field<coordinates_type>(mito::e_0<2>);
+                return fields::uniform_field<polar_coordinates_t>(mito::e_0<2>);
             }
 
             if constexpr (I == 1) {
                 // e_theta
-                return _r * fields::uniform_field<coordinates_type>(mito::e_1<2>);
+                return _r * fields::uniform_field<polar_coordinates_t>(mito::e_1<2>);
             }
         }
     };

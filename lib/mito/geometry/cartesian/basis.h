@@ -10,13 +10,13 @@
 
 namespace mito::geometry {
 
+    // cartesian coordinates type
+    template <int D>
+    using cartesian_coordinates_t = coordinates_t<D, CARTESIAN>;
+
     // cartesian coordinate basis in dimension D
     template <int D>
-    struct basis<coordinates_t<D, CARTESIAN>> {
-
-      private:
-        // the type of coordinates
-        using coordinates_type = coordinates_t<D, CARTESIAN>;
+    struct basis<cartesian_coordinates_t<D>> {
 
       public:
         // the coordinate basis for vector fields
@@ -24,7 +24,7 @@ namespace mito::geometry {
         requires(I >= 0 && I < D)
         static constexpr auto e()
         {
-            return fields::uniform_field<coordinates_type>(mito::e<I, D>);
+            return fields::uniform_field<cartesian_coordinates_t<D>>(mito::e<I, D>);
         }
     };
 }

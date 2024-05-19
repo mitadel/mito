@@ -12,8 +12,8 @@ namespace mito::geometry {
 
     // addition of spherical coordinates {A} and vector {v} stemming from point A
     template <>
-    constexpr auto operator+(const Coordinates<3, SPHERICAL> & A, const vector_t<3> & v)
-        -> Coordinates<3, SPHERICAL>
+    constexpr auto operator+(const spherical_coordinates_t & A, const vector_t<3> & v)
+        -> spherical_coordinates_t
     {
         // get r, theta and phi of point A
         const auto & r_A = A[0];
@@ -56,13 +56,12 @@ namespace mito::geometry {
             + v_phi * r_A * sin_theta_A * sin_theta_B * sin_phi_A_B;
 
         // all done
-        return Coordinates<3, SPHERICAL>({ r_B, theta_B, phi_B });
+        return spherical_coordinates_t({ r_B, theta_B, phi_B });
     }
 
     // subtraction of coordinates B - A, returns a vector stemming from A
     template <>
-    constexpr auto operator-(
-        const Coordinates<3, SPHERICAL> & B, const Coordinates<3, SPHERICAL> & A)
+    constexpr auto operator-(const spherical_coordinates_t & B, const spherical_coordinates_t & A)
         -> mito::vector_t<3>
     {
         // get the radius and angle of the two points

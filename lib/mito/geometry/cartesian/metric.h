@@ -12,14 +12,11 @@ namespace mito::geometry {
 
     // specialization for the Euclidean metric
     template <int D>
-    struct metric<coordinates_t<D, CARTESIAN>> {
+    struct metric<cartesian_coordinates_t<D>> {
         static constexpr auto field()
         {
-            // the type of coordinates
-            using coordinates_t = coordinates_t<D, CARTESIAN>;
-
             // return the identity field
-            return fields::identity_tensor_field<coordinates_t, D>;
+            return fields::identity_tensor_field<cartesian_coordinates_t<D>, D>;
         }
     };
 }

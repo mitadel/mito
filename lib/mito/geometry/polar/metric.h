@@ -12,19 +12,16 @@ namespace mito::geometry {
 
     // specialization for the polar metric in 2D
     template <>
-    struct metric<coordinates_t<2, POLAR>> {
+    struct metric<polar_coordinates_t> {
         static constexpr auto field()
         {
-            // the type of coordinates
-            using coordinates_t = coordinates_t<2, POLAR>;
-
             // the function extracting the x_0 component of a 2D vector
-            constexpr auto r = functions::component<coordinates_t, 0>;
+            constexpr auto r = functions::component<polar_coordinates_t, 0>;
 
             // the function returning the constant e_00 tensor in 2D
-            constexpr auto e_rr = fields::uniform_field<coordinates_t>(e_00<2>);
+            constexpr auto e_rr = fields::uniform_field<polar_coordinates_t>(e_00<2>);
             // the function returning the constant e_11 tensor in 2D
-            constexpr auto e_tt = fields::uniform_field<coordinates_t>(e_11<2>);
+            constexpr auto e_tt = fields::uniform_field<polar_coordinates_t>(e_11<2>);
 
             // return the metric field in polar coordinates
             return e_rr + functions::pow<2>(r) * e_tt;
