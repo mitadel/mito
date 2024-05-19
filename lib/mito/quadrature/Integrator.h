@@ -31,10 +31,6 @@ namespace mito::quadrature {
         static constexpr int D = manifold_type::dim;
 
       private:
-        // QUESTION: Who should be in charge of computing the coordinates of the quadrature points
-        //           in the elements? The quadrature rule has the coordinates of the quadrature
-        //           points on the canonical element, the elements have the coordinate of the
-        //           vertices.
         auto _computeQuadPointCoordinates() -> void
         {
             // loop on elements

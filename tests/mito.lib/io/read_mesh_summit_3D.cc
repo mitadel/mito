@@ -12,8 +12,6 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-// TODO: add test on triangle in 3D
-
 TEST(SummitReader, LoadMesh3D)
 {
     // the coordinate system
