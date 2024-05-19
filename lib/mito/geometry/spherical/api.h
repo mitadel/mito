@@ -16,6 +16,15 @@ namespace mito::geometry::spherical {
     // factory for spherical coordinates
     constexpr auto coordinates = &geometry::coordinates<spherical_coordinates_t>;
 
+    // the function extracting the {r} coordinate from a spherical coordinate set
+    constexpr auto r = functions::component<spherical_coordinates_t, 0>;
+
+    // the function extracting the {theta} coordinate from a spherical coordinate set
+    constexpr auto theta = functions::component<spherical_coordinates_t, 1>;
+
+    // the function extracting the {phi} coordinate from a spherical coordinate set
+    constexpr auto phi = functions::component<spherical_coordinates_t, 2>;
+
     // the basis for vector fields (e_r)
     constexpr auto e_r = basis<spherical_coordinates_t>::template e<0>();
 

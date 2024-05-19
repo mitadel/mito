@@ -16,6 +16,12 @@ namespace mito::geometry::polar {
     // factory for polar coordinates
     constexpr auto coordinates = &geometry::coordinates<polar_coordinates_t>;
 
+    // the function extracting the {r} coordinate from a polar coordinate set
+    constexpr auto r = functions::component<polar_coordinates_t, 0>;
+
+    // the function extracting the {theta} coordinate from a polar coordinate set
+    constexpr auto theta = functions::component<polar_coordinates_t, 1>;
+
     // the basis for vector fields (e_r)
     constexpr auto e_r = basis<polar_coordinates_t>::template e<0>();
 
