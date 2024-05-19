@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_spherical_coordinate_basis_h)
-#define mito_geometry_spherical_coordinate_basis_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -46,7 +45,5 @@ namespace mito::geometry {
     };
 }
 
-
-#endif
 
 // end of file

@@ -4,14 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_geometry_polar_h)
-#define mito_geometry_polar_h
+#pragma once
 
 
 // publish the interface
 #include "polar/public.h"
 
-
-#endif
 
 // end of file

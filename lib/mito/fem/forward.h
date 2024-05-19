@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fem_forward_h)
-#define mito_fem_forward_h
+#pragma once
 
 
 namespace mito::fem {
@@ -27,7 +26,5 @@ namespace mito::fem {
     using quadrature_field_t = QuadratureField<Q, Y>;
 }
 
-
-#endif
 
 // end of file

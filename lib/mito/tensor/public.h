@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_tensor_public_h)
-#define mito_tensor_public_h
+#pragma once
 
 
 // external packages
@@ -30,7 +29,5 @@
 // wedge operator on forms
 #include "wedge.h"
 
-
-#endif
 
 // end of file

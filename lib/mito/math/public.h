@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_math_public_h)
-#define mito_math_public_h
+#pragma once
 
 
 // external packages
@@ -14,7 +13,5 @@
 // combinatorics utilities
 #include "combinatorics.h"
 
-
-#endif
 
 // end of file

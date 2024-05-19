@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_simulation_externals_h)
-#define mito_simulation_externals_h
+#pragma once
 
 
 // externals
@@ -15,7 +14,5 @@
 
 // support
 
-
-#endif
 
 // end of file

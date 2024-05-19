@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fields_fields_functions_arithmetic_h)
-#define mito_fields_fields_functions_arithmetic_h
+#pragma once
 
 
 // Arithmetic hybrid operations on Fields and Functions
@@ -66,7 +65,5 @@ namespace mito::fields {
     }
 }
 
-
-#endif
 
 // end of file

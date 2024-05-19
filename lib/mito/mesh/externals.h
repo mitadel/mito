@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_mesh_externals_h)
-#define mito_mesh_externals_h
+#pragma once
 
 // externals
 #include <ranges>
@@ -15,6 +14,5 @@
 #include "../topology.h"
 #include "../geometry.h"
 
-#endif
 
 // end of file

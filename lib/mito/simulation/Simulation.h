@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_simulation_Simulation_h)
-#define mito_simulation_Simulation_h
+#pragma once
 
 
 namespace mito::simulation {
@@ -67,7 +66,5 @@ namespace mito::simulation {
 #include "Simulation.icc"
 #undef mito_simulation_Simulation_icc
 
-
-#endif    // mito_simulation_Simulation_h
 
 // end of file

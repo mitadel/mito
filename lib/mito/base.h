@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_base_h)
-#define mito_base_h
+#pragma once
 
 
 // external packages
@@ -17,7 +16,5 @@
 // traits on mito types
 #include "traits.h"
 
-
-#endif
 
 // end of file

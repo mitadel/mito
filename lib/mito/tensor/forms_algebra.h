@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_manifold_forms_h)
-#define mito_manifold_forms_h
+#pragma once
 
 
 namespace mito::tensor {
@@ -53,7 +52,5 @@ namespace mito::tensor {
     }
 }
 
-
-#endif
 
 // end of file

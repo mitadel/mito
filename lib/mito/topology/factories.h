@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_factories_h)
-#define mito_topology_factories_h
+#pragma once
 
 
 namespace mito::topology {
@@ -59,6 +58,5 @@ namespace mito::topology {
     }
 }
 
-#endif
 
 // end of file

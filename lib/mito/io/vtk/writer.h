@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_io_vtk_writer_h)
-#define mito_io_vtk_writer_h
+#pragma once
 
 
 namespace mito::io::vtk {
@@ -174,4 +173,5 @@ namespace mito::io::vtk {
 
 }    // namespace mito::io::vtk
 
-#endif    // mito_io_vtk_writer_h
+
+// end of file

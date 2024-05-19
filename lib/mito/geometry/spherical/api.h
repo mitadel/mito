@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_spherical_api_h)
-#define mito_geometry_spherical_api_h
+#pragma once
 
 
 namespace mito::geometry::spherical {
@@ -36,7 +35,5 @@ namespace mito::geometry::spherical {
 
 }
 
-
-#endif
 
 // end of file

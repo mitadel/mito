@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_version_h)
-#define mito_version_h
+#pragma once
+
 
 // support
 #include <tuple>
@@ -20,6 +20,5 @@ namespace mito {
     version_t version();
 }
 
-#endif
 
 // end of file

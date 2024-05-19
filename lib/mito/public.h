@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_public_h)
-#define mito_public_h
+#pragma once
+
 
 // support
 #include "base.h"
@@ -25,6 +25,5 @@
 #include "topology.h"
 #include "utilities.h"
 
-#endif
 
 // end of file

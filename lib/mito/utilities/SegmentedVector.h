@@ -5,8 +5,8 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedVector_h)
-#define mito_utilities_SegmentedVector_h
+#pragma once
+
 
 // DESIGN NOTES
 
@@ -137,6 +137,5 @@ namespace mito::utilities {
     };
 }
 
-#endif    // mito_utilities_SegmentedVector_h
 
 // end of file

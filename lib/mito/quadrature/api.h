@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_quadrature_api_h)
-#define mito_quadrature_api_h
+#pragma once
 
 
 namespace mito::quadrature {
@@ -28,7 +27,5 @@ namespace mito::quadrature {
     constexpr auto quadrature_rule() -> quadrature_rule_t<quadratureT, elementT, r>;
 }
 
-
-#endif
 
 // end of file

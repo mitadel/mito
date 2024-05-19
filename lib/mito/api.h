@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_api_h)
-#define mito_api_h
+#pragma once
 
 
 namespace mito {
@@ -168,6 +167,5 @@ namespace mito {
     using integer_sequence = pyre::tensor::integer_sequence<I...>;
 }
 
-#endif
 
 // end of file

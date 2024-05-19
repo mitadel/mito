@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_simulation_Context_h)
-#define mito_simulation_Context_h
+#pragma once
 
 
 namespace mito::simulation {
@@ -59,7 +58,5 @@ namespace mito::simulation {
 #include "Context.icc"
 #undef mito_simulation_Context_icc
 
-
-#endif    // mito_simulation_Context_h
 
 // end of file

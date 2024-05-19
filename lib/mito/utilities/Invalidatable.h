@@ -5,8 +5,8 @@
 
 
 // code guard
-#if !defined(mito_utilities_Invalidatable_h)
-#define mito_utilities_Invalidatable_h
+#pragma once
+
 
 namespace mito::utilities {
 
@@ -56,5 +56,4 @@ namespace mito::utilities {
 #undef mito_utilities_Invalidatable_icc
 
 
-#endif
 // end of file

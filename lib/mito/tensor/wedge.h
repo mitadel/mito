@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_tensor_wedge_h)
-#define mito_tensor_wedge_h
+#pragma once
 
 
 // wedge operator on forms
@@ -84,7 +83,5 @@ namespace mito::tensor {
     }
 }
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_manifold_externals_h)
-#define mito_manifold_externals_h
+#pragma once
 
 
 // externals
@@ -13,7 +12,5 @@
 // support
 #include "../base.h"
 
-
-#endif
 
 // end of file

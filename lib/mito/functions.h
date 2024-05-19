@@ -4,15 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_functions_h)
-#define mito_functions_h
+#pragma once
 
 
 // publish the interface
 // the api is in "functions/api.h"
 #include "functions/public.h"
 
-
-#endif
 
 // end of file

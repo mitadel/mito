@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fields_api_h)
-#define mito_fields_api_h
+#pragma once
 
 
 namespace mito::fields {
@@ -35,7 +34,5 @@ namespace mito::fields {
     constexpr auto identity_tensor_field = uniform_field<coordType>(mito::identity<N>);
 }
 
-
-#endif
 
 // end of file

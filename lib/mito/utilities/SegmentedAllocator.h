@@ -5,8 +5,8 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedAllocator_h)
-#define mito_utilities_SegmentedAllocator_h
+#pragma once
+
 
 // DESIGN NOTES
 
@@ -351,7 +351,5 @@ namespace mito::utilities {
     };
 }
 
-
-#endif
 
 // end of file

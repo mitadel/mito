@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_manifold_externals_h)
-#define mito_manifold_externals_h
+#pragma once
 
 
 // externals
@@ -15,7 +14,5 @@
 #include "../mesh.h"
 #include "../geometry.h"
 
-
-#endif
 
 // end of file

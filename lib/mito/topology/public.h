@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_public_h)
-#define mito_topology_public_h
+#pragma once
 
 
 // external packages
@@ -35,6 +34,5 @@
 // support for flip diagonal
 #include "FlipDiagonal.h"
 
-#endif
 
 // end of file

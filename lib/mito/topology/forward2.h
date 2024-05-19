@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_forward2_h)
-#define mito_topology_forward2_h
+#pragma once
 
 
 namespace mito::topology {
@@ -31,7 +30,5 @@ namespace mito::topology {
         requires(T instance, const vertex_t & v) { instance.push_back(v); };
 }
 
-
-#endif
 
 // end of file

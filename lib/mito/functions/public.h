@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_functions_public_h)
-#define mito_functions_public_h
+#pragma once
 
 
 // external packages
@@ -35,6 +34,5 @@
 // the derivation rules
 #include "derivation_rules.h"
 
-#endif
 
 // end of file

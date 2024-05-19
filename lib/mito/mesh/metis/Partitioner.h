@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_mesh_metis_partitioner_h)
-#define mito_mesh_metis_partitioner_h
+#pragma once
 
 
 namespace mito::mesh::metis {
@@ -50,7 +49,5 @@ namespace mito::mesh::metis {
 #include "Partitioner.icc"
 #undef mito_mesh_metis_partitioner_icc
 
-
-#endif
 
 // end of file

@@ -4,15 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_tensor_h)
-#define mito_tensor_h
+#pragma once
 
 
 // publish the interface
 // the api is in "tensor/api.h"
 #include "tensor/public.h"
 
-
-#endif
 
 // end of file

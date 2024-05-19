@@ -5,8 +5,7 @@
 
 
 // code guard
-#if !defined(mito_tensor_Form_h)
-#define mito_tensor_Form_h
+#pragma once
 
 
 namespace mito::tensor {
@@ -82,6 +81,5 @@ namespace mito::tensor {
     };
 }
 
-#endif    // mito_tensor_Form_h
 
 // end of file

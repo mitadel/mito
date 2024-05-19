@@ -4,14 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_h)
-#define mito_h
+#pragma once
 
 
 // include the {mito} main header
 #include "mito/public.h"
 
-
-#endif
 
 // end of file

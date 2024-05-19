@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_functions_algebra_h)
-#define mito_functions_algebra_h
+#pragma once
 
 
 // Algebraic operations on functions
@@ -92,7 +91,5 @@ namespace mito::functions {
     }
 }
 
-
-#endif
 
 // end of file

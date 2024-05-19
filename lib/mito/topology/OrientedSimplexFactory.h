@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_OrientedSimplexFactory_h)
-#define mito_topology_OrientedSimplexFactory_h
+#pragma once
 
 namespace mito::topology {
 
@@ -263,6 +262,5 @@ namespace mito::topology {
 
 }
 
-#endif    // mito_topology_OrientedSimplexFactory_h
 
 // end of file

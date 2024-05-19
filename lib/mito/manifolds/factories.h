@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_factories_h)
-#define mito_manifolds_factories_h
+#pragma once
 
 
 namespace mito::manifolds {
@@ -92,7 +91,5 @@ namespace mito::manifolds {
     }
 }
 
-
-#endif
 
 // end of file

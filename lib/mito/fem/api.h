@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fem_api_h)
-#define mito_fem_api_h
+#pragma once
 
 
 namespace mito::fem {
@@ -20,7 +19,5 @@ namespace mito::fem {
 
 }
 
-
-#endif
 
 // end of file

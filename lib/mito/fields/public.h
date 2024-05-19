@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fields_public_h)
-#define mito_fields_public_h
+#pragma once
 
 
 // external packages
@@ -31,7 +30,5 @@
 // differential calculus on fields
 #include "differential.h"
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_PointCloud_h)
-#define mito_geometry_PointCloud_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -78,9 +77,6 @@ namespace mito::geometry {
     }
 
 }    // namespace mito
-
-
-#endif    // mito_geometry_PointCloud_h
 
 
 // end of file

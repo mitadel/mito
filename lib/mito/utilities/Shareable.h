@@ -5,8 +5,8 @@
 
 
 // code guard
-#if !defined(mito_utilities_Shareable_h)
-#define mito_utilities_Shareable_h
+#pragma once
+
 
 namespace mito::utilities {
 
@@ -68,5 +68,4 @@ namespace mito::utilities {
 #undef mito_utilities_Shareable_icc
 
 
-#endif
 // end of file

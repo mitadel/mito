@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_utilities_forward_h)
-#define mito_utilities_forward_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -52,7 +51,5 @@ namespace mito::utilities {
     class SegmentedVector;
 }
 
-
-#endif
 
 // end of file

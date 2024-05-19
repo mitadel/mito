@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_utilities_api_h)
-#define mito_utilities_api_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -32,7 +31,5 @@ namespace mito::utilities {
     using segmented_vector_t = SegmentedVector<resourceT>;
 }
 
-
-#endif
 
 // end of file

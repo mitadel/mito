@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_quadrature_Integrator_h)
-#define mito_quadrature_Integrator_h
+#pragma once
 
 
 namespace mito::quadrature {
@@ -89,6 +88,5 @@ namespace mito::quadrature {
 
 }    // namespace  mito
 
-#endif    // mito_quadrature_Integrator_h
 
 // end of file

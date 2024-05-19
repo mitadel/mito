@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_quadrature_forward_h)
-#define mito_quadrature_forward_h
+#pragma once
 
 
 namespace mito::quadrature {
@@ -22,7 +21,5 @@ namespace mito::quadrature {
     class QuadratureRule;
 }
 
-
-#endif
 
 // end of file

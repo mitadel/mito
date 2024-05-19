@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_quadrature_QuadratureTable_h)
-#define mito_quadrature_QuadratureTable_h
+#pragma once
 
 
 namespace mito::quadrature {
@@ -62,7 +61,5 @@ namespace mito::quadrature {
 #include "quadrature_tables_triangles.icc"
 #include "quadrature_tables_tetrahedra.icc"
 
-
-#endif    // mito_quadrature_QuadratureTable_h
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_mesh_metis_api_h)
-#define mito_mesh_metis_api_h
+#pragma once
 
 
 namespace mito::mesh::metis {
@@ -17,7 +16,5 @@ namespace mito::mesh::metis {
     }
 }
 
-
-#endif
 
 // end of file

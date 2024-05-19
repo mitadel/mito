@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_elements_NodalField_h)
-#define mito_elements_NodalField_h
+#pragma once
 
 
 namespace mito::fem {
@@ -113,6 +112,5 @@ namespace mito::fem {
 
 }    // namespace mito
 
-#endif    // mito_elements_NodalField_h
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_api_h)
-#define mito_geometry_api_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -55,7 +54,5 @@ namespace mito::geometry {
     auto point_cloud() -> point_cloud_t<D> &;
 }
 
-
-#endif
 
 // end of file

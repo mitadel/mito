@@ -4,15 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_io_summit_public_h)
-#define mito_io_summit_public_h
+#pragma once
 
 
 // classes implementation
 #include "reader.h"
 #include "writer.h"
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_forward_h)
-#define mito_manifolds_forward_h
+#pragma once
 
 
 namespace mito::manifolds {
@@ -16,7 +15,5 @@ namespace mito::manifolds {
     class Manifold;
 }
 
-
-#endif
 
 // end of file

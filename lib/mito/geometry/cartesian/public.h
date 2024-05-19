@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_cartesian_public_h)
-#define mito_geometry_cartesian_public_h
+#pragma once
 
 
 // get the forward declarations
@@ -21,7 +20,5 @@
 // get the api
 #include "api.h"
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_math_combinatorics_h)
-#define mito_math_combinatorics_h
+#pragma once
 
 
 namespace mito::math {
@@ -80,7 +79,5 @@ namespace mito::math {
     }
 }
 
-
-#endif
 
 // end of file

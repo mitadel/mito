@@ -5,8 +5,7 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedContainerIterator_h)
-#define mito_utilities_SegmentedContainerIterator_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -117,7 +116,7 @@ namespace mito::utilities {
         segmented_iterator_type _segmented_iterator;
 
         // befriend operator==
-        friend constexpr auto operator== <SegmentedContainerT>(
+        friend constexpr auto operator==<SegmentedContainerT>(
             const SegmentedContainerIterator<SegmentedContainerT> & it1,
             const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
 
@@ -155,6 +154,6 @@ namespace mito::utilities {
         return !(it1 == it2);
     }
 }
-#endif
+
 
 // end of file

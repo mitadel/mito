@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_io_summit_reader_h)
-#define mito_io_summit_reader_h
+#pragma once
 
 
 namespace mito::io::summit {
@@ -283,4 +282,5 @@ namespace mito::io::summit {
 
 }    // namespace io::summit
 
-#endif    // mito_io_summit_reader_h
+
+// end of file

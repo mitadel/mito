@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fields_differential_h)
-#define mito_fields_differential_h
+#pragma once
 
 
 // Differential operators on Fields
@@ -57,7 +56,5 @@ namespace mito::fields {
     }
 }
 
-
-#endif
 
 // end of file

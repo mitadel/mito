@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_tensor_api_h)
-#define mito_tensor_api_h
+#pragma once
 
 
 namespace mito::tensor {
@@ -43,7 +42,5 @@ namespace mito::tensor {
         const one_form_c auto & c_tilda);
 }
 
-
-#endif
 
 // end of file

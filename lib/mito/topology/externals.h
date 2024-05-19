@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_externals_h)
-#define mito_topology_externals_h
+#pragma once
 
 
 // externals
@@ -19,7 +18,5 @@
 #include "../utilities.h"
 #include "../base.h"
 
-
-#endif
 
 // end of file

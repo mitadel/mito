@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_functions_externals_h)
-#define mito_functions_externals_h
+#pragma once
 
 
 // external
@@ -13,7 +12,5 @@
 // support
 #include "../base.h"
 
-
-#endif
 
 // end of file

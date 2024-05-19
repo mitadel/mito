@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_functions_functions_library_h)
-#define mito_functions_functions_library_h
+#pragma once
 
 
 // Library of Functions
@@ -242,7 +241,5 @@ namespace mito::functions {
     };
 }
 
-
-#endif
 
 // end of file

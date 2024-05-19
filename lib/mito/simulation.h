@@ -4,14 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_simulation_h)
-#define mito_simulation_h
+#pragma once
 
 
 // publish the interface
 #include "simulation/public.h"
 
-
-#endif
 
 // end of file

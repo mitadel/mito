@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_Point_h)
-#define mito_geometry_Point_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -36,7 +35,5 @@ namespace mito::geometry {
 
 }    // namespace mito
 
-
-#endif    // mito_geometry_Point_h
 
 // end of file

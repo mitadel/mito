@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_externals_h)
-#define mito_externals_h
+#pragma once
 
 
 // externals
@@ -20,7 +19,5 @@
 #include <pyre/tensor.h>
 #include <pyre/journal.h>
 
-
-#endif
 
 // end of file

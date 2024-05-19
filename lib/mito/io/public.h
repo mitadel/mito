@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_io_public_h)
-#define mito_io_public_h
+#pragma once
 
 
 // external packages
@@ -17,6 +16,5 @@
 #include "vtk/public.h"
 #endif    // WITH_VTK
 
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_utilities_utilities_h)
-#define mito_utilities_utilities_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -26,7 +25,5 @@ namespace mito::utilities {
     using base_type = typename std::remove_cvref_t<T>;
 }
 
-
-#endif
 
 // end of file

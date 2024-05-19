@@ -4,14 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_math_h)
-#define mito_math_h
+#pragma once
 
 
 // publish the interface
 #include "math/public.h"
 
-
-#endif
 
 // end of file

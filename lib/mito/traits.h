@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_traits_h)
-#define mito_traits_h
+#pragma once
 
 
 // traits on mito types
@@ -36,7 +35,5 @@ namespace mito {
 
 }
 
-
-#endif
 
 // end of file

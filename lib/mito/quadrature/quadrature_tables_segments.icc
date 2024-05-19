@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_quadrature_quadrature_tables_segments_h)
-#define mito_quadrature_quadrature_tables_segments_h
+#pragma once
 
 
 namespace mito::quadrature {
@@ -37,9 +36,6 @@ namespace mito::quadrature {
     }
 
 }    // namespace mito
-
-
-#endif    // mito_quadrature_quadrature_tables_segments_h
 
 
 // end of file

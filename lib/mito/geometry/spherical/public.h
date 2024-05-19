@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_spherical_public_h)
-#define mito_geometry_spherical_public_h
+#pragma once
 
 
 // get the forward declarations
@@ -22,7 +21,5 @@
 // get the algebra
 #include "algebra.h"
 
-
-#endif
 
 // end of file

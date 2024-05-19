@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_OrientedSimplex_h)
-#define mito_topology_OrientedSimplex_h
+#pragma once
 
 /*
  * This class represents an OrientedSimplex of order N.
@@ -176,6 +175,6 @@ namespace mito::topology {
         friend class utilities::Repository<oriented_simplex_t<N>>;
     };
 }
-#endif    // mito_topology_OrientedSimplex_h
+
 
 // end of file
