@@ -103,9 +103,6 @@ namespace mito {
         return os;
     }
 
-    // TOFIX: perhaps move the pyre wrapping to a separate header? This stuff should be under
-    //          external
-
     // I-th basis vector in dimension D
     template <int I, int D>
     requires(D > 0 && I >= 0 && I < D)

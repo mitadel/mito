@@ -51,7 +51,6 @@ namespace mito::tensor {
 
 
     // specialization for one-forms
-    // TOFIX: add check that F actually has one input argument
     template <class F>
     class Form<1, F> {
       public:
