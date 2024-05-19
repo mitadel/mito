@@ -18,10 +18,7 @@
 #include "api.h"
 
 // classes implementation
-#include "coordinate_bases.h"
 #include "parametric.h"
-#include "metric.h"
-#include "MetricSpace.h"
 #include "Manifold.h"
 
 // factories implementation

@@ -30,7 +30,7 @@ TEST(Barycenter, Triangle3D)
 
     // check that the barycenter position is correct
     EXPECT_TRUE(
-        barycenter == mito::geometry::coordinates<coordinates_t>({ 0.5, 1.0 / 6.0, 1.0 / 6.0 }));
+        barycenter == mito::geometry::cartesian::coordinates({ 0.5, 1.0 / 6.0, 1.0 / 6.0 }));
 
     // all done
     return;

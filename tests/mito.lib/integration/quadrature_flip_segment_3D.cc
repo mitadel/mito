@@ -23,8 +23,8 @@ TEST(Quadrature, FlipSegment)
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // a segment
-    constexpr auto x_0 = mito::geometry::coordinates<coordinates_t>({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::coordinates<coordinates_t>({ 1.0, 1.0, 1.0 });
+    constexpr auto x_0 = mito::geometry::cartesian::coordinates({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::cartesian::coordinates({ 1.0, 1.0, 1.0 });
     // create nodes
     auto node_0 = mito::geometry::node(coord_system, x_0);
     auto node_1 = mito::geometry::node(coord_system, x_1);

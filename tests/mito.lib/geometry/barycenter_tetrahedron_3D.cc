@@ -30,7 +30,7 @@ TEST(Barycenter, Tetrahedron3D)
     auto barycenter = mito::geometry::barycenter(tetrahedron, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::geometry::coordinates<coordinates_t>({ 0.25, 0.25, 0.25 }));
+    EXPECT_TRUE(barycenter == mito::geometry::cartesian::coordinates({ 0.25, 0.25, 0.25 }));
 
     // all done
     return;

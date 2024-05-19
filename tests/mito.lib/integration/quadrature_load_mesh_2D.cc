@@ -10,6 +10,11 @@
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
+// the function extracting the {x_0} components of a 2D vector
+constexpr auto x_0 = mito::geometry::cartesian::x_0<2>;
+// the function extracting the {x_1} components of a 2D vector
+constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
+
 
 TEST(Quadrature, LoadMeshTriangles)
 {
@@ -22,7 +27,7 @@ TEST(Quadrature, LoadMeshTriangles)
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // instantiate a scalar field
-    auto f = mito::fields::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
+    auto f = mito::fields::field(mito::functions::cos(x_0 * x_1));
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);

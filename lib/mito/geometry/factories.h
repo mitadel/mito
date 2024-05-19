@@ -10,13 +10,6 @@
 
 namespace mito::geometry {
 
-    // factory for coordinates from brace-enclosed initializer list
-    template <coordinates_c coordT>
-    constexpr auto coordinates(mito::scalar_t (&&coords)[coordT::dim])
-    {
-        return coordT(std::move(coords));
-    }
-
     // factory for coordinate system
     template <coordinates_c coordT>
     constexpr auto coordinate_system()
@@ -48,13 +41,13 @@ namespace mito::geometry {
         // the dimension of the physical space
         constexpr int D = coordT::dim;
         // fetch the point cloud
-        auto & point_cloud = mito::geometry::point_cloud<D>();
+        auto & cloud = point_cloud<D>();
         // instantiate a point
-        auto point = point_cloud.point();
+        auto point = cloud.point();
         // place it in space
         coordinate_system.place(point, coords);
         // instantiate a vertex
-        auto vertex = mito::topology::vertex();
+        auto vertex = topology::vertex();
         // instantiate a node binding a vertex to a point
         return node_t<D>(vertex, point);
     }

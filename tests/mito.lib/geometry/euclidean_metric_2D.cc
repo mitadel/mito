@@ -6,7 +6,6 @@
 #include <gtest/gtest.h>
 #include <mito/base.h>
 #include <mito/geometry.h>
-#include <mito/tensor.h>
 
 
 // cartesian coordinates in 2D

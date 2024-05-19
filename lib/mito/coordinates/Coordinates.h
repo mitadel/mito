@@ -8,33 +8,6 @@
 #define mito_geometry_Coordinates_h
 
 
-// forward declarations of {operator+} and {operator*}
-// NOTE: these forward declarations are needed so the compiler knows they are template functions
-//       when we {friend} these functions with the class {Coordinates}
-namespace mito::geometry {
-
-    // addition of coordinates xA + xB
-    template <int D, CoordinateType coordT>
-    constexpr auto operator+(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
-        -> Coordinates<D, coordT>;
-
-    // multiplication of coordinates a * xB
-    template <int D, CoordinateType coordT>
-    constexpr auto operator*(const scalar_t &, const Coordinates<D, coordT> &)
-        -> Coordinates<D, coordT>;
-
-    // coordinates subtraction returning vectors
-    template <int D, CoordinateType coordT>
-    constexpr auto operator-(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
-        -> mito::vector_t<D>;
-
-    // operator less than
-    template <int D, CoordinateType coordT>
-    constexpr auto operator<(const Coordinates<D, coordT> &, const Coordinates<D, coordT> &)
-        -> bool;
-}
-
-
 namespace mito::geometry {
 
     // class for a set of coordinates in a {coordT} coordinates system (e.g. CARTESIAN, POLAR, ...)
@@ -84,28 +57,13 @@ namespace mito::geometry {
         constexpr Coordinates & operator=(Coordinates &&) noexcept = default;
 
       public:
-        // friendship with addition of coordinates
-        friend constexpr auto operator+<>(const coordinates_type &, const coordinates_type &)
-            -> coordinates_type;
-
-        // friendship with scaling of coordinates
-        friend constexpr auto operator*<>(const scalar_t &, const coordinates_type &)
-            -> coordinates_type;
-
         // friendship with {operator==} for coordinates
         friend constexpr auto operator==<>(const coordinates_type &, const coordinates_type &)
             -> bool;
 
-        // friendship with {operator-} for coordinates
-        friend constexpr auto operator-<>(const coordinates_type &, const coordinates_type &)
-            -> mito::vector_t<D>;
-
         // friendship with {operator<} for coordinates
         friend constexpr auto operator< <>(const coordinates_type &, const coordinates_type &)
             -> bool;
-
-        // cast to the underlying array of coordinates
-        constexpr operator array_t() const { return _array; }
 
       public:
         // components accessor

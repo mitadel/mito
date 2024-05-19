@@ -10,10 +10,6 @@
 
 namespace mito::geometry {
 
-    // coordinates alias in D-dimensions
-    template <int D, CoordinateType coordT>
-    using coordinates_t = Coordinates<D, coordT>;
-
     // coordinate system alias
     template <coordinates_c coordT>
     using coordinate_system_t = CoordinateSystem<coordT>;

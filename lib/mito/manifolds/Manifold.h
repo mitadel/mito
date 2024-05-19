@@ -82,17 +82,22 @@ namespace mito::manifolds {
         constexpr auto parametrization(
             const cell_type & cell, const parametric_point_type & point) const -> coordinates_type
         {
-            coordinates_type coord;
+            // get the coordinates of the first node
+            auto coord_0 = coordinates(cell.nodes()[0]);
+
+            // the vector going from {coord_0} to the position of the parametric point (initialize
+            // with the zero vector)
+            auto result = coord_0 - coord_0;
+
             // loop on the element nodes
             int v = 0;
             for (const auto & node : cell.nodes()) {
-                const auto & nodeCoordinates = coordinates(node);
-                coord += point[v] * nodeCoordinates;
-
+                result += (coordinates(node) - coord_0) * point[v];
                 ++v;
             }
 
-            return coord;
+            // return the coordinates of the parametric point
+            return coord_0 + result;
         }
 
         constexpr auto print() const -> void

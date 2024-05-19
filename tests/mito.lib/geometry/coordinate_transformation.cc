@@ -8,10 +8,6 @@
 #include <mito/geometry.h>
 
 
-// TOFIX: this test can be made of {static_assert}s with c++26, when the
-// math functions std::sin, std::cos and friends become {constexpr}
-
-
 TEST(CoordinateTransformation, CartesianPolar)
 {
     // cartesian coordinates in 2D
@@ -21,7 +17,7 @@ TEST(CoordinateTransformation, CartesianPolar)
     using polar_coord_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
 
     // create a set of coordinates
-    constexpr auto coord_cart_A = mito::geometry::coordinates<cartesian_coord_t>({ 1.0, 1.0 });
+    auto coord_cart_A = mito::geometry::coordinates<cartesian_coord_t>({ 1.0, 1.0 });
 
     // transform it to polar coordinates
     auto coord_polar_A = transform_coordinates<polar_coord_t>(coord_cart_A);
@@ -34,16 +30,16 @@ TEST(CoordinateTransformation, CartesianPolar)
     EXPECT_DOUBLE_EQ(coord_cart_A[1], coord_cart_back_A[1]);
 
     // create another set of coordinates
-    constexpr auto coord_cart_B = mito::geometry::coordinates<cartesian_coord_t>({ 1.0, 0.0 });
+    auto coord_cart_B = mito::geometry::coordinates<cartesian_coord_t>({ 1.0, 0.0 });
 
     // transform it to polar coordinates
     auto coord_polar_B = transform_coordinates<polar_coord_t>(coord_cart_B);
 
-    // sum A and B in cartesian coordinates
-    auto coord_cart_AB = coord_cart_A + coord_cart_B;
+    // midpoint of A and B in cartesian coordinates
+    auto coord_cart_AB = coord_cart_A + 0.5 * (coord_cart_B - coord_cart_A);
 
-    // sum A and B in polar coordinates
-    auto coord_polar_AB = coord_polar_A + coord_polar_B;
+    // midpoint of A and B in polar coordinates
+    auto coord_polar_AB = coord_polar_A + 0.5 * (coord_polar_B - coord_polar_A);
 
     // transform the cartesian sum to polar coordinates
     auto coord_cart_AB_polar = transform_coordinates<polar_coord_t>(coord_cart_AB);
@@ -70,7 +66,7 @@ TEST(CoordinateTransformation, CartesianSpherical)
     using spherical_coord_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
 
     // create a set of coordinates
-    constexpr auto coord_cart_A = mito::geometry::coordinates<cartesian_coord_t>({ 1.0, 1.0, 1.0 });
+    auto coord_cart_A = mito::geometry::coordinates<cartesian_coord_t>({ 1.0, 1.0, 1.0 });
 
     // transform it to polar coordinates
     auto coord_spherical_A = transform_coordinates<spherical_coord_t>(coord_cart_A);
@@ -84,16 +80,16 @@ TEST(CoordinateTransformation, CartesianSpherical)
     EXPECT_DOUBLE_EQ(coord_cart_A[2], coord_cart_back_A[2]);
 
     // create another set of coordinates
-    constexpr auto coord_cart_B = mito::geometry::coordinates<cartesian_coord_t>({ 0.5, 0.0, 1.0 });
+    auto coord_cart_B = mito::geometry::coordinates<cartesian_coord_t>({ 0.5, 0.0, 1.0 });
 
     // transform it to polar coordinates
     auto coord_spherical_B = transform_coordinates<spherical_coord_t>(coord_cart_B);
 
-    // sum A and B in cartesian coordinates
-    auto coord_cart_AB = coord_cart_A + coord_cart_B;
+    // midpoint of A and B in cartesian coordinates
+    auto coord_cart_AB = coord_cart_A + 0.5 * (coord_cart_B - coord_cart_A);
 
-    // sum A and B in polar coordinates
-    auto coord_spherical_AB = coord_spherical_A + coord_spherical_B;
+    // midpoint of A and B in polar coordinates
+    auto coord_spherical_AB = coord_spherical_A + 0.5 * (coord_spherical_B - coord_spherical_A);
 
     // transform the cartesian sum to polar coordinates
     auto coord_cart_AB_spherical = transform_coordinates<spherical_coord_t>(coord_cart_AB);

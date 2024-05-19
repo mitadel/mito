@@ -17,16 +17,25 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// classes implementation
-#include "Coordinates.h"
-#include "CoordinateSystem.h"
-#include "Point.h"
-#include "GeometricSimplex.h"
-#include "PointCloud.h"
+// support
+#include "basis.h"
+#include "metric.h"
+#include "metric_space.h"
 
 // algebra
 #include "algebra_coordinates.h"
 #include "coordinate_transformation.h"
+
+// coordinate specialization
+#include "cartesian.h"
+#include "polar.h"
+#include "spherical.h"
+
+// classes implementation
+#include "CoordinateSystem.h"
+#include "Point.h"
+#include "GeometricSimplex.h"
+#include "PointCloud.h"
 
 // factories implementation
 #include "factories.h"

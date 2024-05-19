@@ -11,27 +11,27 @@
 // alias for a set of polar coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
 
+// the metric space type
+using metric_space_t = mito::geometry::metric_space<coordinates_t>;
+
 // pi sixth
 constexpr auto pi_sixth = std::numbers::pi / 6.0;
 
 
 TEST(Manifolds, PolarGradient)
 {
-    // the metric space
-    constexpr auto space = mito::manifolds::metric_space<coordinates_t>();
-
     // the basis vectors
-    constexpr auto e_r = space.e<0>();
-    constexpr auto e_t = space.e<1>();
+    constexpr auto e_r = mito::geometry::polar::e_r;
+    constexpr auto e_t = mito::geometry::polar::e_theta;
 
     // the basis one-forms
-    constexpr auto dr = space.dx<0>();
-    constexpr auto dt = space.dx<1>();
+    constexpr auto dr = metric_space_t::dx<0>;
+    constexpr auto dt = metric_space_t::dx<1>;
 
-    // the function extracting the 0th component (r)
-    constexpr auto r = mito::functions::component<coordinates_t, 0>;
-    // the function extracting the 1st component (theta)
-    constexpr auto theta = mito::functions::component<coordinates_t, 1>;
+    // the function extracting the {r} component
+    constexpr auto r = mito::geometry::polar::r;
+    // the function extracting the {theta} component
+    constexpr auto theta = mito::geometry::polar::theta;
 
     // a scalar field
     constexpr auto f = mito::fields::field(r * mito::functions::sin(theta));
@@ -43,7 +43,7 @@ TEST(Manifolds, PolarGradient)
     constexpr auto df1 = mito::fields::derivative<1>(f);
 
     // a point in space {r = 2.0, theta = pi / 6.0}
-    constexpr auto x = mito::geometry::coordinates<coordinates_t>({ 2.0, pi_sixth });
+    constexpr auto x = mito::geometry::polar::coordinates({ 2.0, pi_sixth });
 
     // the gradient form
     constexpr auto gradient_form = df0 * dr + df1 * dt;
@@ -54,7 +54,7 @@ TEST(Manifolds, PolarGradient)
     static_assert(gradient_form(x)(e_t(x)) == df1(x));
 
     // the gradient vector
-    constexpr auto grad_vector = space.metric_equivalent_vector(gradient_form);
+    constexpr auto grad_vector = metric_space_t::metric_equivalent(gradient_form);
 
     //  the well-known formula for the gradient vector in polar coordinates
     constexpr auto formula = df0 * e_r + (1.0 / (r * r)) * df1 * e_t;

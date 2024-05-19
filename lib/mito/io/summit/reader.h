@@ -25,10 +25,10 @@ namespace mito::io::summit {
             }
 
             // the type of coordinates
-            using coordinates_t = coordT;
+            using coordinates_type = coordT;
 
             // instantiate a new node
-            auto node = mito::geometry::node(coordinate_system, coordinates_t(coordinates));
+            auto node = mito::geometry::node(coordinate_system, coordinates_type(coordinates));
 
             // add node to {nodes}
             nodes.push_back(node);

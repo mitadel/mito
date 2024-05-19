@@ -13,6 +13,8 @@
 // support
 #include "../utilities.h"
 #include "../topology.h"
+#include "../coordinates.h"
+#include "../fields.h"
 
 #endif
 

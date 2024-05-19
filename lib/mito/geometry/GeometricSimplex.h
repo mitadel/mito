@@ -30,10 +30,10 @@ namespace mito::geometry {
         static constexpr int order = N;
 
         // the type of the vertices
-        using vertex_type = mito::topology::vertex_t;
+        using vertex_type = topology::vertex_t;
 
         // the type of the topological simplex
-        using simplex_type = mito::topology::oriented_simplex_t<N>;
+        using simplex_type = topology::oriented_simplex_t<N>;
 
         // number of vertices of simplex
         static constexpr int n_vertices = topology::n_vertices<simplex_type>();
@@ -59,8 +59,7 @@ namespace mito::geometry {
             // of nodes in {_nodes}
             auto _check_vertices = [this]<int... J>(integer_sequence<J...>) -> bool {
                 return (
-                    mito::math::permutation_sign(_simplex->vertices(), { _nodes[J].vertex()... })
-                    == +1);
+                    math::permutation_sign(_simplex->vertices(), { _nodes[J].vertex()... }) == +1);
             };
 
             return _check_vertices(make_integer_sequence<N + 1>{});
@@ -70,7 +69,7 @@ namespace mito::geometry {
         constexpr auto _create_simplex(integer_sequence<J...>) const -> simplex_type
         {
             // fetch the topology
-            auto & topology = mito::topology::topology();
+            auto & topology = topology::topology();
 
             // instantiate a simplex with the vertices prescribed by {_nodes}
             return topology.simplex<N>({ _nodes[J].vertex()... });
@@ -143,10 +142,10 @@ namespace mito::geometry {
         static constexpr int order = 0;
 
         // the type of the vertices
-        using vertex_type = mito::topology::vertex_t;
+        using vertex_type = topology::vertex_t;
 
         // the type of the topological simplex
-        using simplex_type = mito::topology::oriented_simplex_t<0>;
+        using simplex_type = topology::oriented_simplex_t<0>;
 
         // number of vertices of simplex
         static constexpr int n_vertices = 0;

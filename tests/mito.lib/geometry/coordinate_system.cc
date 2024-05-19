@@ -27,9 +27,9 @@ TEST(CoordinateSystem, Cartesian)
     coord_system.place(point1, { 1.0, 0.0 });
 
     EXPECT_EQ(
-        mito::geometry::coordinates<coordinates_t>({ 0.0, 1.0 }), coord_system.coordinates(point0));
+        mito::geometry::cartesian::coordinates({ 0.0, 1.0 }), coord_system.coordinates(point0));
     EXPECT_EQ(
-        mito::geometry::coordinates<coordinates_t>({ 1.0, 0.0 }), coord_system.coordinates(point1));
+        mito::geometry::cartesian::coordinates({ 1.0, 0.0 }), coord_system.coordinates(point1));
 }
 
 
