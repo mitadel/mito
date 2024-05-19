@@ -4,10 +4,8 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/quadrature.h>
 
-// TOFIX: consider including the mito base header as external dependency in all the mito submodules
 
 using mito::vector_t;
 using mito::real;

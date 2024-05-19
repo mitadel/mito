@@ -10,6 +10,9 @@
 
 // externals
 
+// support
+#include "../base.h"
+
 
 #endif
 

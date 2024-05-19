@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/io.h>
 #include <mito/mesh.h>
 

@@ -8,7 +8,6 @@
 #include <cstdlib>
 
 // get support
-#include <mito/base.h>
 #include <mito/materials.h>
 #include <pyre/timers.h>
 

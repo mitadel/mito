@@ -3,7 +3,6 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
-#include <mito/base.h>
 #include <mito/tensor.h>
 #include <pyre/timers.h>
 

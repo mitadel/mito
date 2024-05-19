@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/utilities.h>
 
 

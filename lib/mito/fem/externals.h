@@ -13,6 +13,10 @@
 #include <string>
 #include <cassert>
 
+// support
+#include "../base.h"
+
+
 #endif
 
 // end of file
