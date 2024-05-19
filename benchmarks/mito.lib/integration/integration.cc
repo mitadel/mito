@@ -62,7 +62,6 @@ main()
     auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system);
 
     // instantiate a scalar field
-    using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
     auto f = mito::fields::field([](const coordinates_t & x) { return std::cos(x[0] * x[1]); });
 
     // instantiate a GAUSS integrator with degree of exactness equal to 2
