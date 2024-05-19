@@ -20,7 +20,7 @@
 // support
 #include "basis.h"
 #include "metric.h"
-#include "MetricSpace.h"
+#include "metric_space.h"
 
 // classes implementation
 #include "CoordinateSystem.h"

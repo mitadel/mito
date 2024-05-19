@@ -11,19 +11,19 @@
 // alias for a set of cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
+// the metric space type
+using metric_space_t = mito::geometry::metric_space<coordinates_t>;
+
 
 TEST(Manifolds, CartesianGradient)
 {
-    // the metric space
-    constexpr auto space = mito::geometry::metric_space<coordinates_t>();
-
     // the basis vectors
-    constexpr auto e_0 = space.e<0>();
-    constexpr auto e_1 = space.e<1>();
+    constexpr auto e_0 = metric_space_t::e<0>;
+    constexpr auto e_1 = metric_space_t::e<1>;
 
     // the basis one-forms
-    constexpr auto dx0 = space.dx<0>();
-    constexpr auto dx1 = space.dx<1>();
+    constexpr auto dx0 = metric_space_t::dx<0>;
+    constexpr auto dx1 = metric_space_t::dx<1>;
 
     // the function extracting the components of 2D vector
     constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
@@ -50,7 +50,7 @@ TEST(Manifolds, CartesianGradient)
     static_assert(gradient_form(x)(e_1(x)) == df1(x));
 
     // the gradient vector
-    constexpr auto grad_vector = space.metric_equivalent(gradient_form);
+    constexpr auto grad_vector = metric_space_t::metric_equivalent(gradient_form);
 
     //  the well-known formula for the gradient vector in euclidean coordinates
     constexpr auto formula = df0 * e_0 + df1 * e_1;

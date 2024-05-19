@@ -10,10 +10,6 @@
 
 namespace mito::geometry {
 
-    // metric space alias
-    template <coordinates_c coordsT>
-    using metric_space_t = MetricSpace<coordsT>;
-
     // coordinate system alias
     template <coordinates_c coordT>
     using coordinate_system_t = CoordinateSystem<coordT>;

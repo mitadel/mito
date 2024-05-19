@@ -10,13 +10,6 @@
 
 namespace mito::geometry {
 
-    // factory metric space
-    template <coordinates_c coordsT>
-    constexpr auto metric_space() -> metric_space_t<coordsT>
-    {
-        return metric_space_t<coordsT>();
-    }
-
     // factory for coordinate system
     template <coordinates_c coordT>
     constexpr auto coordinate_system()

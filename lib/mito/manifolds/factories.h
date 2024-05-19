@@ -32,10 +32,14 @@ namespace mito::manifolds {
         // assert that the manifold is of the highest dimension
         static_assert(mesh_type::dim == mesh_type::order);
 
-        // get the metric space
-        constexpr auto space = geometry::metric_space<coordsT>();
+        // the metric space type
+        using metric_space_type = geometry::metric_space<coordsT>;
 
-        return manifold(mesh, coordinate_system, space.w());
+        // get the metric volume form
+        constexpr auto volume_form = metric_space_type::w;
+
+        // return a new manifold
+        return manifold(mesh, coordinate_system, volume_form);
     }
 
     // factory of submanifolds from a mesh, a coordinate system and set of normal fields
@@ -52,11 +56,11 @@ namespace mito::manifolds {
         // physical space minus the order of the manifold
         static_assert(mesh_type::dim - mesh_type::order == sizeof...(fieldsT));
 
-        // get the metric space
-        constexpr auto space = geometry::metric_space<coordsT>();
+        // the metric space type
+        using metric_space_type = geometry::metric_space<coordsT>;
 
         // get the metric volume form
-        constexpr auto w = space.w();
+        constexpr auto w = metric_space_type::w;
 
         // strip namespace from the placeholder for forms contractions
         using mito::tensor::_;

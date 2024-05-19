@@ -11,6 +11,9 @@
 // alias for a set of spherical coordinates in 3D
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
 
+// the metric space type
+using metric_space_t = mito::geometry::metric_space<coordinates_t>;
+
 // pi sixth
 constexpr auto pi_sixth = std::numbers::pi / 6.0;
 constexpr auto pi_fourth = std::numbers::pi / 4.0;
@@ -18,18 +21,15 @@ constexpr auto pi_fourth = std::numbers::pi / 4.0;
 
 TEST(Manifolds, SphericalGradient)
 {
-    // the metric space
-    constexpr auto space = mito::geometry::metric_space<coordinates_t>();
-
     // the basis vectors
-    constexpr auto e_r = space.e<0>();
-    constexpr auto e_t = space.e<1>();
-    constexpr auto e_p = space.e<2>();
+    constexpr auto e_r = metric_space_t::e<0>;
+    constexpr auto e_t = metric_space_t::e<1>;
+    constexpr auto e_p = metric_space_t::e<2>;
 
     // the basis one-forms
-    constexpr auto dr = space.dx<0>();
-    constexpr auto dt = space.dx<1>();
-    constexpr auto dp = space.dx<2>();
+    constexpr auto dr = metric_space_t::dx<0>;
+    constexpr auto dt = metric_space_t::dx<1>;
+    constexpr auto dp = metric_space_t::dx<2>;
 
     // the function extracting the 0th component (r)
     constexpr auto r = mito::functions::component<coordinates_t, 0>;
@@ -64,7 +64,7 @@ TEST(Manifolds, SphericalGradient)
     EXPECT_DOUBLE_EQ(df2(x), gradient_form(x)(e_p(x)));
 
     // the gradient vector
-    constexpr auto grad_vector = space.metric_equivalent(gradient_form);
+    constexpr auto grad_vector = metric_space_t::metric_equivalent(gradient_form);
 
     //  the well-known formula for the gradient vector in spherical coordinates
     constexpr auto formula =
