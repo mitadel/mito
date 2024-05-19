@@ -154,7 +154,6 @@ namespace mito::topology {
             return vertices;
         }
 
-        // TOFIX
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void
@@ -162,7 +161,6 @@ namespace mito::topology {
             return _footprint->edges(edges);
         }
 
-        // TOFIX: remove methods sanity check, a simplex does not need it
         // returns whether the simplex passes the sanity check
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 

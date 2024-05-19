@@ -13,7 +13,6 @@ namespace mito::utilities {
     template <class resourceT>
     using shared_ptr = SharedPointer<resourceT>;
 
-    // TOFIX: perhaps eventually remove indices?
     // index type alias
     template <class resourceT>
     using index_t = std::uintptr_t;

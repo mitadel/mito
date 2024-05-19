@@ -21,7 +21,6 @@ TEST(Barycenter, Segment1D)
     auto node_1 = mito::geometry::node(coord_system, { 1.0 });
 
     // build a segment embedded in 1D
-    // TOFIX: why can't D = 1 be deduced from the nodes?
     auto segment = mito::geometry::segment<1>({ node_0, node_1 });
 
     // compute the barycenter position
