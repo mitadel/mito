@@ -10,10 +10,6 @@
 
 namespace mito::geometry {
 
-    // cartesian coordinates type
-    template <int D>
-    using cartesian_coordinates_t = coordinates_t<D, CARTESIAN>;
-
     // cartesian coordinate basis in dimension D
     template <int D>
     struct basis<cartesian_coordinates_t<D>> {

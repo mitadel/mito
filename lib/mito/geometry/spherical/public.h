@@ -8,12 +8,18 @@
 #define mito_geometry_spherical_public_h
 
 
+// get the forward declarations
+#include "forward.h"
+
 // get the coordinate basis
 #include "basis.h"
 // get the metric
 #include "metric.h"
 // get the algebra
 #include "algebra.h"
+
+// get the api
+#include "api.h"
 
 
 #endif

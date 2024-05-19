@@ -10,9 +10,6 @@
 
 namespace mito::geometry {
 
-    // polar coordinates type
-    using polar_coordinates_t = coordinates_t<2, POLAR>;
-
     // polar coordinate basis in 2D
     template <>
     struct basis<polar_coordinates_t> {

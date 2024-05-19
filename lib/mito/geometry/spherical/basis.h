@@ -10,9 +10,6 @@
 
 namespace mito::geometry {
 
-    // spherical coordinates type
-    using spherical_coordinates_t = coordinates_t<3, SPHERICAL>;
-
     // spherical coordinate basis in 3D
     template <>
     struct basis<spherical_coordinates_t> {
