@@ -8,11 +8,7 @@
 
 
 // externals
-#include <algorithm>
-#include <array>
-#include <vector>
-#include <iostream>
-#include <type_traits>
+#include <iostream>    // TOFIX: switch to journal
 
 #define HAVE_TENSOR
 #define HAVE_COMPACT_PACKINGS
