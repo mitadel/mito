@@ -7,13 +7,8 @@
 #pragma once
 
 
-// externals
-#include <iostream>    // TOFIX: switch to journal
-
-#define HAVE_TENSOR
-#define HAVE_COMPACT_PACKINGS
-#include <pyre/tensor.h>
-#include <pyre/journal.h>
+// publish the interface
+#include "externals/public.h"
 
 
 // end of file

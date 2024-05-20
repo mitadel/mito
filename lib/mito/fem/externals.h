@@ -13,7 +13,7 @@
 #include <cassert>
 
 // support
-#include "../base.h"
+#include "../externals.h"
 
 
 // end of file

@@ -8,7 +8,7 @@
 
 
 // support
-#include "base.h"
+#include "externals.h"
 #include "functions.h"
 #include "fem.h"
 #include "coordinates.h"

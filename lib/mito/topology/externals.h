@@ -16,7 +16,7 @@
 // support
 #include "../math.h"
 #include "../utilities.h"
-#include "../base.h"
+#include "../externals.h"
 
 
 // end of file

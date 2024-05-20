@@ -10,7 +10,7 @@
 // external packages
 #include "externals.h"
 
-// published type aliases
+// published type factories; this is the file you are looking for...
 #include "api.h"
 
 
