@@ -63,46 +63,6 @@ namespace mito {
     concept symmetric_matrix_c =
         (matrix_c<F> and requires { F::symmetric; }) or diagonal_matrix_c<F>;
 
-    template <typename X>
-    std::ostream & operator<<(std::ostream & os, const std::vector<X> & x)
-    {
-
-        if (std::size(x) == 0) {
-            os << "[]";
-            return os;
-        }
-
-        os << "[" << x[0];
-
-        for (auto i = 1; i < std::size(x); ++i) {
-            os << ", " << x[i];
-        }
-
-        os << "]";
-
-        return os;
-    }
-
-    template <typename X, long unsigned int N>
-    std::ostream & operator<<(std::ostream & os, const std::array<X, N> & x)
-    {
-
-        if (N == 0) {
-            os << "[]";
-            return os;
-        }
-
-        os << "[" << x[0];
-
-        for (long unsigned int i = 1; i < N; ++i) {
-            os << ", " << x[i];
-        }
-
-        os << "]";
-
-        return os;
-    }
-
     // I-th basis vector in dimension D
     template <int I, int D>
     requires(D > 0 && I >= 0 && I < D)
