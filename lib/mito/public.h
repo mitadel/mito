@@ -9,12 +9,12 @@
 
 // support
 #include "externals.h"
+#include "tensor.h"
 #include "functions.h"
 #include "fem.h"
 #include "coordinates.h"
 #include "geometry.h"
 #include "io.h"
-#include "tensor.h"
 #include "fields.h"
 #include "manifolds.h"
 #include "materials.h"

@@ -10,7 +10,7 @@
 // externals
 
 // support
-#include "../externals.h"
+#include "../tensor.h"
 
 
 // end of file

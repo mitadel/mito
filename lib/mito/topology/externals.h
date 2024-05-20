@@ -16,7 +16,7 @@
 // support
 #include "../math.h"
 #include "../utilities.h"
-#include "../externals.h"
+#include "../tensor.h"
 
 
 // end of file
