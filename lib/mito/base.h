@@ -13,8 +13,5 @@
 // published type aliases
 #include "api.h"
 
-// traits on mito types
-#include "traits.h"
-
 
 // end of file
