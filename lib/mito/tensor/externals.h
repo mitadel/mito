@@ -20,4 +20,8 @@ template <int... I>
 using integer_sequence = pyre::tensor::integer_sequence<I...>;
 
 
+// support
+#include "../journal.h"
+
+
 // end of file

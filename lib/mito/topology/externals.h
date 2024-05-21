@@ -17,6 +17,7 @@
 #include "../math.h"
 #include "../utilities.h"
 #include "../tensor.h"
+#include "../journal.h"
 
 
 // end of file
