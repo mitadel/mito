@@ -8,8 +8,6 @@
 
 
 // externals
-#include <iostream>    // TOFIX: switch to journal
-
 #include <pyre/journal.h>
 
 

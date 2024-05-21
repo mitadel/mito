@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <memory>
+#include <iostream>
 #include <mito/utilities.h>
 
 
