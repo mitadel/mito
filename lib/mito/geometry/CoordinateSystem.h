@@ -69,10 +69,10 @@ namespace mito::geometry {
             // if the point was not inserted, then it is a duplicate
             if (ret.second == false) {
                 // report
-                pyre::journal::firewall_t firewall("geometry::CoordinateSystem::place");
-                firewall << pyre::journal::at(__HERE__)
+                journal::firewall_t firewall("geometry::CoordinateSystem::place");
+                firewall << journal::at(__HERE__)
                          << "Duplicate coordinates for same point in coordinate system."
-                         << pyre::journal::endl;
+                         << journal::endl;
                 // do not allow duplicates for now
                 assert(false);
             }

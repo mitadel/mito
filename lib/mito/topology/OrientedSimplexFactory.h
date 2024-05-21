@@ -147,9 +147,9 @@ namespace mito::topology {
         requires(N > 0)
         {
             if (!isValid<N>(composition)) {
-                pyre::journal::firewall_t firewall("topology::OrientedSimplexFactory");
-                firewall << pyre::journal::at(__HERE__) << "Invalid simplex composition."
-                         << pyre::journal::endl;
+                journal::firewall_t firewall("topology::OrientedSimplexFactory");
+                firewall << journal::at(__HERE__) << "Invalid simplex composition."
+                         << journal::endl;
                 assert(false);
             }
 

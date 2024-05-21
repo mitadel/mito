@@ -7,11 +7,12 @@
 #pragma once
 
 
-// external packages
-#include "externals.h"
+namespace journal {
 
-// api
-#include "api.h"
+    // remove the {pyre} prefix
+    using namespace pyre::journal;
+
+}
 
 
 // end of file

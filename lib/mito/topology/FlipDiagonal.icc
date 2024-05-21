@@ -26,8 +26,8 @@ namespace mito::topology {
         }
 
         // TOFIX: throw error with journal, but control reaches end of non-void function
-        // pyre::journal::error_t error("error");
-        // error << "Found no shared simplices" << pyre::journal::endl;
+        // journal::error_t error("error");
+        // error << "Found no shared simplices" << journal::endl;
         // something went wrong
         throw std::logic_error("Found no shared simplices.");
     }

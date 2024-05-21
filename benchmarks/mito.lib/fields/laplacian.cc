@@ -27,7 +27,7 @@ void
 laplacian_baseline(int N, const coordinates_t & x)
 {
     // make a channel
-    pyre::journal::info_t channel("benchmarks.laplacian");
+    journal::info_t channel("benchmarks.laplacian");
 
     // make a timer
     pyre::timers::process_timer_t t("benchmarks.laplacian");
@@ -48,9 +48,9 @@ laplacian_baseline(int N, const coordinates_t & x)
     t.stop();
 
     // report
-    channel << "baseline" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result[0] << pyre::journal::newline << "process time = " << t.ms()
-            << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
+    channel << "baseline" << journal::newline << journal::indent(1) << "result = " << result[0]
+            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
+            << journal::outdent(1) << journal::endl;
 
     // all done
     return;
@@ -61,7 +61,7 @@ void
 laplacian_mito(int N, const coordinates_t & x)
 {
     // make a channel
-    pyre::journal::info_t channel("benchmarks.laplacian");
+    journal::info_t channel("benchmarks.laplacian");
 
     // make a timer
     pyre::timers::process_timer_t t("benchmarks.laplacian");
@@ -95,9 +95,9 @@ laplacian_mito(int N, const coordinates_t & x)
     t.stop();
 
     // report
-    channel << "mito" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result[0] << pyre::journal::newline << "process time = " << t.ms()
-            << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
+    channel << "mito" << journal::newline << journal::indent(1) << "result = " << result[0]
+            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
+            << journal::outdent(1) << journal::endl;
 
     // all done
     return;
@@ -111,10 +111,10 @@ main()
     int N = 1 << 25;
 
     // make a channel
-    pyre::journal::info_t channel("tests.timer.laplacian");
+    journal::info_t channel("tests.timer.laplacian");
 
     // report
-    channel << "Computing " << N << " evaluations of laplacian" << pyre::journal::endl;
+    channel << "Computing " << N << " evaluations of laplacian" << journal::endl;
 
     // generate a truly random set of coordinates
     auto x = random_number();

@@ -17,7 +17,7 @@ using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
 TEST(Quadrature, FlipSegment)
 {
     // make a channel
-    pyre::journal::info_t channel("tests.integration");
+    journal::info_t channel("tests.integration");
 
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
@@ -67,8 +67,8 @@ TEST(Quadrature, FlipSegment)
     auto result_flip = integrator_flip.integrate(f);
 
     // report
-    channel << "result from integration on segment: " << result << pyre::journal::newline
-            << "result from integration on flipped segment: " << result_flip << pyre::journal::endl;
+    channel << "result from integration on segment: " << result << journal::newline
+            << "result from integration on flipped segment: " << result_flip << journal::endl;
 
     // expect that the results obtained are opposite
     EXPECT_DOUBLE_EQ(result, -result_flip);

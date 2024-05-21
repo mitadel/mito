@@ -15,7 +15,7 @@ void
 wedge_array(int N)
 {
     // make a channel
-    pyre::journal::info_t channel("benchmarks.wedge");
+    journal::info_t channel("benchmarks.wedge");
 
     // make a timer
     pyre::timers::process_timer_t t("benchmarks.wedge");
@@ -50,9 +50,9 @@ wedge_array(int N)
     t.stop();
 
     // report
-    channel << "array" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result[0] << pyre::journal::newline << "process time = " << t.ms()
-            << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
+    channel << "array" << journal::newline << journal::indent(1) << "result = " << result[0]
+            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
+            << journal::outdent(1) << journal::endl;
 
     // all done
     return;
@@ -63,7 +63,7 @@ void
 wedge_mito(int N)
 {
     // make a channel
-    pyre::journal::info_t channel("benchmarks.wedge");
+    journal::info_t channel("benchmarks.wedge");
 
     // make a timer
     pyre::timers::process_timer_t t("benchmarks.wedge");
@@ -107,9 +107,9 @@ wedge_mito(int N)
     t.stop();
 
     // report
-    channel << "mito" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result[0] << pyre::journal::newline << "process time = " << t.ms()
-            << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
+    channel << "mito" << journal::newline << journal::indent(1) << "result = " << result[0]
+            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
+            << journal::outdent(1) << journal::endl;
 
     // all done
     return;
@@ -123,10 +123,10 @@ main()
     int N = 1 << 25;
 
     // make a channel
-    pyre::journal::info_t channel("tests.timer.wedge");
+    journal::info_t channel("tests.timer.wedge");
 
     // report
-    channel << "Computing " << N << " wedge products of one forms" << pyre::journal::endl;
+    channel << "Computing " << N << " wedge products of one forms" << journal::endl;
 
     // compute {N} wedge products with {std::array}
     wedge_array(N);
