@@ -8,7 +8,7 @@
 
 
 // support
-#include "externals.h"
+#include "journal.h"
 #include "tensor.h"
 #include "functions.h"
 #include "fem.h"

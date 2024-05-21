@@ -8,7 +8,7 @@
 
 
 // publish the interface
-#include "externals/public.h"
+#include "journal/public.h"
 
 
 // end of file
