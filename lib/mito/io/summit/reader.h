@@ -147,8 +147,6 @@ namespace mito::io::summit {
 
             if (cell_type == 2) {
                 readSegment(fileStream, mesh, nodes);
-            } else {
-                std::cout << "Not a segment, skipping element..." << std::endl;
             }
         }
 
@@ -167,8 +165,6 @@ namespace mito::io::summit {
 
             if (cell_type == 3) {
                 readTriangle(fileStream, mesh, nodes);
-            } else {
-                std::cout << "Not a triangle, skipping element..." << std::endl;
             }
         }
 
@@ -187,8 +183,6 @@ namespace mito::io::summit {
 
             if (cell_type == 4) {
                 readTetrahedron(fileStream, mesh, nodes);
-            } else {
-                std::cout << "Not a tetrahedron, skipping element..." << std::endl;
             }
         }
 
