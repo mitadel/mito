@@ -10,6 +10,7 @@
 // externals
 
 // support
+#include "../journal.h"
 #include "../manifolds.h"
 #include "../math.h"
 #include "../fem.h"

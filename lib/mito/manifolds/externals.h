@@ -10,6 +10,7 @@
 // externals
 
 // support
+#include "../journal.h"
 #include "../fields.h"
 #include "../mesh.h"
 #include "../geometry.h"

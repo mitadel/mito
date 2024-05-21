@@ -10,6 +10,7 @@
 // external
 
 // support
+#include "../journal.h"
 #include "../tensor.h"
 
 

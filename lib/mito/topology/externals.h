@@ -14,10 +14,10 @@
 #include <unordered_set>
 
 // support
+#include "../journal.h"
 #include "../math.h"
 #include "../utilities.h"
 #include "../tensor.h"
-#include "../journal.h"
 
 
 // end of file

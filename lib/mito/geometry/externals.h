@@ -10,6 +10,7 @@
 // externals
 
 // support
+#include "../journal.h"
 #include "../utilities.h"
 #include "../topology.h"
 #include "../coordinates.h"

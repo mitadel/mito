@@ -13,6 +13,7 @@
 #endif
 
 // support
+#include "../journal.h"
 
 
 // end of file

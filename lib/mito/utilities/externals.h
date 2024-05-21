@@ -15,5 +15,8 @@
 #include <memory>
 #include <type_traits>
 
+// support
+#include "../journal.h"
+
 
 // end of file
