@@ -29,8 +29,7 @@ TEST(SummitReader, LoadSummitSegmentsMesh3D)
         EXPECT_EQ(boundary_mesh.nCells(), 2);
     }
 
-    // show me the cells
-    std::cout << "Initial mesh: " << std::endl;
+    // get a cell
     auto & cell = mesh.cells()[5];
 
     // erase a simplex

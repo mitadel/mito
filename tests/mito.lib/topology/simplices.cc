@@ -85,8 +85,6 @@ TEST(Simplices, Sanity)
 
     // build a triangle connecting {segment0}, {segment1}, and {segment2}
     auto cell0 = topology.triangle({ segment0, segment1, segment2 });
-    // show me
-    std::cout << cell0 << std::endl;
 
     // assert there is one simplex riding on this segment (cell0)
     EXPECT_EQ(segment0.references(), 2);
@@ -104,8 +102,6 @@ TEST(Simplices, Sanity)
 
     // build a triangle connecting {segment3}, {segment4}, and {segment1m}
     auto cell1 = topology.triangle({ segment3, segment4, segment1m });
-    // show me
-    std::cout << cell1 << std::endl;
 
     // assert there is one simplex riding on this segment (cell1)
     EXPECT_EQ(segment3.references(), 2);

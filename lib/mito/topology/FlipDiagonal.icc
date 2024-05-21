@@ -87,7 +87,6 @@ namespace mito::topology {
         assert(!shared_simplex.is_nullptr());
 
         // show me
-        // std::cout << "shared simplex: " << *shared_simplex << std::endl;
         auto opposite_vertices = _opposite_vertices(simplex0, simplex1, shared_simplex);
 
         auto & topology = topology::topology();

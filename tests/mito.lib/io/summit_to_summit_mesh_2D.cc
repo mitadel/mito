@@ -26,8 +26,6 @@ TEST(SummitToSummit, Mesh2D)
         auto mesh =
             mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
 
-        std::cout << mesh.nCells() << std::endl;
-
         // get the original number of mesh cells
         original_mesh_cells = mesh.nCells();
 
@@ -42,8 +40,6 @@ TEST(SummitToSummit, Mesh2D)
         std::ifstream fileStream("rectangle_copy.summit");
         auto mesh =
             mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
-
-        std::cout << mesh.nCells() << std::endl;
 
         // get the reread number of mesh cells
         reread_mesh_cells = mesh.nCells();

@@ -43,7 +43,4 @@ TEST(Point, TestPoint)
     EXPECT_DOUBLE_EQ(mito::geometry::distance(point_0, point_0, polar_coord_system), 0.0);
     EXPECT_DOUBLE_EQ(
         mito::geometry::distance(point_0, point_1, polar_coord_system), std::sqrt(2.0));
-
-    // print point cloud
-    std::cout << cloud << std::endl;
 }

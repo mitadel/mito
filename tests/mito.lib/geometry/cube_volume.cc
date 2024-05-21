@@ -96,7 +96,8 @@ TEST(Tensor, CubeVolume)
         volume_new += volume_form(w, coord_system, cell);
         volume_old += volume_determinant(coord_system, cell);
     }
-    // std::cout << volume_new << "\t" << volume_old << std::endl;
+
+    // check that the two calculations led to the same result
     EXPECT_DOUBLE_EQ(volume_new, volume_old);
 }
 
