@@ -10,15 +10,15 @@
 // get the forward declarations
 #include "forward.h"
 
-// get the coordinate basis
+// get the polar coordinate basis
 #include "basis.h"
-// get the metric
+// get the polar metric
 #include "metric.h"
 
 // get the api
 #include "api.h"
 
-// get the algebra
+// get the algebra in polar coordinates
 #include "algebra.h"
 
 
