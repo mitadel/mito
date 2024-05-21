@@ -224,7 +224,11 @@ namespace mito::io::summit {
             throw std::runtime_error("reader: Mesh file could not be opened");
         }
 
-        std::cout << "Loading summit mesh..." << std::endl;
+        // make a channel
+        journal::info_t channel("mito.summit.mesh_reader");
+
+        // report
+        channel << "Loading summit mesh..." << journal::endl;
 
         // read dimension of physical space
         int dim = 0;

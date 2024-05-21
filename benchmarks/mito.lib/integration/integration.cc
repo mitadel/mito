@@ -18,6 +18,9 @@ constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
 int
 main()
 {
+    // make a channel
+    journal::info_t channel("benchmarks.integration");
+
     /**
          * Mesh with four cells:
             (0,1)           (1,1)
@@ -74,8 +77,8 @@ main()
 
     auto result = integrator.integrate(f);
     auto exact = mito::scalar_t(0.9460830607878437);
-    std::cout << "Integration of cos(x*y): Result = " << result
-              << ", Error = " << std::fabs(result - exact) << std::endl;
+    channel << "Integration of cos(x*y): Result = " << result
+            << ", Error = " << std::fabs(result - exact) << journal::endl;
 
     // all done
     return 0;

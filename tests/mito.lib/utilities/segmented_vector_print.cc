@@ -21,9 +21,12 @@ using segmented_vector_t = mito::utilities::segmented_vector_t<resource_t>;
 void
 print(const segmented_vector_t & vector)
 {
+    // make a channel
+    journal::info_t channel("tests.utilities");
+
     // print each entry of the vector
     for (int i = 0; i < std::size(vector); ++i) {
-        std::cout << vector[i].foo() << std::endl;
+        channel << vector[i].foo() << journal::endl;
     }
 
     // all done

@@ -14,6 +14,9 @@ using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN
 
 TEST(SummitReader, LoadMesh3D)
 {
+    // make a channel
+    journal::info_t channel("tests.read_mesh");
+
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
@@ -24,5 +27,5 @@ TEST(SummitReader, LoadMesh3D)
     std::ifstream fileStream("cube.summit");
     auto mesh =
         mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
-    std::cout << "Loaded mesh in " << clock() - t << std::endl;
+    channel << "Loaded mesh in " << clock() - t << journal::endl;
 }

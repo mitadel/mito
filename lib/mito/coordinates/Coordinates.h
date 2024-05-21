@@ -70,8 +70,11 @@ namespace mito::geometry {
 
         auto print() const -> void
         {
+            // make a channel
+            journal::info_t channel("mito.coordinates");
+
             // print the coordinates of the point
-            std::cout << _array;
+            channel << _array;
 
             // all done
             return;

@@ -19,6 +19,9 @@ using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
 
 TEST(Quadrature, Square)
 {
+    // make a channel
+    journal::info_t channel("tests.quadrature");
+
     /**
      * Mesh with four cells:
         (0,1)           (1,1)
@@ -82,8 +85,8 @@ TEST(Quadrature, Square)
     constexpr auto exact = real{ 0.35355339059327384 };
 
     // report
-    std::cout << "Integration of x*y in 3D: Result = " << result
-              << ", Error = " << std::fabs(result - exact) << std::endl;
+    channel << "Integration of x*y in 3D: Result = " << result
+            << ", Error = " << std::fabs(result - exact) << journal::endl;
 
     // check the result
     EXPECT_DOUBLE_EQ(result, exact);

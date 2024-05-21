@@ -23,6 +23,9 @@ constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
 
 TEST(Quadrature, LoadMeshTrianglesMPI)
 {
+    // make a channel
+    journal::info_t channel("tests.quadrature");
+
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
 
@@ -58,8 +61,8 @@ TEST(Quadrature, LoadMeshTrianglesMPI)
 
     if (task_id == 0) {
         auto exact = 0.9460830607878437;
-        std::cout << "Integration of cos(x*y): Result = " << global_result
-                  << ", Error = " << std::fabs(global_result - exact) << std::endl;
+        channel << "Integration of cos(x*y): Result = " << global_result
+                << ", Error = " << std::fabs(global_result - exact) << journal::endl;
 
         EXPECT_NEAR(global_result, exact, 1.e-7);
     }

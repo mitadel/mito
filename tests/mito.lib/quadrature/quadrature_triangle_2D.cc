@@ -23,6 +23,9 @@ constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
 
 TEST(Quadrature, Square)
 {
+    // make a channel
+    journal::info_t channel("tests.quadrature");
+
     /**
      * Mesh with four cells:
         (0,1)           (1,1)
@@ -71,8 +74,8 @@ TEST(Quadrature, Square)
     // the exact solution
     constexpr auto exact = real{ 0.9460830607878437 };
     // report
-    std::cout << "Integration of cos(x*y): Result = " << result
-              << ", Error = " << std::fabs(result - exact) << std::endl;
+    channel << "Integration of cos(x*y): Result = " << result
+            << ", Error = " << std::fabs(result - exact) << journal::endl;
     // check the result
     EXPECT_NEAR(result, exact, 1.e-3);
 
@@ -81,8 +84,8 @@ TEST(Quadrature, Square)
     // integrate the field
     result = bodyIntegrator.integrate(f_one);    // exact 1.0
     // report
-    std::cout << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
-              << std::endl;
+    channel << "Integration of 1: Result = " << result << ", Error = " << std::fabs(result - 1.0)
+            << journal::endl;
     // check the result
     EXPECT_DOUBLE_EQ(result, 1.0);
 
@@ -91,8 +94,8 @@ TEST(Quadrature, Square)
     // integrate the field
     result = bodyIntegrator.integrate(f_linear);    // exact 0.5
     // report
-    std::cout << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
-              << std::endl;
+    channel << "Integration of x: Result = " << result << ", Error = " << std::fabs(result - 0.5)
+            << journal::endl;
     // check the result
     EXPECT_DOUBLE_EQ(result, 0.5);
 
@@ -101,8 +104,8 @@ TEST(Quadrature, Square)
     // integrate the field
     result = bodyIntegrator.integrate(f_xy);    // exact 0.25
     // report
-    std::cout << "Integration of x*y: Result = " << result
-              << ", Error = " << std::fabs(result - 0.25) << std::endl;
+    channel << "Integration of x*y: Result = " << result << ", Error = " << std::fabs(result - 0.25)
+            << journal::endl;
     // check the result
     EXPECT_DOUBLE_EQ(result, 0.25);
 
@@ -111,8 +114,8 @@ TEST(Quadrature, Square)
     // integrate the field
     result = bodyIntegrator.integrate(f_xx);    // exact 1.0 / 3.0
     // report
-    std::cout << "Integration of x*x: Result = " << result
-              << ", Error = " << std::fabs(result - 1.0 / 3.0) << std::endl;
+    channel << "Integration of x*x: Result = " << result
+            << ", Error = " << std::fabs(result - 1.0 / 3.0) << journal::endl;
     // check the result
     EXPECT_DOUBLE_EQ(result, 1.0 / 3.0);
 }
