@@ -5,8 +5,7 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedAllocatorIterator_h)
-#define mito_utilities_SegmentedAllocatorIterator_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -148,6 +147,6 @@ namespace mito::utilities {
         return !(it1 == it2);
     }
 }
-#endif
+
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_cartesian_api_h)
-#define mito_geometry_cartesian_api_h
+#pragma once
 
 
 namespace mito::geometry::cartesian {
@@ -53,7 +52,5 @@ namespace mito::geometry::cartesian {
 
 }
 
-
-#endif
 
 // end of file

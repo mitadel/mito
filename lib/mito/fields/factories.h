@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fields_factories_h)
-#define mito_fields_factories_h
+#pragma once
 
 
 namespace mito::fields {
@@ -39,7 +38,5 @@ namespace mito::fields {
     }
 }
 
-
-#endif
 
 // end of file

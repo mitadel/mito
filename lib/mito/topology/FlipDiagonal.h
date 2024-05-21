@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_FlipDiagonal_h)
-#define mito_topology_FlipDiagonal_h
+#pragma once
 
 
 namespace mito::topology {
@@ -60,7 +59,5 @@ namespace mito::topology {
 #include "FlipDiagonal.icc"
 #undef mito_topology_FlipDiagonal_icc
 
-
-#endif
 
 // end of file

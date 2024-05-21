@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_api_h)
-#define mito_manifolds_api_h
+#pragma once
 
 
 namespace mito::manifolds {
@@ -32,7 +31,5 @@ namespace mito::manifolds {
         const mito::fields::vector_field_c auto & normal_field);
 }
 
-
-#endif
 
 // end of file

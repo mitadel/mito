@@ -5,15 +5,14 @@
 
 
 // code guard
-#if !defined(mito_utilities_SharedPointer_h)
-#define mito_utilities_SharedPointer_h
+#pragma once
 
 
 namespace mito::utilities {
 
     // declaration
     template <class resourceT>
-    // requires ReferenceCountedObject<resourceT>
+    // requires reference_countable_c<resourceT>
     class SharedPointer {
         // types
       public:
@@ -109,5 +108,4 @@ namespace mito::utilities {
 #undef mito_utilities_SharedPointer_icc
 
 
-#endif
 // end of file

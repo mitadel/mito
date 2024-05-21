@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_public_h)
-#define mito_topology_public_h
+#pragma once
 
 
 // external packages
@@ -20,7 +19,7 @@
 // other classes implementation
 #include "Simplex.h"
 // class {OrientedSimplex} needs to be complete for the following forward declarations
-// (the concept {ReferenceCountedObject} requires to see full class header file)
+// (the concept {reference_countable_c} requires to see full class header file)
 #include "OrientedSimplex.h"
 #include "SimplexFactory.h"
 #include "OrientedSimplexFactory.h"
@@ -35,6 +34,5 @@
 // support for flip diagonal
 #include "FlipDiagonal.h"
 
-#endif
 
 // end of file

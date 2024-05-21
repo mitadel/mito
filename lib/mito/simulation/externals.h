@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_simulation_externals_h)
-#define mito_simulation_externals_h
+#pragma once
 
 
 // externals
@@ -14,8 +13,7 @@
 #endif
 
 // support
+#include "../journal.h"
 
-
-#endif
 
 // end of file

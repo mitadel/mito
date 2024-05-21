@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_public_h)
-#define mito_geometry_public_h
+#pragma once
 
 
 // external packages
@@ -43,6 +42,5 @@
 // geometry utilities
 #include "utilities.h"
 
-#endif
 
 // end of file

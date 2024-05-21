@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_PointCloud_h)
-#define mito_geometry_PointCloud_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -33,10 +32,12 @@ namespace mito::geometry {
       public:
         auto print() const noexcept -> void
         {
+            // make a channel
+            journal::info_t channel("mito.point_cloud");
+
             // iterate on points
-            std::cout << "Point cloud:" << std::endl;
             for (const auto & point : _cloud) {
-                std::cout << point.id() << std::endl;
+                channel << point.id() << journal::endl;
             }
             // all done
             return;
@@ -78,9 +79,6 @@ namespace mito::geometry {
     }
 
 }    // namespace mito
-
-
-#endif    // mito_geometry_PointCloud_h
 
 
 // end of file

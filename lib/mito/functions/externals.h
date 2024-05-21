@@ -4,14 +4,14 @@
 //
 
 // code guard
-#if !defined(mito_functions_externals_h)
-#define mito_functions_externals_h
+#pragma once
 
 
 // external
 
 // support
+#include "../journal.h"
+#include "../tensor.h"
 
-#endif
 
 // end of file

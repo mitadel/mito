@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_utilities_externals_h)
-#define mito_utilities_externals_h
+#pragma once
 
 
 // externals
@@ -16,7 +15,8 @@
 #include <memory>
 #include <type_traits>
 
+// support
+#include "../journal.h"
 
-#endif
 
 // end of file

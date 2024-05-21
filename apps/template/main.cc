@@ -11,10 +11,10 @@ int
 main()
 {
     // make a channel
-    pyre::journal::info_t channel("apps.template");
+    journal::info_t channel("apps.template");
 
     // report
-    channel << "the mito application template" << pyre::journal::endl;
+    channel << "the mito application template" << journal::endl;
 
     // all done
     return 0;

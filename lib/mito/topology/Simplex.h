@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_topology_Simplex_h)
-#define mito_topology_Simplex_h
+#pragma once
+
 
 namespace mito::topology {
 
@@ -59,7 +59,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        void vertices(VertexInsertable auto & vertices) const
+        void vertices(vertex_insertable_c auto & vertices) const
         requires(N > 1)
         {
             for (const auto & simplex : composition()) {
@@ -68,7 +68,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        void vertices(VertexInsertable auto & vertices) const
+        void vertices(vertex_insertable_c auto & vertices) const
         requires(N == 1)
         {
             vertices.insert(_simplices[0]->footprint());
@@ -89,7 +89,7 @@ namespace mito::topology {
 
         // append the vertices of this simplex to a collection of vertices
         // (maintaining the order dictated by the simplex composition)
-        inline auto vertices(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(vertex_push_backable_c auto & vertices) const -> void
         requires(N > 1)
         {
             // get the first subsimplex
@@ -120,7 +120,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        inline auto vertices(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(vertex_push_backable_c auto & vertices) const -> void
         requires(N == 1)
         {
             vertices.push_back(_simplices[0]->footprint());
@@ -235,7 +235,5 @@ namespace mito::topology {
 
 }    // namespace mito
 
-
-#endif    // mito_topology_Simplex_h
 
 // end of file

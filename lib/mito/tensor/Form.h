@@ -5,8 +5,7 @@
 
 
 // code guard
-#if !defined(mito_tensor_Form_h)
-#define mito_tensor_Form_h
+#pragma once
 
 
 namespace mito::tensor {
@@ -52,7 +51,6 @@ namespace mito::tensor {
 
 
     // specialization for one-forms
-    // TOFIX: add check that F actually has one input argument
     template <class F>
     class Form<1, F> {
       public:
@@ -82,6 +80,5 @@ namespace mito::tensor {
     };
 }
 
-#endif    // mito_tensor_Form_h
 
 // end of file

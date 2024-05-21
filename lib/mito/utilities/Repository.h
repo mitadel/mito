@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_utilities_Repository_h)
-#define mito_utilities_Repository_h
+#pragma once
+
 
 // DESIGN NOTES
 
@@ -33,7 +33,7 @@
 //          correct reference count.
 //
 // The only requirement of the {Repository} class on the template type {T} of its resources
-// stored is simply that the resource is a {ReferenceCountedObject}, which means that the
+// stored is simply that the resource is a {reference_countable_c}, which means that the
 // resource is able to provide the machinery needed by the {SharedPointer} to do the book
 // keeping. Specifically, this translates into the class of the resource inheriting from class
 // {Shareable}, which provides the minimal interface necessary to collaborate with
@@ -49,7 +49,7 @@ namespace mito::utilities {
 
     template <class sharedPointerT>
     class Repository {
-        // requires ReferenceCountedObject<sharedPointerT::resource_type>
+        // requires reference_countable_c<sharedPointerT::resource_type>
       public:
         // me
         using repository_type = Repository<sharedPointerT>;
@@ -161,6 +161,5 @@ namespace mito::utilities {
     };
 }
 
-#endif    // mito_utilities_Repository_h
 
 // end of file

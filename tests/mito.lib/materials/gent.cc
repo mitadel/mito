@@ -4,12 +4,14 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/materials.h>
 
 
 TEST(Gent, TestGent)
 {
+    // make a channel
+    journal::info_t channel("tests.gent");
+
     // can either use this syntax...
     // mito::materials::gent_t material(1.0 /*rho*/, 1.0 /*kappa*/, 1.0 /*mu*/, 1.0 /*Jm*/);
     // ... or this syntax
@@ -25,6 +27,6 @@ TEST(Gent, TestGent)
     mito::matrix_t<2> P2 = { 0.0, 0.0, 0.0, 0.0 };
     material.Constitutive(u2, Du2, P2);
 
-    std::cout << "P = " << P << std::endl;
-    std::cout << "P2 = " << P2 << std::endl;
+    channel << "P = " << P << journal::endl;
+    channel << "P2 = " << P2 << journal::endl;
 }

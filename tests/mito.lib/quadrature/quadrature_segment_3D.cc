@@ -4,7 +4,6 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/quadrature.h>
 
 
@@ -18,7 +17,7 @@ using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
 TEST(Quadrature, Segment3D)
 {
     // make a channel
-    pyre::journal::info_t channel("tests.quadrature");
+    journal::info_t channel("tests.quadrature");
 
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
@@ -63,8 +62,8 @@ TEST(Quadrature, Segment3D)
     auto exact = 0.5773502691896265;
 
     // report
-    channel << "result: " << result << pyre::journal::endl;
-    channel << "exact: " << exact << pyre::journal::endl;
+    channel << "result: " << result << journal::endl;
+    channel << "exact: " << exact << journal::endl;
 
     // expect a decent match with the exact solution
     EXPECT_NEAR(exact, result, 1.e-15);

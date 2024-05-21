@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_CoordinateSystem_h)
-#define mito_geometry_CoordinateSystem_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -27,13 +26,6 @@ namespace mito::geometry {
         using point_id_type = utilities::index_t<point_type>;
         // a map between points and their coordinates
         using coordinates_map_type = std::map<point_id_type, coordinates_type>;
-
-      public:
-        // TOFIX: is this ever used?
-        // I-th basis vector in dimension D
-        template <int I>
-        requires(I >= 0 && I < D)
-        static constexpr auto e = pyre::tensor::unit<pyre::tensor::vector_t<D>, I>;
 
       public:
         // constructor
@@ -77,10 +69,10 @@ namespace mito::geometry {
             // if the point was not inserted, then it is a duplicate
             if (ret.second == false) {
                 // report
-                pyre::journal::firewall_t firewall("geometry::CoordinateSystem::place");
-                firewall << pyre::journal::at(__HERE__)
+                journal::firewall_t firewall("geometry::CoordinateSystem::place");
+                firewall << journal::at(__HERE__)
                          << "Duplicate coordinates for same point in coordinate system."
-                         << pyre::journal::endl;
+                         << journal::endl;
                 // do not allow duplicates for now
                 assert(false);
             }
@@ -121,9 +113,6 @@ namespace mito::geometry {
     };
 
 }    // namespace mito
-
-
-#endif    // mito_geometry_CoordinateSystem_h
 
 
 // end of file

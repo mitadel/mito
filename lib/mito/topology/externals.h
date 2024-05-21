@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_externals_h)
-#define mito_topology_externals_h
+#pragma once
 
 
 // externals
@@ -15,9 +14,10 @@
 #include <unordered_set>
 
 // support
+#include "../journal.h"
 #include "../math.h"
 #include "../utilities.h"
+#include "../tensor.h"
 
-#endif
 
 // end of file

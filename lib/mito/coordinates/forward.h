@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_coordinates_forward_h)
-#define mito_coordinates_forward_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -26,7 +25,5 @@ namespace mito::geometry {
     };
 }
 
-
-#endif
 
 // end of file

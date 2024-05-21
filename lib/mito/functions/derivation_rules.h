@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_functions_derivation_rules_h)
-#define mito_functions_derivation_rules_h
+#pragma once
 
 
 // Derivation rules
@@ -63,7 +62,5 @@ namespace mito::functions {
     }
 }
 
-
-#endif
 
 // end of file

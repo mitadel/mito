@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fem_public_h)
-#define mito_fem_public_h
+#pragma once
 
 
 // external packages
@@ -24,7 +23,5 @@
 // factories implementation
 #include "factories.h"
 
-
-#endif
 
 // end of file

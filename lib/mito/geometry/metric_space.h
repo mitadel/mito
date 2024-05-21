@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_MetricSpace_h)
-#define mito_geometry_MetricSpace_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -106,7 +105,5 @@ namespace mito::geometry {
     }
 }    // namespace mito
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_api_h)
-#define mito_topology_api_h
+#pragma once
 
 
 namespace mito::topology {
@@ -27,7 +26,5 @@ namespace mito::topology {
     using tetrahedron_t = simplex_t<3>;
 }
 
-
-#endif
 
 // end of file

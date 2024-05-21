@@ -5,8 +5,8 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedAllocator_h)
-#define mito_utilities_SegmentedAllocator_h
+#pragma once
+
 
 // DESIGN NOTES
 
@@ -58,12 +58,6 @@ namespace mito::utilities {
         using unqualified_resource_type = typename std::remove_const<resource_type>::type;
         // raw pointer type to unqualified resource type
         using unqualified_pointer = unqualified_resource_type *;
-        // TOFIX: remove?
-        // const raw pointer type to unqualified resource type
-        using const_pointer = const unqualified_resource_type *;
-        // TOFIX: remove?
-        // const raw reference type to unqualified resource type
-        using const_reference = const unqualified_resource_type &;
 
       public:
         // default constructor (empty data structure)
@@ -351,7 +345,5 @@ namespace mito::utilities {
     };
 }
 
-
-#endif
 
 // end of file

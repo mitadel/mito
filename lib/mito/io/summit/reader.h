@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_io_summit_reader_h)
-#define mito_io_summit_reader_h
+#pragma once
 
 
 namespace mito::io::summit {
@@ -148,8 +147,6 @@ namespace mito::io::summit {
 
             if (cell_type == 2) {
                 readSegment(fileStream, mesh, nodes);
-            } else {
-                std::cout << "Not a segment, skipping element..." << std::endl;
             }
         }
 
@@ -168,8 +165,6 @@ namespace mito::io::summit {
 
             if (cell_type == 3) {
                 readTriangle(fileStream, mesh, nodes);
-            } else {
-                std::cout << "Not a triangle, skipping element..." << std::endl;
             }
         }
 
@@ -188,8 +183,6 @@ namespace mito::io::summit {
 
             if (cell_type == 4) {
                 readTetrahedron(fileStream, mesh, nodes);
-            } else {
-                std::cout << "Not a tetrahedron, skipping element..." << std::endl;
             }
         }
 
@@ -231,7 +224,11 @@ namespace mito::io::summit {
             throw std::runtime_error("reader: Mesh file could not be opened");
         }
 
-        std::cout << "Loading summit mesh..." << std::endl;
+        // make a channel
+        journal::info_t channel("mito.summit.mesh_reader");
+
+        // report
+        channel << "Loading summit mesh..." << journal::endl;
 
         // read dimension of physical space
         int dim = 0;
@@ -283,4 +280,5 @@ namespace mito::io::summit {
 
 }    // namespace io::summit
 
-#endif    // mito_io_summit_reader_h
+
+// end of file

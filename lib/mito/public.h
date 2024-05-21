@@ -4,17 +4,17 @@
 //
 
 // code guard
-#if !defined(mito_public_h)
-#define mito_public_h
+#pragma once
+
 
 // support
-#include "base.h"
+#include "journal.h"
+#include "tensor.h"
 #include "functions.h"
 #include "fem.h"
 #include "coordinates.h"
 #include "geometry.h"
 #include "io.h"
-#include "tensor.h"
 #include "fields.h"
 #include "manifolds.h"
 #include "materials.h"
@@ -25,6 +25,5 @@
 #include "topology.h"
 #include "utilities.h"
 
-#endif
 
 // end of file

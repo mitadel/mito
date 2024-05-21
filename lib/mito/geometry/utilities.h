@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_utilities_h)
-#define mito_geometry_utilities_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -170,7 +169,5 @@ namespace mito::geometry {
     }
 }
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_cartesian_Metric_h)
-#define mito_geometry_cartesian_Metric_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -21,7 +20,5 @@ namespace mito::geometry {
     };
 }
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_tensor_forward_h)
-#define mito_tensor_forward_h
+#pragma once
 
 
 namespace mito::tensor {
@@ -32,7 +31,5 @@ namespace mito::tensor {
 
 }
 
-
-#endif
 
 // end of file

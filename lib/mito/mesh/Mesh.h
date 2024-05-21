@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_mesh_Mesh_h)
-#define mito_mesh_Mesh_h
+#pragma once
 
 
 namespace mito::mesh {
@@ -186,7 +185,5 @@ namespace mito::mesh {
 
 }    // namespace mito
 
-
-#endif    // mito_mesh_Mesh_h
 
 // end of file

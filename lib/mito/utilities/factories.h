@@ -4,15 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_utilities_factories_h)
-#define mito_utilities_factories_h
+#pragma once
 
 
 namespace mito::utilities {
 
 }
 
-
-#endif
 
 // end of file

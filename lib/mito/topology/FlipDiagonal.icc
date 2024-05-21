@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_flipdiagonal_h)
-#define mito_topology_flipdiagonal_h
+#pragma once
 
 
 namespace mito::topology {
@@ -27,8 +26,8 @@ namespace mito::topology {
         }
 
         // TOFIX: throw error with journal, but control reaches end of non-void function
-        // pyre::journal::error_t error("error");
-        // error << "Found no shared simplices" << pyre::journal::endl;
+        // journal::error_t error("error");
+        // error << "Found no shared simplices" << journal::endl;
         // something went wrong
         throw std::logic_error("Found no shared simplices.");
     }
@@ -88,7 +87,6 @@ namespace mito::topology {
         assert(!shared_simplex.is_nullptr());
 
         // show me
-        // std::cout << "shared simplex: " << *shared_simplex << std::endl;
         auto opposite_vertices = _opposite_vertices(simplex0, simplex1, shared_simplex);
 
         auto & topology = topology::topology();
@@ -148,7 +146,5 @@ namespace mito::topology {
     }
 }
 
-
-#endif
 
 // end of file

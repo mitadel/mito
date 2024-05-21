@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fem_QuadratureField_h)
-#define mito_fem_QuadratureField_h
+#pragma once
 
 
 namespace mito::fem {
@@ -137,6 +136,5 @@ namespace mito::fem {
 
 }    // namespace mito
 
-#endif    // mito_fem_QuadratureField_h
 
 // end of file

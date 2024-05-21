@@ -4,25 +4,22 @@
 //
 
 // code guard
-#if !defined(mito_geometry_spherical_public_h)
-#define mito_geometry_spherical_public_h
+#pragma once
 
 
 // get the forward declarations
 #include "forward.h"
 
-// get the coordinate basis
+// get the spherical coordinate basis
 #include "basis.h"
-// get the metric
+// get the spherical metric
 #include "metric.h"
 
 // get the api
 #include "api.h"
 
-// get the algebra
+// get the algebra in spherical coordinates
 #include "algebra.h"
 
-
-#endif
 
 // end of file

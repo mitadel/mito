@@ -8,7 +8,6 @@
 #include <cstdlib>
 
 // get support
-#include <mito/base.h>
 #include <mito/materials.h>
 #include <pyre/timers.h>
 
@@ -23,7 +22,7 @@ gent_constitutive_array(
     std::array<double, 9> & P_array_result)
 {
     // make a channel
-    pyre::journal::info_t channel("tests.timer.gent");
+    journal::info_t channel("tests.timer.gent");
 
     // make a timer
     process_timer_t t("tests.timer");
@@ -134,12 +133,12 @@ gent_constitutive_array(
     t.stop();
 
     // report
-    channel << "array (for loop)" << pyre::journal::newline << pyre::journal::indent(1)
+    channel << "array (for loop)" << journal::newline << journal::indent(1)
             << "result = " << P_array_result[0] << ", " << P_array_result[1] << ", "
             << P_array_result[2] << ", " << P_array_result[3] << ", " << P_array_result[4] << ", "
             << P_array_result[5] << ", " << P_array_result[6] << ", " << P_array_result[7] << ", "
-            << P_array_result[8] << pyre::journal::newline << "process time = " << t.ms() << " ms "
-            << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
+            << P_array_result[8] << journal::newline << "process time = " << t.ms() << " ms "
+            << journal::newline << journal::outdent(1) << journal::endl;
 
     // all done
     return;
@@ -152,7 +151,7 @@ gent_constitutive_mito(
     mito::matrix_t<3> & P_result)
 {
     // make a channel
-    pyre::journal::info_t channel("tests.timer.gent");
+    journal::info_t channel("tests.timer.gent");
 
     // make a timer
     process_timer_t t("tests.timer");
@@ -184,9 +183,9 @@ gent_constitutive_mito(
     t.stop();
 
     // report
-    channel << "tensor" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << P_result << pyre::journal::newline << "process time = " << t.ms()
-            << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
+    channel << "tensor" << journal::newline << journal::indent(1) << "result = " << P_result
+            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
+            << journal::outdent(1) << journal::endl;
 
     // all done
     return;
@@ -201,9 +200,9 @@ main()
     int N = 1 << 25;
 
     // make a channel
-    pyre::journal::info_t channel("tests.timer.gent");
+    journal::info_t channel("tests.timer.gent");
 
-    channel << "Computing " << N << " gent constitutive updates" << pyre::journal::endl;
+    channel << "Computing " << N << " gent constitutive updates" << journal::endl;
 
     // material parameters
     double rho = 1.0;

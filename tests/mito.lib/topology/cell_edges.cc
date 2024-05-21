@@ -4,7 +4,6 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/topology.h>
 
 using edge_t = mito::topology::segment_t;

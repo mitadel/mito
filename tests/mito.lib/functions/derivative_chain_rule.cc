@@ -4,7 +4,6 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/functions.h>
 
 

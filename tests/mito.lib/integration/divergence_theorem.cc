@@ -25,6 +25,9 @@ constexpr auto e1 = mito::geometry::cartesian::e_1<2>;
 
 TEST(DivergenceTheorem, Mesh2D)
 {
+    // make a channel
+    journal::info_t channel("tests.divergence_theorem");
+
     // a scalar field
     constexpr auto f = x0 * x1 * e0 + x0 * x0 * e1;
 
@@ -78,7 +81,7 @@ TEST(DivergenceTheorem, Mesh2D)
     auto resultBody = bodyIntegrator.integrate(div);
 
     // report
-    std::cout << "Result of body integration = " << resultBody << std::endl;
+    channel << "Result of body integration = " << resultBody << journal::endl;
 
     // TOFIX: Include normal notion on the boundary, so that we can avoid hardcoding
     // the normals calculations
@@ -108,7 +111,7 @@ TEST(DivergenceTheorem, Mesh2D)
     auto resultBoundary = boundary_integrator.integrate(f * n);
 
     // report
-    std::cout << "Result of boundary integration = " << resultBoundary << std::endl;
+    channel << "Result of boundary integration = " << resultBoundary << journal::endl;
 
     // check that the divergence theorem holds
     EXPECT_DOUBLE_EQ(resultBody, resultBoundary);

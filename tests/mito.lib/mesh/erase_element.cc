@@ -4,7 +4,6 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/mesh.h>
 
 
@@ -48,7 +47,6 @@ TEST(Mesh, EraseElement)
     EXPECT_TRUE(topology.exists({ node_3.vertex(), node_0.vertex() }));
 
     // erase a simplex
-    std::cout << "Erasing simplex..." << std::endl;
     mesh.erase(geom_cell0);
     topology.erase(geom_cell0.simplex());
 

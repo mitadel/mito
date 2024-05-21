@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_utilities_Singleton_h)
-#define mito_utilities_Singleton_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -32,6 +31,5 @@ namespace mito::utilities {
 
 }    // namespace mito
 
-#endif    // mito_utilities_Singleton_h
 
 // end of file

@@ -4,8 +4,8 @@
 //
 
 // code guard
-#if !defined(mito_topology_Topology_h)
-#define mito_topology_Topology_h
+#pragma once
+
 
 namespace mito::topology {
 
@@ -137,5 +137,5 @@ namespace mito::topology {
 #include "Topology.icc"
 #undef mito_topology_Topology_icc
 
-#endif    // mito_topology_Topology_h
+
 // end of file

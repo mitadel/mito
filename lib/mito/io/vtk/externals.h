@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_io_vtk_externals_h)
-#define mito_io_vtk_externals_h
+#pragma once
 
 
 // externals
@@ -18,7 +17,5 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 
-
-#endif
 
 // end of file

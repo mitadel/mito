@@ -5,8 +5,7 @@
 
 
 // code guard
-#if !defined(mito_utilities_SegmentedContainerIterator_h)
-#define mito_utilities_SegmentedContainerIterator_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -59,7 +58,7 @@ namespace mito::utilities {
       public:
         // dereference (case reference-counted object)
         constexpr auto operator*() const -> pointer_type
-        requires(ReferenceCountedObject<resource_type>)
+        requires(reference_countable_c<resource_type>)
         {
             // wrap the resource in a shared pointer and return it
             return pointer_type(_segmented_iterator.ptr());
@@ -67,7 +66,7 @@ namespace mito::utilities {
 
         // dereference (case non reference-counted object)
         constexpr auto operator*() const -> resource_type &
-        requires(!ReferenceCountedObject<resource_type>)
+        requires(!reference_countable_c<resource_type>)
         {
             // return the resource
             return *(_segmented_iterator.ptr());
@@ -117,7 +116,7 @@ namespace mito::utilities {
         segmented_iterator_type _segmented_iterator;
 
         // befriend operator==
-        friend constexpr auto operator== <SegmentedContainerT>(
+        friend constexpr auto operator==<SegmentedContainerT>(
             const SegmentedContainerIterator<SegmentedContainerT> & it1,
             const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
 
@@ -155,6 +154,6 @@ namespace mito::utilities {
         return !(it1 == it2);
     }
 }
-#endif
+
 
 // end of file

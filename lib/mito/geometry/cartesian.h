@@ -4,14 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_geometry_cartesian_h)
-#define mito_geometry_cartesian_h
+#pragma once
 
 
 // publish the interface
 #include "cartesian/public.h"
 
-
-#endif
 
 // end of file

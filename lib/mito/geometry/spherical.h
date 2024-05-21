@@ -4,14 +4,11 @@
 //
 
 // code guard
-#if !defined(mito_geometry_spherical_h)
-#define mito_geometry_spherical_h
+#pragma once
 
 
 // publish the interface
 #include "spherical/public.h"
 
-
-#endif
 
 // end of file

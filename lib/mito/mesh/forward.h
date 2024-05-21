@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_mesh_forward_h)
-#define mito_mesh_forward_h
+#pragma once
 
 
 namespace mito::mesh {
@@ -27,7 +26,5 @@ namespace mito::mesh {
     class Filter;
 }
 
-
-#endif
 
 // end of file

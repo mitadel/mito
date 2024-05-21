@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_forward2_h)
-#define mito_topology_forward2_h
+#pragma once
 
 
 namespace mito::topology {
@@ -20,18 +19,15 @@ namespace mito::topology {
     template <int N>
     using vertex_simplex_composition_t = std::array<vertex_t, N + 1>;
 
-    // TOFIX: move concepts to separate header
     // concept for a class supporting the {insert} method for a {vertex_t} argument
     template <class T>
-    concept VertexInsertable = requires(T instance, const vertex_t & v) { instance.insert(v); };
+    concept vertex_insertable_c = requires(T instance, const vertex_t & v) { instance.insert(v); };
 
     // concept for a class supporting the {push_back} method for a {vertex_t} argument
     template <class T>
-    concept VertexPushBackable =
+    concept vertex_push_backable_c =
         requires(T instance, const vertex_t & v) { instance.push_back(v); };
 }
 
-
-#endif
 
 // end of file

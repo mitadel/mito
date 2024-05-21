@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_forward1_h)
-#define mito_topology_forward1_h
+#pragma once
 
 
 namespace mito::topology {
@@ -52,7 +51,5 @@ namespace mito::topology {
     using orientation_t = int;
 }
 
-
-#endif
 
 // end of file

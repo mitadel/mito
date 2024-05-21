@@ -4,15 +4,12 @@
 //
 
 // code guard
-#if !defined(mito_coordinates_h)
-#define mito_coordinates_h
+#pragma once
 
 
 // publish the interface
 // the api is in "coordinates/api.h"
 #include "coordinates/public.h"
 
-
-#endif
 
 // end of file

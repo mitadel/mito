@@ -9,7 +9,6 @@
 #else
 
 
-// QUESTION: should these methods belong to the interface of class {Mesh}?
 template <class meshT>
 auto
 mito::mesh::metis::Partitioner<meshT>::_populate_vertices_map(const mesh_type & mesh) -> auto

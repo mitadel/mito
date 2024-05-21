@@ -1,6 +1,5 @@
 // code guard
-#if !defined(mito_mesh_boundary_h)
-#define mito_mesh_boundary_h
+#pragma once
 
 
 namespace mito::mesh {
@@ -42,7 +41,5 @@ namespace mito::mesh {
 #include "Boundary.icc"
 #undef mito_mesh_boundary_icc
 
-
-#endif
 
 // end of file

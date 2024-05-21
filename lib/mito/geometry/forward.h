@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_forward_h)
-#define mito_geometry_forward_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -32,7 +31,5 @@ namespace mito::geometry {
     class PointCloud;
 }
 
-
-#endif
 
 // end of file

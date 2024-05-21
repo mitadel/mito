@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_utilities_h)
-#define mito_topology_utilities_h
+#pragma once
 
 
 namespace mito::topology {
@@ -45,7 +44,7 @@ namespace mito::topology {
     {
         os << s.id() << " composed of:" << std::endl;
         for (const auto & simplex : s->composition()) {
-            std::cout << "\t" << simplex << std::endl;
+            os << "\t" << simplex << std::endl;
         }
         return os;
     }
@@ -64,11 +63,11 @@ namespace mito::topology {
     auto print(const simplex_t<N> & s) -> void
     {
         // make a channel
-        pyre::journal::info_t channel("lib.topology.simplex");
+        journal::info_t channel("lib.topology.simplex");
 
         // print footprint and orientation
         channel << "footprint: " << s->footprint().id() << ", orientation: " << s->orientation()
-                << pyre::journal::endl;
+                << journal::endl;
         // print footprint
         print(s->footprint());
         // all done
@@ -80,7 +79,7 @@ namespace mito::topology {
     auto print(const unoriented_simplex_t<N> & s) -> void
     {
         // make a channel
-        pyre::journal::info_t channel("lib.topology.simplex");
+        journal::info_t channel("lib.topology.simplex");
 
         if constexpr (N == 0)
             channel << "vertex ";
@@ -94,10 +93,10 @@ namespace mito::topology {
         if constexpr (N == 3)
             channel << "tetrahedron ";
 
-        channel << s.id() << " composed of:" << pyre::journal::endl;
-        channel << pyre::journal::indent(1) << pyre::journal::endl;
+        channel << s.id() << " composed of:" << journal::endl;
+        channel << journal::indent(1) << journal::endl;
         for (const auto & simplex : s->composition()) {
-            // channel << simplex.id() << pyre::journal::endl;
+            // channel << simplex.id() << journal::endl;
             print(simplex);
         }
         return;
@@ -108,8 +107,8 @@ namespace mito::topology {
     auto print(const unoriented_simplex_t<0> & s) -> void
     {
         // make a channel
-        pyre::journal::info_t channel("lib.topology.simplex");
-        channel << pyre::journal::indent(1) << "vertex: " << s.id() << pyre::journal::endl;
+        journal::info_t channel("lib.topology.simplex");
+        channel << journal::indent(1) << "vertex: " << s.id() << journal::endl;
 
         return;
     }
@@ -207,7 +206,5 @@ namespace mito::topology {
     }
 }
 
-
-#endif
 
 // end of file

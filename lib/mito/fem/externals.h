@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fem_externals_h)
-#define mito_fem_externals_h
+#pragma once
 
 
 // externals
@@ -13,6 +12,9 @@
 #include <string>
 #include <cassert>
 
-#endif
+// support
+#include "../journal.h"
+#include "../tensor.h"
+
 
 // end of file

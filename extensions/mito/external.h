@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_py_external_h)
-#define mito_py_external_h
+#pragma once
 
 // mito support
 #include <mito.h>
@@ -20,7 +19,5 @@ namespace mito {
     namespace py = pybind11;
 }    // namespace mito
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_manifolds_Manifold_h)
-#define mito_manifolds_Manifold_h
+#pragma once
 
 
 namespace mito::manifolds {
@@ -102,20 +101,23 @@ namespace mito::manifolds {
 
         constexpr auto print() const -> void
         {
+            // make a channel
+            journal::info_t channel("mito.manifold");
+
             // print the element set of the manifold
-            std::cout << "Element set: " << std::endl;
+            channel << "Element set: " << journal::endl;
 
             for (const auto & e : _mesh.cells()) {
                 // print the elemental composition
-                std::cout << "Composition: " << std::endl;
-                std::cout << e;
+                channel << "Composition: " << journal::endl;
+                channel << e;
                 // and the coordinates of the vertices
-                std::cout << "Vertices: " << std::endl;
+                channel << "Vertices: " << journal::endl;
                 auto nodes = e.nodes();
                 for (const auto & v : nodes) {
-                    std::cout << coordinates(v) << std::endl;
+                    channel << coordinates(v) << journal::endl;
                 }
-                std::cout << std::endl;
+                channel << journal::endl;
             }
         }
 
@@ -162,7 +164,5 @@ namespace mito::manifolds {
 
 }    // namespace mito
 
-
-#endif
 
 // end of file

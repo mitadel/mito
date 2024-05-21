@@ -5,8 +5,7 @@
 
 
 // code guard
-#if !defined(mito_geometry_GeometricSimplex_h)
-#define mito_geometry_GeometricSimplex_h
+#pragma once
 
 /*
  * This class represents an oriented simplex of order N in D-dimensional space.
@@ -205,7 +204,5 @@ namespace mito::geometry {
 
 }
 
-
-#endif    // mito_geometry_GeometricSimplex_h
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_materials_forward_h)
-#define mito_materials_forward_h
+#pragma once
 
 
 namespace mito::materials {
@@ -18,7 +17,5 @@ namespace mito::materials {
 
 }
 
-
-#endif
 
 // end of file

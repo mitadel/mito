@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_quadrature_public_h)
-#define mito_quadrature_public_h
+#pragma once
 
 
 // external packages
@@ -28,7 +27,5 @@
 // quadrature utilities
 #include "utilities.h"
 
-
-#endif
 
 // end of file

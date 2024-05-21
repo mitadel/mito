@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_OrientedSimplexFactory_h)
-#define mito_topology_OrientedSimplexFactory_h
+#pragma once
 
 namespace mito::topology {
 
@@ -148,9 +147,9 @@ namespace mito::topology {
         requires(N > 0)
         {
             if (!isValid<N>(composition)) {
-                pyre::journal::firewall_t firewall("topology::OrientedSimplexFactory");
-                firewall << pyre::journal::at(__HERE__) << "Invalid simplex composition."
-                         << pyre::journal::endl;
+                journal::firewall_t firewall("topology::OrientedSimplexFactory");
+                firewall << journal::at(__HERE__) << "Invalid simplex composition."
+                         << journal::endl;
                 assert(false);
             }
 
@@ -263,6 +262,5 @@ namespace mito::topology {
 
 }
 
-#endif    // mito_topology_OrientedSimplexFactory_h
 
 // end of file

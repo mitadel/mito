@@ -5,8 +5,8 @@
 
 
 // code guard
-#if !defined(mito_utilities_Shareable_h)
-#define mito_utilities_Shareable_h
+#pragma once
+
 
 namespace mito::utilities {
 
@@ -56,7 +56,7 @@ namespace mito::utilities {
         // friendship with SharedPointer (the shared pointer needs r/w access to the reference count
         // of the Shareable instance)
         template <class T>
-        // requires ReferenceCountedObject<T>
+        // requires reference_countable_c<T>
         friend class utilities::SharedPointer;
     };
 }
@@ -68,5 +68,4 @@ namespace mito::utilities {
 #undef mito_utilities_Shareable_icc
 
 
-#endif
 // end of file

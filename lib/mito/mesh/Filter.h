@@ -1,6 +1,10 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
 // code guard
-#if !defined(mito_mesh_filter_h)
-#define mito_mesh_filter_h
+#pragma once
 
 
 namespace mito::mesh {
@@ -54,7 +58,5 @@ namespace mito::mesh {
 #include "Filter.icc"
 #undef mito_mesh_filter_icc
 
-
-#endif
 
 // end of file

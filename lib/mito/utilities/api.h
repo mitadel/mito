@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_utilities_api_h)
-#define mito_utilities_api_h
+#pragma once
 
 
 namespace mito::utilities {
@@ -14,7 +13,6 @@ namespace mito::utilities {
     template <class resourceT>
     using shared_ptr = SharedPointer<resourceT>;
 
-    // TOFIX: perhaps eventually remove indices?
     // index type alias
     template <class resourceT>
     using index_t = std::uintptr_t;
@@ -32,7 +30,5 @@ namespace mito::utilities {
     using segmented_vector_t = SegmentedVector<resourceT>;
 }
 
-
-#endif
 
 // end of file

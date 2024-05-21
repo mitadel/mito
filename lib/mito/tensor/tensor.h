@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_tensor_tensor_h)
-#define mito_tensor_tensor_h
+#pragma once
 
 
 // tensor operations on forms
@@ -39,7 +38,5 @@ namespace mito::tensor {
     }
 }
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_functions_derivatives_library_h)
-#define mito_functions_derivatives_library_h
+#pragma once
 
 
 namespace mito::functions {
@@ -114,7 +113,5 @@ namespace mito::functions {
     }
 }
 
-
-#endif
 
 // end of file

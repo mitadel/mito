@@ -153,7 +153,6 @@ PYBIND11_MODULE(mito, m)
             // the implementation
             mito::py::init<const manifold_triangle_2D_t &>())
         // interface
-        // QUESTION: should this be called integrateScalarfield?
         // integrate a scalar field
         .def(
             "integrate",

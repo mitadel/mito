@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_io_vtk_public_h)
-#define mito_io_vtk_public_h
+#pragma once
 
 
 // external packages
@@ -15,7 +14,5 @@
 #include "vtk_cell.h"
 #include "writer.h"
 
-
-#endif
 
 // end of file

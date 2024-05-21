@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_coordinates_api_h)
-#define mito_coordinates_api_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -15,7 +14,5 @@ namespace mito::geometry {
     using coordinates_t = Coordinates<D, coordT>;
 }
 
-
-#endif
 
 // end of file

@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_utilities_public_h)
-#define mito_utilities_public_h
+#pragma once
 
 
 // external packages
@@ -34,6 +33,5 @@
 // utilities
 #include "utilities.h"
 
-#endif
 
 // end of file

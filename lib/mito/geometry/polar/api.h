@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_polar_api_h)
-#define mito_geometry_polar_api_h
+#pragma once
 
 
 namespace mito::geometry::polar {
@@ -30,7 +29,5 @@ namespace mito::geometry::polar {
 
 }
 
-
-#endif
 
 // end of file

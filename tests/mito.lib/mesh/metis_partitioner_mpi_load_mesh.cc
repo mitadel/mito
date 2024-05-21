@@ -4,7 +4,6 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/base.h>
 #include <mito/mesh.h>
 #include <mito/io.h>
 #include <mito/simulation.h>
@@ -16,6 +15,9 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 
 TEST(MetisPartitionerMPI, LoadMesh)
 {
+    // make a channel
+    journal::info_t channel("tests.partitioner");
+
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
 
@@ -43,8 +45,8 @@ TEST(MetisPartitionerMPI, LoadMesh)
 
     // report
     if (n_rank == 0) {
-        std::cout << "Initial mesh size = " << mesh.nCells() << std::endl;
-        std::cout << "Partitioned mesh size = " << global_ncells << std::endl;
+        channel << "Initial mesh size = " << mesh.nCells() << journal::endl;
+        channel << "Partitioned mesh size = " << global_ncells << journal::endl;
     }
 
     // expect that the sum of the number of cells in the partitioned meshes equals that of the

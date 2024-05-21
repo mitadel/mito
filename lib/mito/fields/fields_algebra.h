@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_fields_fields_algebra_h)
-#define mito_fields_fields_algebra_h
+#pragma once
 
 
 // Algebraic operations on Fields
@@ -88,7 +87,5 @@ namespace mito::fields {
     }
 }
 
-
-#endif
 
 // end of file

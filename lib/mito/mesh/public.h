@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_mesh_public_h)
-#define mito_mesh_public_h
+#pragma once
 
 
 // external packages
@@ -32,6 +31,5 @@
 #include "metis/public.h"
 #endif
 
-#endif
 
 // end of file

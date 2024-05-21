@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_geometry_Coordinates_h)
-#define mito_geometry_Coordinates_h
+#pragma once
 
 
 namespace mito::geometry {
@@ -71,8 +70,11 @@ namespace mito::geometry {
 
         auto print() const -> void
         {
+            // make a channel
+            journal::info_t channel("mito.coordinates");
+
             // print the coordinates of the point
-            std::cout << _array;
+            channel << _array;
 
             // all done
             return;
@@ -120,7 +122,5 @@ namespace mito::geometry {
 
 }    // namespace mito
 
-
-#endif    // mito_geometry_Coordinates_h
 
 // end of file

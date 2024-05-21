@@ -3,8 +3,8 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
-#if !defined(mito_materials_Gent_h)
-#define mito_materials_Gent_h
+// code guard
+#pragma once
 
 
 namespace mito::materials {
@@ -63,7 +63,5 @@ namespace mito::materials {
 
 }
 
-
-#endif    // mito_materials_Gent_h
 
 // end of file

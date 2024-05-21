@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_functions_traits_h)
-#define mito_functions_traits_h
+#pragma once
 
 
 namespace mito::functions {
@@ -67,7 +66,5 @@ namespace mito::functions {
     };
 }
 
-
-#endif
 
 // end of file

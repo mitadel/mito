@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_io_summit_writer_h)
-#define mito_io_summit_writer_h
+#pragma once
 
 
 namespace mito::io::summit {
@@ -72,4 +71,5 @@ namespace mito::io::summit {
 
 }    // namespace mito::io::summit
 
-#endif    // mito_io_summit_writer_h
+
+// end of file

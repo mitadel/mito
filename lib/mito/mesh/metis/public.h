@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_mesh_metis_public_h)
-#define mito_mesh_metis_public_h
+#pragma once
 
 
 // external packages
@@ -17,6 +16,5 @@
 // published types and functions
 #include "api.h"
 
-#endif
 
 // end of file

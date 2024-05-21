@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_quadrature_factories_h)
-#define mito_quadrature_factories_h
+#pragma once
 
 
 namespace mito::quadrature {
@@ -24,7 +23,5 @@ namespace mito::quadrature {
     }
 }
 
-
-#endif
 
 // end of file

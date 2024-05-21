@@ -18,6 +18,9 @@ constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
 
 TEST(Quadrature, LoadMeshTriangles)
 {
+    // make a channel
+    journal::info_t channel("tests.quadrature");
+
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
@@ -34,8 +37,8 @@ TEST(Quadrature, LoadMeshTriangles)
 
     auto result = integrator.integrate(f);
     auto exact = 0.9460830607878437;
-    std::cout << "Integration of cos(x*y): Result = " << result
-              << ", Error = " << std::fabs(result - exact) << std::endl;
+    channel << "Integration of cos(x*y): Result = " << result
+            << ", Error = " << std::fabs(result - exact) << journal::endl;
     EXPECT_NEAR(result, exact, 1.e-7);
 }
 

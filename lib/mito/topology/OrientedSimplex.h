@@ -4,8 +4,7 @@
 //
 
 // code guard
-#if !defined(mito_topology_OrientedSimplex_h)
-#define mito_topology_OrientedSimplex_h
+#pragma once
 
 /*
  * This class represents an OrientedSimplex of order N.
@@ -91,14 +90,14 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        inline auto vertices(VertexInsertable auto & vertices) const -> void
+        inline auto vertices(vertex_insertable_c auto & vertices) const -> void
         {
             // get the vertices from the footprint
             return _footprint->vertices(vertices);
         }
 
         // append the vertices of this simplex to a collection of vertices
-        inline auto vertices(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(vertex_push_backable_c auto & vertices) const -> void
         requires(N > 0)
         {
             // get a tentative collection of vertices from the footprint
@@ -115,7 +114,7 @@ namespace mito::topology {
         }
 
         // append the vertices of this simplex to a collection of vertices
-        inline auto vertices(VertexPushBackable auto & vertices) const -> void
+        inline auto vertices(vertex_push_backable_c auto & vertices) const -> void
         requires(N == 0)
         {
             // search for the footprint of this oriented vertex in the vertex collection {vertices}
@@ -155,7 +154,6 @@ namespace mito::topology {
             return vertices;
         }
 
-        // TOFIX
         // append the edges of this simplex to a collection of edges
         template <class EDGES_COLLECTION_T>
         inline auto edges(EDGES_COLLECTION_T & edges) const -> void
@@ -163,7 +161,6 @@ namespace mito::topology {
             return _footprint->edges(edges);
         }
 
-        // TOFIX: remove methods sanity check, a simplex does not need it
         // returns whether the simplex passes the sanity check
         inline auto sanityCheck() const -> bool { return _footprint->sanityCheck(); }
 
@@ -176,6 +173,6 @@ namespace mito::topology {
         friend class utilities::Repository<oriented_simplex_t<N>>;
     };
 }
-#endif    // mito_topology_OrientedSimplex_h
+
 
 // end of file
