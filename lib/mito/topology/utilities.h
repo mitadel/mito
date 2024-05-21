@@ -44,7 +44,7 @@ namespace mito::topology {
     {
         os << s.id() << " composed of:" << std::endl;
         for (const auto & simplex : s->composition()) {
-            std::cout << "\t" << simplex << std::endl;
+            os << "\t" << simplex << std::endl;
         }
         return os;
     }
