@@ -39,7 +39,7 @@ namespace mito::fem {
 
       public:
         // destructor
-        ~QuadratureField() {}
+        ~QuadratureField() = default;
 
       public:
         /**
