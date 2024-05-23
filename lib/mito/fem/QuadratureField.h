@@ -48,7 +48,7 @@ namespace mito::fem {
          * @param[in] q local index of the quadrature point in the element
          * @return the data
          */
-        inline Y & operator()(int e, int q)
+        inline auto operator()(int e, int q) -> Y &
         {
             // all done
             return operator[]({ e, q });
@@ -60,19 +60,19 @@ namespace mito::fem {
          * @param[in] q local index of the quadrature point in the element
          * @return the data
          */
-        inline const Y & operator()(int e, int q) const
+        inline auto operator()(int e, int q) const -> const Y &
         {
             // all done
             return operator[]({ e, q });
         }
 
-        inline Y & operator[](const index_type & index)
+        inline auto operator[](const index_type & index) -> Y &
         {
             // all done
             return _grid[index];
         }
 
-        inline const Y & operator[](const index_type & index) const
+        inline auto operator[](const index_type & index) const -> const Y &
         {
             // all done
             return _grid[index];
@@ -82,18 +82,18 @@ namespace mito::fem {
          * accessor for the number of elements
          * @return the number of elements
          */
-        inline int n_elements() const { return _grid.layout().shape()[0]; }
+        inline auto n_elements() const -> int { return _grid.layout().shape()[0]; }
 
         /*
          * accessor for the number of quadrature points per element
          * @return the number of quadrature point per element
          */
-        inline constexpr int n_quad_points() const noexcept { return Q; }
+        inline constexpr auto n_quad_points() const noexcept -> int { return Q; }
 
         /**
          * const accessor for name
          */
-        inline std::string name() const noexcept { return _name; }
+        inline auto name() const noexcept -> std::string { return _name; }
 
         /**
          * setter method for name
