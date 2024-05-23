@@ -32,7 +32,7 @@ namespace mito::fem {
         {}
 
       private:
-        inline QuadratureField(const pack_t & packing, std::string name) :
+        inline QuadratureField(const pack_t && packing, std::string name) :
             _grid{ packing, packing.cells() },
             _name(name)
         {}
