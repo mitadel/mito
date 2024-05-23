@@ -91,7 +91,7 @@ namespace mito::fem {
         constexpr auto n_quad_points() const noexcept -> int { return Q; }
 
         /**
-         * const accessor for name
+         * accessor for name
          */
         inline auto name() const noexcept -> std::string { return _name; }
 
@@ -102,10 +102,10 @@ namespace mito::fem {
         inline auto end() { return std::end(_grid); }
 
       private:
-        // instantiate the grid
+        // the underlying grid
         grid_type _grid;
 
-        // name of the field
+        // the name of the field
         std::string _name;
     };
 
