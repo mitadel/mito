@@ -10,12 +10,12 @@
 namespace mito::fem {
 
     // class nodal field
-    template <typename T, int D>
+    template <class Y>
     class NodalField;
 
     // nodal field alias
-    template <typename T, int D>
-    using nodal_field_t = NodalField<T, D>;
+    template <class Y>
+    using nodal_field_t = NodalField<Y>;
 
     // class quadrature field
     template <int Q, class Y>

@@ -9,103 +9,74 @@
 
 namespace mito::fem {
 
-    // TOFIX: order of template parameters
-    template <typename T, int D>
+    template <class Y>
     class NodalField {
+
+      private:
+        // conventionally packed grid for {n}
+        using pack_type = pyre::grid::canonical_t<1>;
+        // of Y on the heap
+        using storage_type = pyre::memory::heap_t<Y>;
+        // putting it all together
+        using grid_type = pyre::grid::grid_t<pack_type, storage_type>;
+        // index
+        using index_type = pack_type::index_type;
+
       public:
-        NodalField(int nodes, std::string name = "") :
-            _nodes(nodes),
-            _name(name),
-            _nodalField(_nodes * D, 0.0)
+        // constructor
+        NodalField(int nodes, std::string name) : NodalField(pack_type{ { nodes } }, name) {}
+
+        // destructor
+        ~NodalField() = default;
+
+      private:
+        inline NodalField(const pack_type && packing, std::string name) :
+            _grid{ packing, packing.cells() },
+            _name(name)
         {}
 
-        ~NodalField() {}
-
+      public:
         /**
          * Operator()
          */
-        const T & operator()(const int a, const int i) const
-        {
-            assert(i < D);
-            return _nodalField[D * a + i];
-        }
+        inline auto operator()(const int a) const -> const Y & { return _grid[a]; }
 
-        T & operator()(const int a, const int i)
-        {
-            assert(i < D);
-            return _nodalField[D * a + i];
-        }
+        inline auto operator()(const int a) -> Y & { return _grid[a]; }
 
         /**
-         * Iterators
+         * accessor for the number of nodes
          */
-        typename std::vector<T>::iterator begin() { return std::begin(_nodalField); }
-
-        typename std::vector<T>::iterator end() { return std::end(_nodalField); }
-
-        typename std::vector<T>::const_iterator begin() const { return std::cbegin(_nodalField); }
-
-        typename std::vector<T>::const_iterator end() const { return std::cend(_nodalField); }
+        inline auto n_nodes() const -> int { return _grid.layout().shape()[0]; }
 
         /**
-         * Accessors
+         * accessor for name
          */
         inline const std::string & name() const noexcept { return _name; }
 
-        inline int dim() const noexcept { return D; }
-
-        inline int nodes() const noexcept { return _nodes; }
-
-        inline int size() const noexcept { return _nodes * D; }
-
-        /**
-         * Set the field to zero.
-         */
-        inline void init() { std::ranges::fill(_nodalField, 0.0); }
+        // support for ranged for loops (wrapping grid)
+        inline auto begin() const { return std::cbegin(_grid); }
+        inline auto end() const { return std::cend(_grid); }
+        inline auto begin() { return std::begin(_grid); }
+        inline auto end() { return std::end(_grid); }
 
       private:
-        /**
-         * number of nodes
-         */
-        int _nodes;
+        // the underlying grid
+        grid_type _grid;
 
-        /**
-         * name of the nodal field
-         */
+        // the name of the field
         std::string _name;
-
-        /**
-         * nodal field
-         */
-        std::vector<T> _nodalField;
     };
 
-    template <typename T, int D>
-    std::ostream & operator<<(std::ostream & os, const NodalField<T, D> & nodalField)
+    template <class Y>
+    std::ostream & operator<<(std::ostream & os, const NodalField<Y> & nodalField)
     {
 
-        os << "Nodal field \"" << nodalField.name() << "\" : ";
+        os << "Nodal field \"" << nodalField.name() << "\" : " << std::endl;
 
-        if (std::size(nodalField) == 0) {
-            os << "[]";
-            return os;
+
+        for (auto i = 0; i < nodalField.n_nodes(); ++i) {
+            os << "Node " << i << ": " << nodalField(i) << std::endl;
         }
-
-        os << "[(" << nodalField(0, 0);
-        for (int d = 1; d < D; ++d) {
-            os << ", " << nodalField(0, d);
-        }
-        os << ")";
-
-        for (auto i = 1; i < nodalField.nodes(); ++i) {
-            os << ", (" << nodalField(i, 0);
-            for (int d = 1; d < D; ++d) {
-                os << ", " << nodalField(i, d);
-            }
-            os << ")";
-        }
-
-        os << "]";
 
         return os;
     }
