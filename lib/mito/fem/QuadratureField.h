@@ -95,15 +95,6 @@ namespace mito::fem {
          */
         inline auto name() const noexcept -> std::string { return _name; }
 
-        /**
-         * setter method for name
-         */
-        inline void name(std::string name) noexcept
-        {
-            _name = name;
-            return;
-        }
-
         // support for ranged for loops (wrapping grid)
         inline auto begin() const { return std::cbegin(_grid); }
         inline auto end() const { return std::cend(_grid); }
