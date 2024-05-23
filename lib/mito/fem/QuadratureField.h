@@ -14,13 +14,13 @@ namespace mito::fem {
 
       private:
         // conventionally packed grid for {e, q}
-        using pack_t = pyre::grid::canonical_t<2>;
+        using pack_type = pyre::grid::canonical_t<2>;
         // of Y on the heap
-        using storage_t = pyre::memory::heap_t<Y>;
+        using storage_type = pyre::memory::heap_t<Y>;
         // putting it all together
-        using grid_t = pyre::grid::grid_t<pack_t, storage_t>;
+        using grid_type = pyre::grid::grid_t<pack_type, storage_type>;
         // index
-        using index_t = pack_t::index_type;
+        using index_type = pack_type::index_type;
 
       public:
         /**
@@ -28,11 +28,11 @@ namespace mito::fem {
          * @param[in] elements number of elements for which data are stored
          */
         inline QuadratureField(int nElements, std::string name) :
-            QuadratureField(pack_t{ { nElements, Q } }, name)
+            QuadratureField(pack_type{ { nElements, Q } }, name)
         {}
 
       private:
-        inline QuadratureField(const pack_t && packing, std::string name) :
+        inline QuadratureField(const pack_type && packing, std::string name) :
             _grid{ packing, packing.cells() },
             _name(name)
         {}
@@ -66,13 +66,13 @@ namespace mito::fem {
             return operator[]({ e, q });
         }
 
-        inline Y & operator[](const index_t & index)
+        inline Y & operator[](const index_type & index)
         {
             // all done
             return _grid[index];
         }
 
-        inline const Y & operator[](const index_t & index) const
+        inline const Y & operator[](const index_type & index) const
         {
             // all done
             return _grid[index];
@@ -112,7 +112,7 @@ namespace mito::fem {
 
       private:
         // instantiate the grid
-        grid_t _grid;
+        grid_type _grid;
 
         // name of the field
         std::string _name;
