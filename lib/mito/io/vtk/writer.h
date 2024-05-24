@@ -171,6 +171,37 @@ namespace mito::io::vtk {
         write(fileName, gridVtk);
     }
 
+    template <class cellT, geometry::coordinates_c coordT, class Y>
+    requires(cellT::dim == coordT::dim)
+    auto writer(
+        std::string fileName, const mito::mesh::mesh_t<cellT> & mesh,
+        const geometry::coordinate_system_t<coordT> & coordinate_system,
+        const fem::nodal_field_t<Y> & nodal_field
+        /*const auto fields::field_c & field*/) -> void
+    {
+        // create vtk unstructured grid
+        const auto gridVtk = createVtkUnstructuredGrid(mesh, coordinate_system);
+
+        // initialize a vtk array
+        auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
+        vtkArray->SetName(nodal_field.name().data());
+        vtkArray->SetNumberOfComponents(Y::size);
+        vtkArray->SetNumberOfTuples(nodal_field.n_nodes());
+
+        // std::cout << gridVtk->GetPoints()->GetPoint(0)[0] << std::endl;
+        // std::cout << gridVtk->GetNumberOfPoints() << std::endl;
+
+        for (int i = 0; i < gridVtk->GetNumberOfPoints(); ++i) {
+            vtkArray->SetTuple(i, nodal_field(i).begin());
+        }
+
+        // insert array into output mesh
+        gridVtk->GetPointData()->AddArray(vtkArray);
+
+        // write grid to file
+        write(fileName, gridVtk);
+    }
+
 }    // namespace mito::io::vtk
 
 
