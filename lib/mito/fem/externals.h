@@ -12,7 +12,6 @@
 #define HAVE_COMPACT_PACKINGS
 #include <pyre/grid.h>
 #include <string>
-#include <cassert>
 
 // support
 #include "../journal.h"
