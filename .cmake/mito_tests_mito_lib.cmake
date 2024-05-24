@@ -37,6 +37,7 @@ mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 
 # fem
 mito_test_driver(tests/mito.lib/fem/quadrature_field.cc)
+mito_test_driver(tests/mito.lib/fem/nodal_field.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/read_mesh_summit_2D.cc)
