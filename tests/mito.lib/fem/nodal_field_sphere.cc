@@ -22,25 +22,16 @@ TEST(Fem, NodalFieldSphere)
     std::ifstream fileStream("sphere.summit");
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
-    // say we have 319 nodes
-    int n_nodes = 319;
-
-    // a field of mito vectors
-    auto field = mito::fem::nodal_field<mito::vector_t<3>>(n_nodes, "field");
-
-    // populate the field
-    int i = 0;
-    for (auto & vector : field) {
-        if (i == 0) {
-            vector = mito::vector_t<3>{ 0.0, 0.0, 0.0 };
-        } else {
-            vector = field(i - 1) + mito::vector_t<3>{ 1.0, 1.0, 1.0 };
-        }
-        ++i;
-    }
+    // the normal field to the submanifold
+    constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
+        mito::scalar_t phi = std::atan2(x[1], x[0]);
+        mito::scalar_t theta = std::atan2(std::hypot(x[1], x[0]), x[2]);
+        return std::sin(theta) * std::cos(phi) * mito::e_0<3>
+             + std::sin(theta) * std::sin(phi) * mito::e_1<3> + std::cos(theta) * mito::e_2<3>;
+    });
 
 #ifdef WITH_VTK
     // write mesh to vtk file
-    mito::io::vtk::writer("sphere_culo", mesh, coord_system, field);
+    mito::io::vtk::writer("sphere_field", mesh, coord_system, normal_field);
 #endif
 }

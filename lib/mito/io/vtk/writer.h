@@ -171,28 +171,30 @@ namespace mito::io::vtk {
         write(fileName, gridVtk);
     }
 
-    template <class cellT, geometry::coordinates_c coordT, class Y>
+    template <class cellT, geometry::coordinates_c coordT>
     requires(cellT::dim == coordT::dim)
     auto writer(
         std::string fileName, const mito::mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<coordT> & coordinate_system,
-        const fem::nodal_field_t<Y> & nodal_field
-        /*const auto fields::field_c & field*/) -> void
+        const fields::field_c auto & field) -> void
     {
         // create vtk unstructured grid
         const auto gridVtk = createVtkUnstructuredGrid(mesh, coordinate_system);
 
+        auto n_nodes = gridVtk->GetNumberOfPoints();
+
         // initialize a vtk array
         auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
-        vtkArray->SetName(nodal_field.name().data());
-        vtkArray->SetNumberOfComponents(Y::size);
-        vtkArray->SetNumberOfTuples(nodal_field.n_nodes());
-
-        // std::cout << gridVtk->GetPoints()->GetPoint(0)[0] << std::endl;
-        // std::cout << gridVtk->GetNumberOfPoints() << std::endl;
+        vtkArray->SetName("name");
+        vtkArray->SetNumberOfComponents(3);
+        vtkArray->SetNumberOfTuples(n_nodes);
 
         for (int i = 0; i < gridVtk->GetNumberOfPoints(); ++i) {
-            vtkArray->SetTuple(i, nodal_field(i).begin());
+            auto point = gridVtk->GetPoints()->GetPoint(i);
+            auto coord = geometry::cartesian_coordinates_t<3>({ point[0], point[1], point[2] });
+
+            // std::cout << gridVtk->GetNumberOfPoints() << std::endl;
+            vtkArray->SetTuple(i, field(coord).begin());
         }
 
         // insert array into output mesh
