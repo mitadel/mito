@@ -30,6 +30,15 @@ namespace mito::io::vtk {
         pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
     }
 
+    template <>
+    auto insertVtkPoint(
+        const geometry::coordinates_t<1, geometry::CARTESIAN> & coord,
+        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+    {
+        // add the point as new vtk point
+        pointsVtk->InsertNextPoint(coord[0], 0., 0.);
+    }
+
     template <class cellT, geometry::coordinates_c coordT>
     auto createVtkUnstructuredGrid(
         const mito::mesh::mesh_t<cellT> & mesh,
