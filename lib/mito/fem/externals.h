@@ -16,6 +16,7 @@
 // support
 #include "../journal.h"
 #include "../tensor.h"
+#include "../mesh.h"
 
 
 // end of file

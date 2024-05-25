@@ -22,6 +22,9 @@ TEST(Fem, NodalFieldSphere)
     std::ifstream fileStream("sphere.summit");
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
+    // a nodal field on the mesh
+    auto nodal_field = mito::fem::nodal_field<mito::vector_t<3>, 3>(mesh, "normal");
+
     // the normal field to the submanifold
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
         mito::scalar_t phi = std::atan2(x[1], x[0]);
@@ -30,8 +33,16 @@ TEST(Fem, NodalFieldSphere)
              + std::sin(theta) * std::sin(phi) * mito::e_1<3> + std::cos(theta) * mito::e_2<3>;
     });
 
-#ifdef WITH_VTK
-    // write mesh to vtk file
-    mito::io::vtk::writer("sphere_field", mesh, coord_system, normal_field);
-#endif
+    // fill information in nodal field
+    for (auto & [node, value] : nodal_field) {
+        // get the coordinates of the node
+        auto & coordinates = coord_system.coordinates(node.point());
+        // compute the value of the normal field at those coordinates
+        value = normal_field(coordinates);
+    }
+
+    // #ifdef WITH_VTK
+    //     // write mesh to vtk file
+    //     mito::io::vtk::writer("sphere_field", mesh, coord_system, normal_field);
+    // #endif
 }

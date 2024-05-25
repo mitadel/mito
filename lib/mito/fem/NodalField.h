@@ -9,44 +9,57 @@
 
 namespace mito::fem {
 
-    template <class Y>
+    template <int D, class Y>
     class NodalField {
 
       private:
-        // conventionally packed grid for {n}
-        using pack_type = pyre::grid::canonical_t<1>;
-        // of Y on the heap
-        using storage_type = pyre::memory::heap_t<Y>;
-        // putting it all together
-        using grid_type = pyre::grid::grid_t<pack_type, storage_type>;
-        // index
-        using index_type = pack_type::index_type;
+        // the node type
+        using node_type = geometry::node_t<D>;
+
+        // hash function for nodes
+        struct hash_function {
+            auto operator()(const node_type & node) const -> uintptr_t
+            {
+                // reinterpret the address of the node as a {uintptr_t} and return it
+                return uintptr_t(&node);
+            }
+        };
+
+        // a map from {key_type} to {Y} values
+        using map_type = std::unordered_map<node_type, Y, hash_function>;
 
       public:
         // constructor
-        NodalField(int nodes, std::string name) : NodalField(pack_type{ { nodes } }, name) {}
+        NodalField(const mesh::mesh_c auto & mesh, std::string name) :
+            _map_nodes_to_values(),
+            _name(name)
+        {
+            // populate the map with the mesh nodes (map all nodes to default item {Y})
+            for (const auto & cell : mesh.cells()) {
+                for (const auto & node : cell.nodes()) {
+                    _map_nodes_to_values[node] = Y();
+                }
+            }
+        }
 
         // destructor
         ~NodalField() = default;
-
-      private:
-        inline NodalField(const pack_type && packing, std::string name) :
-            _grid{ packing, packing.cells() },
-            _name(name)
-        {}
 
       public:
         /**
          * Operator()
          */
-        inline auto operator()(const int a) const -> const Y & { return _grid[a]; }
+        inline auto operator()(const node_type & node) const -> const Y &
+        {
+            return _map_nodes_to_values[node];
+        }
 
-        inline auto operator()(const int a) -> Y & { return _grid[a]; }
+        inline auto operator()(const node_type & node) -> Y & { return _map_nodes_to_values[node]; }
 
         /**
          * accessor for the number of nodes
          */
-        inline auto n_nodes() const -> int { return _grid.layout().shape()[0]; }
+        inline auto n_nodes() const -> int { return _map_nodes_to_values.size(); }
 
         /**
          * accessor for name
@@ -54,21 +67,21 @@ namespace mito::fem {
         inline const std::string & name() const noexcept { return _name; }
 
         // support for ranged for loops (wrapping grid)
-        inline auto begin() const { return std::cbegin(_grid); }
-        inline auto end() const { return std::cend(_grid); }
-        inline auto begin() { return std::begin(_grid); }
-        inline auto end() { return std::end(_grid); }
+        inline auto begin() const { return std::cbegin(_map_nodes_to_values); }
+        inline auto end() const { return std::cend(_map_nodes_to_values); }
+        inline auto begin() { return std::begin(_map_nodes_to_values); }
+        inline auto end() { return std::end(_map_nodes_to_values); }
 
       private:
-        // the underlying grid
-        grid_type _grid;
+        // the underlying mapping of nodes to nodal values
+        map_type _map_nodes_to_values;
 
         // the name of the field
         std::string _name;
     };
 
-    template <class Y>
-    std::ostream & operator<<(std::ostream & os, const NodalField<Y> & nodalField)
+    template <int D, class Y>
+    std::ostream & operator<<(std::ostream & os, const NodalField<D, Y> & nodalField)
     {
 
         os << "Nodal field \"" << nodalField.name() << "\" : " << std::endl;

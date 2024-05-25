@@ -202,6 +202,14 @@ namespace mito::geometry {
         point_type _point;
     };
 
+    // operator== for nodes
+    template <int D>
+    constexpr auto operator==(
+        const GeometricSimplex<0, D> & node_a, const GeometricSimplex<0, D> & node_b) -> bool
+    {
+        // two nodes are the same if they live at the same address
+        return &node_a == &node_b;
+    }
 }
 
 
