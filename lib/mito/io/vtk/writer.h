@@ -9,12 +9,6 @@
 
 namespace mito::io::vtk {
 
-    template <class cellT>
-    auto vtkCellPointer() -> vtkSmartPointer<typename vtkCellT<cellT>::type>
-    {
-        return vtkSmartPointer<typename vtkCellT<cellT>::type>::New();
-    }
-
     template <geometry::coordinates_c coordT>
     auto insertVtkPoint(const coordT &, vtkSmartPointer<vtkPoints> &) -> void;
 

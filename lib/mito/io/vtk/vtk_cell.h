@@ -28,6 +28,11 @@ namespace mito::io::vtk {
         using type = vtkTetra;
     };
 
+    template <class cellT>
+    auto vtkCellPointer() -> vtkSmartPointer<typename vtkCellT<cellT>::type>
+    {
+        return vtkSmartPointer<typename vtkCellT<cellT>::type>::New();
+    }
 }
 
 
