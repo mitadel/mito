@@ -10,24 +10,9 @@
 namespace mito::io::vtk {
 
     template <class cellT>
-    auto vtkCellPointer() -> vtkSmartPointer<typename vtkCellT<cellT>::type>;
-
-    template <>
-    auto vtkCellPointer<topology::tetrahedron_t>() -> vtkSmartPointer<vtkTetra>
+    auto vtkCellPointer() -> vtkSmartPointer<typename vtkCellT<cellT>::type>
     {
-        return vtkSmartPointer<vtkTetra>::New();
-    }
-
-    template <>
-    auto vtkCellPointer<topology::triangle_t>() -> vtkSmartPointer<vtkTriangle>
-    {
-        return vtkSmartPointer<vtkTriangle>::New();
-    }
-
-    template <>
-    auto vtkCellPointer<topology::segment_t>() -> vtkSmartPointer<vtkLine>
-    {
-        return vtkSmartPointer<vtkLine>::New();
+        return vtkSmartPointer<typename vtkCellT<cellT>::type>::New();
     }
 
     template <geometry::coordinates_c coordT>
