@@ -207,8 +207,8 @@ namespace mito::geometry {
     constexpr auto operator==(
         const GeometricSimplex<0, D> & node_a, const GeometricSimplex<0, D> & node_b) -> bool
     {
-        // two nodes are the same if they live at the same address
-        return &node_a == &node_b;
+        // two nodes are the same if their vertex and point are the same
+        return node_a.vertex() == node_b.vertex() && node_a.point() == node_b.point();
     }
 }
 

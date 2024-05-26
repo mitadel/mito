@@ -20,8 +20,12 @@ namespace mito::fem {
         struct hash_function {
             auto operator()(const node_type & node) const -> uintptr_t
             {
-                // reinterpret the address of the node as a {uintptr_t} and return it
-                return uintptr_t(&node);
+                // TOFIX: this hash function is not safe against collisions: either figure out a
+                // proper hash function or turn nodes into something shareable, so that the hash
+                // can simply be a check on the address of the underlying resource. We'll figure
+                // out which one of two routes to pursue when we do discontinuous Galerkin
+                // build a hash based on the id of the node and that of the point
+                return node.vertex().id() + node.point().id();
             }
         };
 
