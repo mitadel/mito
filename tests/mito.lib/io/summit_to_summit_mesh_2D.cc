@@ -46,7 +46,7 @@ TEST(SummitToSummit, Mesh2D)
 
 #ifdef WITH_VTK
         // write mesh to vtk file
-        mito::io::vtk::writer("rectangle_copy", mesh, coord_system);
+        mito::io::vtk::writer("rectangle_copy", mesh, coord_system).write();
 #endif
     }
 

@@ -22,5 +22,5 @@ TEST(SummitToVTK, Mesh2D)
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
 
     // write mesh to vtk file
-    mito::io::vtk::writer("rectangle_output", mesh, coord_system);
+    mito::io::vtk::writer("rectangle_output", mesh, coord_system).write();
 }
