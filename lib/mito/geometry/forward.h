@@ -17,6 +17,14 @@ namespace mito::geometry {
     template <coordinates_c coordT>
     class CoordinateSystem;
 
+    // concept of a coordinate system
+    template <class F>
+    concept coordinate_system_c = requires(F c) {
+        // require that F only binds to {CoordinateSystem} specializations
+        []<coordinates_c coordT>(const CoordinateSystem<coordT> &) {
+        }(c);
+    };
+
     // class point
     template <int D>
     class Point;
@@ -29,6 +37,14 @@ namespace mito::geometry {
     // class point cloud
     template <int D>
     class PointCloud;
+
+    // concept of a point cloud
+    template <class F>
+    concept point_cloud_c = requires(F c) {
+        // require that F only binds to {PointCloud} specializations
+        []<int D>(const PointCloud<D> &) {
+        }(c);
+    };
 }
 
 
