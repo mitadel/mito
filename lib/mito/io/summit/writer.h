@@ -56,7 +56,7 @@ namespace mito::io::summit {
         for (const auto & cell : mesh.cells()) {
             outfile << cellT::n_vertices << " ";
             for (const auto & node : cell.nodes()) {
-                outfile << distance(points.begin(), points.find(node.point().id())) + 1 << " ";
+                outfile << std::distance(points.begin(), points.find(node.point())) + 1 << " ";
             }
             // TOFIX: material label is always 1 for now
             outfile << 1 << std::endl;
