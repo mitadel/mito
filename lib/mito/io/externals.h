@@ -8,8 +8,7 @@
 
 
 // externals
-#include <fstream>
-#include <unordered_map>
+
 
 // support
 #include "../journal.h"

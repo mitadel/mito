@@ -7,12 +7,9 @@
 #pragma once
 
 
-// external packages
-#include "externals.h"
-
-// classes implementation
-#include "reader.h"
-#include "writer.h"
+// externals
+#include <fstream>
+#include <unordered_map>
 
 
 // end of file
