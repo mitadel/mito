@@ -27,17 +27,13 @@ namespace mito::io::summit {
         // type of point
         using point_type = geometry::point_t<D>;
 
-        // type of point id
-        using point_id_type = utilities::index_t<point_type>;
-
-        // a map between point ids to points
-        std::unordered_map<point_id_type, const point_type &> points;
+        // a set between of points (to remove duplicates)
+        std::unordered_set<point_type, utilities::hash_function<point_type>> points;
 
         // insert the points corresponding to the mesh nodes
         for (const auto & cell : mesh.cells()) {
             for (const auto & node : cell.nodes()) {
-                const auto & point = node.point();
-                points.insert({ point.id(), point });
+                points.insert(node.point());
             }
         }
 
@@ -47,7 +43,7 @@ namespace mito::io::summit {
         outfile << std::size(points) << " " << mesh.nCells() << " " << 1 << std::endl;
 
         // write the points to file
-        for (const auto & [_, point] : points) {
+        for (const auto & point : points) {
             const auto & coord = coordinate_system.coordinates(point);
             outfile << std::setprecision(15) << coord << std::endl;
         }
