@@ -22,10 +22,11 @@ namespace mito::io::vtk {
         static constexpr int D = mesh_type::cell_type::dim;
         // the type of grid
         using grid_type = vtkSmartPointer<vtkUnstructuredGrid>;
+        using point_type = geometry::point_t<D>;
         // map mesh points to the index of the vtk points. Points that are shared among
         // multiple elements have the same index.
-        using point_to_index_type = std::unordered_map<
-            geometry::point_t<D>, int, utilities::hash_function<geometry::point_t<D>>>;
+        using points_type =
+            std::unordered_map<point_type, int, utilities::hash_function<point_type>>;
 
       private:
         auto _create_vtk_grid(const mesh_type & mesh, const coord_system_type & coordinate_system)
@@ -53,16 +54,16 @@ namespace mito::io::vtk {
                     // retrieve the corresponding point
                     const auto & point = node.point();
                     // if the point is not present in the map
-                    if (!_point_to_index.contains(point)) {
+                    if (!_points.contains(point)) {
                         // insert the new vtk point
                         insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
                         // add the point to the map with its global index
-                        _point_to_index[point] = indexPointVtk;
+                        _points[point] = indexPointVtk;
                         // update global index for the vtk point
                         ++indexPointVtk;
                     }
                     // set the id of the point
-                    cellVtk->GetPointIds()->SetId(indexLocalPointVtk, _point_to_index[point]);
+                    cellVtk->GetPointIds()->SetId(indexLocalPointVtk, _points[point]);
                     // update local index for the points in the cell
                     ++indexLocalPointVtk;
                 }
@@ -82,7 +83,7 @@ namespace mito::io::vtk {
         MeshWriter(
             std::string filename, const mesh_type & mesh, const coord_system_type & coord_system) :
             _filename(filename),
-            _point_to_index(),
+            _points(),
             _grid(_create_vtk_grid(mesh, coord_system))
         {}
 
@@ -103,8 +104,8 @@ namespace mito::io::vtk {
             std::cout << n_nodes << "\t" << _grid->GetNumberOfPoints() << std::endl;
             // assert(n_nodes == _grid->GetNumberOfPoints());
             // and equal to the number of indices that we have recorded so far
-            // assert(n_nodes == int(std::size(_point_to_index)));
-            std::cout << n_nodes << "\t" << int(std::size(_point_to_index)) << std::endl;
+            // assert(n_nodes == int(std::size(_points)));
+            std::cout << n_nodes << "\t" << int(std::size(_points)) << std::endl;
 
             // initialize a vtk array
             auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
@@ -115,7 +116,7 @@ namespace mito::io::vtk {
             // populate the array with the nodal values
             for (auto & [node, value] : field) {
                 // get the index corresponding to the current point
-                auto i = _point_to_index.at(node.point());
+                auto i = _points.at(node.point());
                 vtkArray->SetTuple(i, value.begin());
             }
 
@@ -151,7 +152,7 @@ namespace mito::io::vtk {
         std::string _filename;
 
         // a map storing point -> index relation
-        point_to_index_type _point_to_index;
+        points_type _points;
 
         // the grid
         grid_type _grid;
