@@ -25,20 +25,31 @@ namespace mito::io::vtk {
         using point_type = geometry::point_t<D>;
         // map mesh points to the index of the vtk points. Points that are shared among
         // multiple elements have the same index.
-        using points_type =
-            std::unordered_map<point_type, int, utilities::hash_function<point_type>>;
+        using points_type = std::unordered_set<point_type, utilities::hash_function<point_type>>;
 
       private:
         auto _create_vtk_grid(const mesh_type & mesh, const coord_system_type & coordinate_system)
             -> grid_type
         {
-            // vtk unstructured grid
-            auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
+            // loop over the cells
+            for (const auto & cell : mesh.cells()) {
+                // loop over the nodes of the cell
+                for (const auto & node : cell.nodes()) {
+                    // add the point to the map with its global index
+                    _points.insert(node.point());
+                }
+            }
+
             // vtk points and cells
             auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
 
-            // global index assigned to each vtk point
-            auto indexPointVtk = 0;
+            // insert the new vtk point
+            for (const auto & point : _points) {
+                insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
+            }
+
+            // vtk unstructured grid
+            auto gridVtk = vtkSmartPointer<vtkUnstructuredGrid>::New();
 
             // loop over the cells
             for (const auto & cell : mesh.cells()) {
@@ -53,17 +64,12 @@ namespace mito::io::vtk {
                 for (const auto & node : cell.nodes()) {
                     // retrieve the corresponding point
                     const auto & point = node.point();
-                    // if the point is not present in the map
-                    if (!_points.contains(point)) {
-                        // insert the new vtk point
-                        insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
-                        // add the point to the map with its global index
-                        _points[point] = indexPointVtk;
-                        // update global index for the vtk point
-                        ++indexPointVtk;
-                    }
+                    // assert that the point is present in the set of points
+                    assert(_points.contains(point));
+                    // calculate the index of the point
+                    auto index = std::distance(_points.begin(), _points.find(point));
                     // set the id of the point
-                    cellVtk->GetPointIds()->SetId(indexLocalPointVtk, _points[point]);
+                    cellVtk->GetPointIds()->SetId(indexLocalPointVtk, index);
                     // update local index for the points in the cell
                     ++indexLocalPointVtk;
                 }
@@ -116,8 +122,8 @@ namespace mito::io::vtk {
             // populate the array with the nodal values
             for (auto & [node, value] : field) {
                 // get the index corresponding to the current point
-                auto i = _points.at(node.point());
-                vtkArray->SetTuple(i, value.begin());
+                auto index = std::distance(_points.begin(), _points.find(node.point()));
+                vtkArray->SetTuple(index, value.begin());
             }
 
             // insert array into output mesh
