@@ -12,12 +12,12 @@ namespace mito::io::vtk {
     // class mesh writer
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(meshT::cell_type::dim == coordSystemT::coordinates_type::dim)
-    class MeshWriter;
+    class MeshWriterVTK;
 
     // class point cloud writer
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
     requires(cloudT::dim == coordSystemT::coordinates_type::dim)
-    class PointCloudWriter;
+    class PointCloudWriterVTK;
 }
 
 

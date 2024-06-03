@@ -15,7 +15,7 @@ namespace mito::io::vtk {
     auto writer(std::string filename, const meshT & mesh, const coordSystemT & coord_system)
         -> mesh_writer_t<meshT, coordSystemT>
     {
-        return MeshWriter<meshT, coordSystemT>(filename, mesh, coord_system);
+        return MeshWriterVTK<meshT, coordSystemT>(filename, mesh, coord_system);
     }
 
     // vtk point cloud writer factory
@@ -24,7 +24,7 @@ namespace mito::io::vtk {
     auto writer(std::string filename, const cloudT & cloud, const coordSystemT & coord_system)
         -> cloud_writer_t<cloudT, coordSystemT>
     {
-        return PointCloudWriter<cloudT, coordSystemT>(filename, cloud, coord_system);
+        return PointCloudWriterVTK<cloudT, coordSystemT>(filename, cloud, coord_system);
     }
 }
 

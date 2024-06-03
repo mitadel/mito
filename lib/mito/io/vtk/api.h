@@ -12,7 +12,7 @@ namespace mito::io::vtk {
     // mesh writer alias
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(meshT::cell_type::dim == coordSystemT::coordinates_type::dim)
-    using mesh_writer_t = MeshWriter<meshT, coordSystemT>;
+    using mesh_writer_t = MeshWriterVTK<meshT, coordSystemT>;
 
     // vtk mesh writer factory
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
@@ -23,7 +23,7 @@ namespace mito::io::vtk {
     // point cloud writer alias
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
     requires(cloudT::dim == coordSystemT::coordinates_type::dim)
-    using cloud_writer_t = PointCloudWriter<cloudT, coordSystemT>;
+    using cloud_writer_t = PointCloudWriterVTK<cloudT, coordSystemT>;
 
     // point cloud writer factory
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
