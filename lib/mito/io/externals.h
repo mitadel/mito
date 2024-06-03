@@ -8,7 +8,7 @@
 
 
 // externals
-
+#include <unordered_set>
 
 // support
 #include "../journal.h"
