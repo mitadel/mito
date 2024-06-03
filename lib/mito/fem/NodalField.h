@@ -55,10 +55,13 @@ namespace mito::fem {
          */
         inline auto operator()(const node_type & node) const -> const Y &
         {
-            return _map_nodes_to_values[node];
+            return _map_nodes_to_values.at(node);
         }
 
-        inline auto operator()(const node_type & node) -> Y & { return _map_nodes_to_values[node]; }
+        inline auto operator()(const node_type & node) -> Y &
+        {
+            return _map_nodes_to_values.at(node);
+        }
 
         /**
          * accessor for the number of nodes
