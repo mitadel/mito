@@ -18,6 +18,10 @@ namespace mito::io::vtk {
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
     requires(cloudT::dim == coordSystemT::coordinates_type::dim)
     class PointCloudWriterVTK;
+
+    // class field writer
+    template <class gridT, geometry::coordinate_system_c coordSystemT>
+    class FieldWriterVTK;
 }
 
 
