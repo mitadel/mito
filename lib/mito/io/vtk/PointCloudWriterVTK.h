@@ -32,12 +32,12 @@ namespace mito::io::vtk {
 
             // insert the new vtk point
             for (const auto & point : points) {
-                _points.insert(point);
+                this->_points.insert(point);
                 insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
             }
 
             // set the grid points
-            _grid->SetPoints(pointsVtk);
+            this->_grid->SetPoints(pointsVtk);
 
             // all done
             return;

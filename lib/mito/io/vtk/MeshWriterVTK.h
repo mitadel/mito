@@ -29,7 +29,7 @@ namespace mito::io::vtk {
                 // loop over the nodes of the cell
                 for (const auto & node : cell.nodes()) {
                     // add the point to the collection of points (eliminating duplicates)
-                    _points.insert(node.point());
+                    this->_points.insert(node.point());
                 }
             }
 
@@ -37,7 +37,7 @@ namespace mito::io::vtk {
             auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
 
             // insert the new vtk point
-            for (const auto & point : _points) {
+            for (const auto & point : this->_points) {
                 insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
             }
 
@@ -55,9 +55,9 @@ namespace mito::io::vtk {
                     // retrieve the corresponding point
                     const auto & point = node.point();
                     // assert that the point is present in the set of points
-                    assert(_points.contains(point));
+                    assert(this->_points.contains(point));
                     // calculate the index of the point
-                    auto index = std::distance(_points.begin(), _points.find(point));
+                    auto index = std::distance(this->_points.begin(), this->_points.find(point));
                     // set the id of the point
                     cellVtk->GetPointIds()->SetId(indexLocalPointVtk, index);
                     // update local index for the points in the cell
@@ -65,11 +65,11 @@ namespace mito::io::vtk {
                 }
 
                 // insert the new cell
-                _grid->InsertNextCell(cellVtk->GetCellType(), cellVtk->GetPointIds());
+                this->_grid->InsertNextCell(cellVtk->GetCellType(), cellVtk->GetPointIds());
             }
 
             // set the grid points
-            _grid->SetPoints(pointsVtk);
+            this->_grid->SetPoints(pointsVtk);
 
             // all done
             return;
