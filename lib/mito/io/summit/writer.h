@@ -12,57 +12,13 @@ namespace mito::io::summit {
     template <class cellT, geometry::coordinates_c coordT>
     requires(cellT::dim == coordT::dim)
     auto writer(
-        std::string fileName, const mito::mesh::mesh_t<cellT> & mesh,
+        std::string filename, const mito::mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<coordT> & coordinate_system) -> void
     {
-        // the dimension of the physical space
-        constexpr int D = cellT::dim;
-
-        // append file extension
-        fileName = fileName + ".summit";
-
-        // create the output file
-        std::ofstream outfile(fileName);
-
-        // type of point
-        using point_type = geometry::point_t<D>;
-
-        // a set between of points (to remove duplicates)
-        std::unordered_set<point_type, utilities::hash_function<point_type>> points;
-
-        // insert the points corresponding to the mesh nodes
-        for (const auto & cell : mesh.cells()) {
-            for (const auto & node : cell.nodes()) {
-                points.insert(node.point());
-            }
-        }
-
-        // populate the file heading
-        // TOFIX: number of materials is always 1 for now
-        outfile << D << std::endl;
-        outfile << std::size(points) << " " << mesh.nCells() << " " << 1 << std::endl;
-
-        // write the points to file
-        for (const auto & point : points) {
-            const auto & coord = coordinate_system.coordinates(point);
-            outfile << std::setprecision(15) << coord << std::endl;
-        }
-
-        // write the cells to file
-        for (const auto & cell : mesh.cells()) {
-            outfile << cellT::n_vertices << " ";
-            for (const auto & node : cell.nodes()) {
-                outfile << std::distance(points.begin(), points.find(node.point())) + 1 << " ";
-            }
-            // TOFIX: material label is always 1 for now
-            outfile << 1 << std::endl;
-        }
-
-        // close the file
-        outfile.close();
-
-        // all done
-        return;
+        // create a writer
+        auto mesh_writer = mesh_writer_t(filename, mesh, coordinate_system);
+        // write
+        return mesh_writer.write();
     }
 
 }    // namespace mito::io::summit

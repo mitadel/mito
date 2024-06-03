@@ -11,6 +11,12 @@
 #include "externals.h"
 
 // classes implementation
+#include "MeshWriterSummit.h"
+
+// published type factories; this is the file you are looking for...
+#include "api.h"
+
+// read and write functions
 #include "reader.h"
 #include "writer.h"
 
