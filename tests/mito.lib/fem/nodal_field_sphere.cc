@@ -23,7 +23,7 @@ TEST(Fem, NodalFieldSphere)
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
     // a nodal field on the mesh
-    auto nodal_field = mito::fem::nodal_field<mito::vector_t<3>, 3>(mesh, "normal");
+    auto nodal_field = mito::fem::nodal_field<mito::vector_t<3>>(mesh, "normal");
 
     // the normal field to the submanifold
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {

@@ -17,10 +17,10 @@ namespace mito::fem {
     }
 
     // nodal field factory
-    template <class Y, int D>
-    constexpr auto nodal_field(const mesh::mesh_c auto & mesh, std::string name)
+    template <class Y, mesh::mesh_c meshT>
+    constexpr auto nodal_field(const meshT & mesh, std::string name)
     {
-        return nodal_field_t<D, Y>(mesh, name);
+        return nodal_field_t<meshT::dim, Y>(mesh, name);
     }
 }
 
