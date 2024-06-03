@@ -10,22 +10,14 @@
 namespace mito::io::vtk {
 
     template <int D>
-    class GridWriterVTK : public GridWriter {
+    class GridWriterVTK : public GridWriter<D> {
 
       private:
         // the type of grid
         using grid_type = vtkSmartPointer<vtkUnstructuredGrid>;
-        // the type of point
-        using point_type = geometry::point_t<D>;
-        // the type of a collection of points
-        using points_type = std::unordered_set<point_type, utilities::hash_function<point_type>>;
 
       protected:
-        GridWriterVTK(std::string filename) :
-            GridWriter(filename),
-            _grid(grid_type::New()),
-            _points()
-        {}
+        GridWriterVTK(std::string filename) : GridWriter<D>(filename), _grid(grid_type::New()) {}
 
       public:
         auto write() const -> void override
@@ -33,7 +25,7 @@ namespace mito::io::vtk {
             // create a new writer
             auto writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
             // set the name of the output file
-            writer->SetFileName((_filename + ".vtu").data());
+            writer->SetFileName((this->_filename + ".vtu").data());
 
             // sign the grid up for writing
 #if VTK_MAJOR_VERSION <= 8
@@ -66,7 +58,7 @@ namespace mito::io::vtk {
             // populate the array with the nodal values
             for (auto & [node, value] : field) {
                 // get the index corresponding to the current point
-                auto index = std::distance(_points.begin(), _points.find(node.point()));
+                auto index = std::distance(this->_points.begin(), this->_points.find(node.point()));
                 vtkArray->SetTuple(index, value.begin());
             }
 
@@ -77,9 +69,6 @@ namespace mito::io::vtk {
       protected:
         // the grid
         grid_type _grid;
-
-        // a collection of points in the grid
-        points_type _points;
     };
 
 }    // namespace mito::io::vtk
