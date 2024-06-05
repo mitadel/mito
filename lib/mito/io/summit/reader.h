@@ -218,7 +218,7 @@ namespace mito::io::summit {
     auto reader(
         std::ifstream & fileStream, geometry::coordinate_system_t<coordT> & coordinate_system)
         -> mesh::mesh_t<cellT>
-    requires(cellT::dim == coordT::dim)
+    requires(utilities::same_dim_c<cellT, coordT>)
     {
         if (!fileStream.is_open()) {
             throw std::runtime_error("reader: Mesh file could not be opened");

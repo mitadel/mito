@@ -10,7 +10,7 @@
 namespace mito::io::summit {
 
     template <class cellT, geometry::coordinates_c coordT>
-    requires(cellT::dim == coordT::dim)
+    requires(utilities::same_dim_c<cellT, coordT>)
     auto writer(
         std::string filename, const mito::mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<coordT> & coordinate_system) -> void

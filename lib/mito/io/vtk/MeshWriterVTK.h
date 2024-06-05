@@ -10,7 +10,7 @@
 namespace mito::io::vtk {
 
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    requires(meshT::dim == coordSystemT::dim)
+    requires(utilities::same_dim_c<meshT, coordSystemT>)
     class MeshWriterVTK : public GridWriterVTK<meshT::dim> {
 
       private:

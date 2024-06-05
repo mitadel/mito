@@ -28,6 +28,10 @@ namespace mito::utilities {
     // segmented vector alias
     template <class resourceT>
     using segmented_vector_t = SegmentedVector<resourceT>;
+
+    // concept of the types having the same dimension
+    template <class F1, class F2>
+    concept same_dim_c = requires { F1::dim == F2::dim; };
 }
 
 

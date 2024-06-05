@@ -11,12 +11,12 @@ namespace mito::io::vtk {
 
     // mesh writer alias
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    requires(meshT::dim == coordSystemT::dim)
+    requires(utilities::same_dim_c<meshT, coordSystemT>)
     using mesh_writer_t = MeshWriterVTK<meshT, coordSystemT>;
 
     // point cloud writer alias
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
-    requires(cloudT::dim == coordSystemT::dim)
+    requires(utilities::same_dim_c<cloudT, coordSystemT>)
     using cloud_writer_t = PointCloudWriterVTK<cloudT, coordSystemT>;
 
     // field writer alias
@@ -25,13 +25,13 @@ namespace mito::io::vtk {
 
     // vtk mesh writer factory
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    requires(meshT::dim == coordSystemT::dim)
+    requires(utilities::same_dim_c<meshT, coordSystemT>)
     auto writer(std::string filename, const meshT & mesh, const coordSystemT & coord_system)
         -> field_writer_t<meshT, coordSystemT>;
 
     // point cloud writer factory
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
-    requires(cloudT::dim == coordSystemT::dim)
+    requires(utilities::same_dim_c<cloudT, coordSystemT>)
     auto writer(std::string filename, const cloudT & cloud, const coordSystemT & coord_system)
         -> field_writer_t<cloudT, coordSystemT>;
 }
