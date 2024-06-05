@@ -10,7 +10,7 @@
 namespace mito::io::vtk {
 
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
-    requires(cloudT::dim == coordSystemT::coordinates_type::dim)
+    requires(cloudT::dim == coordSystemT::dim)
     class PointCloudWriterVTK : public GridWriterVTK<cloudT::dim> {
 
       private:

@@ -14,7 +14,7 @@ namespace mito::io::vtk {
 
       private:
         // the dimension of the physical space
-        static constexpr int D = coordSystemT::coordinates_type::dim;
+        static constexpr int D = coordSystemT::dim;
         // the grid type (e.g. mesh or point cloud)
         using grid_type = gridT;
         // the coordinate system type

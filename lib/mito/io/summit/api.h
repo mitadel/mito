@@ -11,7 +11,7 @@ namespace mito::io::summit {
 
     // mesh writer alias
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    requires(meshT::cell_type::dim == coordSystemT::coordinates_type::dim)
+    requires(meshT::dim == coordSystemT::dim)
     using mesh_writer_t = MeshWriterSummit<meshT, coordSystemT>;
 }
 

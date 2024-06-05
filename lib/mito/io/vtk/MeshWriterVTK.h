@@ -10,8 +10,8 @@
 namespace mito::io::vtk {
 
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    requires(meshT::cell_type::dim == coordSystemT::coordinates_type::dim)
-    class MeshWriterVTK : public GridWriterVTK<meshT::cell_type::dim> {
+    requires(meshT::dim == coordSystemT::dim)
+    class MeshWriterVTK : public GridWriterVTK<meshT::dim> {
 
       private:
         // the mesh type
@@ -19,7 +19,7 @@ namespace mito::io::vtk {
         // the coordinate system type
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
-        static constexpr int D = mesh_type::cell_type::dim;
+        static constexpr int D = mesh_type::dim;
 
       private:
         auto _create_vtk_grid(const mesh_type & mesh, const coord_system_type & coordinate_system)
