@@ -34,6 +34,18 @@ namespace mito::geometry {
     requires((N >= 0) && (N <= D) && (D > 0))
     class GeometricSimplex;
 
+    // concept of a geometric simplex
+    template <class F>
+    concept geometric_simplex_c = requires(F c) {
+        // require that F only binds to {GeometricSimplex} specializations
+        []<int N, int D>(const GeometricSimplex<N, D> &) {
+        }(c);
+    };
+
+    // concept of a geometric segment (geometric simplex with order 1)
+    template <class F>
+    concept geometric_segment_c = geometric_simplex_c<F> && F::order == 1;
+
     // class point cloud
     template <int D>
     class PointCloud;
