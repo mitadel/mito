@@ -13,6 +13,10 @@ namespace mito::utilities {
     template <class resourceT>
     using shared_ptr = SharedPointer<resourceT>;
 
+    // wrapper of std shared pointer alias
+    template <class resourceT>
+    using std_shared_ptr = StdSharedPointer<resourceT>;
+
     // index type alias
     template <class resourceT>
     using index_t = std::uintptr_t;

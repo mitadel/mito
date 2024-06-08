@@ -45,10 +45,6 @@ namespace mito::utilities {
         // default constructor
         inline SharedPointer();
 
-        template <class... Args>
-        requires(std::is_constructible_v<resource_type, Args...>)
-        inline SharedPointer(Args &&... args);
-
         // constructor
         inline SharedPointer(handle_type);
 

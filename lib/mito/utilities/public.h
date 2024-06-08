@@ -21,6 +21,7 @@
 #include "Shareable.h"
 #include "SharedPointer.h"
 #include "Invalidatable.h"
+#include "StdSharedPointer.h"
 #include "SegmentedAllocator.h"
 #include "SegmentedAllocatorIterator.h"
 #include "SegmentedVector.h"

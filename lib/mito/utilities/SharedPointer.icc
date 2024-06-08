@@ -105,14 +105,6 @@ mito::utilities::SharedPointer<resourceT>::SharedPointer(handle_type resource) :
     _acquire();
 }
 
-// TOFIX: delete? Implement a memory-owning version and a non memory owning one
-template <class resourceT>
-template <class... Args>
-requires(std::is_constructible_v<resourceT, Args...>)
-mito::utilities::SharedPointer<resourceT>::SharedPointer(Args &&... args) :
-    _handle(new resourceT(args...))
-{}
-
 // the copy constructor
 template <class resourceT>
 mito::utilities::SharedPointer<resourceT>::SharedPointer(
