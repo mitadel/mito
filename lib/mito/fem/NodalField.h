@@ -16,21 +16,8 @@ namespace mito::fem {
         // the node type
         using node_type = geometry::node_t<D>;
 
-        // hash function for nodes
-        struct hash_function {
-            auto operator()(const node_type & node) const -> uintptr_t
-            {
-                // TOFIX: this hash function is not safe against collisions: either figure out a
-                // proper hash function or turn nodes into something shareable, so that the hash
-                // can simply be a check on the address of the underlying resource. We'll figure
-                // out which one of two routes to pursue when we do discontinuous Galerkin
-                // build a hash based on the id of the node and that of the point
-                return node.vertex().id() + node.point().id();
-            }
-        };
-
         // a map from {key_type} to {Y} values
-        using map_type = std::unordered_map<node_type, Y, hash_function>;
+        using map_type = std::unordered_map<node_type, Y, utilities::hash_function<node_type>>;
 
       public:
         // constructor

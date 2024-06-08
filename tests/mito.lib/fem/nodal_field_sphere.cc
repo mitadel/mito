@@ -36,7 +36,7 @@ TEST(Fem, NodalFieldSphere)
     // fill information in nodal field
     for (auto & [node, value] : nodal_field) {
         // get the coordinates of the node
-        auto & coordinates = coord_system.coordinates(node.point());
+        auto & coordinates = coord_system.coordinates(node->point());
         // compute the value of the normal field at those coordinates
         value = normal_field(coordinates);
     }

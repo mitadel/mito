@@ -23,7 +23,7 @@ namespace mito::geometry {
 
     // node alias
     template <int D>
-    using node_t = geometric_simplex_t<0, D>;
+    using node_t = utilities::shared_ptr<const geometric_simplex_t<0, D>>;
 
     // segment alias
     template <int D>

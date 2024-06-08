@@ -32,7 +32,7 @@ namespace mito::io {
             // insert the points corresponding to the mesh nodes
             for (const auto & cell : mesh.cells()) {
                 for (const auto & node : cell.nodes()) {
-                    this->_points.insert(node.point());
+                    this->_points.insert(node->point());
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace mito::io {
                 outfile << mesh_type::cell_type::n_vertices << " ";
                 for (const auto & node : cell.nodes()) {
                     outfile
-                        << std::distance(this->_points.begin(), this->_points.find(node.point()))
+                        << std::distance(this->_points.begin(), this->_points.find(node->point()))
                                + 1
                         << " ";
                 }

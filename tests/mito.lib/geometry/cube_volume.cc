@@ -58,7 +58,7 @@ volume_determinant(
     for (const auto & node : element_nodes) {
         // fill up pointsTensor container
         for (int d = 0; d < D; ++d) {
-            pointsTensor[v * V + d] = coord_system.coordinates(node.point())[d];
+            pointsTensor[v * V + d] = coord_system.coordinates(node->point())[d];
         }
         pointsTensor[v * V + D] = 1.0;
         // update element vertices counter

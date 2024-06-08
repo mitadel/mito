@@ -29,7 +29,7 @@ namespace mito::io::vtk {
                 // loop over the nodes of the cell
                 for (const auto & node : cell.nodes()) {
                     // add the point to the collection of points (eliminating duplicates)
-                    this->_points.insert(node.point());
+                    this->_points.insert(node->point());
                 }
             }
 
@@ -53,7 +53,7 @@ namespace mito::io::vtk {
                 // loop over the nodes of the cell
                 for (const auto & node : cell.nodes()) {
                     // retrieve the corresponding point
-                    const auto & point = node.point();
+                    const auto & point = node->point();
                     // assert that the point is present in the set of points
                     assert(this->_points.contains(point));
                     // calculate the index of the point

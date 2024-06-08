@@ -75,7 +75,7 @@ namespace mito::manifolds {
         constexpr auto coordinates(const node_type & v) const -> const coordinates_type &
         {
             // get the coordinates of the point attached to vertex {v}
-            return _coordinate_system.coordinates(v.point());
+            return _coordinate_system.coordinates(v->point());
         }
 
         constexpr auto parametrization(

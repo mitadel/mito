@@ -58,7 +58,8 @@ namespace mito::io::vtk {
             // populate the array with the nodal values
             for (auto & [node, value] : field) {
                 // get the index corresponding to the current point
-                auto index = std::distance(this->_points.begin(), this->_points.find(node.point()));
+                auto index =
+                    std::distance(this->_points.begin(), this->_points.find(node->point()));
                 vtkArray->SetTuple(index, value.begin());
             }
 

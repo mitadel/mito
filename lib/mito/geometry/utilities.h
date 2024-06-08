@@ -15,14 +15,14 @@ namespace mito::geometry {
         const cellT & cell, const coordinate_system_t<coordT> & coordinate_system) -> coordT
     {
         // get the coordinates of the first node
-        auto coord_0 = coordinate_system.coordinates(cell.nodes()[0].point());
+        auto coord_0 = coordinate_system.coordinates(cell.nodes()[0]->point());
 
         // the vector going from {coord_0} to the barycenter (initialize with the zero vector)
         auto result = coord_0 - coord_0;
 
         // average the position of each vertex
         for (const auto & node : cell.nodes()) {
-            result += coordinate_system.coordinates(node.point()) - coord_0;
+            result += coordinate_system.coordinates(node->point()) - coord_0;
         }
         result /= cellT::n_vertices;
 
@@ -61,11 +61,11 @@ namespace mito::geometry {
             auto nodes = simplex.nodes();
 
             // get the coordinates of the first node
-            const auto & p0 = coordinate_system.coordinates(nodes[0].point());
+            const auto & p0 = coordinate_system.coordinates(nodes[0]->point());
 
             // compute the director vectors associated with each director edge
             auto directors = edge_simplex_directors_t<N, D>{ (
-                coordinate_system.coordinates(nodes[J + 1].point()) - p0)... };
+                coordinate_system.coordinates(nodes[J + 1]->point()) - p0)... };
 
             // all done
             return { p0, directors };
@@ -96,14 +96,15 @@ namespace mito::geometry {
             // given vertex
             auto has_vertex = [](const vertex_type & vertex) {
                 auto lambda = [&vertex](const node_type & node) {
-                    return node.vertex() == vertex;
+                    return node->vertex() == vertex;
                 };
                 return lambda;
             };
 
             // return the geometric simplex
             return geometric_simplex_type({ node_type(
-                vertices[K], std::ranges::find_if(nodes, has_vertex(vertices[K]))->point())... });
+                vertices[K],
+                (*std::ranges::find_if(nodes, has_vertex(vertices[K])))->point())... });
         };
 
         // build a geometric simplex based on {simplex} with the vertex-point pair as appears in
@@ -127,13 +128,13 @@ namespace mito::geometry {
         // given vertex
         auto has_vertex = [](const vertex_type & vertex) {
             auto lambda = [&vertex](const node_type & node) {
-                return node.vertex() == vertex;
+                return node->vertex() == vertex;
             };
             return lambda;
         };
 
         // return the node
-        return node_type(vertex, std::ranges::find_if(nodes, has_vertex(vertex))->point());
+        return node_type(vertex, (*std::ranges::find_if(nodes, has_vertex(vertex)))->point());
     }
 
     // returns the geometric simplex with opposite orientation to {simplex}

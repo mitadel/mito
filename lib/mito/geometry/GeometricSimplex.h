@@ -58,7 +58,7 @@ namespace mito::geometry {
             // of nodes in {_nodes}
             auto _check_vertices = [this]<int... J>(integer_sequence<J...>) -> bool {
                 return (
-                    math::permutation_sign(_simplex->vertices(), { _nodes[J].vertex()... }) == +1);
+                    math::permutation_sign(_simplex->vertices(), { _nodes[J]->vertex()... }) == +1);
             };
 
             return _check_vertices(make_integer_sequence<N + 1>{});
@@ -71,7 +71,7 @@ namespace mito::geometry {
             auto & topology = topology::topology();
 
             // instantiate a simplex with the vertices prescribed by {_nodes}
-            return topology.simplex<N>({ _nodes[J].vertex()... });
+            return topology.simplex<N>({ _nodes[J]->vertex()... });
         }
 
       public:
@@ -131,7 +131,7 @@ namespace mito::geometry {
 
     template <int D>
     requires(D > 0)
-    class GeometricSimplex<0, D> : public utilities::Invalidatable {
+    class GeometricSimplex<0, D> : public utilities::Invalidatable, public utilities::Shareable {
 
       public:
         // spatial dimension
@@ -207,8 +207,8 @@ namespace mito::geometry {
     constexpr auto operator==(
         const GeometricSimplex<0, D> & node_a, const GeometricSimplex<0, D> & node_b) -> bool
     {
-        // two nodes are the same if their vertex and point are the same
-        return node_a.vertex() == node_b.vertex() && node_a.point() == node_b.point();
+        // two nodes are the same if they have the same id
+        return node_a.id() == node_b.id();
     }
 }
 
