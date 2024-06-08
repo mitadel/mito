@@ -16,8 +16,6 @@ namespace mito::mesh {
         static constexpr int D = cell_type::dim;
         // get the order of the cell
         static constexpr int N = cell_type::order;
-        // a collection of nodes
-        using nodes_type = cell_type::nodes_type;
         // get the family this cell type belongs to (e.g. geometric simplices)
         template <int I>
         using cell_family_type = typename cell_type::cell_family_type<I, D>;
