@@ -131,7 +131,7 @@ namespace mito::geometry {
 
     template <int D>
     requires(D > 0)
-    class GeometricSimplex<0, D> : public utilities::Invalidatable, public utilities::Shareable {
+    class GeometricSimplex<0, D> : public utilities::Invalidatable {
 
       public:
         // spatial dimension
