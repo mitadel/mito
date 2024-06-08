@@ -21,11 +21,19 @@ namespace mito::mesh {
         using cell_family_type = typename cell_type::cell_family_type<I, D>;
         // the boundary mesh type
         using mesh_boundary_type = mesh_t<cell_family_type<N - 1>>;
+        // the node type
+        using node_type = cell_type::node_type;
+        // a cloud of nodes (the boundary of a 1D mesh)
+        using node_cloud_type = std::unordered_set<node_type, utilities::hash_function<node_type>>;
 
       public:
         // returns the boundary mesh of {mesh}
         static inline auto boundary(const mesh_type & mesh) -> mesh_boundary_type
-        requires(N > 0);
+        requires(N > 1);
+
+        // returns the boundary mesh of {mesh}
+        static inline auto boundary(const mesh_type & mesh) -> node_cloud_type
+        requires(N == 1);
 
         // returns the size of the boundary of {mesh}
         static inline auto boundary_size(const mesh_type & mesh) -> int

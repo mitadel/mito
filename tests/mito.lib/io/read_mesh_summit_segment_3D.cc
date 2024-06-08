@@ -23,12 +23,11 @@ TEST(SummitReader, LoadSummitSegmentsMesh3D)
     // assert you read 10 cells
     EXPECT_EQ(mesh.nCells(), 10);
 
-    // TOFIX
-    // // assert you found 2 nodes on the boundary
-    // {
-    //     auto boundary_mesh = mito::mesh::boundary(mesh);
-    //     EXPECT_EQ(boundary_mesh.nCells(), 2);
-    // }
+    // assert you found 2 nodes on the boundary
+    {
+        auto boundary_nodes = mito::mesh::boundary(mesh);
+        EXPECT_EQ(std::size(boundary_nodes), 2);
+    }
 
     // get a cell
     auto & cell = mesh.cells()[5];
@@ -39,10 +38,9 @@ TEST(SummitReader, LoadSummitSegmentsMesh3D)
     // assert you read 9 cells
     EXPECT_EQ(mesh.nCells(), 9);
 
-    // TOFIX
-    // // assert you found 4 nodes on the boundary
-    // {
-    //     auto boundary_mesh = mito::mesh::boundary(mesh);
-    //     EXPECT_EQ(boundary_mesh.nCells(), 4);
-    // }
+    // assert you found 4 nodes on the boundary
+    {
+        auto boundary_nodes = mito::mesh::boundary(mesh);
+        EXPECT_EQ(std::size(boundary_nodes), 4);
+    }
 }

@@ -115,7 +115,7 @@ namespace mito::geometry {
     // builds the node based on vertex {vertex} with the vertex-point pairing as appears in {nodes}
     template <int D, int N, class nodesT>
     auto geometric_simplex(const topology::simplex_t<N> & simplex, const nodesT & nodes)
-        -> geometric_simplex_t<N, D>
+        -> node_t<D>
     requires(N == 0)
     {
         using vertex_type = topology::vertex_t;
