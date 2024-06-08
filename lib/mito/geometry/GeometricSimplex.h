@@ -143,24 +143,8 @@ namespace mito::geometry {
         // the type of the vertices
         using vertex_type = topology::vertex_t;
 
-        // the type of the topological simplex
-        using simplex_type = topology::oriented_simplex_t<0>;
-
-        // number of vertices of simplex
-        static constexpr int n_vertices = 0;
-
-        // the node type
-        using node_type = node_t<D>;
-
-        // a collection of nodes
-        using nodes_type = std::array<node_type, order + 1>;
-
         // the point type
         using point_type = point_t<D>;
-
-        // typedef for the topological family type (simplicial)
-        template <int I>
-        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
 
       public:
         // get the coordinates of the point
