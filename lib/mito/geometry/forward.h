@@ -46,6 +46,14 @@ namespace mito::geometry {
     template <class F>
     concept geometric_segment_c = geometric_simplex_c<F> && F::order == 1;
 
+    // concept of a geometric triangle (geometric simplex with order 2)
+    template <class F>
+    concept geometric_triangle_c = geometric_simplex_c<F> && F::order == 2;
+
+    // concept of a geometric tetrahedron (geometric simplex with order 3)
+    template <class F>
+    concept geometric_tetrahedron_c = geometric_simplex_c<F> && F::order == 3;
+
     // class point cloud
     template <int D>
     class PointCloud;
