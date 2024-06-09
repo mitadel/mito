@@ -37,7 +37,7 @@ namespace mito::io::summit {
         return;
     }
 
-    template <geometry::geometric_simplex_c cellT>
+    template <GalerkinMeshType galerkinT, geometry::geometric_simplex_c cellT>
     auto readElement(
         std::ifstream & fileStream, mesh::mesh_t<cellT> & mesh,
         const std::vector<geometry::node_t<cellT::dim>> & nodes) -> void
@@ -58,16 +58,41 @@ namespace mito::io::summit {
             index[i] = id;
         }
 
-        // helper function to call the mesh insert method with {N} nodes
-        constexpr auto _insert = []<size_t... I>(
-                                     mesh::mesh_t<cellT> & mesh, const std::array<int, N> index,
-                                     const std::vector<geometry::node_t<cellT::dim>> & nodes,
-                                     std::index_sequence<I...>) {
-            mesh.insert({ nodes[index[I]]... });
-        };
+        // if it is a continuous Galerkin mesh
+        if constexpr (galerkinT == CG) {
 
-        // insert the nodes in the mesh
-        _insert(mesh, index, nodes, std::make_index_sequence<N>{});
+            // helper function to call the mesh insert method with {N} nodes
+            constexpr auto _insert = []<size_t... I>(
+                                         mesh::mesh_t<cellT> & mesh, const std::array<int, N> index,
+                                         const std::vector<geometry::node_t<cellT::dim>> & nodes,
+                                         std::index_sequence<I...>) {
+                // insert in the mesh a geometric simplex with these nodes
+                mesh.insert({ nodes[index[I]]... });
+            };
+
+            // insert the nodes in the mesh
+            _insert(mesh, index, nodes, std::make_index_sequence<N>{});
+
+        }
+        // otherwise
+        else {
+            // assert that it is then a discontinuous Galerkin mesh
+            static_assert(galerkinT == DG);
+
+            // helper function to call the mesh insert method with {N} nodes
+            constexpr auto _insert = []<size_t... I>(
+                                         mesh::mesh_t<cellT> & mesh, const std::array<int, N> index,
+                                         const std::vector<geometry::node_t<cellT::dim>> & nodes,
+                                         std::index_sequence<I...>) {
+                // insert in the mesh a geometric simplex with a new instance of the nodes riding on
+                // same vertex and same point
+                mesh.insert({ geometry::node_t<cellT::dim>(
+                    nodes[index[I]]->vertex(), nodes[index[I]]->point())... });
+            };
+
+            // insert the nodes in the mesh
+            _insert(mesh, index, nodes, std::make_index_sequence<N>{});
+        }
 
         // QUESTION: Can the label be more than one?
         // read label for cell
@@ -79,7 +104,7 @@ namespace mito::io::summit {
         return;
     }
 
-    template <class cellT>
+    template <GalerkinMeshType galerkinT, class cellT>
     auto readElements(
         std::ifstream & fileStream, mesh::mesh_t<cellT> & mesh, int N_cells,
         const std::vector<geometry::node_t<cellT::dim>> & nodes) -> void
@@ -93,7 +118,7 @@ namespace mito::io::summit {
             // if the cell type read from file matches with the cell of the mesh to be populated
             if (cell_type == summit::cell<cellT>::type) {
                 // read the element and insert it in the mesh
-                readElement(fileStream, mesh, nodes);
+                readElement<galerkinT>(fileStream, mesh, nodes);
             }
         }
 
@@ -101,7 +126,7 @@ namespace mito::io::summit {
         return;
     }
 
-    template <class cellT, geometry::coordinates_c coordT>
+    template <class cellT, GalerkinMeshType galerkinT = CG, geometry::coordinates_c coordT>
     auto reader(
         std::ifstream & fileStream, geometry::coordinate_system_t<coordT> & coordinate_system)
         -> mesh::mesh_t<cellT>
@@ -152,7 +177,7 @@ namespace mito::io::summit {
         readVertices(fileStream, coordinate_system, N_vertices, nodes);
 
         // read the cells
-        readElements(fileStream, mesh, N_cells, nodes);
+        readElements<galerkinT>(fileStream, mesh, N_cells, nodes);
 
         // sanity check: the number of nodes in the map is N_vertices
         nodes.shrink_to_fit();

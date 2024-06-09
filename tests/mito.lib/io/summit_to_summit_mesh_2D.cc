@@ -12,7 +12,9 @@
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
-TEST(SummitToSummit, Mesh2D)
+template <mito::io::summit::GalerkinMeshType galerkinT>
+void
+test()
 {
     int original_mesh_cells = 0;
     int reread_mesh_cells = 0;
@@ -25,8 +27,8 @@ TEST(SummitToSummit, Mesh2D)
 
         // read summit mesh
         std::ifstream fileStream("rectangle.summit");
-        auto mesh =
-            mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
+        auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>, galerkinT>(
+            fileStream, coord_system);
 
         // get the original number of mesh cells
         original_mesh_cells = mesh.nCells();
@@ -43,8 +45,8 @@ TEST(SummitToSummit, Mesh2D)
 
         // read the written summit mesh
         std::ifstream fileStream("rectangle_copy.summit");
-        auto mesh =
-            mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
+        auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>, galerkinT>(
+            fileStream, coord_system);
 
         // get the reread number of mesh cells
         reread_mesh_cells = mesh.nCells();
@@ -63,4 +65,14 @@ TEST(SummitToSummit, Mesh2D)
 
     // check that the number of mesh nodes is the same
     EXPECT_TRUE(original_mesh_nodes == reread_mesh_nodes);
+}
+
+TEST(SummitToSummit, Mesh2D_CG)
+{
+    test<mito::io::summit::CG>();
+}
+
+TEST(SummitToSummit, Mesh2D_DG)
+{
+    test<mito::io::summit::DG>();
 }
