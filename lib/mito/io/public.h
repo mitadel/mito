@@ -11,7 +11,7 @@
 #include "externals.h"
 
 // classes implementation
-#include "GridWriter.h"
+#include "Writer.h"
 
 // classes implementation
 #include "summit/public.h"

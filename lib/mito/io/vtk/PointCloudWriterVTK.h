@@ -20,6 +20,10 @@ namespace mito::io::vtk {
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
         static constexpr int D = cloudT::dim;
+        // the type of point
+        using point_type = typename coord_system_type::point_type;
+        // the type of a collection of points
+        using points_type = std::unordered_set<point_type, utilities::hash_function<point_type>>;
 
       private:
         auto _create_vtk_grid(const cloud_type & cloud, const coord_system_type & coordinate_system)
@@ -32,7 +36,7 @@ namespace mito::io::vtk {
 
             // insert the new vtk point
             for (const auto & point : points) {
-                this->_points.insert(point);
+                _points.insert(point);
                 insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
             }
 
@@ -51,6 +55,10 @@ namespace mito::io::vtk {
         {
             _create_vtk_grid(cloud, coord_system);
         }
+
+      private:
+        // a collection of points in the mesh
+        points_type _points;
     };
 
 }    // namespace mito::io::vtk

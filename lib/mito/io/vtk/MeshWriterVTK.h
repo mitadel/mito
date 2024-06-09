@@ -20,6 +20,10 @@ namespace mito::io::vtk {
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
         static constexpr int D = mesh_type::dim;
+        // the type of node
+        using node_type = typename mesh_type::cell_type::node_type;
+        // the type of a collection of nodes
+        using nodes_type = std::unordered_set<node_type, utilities::hash_function<node_type>>;
 
       private:
         auto _create_vtk_grid(const mesh_type & mesh, const coord_system_type & coordinate_system)
@@ -28,8 +32,8 @@ namespace mito::io::vtk {
             for (const auto & cell : mesh.cells()) {
                 // loop over the nodes of the cell
                 for (const auto & node : cell.nodes()) {
-                    // add the point to the collection of points (eliminating duplicates)
-                    this->_points.insert(node->point());
+                    // add the node to the collection of nodes
+                    _nodes.insert(node);
                 }
             }
 
@@ -37,8 +41,8 @@ namespace mito::io::vtk {
             auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
 
             // insert the new vtk point
-            for (const auto & point : this->_points) {
-                insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
+            for (const auto & node : _nodes) {
+                insert_vtk_point(coordinate_system.coordinates(node->point()), pointsVtk);
             }
 
             // loop over the cells
@@ -52,12 +56,10 @@ namespace mito::io::vtk {
 
                 // loop over the nodes of the cell
                 for (const auto & node : cell.nodes()) {
-                    // retrieve the corresponding point
-                    const auto & point = node->point();
-                    // assert that the point is present in the set of points
-                    assert(this->_points.contains(point));
-                    // calculate the index of the point
-                    auto index = std::distance(this->_points.begin(), this->_points.find(point));
+                    // assert that the node is present in the collection of nodes
+                    assert(_nodes.contains(node));
+                    // calculate the index of the node
+                    auto index = std::distance(_nodes.begin(), _nodes.find(node));
                     // set the id of the point
                     cellVtk->GetPointIds()->SetId(indexLocalPointVtk, index);
                     // update local index for the points in the cell
@@ -82,6 +84,36 @@ namespace mito::io::vtk {
         {
             _create_vtk_grid(mesh, coord_system);
         }
+
+        template <class Y>
+        auto attach_field(const fem::nodal_field_t<D, Y> & field, std::string fieldname) -> void
+        {
+            // get the number of nodes
+            auto n_nodes = field.n_nodes();
+
+            // check the number of nodes in the field equals the number of points in the grid
+            assert(n_nodes == this->_grid->GetNumberOfPoints());
+
+            // initialize a vtk array
+            auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
+            vtkArray->SetName(fieldname.data());
+            vtkArray->SetNumberOfComponents(Y::size);
+            vtkArray->SetNumberOfTuples(n_nodes);
+
+            // populate the array with the nodal values
+            for (auto & [node, value] : field) {
+                // get the index corresponding to the current node
+                auto index = std::distance(_nodes.begin(), _nodes.find(node));
+                vtkArray->SetTuple(index, value.begin());
+            }
+
+            // insert array into output mesh
+            this->_grid->GetPointData()->AddArray(vtkArray);
+        }
+
+      private:
+        // a collection of nodes in the grid
+        nodes_type _nodes;
     };
 
 }    // namespace mito::io::vtk

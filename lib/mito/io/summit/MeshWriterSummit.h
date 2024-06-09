@@ -9,9 +9,10 @@
 
 namespace mito::io {
 
+    // class that writes a mesh to file in {summit} format
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<meshT, coordSystemT>)
-    class MeshWriterSummit : public GridWriter<meshT::dim> {
+    class MeshWriterSummit : public Writer {
 
       private:
         // the mesh type
@@ -22,19 +23,24 @@ namespace mito::io {
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
         static constexpr int D = mesh_type::dim;
+        // the type of point
+        using point_type = typename coord_system_type::point_type;
+        // the type of a collection of points
+        using points_type = std::unordered_set<point_type, utilities::hash_function<point_type>>;
 
       public:
         // constructor
         MeshWriterSummit(
             std::string filename, const mesh_type & mesh, const coord_system_type & coord_system) :
-            GridWriter<D>(filename),
+            Writer(filename),
             _mesh(mesh),
-            _coord_system(coord_system)
+            _coord_system(coord_system),
+            _points()
         {
-            // insert the points corresponding to the mesh nodes
+            // insert the points corresponding to the mesh nodes (eliminating duplicates)
             for (const auto & cell : mesh.cells()) {
                 for (const auto & node : cell.nodes()) {
-                    this->_points.insert(node->point());
+                    _points.insert(node->point());
                 }
             }
         }
@@ -55,10 +61,10 @@ namespace mito::io {
             // populate the file heading
             // TOFIX: number of materials is always 1 for now
             outfile << D << std::endl;
-            outfile << std::size(this->_points) << " " << _mesh.nCells() << " " << 1 << std::endl;
+            outfile << std::size(_points) << " " << _mesh.nCells() << " " << 1 << std::endl;
 
             // write the points to file
-            for (const auto & point : this->_points) {
+            for (const auto & point : _points) {
                 const auto & coord = _coord_system.coordinates(point);
                 outfile << std::setprecision(15) << coord << std::endl;
             }
@@ -67,10 +73,8 @@ namespace mito::io {
             for (const auto & cell : _mesh.cells()) {
                 outfile << summit::cell<cell_type>::type << " ";
                 for (const auto & node : cell.nodes()) {
-                    outfile
-                        << std::distance(this->_points.begin(), this->_points.find(node->point()))
-                               + 1
-                        << " ";
+                    outfile << std::distance(_points.begin(), _points.find(node->point())) + 1
+                            << " ";
                 }
                 // TOFIX: material label is always 1 for now
                 outfile << 1 << std::endl;
@@ -89,6 +93,9 @@ namespace mito::io {
 
         // a const reference to the coordinate system
         const coord_system_type & _coord_system;
+
+        // a collection of points in the mesh
+        points_type _points;
     };
 
 }    // namespace mito::io
