@@ -37,13 +37,13 @@ namespace mito::io::summit {
         return;
     }
 
-    template <mesh::mesh_c meshT>
+    template <geometry::geometric_simplex_c cellT>
     auto readElement(
-        std::ifstream & fileStream, meshT & mesh,
-        const std::vector<geometry::node_t<meshT::dim>> & nodes) -> void
+        std::ifstream & fileStream, mesh::mesh_t<cellT> & mesh,
+        const std::vector<geometry::node_t<cellT::dim>> & nodes) -> void
     {
         // get the number of vertices
-        constexpr int N = meshT::cell_type::n_vertices;
+        constexpr int N = cellT::n_vertices;
 
         // the element connectivity
         std::array<int, N> index;
@@ -60,8 +60,8 @@ namespace mito::io::summit {
 
         // helper function to call the mesh insert method with {N} nodes
         constexpr auto _insert = []<size_t... I>(
-                                     meshT & mesh, const std::array<int, N> index,
-                                     const std::vector<geometry::node_t<meshT::dim>> & nodes,
+                                     mesh::mesh_t<cellT> & mesh, const std::array<int, N> index,
+                                     const std::vector<geometry::node_t<cellT::dim>> & nodes,
                                      std::index_sequence<I...>) {
             mesh.insert({ nodes[index[I]]... });
         };
@@ -84,17 +84,15 @@ namespace mito::io::summit {
         std::ifstream & fileStream, mesh::mesh_t<cellT> & mesh, int N_cells,
         const std::vector<geometry::node_t<cellT::dim>> & nodes) -> void
     {
-        // get the number of vertices
-        constexpr int N = cellT::n_vertices;
-
         // for each element
         for (int i = 0; i < N_cells; ++i) {
             // read the cell type from file
             int cell_type = 0;
             fileStream >> cell_type;
 
-            // TOFIX: should be cell_type == summit::cell<cellT>::type
-            if (cell_type == N) {
+            // if the cell type read from file matches with the cell of the mesh to be populated
+            if (cell_type == summit::cell<cellT>::type) {
+                // read the element and insert it in the mesh
                 readElement(fileStream, mesh, nodes);
             }
         }

@@ -11,6 +11,7 @@
 #include "externals.h"
 
 // classes implementation
+#include "summit_cell.h"
 #include "MeshWriterSummit.h"
 
 // published type factories; this is the file you are looking for...

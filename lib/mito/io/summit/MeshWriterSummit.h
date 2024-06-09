@@ -16,6 +16,8 @@ namespace mito::io {
       private:
         // the mesh type
         using mesh_type = meshT;
+        // the cell type
+        using cell_type = typename mesh_type::cell_type;
         // the coordinate system type
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
@@ -63,7 +65,7 @@ namespace mito::io {
 
             // write the cells to file
             for (const auto & cell : _mesh.cells()) {
-                outfile << mesh_type::cell_type::n_vertices << " ";
+                outfile << summit::cell<cell_type>::type << " ";
                 for (const auto & node : cell.nodes()) {
                     outfile
                         << std::distance(this->_points.begin(), this->_points.find(node->point()))
