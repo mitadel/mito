@@ -37,94 +37,37 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
-    auto readSegment(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::segment_t<D>> & mesh,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
+    template <mesh::mesh_c meshT>
+    auto readElement(
+        std::ifstream & fileStream, meshT & mesh,
+        const std::vector<geometry::node_t<meshT::dim>> & nodes) -> void
     {
-        int index0 = 0;
-        fileStream >> index0;
-        --index0;
+        // get the number of vertices
+        constexpr int N = meshT::cell_type::n_vertices;
 
-        int index1 = 0;
-        fileStream >> index1;
-        --index1;
+        // the element connectivity
+        std::array<int, N> index;
+        // for each node
+        for (int i = 0; i < N; ++i) {
+            // read from file the id of the node
+            int id = 0;
+            fileStream >> id;
+            // start from zero (the summit format starts counting from one)
+            --id;
+            // take a note of it
+            index[i] = id;
+        }
 
-        const auto & node_0 = nodes[index0];
-        const auto & node_1 = nodes[index1];
+        // helper function to call the mesh insert method with {N} nodes
+        constexpr auto _insert = []<size_t... I>(
+                                     meshT & mesh, const std::array<int, N> index,
+                                     const std::vector<geometry::node_t<meshT::dim>> & nodes,
+                                     std::index_sequence<I...>) {
+            mesh.insert({ nodes[index[I]]... });
+        };
 
-        mesh.insert({ node_0, node_1 });
-
-        // QUESTION: Can the label be more than one?
-        // read label for cell
-        // TOFIX: Ignored for now
-        std::string cell_label;
-        fileStream >> cell_label;
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readTriangle(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::triangle_t<D>> & mesh,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        int index0 = 0;
-        fileStream >> index0;
-        --index0;
-
-        int index1 = 0;
-        fileStream >> index1;
-        --index1;
-
-        int index2 = 0;
-        fileStream >> index2;
-        --index2;
-
-        const auto & node_0 = nodes[index0];
-        const auto & node_1 = nodes[index1];
-        const auto & node_2 = nodes[index2];
-
-        mesh.insert({ node_0, node_1, node_2 });
-
-        // QUESTION: Can the label be more than one?
-        // read label for cell
-        // TOFIX: Ignored for now
-        std::string cell_label;
-        fileStream >> cell_label;
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readTetrahedron(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::tetrahedron_t<D>> & mesh,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        int index0 = 0;
-        fileStream >> index0;
-        --index0;
-
-        int index1 = 0;
-        fileStream >> index1;
-        --index1;
-
-        int index2 = 0;
-        fileStream >> index2;
-        --index2;
-
-        int index3 = 0;
-        fileStream >> index3;
-        --index3;
-
-        const auto & node_0 = nodes[index0];
-        const auto & node_1 = nodes[index1];
-        const auto & node_2 = nodes[index2];
-        const auto & node_3 = nodes[index3];
-
-        mesh.insert({ node_0, node_1, node_2, node_3 });
+        // insert the nodes in the mesh
+        _insert(mesh, index, nodes, std::make_index_sequence<N>{});
 
         // QUESTION: Can the label be more than one?
         // read label for cell
@@ -136,82 +79,28 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
-    auto readSegments(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::segment_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
+    template <class cellT>
+    auto readElements(
+        std::ifstream & fileStream, mesh::mesh_t<cellT> & mesh, int N_cells,
+        const std::vector<geometry::node_t<cellT::dim>> & nodes) -> void
     {
+        // get the number of vertices
+        constexpr int N = cellT::n_vertices;
+
+        // for each element
         for (int i = 0; i < N_cells; ++i) {
+            // read the cell type from file
             int cell_type = 0;
             fileStream >> cell_type;
 
-            if (cell_type == 2) {
-                readSegment(fileStream, mesh, nodes);
+            // TOFIX: should be cell_type == summit::cell<cellT>::type
+            if (cell_type == N) {
+                readElement(fileStream, mesh, nodes);
             }
         }
 
         // all done
         return;
-    }
-
-    template <int D>
-    auto readTriangles(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::triangle_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        for (int i = 0; i < N_cells; ++i) {
-            int cell_type = 0;
-            fileStream >> cell_type;
-
-            if (cell_type == 3) {
-                readTriangle(fileStream, mesh, nodes);
-            }
-        }
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readTetrahedra(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::tetrahedron_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        for (int i = 0; i < N_cells; ++i) {
-            int cell_type = 0;
-            fileStream >> cell_type;
-
-            if (cell_type == 4) {
-                readTetrahedron(fileStream, mesh, nodes);
-            }
-        }
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::segment_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        return readSegments(fileStream, mesh, N_cells, nodes);
-    }
-
-    template <int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::tetrahedron_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        return readTetrahedra(fileStream, mesh, N_cells, nodes);
-    }
-
-    template <int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::triangle_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        return readTriangles(fileStream, mesh, N_cells, nodes);
     }
 
     template <class cellT, geometry::coordinates_c coordT>
