@@ -8,13 +8,7 @@
 
 
 // externals
-#include <unordered_set>
-
-// support
-#include "../journal.h"
-#include "../geometry.h"
-#include "../mesh.h"
-#include "../fem.h"
+#include <fstream>
 
 
 // end of file

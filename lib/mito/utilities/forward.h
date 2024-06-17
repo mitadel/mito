@@ -28,6 +28,10 @@ namespace mito::utilities {
     // requires reference_countable_c<resourceT>
     class SharedPointer;
 
+    // wrapper class for std shared pointer
+    template <class resourceT>
+    class StdSharedPointer;
+
     // class segmented allocator
     template <class resourceT>
     class SegmentedAllocator;

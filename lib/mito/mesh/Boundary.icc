@@ -12,7 +12,6 @@
 template <class meshT>
 auto
 mito::mesh::Boundary<meshT>::boundary_size(const mesh_type & mesh) -> int
-requires(N > 0)
 {
     // number of boundary cells
     int count = 0;
@@ -33,11 +32,10 @@ requires(N > 0)
 
 template <class meshT>
 auto
-mito::mesh::Boundary<meshT>::boundary(const mesh_type & mesh) -> mesh_boundary_type
-requires(N > 0)
+mito::mesh::Boundary<meshT>::boundary(const mesh_type & mesh) -> boundary_mesh_type
 {
     // instantiate a new mesh for the boundary elements
-    mesh_boundary_type boundary_mesh;
+    boundary_mesh_type boundary;
 
     // loop on the mesh cells
     for (const auto & cell : mesh.cells()) {
@@ -49,13 +47,14 @@ requires(N > 0)
         // loop on the {subcell} on the boundary
         for (const auto & subcell : subcellsOnBoundary) {
             // add {cell} to the boundary mesh
-            boundary_mesh.insert(mito::geometry::geometric_simplex<D>(subcell, cell.nodes()));
+            boundary.insert(mito::geometry::geometric_simplex<D>(subcell, cell.nodes()));
         }
     }
 
     // return the boundary mesh
-    return boundary_mesh;
+    return boundary;
 }
+
 
 #endif
 

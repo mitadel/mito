@@ -53,7 +53,7 @@ namespace mito::quadrature {
       public:
         Integrator(const manifold_type & manifold) :
             _manifold(manifold),
-            _coordinates(manifold.nElements())
+            _coordinates(manifold.nElements(), "coordinates")
         {
             _computeQuadPointCoordinates();
         }

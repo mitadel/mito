@@ -37,94 +37,62 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
-    auto readSegment(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::segment_t<D>> & mesh,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
+    template <GalerkinMeshType galerkinT, geometry::geometric_simplex_c cellT>
+    auto readElement(
+        std::ifstream & fileStream, mesh::mesh_t<cellT> & mesh,
+        const std::vector<geometry::node_t<cellT::dim>> & nodes) -> void
     {
-        int index0 = 0;
-        fileStream >> index0;
-        --index0;
+        // get the number of vertices
+        constexpr int N = cellT::n_vertices;
 
-        int index1 = 0;
-        fileStream >> index1;
-        --index1;
+        // the element connectivity
+        std::array<int, N> index;
+        // for each node
+        for (int i = 0; i < N; ++i) {
+            // read from file the id of the node
+            int id = 0;
+            fileStream >> id;
+            // start from zero (the summit format starts counting from one)
+            --id;
+            // take a note of it
+            index[i] = id;
+        }
 
-        const auto & node_0 = nodes[index0];
-        const auto & node_1 = nodes[index1];
+        // if it is a continuous Galerkin mesh
+        if constexpr (galerkinT == CG) {
 
-        mesh.insert({ node_0, node_1 });
+            // helper function to call the mesh insert method with {N} nodes
+            constexpr auto _insert = []<size_t... I>(
+                                         mesh::mesh_t<cellT> & mesh, const std::array<int, N> index,
+                                         const std::vector<geometry::node_t<cellT::dim>> & nodes,
+                                         std::index_sequence<I...>) {
+                // insert in the mesh a geometric simplex with these nodes
+                mesh.insert({ nodes[index[I]]... });
+            };
 
-        // QUESTION: Can the label be more than one?
-        // read label for cell
-        // TOFIX: Ignored for now
-        std::string cell_label;
-        fileStream >> cell_label;
+            // insert the nodes in the mesh
+            _insert(mesh, index, nodes, std::make_index_sequence<N>{});
 
-        // all done
-        return;
-    }
+        }
+        // otherwise
+        else {
+            // assert that it is then a discontinuous Galerkin mesh
+            static_assert(galerkinT == DG);
 
-    template <int D>
-    auto readTriangle(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::triangle_t<D>> & mesh,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        int index0 = 0;
-        fileStream >> index0;
-        --index0;
+            // helper function to call the mesh insert method with {N} nodes
+            constexpr auto _insert = []<size_t... I>(
+                                         mesh::mesh_t<cellT> & mesh, const std::array<int, N> index,
+                                         const std::vector<geometry::node_t<cellT::dim>> & nodes,
+                                         std::index_sequence<I...>) {
+                // insert in the mesh a geometric simplex with a new instance of the nodes riding on
+                // same vertex and same point
+                mesh.insert({ geometry::node_t<cellT::dim>(
+                    nodes[index[I]]->vertex(), nodes[index[I]]->point())... });
+            };
 
-        int index1 = 0;
-        fileStream >> index1;
-        --index1;
-
-        int index2 = 0;
-        fileStream >> index2;
-        --index2;
-
-        const auto & node_0 = nodes[index0];
-        const auto & node_1 = nodes[index1];
-        const auto & node_2 = nodes[index2];
-
-        mesh.insert({ node_0, node_1, node_2 });
-
-        // QUESTION: Can the label be more than one?
-        // read label for cell
-        // TOFIX: Ignored for now
-        std::string cell_label;
-        fileStream >> cell_label;
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readTetrahedron(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::tetrahedron_t<D>> & mesh,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        int index0 = 0;
-        fileStream >> index0;
-        --index0;
-
-        int index1 = 0;
-        fileStream >> index1;
-        --index1;
-
-        int index2 = 0;
-        fileStream >> index2;
-        --index2;
-
-        int index3 = 0;
-        fileStream >> index3;
-        --index3;
-
-        const auto & node_0 = nodes[index0];
-        const auto & node_1 = nodes[index1];
-        const auto & node_2 = nodes[index2];
-        const auto & node_3 = nodes[index3];
-
-        mesh.insert({ node_0, node_1, node_2, node_3 });
+            // insert the nodes in the mesh
+            _insert(mesh, index, nodes, std::make_index_sequence<N>{});
+        }
 
         // QUESTION: Can the label be more than one?
         // read label for cell
@@ -136,17 +104,21 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
-    auto readSegments(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::segment_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
+    template <GalerkinMeshType galerkinT, class cellT>
+    auto readElements(
+        std::ifstream & fileStream, mesh::mesh_t<cellT> & mesh, int N_cells,
+        const std::vector<geometry::node_t<cellT::dim>> & nodes) -> void
     {
+        // for each element
         for (int i = 0; i < N_cells; ++i) {
+            // read the cell type from file
             int cell_type = 0;
             fileStream >> cell_type;
 
-            if (cell_type == 2) {
-                readSegment(fileStream, mesh, nodes);
+            // if the cell type read from file matches with the cell of the mesh to be populated
+            if (cell_type == summit::cell<cellT>::type) {
+                // read the element and insert it in the mesh
+                readElement<galerkinT>(fileStream, mesh, nodes);
             }
         }
 
@@ -154,71 +126,11 @@ namespace mito::io::summit {
         return;
     }
 
-    template <int D>
-    auto readTriangles(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::triangle_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        for (int i = 0; i < N_cells; ++i) {
-            int cell_type = 0;
-            fileStream >> cell_type;
-
-            if (cell_type == 3) {
-                readTriangle(fileStream, mesh, nodes);
-            }
-        }
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readTetrahedra(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::tetrahedron_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        for (int i = 0; i < N_cells; ++i) {
-            int cell_type = 0;
-            fileStream >> cell_type;
-
-            if (cell_type == 4) {
-                readTetrahedron(fileStream, mesh, nodes);
-            }
-        }
-
-        // all done
-        return;
-    }
-
-    template <int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::segment_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        return readSegments(fileStream, mesh, N_cells, nodes);
-    }
-
-    template <int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::tetrahedron_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        return readTetrahedra(fileStream, mesh, N_cells, nodes);
-    }
-
-    template <int D>
-    auto readElements(
-        std::ifstream & fileStream, mesh::mesh_t<geometry::triangle_t<D>> & mesh, int N_cells,
-        const std::vector<geometry::node_t<D>> & nodes) -> void
-    {
-        return readTriangles(fileStream, mesh, N_cells, nodes);
-    }
-
-    template <class cellT, geometry::coordinates_c coordT>
+    template <class cellT, GalerkinMeshType galerkinT = CG, geometry::coordinates_c coordT>
     auto reader(
         std::ifstream & fileStream, geometry::coordinate_system_t<coordT> & coordinate_system)
         -> mesh::mesh_t<cellT>
-    requires(cellT::dim == coordT::dim)
+    requires(utilities::same_dim_c<cellT, coordT>)
     {
         if (!fileStream.is_open()) {
             throw std::runtime_error("reader: Mesh file could not be opened");
@@ -265,7 +177,7 @@ namespace mito::io::summit {
         readVertices(fileStream, coordinate_system, N_vertices, nodes);
 
         // read the cells
-        readElements(fileStream, mesh, N_cells, nodes);
+        readElements<galerkinT>(fileStream, mesh, N_cells, nodes);
 
         // sanity check: the number of nodes in the map is N_vertices
         nodes.shrink_to_fit();

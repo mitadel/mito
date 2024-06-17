@@ -62,9 +62,8 @@ namespace mito::fields {
     // concept of two fields being compatible with each other (i.e. defined on the same coordinates)
     template <class FIELD1, class FIELD2>
     // a scalar field  is a field returning a scalar
-    concept compatible_fields_c = requires {
+    concept compatible_fields_c =
         std::is_same_v<typename FIELD1::coordinates_type, typename FIELD2::coordinates_type>;
-    };
 }
 
 

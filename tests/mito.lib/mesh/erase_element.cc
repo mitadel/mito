@@ -40,11 +40,11 @@ TEST(Mesh, EraseElement)
     EXPECT_EQ(mito::mesh::boundary_size(mesh), 4);
 
     // assert that there exists a segment connecting vertex 0 and 1
-    EXPECT_TRUE(topology.exists({ node_0.vertex(), node_1.vertex() }));
+    EXPECT_TRUE(topology.exists({ node_0->vertex(), node_1->vertex() }));
     // assert that there exists a segment connecting vertex 1 and 3
-    EXPECT_TRUE(topology.exists({ node_1.vertex(), node_3.vertex() }));
+    EXPECT_TRUE(topology.exists({ node_1->vertex(), node_3->vertex() }));
     // assert that there exists a segment connecting vertex 3 and 0
-    EXPECT_TRUE(topology.exists({ node_3.vertex(), node_0.vertex() }));
+    EXPECT_TRUE(topology.exists({ node_3->vertex(), node_0->vertex() }));
 
     // erase a simplex
     mesh.erase(geom_cell0);
@@ -57,11 +57,11 @@ TEST(Mesh, EraseElement)
     EXPECT_EQ(mito::mesh::boundary_size(mesh), 5);
 
     // assert that a segment connecting vertex 0 and 1 no longer exists in the topology
-    EXPECT_FALSE(topology.exists({ node_0.vertex(), node_1.vertex() }));
+    EXPECT_FALSE(topology.exists({ node_0->vertex(), node_1->vertex() }));
     // assert that a segment connecting vertex 1 and 3 no longer exists in the topology
-    EXPECT_FALSE(topology.exists({ node_1.vertex(), node_3.vertex() }));
+    EXPECT_FALSE(topology.exists({ node_1->vertex(), node_3->vertex() }));
     // assert that a segment connecting vertex 3 and 0 no longer exists in the topology
-    EXPECT_FALSE(topology.exists({ node_3.vertex(), node_0.vertex() }));
+    EXPECT_FALSE(topology.exists({ node_3->vertex(), node_0->vertex() }));
 
     // check that erasing a cell twice does not result in an error
     mesh.erase(geom_cell0);
@@ -77,9 +77,9 @@ TEST(Mesh, EraseElement)
     EXPECT_EQ(mito::mesh::boundary_size(mesh), 4);
 
     // assert that a segment connecting vertex 1 and 2 no longer exists in the topology
-    EXPECT_FALSE(topology.exists({ node_1.vertex(), node_2.vertex() }));
+    EXPECT_FALSE(topology.exists({ node_1->vertex(), node_2->vertex() }));
     // assert that a segment connecting vertex 2 and 3 no longer exists in the topology
-    EXPECT_FALSE(topology.exists({ node_2.vertex(), node_3.vertex() }));
+    EXPECT_FALSE(topology.exists({ node_2->vertex(), node_3->vertex() }));
     // assert that a segment connecting vertex 3 and 1 no longer exists in the topology
-    EXPECT_FALSE(topology.exists({ node_3.vertex(), node_1.vertex() }));
+    EXPECT_FALSE(topology.exists({ node_3->vertex(), node_1->vertex() }));
 }

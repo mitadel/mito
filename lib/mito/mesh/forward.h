@@ -17,6 +17,14 @@ namespace mito::mesh {
     template <class cellT>
     using mesh_t = Mesh<cellT>;
 
+    // concept of a mesh
+    template <class F>
+    concept mesh_c = requires(F c) {
+        // require that F only binds to {Mesh} specializations
+        []<class cellT>(const mesh_t<cellT> &) {
+        }(c);
+    };
+
     // class boundary
     template <class meshT>
     class Boundary;

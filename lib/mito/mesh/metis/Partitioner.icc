@@ -60,7 +60,7 @@ mito::mesh::metis::Partitioner<meshT>::_populate_element_connectivity(
         int v = 0;
         for (const auto & node : cell.nodes()) {
             // populate element connectivity with the id of each of its vertices
-            element_connectivity[n_vertices_per_element * e + v] = vertex_to_id.at(node.vertex());
+            element_connectivity[n_vertices_per_element * e + v] = vertex_to_id.at(node->vertex());
             // increment
             ++v;
         }

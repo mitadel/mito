@@ -57,16 +57,15 @@ namespace mito {
 
     // concept of a matrix
     template <class F>
-    concept matrix_c = tensor_c<F> and requires { F::rank == 2; };
+    concept matrix_c = tensor_c<F> and F::rank == 2;
 
     // concept of a diagonal matrix
     template <class F>
-    concept diagonal_matrix_c = matrix_c<F> and requires { F::diagonal; };
+    concept diagonal_matrix_c = matrix_c<F> and F::diagonal;
 
     // concept of a symmetric matrix
     template <class F>
-    concept symmetric_matrix_c =
-        (matrix_c<F> and requires { F::symmetric; }) or diagonal_matrix_c<F>;
+    concept symmetric_matrix_c = (matrix_c<F> and F::symmetric) or diagonal_matrix_c<F>;
 
     // I-th basis vector in dimension D
     template <int I, int D>

@@ -1,0 +1,27 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_utilities_StdSharedPointer_icc)
+#error This header file contains implementation details of class mito::utilities::StdSharedPointer
+#else
+
+template <class resourceT>
+auto
+mito::utilities::StdSharedPointer<resourceT>::id() const -> index_t<resourceT>
+{
+    // the id is the (immutable) address of this object
+    return reinterpret_cast<index_t<resourceT>>(this->get());
+}
+
+template <class resourceT>
+template <class... Args>
+requires(std::is_constructible_v<resourceT, Args...>)
+mito::utilities::StdSharedPointer<resourceT>::StdSharedPointer(Args &&... args) :
+    std::shared_ptr<resourceT>(std::make_shared<resourceT>(args...))
+{}
+
+#endif
+// end of file

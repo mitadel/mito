@@ -23,10 +23,10 @@ volume(
     const mito::geometry::node_t<3> & v2, const mito::geometry::node_t<3> & v3) -> mito::scalar_t
 {
     // build director segments
-    auto x0 = coordinate_system.coordinates(v0.point());
-    auto x1 = coordinate_system.coordinates(v1.point());
-    auto x2 = coordinate_system.coordinates(v2.point());
-    auto x3 = coordinate_system.coordinates(v3.point());
+    auto x0 = coordinate_system.coordinates(v0->point());
+    auto x1 = coordinate_system.coordinates(v1->point());
+    auto x2 = coordinate_system.coordinates(v2->point());
+    auto x3 = coordinate_system.coordinates(v3->point());
 
     // build director vectors
     auto director0 = x1 - x0;
