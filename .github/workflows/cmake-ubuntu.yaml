@@ -53,7 +53,7 @@ jobs:
       - name: install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install distro numpy pybind11 pytest vtk
+          pip3 install distro 'numpy<2.0' pybind11 pytest vtk
 
       - name: checkout pyre
         uses: actions/checkout@v3
