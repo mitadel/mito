@@ -34,6 +34,9 @@ namespace mito::geometry {
         // the type of the topological simplex
         using simplex_type = topology::oriented_simplex_t<N>;
 
+        // the type of the unoriented simplex
+        using unoriented_simplex_type = topology::unoriented_simplex_t<N>;
+
         // number of vertices of simplex
         static constexpr int n_vertices = topology::n_vertices<simplex_type>();
 
@@ -77,6 +80,7 @@ namespace mito::geometry {
       public:
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const simplex_type & simplex, const nodes_type & nodes) :
+            Invalidatable(),
             _nodes(nodes),
             _simplex(simplex)
         {
@@ -87,6 +91,7 @@ namespace mito::geometry {
 
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const nodes_type & nodes) :
+            Invalidatable(),
             _nodes(nodes),
             _simplex(_create_simplex(make_integer_sequence<n_vertices>{}))
         {}
