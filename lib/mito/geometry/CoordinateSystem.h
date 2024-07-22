@@ -22,10 +22,9 @@ namespace mito::geometry {
         static constexpr int D = dim;
         // a point
         using point_type = point_t<D>;
-        // id type of point
-        using point_id_type = utilities::index_t<point_type>;
         // a map between points and their coordinates
-        using coordinates_map_type = std::map<point_id_type, coordinates_type>;
+        using coordinates_map_type =
+            std::unordered_map<point_type, coordinates_type, utilities::hash_function<point_type>>;
 
       public:
         // constructor
@@ -60,11 +59,11 @@ namespace mito::geometry {
         void operator=(CoordinateSystem<coordT> &&) noexcept = delete;
 
       public:
-        // place the point with id {point_id} at location {coord}
-        auto place(const point_id_type & point_id, const coordinates_type & coord) -> void
+        // place the {point} at location {coord}
+        auto place(const point_type & point, const coordinates_type & coord) -> void
         {
             // record the new point-coordinates pair
-            auto ret = _coordinates_map.emplace(point_id, coord);
+            auto ret = _coordinates_map.emplace(point, coord);
 
             // if the point was not inserted, then it is a duplicate
             if (ret.second == false) {
@@ -81,18 +80,11 @@ namespace mito::geometry {
             return;
         }
 
-        // place the {point} at location {coord}
-        auto place(const point_type & point, const coordinates_type & coord) -> void
-        {
-            // all done
-            return place(point.id(), coord);
-        }
-
         // fetch the coordinates at point {point}
         auto coordinates(const point_type & point) const -> const coordinates_type &
         {
             // look-up the coordinates of the point in the map
-            return _coordinates_map.at(point.id());
+            return _coordinates_map.at(point);
         }
 
         // get the coordinates of the midpoint between {point_a} and {point_b}
