@@ -27,17 +27,23 @@ namespace mito::io::summit {
         // type of point
         using point_type = geometry::point_t<D>;
 
-        // type of point id
-        using point_id_type = utilities::index_t<point_type>;
+        // map points to an index (points that are shared among multiple elements have the same
+        // index)
+        std::unordered_map<point_type, int, utilities::hash_function<point_type>> points;
 
-        // a map between point ids to points
-        std::unordered_map<point_id_type, const point_type &> points;
+        // index assigned to each point (start counting from 1, summit mesh convention)
+        auto index = 1;
 
         // insert the points corresponding to the mesh nodes
         for (const auto & cell : mesh.cells()) {
             for (const auto & node : cell.nodes()) {
                 const auto & point = node.point();
-                points.insert({ point.id(), point });
+                auto [_, inserted] = points.insert({ point, index });
+                // if the point was inserted the map (i.e. if it is not a duplicate)
+                if (inserted) {
+                    // increment index
+                    ++index;
+                }
             }
         }
 
@@ -47,7 +53,7 @@ namespace mito::io::summit {
         outfile << std::size(points) << " " << mesh.nCells() << " " << 1 << std::endl;
 
         // write the points to file
-        for (const auto & [_, point] : points) {
+        for (const auto & [point, _] : points) {
             const auto & coord = coordinate_system.coordinates(point);
             outfile << std::setprecision(15) << coord << std::endl;
         }
@@ -56,7 +62,7 @@ namespace mito::io::summit {
         for (const auto & cell : mesh.cells()) {
             outfile << cellT::n_vertices << " ";
             for (const auto & node : cell.nodes()) {
-                outfile << distance(points.begin(), points.find(node.point().id())) + 1 << " ";
+                outfile << points[node.point()] << " ";
             }
             // TOFIX: material label is always 1 for now
             outfile << 1 << std::endl;
