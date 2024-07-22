@@ -89,18 +89,22 @@ namespace mito::io::vtk {
             // loop over the nodes of the cell
             for (const auto & node : nodes) {
                 // retrieve the corresponding point
-                const auto pPoint = node.point();
-                // if the point is not present in the map
-                if (mapPoints.count(pPoint) == 0) {
+                const auto & pPoint = node.point();
+                // try to insert the point in the map
+                const auto & [it, inserted] = mapPoints.insert({ pPoint, indexPointVtk });
+                // get the index (value) associated with this point (key)
+                auto index = it->second;
+                // if the point was inserted the map (i.e. not a duplicate)
+                if (inserted) {
+                    // assert that the index corresponds to what was requested upon insertion
+                    assert(index == indexPointVtk);
                     // insert the new vtk point
                     insertVtkPoint(coordinate_system.coordinates(pPoint), pointsVtk);
-                    // add the point to the map with its global index
-                    mapPoints[pPoint] = indexPointVtk;
                     // update global index for the vtk point
                     ++indexPointVtk;
                 }
                 // set the id of the point
-                cellVtk->GetPointIds()->SetId(indexLocalPointVtk, mapPoints[pPoint]);
+                cellVtk->GetPointIds()->SetId(indexLocalPointVtk, index);
                 // update local index for the points in the cell
                 ++indexLocalPointVtk;
             }
