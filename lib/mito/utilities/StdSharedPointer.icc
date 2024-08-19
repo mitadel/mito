@@ -13,15 +13,25 @@ auto
 mito::utilities::StdSharedPointer<resourceT>::id() const -> index_t<resourceT>
 {
     // the id is the (immutable) address of this object
-    return reinterpret_cast<index_t<resourceT>>(this->get());
+    return reinterpret_cast<index_t<resourceT>>(_ptr.get());
 }
 
 template <class resourceT>
 template <class... Args>
 requires(std::is_constructible_v<resourceT, Args...>)
 mito::utilities::StdSharedPointer<resourceT>::StdSharedPointer(Args &&... args) :
-    std::shared_ptr<resourceT>(std::make_shared<resourceT>(args...))
+    _ptr(std::make_shared<resourceT>(args...))
 {}
+
+// operator->
+template <class resourceT>
+auto
+mito::utilities::StdSharedPointer<resourceT>::operator->() const noexcept
+    -> mito::utilities::StdSharedPointer<resourceT>::handle_type
+{
+    // return the handle
+    return _ptr.operator->();
+}
 
 #endif
 // end of file

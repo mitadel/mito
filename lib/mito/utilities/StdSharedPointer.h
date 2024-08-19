@@ -12,16 +12,20 @@ namespace mito::utilities {
 
     // declaration
     template <class resourceT>
-    class StdSharedPointer : public std::shared_ptr<resourceT> {
+    class StdSharedPointer {
         // types
       public:
         using shared_ptr_type = StdSharedPointer<resourceT>;
         using resource_type = resourceT;
+        using handle_type = resourceT *;
 
         // interface
       public:
         // returns the id of this (oriented) simplex
         inline auto id() const -> index_t<resource_type>;
+
+        // operator->
+        auto operator->() const noexcept -> handle_type;
 
         // meta methods
       public:
@@ -44,6 +48,10 @@ namespace mito::utilities {
 
         // move assignment operator
         inline StdSharedPointer & operator=(shared_ptr_type &&) noexcept = default;
+
+        // data members
+      private:
+        std::shared_ptr<resourceT> _ptr;
     };
 
     template <class resourceT>
