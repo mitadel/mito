@@ -52,8 +52,14 @@ namespace mito::io::summit {
         outfile << D << std::endl;
         outfile << std::size(points) << " " << mesh.nCells() << " " << 1 << std::endl;
 
-        // write the points to file
-        for (const auto & [point, _] : points) {
+        // a sorted vector with points (the vector subscript is the point index minus one)
+        std::vector<point_type> points_vector(std::size(points));
+        for (const auto & [point, index] : points) {
+            points_vector[index - 1] = point;
+        }
+
+        // write the points to file in an order determined by their index
+        for (const auto & point : points_vector) {
             const auto & coord = coordinate_system.coordinates(point);
             outfile << std::setprecision(15) << coord << std::endl;
         }
