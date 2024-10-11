@@ -20,7 +20,7 @@ template <class resourceT>
 template <class... Args>
 requires(std::is_constructible_v<resourceT, Args...>)
 mito::utilities::StdSharedPointer<resourceT>::StdSharedPointer(Args &&... args) :
-    _ptr(std::make_shared<resourceT>(args...))
+    _ptr(std::make_shared<resourceT>(std::forward<Args>(args)...))
 {}
 
 // operator->
