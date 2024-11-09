@@ -17,8 +17,9 @@ namespace mito::functions {
         // ... is the function that takes {input_type} in input and returns the type of the sum of
         // the output types
         using type = Function<
-            typename F::input_type, typename std::result_of<std::plus<>(
-                                        typename F::output_type, typename G::output_type)>::type>;
+            typename F::input_type,
+            typename std::invoke_result<
+                std::plus<>, typename F::output_type, typename G::output_type>::type>;
     };
 
     // the type of the product of two functions...
@@ -29,8 +30,9 @@ namespace mito::functions {
         // ... is the function that takes {input_type} in input and returns the type of the product
         // of the output types
         using type = Function<
-            typename F::input_type, typename std::result_of<std::multiplies<>(
-                                        typename F::output_type, typename G::output_type)>::type>;
+            typename F::input_type,
+            typename std::invoke_result<
+                std::multiplies<>, typename F::output_type, typename G::output_type>::type>;
     };
 
     // the type of the composition of two functions (F external, G internal)...
