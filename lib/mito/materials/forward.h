@@ -9,6 +9,12 @@
 
 namespace mito::materials {
 
+    // linear elastic material
+    class LinearElastic;
+
+    // linear elastic material alias
+    using linear_elastic_t = LinearElastic;
+
     // gent material
     class Gent;
 
