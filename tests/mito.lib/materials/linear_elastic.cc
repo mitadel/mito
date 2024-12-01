@@ -7,75 +7,7 @@
 #include <mito/materials.h>
 
 
-constexpr mito::real eps = 0.1;
 constexpr mito::real tol = 1.e-3;
-
-auto
-numerical_stress(const auto & material, const mito::matrix_c auto & Du) -> mito::matrix_t<3>
-{
-    // take note of the original deformation tensor
-    auto Du_perturbed = Du;
-    auto P_numerical = mito::matrix_t<3>();
-
-    for (int k = 0; k < 3; k++) {
-        for (int l = 0; l < 3; l++) {
-            // positive perturbation in direction {i, j}
-            Du_perturbed[{ k, l }] = Du[{ k, l }] + eps;
-            // compute {q_plus}
-            auto q_plus = material.energy(Du_perturbed);
-
-            // negative perturbation in direction {i, j}
-            Du_perturbed[{ k, l }] = Du[{ k, l }] - eps;
-            // compute {q_minus}
-            auto q_minus = material.energy(Du_perturbed);
-
-            P_numerical[{ k, l }] = (q_plus - q_minus) / (2.0 * eps);
-
-            // back to the original state {i, j}
-            Du_perturbed[{ k, l }] = Du[{ k, l }];
-        }
-    }
-
-    // all done
-    return P_numerical;
-}
-
-auto
-numerical_tangent(const auto & material, const mito::matrix_c auto & Du)
-    -> mito::fourth_order_tensor_t<3>
-{
-    // take note of the original deformation tensor
-    auto u = mito::vector_t<3>();
-    auto Du_perturbed = Du;
-    auto C_numerical = mito::fourth_order_tensor_t<3>();
-
-    for (int k = 0; k < 3; k++) {
-        for (int l = 0; l < 3; l++) {
-            // positive perturbation in direction {i, j}
-            Du_perturbed[{ k, l }] = Du[{ k, l }] + eps;
-            // compute {P_plus}
-            auto P_plus = material.stress(Du_perturbed);
-
-            // negative perturbation in direction {i, j}
-            Du_perturbed[{ k, l }] = Du[{ k, l }] - eps;
-            // compute {P_minus}
-            auto P_minus = material.stress(Du_perturbed);
-
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    C_numerical[{ i, j, k, l }] =
-                        (P_plus[{ i, j }] - P_minus[{ i, j }]) / (2.0 * eps);
-                }
-            }
-
-            // back to the original state {i, j}
-            Du_perturbed[{ k, l }] = Du[{ k, l }];
-        }
-    }
-
-    // all done
-    return C_numerical;
-}
 
 
 TEST(LinearElastic, TestLinearElastic)
@@ -109,7 +41,7 @@ TEST(LinearElastic, TestLinearElastic)
     auto P_analytical = material.stress(Du);
 
     // compute the numerical stress
-    auto P_numerical = numerical_stress(material, Du);
+    auto P_numerical = mito::materials::numerical_stress(material, Du);
 
     // print the errors
     channel << "Relative error for the stress tensor: "
@@ -122,7 +54,7 @@ TEST(LinearElastic, TestLinearElastic)
     auto C_analytical = material.tangents(Du);
 
     // compute the numerical tangent
-    auto C_numerical = numerical_tangent(material, Du);
+    auto C_numerical = mito::materials::numerical_tangent(material, Du);
 
     channel << "Relative error for the tangent tensor: "
             << mito::norm(C_analytical - C_numerical) / mito::norm(C_analytical) << journal::endl;

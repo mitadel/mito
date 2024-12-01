@@ -23,5 +23,8 @@
 // factories implementation
 #include "factories.h"
 
+// numerical calculation for stress and tangent tensors
+#include "numerical.h"
+
 
 // end of file
