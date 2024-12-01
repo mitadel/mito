@@ -7,6 +7,8 @@
 #pragma once
 
 
+// a linear elastic material model
+
 namespace mito::materials {
 
     class LinearElastic {
@@ -32,6 +34,7 @@ namespace mito::materials {
             _mu(_E / (2.0 * (1.0 + _nu)))
         {}
 
+      public:
         // returns the strain energy density
         constexpr auto energy(const deformation_gradient_type &) const -> scalar_t;
 
@@ -59,7 +62,7 @@ namespace mito::materials {
         // the linear strain associated with {Du}
         auto epsilon = symmetric(Du - identity<D>);
 
-        // return the Cauchy stress tensor
+        // return the strain energy density
         return 0.5 * dot(stress(Du), epsilon);
     }
 
@@ -90,7 +93,7 @@ namespace mito::materials {
             }
         }
 
-        // all done
+        // return the tangent tensor
         return C;
     }
 }
