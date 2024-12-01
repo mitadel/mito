@@ -7,7 +7,7 @@
 #include <mito/materials.h>
 
 
-constexpr mito::real tol = 1.e-3;
+constexpr mito::real tol = 1.e-15;
 
 
 TEST(LinearElastic, TestLinearElastic)
