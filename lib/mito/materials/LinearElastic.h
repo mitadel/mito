@@ -10,9 +10,21 @@
 namespace mito::materials {
 
     class LinearElastic {
+      private:
+        // the dimension of the physical space
+        static constexpr int D = 3;
+        // the type for a scalar
+        using scalar_type = scalar_t;
+        // the type for the deformation gradient
+        using deformation_gradient_type = matrix_t<D>;
+        // the type for the stress
+        using stress_type = symmetric_matrix_t<D>;
+        // the type for the tangents
+        // TOFIX: it would be cool to include the symmetries of the tangent tensor here
+        using tangents_type = fourth_order_tensor_t<D>;
 
       public:
-        constexpr LinearElastic(real rho, real E, real nu) :
+        constexpr LinearElastic(scalar_type rho, scalar_type E, scalar_type nu) :
             _rho(rho),
             _E(E),
             _nu(nu),
@@ -20,41 +32,56 @@ namespace mito::materials {
             _mu(_E / (2.0 * (1.0 + _nu)))
         {}
 
-        constexpr auto Constitutive(
-            const vector_c auto & u, const matrix_c auto & Du, matrix_c auto & P,
-            fourth_order_tensor_c auto & C) const -> void;
+        // returns the strain energy density
+        constexpr auto energy(const deformation_gradient_type &) const -> scalar_t;
+
+        // returns the stress tensor
+        constexpr auto stress(const deformation_gradient_type &) const -> stress_type;
+
+        // returns the material tangents
+        constexpr auto tangents(const deformation_gradient_type &) const -> tangents_type;
 
       private:
         // density
-        real _rho;
+        scalar_t _rho;
         // Young's modulus
-        real _E;
+        scalar_t _E;
         // Poisson's ratio
-        real _nu;
+        scalar_t _nu;
         // 1st Lamé parameter
-        real _lambda;
+        scalar_t _lambda;
         // 2nd Lamé parameter
-        real _mu;
+        scalar_t _mu;
     };
 
-    constexpr auto LinearElastic::Constitutive(
-        const vector_c auto & u, const matrix_c auto & Du, matrix_c auto & P,
-        fourth_order_tensor_c auto & C) const -> void
+    constexpr auto LinearElastic::energy(const deformation_gradient_type & Du) const -> scalar_type
     {
-        // get the dimension of the physical space
-        constexpr int D = utilities::base_type<decltype(u)>::size;
+        // the linear strain associated with {Du}
+        auto epsilon = symmetric(Du - identity<D>);
 
+        // return the Cauchy stress tensor
+        return 0.5 * dot(stress(Du), epsilon);
+    }
+
+    constexpr auto LinearElastic::stress(const deformation_gradient_type & Du) const -> stress_type
+    {
         // the linear strain associated with {Du}
         auto epsilon = symmetric(Du - identity<D>);
 
         // trace of epsilon
-        real tr = trace(epsilon);
+        auto tr = trace(epsilon);
 
-        // fill the stress tensor
-        P = _lambda * tr * identity<D> + 2.0 * _mu * epsilon;
+        // return the Cauchy stress tensor
+        return _lambda * tr * identity<D> + 2.0 * _mu * epsilon;
+    }
+
+    constexpr auto LinearElastic::tangents(const deformation_gradient_type & /*Du*/) const
+        -> tangents_type
+    {
+        // instantiate a tangent tensor
+        auto C = tangents_type();
 
         // fill the tangent tensor
-        C = fourth_order_tensor_t<D>();
         for (int a = 0; a < D; ++a) {
             for (int b = 0; b < D; ++b) {
                 C[{ a, a, b, b }] += _lambda;
@@ -64,7 +91,7 @@ namespace mito::materials {
         }
 
         // all done
-        return;
+        return C;
     }
 }
 
