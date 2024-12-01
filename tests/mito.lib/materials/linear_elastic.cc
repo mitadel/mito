@@ -23,19 +23,8 @@ TEST(LinearElastic, TestLinearElastic)
     // a linear elastic material
     auto material = mito::materials::linear_elastic(rho, E, nu);
 
-    // TOFIX: cannot do it with the line below as then Du is diagonal. Then operator+= is illegal
-    // and component-wise += will lead to the wrong result
-    // same thing for P
-    // auto Du = mito::identity<3>;
-    auto Du = mito::matrix_t<3>() + mito::identity<3>;
-
-    // perturb the state
-    const auto perturbation = mito::real(0.1);
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            Du[{ i, j }] += perturbation * (2.0 * (mito::real) rand() / RAND_MAX - 1.0);
-        }
-    }
+    // choose a deformation gradient as a random perturbation of amplitude 0.1 around the identity
+    auto Du = mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1);
 
     // compute the analytical stress
     auto P_analytical = material.stress(Du);
