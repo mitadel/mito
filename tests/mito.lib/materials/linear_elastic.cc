@@ -11,12 +11,11 @@ constexpr mito::real eps = 0.1;
 constexpr mito::real tol = 1.e-3;
 
 auto
-numerical_stress(const auto & material, const mito::matrix_c auto & Du)
-    -> mito::symmetric_matrix_t<3>
+numerical_stress(const auto & material, const mito::matrix_c auto & Du) -> mito::matrix_t<3>
 {
     // take note of the original deformation tensor
     auto Du_perturbed = Du;
-    auto P_numerical = mito::symmetric_matrix_t<3>();
+    auto P_numerical = mito::matrix_t<3>();
 
     for (int k = 0; k < 3; k++) {
         for (int l = 0; l < 3; l++) {
