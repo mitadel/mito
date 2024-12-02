@@ -12,13 +12,13 @@ namespace mito::materials {
     // computes the stress tensor for material {material} at the state of deformation given by the
     // deformation gradient {Du} as the derivative of the strain energy density with respect to the
     // deformation gradient
-    auto numerical_stress(const auto & material, const matrix_c auto & Du, const real eps = 0.1)
+    auto numerical_stress(const auto & material, const matrix_c auto & Du, const real eps = 1.e-4)
         -> matrix_t<3>;
 
     // computes the tangent tensor for material {material} at the state of deformation given by the
     // deformation gradient {Du} as the derivative of the stress with respect to the deformation
     // gradient
-    auto numerical_tangent(const auto & material, const matrix_c auto & Du, const real eps = 0.1)
+    auto numerical_tangent(const auto & material, const matrix_c auto & Du, const real eps = 1.e-4)
         -> fourth_order_tensor_t<3>;
 
 }
