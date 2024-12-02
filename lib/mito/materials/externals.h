@@ -12,6 +12,7 @@
 // support
 #include "../journal.h"
 #include "../tensor.h"
+#include "../utilities.h"
 
 
 // end of file
