@@ -35,7 +35,7 @@ namespace mito::materials {
 
       public:
         // returns the strain energy density
-        constexpr auto energy(const deformation_gradient_type &) const -> scalar_t;
+        constexpr auto energy(const deformation_gradient_type &) const -> scalar_type;
 
         // returns the stress tensor
         constexpr auto stress(const deformation_gradient_type &) const -> stress_type;
@@ -45,13 +45,13 @@ namespace mito::materials {
 
       private:
         // density
-        scalar_t _rho;
+        scalar_type _rho;
         // bulk modulus
-        scalar_t _kappa;
+        scalar_type _kappa;
         // shear modulus
-        scalar_t _mu;
+        scalar_type _mu;
         // Jm = Im − 1, with Im being the maximum value for the first invariant I1
-        scalar_t _Jm;
+        scalar_type _Jm;
     };
 
     constexpr auto Gent::energy(const deformation_gradient_type & F) const -> scalar_type
@@ -121,13 +121,13 @@ namespace mito::materials {
         auto tangents = tangents_type();
 
         // multiplies \delta_{ik} \delta_{JL}
-        real coef_0 = _mu * B;
+        auto coef_0 = _mu * B;
         // multiplies F_{kL} F_{iJ}
-        real coef_1 = 2.0 * _mu * _Jm / (C * C);
+        auto coef_1 = 2.0 * _mu * _Jm / (C * C);
         // multiplies F^-1_{Jk} F^-1_{Li}
-        real coef_2 = _mu - 2. * _kappa * A * A * A * Jsq_minus_1;
+        auto coef_2 = _mu - 2. * _kappa * A * A * A * Jsq_minus_1;
         // multiplies F^-1_{Ji} F^-1_{Lk}
-        real coef_3 = 2.0 * _kappa
+        auto coef_3 = 2.0 * _kappa
                     * (3.0 * A * A * Jsq_minus_1 * Jsq_minus_1 + 2.0 * detF * detF * A * A * A);
 
         // fill the Lagrangian moduli tensor

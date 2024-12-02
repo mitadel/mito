@@ -36,7 +36,7 @@ namespace mito::materials {
 
       public:
         // returns the strain energy density
-        constexpr auto energy(const deformation_gradient_type &) const -> scalar_t;
+        constexpr auto energy(const deformation_gradient_type &) const -> scalar_type;
 
         // returns the stress tensor
         constexpr auto stress(const deformation_gradient_type &) const -> stress_type;
@@ -46,15 +46,15 @@ namespace mito::materials {
 
       private:
         // density
-        scalar_t _rho;
+        scalar_type _rho;
         // Young's modulus
-        scalar_t _E;
+        scalar_type _E;
         // Poisson's ratio
-        scalar_t _nu;
+        scalar_type _nu;
         // 1st Lamé parameter
-        scalar_t _lambda;
+        scalar_type _lambda;
         // 2nd Lamé parameter
-        scalar_t _mu;
+        scalar_type _mu;
     };
 
     constexpr auto LinearElastic::energy(const deformation_gradient_type & Du) const -> scalar_type
