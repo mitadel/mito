@@ -50,7 +50,7 @@ namespace mito::materials {
         scalar_t _kappa;
         // shear modulus
         scalar_t _mu;
-        // Jm
+        // Jm = Im − 1, with Im being the maximum value for the first invariant I1
         scalar_t _Jm;
     };
 
