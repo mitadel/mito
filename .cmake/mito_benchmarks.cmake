@@ -6,9 +6,11 @@
 
 # register a benchmark case based on a compiled driver
 function(mito_benchmark_driver benchmarkfile)
-
     # generate the name of the target
     mito_target_name(target ${benchmarkfile})
+
+    # find the benchmark library
+    find_package(benchmark REQUIRED)
 
     # schedule it to be compiled
     add_executable(${target} ${benchmarkfile})
@@ -19,8 +21,8 @@ function(mito_benchmark_driver benchmarkfile)
     # with some macros
     target_compile_definitions(${target} PRIVATE MITO_CORE)
 
-    # link against my libraries
-    target_link_libraries(${target} PUBLIC mito)
+    # link against my libraries and the benchmark library
+    target_link_libraries(${target} PUBLIC mito benchmark::benchmark)
 
     # specify the directory for the target compilation products
     mito_target_directory(${target} benchmarks)
@@ -30,7 +32,7 @@ function(mito_benchmark_driver benchmarkfile)
         LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
     )
 
-  # all done
+    # all done
 endfunction()
 
 

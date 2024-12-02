@@ -4,198 +4,109 @@
 // (c) 1998-2024 all rights reserved
 //
 
+// get the benchmark library
+#include <benchmark/benchmark.h>
 
 // get array
 #include <array>
-
-// get support
-#define HAVE_TENSOR
-#define HAVE_COMPACT_PACKINGS
-#include <pyre/timers.h>
-#include <pyre/journal.h>
-#include <pyre/tensor.h>
+// get mito tensor library
+#include <mito/tensor.h>
 
 
-// type aliases
-using process_timer_t = pyre::timers::process_timer_t;
+// strip the namespace
+using namespace pyre::tensor;
 
-
-void
-matrix_times_matrix(int N)
+auto
+multiply_tensor(const auto & matrix1, const auto & matrix2)
 {
-    // make a channel
-    pyre::journal::info_t channel("tests.timer.matrix_times_matrix");
+    return matrix1 * matrix2;
+}
 
-    // make a timer
-    process_timer_t t("tests.timer");
-
-    channel << "Computing " << N << " matrix-matrix multiplications" << pyre::journal::endl;
-
-
-    // ARRAY
-
-    // array matrix
-    std::array<double, 9> tensor1_c{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
-    std::array<double, 9> tensor2_c{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
-    std::array<double, 9> result_c{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-    const auto size_rows = tensor1_c.size() / 3;
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    for (int n = 0; n < N; ++n) {
-        // matrix * matrix (array)
-        for (size_t i = 0; i < size_rows; ++i) {
-            for (size_t j = 0; j < size_rows; ++j) {
-                for (size_t k = 0; k < size_rows; ++k) {
-                    result_c[j + i * size_rows] +=
-                        tensor2_c[k + i * size_rows] * tensor1_c[j + k * size_rows];
-                }
+auto
+multiply_array(const std::array<double, 9> & matrix1, const std::array<double, 9> & matrix2)
+{
+    const auto size_rows = matrix1.size() / 3;
+    auto result = std::array<double, 9>{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+    // matrix * matrix (array)
+    for (size_t i = 0; i < size_rows; ++i) {
+        for (size_t j = 0; j < size_rows; ++j) {
+            for (size_t k = 0; k < size_rows; ++k) {
+                result[j + i * size_rows] = matrix1[k + i * size_rows] * matrix2[j + k * size_rows];
             }
         }
     }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "array (for loop)" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result_c[0] << ", " << result_c[1] << ", " << result_c[2] << ", "
-            << result_c[3] << ", " << result_c[4] << ", " << result_c[5] << ", " << result_c[6]
-            << ", " << result_c[7] << ", " << result_c[8] << pyre::journal::newline
-            << "process time = " << t.ms() << " ms " << pyre::journal::newline
-            << pyre::journal::outdent(1) << pyre::journal::endl;
-
-
-    // PYRE TENSOR
-    // tensor matrix
-    pyre::tensor::matrix_t<3> tensor1{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
-    pyre::tensor::matrix_t<3> tensor2{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
-    pyre::tensor::matrix_t<3> result_tensor{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    for (int n = 0; n < N; ++n) {
-        // matrix * matrix (tensor)
-        result_tensor += tensor2 * tensor1;
-    }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "pyre tensor" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result_tensor << pyre::journal::newline << "process time = " << t.ms()
-            << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
-
-    // all done
-    return;
+    return result;
 }
 
-
-void
-matrix_times_symmetric_matrix(int N)
+static void
+MatrixTimesMatrix_Tensor(benchmark::State & state)
 {
-    // make a channel
-    pyre::journal::info_t channel("tests.timer.matrix_times_matrix");
+    auto matrix1 = matrix_t<3>{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
+    auto matrix2 = matrix_t<3>{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
 
-    // make a timer
-    process_timer_t t("tests.timer");
-
-    channel << "Computing " << N << " matrix-matrix multiplications" << pyre::journal::endl;
-
-
-    // ARRAY
-
-    // array matrix
-    std::array<double, 9> tensor1_c{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
-    std::array<double, 9> tensor2_c{ 1.0, -1.0, 2.0, -1.0, 1.0, 0.0, 2.0, 0.0, 1.0 };
-    std::array<double, 9> result_c{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-    const auto size_rows = tensor1_c.size() / 3;
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    for (int n = 0; n < N; ++n) {
-        // matrix * matrix (array)
-        for (size_t i = 0; i < size_rows; ++i) {
-            for (size_t j = 0; j < size_rows; ++j) {
-                for (size_t k = 0; k < size_rows; ++k) {
-                    result_c[j + i * size_rows] +=
-                        tensor2_c[k + i * size_rows] * tensor1_c[j + k * size_rows];
-                }
-            }
-        }
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(multiply_tensor(matrix1, matrix2));
     }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "array (for loop)" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result_c[0] << ", " << result_c[1] << ", " << result_c[2] << ", "
-            << result_c[3] << ", " << result_c[4] << ", " << result_c[5] << ", " << result_c[6]
-            << ", " << result_c[7] << ", " << result_c[8] << pyre::journal::newline
-            << "process time = " << t.ms() << " ms " << pyre::journal::newline
-            << pyre::journal::outdent(1) << pyre::journal::endl;
-
-
-    // PYRE TENSOR
-    // tensor matrix
-    pyre::tensor::matrix_t<3> tensor1{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
-    pyre::tensor::symmetric_matrix_t<3> tensor2{ 1.0,
-                                                 -1.0,
-                                                 2.0,
-                                                 /*-1.0,*/ 1.0,
-                                                 0.0,
-                                                 /*2.0, 0.0,*/ 1.0 };
-    pyre::tensor::matrix_t<3> result_tensor{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    for (int n = 0; n < N; ++n) {
-        // matrix * matrix (tensor)
-        result_tensor += tensor2 * tensor1;
-    }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "pyre tensor" << pyre::journal::newline << pyre::journal::indent(1)
-            << "result = " << result_tensor << pyre::journal::newline << "process time = " << t.ms()
-            << " ms " << pyre::journal::newline << pyre::journal::outdent(1) << pyre::journal::endl;
-
-    // all done
-    return;
 }
 
-
-int
-main()
+static void
+MatrixTimesMatrix_Array(benchmark::State & state)
 {
-    // number of times to do operation
-    int N = 1 << 25;
+    auto matrix1 = std::array<double, 9>{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
+    auto matrix2 = std::array<double, 9>{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
 
-    // matrix times matrix
-    matrix_times_matrix(N);
-
-    // matrix times symmetric matrix
-    matrix_times_symmetric_matrix(N);
-
-    // all done
-    return 0;
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(multiply_array(matrix1, matrix2));
+    }
 }
+
+static void
+MatrixTimesSymmetricMatrix_Tensor(benchmark::State & state)
+{
+    auto matrix1 = matrix_t<3>{ 1.0, -1.0, 2.0, 1.0, 0.0, 1.0, 2.0, -1.0, 0.0 };
+    auto matrix2 = symmetric_matrix_t<3>{ 1.0,
+                                          -1.0,
+                                          2.0,
+                                          /*-1.0,*/ 1.0,
+                                          0.0,
+                                          /*2.0, 0.0,*/ 1.0 };
+
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(multiply_tensor(matrix1, matrix2));
+    }
+}
+
+static void
+SymmetricMatrixTimesSymmetricMatrix_Tensor(benchmark::State & state)
+{
+    auto matrix1 = symmetric_matrix_t<3>{ 1.0,
+                                          -1.0,
+                                          2.0,
+                                          /*-1.0,*/ 1.0,
+                                          0.0,
+                                          /*2.0, 0.0,*/ 1.0 };
+    auto matrix2 = symmetric_matrix_t<3>{ 1.0,
+                                          -1.0,
+                                          2.0,
+                                          /*-1.0,*/ 1.0,
+                                          0.0,
+                                          /*2.0, 0.0,*/ 1.0 };
+
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(multiply_tensor(matrix1, matrix2));
+    }
+}
+
+BENCHMARK(MatrixTimesMatrix_Array);
+BENCHMARK(MatrixTimesMatrix_Tensor);
+BENCHMARK(MatrixTimesSymmetricMatrix_Tensor);
+BENCHMARK(SymmetricMatrixTimesSymmetricMatrix_Tensor);
+
+BENCHMARK_MAIN();
 
 
 // end of file
