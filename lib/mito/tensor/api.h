@@ -15,6 +15,14 @@ namespace mito {
     // typedef for scalars
     using scalar_t = real;
 
+    // concept of a scalar
+    template <class F>
+    concept scalar_c = std::convertible_to<F, scalar_t>;
+
+    // concept for a tensor (vector, matrix, higher-order, ...) or a scalar
+    template <class F>
+    concept tensor_or_scalar_c = tensor_c<F> or scalar_c<F>;
+
     // I-th basis vector in dimension D
     template <int I, int D>
     requires(D > 0 && I >= 0 && I < D)
