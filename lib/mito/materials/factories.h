@@ -9,6 +9,12 @@
 
 namespace mito::materials {
 
+    // linear_elastic material factory
+    constexpr auto linear_elastic(real rho, real E, real nu) -> linear_elastic_t
+    {
+        return linear_elastic_t(rho, E, nu);
+    }
+
     // gent material factory
     constexpr auto gent(real rho, real kappa, real mu, real Jm) -> gent_t
     {
