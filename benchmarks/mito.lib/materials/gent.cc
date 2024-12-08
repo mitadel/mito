@@ -164,7 +164,6 @@ gent_constitutive_mito(
     mito::vector_t<3> u{ 0.0, 0.0, 0.0 };
     mito::matrix_t<3> F{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
                          epsilon,       epsilon, epsilon, 1.0 + epsilon };
-    mito::matrix_t<3> P;
 
     // reset timer
     t.reset();
@@ -173,10 +172,8 @@ gent_constitutive_mito(
 
     // perform calculation N times
     for (int n = 0; n < N; ++n) {
-        // evaluate constitutive update
-        material.Constitutive(u, F, P);
         // accumulate result
-        P_result += P;
+        P_result += material.stress(F);
     }
 
     // stop the timer

@@ -80,6 +80,7 @@ mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_spherical.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
+mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
 # math
 mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
