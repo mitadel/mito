@@ -9,9 +9,6 @@ function(mito_benchmark_driver benchmarkfile)
     # generate the name of the target
     mito_target_name(target ${benchmarkfile})
 
-    # find the benchmark library
-    find_package(benchmark REQUIRED)
-
     # schedule it to be compiled
     add_executable(${target} ${benchmarkfile})
 
