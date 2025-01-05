@@ -3,8 +3,11 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
+// get the benchmark library
+#include <benchmark/benchmark.h>
+
+// get the mito materials
 #include <mito/fields.h>
-#include <pyre/timers.h>
 
 
 // the type of coordinates
@@ -12,60 +15,32 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 
 
 auto
-random_number()
+random_coordinate()
 {
     // seed the random number generator
     std::srand(time(0));
-    // a truly random_number
+    // a truly random number
     auto rand_num = static_cast<float>(std::rand()) / static_cast<float>(RAND_MAX);
     // a point in 2D space
     return mito::geometry::coordinates<coordinates_t>({ rand_num, rand_num });
 }
 
 
-void
-laplacian_baseline(int N, const coordinates_t & x)
+auto
+laplacian_baseline(const coordinates_t & x)
 {
-    // make a channel
-    journal::info_t channel("benchmarks.laplacian");
-
-    // make a timer
-    pyre::timers::process_timer_t t("benchmarks.laplacian");
-
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    // evaluate the laplacian product on {x}
-    std::vector<double> result(N);
-    for (int i = 0; i < N; ++i) {
-        result[i] = 12 * x[0] * x[0] * x[1] * x[1] * x[1] * x[1]
-                  + 12 * x[1] * x[1] * x[0] * x[0] * x[0] * x[0];
-    }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "baseline" << journal::newline << journal::indent(1) << "result = " << result[0]
-            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
-            << journal::outdent(1) << journal::endl;
+    // evaluate the laplacian at {x}
+    auto result =
+        12 * x[0] * x[0] * x[1] * x[1] * x[1] * x[1] + 12 * x[1] * x[1] * x[0] * x[0] * x[0] * x[0];
 
     // all done
-    return;
+    return result;
 }
 
 
-void
-laplacian_mito(int N, const coordinates_t & x)
+auto
+laplacian_mito(const coordinates_t & x)
 {
-    // make a channel
-    journal::info_t channel("benchmarks.laplacian");
-
-    // make a timer
-    pyre::timers::process_timer_t t("benchmarks.laplacian");
-
     // the function extracting the x_0 component of 2D vector
     auto x0 = mito::functions::component<coordinates_t, 0>;
     // the function extracting the x_1 component of a 2D vector
@@ -80,51 +55,47 @@ laplacian_mito(int N, const coordinates_t & x)
     // the laplacian (divergence of gradient)
     auto laplacian = mito::fields::divergence(gradient);
 
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    // evaluate the laplacian product on {x}
-    std::vector<double> result(N);
-    for (int i = 0; i < N; ++i) {
-        result[i] = laplacian(x);
-    }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "mito" << journal::newline << journal::indent(1) << "result = " << result[0]
-            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
-            << journal::outdent(1) << journal::endl;
+    // evaluate the laplacian at {x}
+    auto result = laplacian(x);
 
     // all done
-    return;
+    return result;
 }
 
 
-int
-main()
+static void
+LaplacianBaseline(benchmark::State & state)
 {
-    // number of times to do operation
-    int N = 1 << 25;
+    // generate a set of random coordinates
+    auto x = random_coordinate();
 
-    // make a channel
-    journal::info_t channel("tests.timer.laplacian");
-
-    // report
-    channel << "Computing " << N << " evaluations of laplacian" << journal::endl;
-
-    // generate a truly random set of coordinates
-    auto x = random_number();
-
-    // compute {N} evaluations of laplacian without mito
-    laplacian_baseline(N, x);
-
-    // compute {N} evaluations of laplacian with mito
-    laplacian_mito(N, x);
-
-    // all done
-    return 0;
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(laplacian_baseline(x));
+    }
 }
+
+static void
+LaplacianMito(benchmark::State & state)
+{
+    // generate a set of random coordinates
+    auto x = random_coordinate();
+
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(laplacian_mito(x));
+    }
+}
+
+
+// run benchmark for laplacian calculation (baeline)
+BENCHMARK(LaplacianBaseline);
+// run benchmark for laplacian calculation (mito)
+BENCHMARK(LaplacianMito);
+
+
+// run all benchmarks
+BENCHMARK_MAIN();
+
+
+// end of file
