@@ -43,7 +43,7 @@ jobs:
           echo " -- upgrade"
           sudo apt dist-upgrade
           echo " -- install our dependencies"
-          sudo apt install -y make cmake libgtest-dev libvtk9-dev libopenmpi-dev libmetis-dev valgrind
+          sudo apt install -y make cmake libgtest-dev libbenchmark-dev libvtk9-dev libopenmpi-dev libmetis-dev valgrind
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -122,6 +122,8 @@ jobs:
         run: |
           echo " -- gtest"
           sudo dpkg-query -L libgtest-dev
+          echo " -- google-benchmark"
+          sudo dpkg-query -L libbenchmark-dev
           echo " -- vtk"
           sudo dpkg-query -L libvtk9-dev
           echo " -- openmpi"
