@@ -61,7 +61,7 @@ jobs:
           repository: pyre/pyre
           fetch-depth: 0
           path: ${{github.workspace}}/pyre
-          ref: tensor
+          ref: main
 
       - name: retrieve pyre commit SHA
         id: pyre-sha
