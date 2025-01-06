@@ -42,18 +42,18 @@ auto
 laplacian_mito(const coordinates_t & x)
 {
     // the function extracting the x_0 component of 2D vector
-    auto x0 = mito::functions::component<coordinates_t, 0>;
+    constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
     // the function extracting the x_1 component of a 2D vector
-    auto x1 = mito::functions::component<coordinates_t, 1>;
+    constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 
     // a scalar field
-    auto f = mito::fields::field(mito::functions::pow<4>(x0 * x1));
+    constexpr auto f = mito::fields::field(mito::functions::pow<4>(x0 * x1));
 
     // the gradient of {f}
-    auto gradient = mito::fields::gradient(f);
+    constexpr auto gradient = mito::fields::gradient(f);
 
     // the laplacian (divergence of gradient)
-    auto laplacian = mito::fields::divergence(gradient);
+    constexpr auto laplacian = mito::fields::divergence(gradient);
 
     // evaluate the laplacian at {x}
     auto result = laplacian(x);
