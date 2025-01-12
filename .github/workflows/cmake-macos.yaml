@@ -39,7 +39,7 @@ jobs:
           echo " -- install our dependencies"
           brew install make cmake metis open-mpi
           # install {google-benchmark} from source to make sure it is built with the same compiler
-          brew install --build-from-source --cc=gcc google-benchmark
+          brew install --build-from-source --cc=gcc-12 google-benchmark
           curl https://raw.githubusercontent.com/Homebrew/homebrew-core/67b277e6d1faee20d2aa4fc8b2dc229a241fa807/Formula/vtk.rb > vtk.rb
           HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1 brew install vtk.rb
 
