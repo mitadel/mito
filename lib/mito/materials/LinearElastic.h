@@ -57,19 +57,19 @@ namespace mito::materials {
         scalar_type _mu;
     };
 
-    constexpr auto LinearElastic::energy(const deformation_gradient_type & Du) const -> scalar_type
+    constexpr auto LinearElastic::energy(const deformation_gradient_type & F) const -> scalar_type
     {
-        // the linear strain associated with {Du}
-        auto epsilon = symmetric(Du - identity<D>);
+        // the linear strain associated with {F}
+        auto epsilon = symmetric(F - identity<D>);
 
         // return the strain energy density
-        return 0.5 * dot(stress(Du), epsilon);
+        return 0.5 * dot(stress(F), epsilon);
     }
 
-    constexpr auto LinearElastic::stress(const deformation_gradient_type & Du) const -> stress_type
+    constexpr auto LinearElastic::stress(const deformation_gradient_type & F) const -> stress_type
     {
-        // the linear strain associated with {Du}
-        auto epsilon = symmetric(Du - identity<D>);
+        // the linear strain associated with {F}
+        auto epsilon = symmetric(F - identity<D>);
 
         // trace of epsilon
         auto tr = trace(epsilon);
@@ -78,7 +78,7 @@ namespace mito::materials {
         return _lambda * tr * identity<D> + 2.0 * _mu * epsilon;
     }
 
-    constexpr auto LinearElastic::tangents(const deformation_gradient_type & /*Du*/) const
+    constexpr auto LinearElastic::tangents(const deformation_gradient_type & /*F*/) const
         -> tangents_type
     {
         // instantiate a tangent tensor

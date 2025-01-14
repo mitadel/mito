@@ -22,13 +22,13 @@ TEST(Gent, TestGent)
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
     // choose a deformation gradient as a random perturbation of amplitude 0.1 around the identity
-    auto Du = mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1);
+    auto F = mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1);
 
     // compute the analytical stress
-    auto P_analytical = material.stress(Du);
+    auto P_analytical = material.stress(F);
 
     // compute the numerical stress
-    auto P_numerical = mito::materials::numerical_stress(material, Du, 1.e-4);
+    auto P_numerical = mito::materials::numerical_stress(material, F, 1.e-4);
 
     // print the errors
     channel << "Relative error for the stress tensor: "
@@ -38,10 +38,10 @@ TEST(Gent, TestGent)
     EXPECT_NEAR(mito::norm(P_analytical - P_numerical) / mito::norm(P_analytical), 0.0, 1.e-7);
 
     // compute the analytical tangent
-    auto C_analytical = material.tangents(Du);
+    auto C_analytical = material.tangents(F);
 
     // compute the numerical tangent
-    auto C_numerical = mito::materials::numerical_tangent(material, Du, 1.e-4);
+    auto C_numerical = mito::materials::numerical_tangent(material, F, 1.e-4);
 
     // print the errors
     channel << "Relative error for the tangent tensor: "
