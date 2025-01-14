@@ -7,46 +7,32 @@
 #include <mito/materials.h>
 
 
+// the perturbation for computing the numerical derivatives
+constexpr mito::real eps = 1.e-5;
+// the tolerance for passing the test
+constexpr mito::real tol = 1.e-10;
+
+
 TEST(Gent, TestGent)
 {
-    // make a channel
-    journal::info_t channel("tests.gent");
-
     // material parameters
-    const auto rho = mito::real(1.0e3);
-    const auto kappa = mito::real(1.5e9);
-    const auto mu = mito::real(5.0e6);
-    const auto Jm = mito::real(50);
+    const auto rho = mito::real(1.0);
+    const auto kappa = mito::real(1.5);
+    const auto mu = mito::real(5.0);
+    const auto Jm = mito::real(2.0);
 
     // a gent material
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
+    // the material consistency test
+    auto test = mito::materials::consistency_test(material, eps, tol);
+
     // choose a deformation gradient as a random perturbation of amplitude 0.1 around the identity
-    auto F = mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1);
+    auto F = mito::matrix_t<3>(mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1));
 
-    // compute the analytical stress
-    auto P_analytical = material.stress(F);
+    // test that the stress tensor is consistent with the strain energy density
+    EXPECT_TRUE(test.test_stress(F));
 
-    // compute the numerical stress
-    auto P_numerical = mito::materials::numerical_stress(material, F, 1.e-4);
-
-    // print the errors
-    channel << "Relative error for the stress tensor: "
-            << mito::norm(P_analytical - P_numerical) / mito::norm(P_analytical) << journal::endl;
-
-    // expect a reasonable match between the analytical and the numerical stresses
-    EXPECT_NEAR(mito::norm(P_analytical - P_numerical) / mito::norm(P_analytical), 0.0, 1.e-7);
-
-    // compute the analytical tangent
-    auto C_analytical = material.tangents(F);
-
-    // compute the numerical tangent
-    auto C_numerical = mito::materials::numerical_tangent(material, F, 1.e-4);
-
-    // print the errors
-    channel << "Relative error for the tangent tensor: "
-            << mito::norm(C_analytical - C_numerical) / mito::norm(C_analytical) << journal::endl;
-
-    // expect a reasonable match between the analytical and the numerical tangents
-    EXPECT_NEAR(mito::norm(C_analytical - C_numerical) / mito::norm(C_analytical), 0.0, 1.e-6);
+    // test that the tangent tensor is consistent with the stress tensor
+    EXPECT_TRUE(test.test_tangents(F));
 }

@@ -9,7 +9,7 @@
 
 // a linear elastic material model
 class mito::materials::LinearElastic {
-  private:
+  public:
     // the dimension of the physical space
     static constexpr int D = 3;
     // the type for a scalar

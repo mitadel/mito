@@ -21,6 +21,13 @@ namespace mito::materials {
     // gent material alias
     using gent_t = Gent;
 
+    // material consistency test class
+    template <class materialT>
+    class MaterialConsistencyTest;
+
+    // material consistency test alias
+    template <class materialT>
+    using material_consistency_test_t = MaterialConsistencyTest<materialT>;
 }
 
 

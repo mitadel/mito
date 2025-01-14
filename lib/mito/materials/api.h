@@ -14,6 +14,13 @@ namespace mito::materials {
 
     // gent material factory
     constexpr auto gent(real rho, real kappa, real mu, real Jm) -> gent_t;
+
+    // material consistency test factory
+    template <class materialT>
+    constexpr auto consistency_test(
+        const materialT & material, const real & perturbation, const real & tolerance)
+        -> material_consistency_test_t<materialT>;
+
 }
 
 

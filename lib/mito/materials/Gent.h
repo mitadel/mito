@@ -9,7 +9,7 @@
 
 // a compressible Gent material model
 class mito::materials::Gent {
-  private:
+  public:
     // the dimension of the physical space
     static constexpr int D = 3;
     // the type for a scalar

@@ -7,47 +7,31 @@
 #include <mito/materials.h>
 
 
+// the perturbation for computing the numerical derivatives
+constexpr mito::real eps = 1.e-5;
+// the tolerance for passing the test
 constexpr mito::real tol = 1.e-15;
 
 
 TEST(LinearElastic, TestLinearElastic)
 {
-    // make a channel
-    journal::info_t channel("tests.linear_elastic");
-
     // material parameters
-    const auto rho = mito::real(1000);
-    const auto E = mito::real(210e9);
-    const auto nu = mito::real(0.33);
+    const auto rho = mito::real(1.0);
+    const auto E = mito::real(1.0);
+    const auto nu = mito::real(0.3);
 
     // a linear elastic material
     auto material = mito::materials::linear_elastic(rho, E, nu);
 
+    // the material consistency test
+    auto test = mito::materials::consistency_test(material, eps, tol);
+
     // choose a deformation gradient as a random perturbation of amplitude 0.1 around the identity
-    auto F = mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1);
+    auto F = mito::matrix_t<3>(mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1));
 
-    // compute the analytical stress
-    auto P_analytical = material.stress(F);
+    // test that the stress tensor is consistent with the strain energy density
+    EXPECT_TRUE(test.test_stress(F));
 
-    // compute the numerical stress
-    auto P_numerical = mito::materials::numerical_stress(material, F);
-
-    // print the errors
-    channel << "Relative error for the stress tensor: "
-            << mito::norm(P_analytical - P_numerical) / mito::norm(P_analytical) << journal::endl;
-
-    // expect a reasonable match between the analytical and the numerical stresses
-    EXPECT_NEAR(mito::norm(P_analytical - P_numerical) / mito::norm(P_analytical), 0.0, tol);
-
-    // compute the analytical tangent
-    auto C_analytical = material.tangents(F);
-
-    // compute the numerical tangent
-    auto C_numerical = mito::materials::numerical_tangent(material, F);
-
-    channel << "Relative error for the tangent tensor: "
-            << mito::norm(C_analytical - C_numerical) / mito::norm(C_analytical) << journal::endl;
-
-    // expect a reasonable match between the analytical and the numerical tangents
-    EXPECT_NEAR(mito::norm(C_analytical - C_numerical) / mito::norm(C_analytical), 0.0, tol);
+    // test that the tangent tensor is consistent with the stress tensor
+    EXPECT_TRUE(test.test_tangents(F));
 }
