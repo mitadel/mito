@@ -17,7 +17,9 @@
 #include "api.h"
 
 // classes implementation
+#include "LinearElastic.h"
 #include "Gent.h"
+#include "MaterialConsistencyTest.h"
 
 // factories implementation
 #include "factories.h"

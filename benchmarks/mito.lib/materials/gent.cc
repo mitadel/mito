@@ -107,16 +107,12 @@ gent_mito(const auto & epsilon)
     // mito gent material
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
-    auto u = mito::vector_t<3>{ 0.0, 0.0, 0.0 };
     auto F = mito::matrix_t<3>{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
                                 epsilon,       epsilon, epsilon, 1.0 + epsilon };
-    auto P = mito::matrix_t<3>{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
-    // evaluate constitutive update
-    material.Constitutive(u, F, P);
 
     // all done
-    return P;
+    return material.stress(F);
 }
 
 

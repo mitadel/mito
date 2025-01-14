@@ -9,6 +9,22 @@
 
 namespace mito::geometry {
 
+    // operator==
+    template <int D, CoordinateType coordT>
+    constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> bool
+    {
+        return xA._array == xB._array;
+    }
+
+    // operator<
+    template <int D, CoordinateType coordT>
+    constexpr auto operator<(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
+        -> bool
+    {
+        return xA._array < xB._array;
+    }
+
     // class for a set of coordinates in a {coordT} coordinates system (e.g. CARTESIAN, POLAR, ...)
     // in {D} dimensions
     template <int D, CoordinateType coordT>
@@ -57,7 +73,7 @@ namespace mito::geometry {
 
       public:
         // friendship with {operator==} for coordinates
-        friend constexpr auto operator==<>(const coordinates_type &, const coordinates_type &)
+        friend constexpr auto operator== <>(const coordinates_type &, const coordinates_type &)
             -> bool;
 
         // friendship with {operator<} for coordinates
@@ -102,22 +118,6 @@ namespace mito::geometry {
 
         // all done
         return os;
-    }
-
-    // operator==
-    template <int D, CoordinateType coordT>
-    constexpr auto operator==(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
-        -> bool
-    {
-        return xA._array == xB._array;
-    }
-
-    // operator<
-    template <int D, CoordinateType coordT>
-    constexpr auto operator<(const Coordinates<D, coordT> & xA, const Coordinates<D, coordT> & xB)
-        -> bool
-    {
-        return xA._array < xB._array;
     }
 
 }    // namespace mito
