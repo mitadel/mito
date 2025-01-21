@@ -11,16 +11,17 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 // the basis for vector fields
-static constexpr auto e_x = mito::e_0<3>;
-static constexpr auto e_y = mito::e_1<3>;
-static constexpr auto e_z = mito::e_2<3>;
+static constexpr auto e_x = mito::tensor::e_0<3>;
+static constexpr auto e_y = mito::tensor::e_1<3>;
+static constexpr auto e_z = mito::tensor::e_2<3>;
 
 
 auto
 volume(
     const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coordinate_system,
     const mito::geometry::node_t<3> & v0, const mito::geometry::node_t<3> & v1,
-    const mito::geometry::node_t<3> & v2, const mito::geometry::node_t<3> & v3) -> mito::scalar_t
+    const mito::geometry::node_t<3> & v2, const mito::geometry::node_t<3> & v3)
+    -> mito::tensor::scalar_t
 {
     // build director segments
     auto x0 = coordinate_system.coordinates(v0.point());

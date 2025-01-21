@@ -27,7 +27,8 @@ TEST(LinearElastic, TestLinearElastic)
     auto test = mito::materials::consistency_test(material, eps, tol);
 
     // choose a deformation gradient as a random perturbation of amplitude 0.1 around the identity
-    auto F = mito::matrix_t<3>(mito::identity<3> + mito::random<mito::matrix_t<3>>(0.1));
+    auto F = mito::tensor::matrix_t<3>(
+        mito::tensor::identity<3> + mito::tensor::random<mito::tensor::matrix_t<3>>(0.1));
 
     // test that the stress tensor is consistent with the strain energy density
     EXPECT_TRUE(test.test_stress(F));

@@ -65,7 +65,7 @@ namespace mito::tensor {
 
         // contraction with a vector
         template <class X>
-        constexpr auto operator()(const X & x) const -> mito::scalar_t
+        constexpr auto operator()(const X & x) const -> mito::tensor::scalar_t
         requires(!std::is_same_v<X, dummy_vector>)
         {
             return _f(x);

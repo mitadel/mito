@@ -28,7 +28,7 @@ namespace mito::functions {
     template <int... I>
     constexpr auto derivative(const Power<1> &)
     {
-        return one<scalar_t>;
+        return one<tensor::scalar_t>;
     }
 
     // the {I...}-th first partial derivative of the {Sin} function

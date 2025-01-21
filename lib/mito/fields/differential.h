@@ -30,7 +30,7 @@ namespace mito::fields {
         // helper function to compute the gradient of a scalar
         constexpr auto _grad = []<size_t... I>(const F & field, std::index_sequence<I...>) {
             // the vector of the partial derivatives
-            return ((derivative<I>(field) * uniform_field<coordinate_t>(e<I, D>)) + ...);
+            return ((derivative<I>(field) * uniform_field<coordinate_t>(tensor::e<I, D>)) + ...);
         };
 
         return _grad(field, std::make_index_sequence<D>{});
@@ -48,7 +48,7 @@ namespace mito::fields {
         // helper function to compute the divergence of a vector field
         constexpr auto _div = []<size_t... I>(const F & field, std::index_sequence<I...>) {
             // the summation of the I-th partial derivative of the I-th component
-            return ((derivative<I>(field * uniform_field<coordinate_t>(e<I, D>))) + ...);
+            return ((derivative<I>(field * uniform_field<coordinate_t>(tensor::e<I, D>))) + ...);
         };
 
         // all done

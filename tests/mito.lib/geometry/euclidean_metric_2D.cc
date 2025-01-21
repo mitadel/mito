@@ -11,15 +11,15 @@
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 // the basis for vector fields
-static constexpr auto e_x = mito::e_0<2>;
-static constexpr auto e_y = mito::e_1<2>;
+static constexpr auto e_x = mito::tensor::e_0<2>;
+static constexpr auto e_y = mito::tensor::e_1<2>;
 
 
 auto
 area(
     const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coordinate_system,
     const mito::geometry::node_t<2> & v0, const mito::geometry::node_t<2> & v1,
-    const mito::geometry::node_t<2> & v2) -> mito::scalar_t
+    const mito::geometry::node_t<2> & v2) -> mito::tensor::scalar_t
 {
     // get vertex coordinates
     auto x0 = coordinate_system.coordinates(v0.point());

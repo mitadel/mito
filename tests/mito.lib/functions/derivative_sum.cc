@@ -10,7 +10,7 @@
 // pi
 using std::numbers::pi;
 // mito scalars
-using mito::scalar_t;
+using mito::tensor::scalar_t;
 
 
 TEST(Derivatives, Sum)
@@ -84,7 +84,7 @@ TEST(Derivatives, Subtraction)
 TEST(Derivatives, VectorSum)
 {
     // a 2D vector
-    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
+    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
 
     // the function extracting the x_0 component
     constexpr auto x0 = mito::functions::x<0, 2>;

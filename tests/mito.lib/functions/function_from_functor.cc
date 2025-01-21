@@ -8,7 +8,7 @@
 
 
 // mito scalars
-using mito::scalar_t;
+using mito::tensor::scalar_t;
 
 
 TEST(Functions, Functor)

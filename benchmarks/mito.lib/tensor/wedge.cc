@@ -54,16 +54,16 @@ static void
 WedgeMito(benchmark::State & state)
 {
     // the Euclidean metric in 3D space
-    constexpr auto metric = mito::identity<3>;
+    constexpr auto metric = mito::tensor::identity<3>;
 
     // a vector field
-    auto a = 2.0 * mito::e_0<3> + mito::e_1<3>;
+    auto a = 2.0 * mito::tensor::e_0<3> + mito::tensor::e_1<3>;
 
     // the corresponding one-form
     auto a_tilda = mito::tensor::one_form(a, metric);
 
     // another vector field
-    auto b = mito::e_2<3>;
+    auto b = mito::tensor::e_2<3>;
 
     // the corresponding one-form
     auto b_tilda = mito::tensor::one_form(b, metric);
@@ -72,10 +72,10 @@ WedgeMito(benchmark::State & state)
     auto ab_two_form = mito::tensor::wedge(a_tilda, b_tilda);
 
     // a vector
-    auto xi1 = mito::e_2<3>;
+    auto xi1 = mito::tensor::e_2<3>;
 
     // another vector
-    auto xi2 = mito::e_1<3>;
+    auto xi2 = mito::tensor::e_1<3>;
 
     // repeat the operation sufficient number of times
     for (auto _ : state) {

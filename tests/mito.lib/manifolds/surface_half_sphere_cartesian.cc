@@ -23,17 +23,18 @@ TEST(Manifolds, HalfSphereCartesian)
 
     // the normal field to the submanifold
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
-        mito::scalar_t phi = std::atan2(x[1], x[0]);
-        mito::scalar_t theta = std::atan2(std::hypot(x[1], x[0]), x[2]);
-        return std::sin(theta) * std::cos(phi) * mito::e_0<3>
-             + std::sin(theta) * std::sin(phi) * mito::e_1<3> + std::cos(theta) * mito::e_2<3>;
+        mito::tensor::scalar_t phi = std::atan2(x[1], x[0]);
+        mito::tensor::scalar_t theta = std::atan2(std::hypot(x[1], x[0]), x[2]);
+        return std::sin(theta) * std::cos(phi) * mito::tensor::e_0<3>
+             + std::sin(theta) * std::sin(phi) * mito::tensor::e_1<3>
+             + std::cos(theta) * mito::tensor::e_2<3>;
     });
 
     // create a submanifold on {mesh} with the appropriate normal field
     auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
 
     // compute the area of the manifold
-    mito::scalar_t area = manifold.volume();
+    mito::tensor::scalar_t area = manifold.volume();
 
     // expect a reasonable match with the exact solution
     // (the error depends on the poor approximation of the sphere in the mesh)

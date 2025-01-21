@@ -20,26 +20,26 @@ namespace mito::fields {
 
     // scalar + field
     template <field_c F>
-    constexpr auto operator+(const tensor_or_scalar_c auto & a, const F & f)
+    constexpr auto operator+(const tensor::tensor_or_scalar_c auto & a, const F & f)
     {
         return field(a + f.function());
     }
 
     // field + scalar
-    constexpr auto operator+(const field_c auto & f, const tensor_or_scalar_c auto & a)
+    constexpr auto operator+(const field_c auto & f, const tensor::tensor_or_scalar_c auto & a)
     {
         return a + f;
     }
 
     // scalar * fields
     template <field_c F>
-    constexpr auto operator*(const tensor_or_scalar_c auto & a, const F & f)
+    constexpr auto operator*(const tensor::tensor_or_scalar_c auto & a, const F & f)
     {
         return field(a * f.function());
     }
 
     // field * scalar
-    constexpr auto operator*(const field_c auto & f, const tensor_or_scalar_c auto & a)
+    constexpr auto operator*(const field_c auto & f, const tensor::tensor_or_scalar_c auto & a)
     {
         return a * f;
     }
@@ -53,7 +53,7 @@ namespace mito::fields {
     }
 
     // field / a
-    constexpr auto operator/(const field_c auto & f, const scalar_t & a)
+    constexpr auto operator/(const field_c auto & f, const tensor::scalar_t & a)
     {
         return (1.0 / a) * f;
     }
@@ -71,20 +71,20 @@ namespace mito::fields {
     }
 
     // a - field
-    constexpr auto operator-(const tensor_or_scalar_c auto & a, const field_c auto & f)
+    constexpr auto operator-(const tensor::tensor_or_scalar_c auto & a, const field_c auto & f)
     {
         return a + (-f);
     }
 
     // field - a
-    constexpr auto operator-(const field_c auto & f, const tensor_or_scalar_c auto & a)
+    constexpr auto operator-(const field_c auto & f, const tensor::tensor_or_scalar_c auto & a)
     {
         return f + (-a);
     }
 
     // a / field
     template <scalar_field_c F>
-    constexpr auto operator/(const tensor_or_scalar_c auto & a, const F & f)
+    constexpr auto operator/(const tensor::tensor_or_scalar_c auto & a, const F & f)
     {
         return field(a / f.function());
     }

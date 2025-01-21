@@ -9,7 +9,7 @@
 
 // strip the namespace
 using mito::geometry::CARTESIAN;
-using mito::vector_t;
+using mito::tensor::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
 
@@ -66,8 +66,8 @@ TEST(Quadrature, Square)
     mesh.insert({ node_4, node_0, node_3 });
 
     // the normal vector to the square
-    constexpr auto cross = pyre::tensor::cross(x_1 - x_0, x_2 - x_0);
-    constexpr auto normal_vector = cross / pyre::tensor::norm(cross);
+    constexpr auto cross = mito::tensor::cross(x_1 - x_0, x_2 - x_0);
+    constexpr auto normal_vector = cross / mito::tensor::norm(cross);
     constexpr auto normal_field = mito::fields::uniform_field<coordinates_t>(normal_vector);
 
     // create a submanifold on {mesh} with the appropriate normal fields

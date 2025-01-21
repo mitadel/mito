@@ -15,7 +15,7 @@ namespace mito::geometry::cartesian {
 
     // factory for cartesian coordinates
     template <int D>
-    constexpr auto coordinates(mito::scalar_t (&&coord)[D])
+    constexpr auto coordinates(mito::tensor::scalar_t (&&coord)[D])
     {
         return geometry::coordinates<cartesian_coordinates_t<D>>(std::move(coord));
     }

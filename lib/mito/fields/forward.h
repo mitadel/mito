@@ -25,29 +25,29 @@ namespace mito::fields {
     // concept of a field {FIELD} being a scalar field
     template <class FIELD>
     // a scalar field  is a field returning a scalar
-    concept scalar_field_c = field_c<FIELD> and scalar_c<typename FIELD::output_type>;
+    concept scalar_field_c = field_c<FIELD> and tensor::scalar_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a vector field
     template <class FIELD>
     // a vector field  is a field returning a vector
-    concept vector_field_c = field_c<FIELD> and vector_c<typename FIELD::output_type>;
+    concept vector_field_c = field_c<FIELD> and tensor::vector_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a tensor field
     template <class FIELD>
     // a tensor field  is a field returning a matrix
-    concept tensor_field_c = field_c<FIELD> and matrix_c<typename FIELD::output_type>;
+    concept tensor_field_c = field_c<FIELD> and tensor::matrix_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a symmetric tensor field
     template <class FIELD>
     // a symmetric tensor field  is a field returning a symmetric matrix
     concept symmetric_tensor_field_c =
-        field_c<FIELD> and symmetric_matrix_c<typename FIELD::output_type>;
+        field_c<FIELD> and tensor::symmetric_matrix_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} being a diagonal tensor field
     template <class FIELD>
     // a diagonal tensor field  is a field returning a diagonal matrix
     concept diagonal_tensor_field_c =
-        field_c<FIELD> and diagonal_matrix_c<typename FIELD::output_type>;
+        field_c<FIELD> and tensor::diagonal_matrix_c<typename FIELD::output_type>;
 
     // concept of a field {FIELD} of one-forms
     template <class FIELD>

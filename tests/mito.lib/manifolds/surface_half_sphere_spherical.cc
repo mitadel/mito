@@ -18,7 +18,8 @@ using spherical_coordinates_t = mito::geometry::coordinates_t<3, SPHERICAL>;
 using cartesian_coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
 
 // the basis for vector fields
-static constexpr auto e_r = mito::fields::uniform_field<spherical_coordinates_t>(mito::e_0<3>);
+static constexpr auto e_r =
+    mito::fields::uniform_field<spherical_coordinates_t>(mito::tensor::e_0<3>);
 
 
 TEST(Manifolds, HalfSphereSpherical)
@@ -42,7 +43,7 @@ TEST(Manifolds, HalfSphereSpherical)
     auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
 
     // compute the area of the manifold
-    mito::scalar_t area = manifold.volume();
+    mito::tensor::scalar_t area = manifold.volume();
 
     // expect a reasonable match with the exact solution
     // (the error depends on the poor approximation of the sphere in the mesh)

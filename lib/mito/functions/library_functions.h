@@ -14,13 +14,13 @@ namespace mito::functions {
 
     // function extracting the {I...} component of a tensor
     template <class T, int... I>
-    class Component : public Function<T, scalar_t> {
+    class Component : public Function<T, tensor::scalar_t> {
 
       public:
         // the input type
-        using input_type = Function<T, scalar_t>::input_type;
+        using input_type = Function<T, tensor::scalar_t>::input_type;
         // the output type
-        using output_type = Function<T, scalar_t>::output_type;
+        using output_type = Function<T, tensor::scalar_t>::output_type;
 
       public:
         // call operator for function composition
@@ -36,7 +36,7 @@ namespace mito::functions {
 
 
     // the sine function
-    class Sin : public Function<scalar_t, scalar_t> {
+    class Sin : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -52,7 +52,7 @@ namespace mito::functions {
 
 
     // the cosine function
-    class Cos : public Function<scalar_t, scalar_t> {
+    class Cos : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -68,7 +68,7 @@ namespace mito::functions {
 
 
     // the tangent function
-    class Tan : public Function<scalar_t, scalar_t> {
+    class Tan : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -84,7 +84,7 @@ namespace mito::functions {
 
 
     // the arc cosine function
-    class ArcCos : public Function<scalar_t, scalar_t> {
+    class ArcCos : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -103,7 +103,7 @@ namespace mito::functions {
 
 
     // the arc sine function
-    class ArcSin : public Function<scalar_t, scalar_t> {
+    class ArcSin : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -122,7 +122,7 @@ namespace mito::functions {
 
 
     // the arc tangent function
-    class ArcTan : public Function<scalar_t, scalar_t> {
+    class ArcTan : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -141,7 +141,7 @@ namespace mito::functions {
 
 
     // the exponential function
-    class Exp : public Function<scalar_t, scalar_t> {
+    class Exp : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -157,7 +157,7 @@ namespace mito::functions {
 
 
     // the natural logarithm function
-    class Log : public Function<scalar_t, scalar_t> {
+    class Log : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -173,7 +173,7 @@ namespace mito::functions {
 
 
     // the square root function
-    class Sqrt : public Function<scalar_t, scalar_t> {
+    class Sqrt : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -192,7 +192,7 @@ namespace mito::functions {
 
 
     // the cubic root function
-    class Cbrt : public Function<scalar_t, scalar_t> {
+    class Cbrt : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       public:
         // call operator for function composition
@@ -213,7 +213,7 @@ namespace mito::functions {
     // the power to integer functions
     template <int N>
     requires(N >= 1)
-    class Power : public Function<scalar_t, scalar_t> {
+    class Power : public Function<tensor::scalar_t, tensor::scalar_t> {
 
       private:
         template <int I>

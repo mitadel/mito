@@ -11,7 +11,7 @@ namespace mito::geometry {
 
     // addition of cartesian coordinates {A} and vector {v}
     template <>
-    constexpr auto operator+(const cartesian_coordinates_t<1> & A, const vector_t<1> & v)
+    constexpr auto operator+(const cartesian_coordinates_t<1> & A, const tensor::vector_t<1> & v)
         -> cartesian_coordinates_t<1>
     {
         // easy enough
@@ -22,15 +22,15 @@ namespace mito::geometry {
     template <>
     constexpr auto operator-(
         const cartesian_coordinates_t<1> & A, const cartesian_coordinates_t<1> & B)
-        -> mito::vector_t<1>
+        -> mito::tensor::vector_t<1>
     {
-        return mito::vector_t<1>{ A[0] - B[0] };
+        return mito::tensor::vector_t<1>{ A[0] - B[0] };
     }
 
 
     // addition of cartesian coordinates {A} and vector {v}
     template <>
-    constexpr auto operator+(const cartesian_coordinates_t<2> & A, const vector_t<2> & v)
+    constexpr auto operator+(const cartesian_coordinates_t<2> & A, const tensor::vector_t<2> & v)
         -> cartesian_coordinates_t<2>
     {
         // easy enough
@@ -41,15 +41,15 @@ namespace mito::geometry {
     template <>
     constexpr auto operator-(
         const cartesian_coordinates_t<2> & A, const cartesian_coordinates_t<2> & B)
-        -> mito::vector_t<2>
+        -> mito::tensor::vector_t<2>
     {
-        return mito::vector_t<2>{ A[0] - B[0], A[1] - B[1] };
+        return mito::tensor::vector_t<2>{ A[0] - B[0], A[1] - B[1] };
     }
 
 
     // addition of cartesian coordinates {A} and vector {v}
     template <>
-    constexpr auto operator+(const cartesian_coordinates_t<3> & A, const vector_t<3> & v)
+    constexpr auto operator+(const cartesian_coordinates_t<3> & A, const tensor::vector_t<3> & v)
         -> cartesian_coordinates_t<3>
     {
         // easy enough
@@ -60,9 +60,9 @@ namespace mito::geometry {
     template <>
     constexpr auto operator-(
         const cartesian_coordinates_t<3> & A, const cartesian_coordinates_t<3> & B)
-        -> mito::vector_t<3>
+        -> mito::tensor::vector_t<3>
     {
-        return mito::vector_t<3>{ A[0] - B[0], A[1] - B[1], A[2] - B[2] };
+        return mito::tensor::vector_t<3>{ A[0] - B[0], A[1] - B[1], A[2] - B[2] };
     }
 
 }

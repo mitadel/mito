@@ -10,7 +10,7 @@
 // pi
 using std::numbers::pi;
 // mito scalars
-using mito::scalar_t;
+using mito::tensor::scalar_t;
 
 
 TEST(Derivatives, Product)
@@ -102,16 +102,16 @@ TEST(Derivatives, Power)
 TEST(Derivatives, ScalarProduct)
 {
     // a 2D vector
-    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
+    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
 
     // a 2D vector
-    constexpr auto a = mito::vector_t<2>{ -1.0, 1.0 };
+    constexpr auto a = mito::tensor::vector_t<2>{ -1.0, 1.0 };
 
     // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::functions::constant<mito::vector_t<2>>(mito::e_0<2>);
+    constexpr auto e0 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_0<2>);
 
     // the function returning the constant e1 unit vector in 2D
-    constexpr auto e1 = mito::functions::constant<mito::vector_t<2>>(mito::e_1<2>);
+    constexpr auto e1 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_1<2>);
 
     // the function extracting the x_0 component of a 2D vector
     constexpr auto x0 = mito::functions::x<0, 2>;

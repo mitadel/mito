@@ -31,7 +31,7 @@ namespace mito::fields {
 
     // the order N identity tensor in D dimensions
     template <geometry::coordinates_c coordType, int N>
-    constexpr auto identity_tensor_field = uniform_field<coordType>(mito::identity<N>);
+    constexpr auto identity_tensor_field = uniform_field<coordType>(tensor::identity<N>);
 }
 
 

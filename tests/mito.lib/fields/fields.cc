@@ -30,16 +30,16 @@ TEST(Fields, VectorFields)
     static_assert(f(x) == 1.0);
 
     // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::functions::constant<coordinates_t>(mito::e_0<2>);
+    constexpr auto e0 = mito::functions::constant<coordinates_t>(mito::tensor::e_0<2>);
 
     // the function returning the constant e1 unit vector in 2D
-    constexpr auto e1 = mito::functions::constant<coordinates_t>(mito::e_1<2>);
+    constexpr auto e1 = mito::functions::constant<coordinates_t>(mito::tensor::e_1<2>);
 
     // a vector field
     constexpr auto g = mito::fields::field(cos(x0 * x1) * (e0 + e1));
 
     // check value of field at {x}
-    static_assert(g(x) == mito::vector_t<2>{ 1.0, 1.0 });
+    static_assert(g(x) == mito::tensor::vector_t<2>{ 1.0, 1.0 });
 }
 
 

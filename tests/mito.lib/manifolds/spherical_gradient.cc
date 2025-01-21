@@ -71,7 +71,7 @@ TEST(Manifolds, SphericalGradient)
         + (1.0 / (r * r * mito::functions::sin(theta) * mito::functions::sin(theta))) * df2 * e_p;
 
     // check that the gradient vector can also be computed with the well-known formula
-    EXPECT_TRUE(pyre::tensor::norm(grad_vector(x) - formula(x)) < 1.e-15);
+    EXPECT_TRUE(mito::tensor::norm(grad_vector(x) - formula(x)) < 1.e-15);
 }
 
 

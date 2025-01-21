@@ -6,26 +6,26 @@
 #include <mito/systems/statics_system.h>
 #include <mito/solvers/linear_solver.h>
 
-mito::vector_t<3>
-sourceTerm(const mito::vector_t<3> & x, mito::real t)
+mito::tensor::vector_t<3>
+sourceTerm(const mito::tensor::vector_t<3> & x, mito::real t)
 {
     return { x[0] * t, x[1], x[2] };
 }
 
-mito::vector_t<3>
-dirichletBC(const mito::vector_t<3> & x, mito::real t)
+mito::tensor::vector_t<3>
+dirichletBC(const mito::tensor::vector_t<3> & x, mito::real t)
 {
     return { 0.0, 0.0, 0.0 };
 }
 
-mito::vector_t<3>
-neumannBC(const mito::vector_t<3> & x, mito::real t)
+mito::tensor::vector_t<3>
+neumannBC(const mito::tensor::vector_t<3> & x, mito::real t)
 {
     return { -1.0, 0.0, 0.0 };
 }
 
 bool
-filterLeft(const mito::vector_t<3> & x)
+filterLeft(const mito::tensor::vector_t<3> & x)
 {
     if (std::fabs(x[0]) < 1e-8)
         return true;

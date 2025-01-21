@@ -12,16 +12,16 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 // the basis vectors
-static constexpr auto e_x = mito::e_0<3>;
-static constexpr auto e_y = mito::e_1<3>;
-static constexpr auto e_z = mito::e_2<3>;
+static constexpr auto e_x = mito::tensor::e_0<3>;
+static constexpr auto e_y = mito::tensor::e_1<3>;
+static constexpr auto e_z = mito::tensor::e_2<3>;
 
 
 // compute the volume of a tetrahedron via the metric volume element
 auto
 volume_form(
     const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coord_system,
-    const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::scalar_t
+    const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::tensor::scalar_t
 {
     // get the directors of the tetrahedron
     auto [_, directors] = mito::geometry::directors(tetrahedron, coord_system);
@@ -38,14 +38,14 @@ volume_form(
 auto
 volume_determinant(
     const mito::geometry::coordinate_system_t<coordinates_t> & coord_system,
-    const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::scalar_t
+    const mito::geometry::tetrahedron_t<3> & tetrahedron) -> mito::tensor::scalar_t
 {
     // number of element vertices
     constexpr int D = 3;
     constexpr int V = D + 1;
 
     // a container to store the coordinates of each vertex in a tensor
-    mito::matrix_t<V> pointsTensor;
+    mito::tensor::matrix_t<V> pointsTensor;
 
     // collect element nodes
     auto element_nodes = tetrahedron.nodes();
@@ -66,7 +66,7 @@ volume_determinant(
     }
 
     // compute the volume of the e-th element
-    auto volume = std::fabs(pyre::tensor::determinant(pointsTensor)) / pyre::tensor::factorial<D>();
+    auto volume = std::fabs(mito::tensor::determinant(pointsTensor)) / mito::tensor::factorial<D>();
 
     // all done
     return volume;

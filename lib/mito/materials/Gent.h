@@ -13,13 +13,13 @@ class mito::materials::Gent {
     // the dimension of the physical space
     static constexpr int D = 3;
     // the type for a scalar
-    using scalar_type = scalar_t;
+    using scalar_type = tensor::scalar_t;
     // the type for the deformation gradient
-    using deformation_gradient_type = matrix_t<D>;
+    using deformation_gradient_type = tensor::matrix_t<D>;
     // the type for the stress
-    using stress_type = matrix_t<D>;
+    using stress_type = tensor::matrix_t<D>;
     // the type for the tangents
-    using tangents_type = fourth_order_tensor_t<D>;
+    using tangents_type = tensor::fourth_order_tensor_t<D>;
 
   public:
     // constructor
@@ -56,13 +56,13 @@ mito::materials::Gent::energy(const deformation_gradient_type & F) const -> scal
 {
     // precompute useful quantities
     // J = det F
-    auto detF = determinant(F);
+    auto detF = tensor::determinant(F);
     // J^2 - 1
     auto Jsq_minus_1 = detF * detF - 1.;
     // log(J)
     auto logJ = std::log(detF);
     // tr(C)
-    auto trC = trace(transpose(F) * F);
+    auto trC = tensor::trace(tensor::transpose(F) * F);
     // (J^2 -1)/2 - log(J)
     auto A = 0.5 * Jsq_minus_1 - logJ;
 
@@ -76,15 +76,15 @@ mito::materials::Gent::stress(const deformation_gradient_type & F) const -> stre
 {
     // precompute useful quantities
     // inverse of deformation gradient
-    auto invF = inverse(F);
+    auto invF = tensor::inverse(F);
     // J = det F
-    auto detF = determinant(F);
+    auto detF = tensor::determinant(F);
     // J^2 - 1
     auto Jsq_minus_1 = detF * detF - 1.;
     // log(J)
     auto logJ = std::log(detF);
     // tr(C)
-    auto trC = trace(transpose(F) * F);
+    auto trC = tensor::trace(tensor::transpose(F) * F);
     // (J^2 -1)/2 - log(J)
     auto A = 0.5 * Jsq_minus_1 - logJ;
     // Jm - trC + D /*dim*/
@@ -93,7 +93,7 @@ mito::materials::Gent::stress(const deformation_gradient_type & F) const -> stre
     auto B = _Jm / C;
 
     // return the first Piola stress tensor
-    return (_mu * B) * F + (2. * _kappa * A * A * A * Jsq_minus_1 - _mu) * transpose(invF);
+    return (_mu * B) * F + (2. * _kappa * A * A * A * Jsq_minus_1 - _mu) * tensor::transpose(invF);
 }
 
 constexpr auto
@@ -101,15 +101,15 @@ mito::materials::Gent::tangents(const deformation_gradient_type & F) const -> ta
 {
     // precompute useful quantities
     // inverse of deformation gradient
-    auto invF = inverse(F);
+    auto invF = tensor::inverse(F);
     // J = det F
-    auto detF = determinant(F);
+    auto detF = tensor::determinant(F);
     // J^2 - 1
     auto Jsq_minus_1 = detF * detF - 1.;
     // log(J)
     auto logJ = std::log(detF);
     // tr(C)
-    auto trC = trace(transpose(F) * F);
+    auto trC = tensor::trace(tensor::transpose(F) * F);
     // (J^2 -1)/2 - log(J)
     auto A = 0.5 * Jsq_minus_1 - logJ;
     // Jm - trC + D /*dim*/

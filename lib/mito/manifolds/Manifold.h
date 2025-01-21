@@ -121,9 +121,9 @@ namespace mito::manifolds {
             }
         }
 
-        constexpr auto volume() const -> scalar_t
+        constexpr auto volume() const -> tensor::scalar_t
         {
-            scalar_t result = 0.0;
+            tensor::scalar_t result = 0.0;
             for (const auto & cell : _mesh.cells()) {
                 result += volume(cell);
             }
@@ -132,23 +132,24 @@ namespace mito::manifolds {
         }
 
         // computes the volume of {cell}
-        constexpr auto volume(const cell_type & cell) const -> scalar_t
+        constexpr auto volume(const cell_type & cell) const -> tensor::scalar_t
         {
             // all done
-            return _volume(cell, make_integer_sequence<N>{});
+            return _volume(cell, tensor::make_integer_sequence<N>{});
         }
 
       private:
         // computes the volume of a cell
         template <int... J>
-        constexpr auto _volume(const cell_type & cell, integer_sequence<J...>) const -> scalar_t
+        constexpr auto _volume(const cell_type & cell, tensor::integer_sequence<J...>) const
+            -> tensor::scalar_t
         requires(sizeof...(J) == N)
         {
             // get the director edges of this cell and the point where they stem from
             auto [point, directors] = mito::geometry::directors(cell, _coordinate_system);
             // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
             // contracted with the cell directors
-            auto volume = 1.0 / pyre::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
+            auto volume = 1.0 / mito::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
             // all done
             return volume;
         }

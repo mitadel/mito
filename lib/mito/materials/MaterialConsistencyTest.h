@@ -26,13 +26,13 @@ class mito::materials::MaterialConsistencyTest {
     {}
 
   private:
-    auto _energy_increment(const deformation_gradient_type & F) const -> mito::matrix_t<3>
+    auto _energy_increment(const deformation_gradient_type & F) const -> mito::tensor::matrix_t<3>
     {
         // take note of the original deformation gradient
         auto F_perturbed = F;
 
         // initialize the energy increment tensor
-        auto energy_increment = mito::matrix_t<3>();
+        auto energy_increment = mito::tensor::matrix_t<3>();
 
         // for each component of the deformation gradient
         for (int i = 0; i < 3; i++) {
@@ -61,13 +61,13 @@ class mito::materials::MaterialConsistencyTest {
     }
 
     auto _stress_increment(const deformation_gradient_type & F) const
-        -> mito::fourth_order_tensor_t<3>
+        -> tensor::fourth_order_tensor_t<3>
     {
         // take note of the original deformation gradient
         auto F_perturbed = F;
 
         // initialize the stress increment tensor
-        auto stress_increment = mito::fourth_order_tensor_t<3>();
+        auto stress_increment = tensor::fourth_order_tensor_t<3>();
 
         // for each component of the deformation gradient
         for (int k = 0; k < 3; k++) {
@@ -116,7 +116,7 @@ class mito::materials::MaterialConsistencyTest {
         auto energy_increment = _energy_increment(F);
 
         // compute the residual
-        auto residual = mito::norm(energy_increment - P_analytical * 2.0 * _perturbation);
+        auto residual = tensor::norm(energy_increment - P_analytical * 2.0 * _perturbation);
 
         // print the errors
         channel << "First order residual: " << residual << journal::endl;
@@ -141,7 +141,7 @@ class mito::materials::MaterialConsistencyTest {
         auto stress_increment = _stress_increment(F);
 
         // compute the residual
-        auto residual = mito::norm(stress_increment - C_analytical * 2.0 * _perturbation);
+        auto residual = tensor::norm(stress_increment - C_analytical * 2.0 * _perturbation);
 
         // print the errors
         channel << "First order residual: " << residual << journal::endl;

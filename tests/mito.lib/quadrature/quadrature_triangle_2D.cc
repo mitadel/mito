@@ -7,7 +7,7 @@
 #include <mito/quadrature.h>
 
 
-using mito::vector_t;
+using mito::tensor::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
 

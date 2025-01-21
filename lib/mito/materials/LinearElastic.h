@@ -13,14 +13,14 @@ class mito::materials::LinearElastic {
     // the dimension of the physical space
     static constexpr int D = 3;
     // the type for a scalar
-    using scalar_type = scalar_t;
+    using scalar_type = tensor::scalar_t;
     // the type for the deformation gradient
-    using deformation_gradient_type = matrix_t<D>;
+    using deformation_gradient_type = tensor::matrix_t<D>;
     // the type for the stress
-    using stress_type = symmetric_matrix_t<D>;
+    using stress_type = tensor::symmetric_matrix_t<D>;
     // the type for the tangents
     // TOFIX: it would be cool to include the symmetries of the tangent tensor here
-    using tangents_type = fourth_order_tensor_t<D>;
+    using tangents_type = tensor::fourth_order_tensor_t<D>;
 
   public:
     constexpr LinearElastic(scalar_type rho, scalar_type E, scalar_type nu) :
@@ -58,23 +58,23 @@ constexpr auto
 mito::materials::LinearElastic::energy(const deformation_gradient_type & F) const -> scalar_type
 {
     // the linear strain associated with {F}
-    auto epsilon = symmetric(F - identity<D>);
+    auto epsilon = tensor::symmetric(F - tensor::identity<D>);
 
     // return the strain energy density
-    return 0.5 * dot(stress(F), epsilon);
+    return 0.5 * tensor::dot(stress(F), epsilon);
 }
 
 constexpr auto
 mito::materials::LinearElastic::stress(const deformation_gradient_type & F) const -> stress_type
 {
     // the linear strain associated with {F}
-    auto epsilon = symmetric(F - identity<D>);
+    auto epsilon = tensor::symmetric(F - tensor::identity<D>);
 
     // trace of epsilon
-    auto tr = trace(epsilon);
+    auto tr = tensor::trace(epsilon);
 
     // return the Cauchy stress tensor
-    return _lambda * tr * identity<D> + 2.0 * _mu * epsilon;
+    return _lambda * tr * tensor::identity<D> + 2.0 * _mu * epsilon;
 }
 
 constexpr auto

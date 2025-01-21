@@ -20,21 +20,21 @@ namespace mito::functions {
     }
 
     // the {I...}-th first partial derivative of a constant plus a function
-    template <int... I, tensor_or_scalar_c T, class F>
+    template <int... I, tensor::tensor_or_scalar_c T, class F>
     constexpr auto derivative(const FunctionPlusConstant<T, F> & f)
     {
         return derivative<I...>(f.f());
     }
 
     // the {I...}-th first partial derivative of a function times a constant
-    template <int... I, tensor_or_scalar_c T, class F>
+    template <int... I, tensor::tensor_or_scalar_c T, class F>
     constexpr auto derivative(const FunctionTimesConstant<T, F> & f)
     {
         return derivative<I...>(f.f()) * f.constant();
     }
 
     // the {I...}-th first partial derivative of a constant times a function
-    template <int... I, tensor_or_scalar_c T, class F>
+    template <int... I, tensor::tensor_or_scalar_c T, class F>
     constexpr auto derivative(const ConstantTimesFunction<T, F> & f)
     {
         return f.constant() * derivative<I...>(f.f());

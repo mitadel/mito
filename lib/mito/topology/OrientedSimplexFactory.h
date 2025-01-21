@@ -225,7 +225,7 @@ namespace mito::topology {
         template <int... J>
         inline auto _permutation_sign(
             const simplex_composition_t<N> & composition,
-            const simplex_composition_t<N> & reference, integer_sequence<J...>) const
+            const simplex_composition_t<N> & reference, tensor::integer_sequence<J...>) const
         {
             // compute the sign of the permutation between the indices of {composition} with respect
             // to the reference composition {reference}
@@ -243,7 +243,7 @@ namespace mito::topology {
             // compute the permutation sign of {composition} with respect to the composition of
             // {simplex}
             return _permutation_sign(
-                composition, simplex->composition(), make_integer_sequence<N + 1>{});
+                composition, simplex->composition(), tensor::make_integer_sequence<N + 1>{});
         }
 
       private:
