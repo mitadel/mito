@@ -81,6 +81,7 @@ mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_spherical.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
+mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
 # math
 mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
@@ -88,6 +89,7 @@ mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)
 mito_test_driver(tests/mito.lib/mesh/build_mesh.cc)
+mito_test_driver(tests/mito.lib/mesh/erase_duplicates.cc)
 mito_test_driver(tests/mito.lib/mesh/filter_ball.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_segment_1D.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_triangle_2D.cc)
@@ -97,6 +99,7 @@ mito_test_driver(tests/mito.lib/mesh/tetra_zero_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/tetra_multiple_subdivisions.cc)
 mito_test_driver(tests/mito.lib/mesh/erase_element.cc)
 mito_test_driver(tests/mito.lib/mesh/sphere.cc)
+mito_test_driver(tests/mito.lib/mesh/summit_read_write.cc)
 
 if(WITH_METIS)
     mito_test_driver(tests/mito.lib/mesh/metis_partitioner.cc)

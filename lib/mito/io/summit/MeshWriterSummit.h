@@ -25,8 +25,10 @@ namespace mito::io {
         static constexpr int D = mesh_type::dim;
         // the type of point
         using point_type = typename coord_system_type::point_type;
-        // the type of a collection of points
-        using points_type = std::unordered_set<point_type, utilities::hash_function<point_type>>;
+        // the type of a collection of points (points are mapped to indices; points that are shared
+        // among multiple elements have the same index)
+        using points_type =
+            std::unordered_map<point_type, int, utilities::hash_function<point_type>>;
 
       public:
         // constructor
@@ -37,10 +39,19 @@ namespace mito::io {
             _coord_system(coord_system),
             _points()
         {
+            // index assigned to each point (start counting from 1, summit mesh convention)
+            auto index = 1;
+
             // insert the points corresponding to the mesh nodes (eliminating duplicates)
             for (const auto & cell : mesh.cells()) {
                 for (const auto & node : cell.nodes()) {
-                    _points.insert(node->point());
+                    const auto & point = node->point();
+                    auto [_, inserted] = _points.insert({ point, index });
+                    // if the point was inserted in the map (i.e. if it is not a duplicate)
+                    if (inserted) {
+                        // increment index
+                        ++index;
+                    }
                 }
             }
         }
@@ -63,8 +74,14 @@ namespace mito::io {
             outfile << D << std::endl;
             outfile << std::size(_points) << " " << _mesh.nCells() << " " << 1 << std::endl;
 
-            // write the points to file
-            for (const auto & point : _points) {
+            // a sorted vector with points (the vector subscript is the point index minus one)
+            std::vector<point_type> points_vector(std::size(_points));
+            for (const auto & [point, index] : _points) {
+                points_vector[index - 1] = point;
+            }
+
+            // write the points to file in an order determined by their index
+            for (const auto & point : points_vector) {
                 const auto & coord = _coord_system.coordinates(point);
                 outfile << std::setprecision(15) << coord << std::endl;
             }
@@ -73,8 +90,7 @@ namespace mito::io {
             for (const auto & cell : _mesh.cells()) {
                 outfile << summit::cell<cell_type>::type << " ";
                 for (const auto & node : cell.nodes()) {
-                    outfile << std::distance(_points.begin(), _points.find(node->point())) + 1
-                            << " ";
+                    outfile << _points.at(node->point()) << " ";
                 }
                 // TOFIX: material label is always 1 for now
                 outfile << 1 << std::endl;

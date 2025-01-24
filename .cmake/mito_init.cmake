@@ -134,6 +134,9 @@ function(mito_shareCmakePackage)
     install(FILES ${PROJECT_BINARY_DIR}/mito-config.cmake
         ${PROJECT_BINARY_DIR}/mito-config-version.cmake
         DESTINATION ${MITO_CMAKE_DIR})
+    # copy the {FindMETIS.cmake}
+    install(FILES ${PROJECT_SOURCE_DIR}/.cmake/FindMETIS.cmake
+            DESTINATION ${MITO_CMAKE_DIR})
 
     # create aliases matching the exports above
     add_library(mito::mito ALIAS mito)

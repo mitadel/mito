@@ -87,11 +87,40 @@ constexpr_for_3(F && f)
     _constexpr_for_3<End1, End2, End3, 0, 0>(f);
 }
 
+// take f(i, j, k, l) and return f_IJK(l) := f(I, J, K, l) for I, J, K fixed
+template <int I, class F>
+constexpr auto
+f_IJK(F && f)
+{
+    return [f]<int j, int k, int l>() {
+        f.template operator()<I, j, k, l>();
+    };
+}
+
+// constexpr for loop calling function f(i, j, k, l) for each i,j,k,l in (Start, End)x(Start,
+// End)
+template <
+    int End1, int End2, int End3, int End4, int Index1 = 0, int Index2 = 0, int Index3 = 0, class F>
+constexpr void
+_constexpr_for_4(F && f)
+{
+    if constexpr (Index1 < End1) {
+        constexpr_for_3<End2, End3, End4>(f_IJK<Index1>(f));
+        _constexpr_for_4<End1, End2, End3, End4, Index1 + 1, Index2, Index3>(f);
+    }
+}
+
+template <int End1, int End2, int End3, int End4, class F>
+constexpr void
+constexpr_for_4(F && f)
+{
+    _constexpr_for_4<End1, End2, End3, End4, 0, 0>(f);
+}
+
 // main program
 int
 main(int argc, char * argv[])
 {
-
     // a vector
     constexpr vector_t<3> x{ 1, 1, 1 };
 
@@ -126,9 +155,15 @@ main(int argc, char * argv[])
     constexpr matrix_t<3, 3> BB{ 1, 0, 0, 0, 4, 0, 0, 0, 9 };
 
     // assert all components of the matrix are equal to 2
+    std::cout << "constexpr_for_3" << std::endl;
     constexpr_for_3<3, 1, 2>(
         []<int i, int j, int k>() { std::cout << i << "\t" << j << "\t" << k << std::endl; });
 
+    // assert all components of the matrix are equal to 2
+    std::cout << "constexpr_for_4" << std::endl;
+    constexpr_for_4<3, 2, 2, 4>([]<int i, int j, int k, int l>() {
+        std::cout << i << "\t" << j << "\t" << k << "\t" << l << std::endl;
+    });
 
     // all done
     return 0;

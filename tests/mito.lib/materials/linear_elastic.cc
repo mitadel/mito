@@ -10,19 +10,18 @@
 // the perturbation for computing the numerical derivatives
 constexpr mito::real eps = 1.e-5;
 // the tolerance for passing the test
-constexpr mito::real tol = 1.e-10;
+constexpr mito::real tol = 1.e-15;
 
 
-TEST(Gent, TestGent)
+TEST(LinearElastic, TestLinearElastic)
 {
     // material parameters
     const auto rho = mito::real(1.0);
-    const auto kappa = mito::real(1.5);
-    const auto mu = mito::real(5.0);
-    const auto Jm = mito::real(2.0);
+    const auto E = mito::real(1.0);
+    const auto nu = mito::real(0.3);
 
-    // a gent material
-    auto material = mito::materials::gent(rho, kappa, mu, Jm);
+    // a linear elastic material
+    auto material = mito::materials::linear_elastic(rho, E, nu);
 
     // the material consistency test
     auto test = mito::materials::consistency_test(material, eps, tol);

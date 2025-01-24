@@ -3,224 +3,152 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
+// get the benchmark library
+#include <benchmark/benchmark.h>
+
 // get array
 #include <array>
-#include <cstdlib>
 
-// get support
+// get the mito materials
 #include <mito/materials.h>
-#include <pyre/timers.h>
 
 
-// type aliases
-using process_timer_t = pyre::timers::process_timer_t;
-
-
-void
-gent_constitutive_array(
-    int N, double kappa, double mu, double Jm, double epsilon,
-    std::array<double, 9> & P_array_result)
-{
-    // make a channel
-    journal::info_t channel("tests.timer.gent");
-
-    // make a timer
-    process_timer_t t("tests.timer");
-
-
-    // ARRAY
-
-    // array tensor
-    std::array<double, 9> F_array{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
-                                   epsilon,       epsilon, epsilon, 1.0 + epsilon };
-
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    // perform calculation N times
-    for (int n = 0; n < N; ++n) {
-
-        double f11 = F_array[0 * 3 + 0];
-        double f12 = F_array[0 * 3 + 1];
-        double f13 = F_array[0 * 3 + 2];
-        double f21 = F_array[1 * 3 + 0];
-        double f22 = F_array[1 * 3 + 1];
-        double f23 = F_array[1 * 3 + 2];
-        double f31 = F_array[2 * 3 + 0];
-        double f32 = F_array[2 * 3 + 1];
-        double f33 = F_array[2 * 3 + 2];
-
-        double detF = f11 * (f22 * f33 - f23 * f32) - f12 * (f21 * f33 - f23 * f31)
-                    + f13 * (f21 * f32 - f22 * f31);
-
-        double detinv = 1.0 / detF;
-
-        std::array<double, 9> F_inv_array{
-            detinv * (f22 * f33 - f23 * f32), detinv * (-f12 * f33 + f13 * f32),
-            detinv * (f12 * f23 - f13 * f22), detinv * (-f21 * f33 + f23 * f31),
-            detinv * (f11 * f33 - f13 * f31), detinv * (-f11 * f23 + f13 * f21),
-            detinv * (f21 * f32 - f22 * f31), detinv * (-f11 * f32 + f12 * f31),
-            detinv * (f11 * f22 - f12 * f21)
-        };
-
-        // precompute useful quantities
-        // J^2 - 1
-        double Jsq_minus_1 = detF * detF - 1.;
-        // log(J)
-        double logJ = std::log(detF);
-
-        // tr(C) - Cauchy-Green
-        // double trC = 0.0;
-        // for (int i = 0; i < 3; i++) {
-        //     for (int J = 0; J < 3; J++) {
-        //         trC += F_array[i * 3 + J] * F_array[i * 3 + J];
-        //     }
-        // }
-
-        // this is equivalent to the above commented out for-loop
-        double trC = F_array[0] * F_array[0] + F_array[1] * F_array[1] + F_array[2] * F_array[2]
-                   + F_array[3] * F_array[3] + F_array[4] * F_array[4] + F_array[5] * F_array[5]
-                   + F_array[6] * F_array[6] + F_array[7] * F_array[7] + F_array[8] * F_array[8];
-
-        // (J^2 -1)/2 - log(J)
-        double A = 0.5 * Jsq_minus_1 - logJ;
-        // Jm - trC + D /*dim*/
-        double C = (Jm - trC + 3 /*dim*/);
-        // Jm / (Jm - trC + D /*dim*/))
-        double B = Jm / C;
-
-        // compute the Piola stress tensor
-        // std::array<double, 9> P_array { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-        // for (int i = 0; i < 3; i++) {
-        //     for (int J = 0; J < 3; J++) {
-        //         P_array[i * 3 + J] =
-        //             mu * B * F_array[i * 3 + J]
-        //             + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[J * 3 + i];
-        //     }
-        // }
-
-        // accumulate result
-        // for (int i = 0; i < 3; i++) {
-        //     for (int J = 0; J < 3; J++) {
-        //         P_array_result[i * 3 + J] += P_array[i * 3 + J];
-        //     }
-        // }
-
-        // this is equivalent to the above commented out for-loops
-        P_array_result[0] +=
-            mu * B * F_array[0] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[0];
-        P_array_result[1] +=
-            mu * B * F_array[1] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[3];
-        P_array_result[2] +=
-            mu * B * F_array[2] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[6];
-        P_array_result[3] +=
-            mu * B * F_array[3] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[1];
-        P_array_result[4] +=
-            mu * B * F_array[4] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[4];
-        P_array_result[5] +=
-            mu * B * F_array[5] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[7];
-        P_array_result[6] +=
-            mu * B * F_array[6] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[2];
-        P_array_result[7] +=
-            mu * B * F_array[7] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[5];
-        P_array_result[8] +=
-            mu * B * F_array[8] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv_array[8];
-    }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "array (for loop)" << journal::newline << journal::indent(1)
-            << "result = " << P_array_result[0] << ", " << P_array_result[1] << ", "
-            << P_array_result[2] << ", " << P_array_result[3] << ", " << P_array_result[4] << ", "
-            << P_array_result[5] << ", " << P_array_result[6] << ", " << P_array_result[7] << ", "
-            << P_array_result[8] << journal::newline << "process time = " << t.ms() << " ms "
-            << journal::newline << journal::outdent(1) << journal::endl;
-
-    // all done
-    return;
-}
+// material parameters
+constexpr static double rho = 1.0;
+constexpr static double kappa = 1.0;
+constexpr static double mu = 1.0;
+constexpr static double Jm = 1.0;
 
 
 auto
-gent_constitutive_mito(
-    int N, double rho, double kappa, double mu, double Jm, double epsilon,
-    mito::matrix_t<3> & P_result)
+gent_array(const auto & epsilon)
 {
-    // make a channel
-    journal::info_t channel("tests.timer.gent");
+    // build a deformation gradient
+    auto F = std::array<double, 9>{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                                    epsilon,       epsilon, epsilon, 1.0 + epsilon };
 
-    // make a timer
-    process_timer_t t("tests.timer");
 
-    // MITO
+    double f11 = F[0 * 3 + 0];
+    double f12 = F[0 * 3 + 1];
+    double f13 = F[0 * 3 + 2];
+    double f21 = F[1 * 3 + 0];
+    double f22 = F[1 * 3 + 1];
+    double f23 = F[1 * 3 + 2];
+    double f31 = F[2 * 3 + 0];
+    double f32 = F[2 * 3 + 1];
+    double f33 = F[2 * 3 + 2];
 
+    double detF = f11 * (f22 * f33 - f23 * f32) - f12 * (f21 * f33 - f23 * f31)
+                + f13 * (f21 * f32 - f22 * f31);
+
+    double detinv = 1.0 / detF;
+
+    auto F_inv =
+        std::array<double, 9>{ detinv * (f22 * f33 - f23 * f32), detinv * (-f12 * f33 + f13 * f32),
+                               detinv * (f12 * f23 - f13 * f22), detinv * (-f21 * f33 + f23 * f31),
+                               detinv * (f11 * f33 - f13 * f31), detinv * (-f11 * f23 + f13 * f21),
+                               detinv * (f21 * f32 - f22 * f31), detinv * (-f11 * f32 + f12 * f31),
+                               detinv * (f11 * f22 - f12 * f21) };
+
+    // precompute useful quantities
+    // J^2 - 1
+    double Jsq_minus_1 = detF * detF - 1.;
+    // log(J)
+    double logJ = std::log(detF);
+
+    // tr(C) - Cauchy-Green
+    // double trC = 0.0;
+    // for (int i = 0; i < 3; i++) {
+    //     for (int J = 0; J < 3; J++) {
+    //         trC += F[i * 3 + J] * F[i * 3 + J];
+    //     }
+    // }
+
+    // this is equivalent to the above commented out for-loop
+    double trC = F[0] * F[0] + F[1] * F[1] + F[2] * F[2] + F[3] * F[3] + F[4] * F[4] + F[5] * F[5]
+               + F[6] * F[6] + F[7] * F[7] + F[8] * F[8];
+
+    // (J^2 -1)/2 - log(J)
+    double A = 0.5 * Jsq_minus_1 - logJ;
+    // Jm - trC + D /*dim*/
+    double C = (Jm - trC + 3 /*dim*/);
+    // Jm / (Jm - trC + D /*dim*/))
+    double B = Jm / C;
+
+    // the Piola stress tensor
+    auto P = std::array<double, 9>{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
+    // // compute the Piola stress tensor
+    // for (int i = 0; i < 3; i++) {
+    //     for (int J = 0; J < 3; J++) {
+    //         P[i * 3 + J] = mu * B * F[i * 3 + J]
+    //                      + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[J * 3 + i];
+    //     }
+    // }
+
+    // this is equivalent to the above commented out for-loop
+    P[0] = mu * B * F[0] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[0];
+    P[1] = mu * B * F[1] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[3];
+    P[2] = mu * B * F[2] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[6];
+    P[3] = mu * B * F[3] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[1];
+    P[4] = mu * B * F[4] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[4];
+    P[5] = mu * B * F[5] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[7];
+    P[6] = mu * B * F[6] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[2];
+    P[7] = mu * B * F[7] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[5];
+    P[8] = mu * B * F[8] + (2. * kappa * A * A * A * Jsq_minus_1 - mu) * F_inv[8];
+
+    // all done
+    return P;
+}
+
+auto
+gent_mito(const auto & epsilon)
+{
     // mito gent material
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
-    mito::vector_t<3> u{ 0.0, 0.0, 0.0 };
-    mito::matrix_t<3> F{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
-                         epsilon,       epsilon, epsilon, 1.0 + epsilon };
-    mito::matrix_t<3> P;
+    auto F = mito::matrix_t<3>{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                                epsilon,       epsilon, epsilon, 1.0 + epsilon };
 
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    // perform calculation N times
-    for (int n = 0; n < N; ++n) {
-        // evaluate constitutive update
-        material.Constitutive(u, F, P);
-        // accumulate result
-        P_result += P;
-    }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "tensor" << journal::newline << journal::indent(1) << "result = " << P_result
-            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
-            << journal::outdent(1) << journal::endl;
 
     // all done
-    return;
+    return material.stress(F);
 }
 
 
-int
-main()
+static void
+GentArray(benchmark::State & state)
 {
-
-    // number of times to do operation
-    int N = 1 << 25;
-
-    // make a channel
-    journal::info_t channel("tests.timer.gent");
-
-    channel << "Computing " << N << " gent constitutive updates" << journal::endl;
-
-    // material parameters
-    double rho = 1.0;
-    double kappa = 1.0;
-    double mu = 1.0;
-    double Jm = 1.0;
-
-    // Generate a random number between -0.01 and 0.01
+    // generate a random number between -0.01 and 0.01
     double epsilon = 0.01 * ((std::rand() % 20001 / 10000.0) - 1.0);
 
-    // gent constitutive update
-    std::array<double, 9> P_array_result{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-    gent_constitutive_array(N, kappa, mu, Jm, epsilon, P_array_result);
-
-    // gent constitutive update
-    mito::matrix_t<3> P_result;
-    gent_constitutive_mito(N, rho, kappa, mu, Jm, epsilon, P_result);
-
-    // all done
-    return 0;
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(gent_array(epsilon));
+    }
 }
+
+static void
+GentMito(benchmark::State & state)
+{
+    // generate a random number between -0.01 and 0.01
+    double epsilon = 0.01 * ((std::rand() % 20001 / 10000.0) - 1.0);
+
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(gent_mito(epsilon));
+    }
+}
+
+
+// run benchmark for Gent constitutive update (array)
+BENCHMARK(GentArray);
+// run benchmark for Gent constitutive update (mito)
+BENCHMARK(GentMito);
+
+
+// run all benchmarks
+BENCHMARK_MAIN();
+
+
+// end of file

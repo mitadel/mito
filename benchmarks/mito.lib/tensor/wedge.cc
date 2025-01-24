@@ -3,23 +3,35 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
+
+// get the benchmark library
+#include <benchmark/benchmark.h>
+
+// get tensor
 #include <mito/tensor.h>
-#include <pyre/timers.h>
 
 
-// type aliases
-using process_timer_t = pyre::timers::process_timer_t;
-
-
-void
-wedge_array(int N)
+auto
+wedge_array(const auto & a, const auto & b, const auto & xi1, const auto & xi2)
 {
-    // make a channel
-    journal::info_t channel("benchmarks.wedge");
+    // all done
+    return (a[0] * xi1[0] + a[1] * xi1[1] + a[2] * xi1[2])
+             * (b[0] * xi2[0] + b[1] * xi2[1] + b[2] * xi2[2])
+         - (b[0] * xi1[0] + b[1] * xi1[1] + b[2] * xi1[2])
+               * (a[0] * xi2[0] + a[1] * xi2[1] + a[2] * xi2[2]);
+}
 
-    // make a timer
-    pyre::timers::process_timer_t t("benchmarks.wedge");
 
+auto
+wedge_mito(const auto & two_form, const auto & xi1, const auto & xi2)
+{
+    // all done
+    return two_form(xi1, xi2);
+}
+
+static void
+WedgeArray(benchmark::State & state)
+{
     // a vector representing a one-form
     std::array<double, 3> a = { 2.0, 1.0, 0.0 };
 
@@ -32,42 +44,15 @@ wedge_array(int N)
     // another vector
     std::array<double, 3> xi2 = { 0.0, 1.0, 0.0 };
 
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    // evaluate the wedge product on {xi1} and {xi2}
-    std::vector<double> result(N);
-    for (int i = 0; i < N; ++i) {
-        result[i] = (a[0] * xi1[0] + a[1] * xi1[1] + a[2] * xi1[2])
-                      * (b[0] * xi2[0] + b[1] * xi2[1] + b[2] * xi2[2])
-                  - (b[0] * xi1[0] + b[1] * xi1[1] + b[2] * xi1[2])
-                        * (a[0] * xi2[0] + a[1] * xi2[1] + a[2] * xi2[2]);
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(wedge_array(a, b, xi1, xi2));
     }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "array" << journal::newline << journal::indent(1) << "result = " << result[0]
-            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
-            << journal::outdent(1) << journal::endl;
-
-    // all done
-    return;
 }
 
-
-void
-wedge_mito(int N)
+static void
+WedgeMito(benchmark::State & state)
 {
-    // make a channel
-    journal::info_t channel("benchmarks.wedge");
-
-    // make a timer
-    pyre::timers::process_timer_t t("benchmarks.wedge");
-
     // the Euclidean metric in 3D space
     constexpr auto metric = mito::identity<3>;
 
@@ -92,48 +77,21 @@ wedge_mito(int N)
     // another vector
     auto xi2 = mito::e_1<3>;
 
-    // reset timer
-    t.reset();
-    // start timer
-    t.start();
-
-    // evaluate the wedge product on {xi1} and {xi2}
-    std::vector<double> result(N);
-    for (int i = 0; i < N; ++i) {
-        result[i] = ab_two_form(xi1, xi2);
+    // repeat the operation sufficient number of times
+    for (auto _ : state) {
+        benchmark::DoNotOptimize(wedge_mito(ab_two_form, xi1, xi2));
     }
-
-    // stop the timer
-    t.stop();
-
-    // report
-    channel << "mito" << journal::newline << journal::indent(1) << "result = " << result[0]
-            << journal::newline << "process time = " << t.ms() << " ms " << journal::newline
-            << journal::outdent(1) << journal::endl;
-
-    // all done
-    return;
 }
 
 
-int
-main()
-{
-    // number of times to do operation
-    int N = 1 << 25;
+// run benchmark for 3D wedge products (array)
+BENCHMARK(WedgeArray);
+// run benchmark for 3D wedge products (mito)
+BENCHMARK(WedgeMito);
 
-    // make a channel
-    journal::info_t channel("tests.timer.wedge");
 
-    // report
-    channel << "Computing " << N << " wedge products of one forms" << journal::endl;
+// run all benchmarks
+BENCHMARK_MAIN();
 
-    // compute {N} wedge products with {std::array}
-    wedge_array(N);
 
-    // compute {N} wedge products with mito datastructures
-    wedge_mito(N);
-
-    // all done
-    return 0;
-}
+// end of file

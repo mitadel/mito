@@ -126,6 +126,40 @@ namespace mito::mesh {
             return;
         }
 
+        // erase topological duplicates
+        inline auto erase_topological_duplicates() -> void
+        {
+            using simplex_type = typename cell_type::unoriented_simplex_type;
+            std::unordered_set<simplex_type, utilities::hash_function<simplex_type>> simplices;
+
+            for (auto & cell : _cells) {
+                auto [_, was_inserted] = simplices.insert(cell.simplex()->footprint());
+                if (!was_inserted) {
+                    erase(cell);
+                }
+            }
+
+            // all done
+            return;
+        }
+
+        // erase geometrical duplicates
+        inline auto erase_geometrical_duplicates() -> void
+        {
+            using simplex_type = typename cell_type::simplex_type;
+            std::unordered_set<simplex_type, utilities::hash_function<simplex_type>> simplices;
+
+            for (auto & cell : _cells) {
+                auto [_, was_inserted] = simplices.insert(cell.simplex());
+                if (!was_inserted) {
+                    erase(cell);
+                }
+            }
+
+            // all done
+            return;
+        }
+
         inline auto isOnBoundary(const cell_topological_family_type<N - 1> & cell) const -> bool
         {
             // count how many times this oriented cell occurs in the mesh with opposite orientation

@@ -14,6 +14,7 @@ All authors are listed in file [AUTHORS](AUTHORS), see also the MiTo [contributo
 
 - The [pyre](https://github.com/pyre/pyre) framework
 - C++20
+- gcc>=12
 
 ## License and Copyright
 
