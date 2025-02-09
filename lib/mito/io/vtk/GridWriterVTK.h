@@ -14,12 +14,12 @@ namespace mito::io::vtk {
 
       private:
         // the type of grid
-        using grid_type = vtkSmartPointer<vtkUnstructuredGrid>;
+        using vtk_grid_type = vtkSmartPointer<vtkUnstructuredGrid>;
 
       protected:
         // constructor
         // (protected so this class cannot be instantiated unless by the derived classes)
-        GridWriterVTK(std::string filename) : Writer(filename), _grid(grid_type::New()) {}
+        GridWriterVTK(std::string filename) : Writer(filename), _grid(vtk_grid_type::New()) {}
 
       public:
         auto write() const -> void override
@@ -44,7 +44,7 @@ namespace mito::io::vtk {
 
       protected:
         // the grid
-        grid_type _grid;
+        vtk_grid_type _grid;
     };
 
 }    // namespace mito::io::vtk

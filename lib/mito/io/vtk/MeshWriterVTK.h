@@ -13,21 +13,23 @@ namespace mito::io::vtk {
     requires(utilities::same_dim_c<meshT, coordSystemT>)
     class MeshWriterVTK : public GridWriterVTK<meshT::dim> {
 
+      public:
+        // the grid type
+        using grid_type = meshT;
+
       private:
-        // the mesh type
-        using mesh_type = meshT;
         // the coordinate system type
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
-        static constexpr int D = mesh_type::dim;
+        static constexpr int D = grid_type::dim;
         // the type of node
-        using node_type = typename mesh_type::cell_type::node_type;
+        using node_type = typename grid_type::cell_type::node_type;
         // the type of a collection of nodes (nodes are mapped to the index of the vtk points;
         // points that are shared among multiple elements have the same index)
         using nodes_type = std::unordered_map<node_type, int, utilities::hash_function<node_type>>;
 
       private:
-        auto _create_vtk_grid(const mesh_type & mesh, const coord_system_type & coordinate_system)
+        auto _create_vtk_grid(const grid_type & mesh, const coord_system_type & coordinate_system)
         {
             // vtk points and cells
             auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
@@ -55,7 +57,7 @@ namespace mito::io::vtk {
             for (const auto & cell : mesh.cells()) {
 
                 // create vtk cell
-                auto cellVtk = vtkCellPointer<typename mesh_type::cell_type::simplex_type>();
+                auto cellVtk = vtkCellPointer<typename grid_type::cell_type::simplex_type>();
 
                 // local index for the points of the cell
                 auto indexLocalPointVtk = 0;
@@ -85,7 +87,7 @@ namespace mito::io::vtk {
 
       public:
         MeshWriterVTK(
-            std::string filename, const mesh_type & mesh, const coord_system_type & coord_system) :
+            std::string filename, const grid_type & mesh, const coord_system_type & coord_system) :
             GridWriterVTK<D>(filename)
         {
             _create_vtk_grid(mesh, coord_system);

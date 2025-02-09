@@ -13,9 +13,11 @@ namespace mito::io::vtk {
     requires(utilities::same_dim_c<cloudT, coordSystemT>)
     class PointCloudWriterVTK : public GridWriterVTK<cloudT::dim> {
 
+      public:
+        // the grid type
+        using grid_type = cloudT;
+
       private:
-        // the point cloud type
-        using cloud_type = cloudT;
         // the coordinate system type
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
@@ -26,7 +28,7 @@ namespace mito::io::vtk {
         using points_type = std::unordered_set<point_type, utilities::hash_function<point_type>>;
 
       private:
-        auto _create_vtk_grid(const cloud_type & cloud, const coord_system_type & coordinate_system)
+        auto _create_vtk_grid(const grid_type & cloud, const coord_system_type & coordinate_system)
         {
             // vtk points and cells
             auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
@@ -49,8 +51,7 @@ namespace mito::io::vtk {
 
       public:
         PointCloudWriterVTK(
-            std::string filename, const cloud_type & cloud,
-            const coord_system_type & coord_system) :
+            std::string filename, const grid_type & cloud, const coord_system_type & coord_system) :
             GridWriterVTK<D>(filename)
         {
             _create_vtk_grid(cloud, coord_system);
