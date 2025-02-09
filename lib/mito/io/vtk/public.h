@@ -28,6 +28,9 @@
 #include "MeshWriterVTK.h"
 #include "PointCloudWriterVTK.h"
 #include "FieldWriterVTK.h"
+#ifdef WITH_PARALLEL_VTK
+#include "ParallelGridWriterVTK.h"
+#endif    // WITH_PARALLEL_VTK
 
 // factories implementation
 #include "factories.h"
