@@ -12,16 +12,16 @@ namespace mito::io::vtk {
     // mesh writer alias
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<meshT, coordSystemT>)
-    using mesh_writer_t = MeshWriterVTK<meshT, coordSystemT, GridWriterVTK<meshT::dim>>;
+    using mesh_writer_t = MeshVTKWriter<meshT, coordSystemT, GridVTKWriter<meshT::dim>>;
 
     // point cloud writer alias
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<cloudT, coordSystemT>)
-    using cloud_writer_t = PointCloudWriterVTK<cloudT, coordSystemT, GridWriterVTK<cloudT::dim>>;
+    using cloud_writer_t = PointCloudVTKWriter<cloudT, coordSystemT, GridVTKWriter<cloudT::dim>>;
 
     // field writer alias
     template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
-    using field_writer_t = FieldWriterVTK<gridWriterT, coordSystemT>;
+    using field_writer_t = FieldVTKWriter<gridWriterT, coordSystemT>;
 
     // vtk mesh writer factory
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
@@ -49,13 +49,13 @@ namespace mito::io::vtk {
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<meshT, coordSystemT>)
     using parallel_mesh_writer_t =
-        MeshWriterVTK<meshT, coordSystemT, ParallelGridWriterVTK<meshT::dim>>;
+        MeshVTKWriter<meshT, coordSystemT, ParallelGridVTKWriter<meshT::dim>>;
 
     // parallel point cloud writer alias
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<cloudT, coordSystemT>)
     using parallel_cloud_writer_t =
-        PointCloudWriterVTK<cloudT, coordSystemT, ParallelGridWriterVTK<cloudT::dim>>;
+        PointCloudVTKWriter<cloudT, coordSystemT, ParallelGridVTKWriter<cloudT::dim>>;
 
     // parallel vtk mesh writer factory
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>

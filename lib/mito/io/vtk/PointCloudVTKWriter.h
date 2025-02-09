@@ -15,7 +15,7 @@ namespace mito::io::vtk {
     requires(
         utilities::same_dim_c<cloudT, coordSystemT>
         && utilities::same_dim_c<cloudT, vtkGridWriterT>)
-    class PointCloudWriterVTK : public vtkGridWriterT {
+    class PointCloudVTKWriter : public vtkGridWriterT {
       public:
         // the grid type
         using grid_type = cloudT;
@@ -55,7 +55,7 @@ namespace mito::io::vtk {
         }
 
       public:
-        PointCloudWriterVTK(
+        PointCloudVTKWriter(
             std::string filename, const grid_type & cloud, const coord_system_type & coord_system) :
             grid_writer_type(filename)
         {

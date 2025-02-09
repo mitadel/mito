@@ -11,13 +11,13 @@ namespace mito::io::vtk {
 
     // class grid writer
     template <int D>
-    class GridWriterVTK;
+    class GridVTKWriter;
 
     // class mesh writer
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT, class vtkGridWriterT>
     requires(
         utilities::same_dim_c<meshT, coordSystemT> && utilities::same_dim_c<meshT, vtkGridWriterT>)
-    class MeshWriterVTK;
+    class MeshVTKWriter;
 
     // class point cloud writer
     template <
@@ -26,16 +26,16 @@ namespace mito::io::vtk {
     requires(
         utilities::same_dim_c<cloudT, coordSystemT>
         && utilities::same_dim_c<cloudT, vtkGridWriterT>)
-    class PointCloudWriterVTK;
+    class PointCloudVTKWriter;
 
     // class field writer
     template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
-    class FieldWriterVTK;
+    class FieldVTKWriter;
 
 #ifdef WITH_PARALLEL_VTK
     // class parallel grid writer
     template <int D>
-    class ParallelGridWriterVTK;
+    class ParallelGridVTKWriter;
 #endif    // WITH_PARALLEL_VTK
 }
 

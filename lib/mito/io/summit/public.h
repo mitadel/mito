@@ -12,7 +12,7 @@
 
 // classes implementation
 #include "summit_cell.h"
-#include "MeshWriterSummit.h"
+#include "MeshSummitWriter.h"
 
 // published type factories; this is the file you are looking for...
 #include "api.h"

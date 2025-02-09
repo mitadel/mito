@@ -10,7 +10,7 @@
 namespace mito::io::vtk {
 
     template <int D>
-    class GridWriterVTK : public Writer {
+    class GridVTKWriter : public Writer {
 
       public:
         // the grid dimension
@@ -23,7 +23,7 @@ namespace mito::io::vtk {
       protected:
         // constructor
         // (protected so this class cannot be instantiated unless by the derived classes)
-        GridWriterVTK(std::string filename) : Writer(filename), _grid(vtk_grid_type::New()) {}
+        GridVTKWriter(std::string filename) : Writer(filename), _grid(vtk_grid_type::New()) {}
 
       public:
         auto write() const -> void override

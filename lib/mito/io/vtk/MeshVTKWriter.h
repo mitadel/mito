@@ -12,7 +12,7 @@ namespace mito::io::vtk {
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT, class vtkGridWriterT>
     requires(
         utilities::same_dim_c<meshT, coordSystemT> && utilities::same_dim_c<meshT, vtkGridWriterT>)
-    class MeshWriterVTK : public vtkGridWriterT {
+    class MeshVTKWriter : public vtkGridWriterT {
       public:
         // the grid type
         using grid_type = meshT;
@@ -88,7 +88,7 @@ namespace mito::io::vtk {
         }
 
       public:
-        MeshWriterVTK(
+        MeshVTKWriter(
             std::string filename, const grid_type & mesh, const coord_system_type & coord_system) :
             grid_writer_type(filename)
         {

@@ -21,12 +21,12 @@
 #include "vtk_point.h"
 
 // classes
-#include "GridWriterVTK.h"
-#include "MeshWriterVTK.h"
-#include "PointCloudWriterVTK.h"
-#include "FieldWriterVTK.h"
+#include "GridVTKWriter.h"
+#include "MeshVTKWriter.h"
+#include "PointCloudVTKWriter.h"
+#include "FieldVTKWriter.h"
 #ifdef WITH_PARALLEL_VTK
-#include "ParallelGridWriterVTK.h"
+#include "ParallelGridVTKWriter.h"
 #endif    // WITH_PARALLEL_VTK
 
 // factories implementation

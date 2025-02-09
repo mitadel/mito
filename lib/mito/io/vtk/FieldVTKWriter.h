@@ -10,7 +10,7 @@
 namespace mito::io::vtk {
 
     template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
-    class FieldWriterVTK {
+    class FieldVTKWriter {
 
       private:
         // the dimension of the physical space
@@ -23,7 +23,7 @@ namespace mito::io::vtk {
         using coord_system_type = coordSystemT;
 
       public:
-        FieldWriterVTK(
+        FieldVTKWriter(
             std::string filename, const grid_type & grid, const coord_system_type & coord_system) :
             _grid_writer(filename, grid, coord_system)
         {}

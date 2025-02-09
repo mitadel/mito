@@ -10,7 +10,7 @@
 namespace mito::io::vtk {
 
     template <int D>
-    class ParallelGridWriterVTK : public Writer {
+    class ParallelGridVTKWriter : public Writer {
 
       public:
         // the grid dimension
@@ -21,7 +21,7 @@ namespace mito::io::vtk {
       protected:
         // constructor
         // (protected so this class cannot be instantiated unless by the derived classes)
-        ParallelGridWriterVTK(std::string filename) : Writer(filename), _grid(grid_type::New()) {}
+        ParallelGridVTKWriter(std::string filename) : Writer(filename), _grid(grid_type::New()) {}
 
       public:
         auto write() const -> void override
