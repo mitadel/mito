@@ -12,7 +12,9 @@ namespace mito::io::vtk {
     template <int D>
     class ParallelGridWriterVTK : public Writer {
 
-      private:
+      public:
+        // the grid dimension
+        static constexpr int dim = D;
         // the type of grid
         using grid_type = vtkSmartPointer<vtkUnstructuredGrid>;
 

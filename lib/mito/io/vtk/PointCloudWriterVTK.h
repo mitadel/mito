@@ -9,13 +9,18 @@
 
 namespace mito::io::vtk {
 
-    template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
-    requires(utilities::same_dim_c<cloudT, coordSystemT>)
-    class PointCloudWriterVTK : public GridWriterVTK<cloudT::dim> {
-
+    template <
+        geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT,
+        class vtkGridWriterT>
+    requires(
+        utilities::same_dim_c<cloudT, coordSystemT>
+        && utilities::same_dim_c<cloudT, vtkGridWriterT>)
+    class PointCloudWriterVTK : public vtkGridWriterT {
       public:
         // the grid type
         using grid_type = cloudT;
+        // the grid writer type
+        using grid_writer_type = vtkGridWriterT;
 
       private:
         // the coordinate system type
@@ -52,7 +57,7 @@ namespace mito::io::vtk {
       public:
         PointCloudWriterVTK(
             std::string filename, const grid_type & cloud, const coord_system_type & coord_system) :
-            GridWriterVTK<D>(filename)
+            grid_writer_type(filename)
         {
             _create_vtk_grid(cloud, coord_system);
         }
