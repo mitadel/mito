@@ -20,20 +20,29 @@ namespace mito::io::vtk {
     using cloud_writer_t = PointCloudWriterVTK<cloudT, coordSystemT>;
 
     // field writer alias
-    template <class gridT, geometry::coordinate_system_c coordSystemT>
-    using field_writer_t = FieldWriterVTK<gridT, coordSystemT>;
+    template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
+    using field_writer_t = FieldWriterVTK<gridWriterT, coordSystemT>;
 
     // vtk mesh writer factory
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<meshT, coordSystemT>)
-    auto writer(std::string filename, const meshT & mesh, const coordSystemT & coord_system)
-        -> field_writer_t<meshT, coordSystemT>;
+    auto grid_writer(std::string filename, const meshT & mesh, const coordSystemT & coord_system);
 
     // point cloud writer factory
     template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<cloudT, coordSystemT>)
-    auto writer(std::string filename, const cloudT & cloud, const coordSystemT & coord_system)
-        -> field_writer_t<cloudT, coordSystemT>;
+    auto grid_writer(std::string filename, const cloudT & cloud, const coordSystemT & coord_system);
+
+    // vtk mesh field writer factory
+    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
+    requires(utilities::same_dim_c<meshT, coordSystemT>)
+    auto field_writer(std::string filename, const meshT & mesh, const coordSystemT & coord_system);
+
+    // point cloud field writer factory
+    template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
+    requires(utilities::same_dim_c<cloudT, coordSystemT>)
+    auto field_writer(
+        std::string filename, const cloudT & cloud, const coordSystemT & coord_system);
 }
 
 

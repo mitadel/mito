@@ -16,9 +16,6 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// utilities
-#include "utilities.h"
-
 // wrappers
 #include "vtk_cell.h"
 #include "vtk_point.h"

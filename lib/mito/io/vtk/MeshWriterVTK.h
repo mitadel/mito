@@ -93,31 +93,8 @@ namespace mito::io::vtk {
             _create_vtk_grid(mesh, coord_system);
         }
 
-        template <class Y>
-        auto attach_field(const fem::nodal_field_t<D, Y> & field, std::string fieldname) -> void
-        {
-            // get the number of nodes
-            auto n_nodes = field.n_nodes();
-
-            // check the number of nodes in the field equals the number of points in the grid
-            assert(n_nodes == this->_grid->GetNumberOfPoints());
-
-            // initialize a vtk array
-            auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
-            vtkArray->SetName(fieldname.data());
-            vtkArray->SetNumberOfComponents(Y::size);
-            vtkArray->SetNumberOfTuples(n_nodes);
-
-            // populate the array with the nodal values
-            for (auto & [node, value] : field) {
-                // get the index corresponding to the current node
-                auto index = _nodes.at(node);
-                vtkArray->SetTuple(index, value.begin());
-            }
-
-            // insert array into output mesh
-            this->_grid->GetPointData()->AddArray(vtkArray);
-        }
+        // accessor for the nodes
+        auto nodes() const -> const nodes_type & { return _nodes; }
 
       private:
         // a collection of nodes in the grid

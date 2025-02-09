@@ -20,7 +20,7 @@ namespace mito::io::vtk {
     class PointCloudWriterVTK;
 
     // class field writer
-    template <class gridT, geometry::coordinate_system_c coordSystemT>
+    template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
     class FieldWriterVTK;
 }
 
