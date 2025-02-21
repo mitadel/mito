@@ -25,6 +25,8 @@ if(WITH_VTK)
             message(STATUS "Added definition WITH_VTK")
             # add compiler definitions
             add_definitions(-DWITH_PARALLEL_VTK)
+            # record that VTK is available in its parallel flavor
+            set(WITH_PARALLEL_VTK TRUE)
             # report
             message(STATUS "Add definition WITH_PARALLEL_VTK")
             # include VTK headers
