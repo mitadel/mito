@@ -11,14 +11,31 @@
 #include <tuple>
 #include <string>
 
-// my declarations
-namespace mito {
-    // my version is an array of three integers and the git hash
-    using version_t = std::tuple<int, int, int, std::string>;
 
-    // access to the version number of the {mito} library
-    version_t version();
-}
+// put all version related symbols in their own namespace
+// N.B.: version information is made available two different ways in order to enable detecting
+// inconsistencies between the headers accessible at compile time and the library available
+// at run time
+namespace mito::version {
+
+    // type aliases
+    using string_t = std::string;
+
+    // my version is a tuple of three integers and the {git} hash
+    using version_t = std::tuple<int, int, int, string_t>;
+
+    // the version of the {mito} library
+    auto version() -> version_t;
+
+    // the version visible through the headers
+    // clang-format off
+    const int major = @MAJOR@;
+    const int minor = @MINOR@;
+    const int micro = @MICRO@;
+    const string_t revision = "@REVISION@";
+    // clang-format on
+
+}    // namespace mito::version
 
 
 // end of file

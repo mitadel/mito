@@ -7,10 +7,11 @@
 #include "version.h"
 
 // build and return the version tuple
-mito::version_t
-mito::version() {
-    //
-    return version_t { @MAJOR@, @MINOR@, @MICRO@, "@REVISION@" };
+auto
+mito::version::version() -> version_t
+{
+    // easy enough
+    return version_t { major, minor, micro, revision };
 }
 
 // end of file
