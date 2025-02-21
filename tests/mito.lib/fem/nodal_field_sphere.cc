@@ -29,8 +29,9 @@ TEST(Fem, NodalFieldSphere)
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
         mito::tensor::scalar_t phi = std::atan2(x[1], x[0]);
         mito::tensor::scalar_t theta = std::atan2(std::hypot(x[1], x[0]), x[2]);
-        return std::sin(theta) * std::cos(phi) * mito::e_0<3>
-             + std::sin(theta) * std::sin(phi) * mito::e_1<3> + std::cos(theta) * mito::e_2<3>;
+        return std::sin(theta) * std::cos(phi) * mito::tensor::e_0<3>
+             + std::sin(theta) * std::sin(phi) * mito::tensor::e_1<3>
+             + std::cos(theta) * mito::tensor::e_2<3>;
     });
 
     // fill information in nodal field

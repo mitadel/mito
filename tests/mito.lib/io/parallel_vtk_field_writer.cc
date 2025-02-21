@@ -41,7 +41,7 @@ TEST(ParallelVTKWriter, FieldWriter)
     // the normal field to the disk
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
         mito::tensor::scalar_t theta = std::atan2(x[1], x[0]);
-        return std::cos(theta) * mito::e_0<2> + std::sin(theta) * mito::e_1<2>;
+        return std::cos(theta) * mito::tensor::e_0<2> + std::sin(theta) * mito::tensor::e_1<2>;
     });
 
     // fill information in nodal field
