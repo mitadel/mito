@@ -14,32 +14,32 @@ namespace mito::fem {
 
       private:
         // conventionally packed grid for {e, q}
-        using pack_t = pyre::grid::canonical_t<2>;
+        using pack_type = pyre::grid::canonical_t<2>;
         // of Y on the heap
-        using storage_t = pyre::memory::heap_t<Y>;
+        using storage_type = pyre::memory::heap_t<Y>;
         // putting it all together
-        using grid_t = pyre::grid::grid_t<pack_t, storage_t>;
+        using grid_type = pyre::grid::grid_t<pack_type, storage_type>;
         // index
-        using index_t = pack_t::index_type;
+        using index_type = pack_type::index_type;
 
       public:
         /**
          * constructor
          * @param[in] elements number of elements for which data are stored
          */
-        inline QuadratureField(int nElements, std::string name = "") :
-            QuadratureField(nElements, pack_t{ { nElements, Q } }, name)
+        inline QuadratureField(int nElements, std::string name) :
+            QuadratureField(pack_type{ { nElements, Q } }, name)
         {}
 
       private:
-        inline QuadratureField(int /*nElements*/, const pack_t & packing, std::string name = "") :
+        inline QuadratureField(const pack_type && packing, std::string name) :
             _grid{ packing, packing.cells() },
             _name(name)
         {}
 
       public:
         // destructor
-        ~QuadratureField() {}
+        ~QuadratureField() = default;
 
       public:
         /**
@@ -48,7 +48,7 @@ namespace mito::fem {
          * @param[in] q local index of the quadrature point in the element
          * @return the data
          */
-        inline Y & operator()(int e, int q)
+        inline auto operator()(int e, int q) -> Y &
         {
             // all done
             return operator[]({ e, q });
@@ -60,19 +60,19 @@ namespace mito::fem {
          * @param[in] q local index of the quadrature point in the element
          * @return the data
          */
-        inline const Y & operator()(int e, int q) const
+        inline auto operator()(int e, int q) const -> const Y &
         {
             // all done
             return operator[]({ e, q });
         }
 
-        inline Y & operator[](const index_t & index)
+        inline auto operator[](const index_type & index) -> Y &
         {
             // all done
             return _grid[index];
         }
 
-        inline const Y & operator[](const index_t & index) const
+        inline auto operator[](const index_type & index) const -> const Y &
         {
             // all done
             return _grid[index];
@@ -82,27 +82,18 @@ namespace mito::fem {
          * accessor for the number of elements
          * @return the number of elements
          */
-        inline int n_elements() const { return _grid.layout().shape()[0]; }
+        inline auto n_elements() const -> int { return _grid.layout().shape()[0]; }
 
         /*
          * accessor for the number of quadrature points per element
          * @return the number of quadrature point per element
          */
-        inline constexpr int n_quad_points() const noexcept { return Q; }
+        constexpr auto n_quad_points() const noexcept -> int { return Q; }
 
         /**
-         * const accessor for name
+         * accessor for name
          */
-        inline std::string name() const noexcept { return _name; }
-
-        /**
-         * setter method for name
-         */
-        inline void name(std::string name) noexcept
-        {
-            _name = name;
-            return;
-        }
+        inline auto name() const noexcept -> std::string { return _name; }
 
         // support for ranged for loops (wrapping grid)
         inline auto begin() const { return std::cbegin(_grid); }
@@ -111,10 +102,10 @@ namespace mito::fem {
         inline auto end() { return std::end(_grid); }
 
       private:
-        // instantiate the grid
-        grid_t _grid;
+        // the underlying grid
+        grid_type _grid;
 
-        // name of the field
+        // the name of the field
         std::string _name;
     };
 

@@ -21,7 +21,7 @@ class Resource : public mito::utilities::Invalidatable {
 using resource_t = Resource;
 
 
-TEST(Utilities, RepositoryIterator)
+TEST(Utilities, SegmentedVectorIterator)
 {
     // instantiate a segmented vector of {resource_t} resources
     mito::utilities::segmented_vector_t<resource_t> collection(3 /*segment size */);

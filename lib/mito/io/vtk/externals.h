@@ -11,6 +11,7 @@
 #include <vtkLine.h>
 #include <vtkPointData.h>
 #include <vtkPoints.h>
+#include <vtkDoubleArray.h>
 #include <vtkSmartPointer.h>
 #include <vtkTetra.h>
 #include <vtkTriangle.h>

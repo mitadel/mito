@@ -72,8 +72,15 @@ namespace mito::utilities {
         template <class... Args>
         inline auto emplace(Args &&... args) -> resource_type &
         {
-            // get a spare location for the placement of the new resource
-            auto location = _resources.location_for_placement();
+            // get a spare location for the placement of the new resource and a flag indicating
+            // whether the location was reused
+            auto [location, reused] = _resources.location_for_placement();
+
+            // if the location was reused, destroy the resource at {location}
+            if (reused) {
+                // destroy the resource
+                location->~resource_type();
+            }
 
             // create a new instance of {resource_type} at location {location} with placement new
             resource_type * resource = new (location) resource_type(std::forward<Args>(args)...);

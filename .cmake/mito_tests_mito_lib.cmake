@@ -37,6 +37,7 @@ mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 
 # fem
 mito_test_driver(tests/mito.lib/fem/quadrature_field.cc)
+mito_test_driver(tests/mito.lib/fem/nodal_field_sphere.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/read_mesh_summit_2D.cc)
@@ -48,6 +49,7 @@ if(WITH_VTK)
     mito_test_driver_pytest_check(tests/mito.lib/io/write_point_cloud_vtk.cc)
     mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_3D.cc)
     mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_2D.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_lattice_3D.cc)
 endif()
 
 # tensor
@@ -127,6 +129,7 @@ mito_test_driver(tests/mito.lib/topology/simplices.cc)
 mito_test_driver(tests/mito.lib/utilities/repository.cc)
 mito_test_driver(tests/mito.lib/utilities/repository_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector.cc)
+mito_test_driver(tests/mito.lib/utilities/segmented_vector_erase.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_move.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_subscript.cc)

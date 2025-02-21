@@ -1,0 +1,53 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#pragma once
+
+
+namespace mito::io::vtk {
+
+    template <int D>
+    class GridWriterVTK : public Writer {
+
+      private:
+        // the type of grid
+        using grid_type = vtkSmartPointer<vtkUnstructuredGrid>;
+
+      protected:
+        // constructor
+        // (protected so this class cannot be instantiated unless by the derived classes)
+        GridWriterVTK(std::string filename) : Writer(filename), _grid(grid_type::New()) {}
+
+      public:
+        auto write() const -> void override
+        {
+            // create a new writer
+            auto writer = vtkSmartPointer<vtkXMLUnstructuredGridWriter>::New();
+            // set the name of the output file
+            writer->SetFileName((this->_filename + ".vtu").data());
+
+            // sign the grid up for writing
+#if VTK_MAJOR_VERSION <= 8
+            writer->SetInput(_grid);
+#else
+            writer->SetInputData(_grid);
+#endif
+            // write the grid to file
+            writer->Write();
+
+            // all done
+            return;
+        }
+
+      protected:
+        // the grid
+        grid_type _grid;
+    };
+
+}    // namespace mito::io::vtk
+
+
+// end of file

@@ -16,12 +16,12 @@ namespace mito::geometry {
         using coordinates_type = coordT;
         // the dimension of the physical space
         static constexpr int dim = coordinates_type::dim;
+        // a point
+        using point_type = point_t<dim>;
 
       private:
         // alias {dim} for internal purposes
         static constexpr int D = dim;
-        // a point
-        using point_type = point_t<D>;
         // a map between points and their coordinates
         using coordinates_map_type =
             std::unordered_map<point_type, coordinates_type, utilities::hash_function<point_type>>;
