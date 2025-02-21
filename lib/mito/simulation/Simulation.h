@@ -17,7 +17,7 @@ namespace mito::simulation {
         // the execution context type
         using execution_context_type = context_t;
         // the clock type
-        using clock_type = real;
+        using clock_type = double;
 
       public:
         // default constructor

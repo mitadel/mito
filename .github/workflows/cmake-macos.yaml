@@ -207,7 +207,7 @@ jobs:
 
       - name: create artifact
         if: ${{!cancelled()}}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mito_build_${{matrix.target}}
           path: ${{runner.temp}}/build

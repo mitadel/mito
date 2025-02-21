@@ -22,7 +22,7 @@ TEST(Mesh, FilterBall)
 
 #ifdef WITH_VTK
     // write mesh to vtk file
-    mito::io::vtk::writer("ball_internal_faces", mesh_faces, coord_system);
+    mito::io::vtk::grid_writer("ball_internal_faces", mesh_faces, coord_system).write();
 #endif
 
     // mesh wireframe
@@ -30,7 +30,7 @@ TEST(Mesh, FilterBall)
 
 #ifdef WITH_VTK
     // write mesh to vtk file
-    mito::io::vtk::writer("ball_wireframe", wireframe, coord_system);
+    mito::io::vtk::grid_writer("ball_wireframe", wireframe, coord_system).write();
 #endif
 
     // mesh wireframe
@@ -47,6 +47,6 @@ TEST(Mesh, FilterBall)
 
 #ifdef WITH_VTK
     // write mesh to vtk file
-    mito::io::vtk::writer("sphere_wireframe", boundary_wireframe, coord_system);
+    mito::io::vtk::grid_writer("sphere_wireframe", boundary_wireframe, coord_system).write();
 #endif
 }

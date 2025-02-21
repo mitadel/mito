@@ -11,6 +11,9 @@ namespace mito::geometry {
 
     template <int D>
     class PointCloud {
+      public:
+        static constexpr int dim = D;
+
       private:
         // a point
         using point_type = point_t<D>;

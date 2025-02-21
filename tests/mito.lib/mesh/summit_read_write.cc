@@ -25,7 +25,7 @@ TEST(Mesh, Sphere)
 
 #ifdef WITH_VTK
         // write mesh to vtk file
-        mito::io::vtk::writer("rectangle", mesh, coord_system);
+        mito::io::vtk::grid_writer("rectangle", mesh, coord_system);
 #endif
 
         // write mesh to summit mesh file
@@ -43,7 +43,7 @@ TEST(Mesh, Sphere)
 
 #ifdef WITH_VTK
         // write mesh to vtk file
-        mito::io::vtk::writer("rectangle_copy", mesh, coord_system);
+        mito::io::vtk::grid_writer("rectangle_copy", mesh, coord_system);
 #endif
     }
 }

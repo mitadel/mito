@@ -28,6 +28,6 @@ TEST(VtkWriter, WritePointCloudToVtk)
     const auto point_c = cloud.point();
     coord_system.place(point_c, { 0.0, 1.0, 1.0 });
 
-    // print the point cloud
-    mito::io::vtk::writer("point_cloud_output", cloud, coord_system);
+    // write point cloud to vtk file
+    mito::io::vtk::grid_writer("point_cloud_output", cloud, coord_system).write();
 }

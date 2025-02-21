@@ -61,7 +61,7 @@ namespace mito::geometry {
             // of nodes in {_nodes}
             auto _check_vertices = [this]<int... J>(tensor::integer_sequence<J...>) -> bool {
                 return (
-                    math::permutation_sign(_simplex->vertices(), { _nodes[J].vertex()... }) == +1);
+                    math::permutation_sign(_simplex->vertices(), { _nodes[J]->vertex()... }) == +1);
             };
 
             return _check_vertices(tensor::make_integer_sequence<N + 1>{});
@@ -74,7 +74,7 @@ namespace mito::geometry {
             auto & topology = topology::topology();
 
             // instantiate a simplex with the vertices prescribed by {_nodes}
-            return topology.simplex<N>({ _nodes[J].vertex()... });
+            return topology.simplex<N>({ _nodes[J]->vertex()... });
         }
 
       public:
@@ -148,24 +148,8 @@ namespace mito::geometry {
         // the type of the vertices
         using vertex_type = topology::vertex_t;
 
-        // the type of the topological simplex
-        using simplex_type = topology::oriented_simplex_t<0>;
-
-        // number of vertices of simplex
-        static constexpr int n_vertices = 0;
-
-        // the node type
-        using node_type = node_t<D>;
-
-        // a collection of nodes
-        using nodes_type = std::array<node_type, order + 1>;
-
         // the point type
         using point_type = point_t<D>;
-
-        // typedef for the topological family type (simplicial)
-        template <int I>
-        using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
 
       public:
         // get the coordinates of the point
@@ -207,6 +191,14 @@ namespace mito::geometry {
         point_type _point;
     };
 
+    // operator== for nodes
+    template <int D>
+    constexpr auto operator==(
+        const GeometricSimplex<0, D> & node_a, const GeometricSimplex<0, D> & node_b) -> bool
+    {
+        // two nodes are the same if they have the same id
+        return node_a.id() == node_b.id();
+    }
 }
 
 

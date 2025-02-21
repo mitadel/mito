@@ -23,7 +23,7 @@ TEST(Mesh, Sphere)
 
 #ifdef WITH_VTK
     // write mesh to vtk file
-    mito::io::vtk::writer("sphere", mesh, coord_system);
+    mito::io::vtk::grid_writer("sphere", mesh, coord_system).write();
 #endif
 
     // fetch the boundary of the sphere

@@ -13,6 +13,7 @@
 #endif
 
 // support
+#include "../utilities.h"
 #include "../journal.h"
 
 

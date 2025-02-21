@@ -17,7 +17,7 @@ namespace mito::mesh {
     {
         // return a new node at the midpoint between {node_a} and {node_b}
         return mito::geometry::node(
-            coordinate_system, coordinate_system.midpoint(node_a.point(), node_b.point()));
+            coordinate_system, coordinate_system.midpoint(node_a->point(), node_b->point()));
     }
 
     template <int D /*spatial dimension*/, geometry::coordinates_c coordT>

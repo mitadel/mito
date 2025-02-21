@@ -10,9 +10,27 @@
 // external packages
 #include "externals.h"
 
-// classes implementation
+// get the forward declarations
+#include "forward.h"
+
+// published type factories; this is the file you are looking for...
+#include "api.h"
+
+// wrappers
 #include "vtk_cell.h"
-#include "writer.h"
+#include "vtk_point.h"
+
+// classes
+#include "GridVTKWriter.h"
+#include "MeshVTKWriter.h"
+#include "PointCloudVTKWriter.h"
+#include "FieldVTKWriter.h"
+#ifdef WITH_PARALLEL_VTK
+#include "ParallelGridVTKWriter.h"
+#endif    // WITH_PARALLEL_VTK
+
+// factories implementation
+#include "factories.h"
 
 
 // end of file

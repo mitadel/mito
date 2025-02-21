@@ -82,7 +82,7 @@ namespace mito::utilities {
         auto emplace(Args &&... args) -> pointer_type
         {
             // get a spare location for the placement of the new resource
-            auto location = _resources.location_for_placement();
+            auto [location, _] = _resources.location_for_placement();
 
             // create a new instance of {resource_type} at location {location} with placement new
             resource_type * resource = new (location) resource_type(std::forward<Args>(args)...);

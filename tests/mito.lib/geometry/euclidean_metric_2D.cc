@@ -22,9 +22,9 @@ area(
     const mito::geometry::node_t<2> & v2) -> mito::tensor::scalar_t
 {
     // get vertex coordinates
-    auto x0 = coordinate_system.coordinates(v0.point());
-    auto x1 = coordinate_system.coordinates(v1.point());
-    auto x2 = coordinate_system.coordinates(v2.point());
+    auto x0 = coordinate_system.coordinates(v0->point());
+    auto x1 = coordinate_system.coordinates(v1->point());
+    auto x2 = coordinate_system.coordinates(v2->point());
 
     // build director vectors
     auto director0 = x1 - x0;

@@ -5,9 +5,9 @@
 
 
 #include <gtest/gtest.h>
-#include <mito/mesh.h>
 #include <mito/simulation.h>
-
+#include <mito/mesh.h>
+#include <mito/io.h>
 
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
@@ -67,6 +67,11 @@ TEST(MetisPartitionerMPI, Base)
     // (this check assumes that the number of cells of the original mesh is divisible by the number
     //  of partitions requested)
     EXPECT_EQ(mesh_partition.nCells(), mesh.nCells() / n_partitions);
+
+#ifdef WITH_PARALLEL_VTK
+    // write mesh to vtk file
+    mito::io::vtk::parallel_grid_writer("square", mesh_partition, coord_system).write();
+#endif
 
     // all done
     return;
