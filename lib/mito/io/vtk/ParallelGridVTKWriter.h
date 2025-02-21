@@ -70,6 +70,9 @@ namespace mito::io::vtk {
             return;
         }
 
+        // accessor for the grid
+        auto grid() -> grid_type & { return _grid; }
+
       protected:
         // the grid
         grid_type _grid;
