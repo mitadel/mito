@@ -163,26 +163,33 @@ namespace mito::utilities {
             return segment;
         }
 
-        auto _next_available_location() -> unqualified_pointer
+        auto _next_available_location() -> std::pair<unqualified_pointer, bool>
         {
+            // a boolean stating whether the next available location is an old one being reused
+            bool reused = false;
+
             // if there are available locations to spare
             if (!_available_locations.empty()) {
+
+                // mark the {location} as reused
+                reused = true;
+
                 // get an available location from the queue
                 unqualified_pointer location = _available_locations.front();
 
-                // return the available location from the queue
-                return location;
+                // return the available location from the queue and whether it is a reused location
+                return { location, reused };
             }
 
             // if the container is all filled up (note that this case also includes the case that
             // the container is completely empty)
             if (_end == _end_allocation) {
                 // there is no available location
-                return nullptr;
+                return { nullptr, reused };
             }
 
             // otherwise the next available location is given by {_end}
-            return _end;
+            return { _end, reused };
         }
 
         auto _erase_check(pointer element) const -> bool
@@ -203,10 +210,11 @@ namespace mito::utilities {
         }
 
       public:
-        auto location_for_placement() -> unqualified_pointer
+        auto location_for_placement() -> std::pair<unqualified_pointer, bool>
         {
-            // fetch the next available location where to write the new element
-            auto location = _next_available_location();
+            // fetch the next available location where to write the new element and whether it is a
+            // reused location
+            auto [location, reused] = _next_available_location();
 
             // if I do not have room for the new element
             if (location == nullptr) {
@@ -221,7 +229,7 @@ namespace mito::utilities {
             }
 
             // all done
-            return location;
+            return { location, reused };
         }
 
         // insert an element in the container
