@@ -43,7 +43,7 @@ TEST(Fem, NodalFieldSphere)
 
 #ifdef WITH_VTK
     // write mesh to vtk file
-    auto writer = mito::io::vtk::writer("sphere_field", mesh, coord_system);
+    auto writer = mito::io::vtk::field_writer("sphere_field", mesh, coord_system);
     // sign {nodal_field} up with the writer
     writer.record(nodal_field);
     // write output file

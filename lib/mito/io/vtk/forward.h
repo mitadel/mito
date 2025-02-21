@@ -9,19 +9,34 @@
 
 namespace mito::io::vtk {
 
+    // class grid writer
+    template <int D>
+    class GridVTKWriter;
+
     // class mesh writer
-    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    requires(utilities::same_dim_c<meshT, coordSystemT>)
-    class MeshWriterVTK;
+    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT, class vtkGridWriterT>
+    requires(
+        utilities::same_dim_c<meshT, coordSystemT> && utilities::same_dim_c<meshT, vtkGridWriterT>)
+    class MeshVTKWriter;
 
     // class point cloud writer
-    template <geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT>
-    requires(utilities::same_dim_c<cloudT, coordSystemT>)
-    class PointCloudWriterVTK;
+    template <
+        geometry::point_cloud_c cloudT, geometry::coordinate_system_c coordSystemT,
+        class vtkGridWriterT>
+    requires(
+        utilities::same_dim_c<cloudT, coordSystemT>
+        && utilities::same_dim_c<cloudT, vtkGridWriterT>)
+    class PointCloudVTKWriter;
 
     // class field writer
-    template <class gridT, geometry::coordinate_system_c coordSystemT>
-    class FieldWriterVTK;
+    template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
+    class FieldVTKWriter;
+
+#ifdef WITH_PARALLEL_VTK
+    // class parallel grid writer
+    template <int D>
+    class ParallelGridVTKWriter;
+#endif    // WITH_PARALLEL_VTK
 }
 
 

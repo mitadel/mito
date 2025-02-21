@@ -56,7 +56,7 @@ test()
 
 #ifdef WITH_VTK
         // write mesh to vtk file
-        mito::io::vtk::writer("rectangle_copy", mesh, coord_system).write();
+        mito::io::vtk::grid_writer("rectangle_copy", mesh, coord_system).write();
 #endif
     }
 

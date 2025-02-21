@@ -32,5 +32,5 @@ TEST(VtkWriter, WriteTetraMeshToVtk)
     auto tetra_mesh = mito::mesh::tetra(mesh, coord_system);
 
     // write mesh to vtk file
-    mito::io::vtk::writer("tetra_output", tetra_mesh, coord_system).write();
+    mito::io::vtk::grid_writer("tetra_output", tetra_mesh, coord_system).write();
 }

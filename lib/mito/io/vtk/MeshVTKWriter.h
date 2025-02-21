@@ -9,25 +9,29 @@
 
 namespace mito::io::vtk {
 
-    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    requires(utilities::same_dim_c<meshT, coordSystemT>)
-    class MeshWriterVTK : public GridWriterVTK<meshT::dim> {
+    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT, class vtkGridWriterT>
+    requires(
+        utilities::same_dim_c<meshT, coordSystemT> && utilities::same_dim_c<meshT, vtkGridWriterT>)
+    class MeshVTKWriter : public vtkGridWriterT {
+      public:
+        // the grid type
+        using grid_type = meshT;
+        // the grid writer type
+        using grid_writer_type = vtkGridWriterT;
 
       private:
-        // the mesh type
-        using mesh_type = meshT;
         // the coordinate system type
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
-        static constexpr int D = mesh_type::dim;
+        static constexpr int D = grid_type::dim;
         // the type of node
-        using node_type = typename mesh_type::cell_type::node_type;
+        using node_type = typename grid_type::cell_type::node_type;
         // the type of a collection of nodes (nodes are mapped to the index of the vtk points;
         // points that are shared among multiple elements have the same index)
         using nodes_type = std::unordered_map<node_type, int, utilities::hash_function<node_type>>;
 
       private:
-        auto _create_vtk_grid(const mesh_type & mesh, const coord_system_type & coordinate_system)
+        auto _create_vtk_grid(const grid_type & mesh, const coord_system_type & coordinate_system)
         {
             // vtk points and cells
             auto pointsVtk = vtkSmartPointer<vtkPoints>::New();
@@ -55,7 +59,7 @@ namespace mito::io::vtk {
             for (const auto & cell : mesh.cells()) {
 
                 // create vtk cell
-                auto cellVtk = vtkCellPointer<typename mesh_type::cell_type::simplex_type>();
+                auto cellVtk = vtkCellPointer<typename grid_type::cell_type::simplex_type>();
 
                 // local index for the points of the cell
                 auto indexLocalPointVtk = 0;
@@ -84,38 +88,15 @@ namespace mito::io::vtk {
         }
 
       public:
-        MeshWriterVTK(
-            std::string filename, const mesh_type & mesh, const coord_system_type & coord_system) :
-            GridWriterVTK<D>(filename)
+        MeshVTKWriter(
+            std::string filename, const grid_type & mesh, const coord_system_type & coord_system) :
+            grid_writer_type(filename)
         {
             _create_vtk_grid(mesh, coord_system);
         }
 
-        template <class Y>
-        auto attach_field(const fem::nodal_field_t<D, Y> & field, std::string fieldname) -> void
-        {
-            // get the number of nodes
-            auto n_nodes = field.n_nodes();
-
-            // check the number of nodes in the field equals the number of points in the grid
-            assert(n_nodes == this->_grid->GetNumberOfPoints());
-
-            // initialize a vtk array
-            auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
-            vtkArray->SetName(fieldname.data());
-            vtkArray->SetNumberOfComponents(Y::size);
-            vtkArray->SetNumberOfTuples(n_nodes);
-
-            // populate the array with the nodal values
-            for (auto & [node, value] : field) {
-                // get the index corresponding to the current node
-                auto index = _nodes.at(node);
-                vtkArray->SetTuple(index, value.begin());
-            }
-
-            // insert array into output mesh
-            this->_grid->GetPointData()->AddArray(vtkArray);
-        }
+        // accessor for the nodes
+        auto nodes() const -> const nodes_type & { return _nodes; }
 
       private:
         // a collection of nodes in the grid

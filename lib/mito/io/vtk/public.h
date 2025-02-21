@@ -16,18 +16,18 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// utilities
-#include "utilities.h"
-
 // wrappers
 #include "vtk_cell.h"
 #include "vtk_point.h"
 
 // classes
-#include "GridWriterVTK.h"
-#include "MeshWriterVTK.h"
-#include "PointCloudWriterVTK.h"
-#include "FieldWriterVTK.h"
+#include "GridVTKWriter.h"
+#include "MeshVTKWriter.h"
+#include "PointCloudVTKWriter.h"
+#include "FieldVTKWriter.h"
+#ifdef WITH_PARALLEL_VTK
+#include "ParallelGridVTKWriter.h"
+#endif    // WITH_PARALLEL_VTK
 
 // factories implementation
 #include "factories.h"

@@ -12,7 +12,7 @@ namespace mito::io {
     // class that writes a mesh to file in {summit} format
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<meshT, coordSystemT>)
-    class MeshWriterSummit : public Writer {
+    class MeshSummitWriter : public Writer {
 
       private:
         // the mesh type
@@ -32,7 +32,7 @@ namespace mito::io {
 
       public:
         // constructor
-        MeshWriterSummit(
+        MeshSummitWriter(
             std::string filename, const mesh_type & mesh, const coord_system_type & coord_system) :
             Writer(filename),
             _mesh(mesh),
@@ -57,7 +57,7 @@ namespace mito::io {
         }
 
         // destructor
-        ~MeshWriterSummit() = default;
+        ~MeshSummitWriter() = default;
 
       public:
         // write mesh to file

@@ -17,6 +17,9 @@
 #include <vtkTriangle.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridWriter.h>
-
+#ifdef WITH_PARALLEL_VTK
+#include <vtkXMLPUnstructuredGridWriter.h>
+#include <vtkMPIController.h>
+#endif    // WITH_PARALLEL_VTK
 
 // end of file

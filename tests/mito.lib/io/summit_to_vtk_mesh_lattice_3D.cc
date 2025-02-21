@@ -22,5 +22,5 @@ TEST(SummitToVTK, MeshLattice3D)
     auto mesh = mito::io::summit::reader<mito::geometry::segment_t<3>>(fileStream, coord_system);
 
     // write mesh to vtk file
-    mito::io::vtk::writer("lattice", mesh, coord_system).write();
+    mito::io::vtk::grid_writer("lattice", mesh, coord_system).write();
 }
