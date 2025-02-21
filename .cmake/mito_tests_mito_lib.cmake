@@ -53,6 +53,7 @@ if(WITH_VTK)
 
     if(WITH_MPI)
         mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_cloud_writer.cc 2)
+        mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_field_writer.cc 2)
     endif()
 endif()
 
