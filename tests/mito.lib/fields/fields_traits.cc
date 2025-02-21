@@ -27,10 +27,12 @@ TEST(Fields, Traits)
     static_assert(mito::fields::scalar_field_c<decltype(f)>);
 
     // the function returning the constant e0 unit vector in 2D
-    [[maybe_unused]] constexpr auto e0 = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
+    [[maybe_unused]] constexpr auto e0 =
+        mito::fields::uniform_field<coordinates_t>(mito::tensor::e_0<2>);
 
     // the function returning the constant e1 unit vector in 2D
-    [[maybe_unused]] constexpr auto e1 = mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
+    [[maybe_unused]] constexpr auto e1 =
+        mito::fields::uniform_field<coordinates_t>(mito::tensor::e_1<2>);
 
     // a vector field
     constexpr auto g = mito::fields::field(cos * (e0 + e1));

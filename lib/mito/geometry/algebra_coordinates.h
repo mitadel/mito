@@ -11,25 +11,25 @@ namespace mito::geometry {
 
     // addition of a set of coordinates and a vector
     template <coordinates_c coordsT>
-    constexpr auto operator+(const coordsT &, const vector_t<coordsT::dim> &) -> coordsT;
+    constexpr auto operator+(const coordsT &, const tensor::vector_t<coordsT::dim> &) -> coordsT;
 
     // subtraction of two sets of coordinates (returns a vector)
     template <coordinates_c coordsT>
-    constexpr auto operator-(const coordsT &, const coordsT &) -> vector_t<coordsT::dim>;
+    constexpr auto operator-(const coordsT &, const coordsT &) -> tensor::vector_t<coordsT::dim>;
 
     // operator+=
     template <coordinates_c coordsT>
-    constexpr auto operator+=(coordsT & A, const vector_t<coordsT::dim> & v) -> coordsT &
+    constexpr auto operator+=(coordsT & A, const tensor::vector_t<coordsT::dim> & v) -> coordsT &
     {
         A = A + v;
         return A;
     }
 
     template <coordinates_c coordsT>
-    constexpr auto distance(const coordsT & xA, const coordsT & xB) -> scalar_t
+    constexpr auto distance(const coordsT & xA, const coordsT & xB) -> tensor::scalar_t
     {
         // return the distance between the two points
-        return pyre::tensor::norm(xA - xB);
+        return mito::tensor::norm(xA - xB);
     }
 
 }    // namespace mito

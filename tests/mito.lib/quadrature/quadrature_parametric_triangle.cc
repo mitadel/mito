@@ -18,7 +18,7 @@ TEST(ParametricTriangle, Order1)
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
 
     // a linear function of the parametric coordinates x_0
-    constexpr auto f = [](const point_t & x) -> mito::scalar_t {
+    constexpr auto f = [](const point_t & x) -> mito::tensor::scalar_t {
         return x[0];
     };
 
@@ -45,7 +45,7 @@ TEST(ParametricTriangle, Order2)
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
 
     // a quadratic function of the parametric coordinates x_0^2
-    constexpr auto f = [](const point_t & x) -> mito::scalar_t {
+    constexpr auto f = [](const point_t & x) -> mito::tensor::scalar_t {
         return x[0] * x[0];
     };
 
@@ -75,7 +75,7 @@ TEST(ParametricTriangle, Order3)
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
 
     // a quadratic function of the parametric coordinates x_0^2
-    constexpr auto f = [](const point_t & x) -> mito::scalar_t {
+    constexpr auto f = [](const point_t & x) -> mito::tensor::scalar_t {
         return x[0] * x[0] * x[0];
     };
 

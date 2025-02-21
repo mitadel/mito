@@ -24,8 +24,9 @@ namespace mito::fields {
     constexpr auto determinant(const F & f)
     {
         using coordinates_type = typename F::coordinates_type;
-        return field(functions::function(
-            [f](const coordinates_type & x) -> mito::scalar_t { return determinant(f(x)); }));
+        return field(functions::function([f](const coordinates_type & x) -> mito::tensor::scalar_t {
+            return determinant(f(x));
+        }));
     }
 
     // sqrt(f)
@@ -34,7 +35,7 @@ namespace mito::fields {
     {
         using coordinates_type = typename F::coordinates_type;
         return field(functions::function(
-            [f](const coordinates_type & x) -> mito::scalar_t { return std::sqrt(f(x)); }));
+            [f](const coordinates_type & x) -> mito::tensor::scalar_t { return std::sqrt(f(x)); }));
     }
 
     // the tensor product of two fields of one-forms

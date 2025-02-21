@@ -76,7 +76,7 @@ main()
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
     auto result = integrator.integrate(f);
-    auto exact = mito::scalar_t(0.9460830607878437);
+    auto exact = mito::tensor::scalar_t(0.9460830607878437);
     channel << "Integration of cos(x*y): Result = " << result
             << ", Error = " << std::fabs(result - exact) << journal::endl;
 

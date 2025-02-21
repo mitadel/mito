@@ -11,9 +11,9 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 // the basis for vectors
-static constexpr auto e_x = mito::e_0<3>;
-static constexpr auto e_y = mito::e_1<3>;
-static constexpr auto e_z = mito::e_2<3>;
+static constexpr auto e_x = mito::tensor::e_0<3>;
+static constexpr auto e_y = mito::tensor::e_1<3>;
+static constexpr auto e_z = mito::tensor::e_2<3>;
 
 
 // the placeholder for empty slots in contractions
@@ -24,7 +24,7 @@ auto
 area(
     const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coordinate_system,
     const mito::geometry::node_t<3> & v0, const mito::geometry::node_t<3> & v1,
-    const mito::geometry::node_t<3> & v2) -> mito::scalar_t
+    const mito::geometry::node_t<3> & v2) -> mito::tensor::scalar_t
 {
     // get vertex coordinates
     auto x0 = coordinate_system.coordinates(v0->point());
@@ -59,8 +59,8 @@ TEST(Tensor, EuclideanSubmanifoldMetric3D)
     constexpr auto x_2 = mito::geometry::cartesian::coordinates({ 1.0, 1.0, 1.0 });
 
     // the normal vector to the submanifold
-    constexpr auto cross = pyre::tensor::cross(x_1 - x_0, x_2 - x_0);
-    constexpr auto normal_vector = cross / pyre::tensor::norm(cross);
+    constexpr auto cross = mito::tensor::cross(x_1 - x_0, x_2 - x_0);
+    constexpr auto normal_vector = cross / mito::tensor::norm(cross);
 
     // the 3D metric volume element
     constexpr auto w = mito::tensor::wedge(dx, dy, dz);

@@ -125,7 +125,7 @@ namespace mito::functions {
 
 
     // the sum of a function with a constant
-    template <tensor_or_scalar_c T, function_c F>
+    template <tensor::tensor_or_scalar_c T, function_c F>
     class FunctionPlusConstant : public function_type<F> {
 
       public:
@@ -205,7 +205,7 @@ namespace mito::functions {
 
 
     // the product of a function with a constant
-    template <tensor_or_scalar_c T, function_c F>
+    template <tensor::tensor_or_scalar_c T, function_c F>
     class FunctionTimesConstant :
         public function_product<F, Constant<typename F::input_type, T>>::type {
 
@@ -246,7 +246,7 @@ namespace mito::functions {
 
 
     // the product of a function with a constant
-    template <tensor_or_scalar_c T, function_c F>
+    template <tensor::tensor_or_scalar_c T, function_c F>
     class ConstantTimesFunction :
         public function_product<Constant<typename F::input_type, T>, F>::type {
 

@@ -13,13 +13,13 @@ using mito::tensor::_;
 TEST(Tensor, ContractionsTensor)
 {
     // a vector
-    constexpr auto a = mito::e_0<3>;
+    constexpr auto a = mito::tensor::e_0<3>;
 
     // the corresponding one-form
     constexpr auto a_tilda = mito::tensor::one_form(a);
 
     // another vector
-    constexpr auto b = mito::e_1<3>;
+    constexpr auto b = mito::tensor::e_1<3>;
 
     // the corresponding one-form
     constexpr auto b_tilda = mito::tensor::one_form(b);
@@ -28,10 +28,10 @@ TEST(Tensor, ContractionsTensor)
     constexpr auto a_tensor_b = mito::tensor::tensor(a_tilda, b_tilda);
 
     // a vector
-    constexpr auto xi0 = mito::e_0<3>;
+    constexpr auto xi0 = mito::tensor::e_0<3>;
 
     // another vector
-    constexpr auto xi1 = mito::e_1<3>;
+    constexpr auto xi1 = mito::tensor::e_1<3>;
 
     // check result of double contraction
     static_assert(a_tensor_b(xi0, xi1) == a_tilda(xi0) * b_tilda(xi1));
@@ -50,9 +50,9 @@ TEST(Tensor, ContractionsTensor)
 TEST(Tensor, ContractionsWedge)
 {
     // the basis vectors
-    constexpr auto e_x = mito::e_0<3>;
-    constexpr auto e_y = mito::e_1<3>;
-    constexpr auto e_z = mito::e_2<3>;
+    constexpr auto e_x = mito::tensor::e_0<3>;
+    constexpr auto e_y = mito::tensor::e_1<3>;
+    constexpr auto e_z = mito::tensor::e_2<3>;
 
     // the corresponding dual basis
     constexpr auto dx = mito::tensor::one_form(e_x);

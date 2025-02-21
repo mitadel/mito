@@ -25,8 +25,8 @@ TEST(Manifolds, Triangle3D)
     constexpr auto x_2 = mito::geometry::cartesian::coordinates({ 1.0, 1.0, 1.0 });
 
     // the normal vector to the submanifold
-    constexpr auto cross = pyre::tensor::cross(x_1 - x_0, x_2 - x_0);
-    constexpr auto normal_vector = cross / pyre::tensor::norm(cross);
+    constexpr auto cross = mito::tensor::cross(x_1 - x_0, x_2 - x_0);
+    constexpr auto normal_vector = cross / mito::tensor::norm(cross);
     constexpr auto normal_field = mito::fields::uniform_field<coordinates_t>(normal_vector);
 
     // create a submanifold on {mesh} with the appropriate normal field
@@ -44,7 +44,7 @@ TEST(Manifolds, Triangle3D)
     mesh.insert(triangle);
 
     // compute the area of the manifold
-    mito::scalar_t area = manifold.volume();
+    mito::tensor::scalar_t area = manifold.volume();
 
     // check that the volume of triangle is correct
     EXPECT_DOUBLE_EQ(0.5 * std::sqrt(2.0), area);

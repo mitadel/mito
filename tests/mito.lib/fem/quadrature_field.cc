@@ -29,7 +29,7 @@ TEST(Fem, QuadratureFields)
     constexpr int Q = 10;
 
     // a field of {Q} mito vectors
-    auto field = mito::fem::quadrature_field_t<Q, mito::vector_t<2>>(nElements, "field");
+    auto field = mito::fem::quadrature_field_t<Q, mito::tensor::vector_t<2>>(nElements, "field");
 
     // get a reference the (0, 1) vector
     auto & vector = field(0, 1);

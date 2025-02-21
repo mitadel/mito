@@ -31,7 +31,7 @@ namespace mito::geometry {
     class Coordinates {
       private:
         // my underlying array type
-        using array_t = mito::vector_t<D>;
+        using array_t = mito::tensor::vector_t<D>;
 
       public:
         // alias for me
@@ -44,7 +44,7 @@ namespace mito::geometry {
         constexpr Coordinates() : _array() {}
 
         // constructor
-        constexpr Coordinates(mito::scalar_t (&&coords)[D]) : _array(std::move(coords)) {}
+        constexpr Coordinates(mito::tensor::scalar_t (&&coords)[D]) : _array(std::move(coords)) {}
 
         // constructor
         constexpr Coordinates(const array_t coords) : _array(coords) {}
@@ -82,7 +82,7 @@ namespace mito::geometry {
 
       public:
         // components accessor
-        constexpr auto operator[](int i) const -> scalar_t { return _array[i]; }
+        constexpr auto operator[](int i) const -> tensor::scalar_t { return _array[i]; }
 
         auto print() const -> void
         {

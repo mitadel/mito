@@ -36,12 +36,12 @@ TEST(ParallelVTKWriter, FieldWriter)
     auto mesh_partition = mito::mesh::metis::partition(mesh, n_partitions, n_rank);
 
     // a nodal field on the mesh
-    auto nodal_field = mito::fem::nodal_field<mito::vector_t<2>>(mesh_partition, "normal");
+    auto nodal_field = mito::fem::nodal_field<mito::tensor::vector_t<2>>(mesh_partition, "normal");
 
     // the normal field to the disk
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
-        mito::scalar_t theta = std::atan2(x[1], x[0]);
-        return std::cos(theta) * mito::e_0<2> + std::sin(theta) * mito::e_1<2>;
+        mito::tensor::scalar_t theta = std::atan2(x[1], x[0]);
+        return std::cos(theta) * mito::tensor::e_0<2> + std::sin(theta) * mito::tensor::e_1<2>;
     });
 
     // fill information in nodal field

@@ -107,8 +107,9 @@ gent_mito(const auto & epsilon)
     // mito gent material
     auto material = mito::materials::gent(rho, kappa, mu, Jm);
 
-    auto F = mito::matrix_t<3>{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
-                                epsilon,       epsilon, epsilon, 1.0 + epsilon };
+    auto F =
+        mito::tensor::matrix_t<3>{ 1.0 + epsilon, epsilon, epsilon, epsilon,      1.0 + epsilon,
+                                   epsilon,       epsilon, epsilon, 1.0 + epsilon };
 
 
     // all done

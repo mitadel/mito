@@ -10,7 +10,7 @@
 TEST(VectorFunctions, Components)
 {
     // a 2D vector
-    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
+    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
 
     // the function extracting the x_0 component
     constexpr auto x0 = mito::functions::x<0, 2>;
@@ -63,7 +63,7 @@ TEST(VectorFunctions, Components)
 TEST(Derivatives, PartialDerivatives)
 {
     // a 2D vector
-    constexpr auto x = mito::vector_t<2>{ 0.1, 1.0 };
+    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
 
     // the function extracting the x_0 component
     constexpr auto x0 = mito::functions::x<0, 2>;

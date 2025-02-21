@@ -27,7 +27,7 @@ namespace mito::functions {
 
     // concept of a scalar-valued function
     template <class F>
-    concept scalar_function_c = function_c<F> and scalar_c<typename F::output_type>;
+    concept scalar_function_c = function_c<F> and tensor::scalar_c<typename F::output_type>;
 
     // function composition
     template <function_c F, function_c G>

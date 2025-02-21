@@ -28,7 +28,7 @@ TEST(Director, Segment)
     auto [_, directors] = mito::geometry::directors(segment, coord_system);
 
     // check that the director is correct
-    EXPECT_TRUE((directors[0] == mito::vector_t<3>{ 1.0, 0.0, 0.0 }));
+    EXPECT_TRUE((directors[0] == mito::tensor::vector_t<3>{ 1.0, 0.0, 0.0 }));
 }
 
 
@@ -50,8 +50,8 @@ TEST(Director, Triangle)
     auto [_, directors] = mito::geometry::directors(triangle, coord_system);
 
     // check that the directors are correct
-    EXPECT_TRUE((directors[0] == mito::vector_t<3>{ 1.0, 0.0, 0.0 }));
-    EXPECT_TRUE((directors[1] == mito::vector_t<3>{ 0.0, 1.0, 0.0 }));
+    EXPECT_TRUE((directors[0] == mito::tensor::vector_t<3>{ 1.0, 0.0, 0.0 }));
+    EXPECT_TRUE((directors[1] == mito::tensor::vector_t<3>{ 0.0, 1.0, 0.0 }));
 }
 
 
@@ -74,9 +74,9 @@ TEST(Director, Tetrahedron)
     auto [_, directors] = mito::geometry::directors(tetrahedron, coord_system);
 
     // check that the directors are correct
-    EXPECT_TRUE((directors[0] == mito::vector_t<3>{ 1.0, 0.0, 0.0 }));
-    EXPECT_TRUE((directors[1] == mito::vector_t<3>{ 0.0, 1.0, 0.0 }));
-    EXPECT_TRUE((directors[2] == mito::vector_t<3>{ 0.0, 0.0, 1.0 }));
+    EXPECT_TRUE((directors[0] == mito::tensor::vector_t<3>{ 1.0, 0.0, 0.0 }));
+    EXPECT_TRUE((directors[1] == mito::tensor::vector_t<3>{ 0.0, 1.0, 0.0 }));
+    EXPECT_TRUE((directors[2] == mito::tensor::vector_t<3>{ 0.0, 0.0, 1.0 }));
 }
 
 

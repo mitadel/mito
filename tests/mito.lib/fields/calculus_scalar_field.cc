@@ -12,8 +12,8 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 
 
 // the basis for vectors in 2D
-static constexpr auto e_0 = mito::e_0<2>;
-static constexpr auto e_1 = mito::e_1<2>;
+static constexpr auto e_0 = mito::tensor::e_0<2>;
+static constexpr auto e_1 = mito::tensor::e_1<2>;
 
 // pi sixth
 constexpr auto pi_sixth = std::numbers::pi / 6.0;

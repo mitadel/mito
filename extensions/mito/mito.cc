@@ -60,7 +60,7 @@ PYBIND11_MODULE(mito, m)
                 // unpack
                 auto [x0, x1] = data;
                 // instantiate
-                return mito::vector_t<2>{ x0, x1 };
+                return mito::tensor::vector_t<2>{ x0, x1 };
             }))
         // operator[]
         .def(
@@ -72,7 +72,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar field 2D
-    using scalar_function_2D_t = std::function<mito::scalar_t(const coordinates_2D_t &)>;
+    using scalar_function_2D_t = std::function<mito::tensor::scalar_t(const coordinates_2D_t &)>;
     using scalar_field_2D_t = mito::manifolds::field_t<scalar_function_2D_t>;
     mito::py::class_<scalar_field_2D_t>(m, "ScalarField2D")
         // the constructor
@@ -87,7 +87,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar field 3D
-    using scalar_function_3D_t = std::function<mito::scalar_t(const coordinates_3D_t &)>;
+    using scalar_function_3D_t = std::function<mito::tensor::scalar_t(const coordinates_3D_t &)>;
     using scalar_field_3D_t = mito::manifolds::field_t<scalar_function_3D_t>;
     mito::py::class_<scalar_field_3D_t>(m, "ScalarField3D")
         // the constructor

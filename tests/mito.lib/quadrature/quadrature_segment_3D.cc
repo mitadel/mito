@@ -31,12 +31,12 @@ TEST(Quadrature, Segment3D)
     auto segment0 = mito::geometry::segment<3>({ node_0, node_1 });
 
     // construct an orthogonal set {v_1}, {v_2}, {v_3} such that {v_1} is parallel to the segment
-    constexpr auto v_1 = (x_1 - x_0) / pyre::tensor::norm(x_1 - x_0);
-    constexpr auto v_2_try = mito::e_0<3>;
+    constexpr auto v_1 = (x_1 - x_0) / mito::tensor::norm(x_1 - x_0);
+    constexpr auto v_2_try = mito::tensor::e_0<3>;
     constexpr auto v_2 =
-        (v_2_try - (v_2_try * v_1) * v_1) / pyre::tensor::norm(v_2_try - (v_2_try * v_1) * v_1);
-    constexpr auto cross = pyre::tensor::cross(v_1, v_2);
-    constexpr auto v_3 = cross / pyre::tensor::norm(cross);
+        (v_2_try - (v_2_try * v_1) * v_1) / mito::tensor::norm(v_2_try - (v_2_try * v_1) * v_1);
+    constexpr auto cross = mito::tensor::cross(v_1, v_2);
+    constexpr auto v_3 = cross / mito::tensor::norm(cross);
 
     constexpr auto normal_field_1 = mito::fields::uniform_field<coordinates_t>(v_2);
     constexpr auto normal_field_2 = mito::fields::uniform_field<coordinates_t>(v_3);

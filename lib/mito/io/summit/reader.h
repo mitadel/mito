@@ -17,7 +17,7 @@ namespace mito::io::summit {
         // fill in nodes
         for (int n = 0; n < N_vertices; ++n) {
             // instantiate new point
-            vector_t<D> coordinates;
+            tensor::vector_t<D> coordinates;
             for (int d = 0; d < D; ++d) {
                 // read point coordinates
                 fileStream >> coordinates[d];

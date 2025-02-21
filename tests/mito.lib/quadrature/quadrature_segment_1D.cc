@@ -11,7 +11,7 @@
 using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
 
 // strip namespace
-using mito::vector_t;
+using mito::tensor::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
 

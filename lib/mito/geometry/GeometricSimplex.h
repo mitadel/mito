@@ -59,16 +59,16 @@ namespace mito::geometry {
         {
             // helper function to check that the order of vertices in {_simplex} matches the order
             // of nodes in {_nodes}
-            auto _check_vertices = [this]<int... J>(integer_sequence<J...>) -> bool {
+            auto _check_vertices = [this]<int... J>(tensor::integer_sequence<J...>) -> bool {
                 return (
                     math::permutation_sign(_simplex->vertices(), { _nodes[J]->vertex()... }) == +1);
             };
 
-            return _check_vertices(make_integer_sequence<N + 1>{});
+            return _check_vertices(tensor::make_integer_sequence<N + 1>{});
         }
 
         template <int... J>
-        constexpr auto _create_simplex(integer_sequence<J...>) const -> simplex_type
+        constexpr auto _create_simplex(tensor::integer_sequence<J...>) const -> simplex_type
         {
             // fetch the topology
             auto & topology = topology::topology();
@@ -93,7 +93,7 @@ namespace mito::geometry {
         constexpr GeometricSimplex(const nodes_type & nodes) :
             Invalidatable(),
             _nodes(nodes),
-            _simplex(_create_simplex(make_integer_sequence<n_vertices>{}))
+            _simplex(_create_simplex(tensor::make_integer_sequence<n_vertices>{}))
         {}
 
         // move constructor

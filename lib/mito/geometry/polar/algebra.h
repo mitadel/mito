@@ -11,7 +11,7 @@ namespace mito::geometry {
 
     // addition of polar coordinates {A} and vector {v} stemming from point A
     template <>
-    constexpr auto operator+(const polar_coordinates_t & A, const vector_t<2> & v)
+    constexpr auto operator+(const polar_coordinates_t & A, const tensor::vector_t<2> & v)
         -> polar_coordinates_t
     {
         // get r and theta of point A
@@ -37,7 +37,7 @@ namespace mito::geometry {
     // subtraction of coordinates B - A, returns a vector stemming from A
     template <>
     constexpr auto operator-(const polar_coordinates_t & B, const polar_coordinates_t & A)
-        -> mito::vector_t<2>
+        -> mito::tensor::vector_t<2>
     {
         // get the radius and angle of the two points
         const auto & r_A = A[0];

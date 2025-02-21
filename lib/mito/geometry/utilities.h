@@ -35,7 +35,7 @@ namespace mito::geometry {
     requires(coordT::dim == D)
     constexpr auto distance(
         const point_t<D> & pointA, const point_t<D> & pointB,
-        const coordinate_system_t<coordT> & coordinate_system) -> real
+        const coordinate_system_t<coordT> & coordinate_system) -> tensor::scalar_t
     {
         // return the distance between the two points
         return distance(
@@ -52,11 +52,11 @@ namespace mito::geometry {
         -> std::pair<coordT, edge_simplex_directors_t<N, D>>
     {
         // helper function to expand {nodes[1] - nodes[0]}, ..., {nodes[N-1] - nodes[0]}
-        constexpr auto _directors =
-            []<int... J>(
-                const geometric_simplex_t<N, D> & simplex,
-                const coordinate_system_t<coordT> & coordinate_system,
-                integer_sequence<J...>) -> std::pair<coordT, edge_simplex_directors_t<N, D>> {
+        constexpr auto _directors = []<int... J>(
+                                        const geometric_simplex_t<N, D> & simplex,
+                                        const coordinate_system_t<coordT> & coordinate_system,
+                                        tensor::integer_sequence<J...>)
+            -> std::pair<coordT, edge_simplex_directors_t<N, D>> {
             // get the simplex nodes
             auto nodes = simplex.nodes();
 
@@ -71,7 +71,7 @@ namespace mito::geometry {
             return { p0, directors };
         };
 
-        return _directors(simplex, coordinate_system, make_integer_sequence<N>{});
+        return _directors(simplex, coordinate_system, tensor::make_integer_sequence<N>{});
     }
 
     // builds a geometric simplex based on a topological simplex {simplex} with the vertex-point
@@ -88,7 +88,7 @@ namespace mito::geometry {
         // helper function to expand {node_type(vertex, *std::find(vertex))} as many times as the
         // vertices of {simplex}
         auto _build_geometric_simplex =
-            [&simplex, &nodes]<int... K>(integer_sequence<K...>) -> geometric_simplex_type {
+            [&simplex, &nodes]<int... K>(tensor::integer_sequence<K...>) -> geometric_simplex_type {
             // get the vertices
             auto vertices = simplex->vertices();
 
@@ -109,7 +109,7 @@ namespace mito::geometry {
 
         // build a geometric simplex based on {simplex} with the vertex-point pair as appears in
         // {nodes}
-        return _build_geometric_simplex(make_integer_sequence<N + 1>());
+        return _build_geometric_simplex(tensor::make_integer_sequence<N + 1>());
     }
 
     // builds the node based on vertex {vertex} with the vertex-point pairing as appears in {nodes}

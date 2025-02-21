@@ -46,7 +46,7 @@ namespace mito::geometry {
       private:
         // helper function wedging the N basis 1-forms
         template <int... J>
-        static constexpr auto _wedge(integer_sequence<J...>)
+        static constexpr auto _wedge(tensor::integer_sequence<J...>)
         requires(sizeof...(J) == D)
         {
             // return the basis N-form
@@ -56,7 +56,7 @@ namespace mito::geometry {
       public:
         // the metric volume form
         static constexpr auto w =
-            fields::sqrt(fields::determinant(g)) * _wedge(make_integer_sequence<D>{});
+            fields::sqrt(fields::determinant(g)) * _wedge(tensor::make_integer_sequence<D>{});
 
         // get the metric equivalent vector field to a given one-form field
         static constexpr auto metric_equivalent(const fields::one_form_field_c auto & one_form);
@@ -74,12 +74,12 @@ namespace mito::geometry {
         return fields::field(functions::function([one_form](const coordinates_type & x) {
             // returns the contraction of the inverse metric with the components of the one
             // form
-            auto _one_form_components = [one_form, x]<int... K>(integer_sequence<K...>) {
+            auto _one_form_components = [one_form, x]<int... K>(tensor::integer_sequence<K...>) {
                 return ((one_form(x)(e<K>(x)) * g_inv(x) * e<K>(x)) + ...);
             };
 
             // all done
-            return _one_form_components(make_integer_sequence<D>{});
+            return _one_form_components(tensor::make_integer_sequence<D>{});
         }));
     }
 

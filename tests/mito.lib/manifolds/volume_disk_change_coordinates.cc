@@ -16,7 +16,7 @@ using polar_coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POL
 
 template <mito::geometry::coordinates_c coordT1, mito::geometry::coordinates_c coordT2>
 auto
-area_change_coordinates(std::string mesh_file_name) -> mito::scalar_t
+area_change_coordinates(std::string mesh_file_name) -> mito::tensor::scalar_t
 {
     // a {coordT1} coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordT1>();

@@ -8,6 +8,11 @@
 
 
 namespace mito {
+    // typedef for real numbers
+    using pyre::tensor::real;
+}
+
+namespace mito::tensor {
 
     // remove the {pyre} prefix
     using namespace pyre::tensor;

@@ -47,7 +47,7 @@ namespace mito::geometry {
     // alias for the collection of oriented simplex director vectors
     // (e.g. an N-simplex has as N director vectors)
     template <int N, int D>
-    using edge_simplex_directors_t = std::array<vector_t<D>, N>;
+    using edge_simplex_directors_t = std::array<tensor::vector_t<D>, N>;
 
     // point cloud factory
     template <int D>

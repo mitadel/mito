@@ -42,8 +42,8 @@ TEST(Manifolds, PolarMetricSpace)
     constexpr auto w = metric_space_t::w;
 
     // check that the volume differential is correct
-    constexpr auto dr_scalar = mito::scalar_t{ 0.01 };
-    constexpr auto dt_scalar = mito::scalar_t{ 0.01 };
+    constexpr auto dr_scalar = mito::tensor::scalar_t{ 0.01 };
+    constexpr auto dt_scalar = mito::tensor::scalar_t{ 0.01 };
     static_assert(w(x)(dr_scalar * e_r(x), dt_scalar * e_t(x)) == r * dr_scalar * dt_scalar);
 }
 

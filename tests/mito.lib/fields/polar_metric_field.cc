@@ -20,12 +20,12 @@ static constexpr auto r = mito::functions::component<coordinates_t, 0>;
 TEST(Fields, PolarCoordinates)
 {
     // the basis for vector fields (e_r and e_theta)
-    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<2>);
-    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::e_1<2>);
+    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_0<2>);
+    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::tensor::e_1<2>);
 
     // the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
-    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<2>);
-    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<2>);
+    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_00<2>);
+    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_11<2>);
 
     // the metric field
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt;
@@ -55,8 +55,8 @@ TEST(Fields, PolarCoordinates)
     constexpr auto w =
         mito::fields::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt);
 
-    constexpr auto dr_scalar = mito::scalar_t{ 0.01 };
-    constexpr auto dt_scalar = mito::scalar_t{ 0.01 };
+    constexpr auto dr_scalar = mito::tensor::scalar_t{ 0.01 };
+    constexpr auto dt_scalar = mito::tensor::scalar_t{ 0.01 };
     static_assert(w(x)(dr_scalar * e_r(x), dt_scalar * e_t(x)) == r * dr_scalar * dt_scalar);
 }
 

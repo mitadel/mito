@@ -15,11 +15,11 @@ namespace mito::functions {
 
     // the function mapping an input of type {T} to the zero scalar
     template <class T>
-    [[maybe_unused]] constexpr auto zero = Constant<T, scalar_t>(0.0);
+    [[maybe_unused]] constexpr auto zero = Constant<T, tensor::scalar_t>(0.0);
 
     // the function mapping an input of type {T} to the zero scalar
     template <class T>
-    [[maybe_unused]] constexpr auto one = Constant<T, scalar_t>(1.0);
+    [[maybe_unused]] constexpr auto one = Constant<T, tensor::scalar_t>(1.0);
 
     // the scalar power to integer function
     template <int N>
@@ -69,7 +69,7 @@ namespace mito::functions {
 
     // the function associating to a D-dimensional vector its N-th component
     template <int N, int D>
-    [[maybe_unused]] constexpr auto x = component<vector_t<D>, N>;
+    [[maybe_unused]] constexpr auto x = component<tensor::vector_t<D>, N>;
 
 }
 

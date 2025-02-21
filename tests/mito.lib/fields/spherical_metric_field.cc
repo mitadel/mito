@@ -21,15 +21,15 @@ static constexpr auto t = mito::functions::component<coordinates_t, 1>;
 TEST(Manifolds, SphericalCoordinates)
 {
     // the basis for vector fields (e_r, e_theta, e_phi)
-    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::e_0<3>);
-    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::e_1<3>);
-    constexpr auto e_p =
-        r * mito::functions::sin(t) * mito::fields::uniform_field<coordinates_t>(mito::e_2<3>);
+    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_0<3>);
+    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::tensor::e_1<3>);
+    constexpr auto e_p = r * mito::functions::sin(t)
+                       * mito::fields::uniform_field<coordinates_t>(mito::tensor::e_2<3>);
 
     // the basis for diagonal second-order tensor fields (e_rr, e_thetatheta, e_phiphi)
-    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::e_00<3>);
-    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::e_11<3>);
-    constexpr auto e_pp = mito::fields::uniform_field<coordinates_t>(mito::e_22<3>);
+    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_00<3>);
+    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_11<3>);
+    constexpr auto e_pp = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_22<3>);
 
     // the metric field
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt + (e_p * e_p) * e_pp;
@@ -66,9 +66,9 @@ TEST(Manifolds, SphericalCoordinates)
     constexpr auto w =
         mito::fields::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt, dp);
 
-    constexpr auto dr_scalar = mito::scalar_t{ 0.01 };
-    constexpr auto dt_scalar = mito::scalar_t{ 0.01 };
-    constexpr auto dp_scalar = mito::scalar_t{ 0.01 };
+    constexpr auto dr_scalar = mito::tensor::scalar_t{ 0.01 };
+    constexpr auto dt_scalar = mito::tensor::scalar_t{ 0.01 };
+    constexpr auto dp_scalar = mito::tensor::scalar_t{ 0.01 };
     EXPECT_DOUBLE_EQ(
         r * r * std::sin(t) * dr_scalar * dt_scalar * dp_scalar,
         w(x)(dr_scalar * e_r(x), dt_scalar * e_t(x), dp_scalar * e_p(x)));
