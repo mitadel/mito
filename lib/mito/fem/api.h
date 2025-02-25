@@ -10,8 +10,8 @@
 namespace mito::fem {
 
     // quadrature field factory
-    template <int Q, class Y>
-    constexpr auto quadrature_field(int nElements, std::string name = "");
+    template <class Y, int Q, mesh::mesh_c meshT>
+    constexpr auto quadrature_field(const meshT & mesh, std::string name);
 
     // nodal field factory
     template <class Y, int D>

@@ -21,13 +21,9 @@ namespace mito::fem {
     template <int D, class Y>
     using point_field_t = DiscreteField<geometry::point_t<D>, Y>;
 
-    // class quadrature field
-    template <int Q, class Y>
-    class QuadratureField;
-
     // quadrature field alias
-    template <int Q, class Y>
-    using quadrature_field_t = QuadratureField<Q, Y>;
+    template <class cellT, int Q, class Y>
+    using quadrature_field_t = DiscreteField<cellT, std::array<Y, Q>>;
 }
 
 
