@@ -17,7 +17,7 @@
 #include "api.h"
 
 // classes implementation
-#include "NodalField.h"
+#include "DiscreteField.h"
 #include "QuadratureField.h"
 
 // factories implementation

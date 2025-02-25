@@ -9,13 +9,17 @@
 
 namespace mito::fem {
 
-    // class nodal field
-    template <int D, class Y>
-    class NodalField;
+    // class discrete field
+    template <class keyT, class Y>
+    class DiscreteField;
 
-    // nodal field alias
+    // nodal field
     template <int D, class Y>
-    using nodal_field_t = NodalField<D, Y>;
+    using nodal_field_t = DiscreteField<geometry::node_t<D>, Y>;
+
+    // point field
+    template <int D, class Y>
+    using point_field_t = DiscreteField<geometry::point_t<D>, Y>;
 
     // class quadrature field
     template <int Q, class Y>

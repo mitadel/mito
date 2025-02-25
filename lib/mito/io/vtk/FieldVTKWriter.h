@@ -33,7 +33,7 @@ namespace mito::io::vtk {
         auto _attach_field(const fem::nodal_field_t<D, Y> & field, std::string fieldname) -> void
         {
             // get the number of nodes
-            auto n_nodes = field.n_nodes();
+            auto n_nodes = field.size();
 
             // get the grid
             auto & grid = _grid_writer.grid();

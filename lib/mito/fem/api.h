@@ -16,6 +16,10 @@ namespace mito::fem {
     // nodal field factory
     template <class Y, int D>
     constexpr auto nodal_field(const mesh::mesh_c auto & mesh, std::string name);
+
+    // point field factory
+    template <class Y, geometry::point_cloud_c cloudT>
+    constexpr auto point_field(const cloudT & cloud, std::string name);
 }
 
 
