@@ -95,7 +95,7 @@ namespace mito::io::vtk {
         }
 
       public:
-        // TOFIX: use concepts to say that Y is a tensor
+        // sign {field} up for writing
         template <class Y>
         auto record(const field_type<Y> & field, std::string fieldname = "") -> void
         {
@@ -109,6 +109,7 @@ namespace mito::io::vtk {
             return _attach_field(field, fieldname);
         }
 
+        // write the grid with the attached fields
         auto write() const -> void
         {
             // delegate to the grid
