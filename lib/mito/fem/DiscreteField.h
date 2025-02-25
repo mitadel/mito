@@ -10,7 +10,6 @@
 namespace mito::fem {
 
     template <class keyT, class Y>
-    // TODO: requires that the key type is hashable
     class DiscreteField {
 
       private:
