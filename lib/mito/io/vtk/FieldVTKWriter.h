@@ -9,6 +9,24 @@
 
 namespace mito::io::vtk {
 
+    // the type of the grid writer depending on the type of grid and on the coordinate system
+    template <class gridT>
+    struct field_type;
+
+    // specialization to {mesh_c} case
+    template <mesh::mesh_c gridT>
+    struct field_type<gridT> {
+        template <class Y>
+        using type = fem::nodal_field_t<gridT::dim, Y>;
+    };
+
+    // specialization to {point_cloud_c} case
+    template <geometry::point_cloud_c gridT>
+    struct field_type<gridT> {
+        template <class Y>
+        using type = fem::point_field_t<gridT::dim, Y>;
+    };
+
     template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
     class FieldVTKWriter {
 
@@ -21,6 +39,9 @@ namespace mito::io::vtk {
         using grid_type = typename grid_writer_type::grid_type;
         // the coordinate system type
         using coord_system_type = coordSystemT;
+        // the field type
+        template <class Y>
+        using field_type = typename field_type<grid_type>::type<Y>;
 
       public:
         FieldVTKWriter(
@@ -30,31 +51,43 @@ namespace mito::io::vtk {
 
       private:
         template <class Y>
-        auto _attach_field(const fem::nodal_field_t<D, Y> & field, std::string fieldname) -> void
+        auto _attach_field(const field_type<Y> & field, std::string fieldname) -> void
         {
-            // get the number of nodes
-            auto n_nodes = field.size();
+            // get the number of entries in the field
+            auto field_size = field.size();
 
             // get the grid
             auto & grid = _grid_writer.grid();
 
-            // get the nodes
-            const auto & nodes = _grid_writer.nodes();
-
-            // check the number of nodes in the field equals the number of points in the grid
-            assert(n_nodes == grid->GetNumberOfPoints());
+            // check the number of entries in the field equals the number of points in the grid
+            assert(field_size == grid->GetNumberOfPoints());
 
             // initialize a vtk array
             auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
             vtkArray->SetName(fieldname.data());
             vtkArray->SetNumberOfComponents(Y::size);
-            vtkArray->SetNumberOfTuples(n_nodes);
+            vtkArray->SetNumberOfTuples(field_size);
 
-            // populate the array with the nodal values
-            for (auto & [node, value] : field) {
-                // get the index corresponding to the current node
-                auto index = nodes.at(node);
-                vtkArray->SetTuple(index, value.begin());
+            // populate the array
+            if constexpr (mesh::mesh_c<grid_type>) {
+                // get the nodes in the grid
+                const auto & nodes = _grid_writer.nodes();
+
+                // populate the array with the nodal values
+                for (const auto & [node, index] : nodes) {
+                    // get the index corresponding to the current node
+                    vtkArray->SetTuple(index, field(node).begin());
+                }
+            } else if constexpr (geometry::point_cloud_c<grid_type>) {
+                // get the points in the grid
+                const auto & points = _grid_writer.points();
+
+                // populate the array with the point values
+                int index = 0;
+                for (const auto & point : points) {
+                    // get the index corresponding to the current point
+                    vtkArray->SetTuple(index++, field(point).begin());
+                }
             }
 
             // insert array into output grid
@@ -64,7 +97,7 @@ namespace mito::io::vtk {
       public:
         // TOFIX: use concepts to say that Y is a tensor
         template <class Y>
-        auto record(const fem::nodal_field_t<D, Y> & field, std::string fieldname = "") -> void
+        auto record(const field_type<Y> & field, std::string fieldname = "") -> void
         {
             // if no name was provided
             if (fieldname == "") {

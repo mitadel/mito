@@ -44,6 +44,10 @@ namespace mito::io::vtk {
             // insert the new vtk point
             for (const auto & point : points) {
                 _points.insert(point);
+            }
+
+            // insert the new vtk point
+            for (const auto & point : _points) {
                 insert_vtk_point(coordinate_system.coordinates(point), pointsVtk);
             }
 
@@ -61,6 +65,9 @@ namespace mito::io::vtk {
         {
             _create_vtk_grid(cloud, coord_system);
         }
+
+        // accessor for the points
+        auto points() const -> const points_type & { return _points; }
 
       private:
         // a collection of points in the mesh
