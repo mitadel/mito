@@ -12,7 +12,7 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-TEST(VtkWriter, WritePointCloudToVtk)
+TEST(VtkWriter, Cloud)
 {
     // an empty point cloud
     auto & cloud = mito::geometry::point_cloud<3>();
@@ -29,5 +29,5 @@ TEST(VtkWriter, WritePointCloudToVtk)
     coord_system.place(point_c, { 0.0, 1.0, 1.0 });
 
     // write point cloud to vtk file
-    mito::io::vtk::grid_writer("point_cloud_output", cloud, coord_system).write();
+    mito::io::vtk::grid_writer("cloud", cloud, coord_system).write();
 }

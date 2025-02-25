@@ -37,7 +37,7 @@ mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 
 # fem
 mito_test_driver(tests/mito.lib/fem/quadrature_field.cc)
-mito_test_driver(tests/mito.lib/fem/nodal_field_sphere.cc)
+mito_test_driver(tests/mito.lib/fem/nodal_field.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/read_mesh_summit_2D.cc)
@@ -46,14 +46,15 @@ mito_test_driver(tests/mito.lib/io/read_mesh_summit_segment_3D.cc)
 mito_test_driver(tests/mito.lib/io/summit_to_summit_mesh_2D.cc)
 
 if(WITH_VTK)
-    mito_test_driver_pytest_check(tests/mito.lib/io/write_point_cloud_vtk.cc)
-    mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_3D.cc)
-    mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_2D.cc)
-    mito_test_driver_pytest_check(tests/mito.lib/io/summit_to_vtk_mesh_lattice_3D.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/vtk_mesh_writer_2D.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/vtk_mesh_writer_3D.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/vtk_mesh_writer_lattice_3D.cc)
+    mito_test_driver_pytest_check(tests/mito.lib/io/vtk_cloud_writer.cc)
 
     if(WITH_PARALLEL_VTK)
         mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_cloud_writer.cc 2)
-        mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_field_writer.cc 2)
+        mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_mesh_writer.cc 2)
+        mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_mesh_field_writer.cc 2)
         mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_cloud_field_writer.cc 2)
     endif()
 endif()

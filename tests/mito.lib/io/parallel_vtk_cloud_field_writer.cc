@@ -13,7 +13,7 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-TEST(ParallelVTKWriter, PointCloudField)
+TEST(ParallelVtkWriter, CloudField)
 {
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
@@ -77,8 +77,7 @@ TEST(ParallelVTKWriter, PointCloudField)
     }
 
     // write mesh to vtk file
-    auto writer =
-        mito::io::vtk::parallel_field_writer("sphere_point_cloud_field", cloud, coord_system);
+    auto writer = mito::io::vtk::parallel_field_writer("sphere_cloud_field", cloud, coord_system);
     // sign {point_field} up with the writer
     writer.record(point_field);
     // write output file

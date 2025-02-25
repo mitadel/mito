@@ -12,15 +12,16 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-TEST(SummitToVTK, MeshLattice3D)
+TEST(VtkWriter, Mesh3D)
 {
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // read summit mesh
-    std::ifstream fileStream("lattice.summit");
-    auto mesh = mito::io::summit::reader<mito::geometry::segment_t<3>>(fileStream, coord_system);
+    std::ifstream fileStream("cube.summit");
+    auto mesh =
+        mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
 
     // write mesh to vtk file
-    mito::io::vtk::grid_writer("lattice", mesh, coord_system).write();
+    mito::io::vtk::grid_writer("cube", mesh, coord_system).write();
 }
