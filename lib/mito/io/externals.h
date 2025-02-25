@@ -14,7 +14,7 @@
 #include "../journal.h"
 #include "../geometry.h"
 #include "../mesh.h"
-#include "../fem.h"
+#include "../discretization.h"
 
 
 // end of file

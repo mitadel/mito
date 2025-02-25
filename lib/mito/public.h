@@ -11,7 +11,7 @@
 #include "journal.h"
 #include "tensor.h"
 #include "functions.h"
-#include "fem.h"
+#include "discretization.h"
 #include "coordinates.h"
 #include "geometry.h"
 #include "io.h"

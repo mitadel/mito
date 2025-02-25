@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/simulation.h>
-#include <mito/fem.h>
+#include <mito/discretization.h>
 #include <mito/mesh.h>
 #include <mito/io.h>
 

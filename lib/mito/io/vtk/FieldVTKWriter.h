@@ -17,14 +17,14 @@ namespace mito::io::vtk {
     template <mesh::mesh_c gridT>
     struct field_type<gridT> {
         template <class Y>
-        using type = fem::nodal_field_t<gridT::dim, Y>;
+        using type = discretization::nodal_field_t<gridT::dim, Y>;
     };
 
     // specialization to {point_cloud_c} case
     template <geometry::point_cloud_c gridT>
     struct field_type<gridT> {
         template <class Y>
-        using type = fem::point_field_t<gridT::dim, Y>;
+        using type = discretization::point_field_t<gridT::dim, Y>;
     };
 
     template <class gridWriterT, geometry::coordinate_system_c coordSystemT>

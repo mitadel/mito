@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::fem {
+namespace mito::discretization {
 
     // class discrete field
     template <class keyT, class Y>

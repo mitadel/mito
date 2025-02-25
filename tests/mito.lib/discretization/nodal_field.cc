@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/fem.h>
+#include <mito/discretization.h>
 #include <mito/mesh.h>
 #include <mito/io.h>
 
@@ -13,7 +13,7 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-TEST(Fem, NodalFieldSphere)
+TEST(Discretization, NodalFieldSphere)
 {
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
@@ -23,7 +23,7 @@ TEST(Fem, NodalFieldSphere)
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
     // a nodal field on the mesh
-    auto nodal_field = mito::fem::nodal_field<mito::tensor::vector_t<3>>(mesh, "normal");
+    auto nodal_field = mito::discretization::nodal_field<mito::tensor::vector_t<3>>(mesh, "normal");
 
     // the normal field to the submanifold
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {

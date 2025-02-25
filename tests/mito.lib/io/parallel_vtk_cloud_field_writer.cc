@@ -56,7 +56,8 @@ TEST(ParallelVtkWriter, CloudField)
     }
 
     // a point field on the cloud
-    auto point_field = mito::fem::point_field<mito::tensor::vector_t<3>>(cloud, "normal");
+    auto point_field =
+        mito::discretization::point_field<mito::tensor::vector_t<3>>(cloud, "normal");
 
     // the normal field to the submanifold
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {

@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::fem {
+namespace mito::discretization {
 
     // quadrature field factory
     template <class Y, int Q, mesh::mesh_c meshT>

@@ -28,7 +28,8 @@ namespace mito::quadrature {
         // the number of quadrature points
         static constexpr int Q = quadrature_rule_type::npoints;
         // the quadrature field type to store the coordinates of the quadrature points
-        using quadrature_field_type = fem::quadrature_field_t<cell_type, Q, coordinates_type>;
+        using quadrature_field_type =
+            discretization::quadrature_field_t<cell_type, Q, coordinates_type>;
 
       private:
         template <int... q>

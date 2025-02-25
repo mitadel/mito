@@ -8,8 +8,8 @@
 
 
 // publish the interface
-// the api is in "fem/api.h"
-#include "fem/public.h"
+// the api is in "discretization/api.h"
+#include "discretization/public.h"
 
 
 // end of file

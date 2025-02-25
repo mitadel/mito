@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::fem {
+namespace mito::discretization {
 
     // nodal field
     template <int D, class Y>
