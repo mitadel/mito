@@ -51,6 +51,9 @@ if(WITH_VTK)
     mito_test_driver_pytest_check(tests/mito.lib/io/vtk_mesh_writer_lattice_3D.cc)
     mito_test_driver_pytest_check(tests/mito.lib/io/vtk_cloud_writer.cc)
 
+    mito_test_driver(tests/mito.lib/io/vtk_cloud_writer_spherical_coordinates.cc)
+    mito_test_driver(tests/mito.lib/io/vtk_mesh_writer_polar_coordinates.cc)
+
     if(WITH_PARALLEL_VTK)
         mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_cloud_writer.cc 2)
         mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_mesh_writer.cc 2)

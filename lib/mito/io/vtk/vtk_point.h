@@ -39,6 +39,36 @@ namespace mito::io::vtk {
         pointsVtk->InsertNextPoint(coord[0], 0., 0.);
     }
 
+    template <>
+    auto insert_vtk_point(
+        const geometry::coordinates_t<3, geometry::SPHERICAL> & coord,
+        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+    {
+        // cartesian coordinates in 2D
+        using cartesian_coord_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+
+        // transform {coord} into cartesian coordinates
+        auto cartesian_coord = transform_coordinates<cartesian_coord_t>(coord);
+
+        // add the point as new vtk point
+        pointsVtk->InsertNextPoint(cartesian_coord[0], cartesian_coord[1], cartesian_coord[2]);
+    }
+
+    template <>
+    auto insert_vtk_point(
+        const geometry::coordinates_t<2, geometry::POLAR> & coord,
+        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+    {
+        // cartesian coordinates in 2D
+        using cartesian_coord_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+
+        // transform {coord} into cartesian coordinates
+        auto cartesian_coord = transform_coordinates<cartesian_coord_t>(coord);
+
+        // add the point as new vtk point
+        pointsVtk->InsertNextPoint(cartesian_coord[0], cartesian_coord[1], 0.);
+    }
+
 }    // namespace mito::io::vtk
 
 
