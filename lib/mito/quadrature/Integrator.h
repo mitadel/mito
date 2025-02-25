@@ -27,8 +27,6 @@ namespace mito::quadrature {
         static constexpr auto _quadratureRule = quadrature_rule_type();
         // the number of quadrature points
         static constexpr int Q = quadrature_rule_type::npoints;
-        // the dimension of the physical space
-        static constexpr int D = manifold_type::dim;
 
       private:
         auto _computeQuadPointCoordinates() -> void
