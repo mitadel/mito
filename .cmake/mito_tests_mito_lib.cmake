@@ -40,9 +40,9 @@ mito_test_driver(tests/mito.lib/discretization/quadrature_field.cc)
 mito_test_driver(tests/mito.lib/discretization/nodal_field.cc)
 
 # io
-mito_test_driver(tests/mito.lib/io/read_mesh_summit_2D.cc)
-mito_test_driver(tests/mito.lib/io/read_mesh_summit_3D.cc)
-mito_test_driver(tests/mito.lib/io/read_mesh_summit_segment_3D.cc)
+mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)
+mito_test_driver(tests/mito.lib/io/summit_mesh_reader_3D.cc)
+mito_test_driver(tests/mito.lib/io/summit_mesh_reader_segment_3D.cc)
 mito_test_driver(tests/mito.lib/io/summit_to_summit_mesh_2D.cc)
 
 if(WITH_VTK)

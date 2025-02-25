@@ -12,7 +12,7 @@
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
-TEST(SummitReader, LoadMesh2D)
+TEST(SummitReader, Mesh2D)
 {
     // make a channel
     journal::info_t channel("tests.read_mesh");
@@ -27,8 +27,4 @@ TEST(SummitReader, LoadMesh2D)
     std::ifstream fileStream("rectangle.summit");
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
     channel << "Loaded mesh in " << clock() - t << journal::endl;
-
-    t = clock();
-    auto boundary_mesh = mito::mesh::boundary(mesh);
-    channel << "Fetched boundary in " << clock() - t << journal::endl;
 }
