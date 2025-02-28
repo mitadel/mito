@@ -17,7 +17,7 @@ TEST(Solvers, PETScKSPExternalInitialize)
     int N = 10;
 
     // instantiate a PETSc Krylov solver for a linear system of size {N}
-    auto solver = mito::solvers::petsc::PETScKrylovSolver("mysolver");
+    auto solver = mito::solvers::petsc::ksp("mysolver");
     solver.initialize(N);
 
     // finalize the solver

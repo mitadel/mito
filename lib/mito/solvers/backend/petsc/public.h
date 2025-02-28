@@ -10,8 +10,17 @@
 // external packages
 #include "externals.h"
 
+// get the forward declarations
+#include "forward.h"
+
+// published types
+#include "api.h"
+
 // classes
 #include "PETScKrylovSolver.h"
+
+// factories implementation
+#include "factories.h"
 
 
 // end of file
