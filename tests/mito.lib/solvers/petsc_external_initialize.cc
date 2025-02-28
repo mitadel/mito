@@ -26,3 +26,6 @@ TEST(Solvers, PETScKSPExternalInitialize)
     // finalize PETSc
     PetscFinalize();
 }
+
+
+// end of file
