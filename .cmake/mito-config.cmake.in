@@ -39,3 +39,9 @@ if(@WITH_VTK@)
     add_definitions(-DWITH_PARALLEL_VTK)
   endif(@WITH_PARALLEL_VTK@)
 endif(@WITH_VTK@)
+
+# petsc dependency
+if(@WITH_PETSC@)
+  # add compiler definitions
+  add_definitions(-DWITH_PETSC)
+endif(@WITH_PETSC@)
