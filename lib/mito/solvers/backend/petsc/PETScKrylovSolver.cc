@@ -8,7 +8,10 @@
 
 
 // constructor
-mito::solvers::petsc::PETScKrylovSolver::PETScKrylovSolver() : _initialized_petsc(false) {}
+mito::solvers::petsc::PETScKrylovSolver::PETScKrylovSolver(const label_type & name) :
+    _options_prefix(name + "_"),
+    _initialized_petsc(false)
+{}
 
 // destructor
 mito::solvers::petsc::PETScKrylovSolver::~PETScKrylovSolver() {}
@@ -63,6 +66,7 @@ mito::solvers::petsc::PETScKrylovSolver::_create_linear_system(index_type size) 
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
     PetscCallVoid(KSPSetOperators(_ksp, _matrix, _matrix));
+    PetscCallVoid(KSPSetOptionsPrefix(_ksp, _options_prefix.c_str()));
 
     // set the default options (do not allow the user to control the options for matrix and vectors)
     PetscCallVoid(MatSetFromOptions(_matrix));
@@ -114,14 +118,55 @@ mito::solvers::petsc::PETScKrylovSolver::finalize() -> void
     return;
 }
 
+namespace {
+    // helper function to prepend the prefix {prefix} to each of the space-separated
+    // options leading with '-'
+    auto prepend_options_prefix(const std::string & options, const std::string & prefix)
+        -> std::string
+    {
+        // split the {options} string into words and store them in a vector
+        size_t pos_old = 0;
+        size_t pos_new = 0;
+        std::vector<std::string> options_vector;
+        while ((pos_new = options.find(" ", pos_old)) != std::string::npos) {
+            std::string word_string = options.substr(pos_old, pos_new - pos_old);
+            options_vector.push_back(word_string);
+            pos_old = pos_new + 1;
+        }
+        std::string word_string = options.substr(pos_old, pos_new - pos_old);
+        options_vector.push_back(word_string);
+
+        // for each word, if the leading character is '-', insert the {prefix} between '-' and the
+        // rest of the word
+        for (auto & word : options_vector) {
+            if (word[0] == '-') {
+                word.erase(0, 1);
+                word = "-" + prefix + word;
+            }
+        }
+
+        // concatenate the words into a single string
+        std::string prefixed_options;
+        for (auto & word : options_vector) {
+            prefixed_options += word + " ";
+        }
+
+        // all done
+        return prefixed_options;
+    }
+}
+
 // set petsc options
 auto
 mito::solvers::petsc::PETScKrylovSolver::set_options(const options_type & options) -> void
 {
-    // record the options with PETSc
-    PetscCallVoid(PetscOptionsInsertString(PETSC_NULLPTR, options.c_str()));
+    // prepend the prefix {_options_prefix} to each of the space-separated options in input
+    auto prefixed_options = prepend_options_prefix(options, _options_prefix);
 
-    // TODO: possibly add an options prefix to avoid conflicts when multiple solvers are used
+    // record the options with PETSc
+    PetscCallVoid(PetscOptionsInsertString(PETSC_NULLPTR, prefixed_options.c_str()));
+
+    // configure the Krylov solver with the options
     PetscCallVoid(KSPSetFromOptions(_ksp));
 
     // // show all options that have been set

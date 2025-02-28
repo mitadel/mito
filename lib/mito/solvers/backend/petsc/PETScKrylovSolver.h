@@ -23,10 +23,12 @@ namespace mito::solvers::petsc {
         using solver_type = KSP;
         // the options type
         using options_type = std::string;
+        // the label type
+        using label_type = std::string;
 
       public:
         // constructor
-        PETScKrylovSolver();
+        PETScKrylovSolver(const label_type &);
 
         // destructor
         ~PETScKrylovSolver();
@@ -74,6 +76,8 @@ namespace mito::solvers::petsc {
         auto get_solution(solutionT & solution) const -> void;
 
       private:
+        // the prefix for the PETSc options
+        label_type _options_prefix;
         // a flag to recall if this instance has initialized PETSc
         bool _initialized_petsc;
         // the matrix

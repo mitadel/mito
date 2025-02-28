@@ -13,8 +13,9 @@ TEST(Solvers, PETScKSPSolver)
     // the size of the linear system
     int N = 10;
 
+    // TODO: implement solver factory
     // instantiate a PETSc Krylov solver for a linear system of size {N}
-    mito::solvers::petsc::PETScKrylovSolver solver;
+    mito::solvers::petsc::PETScKrylovSolver solver("mysolver");
     solver.initialize(N);
     solver.set_options("-ksp_monitor");
 
