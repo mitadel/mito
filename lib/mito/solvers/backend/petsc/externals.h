@@ -10,6 +10,7 @@
 // externals
 #include <string>
 #include <vector>
+#include <cassert>
 
 // petsc support
 #include <petscksp.h>

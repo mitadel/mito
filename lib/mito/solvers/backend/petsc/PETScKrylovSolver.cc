@@ -201,8 +201,8 @@ mito::solvers::petsc::PETScKrylovSolver::solve() -> void
     // solve the linear system
     PetscCallVoid(KSPSolve(_ksp, _rhs, _solution));
 
-    // show the solution
-    PetscCallVoid(VecView(_solution, PETSC_VIEWER_STDOUT_WORLD));
+    // // show the solution
+    // PetscCallVoid(VecView(_solution, PETSC_VIEWER_STDOUT_WORLD));
 
     // all done
     return;

@@ -69,6 +69,10 @@ namespace mito::solvers::petsc {
         // solve the linear system
         auto solve() -> void;
 
+        // get the solution vector
+        template <class solutionT>
+        auto get_solution(solutionT & solution) const -> void;
+
       private:
         // a flag to recall if this instance has initialized PETSc
         bool _initialized_petsc;
@@ -83,6 +87,12 @@ namespace mito::solvers::petsc {
     };
 
 }    // namespace mito
+
+
+// get the template definitions
+#define mito_solvers_backend_petsc_PETScKrylovSolver_icc
+#include "PETScKrylovSolver.icc"
+#undef mito_solvers_backend_petsc_PETScKrylovSolver_icc
 
 
 // end of file
