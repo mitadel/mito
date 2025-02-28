@@ -57,4 +57,21 @@ TEST(Solvers, PETScKSPSolver)
 }
 
 
+int
+main(int argc, char ** argv)
+{
+    // initialize petsc
+    PetscInitialize(&argc, &argv, PETSC_NULLPTR, PETSC_NULLPTR);
+
+    ::testing::InitGoogleTest(&argc, argv);
+    auto result = RUN_ALL_TESTS();
+
+    // finalize petsc
+    PetscFinalize();
+
+    // all done
+    return result;
+}
+
+
 // end of file
