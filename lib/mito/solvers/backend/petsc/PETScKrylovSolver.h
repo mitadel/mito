@@ -22,7 +22,7 @@ namespace mito::solvers::petsc {
         // the solver type
         using solver_type = KSP;
         // the options type
-        using options_type = std::vector<std::string>;
+        using options_type = std::string;
 
       public:
         // constructor

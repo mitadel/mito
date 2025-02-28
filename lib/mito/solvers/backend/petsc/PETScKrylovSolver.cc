@@ -118,22 +118,14 @@ mito::solvers::petsc::PETScKrylovSolver::finalize() -> void
 auto
 mito::solvers::petsc::PETScKrylovSolver::set_options(const options_type & options) -> void
 {
-    // the number of arguments
-    PetscInt petsc_argc = std::size(options);
-
-    // populate the arguments list
-    std::vector<char *> options_chars(petsc_argc);
-    for (const auto & option : options) {
-        // add the option to the list of arguments
-        options_chars.push_back(const_cast<char *>(option.c_str()));
-    }
-    auto petsc_argv = options_chars.data();
-
     // record the options with PETSc
-    PetscCallVoid(PetscOptionsInsert(PETSC_NULLPTR, &petsc_argc, &petsc_argv, PETSC_NULLPTR));
+    PetscCallVoid(PetscOptionsInsertString(PETSC_NULLPTR, options.c_str()));
 
     // TODO: possibly add an options prefix to avoid conflicts when multiple solvers are used
     PetscCallVoid(KSPSetFromOptions(_ksp));
+
+    // // show all options that have been set
+    // PetscOptionsView(PETSC_NULLPTR, PETSC_VIEWER_STDOUT_WORLD);
 
     // all done
     return;
@@ -191,7 +183,6 @@ mito::solvers::petsc::PETScKrylovSolver::add_rhs_value(index_type row, const sca
 auto
 mito::solvers::petsc::PETScKrylovSolver::solve() -> void
 {
-
     // assemble matrix
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FINAL_ASSEMBLY));
     PetscCallVoid(MatAssemblyEnd(_matrix, MAT_FINAL_ASSEMBLY));

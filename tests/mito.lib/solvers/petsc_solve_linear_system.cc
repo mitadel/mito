@@ -16,7 +16,7 @@ TEST(Solvers, PETScKSPSolver)
     // instantiate a PETSc Krylov solver for a linear system of size {N}
     mito::solvers::petsc::PETScKrylovSolver solver;
     solver.initialize(N);
-    solver.set_options({});
+    solver.set_options("-ksp_monitor");
 
     // set matrix and right-hand side entries
     for (int i = 0; i < N; i++) {
