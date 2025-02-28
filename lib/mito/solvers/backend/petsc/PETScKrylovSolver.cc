@@ -64,6 +64,11 @@ mito::solvers::petsc::PETScKrylovSolver::_create_linear_system(index_type size) 
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
     PetscCallVoid(KSPSetOperators(_ksp, _matrix, _matrix));
 
+    // set the default options (do not allow the user to control the options for matrix and vectors)
+    PetscCallVoid(MatSetFromOptions(_matrix));
+    PetscCallVoid(VecSetFromOptions(_rhs));
+    PetscCallVoid(VecSetFromOptions(_solution));
+
     // all done
     return;
 }
@@ -128,9 +133,6 @@ mito::solvers::petsc::PETScKrylovSolver::set_options(const options_type & option
     PetscCallVoid(PetscOptionsInsert(PETSC_NULLPTR, &petsc_argc, &petsc_argv, PETSC_NULLPTR));
 
     // TODO: possibly add an options prefix to avoid conflicts when multiple solvers are used
-    PetscCallVoid(MatSetFromOptions(_matrix));
-    PetscCallVoid(VecSetFromOptions(_rhs));
-    PetscCallVoid(VecSetFromOptions(_solution));
     PetscCallVoid(KSPSetFromOptions(_ksp));
 
     // all done
