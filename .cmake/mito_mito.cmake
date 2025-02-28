@@ -4,6 +4,9 @@
 #
 
 
+# get the list of mito source files
+include(mito_sources)
+
 # build the mito libraries
 function(mito_mitoLib)
     # build the libmito version file
@@ -30,11 +33,7 @@ function(mito_mitoLib)
     )
 
     # add the sources
-    target_sources(mito
-        PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/lib/mito/version.cc
-        lib/mito/solvers/backend/petsc/PETScKrylovSolver.cc
-    )
+    target_sources(mito PRIVATE ${MITO_SOURCES})
 
     # and the link dependencies
     target_link_libraries(
