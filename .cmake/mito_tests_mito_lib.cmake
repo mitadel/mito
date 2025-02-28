@@ -60,6 +60,7 @@ endif()
 # solvers
 if(WITH_PETSC)
     mito_test_driver(tests/mito.lib/solvers/petsc_external_initialize.cc)
+    mito_test_driver(tests/mito.lib/solvers/petsc_internal_initialize.cc)
     mito_test_driver(tests/mito.lib/solvers/petsc_solve_linear_system.cc)
 endif()
 
