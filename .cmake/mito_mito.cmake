@@ -33,6 +33,7 @@ function(mito_mitoLib)
     target_sources(mito
         PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/lib/mito/version.cc
+        lib/mito/solvers/backend/petsc/PETScKrylovSolver.cc
     )
 
     # and the link dependencies
