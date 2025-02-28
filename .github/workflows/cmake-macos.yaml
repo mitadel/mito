@@ -37,7 +37,7 @@ jobs:
       - name: ${{matrix.os}} refresh
         run: |
           echo " -- install our dependencies"
-          brew install make cmake metis open-mpi
+          brew install make cmake metis open-mpi petsc
           # install {google-benchmark} from source to make sure it is built with the same compiler
           brew install --build-from-source --cc=gcc-12 google-benchmark
           curl https://raw.githubusercontent.com/Homebrew/homebrew-core/67b277e6d1faee20d2aa4fc8b2dc229a241fa807/Formula/vtk.rb > vtk.rb
@@ -172,7 +172,7 @@ jobs:
           mkdir build
           cd build
           echo " -- configuring the build"
-          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_CXX_COMPILER=${cxx} -DPython_EXECUTABLE=${pythonLocation}/bin/python${pythonVersion} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -DMITO_BUILD_BENCHMARKS=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest -DWITH_VTK=ON -DWITH_METIS=ON ${{github.workspace}}/mito
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_CXX_COMPILER=${cxx} -DPython_EXECUTABLE=${pythonLocation}/bin/python${pythonVersion} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -DMITO_BUILD_BENCHMARKS=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest -DWITH_VTK=ON -DWITH_METIS=ON -DWITH_PETSC=ON ${{github.workspace}}/mito
           echo " -- building mito"
           make -j 2 install
         env:
