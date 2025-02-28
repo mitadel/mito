@@ -12,23 +12,15 @@
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
 
-TEST(SummitReader, LoadMesh2D)
+TEST(VtkWriter, Mesh2D)
 {
-    // make a channel
-    journal::info_t channel("tests.read_mesh");
-
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
-    clock_t t;
-
-    //
-    t = clock();
+    // read summit mesh
     std::ifstream fileStream("rectangle.summit");
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system);
-    channel << "Loaded mesh in " << clock() - t << journal::endl;
 
-    t = clock();
-    auto boundary_mesh = mito::mesh::boundary(mesh);
-    channel << "Fetched boundary in " << clock() - t << journal::endl;
+    // write mesh to vtk file
+    mito::io::vtk::grid_writer("rectangle", mesh, coord_system).write();
 }

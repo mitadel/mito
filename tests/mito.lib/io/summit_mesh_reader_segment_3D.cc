@@ -12,7 +12,7 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-TEST(SummitReader, LoadSummitSegmentsMesh3D)
+TEST(SummitReader, MeshSegment3D)
 {
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();

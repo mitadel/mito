@@ -7,9 +7,13 @@
 #pragma once
 
 
-// publish the interface
-// the api is in "fem/api.h"
-#include "fem/public.h"
+// externals
+#include <string>
+
+// support
+#include "../journal.h"
+#include "../tensor.h"
+#include "../mesh.h"
 
 
 // end of file

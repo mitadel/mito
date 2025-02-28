@@ -27,23 +27,21 @@ namespace mito::quadrature {
         static constexpr auto _quadratureRule = quadrature_rule_type();
         // the number of quadrature points
         static constexpr int Q = quadrature_rule_type::npoints;
-        // the dimension of the physical space
-        static constexpr int D = manifold_type::dim;
+        // the quadrature field type to store the coordinates of the quadrature points
+        using quadrature_field_type =
+            discretization::quadrature_field_t<cell_type, Q, coordinates_type>;
 
       private:
-        auto _computeQuadPointCoordinates() -> void
+        template <int... q>
+        auto _computeQuadPointCoordinates(tensor::integer_sequence<q...>) -> void
         {
             // loop on elements
-            int e = 0;
             for (const auto & element : _manifold.elements()) {
-                // loop on quadrature point
-                for (int q = 0; q < Q; ++q) {
-                    // use manifold parametrization to map the position of quadrature points in
-                    // the canonical element to the coordinate of the quadrature point
-                    _coordinates[{ e, q }] =
-                        _manifold.parametrization(element, _quadratureRule.point(q));
-                }
-                ++e;
+                // use manifold parametrization to map the position of quadrature points in
+                // the canonical element to the coordinate of the quadrature point
+                _coordinates.insert(
+                    element.simplex(),
+                    { _manifold.parametrization(element, _quadratureRule.point(q))... });
             }
 
             // all done
@@ -53,23 +51,20 @@ namespace mito::quadrature {
       public:
         Integrator(const manifold_type & manifold) :
             _manifold(manifold),
-            _coordinates(manifold.nElements(), "coordinates")
+            _coordinates("coordinates")
         {
-            _computeQuadPointCoordinates();
+            _computeQuadPointCoordinates(tensor::make_integer_sequence<Q>{});
         }
 
         auto integrate(const fields::scalar_field_c auto & f) const -> tensor::scalar_t
         {
             auto result = tensor::scalar_t(0.0);
             // assemble elementary contributions
-            int e = 0;
             for (const auto & cell : _manifold.elements()) {
                 for (auto q = 0; q < Q; ++q) {
-                    auto point = _coordinates[{ e, q }];
+                    auto point = _coordinates(cell.simplex())[q];
                     result += f(point) * _quadratureRule.weight(q) * _manifold.volume(cell);
                 }
-                // increment element count
-                ++e;
             }
 
             return result;
@@ -79,7 +74,7 @@ namespace mito::quadrature {
         // the domain of integration
         const manifold_type & _manifold;
         // the coordinates of the quadrature points in the domain of integration
-        fem::quadrature_field_t<Q, coordinates_type> _coordinates;
+        quadrature_field_type _coordinates;
     };
 
 }    // namespace  mito

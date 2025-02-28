@@ -3,17 +3,17 @@
 // Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
 //
 
-#include <gtest/gtest.h>
-#include <mito/io.h>
-#include <mito/geometry.h>
-#include <mito/simulation.h>
 
+#include <gtest/gtest.h>
+#include <mito/simulation.h>
+#include <mito/mesh.h>
+#include <mito/io.h>
 
 // cartesian coordinates in 3D
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-TEST(ParallelVtkWriter, Cloud)
+TEST(ParallelVtkWriter, CloudField)
 {
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
@@ -55,6 +55,38 @@ TEST(ParallelVtkWriter, Cloud)
         }
     }
 
-    // write point cloud to vtk file
-    mito::io::vtk::parallel_grid_writer("sphere_cloud", cloud, coord_system).write();
+    // a point field on the cloud
+    auto point_field =
+        mito::discretization::point_field<mito::tensor::vector_t<3>>(cloud, "normal");
+
+    // the normal field to the submanifold
+    constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
+        mito::tensor::scalar_t phi = std::atan2(x[1], x[0]);
+        mito::tensor::scalar_t theta = std::atan2(std::hypot(x[1], x[0]), x[2]);
+        return std::sin(theta) * std::cos(phi) * mito::tensor::e_0<3>
+             + std::sin(theta) * std::sin(phi) * mito::tensor::e_1<3>
+             + std::cos(theta) * mito::tensor::e_2<3>;
+    });
+
+    // fill information in point field
+    for (auto & [point, value] : point_field) {
+        // get the coordinates of the node
+        auto & coordinates = coord_system.coordinates(point);
+        // compute the value of the normal field at those coordinates
+        value = normal_field(coordinates);
+        std::cout << coordinates << " " << value << std::endl;
+    }
+
+    // write mesh to vtk file
+    auto writer = mito::io::vtk::parallel_field_writer("sphere_cloud_field", cloud, coord_system);
+    // sign {point_field} up with the writer
+    writer.record(point_field);
+    // write output file
+    writer.write();
+
+    // all done
+    return;
 }
+
+
+// end of file

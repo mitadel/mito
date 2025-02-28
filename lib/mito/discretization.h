@@ -7,13 +7,9 @@
 #pragma once
 
 
-// externals
-
-// support
-#include "../journal.h"
-#include "../manifolds.h"
-#include "../math.h"
-#include "../discretization.h"
+// publish the interface
+// the api is in "discretization/api.h"
+#include "discretization/public.h"
 
 
 // end of file

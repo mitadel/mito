@@ -7,13 +7,13 @@
 #pragma once
 
 
-// externals
+namespace mito::discretization {
 
-// support
-#include "../journal.h"
-#include "../manifolds.h"
-#include "../math.h"
-#include "../discretization.h"
+    // class discrete field
+    template <class keyT, class Y>
+    class DiscreteField;
+
+}
 
 
 // end of file

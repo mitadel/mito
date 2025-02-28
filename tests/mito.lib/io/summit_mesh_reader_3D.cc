@@ -12,7 +12,7 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-TEST(SummitReader, LoadMesh3D)
+TEST(SummitReader, Mesh3D)
 {
     // make a channel
     journal::info_t channel("tests.read_mesh");
