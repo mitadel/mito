@@ -15,7 +15,8 @@ main()
     int N = 10;
 
     // instantiate a PETSc Krylov solver for a linear system of size {N}
-    mito::solvers::petsc::PETScKrylovSolver solver(N);
+    mito::solvers::petsc::PETScKrylovSolver solver;
+    solver.initialize(N);
     solver.set_options({});
 
     // set matrix and right-hand side entries
@@ -32,6 +33,9 @@ main()
 
     // solve the linear system
     solver.solve();
+
+    // finalize the solver
+    solver.finalize();
 
     // all done
     return 0;

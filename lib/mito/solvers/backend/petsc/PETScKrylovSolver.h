@@ -26,7 +26,7 @@ namespace mito::solvers::petsc {
 
       public:
         // constructor
-        PETScKrylovSolver(index_type);
+        PETScKrylovSolver();
 
         // destructor
         ~PETScKrylovSolver();
@@ -45,6 +45,12 @@ namespace mito::solvers::petsc {
         auto _destroy_linear_system() -> void;
 
       public:
+        // initialize the petsc solver
+        auto initialize(index_type size) -> void;
+
+        // finalize the petsc solver
+        auto finalize() -> void;
+
         // set petsc options
         auto set_options(const options_type &) -> void;
 

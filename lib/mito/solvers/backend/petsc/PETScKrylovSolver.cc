@@ -8,25 +8,10 @@
 
 
 // constructor
-mito::solvers::petsc::PETScKrylovSolver::PETScKrylovSolver(index_type size) :
-    _initialized_petsc(false)
-{
-    // initialize PETSc if it has not been initialized before
-    _initialize_petsc();
-
-    // create the matrix, right-hand side, solution, and Krylov solver
-    _create_linear_system(size);
-}
+mito::solvers::petsc::PETScKrylovSolver::PETScKrylovSolver() : _initialized_petsc(false) {}
 
 // destructor
-mito::solvers::petsc::PETScKrylovSolver::~PETScKrylovSolver()
-{
-    // destroy the memory for the matrix, right-hand side, solution, and Krylov solver
-    _destroy_linear_system();
-
-    // finalize petsc if it has been initialized by this instance
-    _finalize_petsc();
-}
+mito::solvers::petsc::PETScKrylovSolver::~PETScKrylovSolver() {}
 
 // initialize PETSc if it has not been initialized before
 auto
@@ -91,6 +76,34 @@ mito::solvers::petsc::PETScKrylovSolver::_destroy_linear_system() -> void
     PetscCallVoid(VecDestroy(&_solution));
     PetscCallVoid(VecDestroy(&_rhs));
     PetscCallVoid(KSPDestroy(&_ksp));
+
+    // all done
+    return;
+}
+
+// initialize the petsc solver
+auto
+mito::solvers::petsc::PETScKrylovSolver::initialize(index_type size) -> void
+{
+    // initialize PETSc if it has not been initialized before
+    _initialize_petsc();
+
+    // create the matrix, right-hand side, solution, and Krylov solver
+    _create_linear_system(size);
+
+    // all done
+    return;
+}
+
+// finalize the petsc solver
+auto
+mito::solvers::petsc::PETScKrylovSolver::finalize() -> void
+{
+    // destroy the memory for the matrix, right-hand side, solution, and Krylov solver
+    _destroy_linear_system();
+
+    // finalize petsc if it has been initialized by this instance
+    _finalize_petsc();
 
     // all done
     return;
