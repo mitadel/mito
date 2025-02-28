@@ -8,8 +8,7 @@
 #include <mito.h>
 
 
-int
-main()
+TEST(Solvers, PETScKSPSolver)
 {
     // the size of the linear system
     int N = 10;
@@ -34,9 +33,25 @@ main()
     // solve the linear system
     solver.solve();
 
+    // read the solution
+    auto x = std::vector<double>(N);
+    solver.get_solution(x);
+
+    // check the solution
+    EXPECT_DOUBLE_EQ(x[0], 5.0);
+    EXPECT_DOUBLE_EQ(x[1], 9.0);
+    EXPECT_DOUBLE_EQ(x[2], 12.0);
+    EXPECT_DOUBLE_EQ(x[3], 14.0);
+    EXPECT_DOUBLE_EQ(x[4], 15.0);
+    EXPECT_DOUBLE_EQ(x[5], 15.0);
+    EXPECT_DOUBLE_EQ(x[6], 14.0);
+    EXPECT_DOUBLE_EQ(x[7], 12.0);
+    EXPECT_DOUBLE_EQ(x[8], 9.0);
+    EXPECT_DOUBLE_EQ(x[9], 5.0);
+
     // finalize the solver
     solver.finalize();
 
     // all done
-    return 0;
+    return;
 }
