@@ -53,11 +53,11 @@ function(mito_mitoLib)
         FILES_MATCHING PATTERN *.h PATTERN *.icc
     )
 
-    # install the mito version files
+    # install the mito version file
     install(
         DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib/mito
         DESTINATION ${MITO_DEST_INCLUDE}
-        FILES_MATCHING PATTERN version.cc PATTERN version.h
+        FILES_MATCHING PATTERN version.h
     )
 
     # libmito
