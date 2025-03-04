@@ -38,6 +38,7 @@ mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 # discretization
 mito_test_driver(tests/mito.lib/discretization/quadrature_field.cc)
 mito_test_driver(tests/mito.lib/discretization/nodal_field.cc)
+mito_test_driver(tests/mito.lib/discretization/poisson.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)
