@@ -62,6 +62,13 @@ if(WITH_VTK)
     endif()
 endif()
 
+# solvers
+if(WITH_PETSC)
+    mito_test_driver(tests/mito.lib/solvers/petsc_external_initialize.cc)
+    mito_test_driver(tests/mito.lib/solvers/petsc_internal_initialize.cc)
+    mito_test_driver(tests/mito.lib/solvers/petsc_solve_linear_system.cc)
+endif()
+
 # tensor
 mito_test_driver(tests/mito.lib/tensor/one_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/contractions.cc)

@@ -1,0 +1,41 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_solvers_backend_petsc_PETScKrylovSolver_icc)
+#error This header file contains implementation details of class mito::solvers::petsc::PETScKrylovSolver
+#else
+
+
+// get the solution at entry {row}
+template <class solutionT>
+auto
+mito::solvers::petsc::PETScKrylovSolver::get_solution(solutionT & solution) const -> void
+{
+    // get a pointer to the beginning of {_solution}
+    const scalar_type * u;
+    PetscCallVoid(VecGetArrayRead(_solution, &u));
+
+    // get the size of the vector
+    PetscInt size;
+    PetscCallVoid(VecGetSize(_solution, &size));
+
+    // check that the size of {_solution} matches the size of {solution}
+    assert(size == (int) std::size(solution));
+
+    // copy {_solution} into {solution}
+    std::copy(u, u + size, std::begin(solution));
+
+    // restore the array after reading
+    PetscCallVoid(VecRestoreArrayRead(_solution, &u));
+
+    // all done
+    return;
+}
+
+
+#endif    // mito_solvers_backend_petsc_PETScKrylovSolver_icc
+
+// end of file

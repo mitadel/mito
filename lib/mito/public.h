@@ -24,6 +24,7 @@
 #include "simulation.h"
 #include "topology.h"
 #include "utilities.h"
+#include "solvers.h"
 
 
 // end of file
