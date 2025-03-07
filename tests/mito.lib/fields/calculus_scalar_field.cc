@@ -19,7 +19,7 @@ static constexpr auto e_1 = mito::tensor::e_1<2>;
 constexpr auto pi_sixth = std::numbers::pi / 6.0;
 
 
-TEST(Fields, Gradient)
+TEST(Laplacian, ScalarFields)
 {
     // the sine function
     constexpr auto sin = mito::functions::sin;
