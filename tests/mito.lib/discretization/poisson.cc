@@ -18,13 +18,6 @@ using simplex_t = cell_t::simplex_type;
 // Gauss quadrature on triangles with degree of exactness 1
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 1>;
-// TOFIX: the correct dimension of the parametric space
-// // the dimension of the parametric space
-// static constexpr int parametricDim = mito::manifolds::parametric_dim<simplex_t>();
-// // the type of parametric coordinates
-// using parametric_point_t = mito::manifolds::parametric_point_t<parametricDim>;
-// the type of parametric coordinates
-using parametric_point_t = mito::manifolds::parametric_point_t<2>;
 
 // the function extracting the x component of a 2D vector
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
