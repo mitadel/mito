@@ -21,7 +21,7 @@ using node_t = cell_t::node_type;
 using simplex_t = cell_t::simplex_type;
 // Gauss quadrature on triangles with degree of exactness 1
 using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 1>;
+    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 2>;
 
 
 // instantiate the quadrature rule
@@ -288,23 +288,43 @@ TEST(Fem, PoissonSquare)
 #endif
 
     // compute the error
-    auto error = 0.0;
-    // loop on all the nodes of the cell
-    for (const auto & node : nodes) {
-        // get the exact solution at {coord}
-        auto u_exact = exact_solution(node);
-        // get the numerical solution at {coord}
-        auto u_numerical = solution(node);
-        // get the error
-        error += (u_exact - u_numerical) * (u_exact - u_numerical);
+    auto error_L2 = 0.0;
+    // loop on all the cells of the mesh
+    for (const auto & cell : manifold.elements()) {
+        // volume of the cell
+        auto volume = manifold.volume(cell);
+        // loop on the quadrature points
+        for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
+            // the barycentric coordinates of the quadrature point
+            /*constexpr*/ auto xi =
+                coordinates_t{ quadrature_rule.point(q)[0], quadrature_rule.point(q)[1] };
+            // evaluate the shape functions at {xi}
+            /*constexpr*/ auto phi = std::array<scalar_t, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
+            // the coordinates of the quadrature point
+            auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
+            // get the exact solution at {coord}
+            auto u_exact = u_ex(coord);
+            // assemble the numerical solution at {coord}
+            auto u_numerical = 0.0;
+            int a = 0;
+            // loop on all the nodes of the cell
+            for (const auto & node : cell.nodes()) {
+                // get the numerical solution at {coord}
+                u_numerical += solution(node) * phi[a];
+                ++a;
+            }
+            // get the error
+            error_L2 += (u_exact - u_numerical) * (u_exact - u_numerical)
+                      * quadrature_rule.weight(q) * volume;
+        }
     }
-    error = std::sqrt(error);
+    error_L2 = std::sqrt(error_L2);
 
     // report
-    channel << "l2 error: " << error << journal::endl;
+    channel << "L2 error: " << error_L2 << journal::endl;
 
     // check that the l2 error is reasonable
-    EXPECT_TRUE(error < 0.1);
+    EXPECT_TRUE(error_L2 < 0.02);
 
     // TODO: add norm calculation for convergence study
 }
