@@ -28,7 +28,7 @@ TEST(DivergenceTheorem, Mesh2D)
     // make a channel
     journal::info_t channel("tests.divergence_theorem");
 
-    // a scalar field
+    // a vector field
     constexpr auto f = x0 * x1 * e0 + x0 * x0 * e1;
 
     // build a scalar field with divergence of field
