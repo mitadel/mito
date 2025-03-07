@@ -193,7 +193,14 @@ TEST(Fem, PoissonSquare)
         // add up the area of the cell
         area += 1.0 / 2.0 * mito::tensor::determinant(J(xi));
 
-        // compute the gradients of the shape functions with respect to the actual coordinates
+        // evaluate the shape functions at {xi}
+        using scalar_type = mito::tensor::scalar_t;
+        std::array<scalar_type, 3> phi;
+        phi[0] = phi_0(xi);
+        phi[1] = phi_1(xi);
+        phi[2] = phi_2(xi);
+
+        // evaluate the gradients of the shape functions at {xi}
         using vector_type = mito::tensor::vector_t<2>;
         std::array<vector_type, 3> dphi;
         dphi[0] = mito::fields::gradient(phi_0)(xi) * mito::tensor::inverse(J(xi));
@@ -201,6 +208,9 @@ TEST(Fem, PoissonSquare)
         dphi[2] = mito::fields::gradient(phi_2)(xi) * mito::tensor::inverse(J(xi));
 
         auto factor = quadrature_rule.weight(0) * manifold.volume(cell);
+
+        // the coordinates of the quadrature point
+        auto coord = manifold.parametrization(cell, quadrature_rule.point(0));
 
         // populate the linear system of equations
         int a = 0;
@@ -227,25 +237,11 @@ TEST(Fem, PoissonSquare)
 
                 ++b;
             }
+
+            solver.add_rhs_value(eq_a, factor * f(coord) * phi[a]);
+
             ++a;
         }
-
-        auto coord = manifold.parametrization(cell, quadrature_rule.point(0));
-        int eq = equation_map.at(nodes[0]);
-        if (eq != -1) {
-            solver.add_rhs_value(eq, factor * f(coord) * phi_0(xi));
-        }
-        eq = equation_map.at(nodes[1]);
-        if (eq != -1) {
-            solver.add_rhs_value(eq, factor * f(coord) * phi_1(xi));
-        }
-        eq = equation_map.at(nodes[2]);
-        if (eq != -1) {
-            solver.add_rhs_value(eq, factor * f(coord) * phi_2(xi));
-        }
-
-        // report (print gradients of the shape functions)
-        // channel << dphi << journal::endl;
     }
 
     // check that the area of the unit square is 1.0
