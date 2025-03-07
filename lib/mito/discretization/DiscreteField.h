@@ -9,15 +9,18 @@
 
 namespace mito::discretization {
 
-    template <class keyT, class Y>
+    template <class keyT, class valueT>
     class DiscreteField {
 
       private:
         // the key type
         using key_type = keyT;
+        // the value type
+        using value_type = valueT;
 
-        // a map from {key_type} to {Y} values
-        using map_type = std::unordered_map<key_type, Y, utilities::hash_function<key_type>>;
+        // a map from {key_type} to {value_type} values
+        using map_type =
+            std::unordered_map<key_type, value_type, utilities::hash_function<key_type>>;
 
       public:
         // constructor
@@ -52,7 +55,7 @@ namespace mito::discretization {
         /**
          * accessor for the value of a given entry
          */
-        inline auto operator()(const key_type & key) const -> const Y &
+        inline auto operator()(const key_type & key) const -> const value_type &
         {
             return _map_entry_to_values.at(key);
         }
@@ -60,12 +63,15 @@ namespace mito::discretization {
         /**
          * mutator for the value of a given entry
          */
-        inline auto operator()(const key_type & key) -> Y & { return _map_entry_to_values.at(key); }
+        inline auto operator()(const key_type & key) -> value_type &
+        {
+            return _map_entry_to_values.at(key);
+        }
 
         /**
          * insert a new entry to the field
          */
-        inline auto insert(const key_type & key, const Y & entry = Y()) -> void
+        inline auto insert(const key_type & key, const value_type & entry = value_type()) -> void
         {
             // add a new entry to the field
             _map_entry_to_values[key] = entry;
