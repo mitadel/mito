@@ -144,7 +144,6 @@ TEST(Fem, PoissonSquare)
 
     // instantiate the quadrature rule
     constexpr auto quadrature_rule = quadrature_rule_t();
-    static_assert(quadrature_rule_t::npoints == 1);
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
@@ -174,59 +173,60 @@ TEST(Fem, PoissonSquare)
         // on the cell {cell}
         auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
 
-        // the barycentric coordinates of the only quadrature point of the quadrature rule
-        constexpr auto xi =
-            coordinates_t{ quadrature_rule.point(0)[0], quadrature_rule.point(0)[1] };
+        // loop on the quadrature points
+        for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
 
-        // report (print the barycenter of the mesh cell)
-        // channel << x_cell(xi) << journal::endl;
+            // the barycentric coordinates of the quadrature point
+            /*constexpr*/ auto xi =
+                coordinates_t{ quadrature_rule.point(q)[0], quadrature_rule.point(q)[1] };
 
-        // evaluate the shape functions at {xi}
-        constexpr auto phi = std::array<scalar_t, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
+            // evaluate the shape functions at {xi}
+            /*constexpr*/ auto phi = std::array<scalar_t, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
 
-        // evaluate the gradients of the shape functions at {xi}
-        constexpr auto dphi = std::array<vector_t, 3>{ mito::fields::gradient(phi_0)(xi),
-                                                       mito::fields::gradient(phi_1)(xi),
-                                                       mito::fields::gradient(phi_2)(xi) };
+            // evaluate the gradients of the shape functions at {xi}
+            /*constexpr*/ auto dphi = std::array<vector_t, 3>{ mito::fields::gradient(phi_0)(xi),
+                                                               mito::fields::gradient(phi_1)(xi),
+                                                               mito::fields::gradient(phi_2)(xi) };
 
-        // the derivative of the coordinates with respect to the barycentric coordinates
-        auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi));
+            // the derivative of the coordinates with respect to the barycentric coordinates
+            auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi));
 
-        // precompute the common factor
-        auto factor = quadrature_rule.weight(0) * manifold.volume(cell);
+            // precompute the common factor
+            auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
 
-        // the coordinates of the quadrature point
-        auto coord = manifold.parametrization(cell, quadrature_rule.point(0));
+            // the coordinates of the quadrature point
+            auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
 
-        // populate the linear system of equations
-        int a = 0;
-        for (const auto & node_a : nodes) {
-            int b = 0;
-            // get the equation number of {node_a}
-            int eq_a = equation_map.at(node_a);
-            assert(eq_a < N_equations);
-            if (eq_a == -1) {
-                // skip boundary nodes
-                continue;
-            }
-            for (const auto & node_b : nodes) {
-                // get the equation number of {node_b}
-                int eq_b = equation_map.at(node_b);
-                assert(eq_b < N_equations);
-                if (eq_b == -1) {
+            // populate the linear system of equations
+            int a = 0;
+            for (const auto & node_a : nodes) {
+                int b = 0;
+                // get the equation number of {node_a}
+                int eq_a = equation_map.at(node_a);
+                assert(eq_a < N_equations);
+                if (eq_a == -1) {
                     // skip boundary nodes
                     continue;
                 }
-                auto entry = factor * (dphi[a] * J_inv) * (dphi[b] * J_inv);
+                for (const auto & node_b : nodes) {
+                    // get the equation number of {node_b}
+                    int eq_b = equation_map.at(node_b);
+                    assert(eq_b < N_equations);
+                    if (eq_b == -1) {
+                        // skip boundary nodes
+                        continue;
+                    }
+                    auto entry = factor * (dphi[a] * J_inv) * (dphi[b] * J_inv);
 
-                solver.add_matrix_value(eq_a, eq_b, entry);
+                    solver.add_matrix_value(eq_a, eq_b, entry);
 
-                ++b;
+                    ++b;
+                }
+
+                solver.add_rhs_value(eq_a, factor * f(coord) * phi[a]);
+
+                ++a;
             }
-
-            solver.add_rhs_value(eq_a, factor * f(coord) * phi[a]);
-
-            ++a;
         }
     }
 
