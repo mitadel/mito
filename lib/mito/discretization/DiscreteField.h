@@ -89,6 +89,8 @@ namespace mito::discretization {
         inline auto end() const { return std::cend(_map_entry_to_values); }
         inline auto begin() { return std::begin(_map_entry_to_values); }
         inline auto end() { return std::end(_map_entry_to_values); }
+        inline auto cbegin() const { return std::cbegin(_map_entry_to_values); }
+        inline auto cend() const { return std::cend(_map_entry_to_values); }
 
       private:
         // the underlying mapping of entries to nodal values
