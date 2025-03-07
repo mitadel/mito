@@ -237,32 +237,29 @@ TEST(Fem, PoissonSquare)
     solver.get_solution(u);
 
     // the numerical solution nodal field on the mesh
-    auto solution =
-        mito::discretization::nodal_field<mito::tensor::vector_t<1>>(mesh, "numerical solution");
+    auto solution = mito::discretization::nodal_field<scalar_t>(mesh, "numerical solution");
     // fill information in nodal field
     for (auto & [node, value] : solution) {
         // get the equation number of {node}
         int eq = equation_map.at(node);
         if (eq != -1) {
             // read the solution at {eq}
-            value[0] = u[eq];
+            value = u[eq];
         }
     }
 
     // the forcing term nodal field on the mesh
-    auto forcing =
-        mito::discretization::nodal_field<mito::tensor::vector_t<1>>(mesh, "forcing term");
+    auto forcing = mito::discretization::nodal_field<scalar_t>(mesh, "forcing term");
     // fill information in nodal field
     for (auto & [node, value] : forcing) {
         // get the position of {node}
         auto coord = coord_system.coordinates(node->point());
         // evaluate the forcing at {coord}
-        value[0] = f(coord);
+        value = f(coord);
     }
 
     // the exact solution nodal field on the mesh
-    auto exact_solution =
-        mito::discretization::nodal_field<mito::tensor::vector_t<1>>(mesh, "exact solution");
+    auto exact_solution = mito::discretization::nodal_field<scalar_t>(mesh, "exact solution");
     auto u_ex =
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
     // fill information in nodal field
@@ -270,7 +267,7 @@ TEST(Fem, PoissonSquare)
         // get the position of {node}
         auto coord = coord_system.coordinates(node->point());
         // evaluate the forcing at {coord}
-        value[0] = u_ex(coord);
+        value = u_ex(coord);
     }
 
 #ifdef WITH_VTK
@@ -291,9 +288,9 @@ TEST(Fem, PoissonSquare)
     // loop on all the nodes of the cell
     for (const auto & node : nodes) {
         // get the exact solution at {coord}
-        auto u_exact = exact_solution(node)[0];
+        auto u_exact = exact_solution(node);
         // get the numerical solution at {coord}
-        auto u_numerical = solution(node)[0];
+        auto u_numerical = solution(node);
         // get the error
         error += (u_exact - u_numerical) * (u_exact - u_numerical);
     }
