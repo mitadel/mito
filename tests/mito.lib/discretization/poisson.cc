@@ -7,6 +7,10 @@
 #include <mito.h>
 
 
+// the scalar type
+using scalar_t = mito::tensor::scalar_t;
+// the vector type
+using vector_t = mito::tensor::vector_t<2>;
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 // the type of cell
@@ -178,14 +182,12 @@ TEST(Fem, PoissonSquare)
         // channel << x_cell(xi) << journal::endl;
 
         // evaluate the shape functions at {xi}
-        using scalar_type = mito::tensor::scalar_t;
-        constexpr auto phi = std::array<scalar_type, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
+        constexpr auto phi = std::array<scalar_t, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
 
         // evaluate the gradients of the shape functions at {xi}
-        using vector_type = mito::tensor::vector_t<2>;
-        constexpr auto dphi = std::array<vector_type, 3>{ mito::fields::gradient(phi_0)(xi),
-                                                          mito::fields::gradient(phi_1)(xi),
-                                                          mito::fields::gradient(phi_2)(xi) };
+        constexpr auto dphi = std::array<vector_t, 3>{ mito::fields::gradient(phi_0)(xi),
+                                                       mito::fields::gradient(phi_1)(xi),
+                                                       mito::fields::gradient(phi_2)(xi) };
 
         // the derivative of the coordinates with respect to the barycentric coordinates
         auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi));
