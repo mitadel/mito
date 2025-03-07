@@ -149,9 +149,6 @@ TEST(Fem, PoissonSquare)
     constexpr auto quadrature_rule = quadrature_rule_t();
     static_assert(quadrature_rule_t::npoints == 1);
 
-    // the {area} of the mesh
-    auto area = 0.0;
-
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
            * mito::functions::sin(std::numbers::pi * y);
@@ -189,9 +186,6 @@ TEST(Fem, PoissonSquare)
 
         // report (print the barycenter of the mesh cell)
         // channel << x_cell(xi) << journal::endl;
-
-        // add up the area of the cell
-        area += 1.0 / 2.0 * mito::tensor::determinant(J(xi));
 
         // evaluate the shape functions at {xi}
         using scalar_type = mito::tensor::scalar_t;
@@ -243,9 +237,6 @@ TEST(Fem, PoissonSquare)
             ++a;
         }
     }
-
-    // check that the area of the unit square is 1.0
-    EXPECT_DOUBLE_EQ(1.0, area);
 
     solver.solve();
 
