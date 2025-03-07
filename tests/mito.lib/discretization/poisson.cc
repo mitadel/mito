@@ -236,6 +236,9 @@ TEST(Fem, PoissonSquare)
     auto u = std::vector<double>(N_equations);
     solver.get_solution(u);
 
+    // finalize the solver
+    solver.finalize();
+
     // the numerical solution nodal field on the mesh
     auto solution = mito::discretization::nodal_field<scalar_t>(mesh, "numerical solution");
     // fill information in nodal field
@@ -303,9 +306,6 @@ TEST(Fem, PoissonSquare)
     EXPECT_TRUE(error < 0.1);
 
     // TODO: add norm calculation for convergence study
-
-    // finalize the solver
-    solver.finalize();
 }
 
 // end of file
