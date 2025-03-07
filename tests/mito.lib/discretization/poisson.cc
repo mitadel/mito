@@ -169,9 +169,9 @@ TEST(Fem, PoissonSquare)
         auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
 
         // linear shape functions on the triangle
-        constexpr auto phi_1 = mito::functions::component<parametric_point_t, 0>;
-        constexpr auto phi_2 = mito::functions::component<parametric_point_t, 1>;
-        constexpr auto phi_0 = 1.0 - phi_1 - phi_2;
+        constexpr auto phi_0 = mito::functions::component<parametric_point_t, 0>;
+        constexpr auto phi_1 = mito::functions::component<parametric_point_t, 1>;
+        constexpr auto phi_2 = 1.0 - phi_0 - phi_1;
 
         // the isoparametric mapping from the barycentric coordinates to the actual coordinates
         // on the cell {cell}
