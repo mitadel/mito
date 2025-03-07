@@ -160,8 +160,6 @@ TEST(Fem, PoissonSquare)
     // loop on all the cells of the mesh
     for (const auto & cell : manifold.elements()) {
 
-        // QUESTION: does this work?
-        // auto nodes = cell.nodes();
         // the nodes of the cell
         const auto & nodes = cell.nodes();
 
