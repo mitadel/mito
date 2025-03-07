@@ -23,6 +23,10 @@ using simplex_t = cell_t::simplex_type;
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 1>;
 
+
+// instantiate the quadrature rule
+constexpr auto quadrature_rule = quadrature_rule_t();
+
 // the function extracting the x component of a 2D vector
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the function extracting the y component of a 2D vector
@@ -32,6 +36,11 @@ constexpr auto y = mito::functions::component<coordinates_t, 1>;
 constexpr auto xi_0 = mito::functions::component<coordinates_t, 0>;
 // the function extracting the y component of a 2D vector
 constexpr auto xi_1 = mito::functions::component<coordinates_t, 1>;
+// linear shape functions on the triangle
+constexpr auto phi_0 = mito::fields::field(xi_0);
+constexpr auto phi_1 = mito::fields::field(xi_1);
+constexpr auto phi_2 = 1.0 - phi_0 - phi_1;
+
 
 TEST(Fem, PoissonSquare)
 {
@@ -142,9 +151,6 @@ TEST(Fem, PoissonSquare)
     // create the body manifold
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
-    // instantiate the quadrature rule
-    constexpr auto quadrature_rule = quadrature_rule_t();
-
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
            * mito::functions::sin(std::numbers::pi * y);
@@ -163,11 +169,6 @@ TEST(Fem, PoissonSquare)
         auto x_0 = coord_system.coordinates(nodes[0]->point()) - origin;
         auto x_1 = coord_system.coordinates(nodes[1]->point()) - origin;
         auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
-
-        // linear shape functions on the triangle
-        constexpr auto phi_0 = mito::fields::field(xi_0);
-        constexpr auto phi_1 = mito::fields::field(xi_1);
-        constexpr auto phi_2 = 1.0 - phi_0 - phi_1;
 
         // the isoparametric mapping from the barycentric coordinates to the actual coordinates
         // on the cell {cell}
