@@ -177,9 +177,6 @@ TEST(Fem, PoissonSquare)
         // on the cell {cell}
         auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
 
-        // the derivative of the coordinates with respect to the barycentric coordinates
-        auto J = mito::fields::gradient(x_cell);
-
         // the barycentric coordinates of the only quadrature point of the quadrature rule
         constexpr auto xi =
             coordinates_t{ quadrature_rule.point(0)[0], quadrature_rule.point(0)[1] };
@@ -189,18 +186,18 @@ TEST(Fem, PoissonSquare)
 
         // evaluate the shape functions at {xi}
         using scalar_type = mito::tensor::scalar_t;
-        std::array<scalar_type, 3> phi;
-        phi[0] = phi_0(xi);
-        phi[1] = phi_1(xi);
-        phi[2] = phi_2(xi);
+        constexpr auto phi = std::array<scalar_type, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
 
         // evaluate the gradients of the shape functions at {xi}
         using vector_type = mito::tensor::vector_t<2>;
-        std::array<vector_type, 3> dphi;
-        dphi[0] = mito::fields::gradient(phi_0)(xi) * mito::tensor::inverse(J(xi));
-        dphi[1] = mito::fields::gradient(phi_1)(xi) * mito::tensor::inverse(J(xi));
-        dphi[2] = mito::fields::gradient(phi_2)(xi) * mito::tensor::inverse(J(xi));
+        constexpr auto dphi = std::array<vector_type, 3>{ mito::fields::gradient(phi_0)(xi),
+                                                          mito::fields::gradient(phi_1)(xi),
+                                                          mito::fields::gradient(phi_2)(xi) };
 
+        // the derivative of the coordinates with respect to the barycentric coordinates
+        auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi));
+
+        // precompute the common factor
         auto factor = quadrature_rule.weight(0) * manifold.volume(cell);
 
         // the coordinates of the quadrature point
@@ -225,7 +222,7 @@ TEST(Fem, PoissonSquare)
                     // skip boundary nodes
                     continue;
                 }
-                auto entry = factor * (dphi[a] * dphi[b]);
+                auto entry = factor * (dphi[a] * J_inv) * (dphi[b] * J_inv);
 
                 solver.add_matrix_value(eq_a, eq_b, entry);
 
