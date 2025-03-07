@@ -31,6 +31,11 @@ constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the function extracting the y component of a 2D vector
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
+// the function extracting the 0 component of a parametric point
+constexpr auto xi_0 = mito::functions::component<coordinates_t, 0>;
+// the function extracting the y component of a 2D vector
+constexpr auto xi_1 = mito::functions::component<coordinates_t, 1>;
+
 TEST(Fem, PoissonSquare)
 {
     // make a channel
@@ -169,49 +174,33 @@ TEST(Fem, PoissonSquare)
         auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
 
         // linear shape functions on the triangle
-        constexpr auto phi_0 = mito::functions::component<parametric_point_t, 0>;
-        constexpr auto phi_1 = mito::functions::component<parametric_point_t, 1>;
+        constexpr auto phi_0 = mito::fields::field(xi_0);
+        constexpr auto phi_1 = mito::fields::field(xi_1);
         constexpr auto phi_2 = 1.0 - phi_0 - phi_1;
 
         // the isoparametric mapping from the barycentric coordinates to the actual coordinates
         // on the cell {cell}
         auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
 
-        // the only quadrature point of the quadrature rule
+        // the derivative of the coordinates with respect to the barycentric coordinates
+        auto J = mito::fields::gradient(x_cell);
+
+        // the barycentric coordinates of the only quadrature point of the quadrature rule
         constexpr auto xi =
-            parametric_point_t{ quadrature_rule.point(0)[0], quadrature_rule.point(0)[1] };
+            coordinates_t{ quadrature_rule.point(0)[0], quadrature_rule.point(0)[1] };
 
         // report (print the barycenter of the mesh cell)
         // channel << x_cell(xi) << journal::endl;
 
-        // the derivative of the coordinates with respect to the barycentric coordinates
-        auto J = mito::tensor::matrix_t<2>();
-        J[{ 0, 0 }] = mito::functions::derivative<0>(x_cell)(xi)[0];
-        J[{ 1, 0 }] = mito::functions::derivative<0>(x_cell)(xi)[1];
-        J[{ 0, 1 }] = mito::functions::derivative<1>(x_cell)(xi)[0];
-        J[{ 1, 1 }] = mito::functions::derivative<1>(x_cell)(xi)[1];
-
-        // TODO: make this syntax work and return a matrix function
-        // J = mito::functions::derivative(x_cell);
-
         // add up the area of the cell
-        area += 1.0 / 2.0 * mito::tensor::determinant(J);
+        area += 1.0 / 2.0 * mito::tensor::determinant(J(xi));
 
-        // TODO: make this syntax work:
-        // J[{ 0, 0 }] = mito::functions::derivative<0>(x_cell)[0];
-        // J(xi);
-
-        // the derivative of the shape functions with respect to the parametric coordinates
-        auto dphi_xi = mito::tensor::matrix_t<3, 2>();
-        dphi_xi[{ 0, 0 }] = mito::functions::derivative<0>(phi_0)(xi);
-        dphi_xi[{ 0, 1 }] = mito::functions::derivative<1>(phi_0)(xi);
-        dphi_xi[{ 1, 0 }] = mito::functions::derivative<0>(phi_1)(xi);
-        dphi_xi[{ 1, 1 }] = mito::functions::derivative<1>(phi_1)(xi);
-        dphi_xi[{ 2, 0 }] = mito::functions::derivative<0>(phi_2)(xi);
-        dphi_xi[{ 2, 1 }] = mito::functions::derivative<1>(phi_2)(xi);
-
-        // the derivative of the shape functions with respect to the physical coordinates
-        auto dphi = dphi_xi * mito::tensor::inverse(J);
+        // compute the gradients of the shape functions with respect to the actual coordinates
+        using vector_type = mito::tensor::vector_t<2>;
+        std::array<vector_type, 3> dphi;
+        dphi[0] = mito::fields::gradient(phi_0)(xi) * mito::tensor::inverse(J(xi));
+        dphi[1] = mito::fields::gradient(phi_1)(xi) * mito::tensor::inverse(J(xi));
+        dphi[2] = mito::fields::gradient(phi_2)(xi) * mito::tensor::inverse(J(xi));
 
         auto factor = quadrature_rule.weight(0) * manifold.volume(cell);
 
@@ -234,8 +223,7 @@ TEST(Fem, PoissonSquare)
                     // skip boundary nodes
                     continue;
                 }
-                auto entry =
-                    factor * (dphi[{ a, 0 }] * dphi[{ b, 0 }] + dphi[{ a, 1 }] * dphi[{ b, 1 }]);
+                auto entry = factor * (dphi[a] * dphi[b]);
 
                 solver.add_matrix_value(eq_a, eq_b, entry);
 
