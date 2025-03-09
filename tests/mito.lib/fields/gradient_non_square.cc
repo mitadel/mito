@@ -16,12 +16,12 @@ static constexpr auto e_0 = mito::tensor::e_0<2>;
 static constexpr auto e_1 = mito::tensor::e_1<2>;
 
 // the basis for 2x3 tensors
-static constexpr auto e_00 = mito::tensor::unit<mito::tensor::matrix_t<2, 3>, 0, 0>;
-static constexpr auto e_01 = mito::tensor::unit<mito::tensor::matrix_t<2, 3>, 0, 1>;
-static constexpr auto e_02 = mito::tensor::unit<mito::tensor::matrix_t<2, 3>, 0, 2>;
-static constexpr auto e_10 = mito::tensor::unit<mito::tensor::matrix_t<2, 3>, 1, 0>;
-static constexpr auto e_11 = mito::tensor::unit<mito::tensor::matrix_t<2, 3>, 1, 1>;
-static constexpr auto e_12 = mito::tensor::unit<mito::tensor::matrix_t<2, 3>, 1, 2>;
+static constexpr auto e_00 = mito::tensor::e_00<2, 3>;
+static constexpr auto e_01 = mito::tensor::e_01<2, 3>;
+static constexpr auto e_02 = mito::tensor::e_02<2, 3>;
+static constexpr auto e_10 = mito::tensor::e_10<2, 3>;
+static constexpr auto e_11 = mito::tensor::e_11<2, 3>;
+static constexpr auto e_12 = mito::tensor::e_12<2, 3>;
 
 // pi sixth
 constexpr auto pi_sixth = std::numbers::pi / 6.0;
