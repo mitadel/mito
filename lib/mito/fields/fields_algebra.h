@@ -29,6 +29,13 @@ namespace mito::fields {
         }));
     }
 
+    // f transpose
+    template <tensor_field_c F>
+    constexpr auto transpose(const F & f)
+    {
+        return field(functions::transpose(f.function()));
+    }
+
     // sqrt(f)
     template <scalar_field_c F>
     constexpr auto sqrt(const F & f)

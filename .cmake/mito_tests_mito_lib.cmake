@@ -79,6 +79,7 @@ mito_test_driver(tests/mito.lib/tensor/tensor_product_forms.cc)
 # fields
 mito_test_driver(tests/mito.lib/fields/fields.cc)
 mito_test_driver(tests/mito.lib/fields/fields_traits.cc)
+mito_test_driver(tests/mito.lib/fields/calculus_identities.cc)
 mito_test_driver(tests/mito.lib/fields/calculus_scalar_field.cc)
 mito_test_driver(tests/mito.lib/fields/calculus_vector_field.cc)
 mito_test_driver(tests/mito.lib/fields/polar_metric_field.cc)

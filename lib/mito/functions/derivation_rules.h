@@ -60,6 +60,14 @@ namespace mito::functions {
     {
         return derivative<I...>(f.f1())(f.f2()) * derivative<I...>(f.f2());
     }
+
+    // the derivative of the transpose of a function
+    template <int... I, class F>
+    constexpr auto derivative(const Transpose<F> & f)
+    {
+        // the derivative of the transpose is the transpose of the derivative
+        return functions::transpose(derivative<I...>(f.f()));
+    }
 }
 
 

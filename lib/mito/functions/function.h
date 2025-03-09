@@ -356,6 +356,43 @@ namespace mito::functions {
         const F _f;
         const G _g;
     };
+
+    // function transposing a function of a second order tensor
+    template <function_c F>
+    requires(tensor::matrix_c<typename F::output_type>)
+    class Transpose : public function_transpose<F>::type {
+
+      public:
+        // the transpose function type
+        using transpose_type = function_transpose<F>::type;
+        // the input type
+        using input_type = transpose_type::input_type;
+        // the output type
+        using output_type = transpose_type::output_type;
+
+      public:
+        // constructor
+        constexpr Transpose(const F & f) : _f(f) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return tensor::transpose(_f(x));
+        }
+
+        // the function to transpose
+        constexpr auto f() const -> const F & { return _f; }
+
+      private:
+        const F _f;
+    };
 }
 
 

@@ -90,6 +90,12 @@ namespace mito::functions {
     {
         return f1 * Reciprocal(f2);
     }
+
+    // f transposed
+    constexpr auto transpose(const function_c auto & f)
+    {
+        return Transpose(f);
+    }
 }
 
 
