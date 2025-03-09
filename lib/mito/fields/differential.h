@@ -44,21 +44,23 @@ namespace mito::fields {
         using coordinate_t = F::coordinates_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
+        // the number of components of the vector field
+        constexpr int N = F::output_type::size;
 
         // helper function to compute the gradient of a scalar
         constexpr auto _grad = []<size_t... J>(const F & field, std::index_sequence<J...>) {
             constexpr auto _grad_with_respect_to = []<size_t K, size_t... I>(
                                                        const F & field, std::index_sequence<I...>) {
                 // the tensor of the partial derivatives
-                // (\partial field_I / \partial x_K ) * e_IK
+                // (\partial field_I / \partial x_K ) * e_IK, I = 0, ..., N-1, K = 0, ..., D-1
                 return (
-                    (derivative<K>(field * uniform_field<coordinate_t>(tensor::e<I, D>))
-                     * uniform_field<coordinate_t>(tensor::unit<tensor::matrix_t<D>, I, K>))
+                    (derivative<K>(field * uniform_field<coordinate_t>(tensor::e<I, N>))
+                     * uniform_field<coordinate_t>(tensor::unit<tensor::matrix_t<N, D>, I, K>))
                     + ...);
             };
 
             return (
-                (_grad_with_respect_to.template operator()<J>(field, std::make_index_sequence<D>{}))
+                (_grad_with_respect_to.template operator()<J>(field, std::make_index_sequence<N>{}))
                 + ...);
         };
 
