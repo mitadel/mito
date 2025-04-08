@@ -18,6 +18,7 @@
 
 // classes implementation
 #include "DiscreteField.h"
+#include "IsoparametricSimplex.h"
 
 // factories implementation
 #include "factories.h"

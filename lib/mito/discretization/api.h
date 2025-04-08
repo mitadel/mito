@@ -32,6 +32,11 @@ namespace mito::discretization {
     // point field factory
     template <class Y, geometry::point_cloud_c cloudT>
     constexpr auto point_field(const cloudT & cloud, std::string name);
+
+    // isoparametric simplex alias
+    template <class geometricSimplexT>
+    using isoparametric_simplex_t = IsoparametricSimplex<geometricSimplexT>;
+
 }
 
 

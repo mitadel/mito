@@ -13,6 +13,9 @@ namespace mito::discretization {
     template <class keyT, class Y>
     class DiscreteField;
 
+    // class isoparametric simplex
+    template <class geometricSimplexT>
+    class IsoparametricSimplex;
 }
 
 

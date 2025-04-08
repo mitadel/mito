@@ -41,6 +41,14 @@ namespace mito::discretization {
         // build a point field on the points collected from the cloud
         return point_field_t<cloudT::dim, Y>(cloud.points(), name);
     }
+
+    // isoparametric simplex factory
+    template <class geometricSimplexT>
+    constexpr auto isoparametric_simplex()
+    {
+        // build an isoparametric simplex and return it
+        return isoparametric_simplex_t<geometricSimplexT>();
+    }
 }
 
 

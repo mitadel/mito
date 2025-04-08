@@ -32,14 +32,18 @@ constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the function extracting the y component of a 2D vector
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
-// the function extracting the 0 component of a parametric point
-constexpr auto xi_0 = mito::functions::component<coordinates_t, 0>;
-// the function extracting the y component of a 2D vector
-constexpr auto xi_1 = mito::functions::component<coordinates_t, 1>;
-// linear shape functions on the triangle
-constexpr auto phi_0 = mito::fields::field(xi_0);
-constexpr auto phi_1 = mito::fields::field(xi_1);
-constexpr auto phi_2 = 1.0 - phi_0 - phi_1;
+// the isoparametric simplex
+constexpr auto isoparametric_simplex = mito::discretization::isoparametric_simplex<cell_t>();
+
+// shape functions
+constexpr auto phi_0 = isoparametric_simplex.shape<0>();
+constexpr auto phi_1 = isoparametric_simplex.shape<1>();
+constexpr auto phi_2 = isoparametric_simplex.shape<2>();
+
+// shape functions derivatives
+constexpr auto dphi_0 = isoparametric_simplex.gradient<0>();
+constexpr auto dphi_1 = isoparametric_simplex.gradient<1>();
+constexpr auto dphi_2 = isoparametric_simplex.gradient<2>();
 
 
 TEST(Fem, PoissonSquare)
@@ -162,17 +166,9 @@ TEST(Fem, PoissonSquare)
         // the nodes of the cell
         const auto & nodes = cell.nodes();
 
-        // the origin of the coordinate system
-        auto origin = coordinates_t{};
-
-        // the coordinates of the nodes of the triangle
-        auto x_0 = coord_system.coordinates(nodes[0]->point()) - origin;
-        auto x_1 = coord_system.coordinates(nodes[1]->point()) - origin;
-        auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
-
         // the isoparametric mapping from the barycentric coordinates to the actual coordinates
         // on the cell {cell}
-        auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
+        auto x_cell = isoparametric_simplex.isoparametric_mapping(cell, coord_system);
 
         // loop on the quadrature points
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -185,9 +181,7 @@ TEST(Fem, PoissonSquare)
             /*constexpr*/ auto phi = std::array<scalar_t, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
 
             // evaluate the gradients of the shape functions at {xi}
-            /*constexpr*/ auto dphi = std::array<vector_t, 3>{ mito::fields::gradient(phi_0)(xi),
-                                                               mito::fields::gradient(phi_1)(xi),
-                                                               mito::fields::gradient(phi_2)(xi) };
+            /*constexpr*/ auto dphi = std::array<vector_t, 3>{ dphi_0(xi), dphi_1(xi), dphi_2(xi) };
 
             // the derivative of the coordinates with respect to the barycentric coordinates
             auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi));
