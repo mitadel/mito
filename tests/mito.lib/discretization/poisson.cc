@@ -9,8 +9,6 @@
 
 // the scalar type
 using scalar_t = mito::tensor::scalar_t;
-// the vector type
-using vector_t = mito::tensor::vector_t<2>;
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 // the type of cell
@@ -34,16 +32,6 @@ constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
 // the isoparametric simplex
 constexpr auto isoparametric_simplex = mito::discretization::isoparametric_simplex<cell_t>();
-
-// shape functions
-constexpr auto phi_0 = isoparametric_simplex.shape<0>();
-constexpr auto phi_1 = isoparametric_simplex.shape<1>();
-constexpr auto phi_2 = isoparametric_simplex.shape<2>();
-
-// shape functions derivatives
-constexpr auto dphi_0 = isoparametric_simplex.gradient<0>();
-constexpr auto dphi_1 = isoparametric_simplex.gradient<1>();
-constexpr auto dphi_2 = isoparametric_simplex.gradient<2>();
 
 
 TEST(Fem, PoissonSquare)
@@ -174,17 +162,19 @@ TEST(Fem, PoissonSquare)
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
 
             // the barycentric coordinates of the quadrature point
-            /*constexpr*/ auto xi =
-                coordinates_t{ quadrature_rule.point(q)[0], quadrature_rule.point(q)[1] };
+            /*constexpr*/ auto xi = quadrature_rule.point(q);
 
             // evaluate the shape functions at {xi}
-            /*constexpr*/ auto phi = std::array<scalar_t, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
+            /*constexpr*/ auto phi = isoparametric_simplex.shape(xi);
 
             // evaluate the gradients of the shape functions at {xi}
-            /*constexpr*/ auto dphi = std::array<vector_t, 3>{ dphi_0(xi), dphi_1(xi), dphi_2(xi) };
+            /*constexpr*/ auto dphi = isoparametric_simplex.gradient(xi);
+
+            /*constexpr*/ auto xi_2 =
+                coordinates_t{ quadrature_rule.point(q)[0], quadrature_rule.point(q)[1] };
 
             // the derivative of the coordinates with respect to the barycentric coordinates
-            auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi));
+            auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi_2));
 
             // precompute the common factor
             auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
@@ -290,10 +280,9 @@ TEST(Fem, PoissonSquare)
         // loop on the quadrature points
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
             // the barycentric coordinates of the quadrature point
-            /*constexpr*/ auto xi =
-                coordinates_t{ quadrature_rule.point(q)[0], quadrature_rule.point(q)[1] };
+            /*constexpr*/ auto xi = quadrature_rule.point(q);
             // evaluate the shape functions at {xi}
-            /*constexpr*/ auto phi = std::array<scalar_t, 3>{ phi_0(xi), phi_1(xi), phi_2(xi) };
+            /*constexpr*/ auto phi = isoparametric_simplex.shape(xi);
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
             // get the exact solution at {coord}
