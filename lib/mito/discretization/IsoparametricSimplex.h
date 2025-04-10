@@ -22,9 +22,12 @@ namespace mito::discretization {
         using geometric_simplex_type = geometricSimplexT;
         // TOFIX: this should be defined based on the order of the simplex (e.g. 1 for segments, 2
         // for triangles, 3 for tetrahedra, etc.)
-        // the type of coordinates
+        // the parametric coordinates type
         using parametric_coordinates_type =
             mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+        // TOFIX: see above
+        using evaluated_shape_functions_type = std::array<mito::tensor::scalar_t, 3>;
+        using evaluated_shape_functions_gradients_type = std::array<mito::tensor::vector_t<2>, 3>;
 
       private:
         // TOFIX: these should be defined based on the order of the element and on the type of
@@ -52,20 +55,30 @@ namespace mito::discretization {
         constexpr IsoparametricSimplex() = default;
 
       public:
-        // get the I-th shape function
-        template <int I>
-        constexpr auto shape() const
+        // QUESTION: is there a way to enforce that {barycentricCoordinatesT} are indeed barycentric
+        // coordinates
+        // get all the shape functions evaluated at the point {xi} in barycentric coordinates
+        template <class barycentricCoordinatesT>
+        auto shape(const barycentricCoordinatesT & xi) const -> evaluated_shape_functions_type
         {
-            // return the I-th shape function
-            return std::get<I>(phi);
+            // the parametric coordinates of the quadrature point
+            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+
+            // return the shape functions evaluated at {xi}
+            return { std::get<0>(phi)(xi_p), std::get<1>(phi)(xi_p), std::get<2>(phi)(xi_p) };
         }
 
-        // get the gradient of the I-th shape function
-        template <int I>
-        constexpr auto gradient() const
+        // get all the shape functions gradients evaluated at the point {xi} in barycentric
+        // coordinates
+        template <class barycentricCoordinatesT>
+        auto gradient(const barycentricCoordinatesT & xi) const
+            -> evaluated_shape_functions_gradients_type
         {
-            // return the gradient of I-th shape function
-            return std::get<I>(dphi);
+            // the parametric coordinates of the quadrature point
+            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+
+            // return the shape functions gradients evaluated at {xi}
+            return { std::get<0>(dphi)(xi_p), std::get<1>(dphi)(xi_p), std::get<2>(dphi)(xi_p) };
         }
 
         // get the the isoparametric mapping from barycentric to actual coordinates
