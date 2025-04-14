@@ -154,9 +154,13 @@ TEST(Fem, PoissonSquare)
         // the nodes of the cell
         const auto & nodes = cell.nodes();
 
-        // the isoparametric mapping from the barycentric coordinates to the actual coordinates
-        // on the cell {cell}
-        auto x_cell = isoparametric_simplex.isoparametric_mapping(cell, coord_system);
+        // the origin of the coordinate system
+        auto origin = coordinates_t{};
+
+        // the coordinates of the nodes of the triangle
+        auto x_0 = coord_system.coordinates(nodes[0]->point()) - origin;
+        auto x_1 = coord_system.coordinates(nodes[1]->point()) - origin;
+        auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
 
         // loop on the quadrature points
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -170,11 +174,11 @@ TEST(Fem, PoissonSquare)
             // evaluate the gradients of the shape functions at {xi}
             /*constexpr*/ auto dphi = isoparametric_simplex.gradient(xi);
 
-            /*constexpr*/ auto xi_2 =
-                coordinates_t{ quadrature_rule.point(q)[0], quadrature_rule.point(q)[1] };
+            // the jacobian of the mapping from the reference element to the physical element
+            auto J = isoparametric_simplex.jacobian(x_0, x_1, x_2, xi);
 
             // the derivative of the coordinates with respect to the barycentric coordinates
-            auto J_inv = mito::tensor::inverse(mito::fields::gradient(x_cell)(xi_2));
+            auto J_inv = mito::tensor::inverse(J);
 
             // precompute the common factor
             auto factor = quadrature_rule.weight(q) * manifold.volume(cell);

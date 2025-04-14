@@ -20,6 +20,8 @@ namespace mito::discretization {
       private:
         // the geometric simplex type
         using geometric_simplex_type = geometricSimplexT;
+        // the vector type
+        using vector_type = tensor::vector_t<2>;
         // TOFIX: this should be defined based on the order of the simplex (e.g. 1 for segments, 2
         // for triangles, 3 for tetrahedra, etc.)
         // the parametric coordinates type
@@ -96,29 +98,23 @@ namespace mito::discretization {
             return { std::get<0>(dphi)(xi_p), std::get<1>(dphi)(xi_p), std::get<2>(dphi)(xi_p) };
         }
 
-        // get the the isoparametric mapping from barycentric to actual coordinates
-        template <class coordinateSystemT>
-        constexpr auto isoparametric_mapping(
-            const geometric_simplex_type & simplex,
-            const coordinateSystemT & coordinate_system) const
+        // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
+        template <class barycentricCoordinatesT>
+        constexpr auto jacobian(
+            const vector_type & x_0, const vector_type & x_1, const vector_type & x_2,
+            const barycentricCoordinatesT & xi) const
         {
-            // the nodes of the simplex
-            const auto & nodes = simplex.nodes();
-
-            // the origin of the coordinate system
-            auto origin = typename coordinateSystemT::coordinates_type{};
-
-            // the coordinates of the nodes of the triangle
-            auto x_0 = coordinate_system.coordinates(nodes[0]->point()) - origin;
-            auto x_1 = coordinate_system.coordinates(nodes[1]->point()) - origin;
-            auto x_2 = coordinate_system.coordinates(nodes[2]->point()) - origin;
-
             // assemble the isoparametric mapping from the barycentric coordinates to the actual
             // coordinates on the cell {cell}
             auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
 
-            // return the isoparametric mapping
-            return x_cell;
+            // the parametric coordinates of the quadrature point
+            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+
+            auto J = mito::fields::gradient(x_cell)(xi_p);
+
+            // return the jacobian of the isoparametric mapping
+            return J;
         }
     };
 
