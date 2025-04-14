@@ -37,6 +37,17 @@ namespace mito::discretization {
     template <class geometricSimplexT>
     using isoparametric_simplex_t = IsoparametricSimplex<geometricSimplexT>;
 
+    // isoparametric simplex factory
+    template <class geometricSimplexT>
+    constexpr auto isoparametric_simplex();
+
+    // function space alias
+    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
+    using function_space_t = FunctionSpace<meshT, coordSystemT>;
+
+    // function space factory
+    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
+    constexpr auto function_space(const meshT &, const coordSystemT &);
 }
 
 

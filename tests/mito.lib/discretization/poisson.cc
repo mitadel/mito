@@ -30,9 +30,6 @@ constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the function extracting the y component of a 2D vector
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
-// the isoparametric simplex
-constexpr auto isoparametric_simplex = mito::discretization::isoparametric_simplex<cell_t>();
-
 
 TEST(Fem, PoissonSquare)
 {
@@ -143,6 +140,9 @@ TEST(Fem, PoissonSquare)
     // create the body manifold
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
+    // the function space
+    auto function_space = mito::discretization::function_space(mesh, coord_system);
+
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
            * mito::functions::sin(std::numbers::pi * y);
@@ -169,16 +169,10 @@ TEST(Fem, PoissonSquare)
             /*constexpr*/ auto xi = quadrature_rule.point(q);
 
             // evaluate the shape functions at {xi}
-            /*constexpr*/ auto phi = isoparametric_simplex.shape(xi);
+            /*constexpr*/ auto phi = function_space.shape(xi);
 
-            // evaluate the gradients of the shape functions at {xi}
-            /*constexpr*/ auto dphi = isoparametric_simplex.gradient(xi);
-
-            // the jacobian of the mapping from the reference element to the physical element
-            auto J = isoparametric_simplex.jacobian(x_0, x_1, x_2, xi);
-
-            // the derivative of the coordinates with respect to the barycentric coordinates
-            auto J_inv = mito::tensor::inverse(J);
+            // evaluate the spatial gradients of the shape functions at {xi}
+            auto dphi = function_space.gradient(cell, xi);
 
             // precompute the common factor
             auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
@@ -205,7 +199,7 @@ TEST(Fem, PoissonSquare)
                         // skip boundary nodes
                         continue;
                     }
-                    auto entry = factor * (dphi[a] * J_inv) * (dphi[b] * J_inv);
+                    auto entry = factor * dphi[a] * dphi[b];
 
                     solver.add_matrix_value(eq_a, eq_b, entry);
 
@@ -286,7 +280,7 @@ TEST(Fem, PoissonSquare)
             // the barycentric coordinates of the quadrature point
             /*constexpr*/ auto xi = quadrature_rule.point(q);
             // evaluate the shape functions at {xi}
-            /*constexpr*/ auto phi = isoparametric_simplex.shape(xi);
+            /*constexpr*/ auto phi = function_space.shape(xi);
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
             // get the exact solution at {coord}
