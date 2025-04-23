@@ -12,13 +12,11 @@ namespace mito::quadrature {
     // a table to store quadrature rules in terms of their point-weight pairings
     template <class elementT, int Q>
     class Table {
-      private:
-        // the dimension of the parametric space
-        static constexpr int parametricDim = manifolds::parametric_dim<elementT>();
 
       public:
         // the type of quadrature points' parametric coordinates
-        using quadrature_point_type = manifolds::parametric_point_t<parametricDim>;
+        using quadrature_point_type =
+            typename elementT::resource_type::barycentric_coordinates_type;
         // the type of quadrature weights
         using quadrature_weight_type = double;
         // the type of quadrature point-weight pairing

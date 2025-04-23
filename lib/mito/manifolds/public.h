@@ -17,7 +17,6 @@
 #include "api.h"
 
 // classes implementation
-#include "parametric.h"
 #include "Manifold.h"
 
 // factories implementation

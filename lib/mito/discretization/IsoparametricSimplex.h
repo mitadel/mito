@@ -27,6 +27,8 @@ namespace mito::discretization {
         // the parametric coordinates type
         using parametric_coordinates_type =
             mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+        // type of a point in barycentric coordinates
+        using barycentric_coordinates_type = geometricSimplexT::barycentric_coordinates_type;
         // TOFIX: see above
         using evaluated_shape_functions_type = std::array<mito::tensor::scalar_t, 3>;
         using evaluated_shape_functions_gradients_type = std::array<mito::tensor::vector_t<2>, 3>;
@@ -75,8 +77,7 @@ namespace mito::discretization {
         // QUESTION: is there a way to enforce that {barycentricCoordinatesT} are indeed barycentric
         // coordinates
         // get all the shape functions evaluated at the point {xi} in barycentric coordinates
-        template <class barycentricCoordinatesT>
-        auto shape(const barycentricCoordinatesT & xi) const -> evaluated_shape_functions_type
+        auto shape(const barycentric_coordinates_type & xi) const -> evaluated_shape_functions_type
         {
             // the parametric coordinates of the quadrature point
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
@@ -87,8 +88,7 @@ namespace mito::discretization {
 
         // get all the shape functions gradients evaluated at the point {xi} in barycentric
         // coordinates
-        template <class barycentricCoordinatesT>
-        auto gradient(const barycentricCoordinatesT & xi) const
+        auto gradient(const barycentric_coordinates_type & xi) const
             -> evaluated_shape_functions_gradients_type
         {
             // the parametric coordinates of the quadrature point
@@ -99,10 +99,9 @@ namespace mito::discretization {
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
-        template <class barycentricCoordinatesT>
         constexpr auto jacobian(
             const vector_type & x_0, const vector_type & x_1, const vector_type & x_2,
-            const barycentricCoordinatesT & xi) const
+            const barycentric_coordinates_type & xi) const
         {
             // assemble the isoparametric mapping from the barycentric coordinates to the actual
             // coordinates on the cell {cell}

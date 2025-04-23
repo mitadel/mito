@@ -22,10 +22,6 @@ namespace mito::manifolds {
         static constexpr int D = cellT::dim;
         // the dimension of the manifold (that is that of the cell)
         static constexpr int N = cellT::order;
-        // the dimension of the parametric space
-        static constexpr int parametricDim = parametric_dim<typename cellT::simplex_type>();
-        // typedef for a point in parametric coordinates
-        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
 
       public:
         // typedef for cell type
@@ -38,6 +34,8 @@ namespace mito::manifolds {
         using coordinates_type = coordsT;
         // typedef for a coordinates system
         using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
+        // typedef for a point in parametric coordinates
+        using parametric_point_type = typename cell_type::barycentric_coordinates_type;
 
       public:
         constexpr Manifold(

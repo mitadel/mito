@@ -9,10 +9,6 @@
 
 namespace mito::manifolds {
 
-    // a point in parametric coordinates
-    template <int D>
-    using parametric_point_t = std::array<double, D>;
-
     // manifold alias
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     using manifold_t = Manifold<cellT, coordsT, volumeFormT>;

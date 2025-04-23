@@ -54,6 +54,10 @@ namespace mito::geometry {
         template <int I>
         using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
 
+        // type of a point in barycentric coordinates
+        using barycentric_coordinates_type =
+            typename simplex_type::resource_type::barycentric_coordinates_type;
+
       private:
         constexpr auto _sanity_check() const -> bool
         {
@@ -89,6 +93,7 @@ namespace mito::geometry {
             assert(_sanity_check());
         }
 
+        // QUESTION: do we need this method?
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const nodes_type & nodes) :
             Invalidatable(),
