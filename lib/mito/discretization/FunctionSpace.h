@@ -22,6 +22,8 @@ namespace mito::discretization {
         // TOFIX: how do we inject this in the class?
         // the canonical simplex type
         static constexpr auto canonical_element = isoparametric_simplex<cell_type>();
+        // type of a point in barycentric coordinates
+        using barycentric_coordinates_type = cell_type::barycentric_coordinates_type;
         // TOFIX
         using evaluated_shape_functions_type = std::array<mito::tensor::scalar_t, 3>;
         using evaluated_shape_functions_gradients_type = std::array<mito::tensor::vector_t<2>, 3>;
@@ -50,8 +52,7 @@ namespace mito::discretization {
       public:
         // TOFIX: {barycentricCoordinatesT} should be read from the cell type traits
         // get all the shape functions evaluated at the point {xi} in barycentric coordinates
-        template <class barycentricCoordinatesT>
-        auto shape(/*const cell_type & cell,*/ const barycentricCoordinatesT & xi) const
+        auto shape(/*const cell_type & cell,*/ const barycentric_coordinates_type & xi) const
             -> evaluated_shape_functions_type
         {
             // return the shape functions evaluated at {xi}
@@ -60,8 +61,7 @@ namespace mito::discretization {
 
         // get all the shape functions gradients evaluated at the point {xi} in barycentric
         // coordinates
-        template <class barycentricCoordinatesT>
-        auto gradient(const cell_type & cell, const barycentricCoordinatesT & xi) const
+        auto gradient(const cell_type & cell, const barycentric_coordinates_type & xi) const
             -> evaluated_shape_functions_gradients_type
         {
             // the nodes of the cell
@@ -90,6 +90,7 @@ namespace mito::discretization {
         }
 
       private:
+        // TOFIX: this is unused for now
         // a const reference to the mesh
         const mesh_type & _mesh;
 
