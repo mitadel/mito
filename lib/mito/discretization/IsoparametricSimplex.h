@@ -37,14 +37,18 @@ namespace mito::discretization {
         // TOFIX: these should be defined based on the order of the element and on the type of
         // simplex (for example here it's 3 of them because we use linear elements on a triangle)
         // the function extracting the 0 component of a parametric point
-        static constexpr auto xi_0 = mito::functions::component<parametric_coordinates_type, 0>;
-        // the function extracting the y component of a parametric point
-        static constexpr auto xi_1 = mito::functions::component<parametric_coordinates_type, 1>;
+        static constexpr auto xi_0 =
+            mito::fields::field(mito::functions::component<parametric_coordinates_type, 0>);
+        // the function extracting the 1 component of a parametric point
+        static constexpr auto xi_1 =
+            mito::fields::field(mito::functions::component<parametric_coordinates_type, 1>);
+        // the function extracting the 2 component of a parametric point
+        static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
 
         // linear shape functions on the triangle
-        static constexpr auto phi_0 = mito::fields::field(xi_0);
-        static constexpr auto phi_1 = mito::fields::field(xi_1);
-        static constexpr auto phi_2 = 1.0 - phi_0 - phi_1;
+        static constexpr auto phi_0 = xi_0;
+        static constexpr auto phi_1 = xi_1;
+        static constexpr auto phi_2 = xi_2;
 
         // the shape functions
         static constexpr auto phi = std::make_tuple(phi_0, phi_1, phi_2);
