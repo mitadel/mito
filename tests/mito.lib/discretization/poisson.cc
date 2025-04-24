@@ -160,17 +160,11 @@ TEST(Fem, PoissonSquare)
             // the barycentric coordinates of the quadrature point
             /*constexpr*/ auto xi = quadrature_rule.point(q);
 
-            // evaluate the shape functions at {xi}
-            /*constexpr*/ auto phi = function_space.shape(xi);
-
-            // evaluate the spatial gradients of the shape functions at {xi}
-            auto dphi = function_space.gradient(cell, xi);
-
             // precompute the common factor
             auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
 
-            // the coordinates of the quadrature point
-            auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
+            // evaluate the spatial gradients of the shape functions at {xi}
+            auto dphi = function_space.gradient(cell, xi);
 
             // populate the linear system of equations
             int a = 0;
@@ -196,6 +190,26 @@ TEST(Fem, PoissonSquare)
                     solver.add_matrix_value(eq_a, eq_b, entry);
 
                     ++b;
+                }
+
+                ++a;
+            }
+
+            // evaluate the shape functions at {xi}
+            /*constexpr*/ auto phi = function_space.shape(xi);
+
+            // the coordinates of the quadrature point
+            auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
+
+            // populate the right hand side
+            a = 0;
+            for (const auto & node_a : nodes) {
+                // get the equation number of {node_a}
+                int eq_a = equation_map.at(node_a);
+                assert(eq_a < N_equations);
+                if (eq_a == -1) {
+                    // skip boundary nodes
+                    continue;
                 }
 
                 solver.add_rhs_value(eq_a, factor * f(coord) * phi[a]);
