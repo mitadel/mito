@@ -154,14 +154,6 @@ TEST(Fem, PoissonSquare)
         // the nodes of the cell
         const auto & nodes = cell.nodes();
 
-        // the origin of the coordinate system
-        auto origin = coordinates_t{};
-
-        // the coordinates of the nodes of the triangle
-        auto x_0 = coord_system.coordinates(nodes[0]->point()) - origin;
-        auto x_1 = coord_system.coordinates(nodes[1]->point()) - origin;
-        auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
-
         // loop on the quadrature points
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
 
