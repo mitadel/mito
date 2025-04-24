@@ -78,8 +78,6 @@ namespace mito::discretization {
         constexpr IsoparametricSimplex & operator=(IsoparametricSimplex &&) noexcept = delete;
 
       public:
-        // QUESTION: is there a way to enforce that {barycentricCoordinatesT} are indeed barycentric
-        // coordinates
         // get all the shape functions evaluated at the point {xi} in barycentric coordinates
         auto shape(const barycentric_coordinates_type & xi) const -> evaluated_shape_functions_type
         {
