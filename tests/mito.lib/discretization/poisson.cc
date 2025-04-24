@@ -135,7 +135,7 @@ TEST(Fem, PoissonSquare)
     // create a linear system of equations (PETSc Krylov solver)
     auto solver = mito::solvers::petsc::ksp("mysolver");
     solver.initialize(N_equations);
-    solver.set_options("-ksp_monitor -ksp_converged_reason");
+    solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // create the body manifold
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
