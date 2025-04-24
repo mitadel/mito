@@ -141,7 +141,7 @@ TEST(Fem, PoissonSquare)
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // the function space
-    auto function_space = mito::discretization::function_space(mesh, coord_system);
+    auto function_space = mito::discretization::function_space(manifold);
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)

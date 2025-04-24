@@ -51,11 +51,11 @@ namespace mito::discretization {
     }
 
     // function space factory
-    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    constexpr auto function_space(const meshT & mesh, const coordSystemT & coord_system)
+    template <manifolds::manifold_c manifoldT>
+    constexpr auto function_space(const manifoldT & manifold)
     {
-        // build a function space on the mesh and return it
-        return function_space_t<meshT, coordSystemT>(mesh, coord_system);
+        // build a function space on the manifold and return it
+        return function_space_t<manifoldT>(manifold);
     }
 }
 

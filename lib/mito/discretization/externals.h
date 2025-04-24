@@ -12,8 +12,7 @@
 
 // support
 #include "../journal.h"
-#include "../tensor.h"
-#include "../mesh.h"
+#include "../manifolds.h"
 
 
 // end of file

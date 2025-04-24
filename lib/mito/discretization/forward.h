@@ -18,7 +18,7 @@ namespace mito::discretization {
     class IsoparametricSimplex;
 
     // class function space
-    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
+    template <manifolds::manifold_c manifoldT>
     class FunctionSpace;
 }
 

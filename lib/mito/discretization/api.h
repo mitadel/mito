@@ -42,12 +42,12 @@ namespace mito::discretization {
     constexpr auto isoparametric_simplex();
 
     // function space alias
-    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    using function_space_t = FunctionSpace<meshT, coordSystemT>;
+    template <manifolds::manifold_c manifoldT>
+    using function_space_t = FunctionSpace<manifoldT>;
 
     // function space factory
-    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
-    constexpr auto function_space(const meshT &, const coordSystemT &);
+    template <manifolds::manifold_c manifoldT>
+    constexpr auto function_space(const manifoldT &);
 }
 
 

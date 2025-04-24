@@ -9,16 +9,18 @@
 
 namespace mito::discretization {
 
-    template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
+    template <manifolds::manifold_c manifoldT>
     class FunctionSpace {
 
       private:
+        // the manifold type
+        using manifold_type = manifoldT;
         // the mesh type
-        using mesh_type = meshT;
+        using mesh_type = typename manifold_type::mesh_type;
         // the cell type
         using cell_type = typename mesh_type::cell_type;
         // the coordinate system type
-        using coord_system_type = coordSystemT;
+        using coord_system_type = typename manifold_type::coordinate_system_type;
         // TOFIX: how do we inject this in the class?
         // the canonical simplex type
         static constexpr auto canonical_element = isoparametric_simplex<cell_type>();
@@ -30,9 +32,7 @@ namespace mito::discretization {
 
       public:
         // the default constructor
-        constexpr FunctionSpace(const mesh_type & mesh, const coord_system_type & coord_system) :
-            _mesh(mesh),
-            _coord_system(coord_system) {};
+        constexpr FunctionSpace(const manifold_type & manifold) : _manifold(manifold) {};
 
         // destructor
         constexpr ~FunctionSpace() = default;
@@ -71,9 +71,9 @@ namespace mito::discretization {
             auto origin = typename coord_system_type::coordinates_type{};
 
             // the coordinates of the nodes of the triangle
-            auto x_0 = _coord_system.coordinates(nodes[0]->point()) - origin;
-            auto x_1 = _coord_system.coordinates(nodes[1]->point()) - origin;
-            auto x_2 = _coord_system.coordinates(nodes[2]->point()) - origin;
+            auto x_0 = _manifold.coordinates(nodes[0]) - origin;
+            auto x_1 = _manifold.coordinates(nodes[1]) - origin;
+            auto x_2 = _manifold.coordinates(nodes[2]) - origin;
 
             // the jacobian of the mapping from the reference element to the physical element
             // evaluated at {xi}
@@ -90,12 +90,8 @@ namespace mito::discretization {
         }
 
       private:
-        // TOFIX: this is unused for now
         // a const reference to the mesh
-        const mesh_type & _mesh;
-
-        // a const reference to the coordinate system
-        const coord_system_type & _coord_system;
+        const manifold_type & _manifold;
     };
 
 }    // namespace mito
