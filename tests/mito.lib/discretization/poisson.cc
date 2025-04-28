@@ -174,6 +174,7 @@ TEST(Fem, PoissonSquare)
                 int eq_a = equation_map.at(node_a);
                 assert(eq_a < N_equations);
                 if (eq_a == -1) {
+                    ++a;
                     // skip boundary nodes
                     continue;
                 }
@@ -182,6 +183,7 @@ TEST(Fem, PoissonSquare)
                     int eq_b = equation_map.at(node_b);
                     assert(eq_b < N_equations);
                     if (eq_b == -1) {
+                        ++b;
                         // skip boundary nodes
                         continue;
                     }
@@ -208,6 +210,7 @@ TEST(Fem, PoissonSquare)
                 int eq_a = equation_map.at(node_a);
                 assert(eq_a < N_equations);
                 if (eq_a == -1) {
+                    ++a;
                     // skip boundary nodes
                     continue;
                 }
