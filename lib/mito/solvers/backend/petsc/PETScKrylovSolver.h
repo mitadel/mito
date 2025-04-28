@@ -71,6 +71,9 @@ namespace mito::solvers::petsc {
         // solve the linear system
         auto solve() -> void;
 
+        // print the linear system of equations of the petsc solver
+        auto print() -> void;
+
         // get the solution vector
         template <class solutionT>
         auto get_solution(solutionT & solution) const -> void;

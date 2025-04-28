@@ -246,5 +246,22 @@ mito::solvers::petsc::PETScKrylovSolver::solve() -> void
     return;
 }
 
+// print the linear system of equations of the petsc solver
+auto
+mito::solvers::petsc::PETScKrylovSolver::print() -> void
+{
+    // create a reporting channel
+    journal::info_t channel("mito.solvers.petsc.PETScKrylovSolver");
+
+    // print the matrix
+    channel << "Matrix:" << journal::endl;
+    PetscCallVoid(MatView(_matrix, PETSC_VIEWER_STDOUT_WORLD));
+    // print the right-hand side
+    channel << "Right-hand side:" << journal::endl;
+    PetscCallVoid(VecView(_rhs, PETSC_VIEWER_STDOUT_WORLD));
+
+    // all done
+    return;
+}
 
 // end of file
