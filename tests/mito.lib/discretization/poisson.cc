@@ -48,28 +48,16 @@ TEST(Fem, PoissonSquare)
     // const auto subdivisions = 1;
     // auto mesh = mito::mesh::tetra(original_mesh, coord_system, subdivisions);
 
-#if 0
     // get all the nodes in the mesh
     std::set<node_t> nodes;
     mito::mesh::get_nodes(mesh, nodes);
-    channel << "Number of total cells: " << std::size(mesh.cells()) << journal::endl;
-    channel << "Number of total nodes: " << std::size(nodes) << journal::endl;
-    for (const auto & node : nodes) {
-        // print the coordinates of the node
-        channel << coord_system.coordinates(node->point()) << journal::endl;
-    }
+    channel << "Number of nodes: " << std::size(nodes) << journal::endl;
 
     // get all the nodes on the mesh boundary
     auto boundary_mesh = mito::mesh::boundary(mesh);
     std::set<node_t> boundary_nodes;
     mito::mesh::get_nodes(boundary_mesh, boundary_nodes);
-    channel << "Number of boundary cells: " << std::size(boundary_mesh.cells()) << journal::endl;
     channel << "Number of boundary nodes: " << std::size(boundary_nodes) << journal::endl;
-    for (const auto & node : boundary_nodes) {
-        // node.vertex()
-        // print the coordinates of the node
-        channel << coord_system.coordinates(node->point()) << journal::endl;
-    }
 
     // get all the interior nodes as the difference between all the nodes and the boundary nodes
     std::set<node_t> interior_nodes;
@@ -106,40 +94,6 @@ TEST(Fem, PoissonSquare)
     // the number of equations
     int N_equations = equation;
 
-#else
-    std::set<node_t> nodes;
-    mito::mesh::get_nodes(mesh, nodes);
-
-    // populate the equation map (from node to equation, one equations per node)
-    std::map<node_t, int> equation_map;
-    int equation = 0;
-
-    // loop on all the nodes of the cell
-    for (const auto & node : nodes) {
-        // get the coordinates of the node
-        auto coord = coord_system.coordinates(node->point());
-        // if the node is on the boundary
-        if (coord[0] == 0.0 || coord[0] == 1.0 || coord[1] == 0.0 || coord[1] == 1.0) {
-            // check if the node is already in the equation map
-            if (equation_map.find(node) == equation_map.end()) {
-                // add the node to the equation map with a -1 indicating that the node is on the
-                // boundary
-                equation_map[node] = -1;
-            }
-        }
-
-        // check if the node is already in the equation map
-        if (equation_map.find(node) == equation_map.end()) {
-            // add the node to the equation map
-            equation_map[node] = equation;
-            // increment the equation number
-            equation++;
-        }
-    }
-
-    // the number of equations
-    int N_equations = equation;
-#endif
     channel << "Number of equations: " << equation << journal::endl;
 
     // create a linear system of equations (PETSc Krylov solver)
