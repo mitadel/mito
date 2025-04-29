@@ -19,6 +19,8 @@ namespace mito::discretization {
         using mesh_type = typename manifold_type::mesh_type;
         // the cell type
         using cell_type = typename mesh_type::cell_type;
+        // the node type
+        using node_type = typename cell_type::node_type;
         // the coordinate system type
         using coord_system_type = typename manifold_type::coordinate_system_type;
         // TOFIX: how do we inject this in the class?
@@ -27,8 +29,9 @@ namespace mito::discretization {
         // type of a point in barycentric coordinates
         using barycentric_coordinates_type = cell_type::barycentric_coordinates_type;
         // TOFIX
-        using evaluated_shape_functions_type = std::array<mito::tensor::scalar_t, 3>;
-        using evaluated_shape_functions_gradients_type = std::array<mito::tensor::vector_t<2>, 3>;
+        using evaluated_shape_functions_type = std::map<node_type, mito::tensor::scalar_t>;
+        using evaluated_shape_functions_gradients_type =
+            std::map<node_type, mito::tensor::vector_t<2>>;
 
       public:
         // the default constructor
@@ -50,13 +53,21 @@ namespace mito::discretization {
         constexpr FunctionSpace & operator=(FunctionSpace &&) noexcept = delete;
 
       public:
-        // TOFIX: {barycentricCoordinatesT} should be read from the cell type traits
-        // get all the shape functions evaluated at the point {xi} in barycentric coordinates
-        auto shape(/*const cell_type & cell,*/ const barycentric_coordinates_type & xi) const
+        // get all the shape functions of cell {cell} evaluated at the point {xi} in barycentric
+        // coordinates
+        auto shape(const cell_type & cell, const barycentric_coordinates_type & xi) const
             -> evaluated_shape_functions_type
         {
+            // get the shape functions of the canonical element
+            auto shape_functions = canonical_element.shape(xi);
+
+            // the nodes of the cell
+            const auto & nodes = cell.nodes();
+
             // return the shape functions evaluated at {xi}
-            return canonical_element.shape(xi);
+            return { { nodes[0], shape_functions[0] },
+                     { nodes[1], shape_functions[1] },
+                     { nodes[2], shape_functions[2] } };
         }
 
         // get all the shape functions gradients evaluated at the point {xi} in barycentric
@@ -86,7 +97,9 @@ namespace mito::discretization {
             /*constexpr*/ auto dphi = canonical_element.gradient(xi);
 
             // return the spatial gradients of the shape functions evaluated at {xi}
-            return { dphi[0] * J_inv, dphi[1] * J_inv, dphi[2] * J_inv };
+            return { { nodes[0], dphi[0] * J_inv },
+                     { nodes[1], dphi[1] * J_inv },
+                     { nodes[2], dphi[2] * J_inv } };
         }
 
       private:

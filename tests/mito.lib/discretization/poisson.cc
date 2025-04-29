@@ -151,9 +151,6 @@ TEST(Fem, PoissonSquare)
     // loop on all the cells of the mesh
     for (const auto & cell : manifold.elements()) {
 
-        // the nodes of the cell
-        const auto & nodes = cell.nodes();
-
         // loop on the quadrature points
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
 
@@ -163,61 +160,51 @@ TEST(Fem, PoissonSquare)
             // precompute the common factor
             auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
 
-            // evaluate the spatial gradients of the shape functions at {xi}
+            // evaluate the spatial gradients of the element shape functions at {xi}
             auto dphi = function_space.gradient(cell, xi);
 
             // populate the linear system of equations
-            int a = 0;
-            for (const auto & node_a : nodes) {
-                int b = 0;
+            for (const auto & [node_a, dphi_a] : dphi) {
                 // get the equation number of {node_a}
                 int eq_a = equation_map.at(node_a);
                 assert(eq_a < N_equations);
                 if (eq_a == -1) {
-                    ++a;
                     // skip boundary nodes
                     continue;
                 }
-                for (const auto & node_b : nodes) {
+                for (const auto & [node_b, dphi_b] : dphi) {
                     // get the equation number of {node_b}
                     int eq_b = equation_map.at(node_b);
                     assert(eq_b < N_equations);
                     if (eq_b == -1) {
-                        ++b;
                         // skip boundary nodes
                         continue;
                     }
-                    auto entry = factor * dphi[a] * dphi[b];
-
+                    // compute the entry of the stiffness matrix
+                    auto entry = factor * dphi_a * dphi_b;
+                    // assemble the value in the stiffness matrix
                     solver.add_matrix_value(eq_a, eq_b, entry);
-
-                    ++b;
                 }
-
-                ++a;
             }
 
-            // evaluate the shape functions at {xi}
-            /*constexpr*/ auto phi = function_space.shape(xi);
+            // evaluate the element shape functions at {xi}
+            auto phi = function_space.shape(cell, xi);
 
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
 
             // populate the right hand side
-            a = 0;
-            for (const auto & node_a : nodes) {
+            for (const auto & [node_a, phi_a] : phi) {
                 // get the equation number of {node_a}
                 int eq_a = equation_map.at(node_a);
                 assert(eq_a < N_equations);
                 if (eq_a == -1) {
-                    ++a;
                     // skip boundary nodes
                     continue;
                 }
 
-                solver.add_rhs_value(eq_a, factor * f(coord) * phi[a]);
-
-                ++a;
+                // assemble the value in the right hand side
+                solver.add_rhs_value(eq_a, factor * f(coord) * phi_a);
             }
         }
     }
@@ -288,20 +275,18 @@ TEST(Fem, PoissonSquare)
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
             // the barycentric coordinates of the quadrature point
             /*constexpr*/ auto xi = quadrature_rule.point(q);
-            // evaluate the shape functions at {xi}
-            /*constexpr*/ auto phi = function_space.shape(xi);
+            // evaluate the element shape functions at {xi}
+            auto phi = function_space.shape(cell, xi);
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
             // get the exact solution at {coord}
             auto u_exact = u_ex(coord);
             // assemble the numerical solution at {coord}
             auto u_numerical = 0.0;
-            int a = 0;
-            // loop on all the nodes of the cell
-            for (const auto & node : cell.nodes()) {
+            // loop on all the shape functions
+            for (const auto & [node_a, phi_a] : phi) {
                 // get the numerical solution at {coord}
-                u_numerical += solution(node) * phi[a];
-                ++a;
+                u_numerical += solution(node_a) * phi_a;
             }
             // get the error
             error_L2 += (u_exact - u_numerical) * (u_exact - u_numerical)
