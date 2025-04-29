@@ -49,10 +49,6 @@ TEST(Fem, PoissonSquare)
     // auto mesh = mito::mesh::tetra(original_mesh, coord_system, subdivisions);
 
 #if 0
-    // TOFIX: this does not work as the nodes are copied into new nodes to construct the boundary
-    // cells, therefore the set difference is not aware of the node equality. Therefore we need to
-    // back up to the spatial search implementation
-
     // get all the nodes in the mesh
     std::set<node_t> nodes;
     mito::mesh::get_nodes(mesh, nodes);
@@ -86,7 +82,17 @@ TEST(Fem, PoissonSquare)
     std::map<node_t, int> equation_map;
     int equation = 0;
 
-    // loop on all the nodes of the cell
+    // loop on all the boundary nodes of the mesh
+    for (const auto & node : boundary_nodes) {
+        // check if the node is already in the equation map
+        if (equation_map.find(node) == equation_map.end()) {
+            // add the node to the equation map with a -1 indicating that the node is on the
+            // boundary
+            equation_map[node] = -1;
+        }
+    }
+
+    // loop on all the interior nodes of the mesh
     for (const auto & node : interior_nodes) {
         // check if the node is already in the equation map
         if (equation_map.find(node) == equation_map.end()) {
@@ -96,6 +102,10 @@ TEST(Fem, PoissonSquare)
             equation++;
         }
     }
+
+    // the number of equations
+    int N_equations = equation;
+
 #else
     std::set<node_t> nodes;
     mito::mesh::get_nodes(mesh, nodes);
