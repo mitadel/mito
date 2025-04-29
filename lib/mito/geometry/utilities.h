@@ -102,9 +102,8 @@ namespace mito::geometry {
             };
 
             // return the geometric simplex
-            return geometric_simplex_type({ node_type(
-                vertices[K],
-                (*std::ranges::find_if(nodes, has_vertex(vertices[K])))->point())... });
+            return geometric_simplex_type(
+                { (*std::ranges::find_if(nodes, has_vertex(vertices[K])))... });
         };
 
         // build a geometric simplex based on {simplex} with the vertex-point pair as appears in
@@ -134,7 +133,7 @@ namespace mito::geometry {
         };
 
         // return the node
-        return node_type(vertex, (*std::ranges::find_if(nodes, has_vertex(vertex)))->point());
+        return *std::ranges::find_if(nodes, has_vertex(vertex));
     }
 
     // returns the geometric simplex with opposite orientation to {simplex}
