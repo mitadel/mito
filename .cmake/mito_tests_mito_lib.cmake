@@ -35,6 +35,9 @@ mito_test_driver(tests/mito.lib/geometry/euclidean_metric_space.cc)
 mito_test_driver(tests/mito.lib/geometry/polar_metric_space.cc)
 mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 
+# constraints
+mito_test_driver(tests/mito.lib/constraints/dirichlet.cc)
+
 # discretization
 mito_test_driver(tests/mito.lib/discretization/quadrature_field.cc)
 mito_test_driver(tests/mito.lib/discretization/nodal_field.cc)

@@ -12,6 +12,7 @@
 #include "tensor.h"
 #include "functions.h"
 #include "discretization.h"
+#include "constraints.h"
 #include "coordinates.h"
 #include "geometry.h"
 #include "io.h"
