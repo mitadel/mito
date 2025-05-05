@@ -13,6 +13,7 @@
 // support
 #include "../journal.h"
 #include "../manifolds.h"
+#include "../constraints.h"
 
 
 // end of file

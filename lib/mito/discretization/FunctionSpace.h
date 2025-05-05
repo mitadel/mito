@@ -9,12 +9,14 @@
 
 namespace mito::discretization {
 
-    template <manifolds::manifold_c manifoldT>
+    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     class FunctionSpace {
 
-      private:
+      public:
         // the manifold type
         using manifold_type = manifoldT;
+        // the constraints type
+        using constraints_type = constraintsT;
         // the mesh type
         using mesh_type = typename manifold_type::mesh_type;
         // the cell type
@@ -23,6 +25,8 @@ namespace mito::discretization {
         using node_type = typename cell_type::node_type;
         // the coordinate system type
         using coord_system_type = typename manifold_type::coordinate_system_type;
+
+      private:
         // TOFIX: how do we inject this in the class?
         // the canonical simplex type
         static constexpr auto canonical_element = isoparametric_simplex<cell_type>();
@@ -34,8 +38,11 @@ namespace mito::discretization {
             std::map<node_type, mito::tensor::vector_t<2>>;
 
       public:
-        // the default constructor
-        constexpr FunctionSpace(const manifold_type & manifold) : _manifold(manifold) {};
+        // the constructor
+        constexpr FunctionSpace(
+            const manifold_type & manifold, const constraints_type & constraints) :
+            _manifold(manifold),
+            _constraints(constraints) {};
 
         // destructor
         constexpr ~FunctionSpace() = default;
@@ -55,6 +62,12 @@ namespace mito::discretization {
       public:
         // accessor for the manifold
         constexpr auto manifold() const noexcept -> const manifold_type & { return _manifold; }
+
+        // accessor for the constraints
+        constexpr auto constraints() const noexcept -> const constraints_type &
+        {
+            return _constraints;
+        }
 
         // get all the shape functions of cell {cell} evaluated at the point {xi} in barycentric
         // coordinates
@@ -108,6 +121,14 @@ namespace mito::discretization {
       private:
         // a const reference to the mesh
         const manifold_type & _manifold;
+
+        // TOFIX: this should be a collection of constraints. Also, constraints may involve
+        // different degrees of freedom (e.g. periodic boundary conditions to impose relations
+        // between beam rotations). Therefore, the function space should be aware of the spatial
+        // dimension of the shape functions.
+        //
+        // the constraints
+        const constraints_type & _constraints;
     };
 
 }    // namespace mito

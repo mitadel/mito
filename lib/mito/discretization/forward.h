@@ -18,7 +18,7 @@ namespace mito::discretization {
     class IsoparametricSimplex;
 
     // class function space
-    template <manifolds::manifold_c manifoldT>
+    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     class FunctionSpace;
 
     // class discrete system

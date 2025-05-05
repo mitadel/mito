@@ -13,8 +13,6 @@ using scalar_t = mito::tensor::scalar_t;
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
-// the type of node
-using node_t = cell_t::node_type;
 // the type of simplex
 using simplex_t = cell_t::simplex_type;
 // Gauss quadrature on triangles with degree of exactness 1
@@ -48,64 +46,30 @@ TEST(Fem, PoissonSquare)
     // const auto subdivisions = 1;
     // auto mesh = mito::mesh::tetra(original_mesh, coord_system, subdivisions);
 
-    // get all the nodes in the mesh
-    std::set<node_t> nodes;
-    mito::mesh::get_nodes(mesh, nodes);
-    channel << "Number of nodes: " << std::size(nodes) << journal::endl;
+    // the zero field
+    auto zero = mito::fields::field(mito::functions::zero<coordinates_t>);
 
     // get all the nodes on the mesh boundary
     auto boundary_mesh = mito::mesh::boundary(mesh);
-    std::set<node_t> boundary_nodes;
-    mito::mesh::get_nodes(boundary_mesh, boundary_nodes);
-    channel << "Number of boundary nodes: " << std::size(boundary_nodes) << journal::endl;
 
-    // get all the interior nodes as the difference between all the nodes and the boundary nodes
-    std::set<node_t> interior_nodes;
-    std::set_difference(
-        nodes.begin(), nodes.end(), boundary_nodes.begin(), boundary_nodes.end(),
-        std::inserter(interior_nodes, interior_nodes.begin()));
-    channel << "Number of interior nodes: " << std::size(interior_nodes) << journal::endl;
-
-    // populate the equation map (from node to equation, one equations per node)
-    std::map<node_t, int> equation_map;
-    int equation = 0;
-
-    // loop on all the boundary nodes of the mesh
-    for (const auto & node : boundary_nodes) {
-        // check if the node is already in the equation map
-        if (equation_map.find(node) == equation_map.end()) {
-            // add the node to the equation map with a -1 indicating that the node is on the
-            // boundary
-            equation_map[node] = -1;
-        }
-    }
-
-    // loop on all the interior nodes of the mesh
-    for (const auto & node : interior_nodes) {
-        // check if the node is already in the equation map
-        if (equation_map.find(node) == equation_map.end()) {
-            // add the node to the equation map
-            equation_map[node] = equation;
-            // increment the equation number
-            equation++;
-        }
-    }
-
-    // the number of equations
-    int N_equations = equation;
-
-    channel << "Number of equations: " << equation << journal::endl;
-
-    // create a linear system of equations (PETSc Krylov solver)
-    auto solver = mito::solvers::petsc::ksp("mysolver");
-    solver.initialize(N_equations);
-    solver.set_options("-ksp_type preonly -pc_type cholesky");
+    // the Dirichlet boundary condition
+    auto constraints = mito::constraints::dirichlet_bc(boundary_mesh, zero);
 
     // create the body manifold
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // the function space
-    auto function_space = mito::discretization::function_space(manifold);
+    auto function_space = mito::discretization::function_space(manifold, constraints);
+
+    // the discrete system
+    auto discrete_system = mito::discretization::discrete_system(function_space);
+    const auto & equation_map = discrete_system.equation_map();
+    int N_equations = discrete_system.n_equations();
+
+    // create a linear system of equations (PETSc Krylov solver)
+    auto solver = mito::solvers::petsc::ksp("mysolver");
+    solver.initialize(N_equations);
+    solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
@@ -182,6 +146,8 @@ TEST(Fem, PoissonSquare)
     // finalize the solver
     solver.finalize();
 
+    // TOFIX: the solution should be assembled by the function space, which is aware of the
+    // constraints and can populate the constrained nodes appropriately
     // the numerical solution nodal field on the mesh
     auto solution = mito::discretization::nodal_field<scalar_t>(mesh, "numerical solution");
     // fill information in nodal field
