@@ -43,7 +43,7 @@ TEST(Constraints, Dirichlet)
     auto constraints = mito::constraints::dirichlet_bc(boundary_mesh, bc_value);
 
     // loop on all the constrained nodes
-    for (const auto & cell : constraints.cells()) {
+    for (const auto & cell : constraints.domain().cells()) {
         // get all the nodes of the cell
         auto nodes = cell.nodes();
         // loop on all the nodes of the cell

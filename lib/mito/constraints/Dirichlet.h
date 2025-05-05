@@ -18,7 +18,6 @@ namespace mito::constraints {
       public:
         using domain_type = meshT;
         using function_type = fieldT;
-        using cells_type = domain_type::cells_type;
 
         // interface
       public:
@@ -32,7 +31,7 @@ namespace mito::constraints {
         ~Dirichlet() = default;
 
         // accessors
-        auto cells() const -> const cells_type & { return _domain.cells(); }
+        auto domain() const -> const domain_type & { return _domain; }
         auto function() const -> const function_type & { return _function; }
 
       private:
