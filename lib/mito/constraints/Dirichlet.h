@@ -18,6 +18,8 @@ namespace mito::constraints {
       public:
         using domain_type = meshT;
         using function_type = fieldT;
+        using node_type = typename domain_type::node_type;
+        using nodes_type = std::set<node_type>;
 
         // interface
       public:
@@ -33,6 +35,15 @@ namespace mito::constraints {
         // accessors
         auto domain() const -> const domain_type & { return _domain; }
         auto function() const -> const function_type & { return _function; }
+
+        // get the constrained nodes
+        auto nodes() const -> nodes_type
+        {
+            // get all the nodes in the domain
+            nodes_type nodes;
+            mito::mesh::get_nodes(_domain, nodes);
+            return nodes;
+        }
 
       private:
         const domain_type & _domain;
