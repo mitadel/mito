@@ -20,6 +20,7 @@
 #include "DiscreteField.h"
 #include "IsoparametricSimplex.h"
 #include "FunctionSpace.h"
+#include "DiscreteSystem.h"
 
 // factories implementation
 #include "factories.h"

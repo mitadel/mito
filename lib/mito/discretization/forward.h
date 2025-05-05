@@ -20,6 +20,10 @@ namespace mito::discretization {
     // class function space
     template <manifolds::manifold_c manifoldT>
     class FunctionSpace;
+
+    // class discrete system
+    template <class functionSpaceT>
+    class DiscreteSystem;
 }
 
 

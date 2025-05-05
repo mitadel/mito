@@ -57,6 +57,13 @@ namespace mito::discretization {
         // build a function space on the manifold and return it
         return function_space_t<manifoldT>(manifold);
     }
+
+    // discrete system factory
+    template <class functionSpaceT>
+    constexpr auto discrete_system(const functionSpaceT & function_space)
+    {
+        return discrete_system_t<functionSpaceT>(function_space);
+    }
 }
 
 
