@@ -53,6 +53,9 @@ namespace mito::discretization {
         constexpr FunctionSpace & operator=(FunctionSpace &&) noexcept = delete;
 
       public:
+        // accessor for the manifold
+        constexpr auto manifold() const noexcept -> const manifold_type & { return _manifold; }
+
         // get all the shape functions of cell {cell} evaluated at the point {xi} in barycentric
         // coordinates
         auto shape(const cell_type & cell, const barycentric_coordinates_type & xi) const
