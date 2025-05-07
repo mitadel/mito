@@ -99,7 +99,7 @@ namespace mito::discretization {
             }
 
             // the number of equations
-            int _n_equations = equation;
+            _n_equations = equation;
 
             // print the number of equations
             channel << "Number of equations: " << _n_equations << journal::endl;
