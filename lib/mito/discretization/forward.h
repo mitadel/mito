@@ -14,7 +14,7 @@ namespace mito::discretization {
     class DiscreteField;
 
     // class isoparametric simplex
-    template <class geometricSimplexT>
+    template <geometry::geometric_simplex_c geometricSimplexT>
     class IsoparametricSimplex;
 
     // class function space

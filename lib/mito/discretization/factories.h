@@ -43,7 +43,7 @@ namespace mito::discretization {
     }
 
     // isoparametric simplex factory
-    template <class geometricSimplexT>
+    template <geometry::geometric_simplex_c geometricSimplexT>
     constexpr auto isoparametric_simplex()
     {
         // build an isoparametric simplex and return it

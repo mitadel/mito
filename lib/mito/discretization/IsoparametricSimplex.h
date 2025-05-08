@@ -12,9 +12,7 @@
 
 namespace mito::discretization {
 
-    // TODO: add concept of geometric simplex and require that {geomtricSimplexT} is a geometric
-    // simplex
-    template <class geometricSimplexT>
+    template <geometry::geometric_simplex_c geometricSimplexT>
     class IsoparametricSimplex {
 
       private:
