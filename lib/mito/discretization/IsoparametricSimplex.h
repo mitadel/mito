@@ -26,7 +26,7 @@ namespace mito::discretization {
         using parametric_coordinates_type =
             mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
         // type of a point in barycentric coordinates
-        using barycentric_coordinates_type = geometricSimplexT::barycentric_coordinates_type;
+        using barycentric_coordinates_type = geometric_simplex_type::barycentric_coordinates_type;
         // TOFIX: see above
         using evaluated_shape_functions_type = std::array<mito::tensor::scalar_t, 3>;
         using evaluated_shape_functions_gradients_type = std::array<mito::tensor::vector_t<2>, 3>;
