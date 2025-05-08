@@ -119,7 +119,7 @@ namespace mito::discretization {
         }
 
       private:
-        // a const reference to the mesh
+        // a const reference to the manifold
         const manifold_type & _manifold;
 
         // TOFIX: this should be a collection of constraints. Also, constraints may involve
