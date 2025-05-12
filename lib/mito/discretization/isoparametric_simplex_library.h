@@ -9,22 +9,22 @@
 
 namespace mito::discretization {
 
-    // struct storing the type of an isoparametric simplex of order {order} and polynomial degree
-    // {degree} on a geometric simplex of type {geometricSimplexT} and coordinate system
-    // {coordinateSystemT}
+    // TOFIX: add requirement that the geometric simplex spatial dimension matches that of the
+    // coordinate system
+    // struct storing the type of an isoparametric simplex of polynomial degree {degree} on a
+    // geometric simplex of type {geometricSimplexT} and coordinate system {coordinateSystemT}
     template <
-        int order, int degree, geometry::geometric_simplex_c geometricSimplexT,
+        int degree, geometry::geometric_simplex_c geometricSimplexT,
         geometry::coordinate_system_c coordinateSystemT>
     struct isoparametric_simplex {};
 
     // linear shape functions on triangles
-    template <
-        geometry::geometric_simplex_c geometricSimplexT,
-        geometry::coordinate_system_c coordinateSystemT>
-    struct isoparametric_simplex<2, 1, geometricSimplexT, coordinateSystemT> {
-        using type = IsoparametricTriangle1<geometricSimplexT, coordinateSystemT>;
+    template <geometry::coordinate_system_c coordinateSystemT>
+    struct isoparametric_simplex<
+        1, geometry::triangle_t<coordinateSystemT::dim>, coordinateSystemT> {
+        using type =
+            IsoparametricTriangle1<geometry::triangle_t<coordinateSystemT::dim>, coordinateSystemT>;
     };
-
 }
 
 

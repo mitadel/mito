@@ -25,11 +25,10 @@ namespace mito::discretization {
         using node_type = typename cell_type::node_type;
         // the coordinate system type
         using coord_system_type = typename manifold_type::coordinate_system_type;
-        // TOFIX: order and degree are hard coded here for now. Eventually, we should make them
+        // TOFIX: polynomial degree is hard coded here for now. Eventually, we should make them
         // template parameters for the class
         // typedef for a finite element
-        using element_type =
-            typename isoparametric_simplex<2, 1, cell_type, coord_system_type>::type;
+        using element_type = typename isoparametric_simplex<1, cell_type, coord_system_type>::type;
         // typedef for a collection of finite elements
         using elements_type = utilities::segmented_vector_t<element_type>;
 

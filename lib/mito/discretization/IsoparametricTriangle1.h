@@ -17,6 +17,9 @@
 // and the isoparametric mapping
 namespace mito::discretization {
 
+    // QUESTION: should we enforce the use of a cartesian coordinate system for this type of
+    // isoparametric simplex? In this case, the coordinate system type can be sinthesized from the
+    // geometric simplex type (which has knowledge of the dimension of the embedding space)
     template <
         geometry::geometric_simplex_c geometricSimplexT,
         geometry::coordinate_system_c coordinateSystemT>
