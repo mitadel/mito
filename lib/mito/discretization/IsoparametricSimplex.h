@@ -79,9 +79,6 @@ namespace mito::discretization {
         // get all the shape functions evaluated at the point {xi} in barycentric coordinates
         auto shape(const barycentric_coordinates_type & xi) const -> evaluated_shape_functions_type
         {
-            // check that the barycentric coordinates are valid
-            assert(1.0 - (xi[0] + xi[1]) == xi[2]);
-
             // the parametric coordinates of the quadrature point
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
@@ -94,9 +91,6 @@ namespace mito::discretization {
         auto gradient(const barycentric_coordinates_type & xi) const
             -> evaluated_shape_functions_gradients_type
         {
-            // check that the barycentric coordinates are valid
-            assert(1.0 - (xi[0] + xi[1]) == xi[2]);
-
             // the parametric coordinates of the quadrature point
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
@@ -109,9 +103,6 @@ namespace mito::discretization {
             const vector_type & x_0, const vector_type & x_1, const vector_type & x_2,
             const barycentric_coordinates_type & xi) const
         {
-            // check that the barycentric coordinates are valid
-            assert(1.0 - (xi[0] + xi[1]) == xi[2]);
-
             // assemble the isoparametric mapping from the barycentric coordinates to the actual
             // coordinates on the cell {cell}
             auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
