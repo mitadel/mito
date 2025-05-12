@@ -25,24 +25,31 @@ namespace mito::discretization {
         using node_type = typename cell_type::node_type;
         // the coordinate system type
         using coord_system_type = typename manifold_type::coordinate_system_type;
-
-      private:
-        // TOFIX: how do we inject this in the class?
-        // the canonical simplex type
-        static constexpr auto canonical_element = isoparametric_simplex<cell_type>();
-        // type of a point in barycentric coordinates
-        using barycentric_coordinates_type = cell_type::barycentric_coordinates_type;
-        // TOFIX
-        using evaluated_shape_functions_type = std::map<node_type, mito::tensor::scalar_t>;
-        using evaluated_shape_functions_gradients_type =
-            std::map<node_type, mito::tensor::vector_t<2>>;
+        // TOFIX: how to properly inject the element type information into the function space?
+        // typedef for a finite element
+        using element_type = isoparametric_simplex_t<cell_type, coord_system_type>;
+        // typedef for a collection of finite elements
+        using elements_type = utilities::segmented_vector_t<element_type>;
 
       public:
         // the constructor
         constexpr FunctionSpace(
             const manifold_type & manifold, const constraints_type & constraints) :
-            _manifold(manifold),
-            _constraints(constraints) {};
+            _elements(100),
+            _constraints(constraints)
+        {
+            // get the coordinate system of the manifold
+            const auto & coord_system = manifold.coordinate_system();
+
+            // loop on the cells of the mesh
+            for (const auto & cell : manifold.elements()) {
+                // create a finite element for each cell and add it to the pile
+                _elements.emplace(cell, coord_system);
+            }
+
+            // all done
+            return;
+        };
 
         // destructor
         constexpr ~FunctionSpace() = default;
@@ -60,67 +67,19 @@ namespace mito::discretization {
         constexpr FunctionSpace & operator=(FunctionSpace &&) noexcept = delete;
 
       public:
-        // accessor for the manifold
-        constexpr auto manifold() const noexcept -> const manifold_type & { return _manifold; }
-
+        // TOFIX: not sure this should be constexpr
         // accessor for the constraints
         constexpr auto constraints() const noexcept -> const constraints_type &
         {
             return _constraints;
         }
 
-        // get all the shape functions of cell {cell} evaluated at the point {xi} in barycentric
-        // coordinates
-        auto shape(const cell_type & cell, const barycentric_coordinates_type & xi) const
-            -> evaluated_shape_functions_type
-        {
-            // get the shape functions of the canonical element
-            auto shape_functions = canonical_element.shape(xi);
-
-            // the nodes of the cell
-            const auto & nodes = cell.nodes();
-
-            // return the shape functions evaluated at {xi}
-            return { { nodes[0], shape_functions[0] },
-                     { nodes[1], shape_functions[1] },
-                     { nodes[2], shape_functions[2] } };
-        }
-
-        // get all the shape functions gradients evaluated at the point {xi} in barycentric
-        // coordinates
-        auto gradient(const cell_type & cell, const barycentric_coordinates_type & xi) const
-            -> evaluated_shape_functions_gradients_type
-        {
-            // the nodes of the cell
-            const auto & nodes = cell.nodes();
-
-            // the origin of the coordinate system
-            auto origin = typename coord_system_type::coordinates_type{};
-
-            // the coordinates of the nodes of the triangle
-            auto x_0 = _manifold.coordinates(nodes[0]) - origin;
-            auto x_1 = _manifold.coordinates(nodes[1]) - origin;
-            auto x_2 = _manifold.coordinates(nodes[2]) - origin;
-
-            // the jacobian of the mapping from the reference element to the physical element
-            // evaluated at {xi}
-            auto J = canonical_element.jacobian(x_0, x_1, x_2, xi);
-
-            // the derivative of the coordinates with respect to the barycentric coordinates
-            auto J_inv = mito::tensor::inverse(J);
-
-            // get the  shape functions derivatives at {xi}
-            /*constexpr*/ auto dphi = canonical_element.gradient(xi);
-
-            // return the spatial gradients of the shape functions evaluated at {xi}
-            return { { nodes[0], dphi[0] * J_inv },
-                     { nodes[1], dphi[1] * J_inv },
-                     { nodes[2], dphi[2] * J_inv } };
-        }
+        // get the finite elements
+        auto elements() const noexcept -> const elements_type & { return _elements; }
 
       private:
-        // a const reference to the manifold
-        const manifold_type & _manifold;
+        // a collection of finite elements
+        elements_type _elements;
 
         // TOFIX: this should be a collection of constraints. Also, constraints may involve
         // different degrees of freedom (e.g. periodic boundary conditions to impose relations

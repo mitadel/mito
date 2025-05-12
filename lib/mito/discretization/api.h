@@ -34,12 +34,10 @@ namespace mito::discretization {
     constexpr auto point_field(const cloudT & cloud, std::string name);
 
     // isoparametric simplex alias
-    template <geometry::geometric_simplex_c geometricSimplexT>
-    using isoparametric_simplex_t = IsoparametricSimplex<geometricSimplexT>;
-
-    // isoparametric simplex factory
-    template <geometry::geometric_simplex_c geometricSimplexT>
-    constexpr auto isoparametric_simplex();
+    template <
+        geometry::geometric_simplex_c geometricSimplexT,
+        geometry::coordinate_system_c coordinateSystemT>
+    using isoparametric_simplex_t = IsoparametricSimplex<geometricSimplexT, coordinateSystemT>;
 
     // function space alias
     template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>

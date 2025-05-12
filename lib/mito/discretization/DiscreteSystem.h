@@ -53,12 +53,9 @@ namespace mito::discretization {
             // make a channel
             journal::info_t channel("discretization.discrete_system");
 
-            // get the mesh of the function space
-            const auto & mesh = _function_space.manifold().mesh();
-
-            // get all the nodes in the mesh
+            // get all the nodes in the function space
             std::set<node_type> nodes;
-            mito::mesh::get_nodes(mesh, nodes);
+            get_nodes(_function_space, nodes);
             channel << "Number of nodes: " << std::size(nodes) << journal::endl;
 
             // get the domain that is constrained

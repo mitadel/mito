@@ -42,14 +42,6 @@ namespace mito::discretization {
         return point_field_t<cloudT::dim, Y>(cloud.points(), name);
     }
 
-    // isoparametric simplex factory
-    template <geometry::geometric_simplex_c geometricSimplexT>
-    constexpr auto isoparametric_simplex()
-    {
-        // build an isoparametric simplex and return it
-        return isoparametric_simplex_t<geometricSimplexT>();
-    }
-
     // TOFIX: {constraints} should be a collection of constraints as opposed to an instance of a
     // single constraint
     // function space factory

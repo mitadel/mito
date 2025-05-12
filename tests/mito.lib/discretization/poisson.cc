@@ -77,7 +77,11 @@ TEST(Fem, PoissonSquare)
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // loop on all the cells of the mesh
-    for (const auto & cell : manifold.elements()) {
+    for (const auto & element : function_space.elements()) {
+
+        // QUESTION: is accessing the geometric simplex really needed?
+        // get the corresponding cell
+        const auto & cell = element.geometric_simplex();
 
         // loop on the quadrature points
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -89,7 +93,7 @@ TEST(Fem, PoissonSquare)
             auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
 
             // evaluate the spatial gradients of the element shape functions at {xi}
-            auto dphi = function_space.gradient(cell, xi);
+            auto dphi = element.gradient(xi);
 
             // populate the linear system of equations
             for (const auto & [node_a, dphi_a] : dphi) {
@@ -116,7 +120,7 @@ TEST(Fem, PoissonSquare)
             }
 
             // evaluate the element shape functions at {xi}
-            auto phi = function_space.shape(cell, xi);
+            auto phi = element.shape(xi);
 
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
@@ -198,7 +202,9 @@ TEST(Fem, PoissonSquare)
     // compute the error
     auto error_L2 = 0.0;
     // loop on all the cells of the mesh
-    for (const auto & cell : manifold.elements()) {
+    for (const auto & element : function_space.elements()) {
+        // get the corresponding cell
+        const auto & cell = element.geometric_simplex();
         // volume of the cell
         auto volume = manifold.volume(cell);
         // loop on the quadrature points
@@ -206,7 +212,7 @@ TEST(Fem, PoissonSquare)
             // the barycentric coordinates of the quadrature point
             /*constexpr*/ auto xi = quadrature_rule.point(q);
             // evaluate the element shape functions at {xi}
-            auto phi = function_space.shape(cell, xi);
+            auto phi = element.shape(xi);
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
             // get the exact solution at {coord}

@@ -10,26 +10,43 @@
 // DESIGN NOTES
 // Class {IsoparametricSimplex} represents the reference simplex in the parametric space
 
+
+// TODO: rename to IsoparametricTriangle1. IsoparametricTriangle1 and IsoparametricTriangle2 can be
+// derived from a common base class IsoparametricTriangle that has the barycentric coordinates types
+// and the isoparametric mapping
 namespace mito::discretization {
 
-    template <geometry::geometric_simplex_c geometricSimplexT>
-    class IsoparametricSimplex {
+    template <
+        geometry::geometric_simplex_c geometricSimplexT,
+        geometry::coordinate_system_c coordinateSystemT>
+    class IsoparametricSimplex : public utilities::Invalidatable {
 
       private:
         // the geometric simplex type
         using geometric_simplex_type = geometricSimplexT;
-        // the vector type
-        using vector_type = tensor::vector_t<2>;
+        // TOFIX: we need to come up with another notion for the discretization node as the
+        // {geometry::node_t} implies the presence of a vertex the node type
+        using node_type = typename geometric_simplex_type::node_type;
+        // the number of discretization nodes
+        static constexpr int n_nodes = 3;
+        // a collection of discretization nodes
+        using nodes_type = std::array<node_type, n_nodes>;
+        // the global coordinate system type
+        using coordinate_system_type = coordinateSystemT;
         // TOFIX: this should be defined based on the order of the simplex (e.g. 1 for segments, 2
         // for triangles, 3 for tetrahedra, etc.)
+        // the parametric dimension
+        static constexpr int dim = 2;
         // the parametric coordinates type
         using parametric_coordinates_type =
-            mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+            mito::geometry::coordinates_t<dim, mito::geometry::CARTESIAN>;
         // type of a point in barycentric coordinates
         using barycentric_coordinates_type = geometric_simplex_type::barycentric_coordinates_type;
-        // TOFIX: see above
-        using evaluated_shape_functions_type = std::array<mito::tensor::scalar_t, 3>;
-        using evaluated_shape_functions_gradients_type = std::array<mito::tensor::vector_t<2>, 3>;
+        // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
+        // another data structure
+        using evaluated_shape_functions_type = std::map<node_type, mito::tensor::scalar_t>;
+        using evaluated_shape_functions_gradients_type =
+            std::map<node_type, mito::tensor::vector_t<dim>>;
 
       private:
         // TOFIX: these should be defined based on the order of the element and on the type of
@@ -58,7 +75,13 @@ namespace mito::discretization {
 
       public:
         // the default constructor
-        constexpr IsoparametricSimplex() = default;
+        constexpr IsoparametricSimplex(
+            const geometric_simplex_type & geometric_simplex,
+            const coordinate_system_type & coordinate_system) :
+            _geometric_simplex(geometric_simplex),
+            _coordinate_system(coordinate_system),
+            _nodes{ geometric_simplex.nodes() }
+        {}
 
         // destructor
         constexpr ~IsoparametricSimplex() = default;
@@ -76,6 +99,15 @@ namespace mito::discretization {
         constexpr IsoparametricSimplex & operator=(IsoparametricSimplex &&) noexcept = delete;
 
       public:
+        // get the geometric simplex
+        constexpr auto geometric_simplex() const noexcept -> const geometric_simplex_type &
+        {
+            return _geometric_simplex;
+        }
+
+        // get the nodes
+        constexpr auto nodes() const noexcept -> const nodes_type & { return _nodes; }
+
         // get all the shape functions evaluated at the point {xi} in barycentric coordinates
         auto shape(const barycentric_coordinates_type & xi) const -> evaluated_shape_functions_type
         {
@@ -83,26 +115,22 @@ namespace mito::discretization {
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
             // return the shape functions evaluated at {xi}
-            return { std::get<0>(phi)(xi_p), std::get<1>(phi)(xi_p), std::get<2>(phi)(xi_p) };
-        }
-
-        // get all the shape functions gradients evaluated at the point {xi} in barycentric
-        // coordinates
-        auto gradient(const barycentric_coordinates_type & xi) const
-            -> evaluated_shape_functions_gradients_type
-        {
-            // the parametric coordinates of the quadrature point
-            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
-
-            // return the shape functions gradients evaluated at {xi}
-            return { std::get<0>(dphi)(xi_p), std::get<1>(dphi)(xi_p), std::get<2>(dphi)(xi_p) };
+            return { { _nodes[0], std::get<0>(phi)(xi_p) },
+                     { _nodes[1], std::get<1>(phi)(xi_p) },
+                     { _nodes[2], std::get<2>(phi)(xi_p) } };
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
-        constexpr auto jacobian(
-            const vector_type & x_0, const vector_type & x_1, const vector_type & x_2,
-            const barycentric_coordinates_type & xi) const
+        constexpr auto jacobian(const barycentric_coordinates_type & xi) const
         {
+            // the origin of the coordinate system
+            auto origin = typename coordinate_system_type::coordinates_type{};
+
+            // the coordinates of the nodes of the triangle
+            auto x_0 = _coordinate_system.coordinates(_nodes[0]->point()) - origin;
+            auto x_1 = _coordinate_system.coordinates(_nodes[1]->point()) - origin;
+            auto x_2 = _coordinate_system.coordinates(_nodes[2]->point()) - origin;
+
             // assemble the isoparametric mapping from the barycentric coordinates to the actual
             // coordinates on the cell {cell}
             auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
@@ -110,11 +138,41 @@ namespace mito::discretization {
             // the parametric coordinates of the quadrature point
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
+            // compute the gradient of the isoparametric mapping
             auto J = mito::fields::gradient(x_cell)(xi_p);
 
             // return the jacobian of the isoparametric mapping
             return J;
         }
+
+        // get all the shape functions gradients evaluated at the point {xi} in barycentric
+        // coordinates
+        auto gradient(const barycentric_coordinates_type & xi) const
+            -> evaluated_shape_functions_gradients_type
+        {
+            // the jacobian of the mapping from the reference element to the physical element
+            // evaluated at {xi}
+            auto J = jacobian(xi);
+
+            // the derivative of the coordinates with respect to the barycentric coordinates
+            auto J_inv = mito::tensor::inverse(J);
+
+            // the parametric coordinates of the quadrature point
+            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+
+            // return the spatial gradients of the shape functions evaluated at {xi}
+            return { { _nodes[0], std::get<0>(dphi)(xi_p) * J_inv },
+                     { _nodes[1], std::get<1>(dphi)(xi_p) * J_inv },
+                     { _nodes[2], std::get<2>(dphi)(xi_p) * J_inv } };
+        }
+
+      private:
+        // a const reference to the geometric simplex
+        const geometric_simplex_type & _geometric_simplex;
+        // a const reference to the coordinate system
+        const coordinate_system_type & _coordinate_system;
+        // the nodes of the simplex
+        const nodes_type _nodes;
     };
 
 }    // namespace mito
