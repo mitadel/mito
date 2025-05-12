@@ -20,7 +20,7 @@ namespace mito::discretization {
     class IsoparametricTriangle1;
 
     // class function space
-    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     class FunctionSpace;
 
     // class discrete system

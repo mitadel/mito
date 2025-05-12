@@ -58,8 +58,8 @@ TEST(Fem, PoissonSquare)
     // create the body manifold
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
-    // the function space
-    auto function_space = mito::discretization::function_space(manifold, constraints);
+    // the function space (linear elements on the manifold)
+    auto function_space = mito::discretization::function_space<1>(manifold, constraints);
 
     // the discrete system
     auto discrete_system = mito::discretization::discrete_system(function_space);

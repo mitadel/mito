@@ -45,11 +45,11 @@ namespace mito::discretization {
     // TOFIX: {constraints} should be a collection of constraints as opposed to an instance of a
     // single constraint
     // function space factory
-    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints)
     {
         // build a function space on the manifold and return it
-        return function_space_t<manifoldT, constraintsT>(manifold, constraints);
+        return function_space_t<p, manifoldT, constraintsT>(manifold, constraints);
     }
 
     // discrete system factory

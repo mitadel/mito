@@ -34,8 +34,8 @@ namespace mito::discretization {
     constexpr auto point_field(const cloudT & cloud, std::string name);
 
     // function space alias
-    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
-    using function_space_t = FunctionSpace<manifoldT, constraintsT>;
+    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    using function_space_t = FunctionSpace<p, manifoldT, constraintsT>;
 
     // function space factory
     template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>

@@ -9,7 +9,9 @@
 
 namespace mito::discretization {
 
-    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    // Class {FunctionSpace} represents a collection of finite elements of order {p} defined on a
+    // manifold and subjected to a set of constraints.
+    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     class FunctionSpace {
 
       public:
@@ -25,10 +27,11 @@ namespace mito::discretization {
         using node_type = typename cell_type::node_type;
         // the coordinate system type
         using coord_system_type = typename manifold_type::coordinate_system_type;
-        // TOFIX: polynomial degree is hard coded here for now. Eventually, we should make them
-        // template parameters for the class
+        // the order of the finite element
+        static constexpr int order = p;
         // typedef for a finite element
-        using element_type = typename isoparametric_simplex<1, cell_type, coord_system_type>::type;
+        using element_type =
+            typename isoparametric_simplex<order, cell_type, coord_system_type>::type;
         // typedef for a collection of finite elements
         using elements_type = utilities::segmented_vector_t<element_type>;
 
