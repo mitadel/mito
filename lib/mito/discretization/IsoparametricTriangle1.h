@@ -12,9 +12,6 @@
 // functions defined in the parametric space.
 
 
-// TODO: rename to IsoparametricTriangle1. IsoparametricTriangle1 and IsoparametricTriangle2 can be
-// derived from a common base class IsoparametricTriangle that has the barycentric coordinates types
-// and the isoparametric mapping
 namespace mito::discretization {
 
     // QUESTION: should we enforce the use of a cartesian coordinate system for this type of
@@ -23,11 +20,22 @@ namespace mito::discretization {
     template <
         geometry::geometric_simplex_c geometricSimplexT,
         geometry::coordinate_system_c coordinateSystemT>
-    class IsoparametricTriangle1 : public utilities::Invalidatable {
+    class IsoparametricTriangle1 : public IsoparametricTriangle<geometricSimplexT> {
 
       private:
         // the geometric simplex type
         using geometric_simplex_type = geometricSimplexT;
+        // the global coordinate system type
+        using coordinate_system_type = coordinateSystemT;
+        // the base class
+        using isoparametric_triangle_type = IsoparametricTriangle<geometric_simplex_type>;
+        // the parametric coordinates type
+        using parametric_coordinates_type =
+            typename isoparametric_triangle_type::parametric_coordinates_type;
+
+      private:
+        // the point type
+        using point_type = typename coordinate_system_type::point_type;
         // TOFIX: we need to come up with another notion for the discretization node as the
         // {geometry::node_t} implies the presence of a vertex the node type
         using node_type = typename geometric_simplex_type::node_type;
@@ -35,39 +43,20 @@ namespace mito::discretization {
         static constexpr int n_nodes = 3;
         // a collection of discretization nodes
         using nodes_type = std::array<node_type, n_nodes>;
-        // the global coordinate system type
-        using coordinate_system_type = coordinateSystemT;
-        // TOFIX: this should be defined based on the order of the simplex (e.g. 1 for segments, 2
-        // for triangles, 3 for tetrahedra, etc.)
-        // the parametric dimension
-        static constexpr int dim = 2;
-        // the parametric coordinates type
-        using parametric_coordinates_type =
-            mito::geometry::coordinates_t<dim, mito::geometry::CARTESIAN>;
         // type of a point in barycentric coordinates
-        using barycentric_coordinates_type = geometric_simplex_type::barycentric_coordinates_type;
+        using barycentric_coordinates_type =
+            typename geometric_simplex_type::barycentric_coordinates_type;
         // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
         // another data structure
         using evaluated_shape_functions_type = std::map<node_type, mito::tensor::scalar_t>;
         using evaluated_shape_functions_gradients_type =
-            std::map<node_type, mito::tensor::vector_t<dim>>;
+            std::map<node_type, mito::tensor::vector_t<2>>;
 
       private:
-        // TOFIX: these should be defined based on the order of the element and on the type of
-        // simplex (for example here it's 3 of them because we use linear elements on a triangle)
-        // the function extracting the 0 component of a parametric point
-        static constexpr auto xi_0 =
-            mito::fields::field(mito::functions::component<parametric_coordinates_type, 0>);
-        // the function extracting the 1 component of a parametric point
-        static constexpr auto xi_1 =
-            mito::fields::field(mito::functions::component<parametric_coordinates_type, 1>);
-        // the function extracting the 2 component of a parametric point
-        static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
-
         // linear shape functions on the triangle
-        static constexpr auto phi_0 = xi_0;
-        static constexpr auto phi_1 = xi_1;
-        static constexpr auto phi_2 = xi_2;
+        static constexpr auto phi_0 = isoparametric_triangle_type::xi_0;
+        static constexpr auto phi_1 = isoparametric_triangle_type::xi_1;
+        static constexpr auto phi_2 = isoparametric_triangle_type::xi_2;
 
         // the shape functions
         static constexpr auto phi = std::make_tuple(phi_0, phi_1, phi_2);
@@ -82,7 +71,7 @@ namespace mito::discretization {
         constexpr IsoparametricTriangle1(
             const geometric_simplex_type & geometric_simplex,
             const coordinate_system_type & coordinate_system) :
-            _geometric_simplex(geometric_simplex),
+            IsoparametricTriangle<geometric_simplex_type>(geometric_simplex),
             _coordinate_system(coordinate_system),
             _nodes{ geometric_simplex.nodes() }
         {}
@@ -102,13 +91,17 @@ namespace mito::discretization {
         // delete move assignment operator
         constexpr IsoparametricTriangle1 & operator=(IsoparametricTriangle1 &&) noexcept = delete;
 
-      public:
-        // get the geometric simplex
-        constexpr auto geometric_simplex() const noexcept -> const geometric_simplex_type &
+      private:
+        // get the coordinates of a point
+        constexpr auto coordinates(const point_type & point) const noexcept
         {
-            return _geometric_simplex;
+            // the origin of the coordinate system
+            auto origin = typename coordinate_system_type::coordinates_type{};
+            // delegate to the coordinate system
+            return _coordinate_system.coordinates(point) - origin;
         }
 
+      public:
         // get the nodes
         constexpr auto nodes() const noexcept -> const nodes_type & { return _nodes; }
 
@@ -127,13 +120,10 @@ namespace mito::discretization {
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
         constexpr auto jacobian(const barycentric_coordinates_type & xi) const
         {
-            // the origin of the coordinate system
-            auto origin = typename coordinate_system_type::coordinates_type{};
-
             // the coordinates of the nodes of the triangle
-            auto x_0 = _coordinate_system.coordinates(_nodes[0]->point()) - origin;
-            auto x_1 = _coordinate_system.coordinates(_nodes[1]->point()) - origin;
-            auto x_2 = _coordinate_system.coordinates(_nodes[2]->point()) - origin;
+            auto x_0 = coordinates(_nodes[0]->point());
+            auto x_1 = coordinates(_nodes[1]->point());
+            auto x_2 = coordinates(_nodes[2]->point());
 
             // assemble the isoparametric mapping from the barycentric coordinates to the actual
             // coordinates on the cell {cell}
@@ -171,8 +161,6 @@ namespace mito::discretization {
         }
 
       private:
-        // a const reference to the geometric simplex
-        const geometric_simplex_type & _geometric_simplex;
         // a const reference to the coordinate system
         const coordinate_system_type & _coordinate_system;
         // the nodes of the simplex
