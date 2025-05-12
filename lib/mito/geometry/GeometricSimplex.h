@@ -196,14 +196,6 @@ namespace mito::geometry {
         point_type _point;
     };
 
-    // operator== for nodes
-    template <int D>
-    constexpr auto operator==(
-        const GeometricSimplex<0, D> & node_a, const GeometricSimplex<0, D> & node_b) -> bool
-    {
-        // two nodes are the same if they have the same id
-        return node_a.id() == node_b.id();
-    }
 }
 
 
