@@ -8,7 +8,8 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSimplex} represents the reference simplex in the parametric space
+// Class {IsoparametricTriangle1} represents a second order simplex equipped with linear shape
+// functions defined in the parametric space.
 
 
 // TODO: rename to IsoparametricTriangle1. IsoparametricTriangle1 and IsoparametricTriangle2 can be
@@ -19,7 +20,7 @@ namespace mito::discretization {
     template <
         geometry::geometric_simplex_c geometricSimplexT,
         geometry::coordinate_system_c coordinateSystemT>
-    class IsoparametricSimplex : public utilities::Invalidatable {
+    class IsoparametricTriangle1 : public utilities::Invalidatable {
 
       private:
         // the geometric simplex type
@@ -75,7 +76,7 @@ namespace mito::discretization {
 
       public:
         // the default constructor
-        constexpr IsoparametricSimplex(
+        constexpr IsoparametricTriangle1(
             const geometric_simplex_type & geometric_simplex,
             const coordinate_system_type & coordinate_system) :
             _geometric_simplex(geometric_simplex),
@@ -84,19 +85,19 @@ namespace mito::discretization {
         {}
 
         // destructor
-        constexpr ~IsoparametricSimplex() = default;
+        constexpr ~IsoparametricTriangle1() = default;
 
         // delete move constructor
-        constexpr IsoparametricSimplex(IsoparametricSimplex &&) noexcept = delete;
+        constexpr IsoparametricTriangle1(IsoparametricTriangle1 &&) noexcept = delete;
 
         // delete copy constructor
-        constexpr IsoparametricSimplex(const IsoparametricSimplex &) = delete;
+        constexpr IsoparametricTriangle1(const IsoparametricTriangle1 &) = delete;
 
         // delete assignment operator
-        constexpr IsoparametricSimplex & operator=(const IsoparametricSimplex &) = delete;
+        constexpr IsoparametricTriangle1 & operator=(const IsoparametricTriangle1 &) = delete;
 
         // delete move assignment operator
-        constexpr IsoparametricSimplex & operator=(IsoparametricSimplex &&) noexcept = delete;
+        constexpr IsoparametricTriangle1 & operator=(IsoparametricTriangle1 &&) noexcept = delete;
 
       public:
         // get the geometric simplex

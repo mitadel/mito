@@ -17,7 +17,7 @@ namespace mito::discretization {
     template <
         geometry::geometric_simplex_c geometricSimplexT,
         geometry::coordinate_system_c coordinateSystemT>
-    class IsoparametricSimplex;
+    class IsoparametricTriangle1;
 
     // class function space
     template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
