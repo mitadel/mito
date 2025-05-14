@@ -9,6 +9,9 @@
 
 namespace mito::discretization {
 
+    // class discretization node
+    class DiscretizationNode;
+
     // class discrete field
     template <class keyT, class Y>
     class DiscreteField;

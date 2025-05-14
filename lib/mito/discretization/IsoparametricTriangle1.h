@@ -22,6 +22,16 @@ namespace mito::discretization {
         geometry::coordinate_system_c coordinateSystemT>
     class IsoparametricTriangle1 : public IsoparametricTriangle<geometricSimplexT> {
 
+      public:
+        // the number of discretization nodes
+        static constexpr int n_nodes = 3;
+        // the number of vertices
+        static constexpr int n_vertices = 3;
+        // the node type
+        using node_type = discretization_node_t;
+        // a collection of discretization nodes
+        using nodes_type = std::array<node_type, n_nodes>;
+
       private:
         // the geometric simplex type
         using geometric_simplex_type = geometricSimplexT;
@@ -34,15 +44,8 @@ namespace mito::discretization {
             typename isoparametric_triangle_type::parametric_coordinates_type;
 
       private:
-        // the point type
-        using point_type = typename coordinate_system_type::point_type;
-        // TOFIX: we need to come up with another notion for the discretization node as the
-        // {geometry::node_t} implies the presence of a vertex the node type
-        using node_type = typename geometric_simplex_type::node_type;
-        // the number of discretization nodes
-        static constexpr int n_nodes = 3;
-        // a collection of discretization nodes
-        using nodes_type = std::array<node_type, n_nodes>;
+        //
+        using vector_type = tensor::vector_t<coordinate_system_type::dim>;
         // type of a point in barycentric coordinates
         using barycentric_coordinates_type =
             typename geometric_simplex_type::barycentric_coordinates_type;
@@ -69,11 +72,13 @@ namespace mito::discretization {
       public:
         // the default constructor
         constexpr IsoparametricTriangle1(
-            const geometric_simplex_type & geometric_simplex,
-            const coordinate_system_type & coordinate_system) :
+            const geometric_simplex_type & geometric_simplex, const nodes_type & nodes,
+            const vector_type & x0, const vector_type & x1, const vector_type & x2) :
             IsoparametricTriangle<geometric_simplex_type>(geometric_simplex),
-            _coordinate_system(coordinate_system),
-            _nodes{ geometric_simplex.nodes() }
+            _nodes(nodes),
+            _x0(x0),
+            _x1(x1),
+            _x2(x2)
         {}
 
         // destructor
@@ -90,16 +95,6 @@ namespace mito::discretization {
 
         // delete move assignment operator
         constexpr IsoparametricTriangle1 & operator=(IsoparametricTriangle1 &&) noexcept = delete;
-
-      private:
-        // get the coordinates of a point
-        constexpr auto coordinates(const point_type & point) const noexcept
-        {
-            // the origin of the coordinate system
-            auto origin = typename coordinate_system_type::coordinates_type{};
-            // delegate to the coordinate system
-            return _coordinate_system.coordinates(point) - origin;
-        }
 
       public:
         // get the nodes
@@ -120,14 +115,9 @@ namespace mito::discretization {
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
         constexpr auto jacobian(const barycentric_coordinates_type & xi) const
         {
-            // the coordinates of the nodes of the triangle
-            auto x_0 = coordinates(_nodes[0]->point());
-            auto x_1 = coordinates(_nodes[1]->point());
-            auto x_2 = coordinates(_nodes[2]->point());
-
             // assemble the isoparametric mapping from the barycentric coordinates to the actual
             // coordinates on the cell {cell}
-            auto x_cell = x_0 * phi_0 + x_1 * phi_1 + x_2 * phi_2;
+            auto x_cell = _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2;
 
             // the parametric coordinates of the quadrature point
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
@@ -161,10 +151,16 @@ namespace mito::discretization {
         }
 
       private:
-        // a const reference to the coordinate system
-        const coordinate_system_type & _coordinate_system;
         // the nodes of the simplex
         const nodes_type _nodes;
+        // QUESTION: alternatively to the coordinates of the vertices, we could store the points
+        // associated with the vertices of the triangle, so the coordinates can be fetched from the
+        // coordinate system
+        //
+        // the coordinates of the nodes of the triangle
+        const vector_type _x0;
+        const vector_type _x1;
+        const vector_type _x2;
     };
 
 }    // namespace mito

@@ -16,7 +16,7 @@ namespace mito::discretization {
         // the function space type
         using function_space_type = functionSpaceT;
         // the type of node
-        using node_type = typename function_space_type::node_type;
+        using node_type = typename function_space_type::discretization_node_type;
         // QUESTION: is std::map the best choice for {equation_map_type}?
         // the equation map type (map associating an equation number to each node degree of freedom)
         using equation_map_type = std::map<node_type, int>;
@@ -58,8 +58,8 @@ namespace mito::discretization {
             get_nodes(_function_space, nodes);
             channel << "Number of nodes: " << std::size(nodes) << journal::endl;
 
-            // get the domain that is constrained
-            const auto & constrained_nodes = _function_space.constraints().nodes();
+            // get the constrained nodes in the function space
+            const auto & constrained_nodes = _function_space.constrained_nodes();
             channel << "Number of constrained nodes: " << std::size(constrained_nodes)
                     << journal::endl;
 

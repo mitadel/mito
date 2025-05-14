@@ -14,6 +14,7 @@
 #include "../journal.h"
 #include "../manifolds.h"
 #include "../constraints.h"
+#include "../utilities.h"
 
 
 // end of file

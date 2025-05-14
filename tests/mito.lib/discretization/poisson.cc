@@ -154,10 +154,13 @@ TEST(Fem, PoissonSquare)
     // constraints and can populate the constrained nodes appropriately
     // the numerical solution nodal field on the mesh
     auto solution = mito::discretization::nodal_field<scalar_t>(mesh, "numerical solution");
+    // get the node map from the function space
+    auto node_map = function_space.node_map();
     // fill information in nodal field
     for (auto & [node, value] : solution) {
+        auto discretization_node = node_map.at(node);
         // get the equation number of {node}
-        int eq = equation_map.at(node);
+        int eq = equation_map.at(discretization_node);
         if (eq != -1) {
             // read the solution at {eq}
             value = u[eq];
@@ -221,8 +224,12 @@ TEST(Fem, PoissonSquare)
             auto u_numerical = 0.0;
             // loop on all the shape functions
             for (const auto & [node_a, phi_a] : phi) {
-                // get the numerical solution at {coord}
-                u_numerical += solution(node_a) * phi_a;
+                // get the equation number of {node}
+                int eq = equation_map.at(node_a);
+                if (eq != -1) {
+                    // get the numerical solution at {coord}
+                    u_numerical += u[eq] * phi_a;
+                }
             }
             // get the error
             error_L2 += (u_exact - u_numerical) * (u_exact - u_numerical)

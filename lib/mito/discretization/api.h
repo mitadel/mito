@@ -9,6 +9,9 @@
 
 namespace mito::discretization {
 
+    // discretization node alias
+    using discretization_node_t = utilities::std_shared_ptr<const DiscretizationNode>;
+
     // nodal field
     template <int D, class Y>
     using nodal_field_t = DiscreteField<geometry::node_t<D>, Y>;

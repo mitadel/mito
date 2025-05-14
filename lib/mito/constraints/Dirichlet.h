@@ -36,15 +36,6 @@ namespace mito::constraints {
         auto domain() const -> const domain_type & { return _domain; }
         auto function() const -> const function_type & { return _function; }
 
-        // get the constrained nodes
-        auto nodes() const -> nodes_type
-        {
-            // get all the nodes in the domain
-            nodes_type nodes;
-            mito::mesh::get_nodes(_domain, nodes);
-            return nodes;
-        }
-
       private:
         const domain_type & _domain;
         function_type _function;

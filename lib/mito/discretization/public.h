@@ -18,6 +18,7 @@
 
 // classes implementation
 #include "DiscreteField.h"
+#include "DiscretizationNode.h"
 #include "IsoparametricTriangle.h"
 #include "IsoparametricTriangle1.h"
 #include "isoparametric_simplex_library.h"
