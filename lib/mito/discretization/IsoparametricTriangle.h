@@ -27,8 +27,6 @@ namespace mito::discretization {
             mito::geometry::coordinates_t<dim, mito::geometry::CARTESIAN>;
 
       protected:
-        // TOFIX: these should be defined based on the order of the element and on the type of
-        // simplex (for example here it's 3 of them because we use linear elements on a triangle)
         // the function extracting the 0 component of a parametric point
         static constexpr auto xi_0 =
             mito::fields::field(mito::functions::component<parametric_coordinates_type, 0>);
@@ -67,6 +65,7 @@ namespace mito::discretization {
         }
 
       protected:
+        // QUESTION: do we need to maintain a reference to the geometric simplex?
         // a const reference to the geometric simplex
         const geometric_simplex_type & _geometric_simplex;
     };
