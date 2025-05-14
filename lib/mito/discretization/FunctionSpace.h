@@ -27,11 +27,11 @@ namespace mito::discretization {
         using mesh_node_type = typename cell_type::node_type;
         // the coordinate system type
         using coord_system_type = typename manifold_type::coordinate_system_type;
-        // the order of the finite element
-        static constexpr int order = p;
+        // the degree of the finite element
+        static constexpr int degree = p;
         // typedef for a finite element
         using element_type =
-            typename isoparametric_simplex<order, cell_type, coord_system_type>::type;
+            typename isoparametric_simplex<degree, cell_type, coord_system_type>::type;
         // typedef for a collection of finite elements
         using elements_type = utilities::segmented_vector_t<element_type>;
         // the node type
