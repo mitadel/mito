@@ -18,7 +18,7 @@ namespace mito::discretization {
     requires(coordinateSystemT::dim == geometricSimplexT::dim)
     struct isoparametric_simplex {};
 
-    // linear shape functions on triangles
+    // specialization for linear shape functions on triangles
     template <geometry::coordinate_system_c coordinateSystemT>
     struct isoparametric_simplex<
         1, geometry::triangle_t<coordinateSystemT::dim>, coordinateSystemT> {
