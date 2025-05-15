@@ -9,6 +9,7 @@
 
 #include "IsoparametricTriangle.h"
 #include "IsoparametricTriangle1.h"
+#include "IsoparametricTriangle2.h"
 
 
 namespace mito::discretization {
@@ -28,6 +29,14 @@ namespace mito::discretization {
         1, geometry::triangle_t<coordinateSystemT::dim>, coordinateSystemT> {
         using type =
             IsoparametricTriangle1<geometry::triangle_t<coordinateSystemT::dim>, coordinateSystemT>;
+    };
+
+    // specialization for quadratic shape functions on triangles
+    template <geometry::coordinate_system_c coordinateSystemT>
+    struct isoparametric_simplex<
+        2, geometry::triangle_t<coordinateSystemT::dim>, coordinateSystemT> {
+        using type =
+            IsoparametricTriangle2<geometry::triangle_t<coordinateSystemT::dim>, coordinateSystemT>;
     };
 }
 
