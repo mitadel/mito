@@ -25,8 +25,6 @@ namespace mito::discretization {
       public:
         // the number of discretization nodes
         static constexpr int n_nodes = 3;
-        // the number of vertices
-        static constexpr int n_vertices = 3;
         // the node type
         using node_type = discretization_node_t;
         // a collection of discretization nodes
