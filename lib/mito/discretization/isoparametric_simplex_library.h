@@ -7,6 +7,10 @@
 #pragma once
 
 
+#include "IsoparametricTriangle.h"
+#include "IsoparametricTriangle1.h"
+
+
 namespace mito::discretization {
 
     // struct storing the type of an isoparametric simplex of polynomial degree {degree} on a
