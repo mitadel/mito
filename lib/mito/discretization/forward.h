@@ -16,12 +16,6 @@ namespace mito::discretization {
     template <class keyT, class Y>
     class DiscreteField;
 
-    // class isoparametric triangle with linear shape functions in D dimensions
-    template <
-        geometry::geometric_simplex_c geometricSimplexT,
-        geometry::coordinate_system_c coordinateSystemT>
-    class IsoparametricTriangle1;
-
     // class function space
     template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     class FunctionSpace;
