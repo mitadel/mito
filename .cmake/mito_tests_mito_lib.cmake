@@ -42,6 +42,7 @@ mito_test_driver(tests/mito.lib/constraints/dirichlet.cc)
 mito_test_driver(tests/mito.lib/discretization/quadrature_field.cc)
 mito_test_driver(tests/mito.lib/discretization/nodal_field.cc)
 mito_test_driver(tests/mito.lib/discretization/poisson.cc)
+mito_test_driver(tests/mito.lib/discretization/isoparametric_triangle.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)
