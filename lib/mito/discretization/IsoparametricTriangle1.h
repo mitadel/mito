@@ -29,6 +29,9 @@ namespace mito::discretization {
         using node_type = discretization_node_t;
         // a collection of discretization nodes
         using nodes_type = std::array<node_type, n_nodes>;
+        // type of a point in barycentric coordinates
+        using barycentric_coordinates_type =
+            typename geometricSimplexT::barycentric_coordinates_type;
 
       private:
         // the geometric simplex type
@@ -44,9 +47,6 @@ namespace mito::discretization {
       private:
         //
         using vector_type = tensor::vector_t<coordinate_system_type::dim>;
-        // type of a point in barycentric coordinates
-        using barycentric_coordinates_type =
-            typename geometric_simplex_type::barycentric_coordinates_type;
         // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
         // another data structure
         using evaluated_shape_functions_type = std::map<node_type, mito::tensor::scalar_t>;
