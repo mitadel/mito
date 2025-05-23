@@ -55,9 +55,9 @@ namespace mito::discretization {
 
       private:
         // linear shape functions on the triangle
-        static constexpr auto phi_0 = isoparametric_triangle_type::xi_2;
-        static constexpr auto phi_1 = isoparametric_triangle_type::xi_0;
-        static constexpr auto phi_2 = isoparametric_triangle_type::xi_1;
+        static constexpr auto phi_0 = isoparametric_triangle_type::xi_0;
+        static constexpr auto phi_1 = isoparametric_triangle_type::xi_1;
+        static constexpr auto phi_2 = isoparametric_triangle_type::xi_2;
 
         // the shape functions
         static constexpr auto phi = std::make_tuple(phi_0, phi_1, phi_2);

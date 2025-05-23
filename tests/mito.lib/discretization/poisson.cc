@@ -242,7 +242,7 @@ TEST(Fem, PoissonSquare)
     channel << "L2 error: " << error_L2 << journal::endl;
 
     // check that the l2 error is reasonable
-    EXPECT_TRUE(error_L2 < 0.1);
+    EXPECT_TRUE(error_L2 < 0.02);
 
     // TODO: add norm calculation for convergence study
 }
