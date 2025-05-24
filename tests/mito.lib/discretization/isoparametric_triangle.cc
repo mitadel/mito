@@ -26,7 +26,7 @@ constexpr auto quadrature_rule = quadrature_rule_t();
 
 // test that all shape functions sum to 1.0 at any quadrature point
 auto
-test_shape_functions(const auto & element)
+test_partition_of_unity(const auto & element)
 {
     // loop on the quadrature points
     for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -83,8 +83,8 @@ TEST(Fem, IsoparametricTriangle)
             { discretization_node_t(), discretization_node_t(), discretization_node_t() },
             coord_0 - origin, coord_1 - origin, coord_2 - origin);
 
-        // run test for second order finite elements
-        test_shape_functions(element_p1);
+        // check that first order shape functions are a partition of unity
+        test_partition_of_unity(element_p1);
     }
 
     {
@@ -99,8 +99,8 @@ TEST(Fem, IsoparametricTriangle)
               discretization_node_t(), discretization_node_t(), discretization_node_t() },
             coord_0 - origin, coord_1 - origin, coord_2 - origin);
 
-        // run test for second order finite elements
-        test_shape_functions(element_p2);
+        // check that second order shape functions are a partition of unity
+        test_partition_of_unity(element_p2);
     }
 
     // all done
