@@ -26,9 +26,9 @@ TEST(Fem, IsoparametricTriangleP1)
 {
     /**
      * The reference triangle in barycentic coordinates:
-        (0,1,0)
+        (0,0,1)
           2
-    xi_1  +
+    xi_2  +
           | .
           |   .
           |     .
@@ -36,9 +36,9 @@ TEST(Fem, IsoparametricTriangleP1)
           |         .
           |           .
           |             .
-          +---------------+ xi_0
+          +---------------+ xi_1
           0               1
-        (0,0,1)           (1,0,0)
+        (1,0,0)           (0,1,0)
     */
 
     // the coordinate system
@@ -69,7 +69,7 @@ TEST(Fem, IsoparametricTriangleP1)
         coord_2 - origin);
 
     // node 0 in barycentric coordinates
-    auto n0 = barycentric_coordinates_t{ 0.0, 0.0, 1.0 };
+    auto n0 = barycentric_coordinates_t{ 1.0, 0.0, 0.0 };
     // the shape functions at node 0
     auto phi_0 = element.shape(n0);
     // check that the shape function at node 0 is 1.0
@@ -80,7 +80,7 @@ TEST(Fem, IsoparametricTriangleP1)
     EXPECT_DOUBLE_EQ(0.0, phi_0.at(node_2));
 
     // node 1 in barycentric coordinates
-    auto n1 = barycentric_coordinates_t{ 1.0, 0.0, 0.0 };
+    auto n1 = barycentric_coordinates_t{ 0.0, 1.0, 0.0 };
     // the shape functions at node 1
     auto phi_1 = element.shape(n1);
     // check that the shape function at node 0 is 0.0
@@ -91,7 +91,7 @@ TEST(Fem, IsoparametricTriangleP1)
     EXPECT_DOUBLE_EQ(0.0, phi_1.at(node_2));
 
     // node 2 in barycentric coordinates
-    auto n2 = barycentric_coordinates_t{ 0.0, 1.0, 0.0 };
+    auto n2 = barycentric_coordinates_t{ 0.0, 0.0, 1.0 };
     // the shape functions at node 2
     auto phi_2 = element.shape(n2);
     // check that the shape function at node 0 is 0.0

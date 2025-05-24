@@ -60,12 +60,12 @@ namespace mito::discretization {
         static constexpr auto xi_2 = isoparametric_triangle_type::xi_2;
 
         // quadratic shape functions on the triangle
-        static constexpr auto phi_3 = 4.0 * xi_0 * xi_2;
-        static constexpr auto phi_4 = 4.0 * xi_0 * xi_1;
-        static constexpr auto phi_5 = 4.0 * xi_1 * xi_2;
-        static constexpr auto phi_0 = xi_2 - 0.5 * phi_3 - 0.5 * phi_5;
-        static constexpr auto phi_1 = xi_0 - 0.5 * phi_3 - 0.5 * phi_4;
-        static constexpr auto phi_2 = xi_1 - 0.5 * phi_4 - 0.5 * phi_5;
+        static constexpr auto phi_3 = 4.0 * xi_0 * xi_1;
+        static constexpr auto phi_4 = 4.0 * xi_1 * xi_2;
+        static constexpr auto phi_5 = 4.0 * xi_0 * xi_2;
+        static constexpr auto phi_0 = xi_0 - 0.5 * phi_5 - 0.5 * phi_3;
+        static constexpr auto phi_1 = xi_1 - 0.5 * phi_3 - 0.5 * phi_4;
+        static constexpr auto phi_2 = xi_2 - 0.5 * phi_5 - 0.5 * phi_4;
 
         // the shape functions
         static constexpr auto phi = std::make_tuple(phi_0, phi_1, phi_2, phi_3, phi_4, phi_5);
