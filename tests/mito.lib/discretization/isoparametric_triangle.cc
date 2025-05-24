@@ -53,6 +53,36 @@ test_partition_of_unity(const auto & element)
     return;
 }
 
+// test that the gradients of all shape functions sum to 0.0 at any quadrature point
+auto
+test_gradient_consistency(const auto & element)
+{
+    // loop on the quadrature points
+    for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
+
+        // the barycentric coordinates of the quadrature point
+        auto xi = quadrature_rule.point(q);
+
+        // evaluate the element shape functions gradients at {xi}
+        auto dphi = element.gradient(xi);
+
+        // the sum of the shape functions
+        auto sum = mito::tensor::vector_t<2>{ 0.0, 0.0 };
+
+        // populate the linear system of equations
+        for (const auto & [_, dphi_a] : dphi) {
+            sum += dphi_a;
+        }
+
+        // check the sum of the shape functions gradients
+        EXPECT_NEAR(0.0, sum[0], 3.0e-16);
+        EXPECT_NEAR(0.0, sum[1], 3.0e-16);
+    }
+
+    // all done
+    return;
+}
+
 TEST(Fem, IsoparametricTriangle)
 {
     // the coordinate system
@@ -85,6 +115,9 @@ TEST(Fem, IsoparametricTriangle)
 
         // check that first order shape functions are a partition of unity
         test_partition_of_unity(element_p1);
+
+        // check that the gradients of first order shape functions sum to 0.0
+        test_gradient_consistency(element_p1);
     }
 
     {
@@ -101,6 +134,9 @@ TEST(Fem, IsoparametricTriangle)
 
         // check that second order shape functions are a partition of unity
         test_partition_of_unity(element_p2);
+
+        // check that the gradients of second order shape functions sum to 0.0
+        test_gradient_consistency(element_p2);
     }
 
     // all done
