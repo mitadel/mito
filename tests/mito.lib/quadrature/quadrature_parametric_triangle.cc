@@ -74,7 +74,7 @@ TEST(ParametricTriangle, Order3)
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
 
-    // a quadratic function of the parametric coordinates x_0^2
+    // a quadratic function of the parametric coordinates x_0^3
     constexpr auto f = [](const point_t & x) -> mito::tensor::scalar_t {
         return x[0] * x[0] * x[0];
     };
@@ -82,7 +82,7 @@ TEST(ParametricTriangle, Order3)
     // area of the parametric triangle
     constexpr auto area = 0.5;
 
-    // integral of f on the parametric triangle [0, 1]
+    // integral of f on the parametric triangle
     constexpr auto integral = area
                             * (quadrature_rule.weight(0) * f(quadrature_rule.point(0))
                                + quadrature_rule.weight(1) * f(quadrature_rule.point(1))
@@ -91,7 +91,7 @@ TEST(ParametricTriangle, Order3)
                                + quadrature_rule.weight(4) * f(quadrature_rule.point(4))
                                + quadrature_rule.weight(5) * f(quadrature_rule.point(5)));
 
-    // exact solution (1/3 x^3) at x = 1
+    // exact solution
     constexpr auto exact = 1.0 / 20.0;
 
     // check result
