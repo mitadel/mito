@@ -72,8 +72,9 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar field 2D
-    using scalar_function_2D_t = std::function<mito::tensor::scalar_t(const coordinates_2D_t &)>;
-    using scalar_field_2D_t = mito::manifolds::field_t<scalar_function_2D_t>;
+    using scalar_function_2D_t = mito::functions::FunctionFromFunctor<
+        std::function<mito::tensor::scalar_t(coordinates_2D_t)>>;
+    using scalar_field_2D_t = decltype(mito::fields::field(std::declval<scalar_function_2D_t>()));
     mito::py::class_<scalar_field_2D_t>(m, "ScalarField2D")
         // the constructor
         .def(mito::py::init<scalar_function_2D_t>())
@@ -87,8 +88,9 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar field 3D
-    using scalar_function_3D_t = std::function<mito::tensor::scalar_t(const coordinates_3D_t &)>;
-    using scalar_field_3D_t = mito::manifolds::field_t<scalar_function_3D_t>;
+    using scalar_function_3D_t = mito::functions::FunctionFromFunctor<
+        std::function<mito::tensor::scalar_t(coordinates_3D_t)>>;
+    using scalar_field_3D_t = decltype(mito::fields::field(std::declval<scalar_function_3D_t>()));
     mito::py::class_<scalar_field_3D_t>(m, "ScalarField3D")
         // the constructor
         .def(mito::py::init<scalar_function_3D_t>())
@@ -100,36 +102,37 @@ PYBIND11_MODULE(mito, m)
         // done
         ;
 
+    // alias for a triangle embedded in 2D
+    using cell_2D_t = mito::geometry::triangle_t<2>;
     // alias for a mesh of triangles embedded in 2D
-    using mesh_triangle_2D_t =
-        mito::mesh::mesh_t<mito::topology::triangle_t, 2, mito::geometry::CARTESIAN>;
+    using mesh_triangle_2D_t = mito::mesh::mesh_t<cell_2D_t>;
 
     // the mito Mesh interface
     mito::py::class_<mesh_triangle_2D_t>(m, "SimplicialMesh2D")
         // the default constructor
         .def(mito::py::init([](std::string filename) {
-            // an empty topology
-            auto & topology = mito::topology::topology();
-            // an empty cloud of points in 2D
-            auto & point_cloud = mito::geometry::point_cloud<2>();
-            // an empty geometry binding {topology} and {point_cloud}
-            auto & geometry = mito::geometry::geometry(topology, point_cloud);
-
+            // TOFIX: pass the coord system in the constructor
+            auto coord_system = mito::geometry::coordinate_system<coordinates_2D_t>();
             // create an input stream
-            auto filestream = std::ifstream(filename);
+            auto fileStream = std::ifstream(filename);
             // read the mesh
             return mesh_triangle_2D_t(
-                mito::io::summit::reader<mito::topology::triangle_t, 2>(filestream, geometry));
+                mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system));
         }))
         // accessors
         // the cells; read-only property
-        .def_property_readonly("cells", &mesh_triangle_2D_t::cells, "the body cells")
+        .def_property_readonly(
+            "cells",
+            static_cast<const mesh_triangle_2D_t::cells_type & (mesh_triangle_2D_t::*) () const>(
+                &mesh_triangle_2D_t::cells),
+            "the body cells")
         // done
         ;
 
     // alias for a manifold of triangles embedded in 2D
-    using manifold_triangle_2D_t =
-        mito::manifolds::manifold_t<mito::geometry::CARTESIAN, mito::topology::triangle_t, 2>;
+    using manifold_triangle_2D_t = decltype(mito::manifolds::manifold(
+        std::declval<mesh_triangle_2D_t>(),
+        std::declval<mito::geometry::coordinate_system_t<coordinates_2D_t>>()));
 
     // the mito manifold interface
     mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")
@@ -137,8 +140,10 @@ PYBIND11_MODULE(mito, m)
         .def(
             // the implementation
             mito::py::init([](const mesh_triangle_2D_t & mesh) {
-                // instantiate
-                return manifold_triangle_2D_t(mesh);
+                // TOFIX: pass the coord system in the constructor
+                const auto coord_system = mito::geometry::coordinate_system<coordinates_2D_t>();
+                // create the manifold
+                return mito::manifolds::manifold(mesh, coord_system);
             }))
         // done
         ;
