@@ -124,7 +124,7 @@ PYBIND11_MODULE(mito, m)
             auto fileStream = std::ifstream(filename);
             // read the mesh
             return mesh_triangle_2D_t(
-                mito::io::summit::reader<mito::geometry::triangle_t<2>>(fileStream, coord_system));
+                mito::io::summit::reader<cell_2D_t>(fileStream, coord_system));
         }))
         // accessors
         // the cells; read-only property
