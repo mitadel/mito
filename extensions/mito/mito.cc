@@ -102,6 +102,15 @@ PYBIND11_MODULE(mito, m)
         // done
         ;
 
+    // alias for a coordinate system in 2D
+    using coordinate_system_2D_t = mito::geometry::coordinate_system_t<coordinates_2D_t>;
+
+    mito::py::class_<coordinate_system_2D_t>(m, "CoordinateSystem2D")
+        // the default constructor
+        .def(mito::py::init<>())
+        // done
+        ;
+
     // alias for a triangle embedded in 2D
     using cell_2D_t = mito::geometry::triangle_t<2>;
     // alias for a mesh of triangles embedded in 2D
@@ -110,9 +119,7 @@ PYBIND11_MODULE(mito, m)
     // the mito Mesh interface
     mito::py::class_<mesh_triangle_2D_t>(m, "SimplicialMesh2D")
         // the default constructor
-        .def(mito::py::init([](std::string filename) {
-            // TOFIX: pass the coord system in the constructor
-            auto coord_system = mito::geometry::coordinate_system<coordinates_2D_t>();
+        .def(mito::py::init([](std::string filename, coordinate_system_2D_t & coord_system) {
             // create an input stream
             auto fileStream = std::ifstream(filename);
             // read the mesh
@@ -131,20 +138,18 @@ PYBIND11_MODULE(mito, m)
 
     // alias for a manifold of triangles embedded in 2D
     using manifold_triangle_2D_t = decltype(mito::manifolds::manifold(
-        std::declval<mesh_triangle_2D_t>(),
-        std::declval<mito::geometry::coordinate_system_t<coordinates_2D_t>>()));
+        std::declval<mesh_triangle_2D_t>(), std::declval<coordinate_system_2D_t>()));
 
     // the mito manifold interface
     mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")
         // the constructor
         .def(
             // the implementation
-            mito::py::init([](const mesh_triangle_2D_t & mesh) {
-                // TOFIX: pass the coord system in the constructor
-                const auto coord_system = mito::geometry::coordinate_system<coordinates_2D_t>();
-                // create the manifold
-                return mito::manifolds::manifold(mesh, coord_system);
-            }))
+            mito::py::init(
+                [](const mesh_triangle_2D_t & mesh, const coordinate_system_2D_t & coord_system) {
+                    // create the manifold
+                    return mito::manifolds::manifold(mesh, coord_system);
+                }))
         // done
         ;
 
