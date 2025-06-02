@@ -25,7 +25,7 @@ using barycentric_coordinates_t = typename element_t::barycentric_coordinates_ty
 TEST(Fem, IsoparametricTriangleP2)
 {
     /**
-     * The reference triangle in barycentic coordinates:
+     * The reference triangle in barycentric coordinates:
                 (0,0,1)
                   2
             xi_2  +
