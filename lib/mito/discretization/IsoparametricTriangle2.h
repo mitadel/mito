@@ -47,11 +47,12 @@ namespace mito::discretization {
         // that the coordinates are in 2D space. Also, we would need to add a {requires} clause to
         // ensure that the geometric simplex is embedded in 2D.
         using vector_type = tensor::vector_t<coordinate_system_type::dim>;
-        // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
-        // another data structure
-        using evaluated_shape_functions_type = std::map<node_type, mito::tensor::scalar_t>;
+        // the type for a collection of evaluated shape functions
+        using evaluated_shape_functions_type =
+            std::array<std::pair<node_type, mito::tensor::scalar_t>, n_nodes>;
+        // the type for a collection of evaluated shape functions gradients
         using evaluated_shape_functions_gradients_type =
-            std::map<node_type, mito::tensor::vector_t<2>>;
+            std::array<std::pair<node_type, mito::tensor::vector_t<2>>, n_nodes>;
 
       private:
         // strip the namespace
@@ -114,9 +115,12 @@ namespace mito::discretization {
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
             // return the shape functions evaluated at {xi}
-            return { { _nodes[0], std::get<0>(phi)(xi_p) }, { _nodes[1], std::get<1>(phi)(xi_p) },
-                     { _nodes[2], std::get<2>(phi)(xi_p) }, { _nodes[3], std::get<3>(phi)(xi_p) },
-                     { _nodes[4], std::get<4>(phi)(xi_p) }, { _nodes[5], std::get<5>(phi)(xi_p) } };
+            return { { { _nodes[0], std::get<0>(phi)(xi_p) },
+                       { _nodes[1], std::get<1>(phi)(xi_p) },
+                       { _nodes[2], std::get<2>(phi)(xi_p) },
+                       { _nodes[3], std::get<3>(phi)(xi_p) },
+                       { _nodes[4], std::get<4>(phi)(xi_p) },
+                       { _nodes[5], std::get<5>(phi)(xi_p) } } };
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
@@ -157,12 +161,12 @@ namespace mito::discretization {
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
             // return the spatial gradients of the shape functions evaluated at {xi}
-            return { { _nodes[0], std::get<0>(dphi)(xi_p) * J_inv },
-                     { _nodes[1], std::get<1>(dphi)(xi_p) * J_inv },
-                     { _nodes[2], std::get<2>(dphi)(xi_p) * J_inv },
-                     { _nodes[3], std::get<3>(dphi)(xi_p) * J_inv },
-                     { _nodes[4], std::get<4>(dphi)(xi_p) * J_inv },
-                     { _nodes[5], std::get<5>(dphi)(xi_p) * J_inv } };
+            return { { { _nodes[0], std::get<0>(dphi)(xi_p) * J_inv },
+                       { _nodes[1], std::get<1>(dphi)(xi_p) * J_inv },
+                       { _nodes[2], std::get<2>(dphi)(xi_p) * J_inv },
+                       { _nodes[3], std::get<3>(dphi)(xi_p) * J_inv },
+                       { _nodes[4], std::get<4>(dphi)(xi_p) * J_inv },
+                       { _nodes[5], std::get<5>(dphi)(xi_p) * J_inv } } };
         }
 
       private:
