@@ -15,9 +15,9 @@ using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
 using discretization_node_t = mito::discretization::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
-// Gauss quadrature on triangles with degree of exactness 2
+// Gauss quadrature on triangles with degree of exactness 4
 using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, cell_t::simplex_type, 3>;
+    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, cell_t::simplex_type, 4>;
 
 
 // instantiate the quadrature rule
@@ -255,6 +255,29 @@ TEST(Fem, IsoparametricTriangle)
 
         // check that the gradients of second order shape functions sum to 0.0
         test_gradient_consistency(element_p2);
+
+        // the analytical elementary stiffness matrix
+        auto analytical_stiffness_matrix = mito::tensor::matrix_t<6>(
+            { 1.0,        1.0 / 6.0,  1.0 / 6.0,  -2.0 / 3.0, 0.0,        -2.0 / 3.0,
+              1.0 / 6.0,  1.0 / 2.0,  0.0,        -2.0 / 3.0, 0.0,        0.0,
+              1.0 / 6.0,  0.0,        1.0 / 2.0,  0.0,        0.0,        -2.0 / 3.0,
+              -2.0 / 3.0, -2.0 / 3.0, 0.0,        8.0 / 3.0,  -4.0 / 3.0, 0.0,
+              0.0,        0.0,        0.0,        -4.0 / 3.0, 8.0 / 3.0,  -4.0 / 3.0,
+              -2.0 / 3.0, 0.0,        -2.0 / 3.0, 0.0,        -4.0 / 3.0, 8.0 / 3.0 });
+
+        // check that the elementary stiffness matrix is computed correctly
+        test_stiffness_matrix(element_p2, analytical_stiffness_matrix);
+
+        // the analytical elementary mass matrix
+        auto analytical_mass_matrix = mito::tensor::matrix_t<6>(
+            { 1.0 / 60.0,   -1.0 / 360.0, -1.0 / 360.0, 0.0,         -1.0 / 90.0, 0.0,
+              -1.0 / 360.0, 1.0 / 60.0,   -1.0 / 360.0, 0.0,         0.0,         -1.0 / 90.0,
+              -1.0 / 360.0, -1.0 / 360.0, 1.0 / 60.0,   -1.0 / 90.0, 0.0,         0.0,
+              0.0,          0.0,          -1.0 / 90.0,  4.0 / 45.0,  2.0 / 45.0,  2.0 / 45.0,
+              -1.0 / 90.0,  0.0,          0.0,          2.0 / 45.0,  4.0 / 45.0,  2.0 / 45.0,
+              0.0,          -1.0 / 90.0,  0.0,          2.0 / 45.0,  2.0 / 45.0,  4.0 / 45.0 });
+
+        test_mass_matrix(element_p2, analytical_mass_matrix);
     }
 
     // all done
