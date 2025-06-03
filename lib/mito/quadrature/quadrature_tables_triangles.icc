@@ -55,6 +55,30 @@ namespace mito::quadrature {
                             point_weight_pair_type({ b, b, 1.0 - 2.0 * b }, w2) });
     }
 
+    // Dunavant's Rule #4, Hammer–Stroud-type rule
+    template <>
+    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 4>() -> auto
+    {
+        constexpr int Q = 6;
+        using table_type = Table<topology::triangle_t, Q>;
+        using point_weight_pair_type = table_type::point_weight_pair_type;
+
+        constexpr auto a = 0.816847572980458513080857;
+        constexpr auto b = 0.091576213509770743459571;
+        constexpr auto c = 0.108103018168070227363167;
+        constexpr auto d = 0.445948490915964886318329;
+        constexpr auto w1 = 0.109951743655321867638326;
+        constexpr auto w2 = 0.223381589678011465695007;
+
+        return table_type({ /*{point}, weight*/
+                            point_weight_pair_type({ a, b, 1.0 - a - b }, w1),
+                            point_weight_pair_type({ b, a, 1.0 - a - b }, w1),
+                            point_weight_pair_type({ b, b, 1.0 - 2.0 * b }, w1),
+                            point_weight_pair_type({ c, d, 1.0 - c - d }, w2),
+                            point_weight_pair_type({ d, c, 1.0 - c - d }, w2),
+                            point_weight_pair_type({ d, d, 1.0 - 2.0 * d }, w2) });
+    }
+
 }    // namespace mito
 
 

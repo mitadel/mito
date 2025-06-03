@@ -98,4 +98,37 @@ TEST(ParametricTriangle, Order3)
     static_assert(std::fabs(integral - exact) < 1.e-16);
 }
 
+TEST(ParametricTriangle, Order4)
+{
+    // a Gauss quadrature rule on triangles with degree of exactness 4
+    constexpr auto quadrature_rule =
+        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 4>();
+
+    // the parametric point type
+    using point_t = decltype(quadrature_rule)::quadrature_point_type;
+
+    // a polynomial of degree 4 in parametric coordinates
+    constexpr auto f = [](const point_t & x) -> mito::tensor::scalar_t {
+        return x[0] * x[0] * x[0] * x[0];
+    };
+
+    // area of the parametric triangle
+    constexpr auto area = 0.5;
+
+    // integral of f on the parametric triangle
+    constexpr auto integral = area
+                            * (quadrature_rule.weight(0) * f(quadrature_rule.point(0))
+                               + quadrature_rule.weight(1) * f(quadrature_rule.point(1))
+                               + quadrature_rule.weight(2) * f(quadrature_rule.point(2))
+                               + quadrature_rule.weight(3) * f(quadrature_rule.point(3))
+                               + quadrature_rule.weight(4) * f(quadrature_rule.point(4))
+                               + quadrature_rule.weight(5) * f(quadrature_rule.point(5)));
+
+    // exact solution
+    constexpr auto exact = 1.0 / 30.0;
+
+    // check result
+    static_assert(std::fabs(integral - exact) < 1.e-16);
+}
+
 // end of file
