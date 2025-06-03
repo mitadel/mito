@@ -23,13 +23,13 @@ TEST(ParametricTetrahedron, Order1)
     };
 
     // area of the parametric tetrahedron
-    constexpr auto area = 1.0 / 3.0;
+    constexpr auto area = 1.0 / 6.0;
 
     // integral of f on the parametric tetrahedron
     constexpr auto integral = area * quadrature_rule.weight(0) * f(quadrature_rule.point(0));
 
     // exact solution
-    constexpr auto exact = 1.0 / 12.0;
+    constexpr auto exact = 1.0 / 24.0;
 
     // check result
     static_assert(std::fabs(integral - exact) < 1.e-16);
@@ -50,7 +50,7 @@ TEST(ParametricTetrahedron, Order2)
     };
 
     // area of the parametric tetrahedron
-    constexpr auto area = 1.0 / 3.0;
+    constexpr auto area = 1.0 / 6.0;
 
     // integral of f on the parametric tetrahedron
     constexpr auto integral = area
@@ -60,7 +60,7 @@ TEST(ParametricTetrahedron, Order2)
                                + quadrature_rule.weight(3) * f(quadrature_rule.point(3)));
 
     // exact solution
-    constexpr auto exact = 1.0 / 30.0;
+    constexpr auto exact = 1.0 / 60.0;
 
     // check result
     static_assert(std::fabs(integral - exact) < 1.e-16);
