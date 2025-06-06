@@ -1,0 +1,16 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_solvers_backend_cuda_CUDADenseSolver_icc)
+#error This header file contains implementation details of class mito::solvers::cuda::CUDADenseSolver
+#else
+
+// We can add template specializations here for CUDADenseSolver, if needed.
+
+#endif    // mito_solvers_backend_cuda_CUDADenseSolver_icc
+
+
+// end of file
