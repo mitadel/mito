@@ -18,6 +18,8 @@ using cell_t = mito::geometry::triangle_t<2>;
 // Gauss quadrature on triangles with degree of exactness 4
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, cell_t::simplex_type, 4>;
+// the equation map type (map associating an equation number to each node degree of freedom)
+using equation_map_type = std::map<discretization_node_t, int>;
 
 
 // instantiate the quadrature rule
@@ -87,7 +89,7 @@ test_gradient_consistency(const auto & element)
 template <class elementT>
 auto
 test_stiffness_matrix(
-    const elementT & element,
+    const elementT & element, const equation_map_type & equation_map,
     const mito::tensor::matrix_t<elementT::n_nodes> & analytical_stiffness_matrix) -> void
 {
     // create reporting channel
@@ -112,17 +114,15 @@ test_stiffness_matrix(
         auto factor = quadrature_rule.weight(q) * area;
 
         // populate the mass matrix
-        int i = 0;
         for (const auto & [node_a, dphi_a] : dphi) {
-            int j = 0;
+            // get the equation number of {node_a}
+            int i = equation_map.at(node_a);
             for (const auto & [node_b, dphi_b] : dphi) {
+                // get the equation number of {node_b}
+                int j = equation_map.at(node_b);
                 // assemble the {node_a, node_b} contribution to the mass matrix
                 elementary_stiffness_matrix[{ i, j }] += factor * dphi_a * dphi_b;
-                // increment the column index
-                ++j;
             }
-            // increment the row index
-            ++i;
         }
     }
 
@@ -140,7 +140,7 @@ test_stiffness_matrix(
 template <class elementT>
 auto
 test_mass_matrix(
-    const elementT & element,
+    const elementT & element, const equation_map_type & equation_map,
     const mito::tensor::matrix_t<elementT::n_nodes> & analytical_mass_matrix) -> void
 {
     // create reporting channel
@@ -163,17 +163,15 @@ test_mass_matrix(
             0.5 * mito::tensor::determinant(element.jacobian(xi)) * quadrature_rule.weight(q);
 
         // populate the mass matrix
-        int i = 0;
-        for (const auto & [_, phi_a] : phi) {
-            int j = 0;
-            for (const auto & [_, phi_b] : phi) {
+        for (const auto & [node_a, phi_a] : phi) {
+            // get the equation number of {node_a}
+            int i = equation_map.at(node_a);
+            for (const auto & [node_b, phi_b] : phi) {
+                // get the equation number of {node_b}
+                int j = equation_map.at(node_b);
                 // assemble the {node_a, node_b} contribution to the mass matrix
                 elementary_mass_matrix[{ i, j }] += factor * phi_a * phi_b;
-                // increment the column index
-                ++j;
             }
-            // increment the row index
-            ++i;
         }
     }
 
@@ -211,10 +209,15 @@ TEST(Fem, IsoparametricTriangle)
         using element_p1_t =
             typename mito::discretization::isoparametric_simplex<1, cell_t, coord_system_t>::type;
 
+        // build the discretization nodes
+        auto discretization_node_0 = discretization_node_t();
+        auto discretization_node_1 = discretization_node_t();
+        auto discretization_node_2 = discretization_node_t();
+
         // a finite element
         auto element_p1 = element_p1_t(
             geometric_simplex,
-            { discretization_node_t(), discretization_node_t(), discretization_node_t() },
+            { discretization_node_0, discretization_node_1, discretization_node_2 },
             coord_0 - origin, coord_1 - origin, coord_2 - origin);
 
         // check that first order shape functions are a partition of unity
@@ -223,19 +226,27 @@ TEST(Fem, IsoparametricTriangle)
         // check that the gradients of first order shape functions sum to 0.0
         test_gradient_consistency(element_p1);
 
+        // the map between the discretization nodes and the equation numbers
+        equation_map_type equation_map;
+
+        // populate the equation map
+        equation_map[discretization_node_0] = 0;
+        equation_map[discretization_node_1] = 1;
+        equation_map[discretization_node_2] = 2;
+
         // the analytical elementary stiffness matrix
         auto analytical_stiffness_matrix =
             1.0 / 2.0
             * mito::tensor::matrix_t<3>({ 2.0, -1.0, -1.0, -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 });
 
         // check that the elementary stiffness matrix is computed correctly
-        test_stiffness_matrix(element_p1, analytical_stiffness_matrix);
+        test_stiffness_matrix(element_p1, equation_map, analytical_stiffness_matrix);
 
         // the analytical elementary mass matrix
         auto analytical_mass_matrix =
             1.0 / 24.0 * mito::tensor::matrix_t<3>({ 2.0, 1.0, 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 2.0 });
 
-        test_mass_matrix(element_p1, analytical_mass_matrix);
+        test_mass_matrix(element_p1, equation_map, analytical_mass_matrix);
     }
 
     {
@@ -243,11 +254,19 @@ TEST(Fem, IsoparametricTriangle)
         using element_p2_t =
             typename mito::discretization::isoparametric_simplex<2, cell_t, coord_system_t>::type;
 
+        // build the discretization nodes
+        auto discretization_node_0 = discretization_node_t();
+        auto discretization_node_1 = discretization_node_t();
+        auto discretization_node_2 = discretization_node_t();
+        auto discretization_node_3 = discretization_node_t();
+        auto discretization_node_4 = discretization_node_t();
+        auto discretization_node_5 = discretization_node_t();
+
         // a finite element
         auto element_p2 = element_p2_t(
             geometric_simplex,
-            { discretization_node_t(), discretization_node_t(), discretization_node_t(),
-              discretization_node_t(), discretization_node_t(), discretization_node_t() },
+            { discretization_node_0, discretization_node_1, discretization_node_2,
+              discretization_node_3, discretization_node_4, discretization_node_5 },
             coord_0 - origin, coord_1 - origin, coord_2 - origin);
 
         // check that second order shape functions are a partition of unity
@@ -255,6 +274,17 @@ TEST(Fem, IsoparametricTriangle)
 
         // check that the gradients of second order shape functions sum to 0.0
         test_gradient_consistency(element_p2);
+
+        // the map between the discretization nodes and the equation numbers
+        equation_map_type equation_map;
+
+        // populate the equation map
+        equation_map[discretization_node_0] = 0;
+        equation_map[discretization_node_1] = 1;
+        equation_map[discretization_node_2] = 2;
+        equation_map[discretization_node_3] = 3;
+        equation_map[discretization_node_4] = 4;
+        equation_map[discretization_node_5] = 5;
 
         // the analytical elementary stiffness matrix
         auto analytical_stiffness_matrix = mito::tensor::matrix_t<6>(
@@ -266,7 +296,7 @@ TEST(Fem, IsoparametricTriangle)
               -2.0 / 3.0, 0.0,        -2.0 / 3.0, 0.0,        -4.0 / 3.0, 8.0 / 3.0 });
 
         // check that the elementary stiffness matrix is computed correctly
-        test_stiffness_matrix(element_p2, analytical_stiffness_matrix);
+        test_stiffness_matrix(element_p2, equation_map, analytical_stiffness_matrix);
 
         // the analytical elementary mass matrix
         auto analytical_mass_matrix = mito::tensor::matrix_t<6>(
@@ -277,7 +307,7 @@ TEST(Fem, IsoparametricTriangle)
               -1.0 / 90.0,  0.0,          0.0,          2.0 / 45.0,  4.0 / 45.0,  2.0 / 45.0,
               0.0,          -1.0 / 90.0,  0.0,          2.0 / 45.0,  2.0 / 45.0,  4.0 / 45.0 });
 
-        test_mass_matrix(element_p2, analytical_mass_matrix);
+        test_mass_matrix(element_p2, equation_map, analytical_mass_matrix);
     }
 
     // all done
