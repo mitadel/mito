@@ -15,7 +15,7 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 using cell_t = mito::geometry::triangle_t<2>;
 // the type of simplex
 using simplex_t = cell_t::simplex_type;
-// Gauss quadrature on triangles with degree of exactness 1
+// Gauss quadrature on triangles with degree of exactness 2
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 2>;
 
