@@ -21,10 +21,10 @@ namespace mito::discretization {
         // the geometric simplex type
         using geometric_simplex_type = geometricSimplexT;
         // the parametric dimension
-        static constexpr int dim = 2;
+        static constexpr int parametric_dim = 2;
         // the parametric coordinates type
         using parametric_coordinates_type =
-            mito::geometry::coordinates_t<dim, mito::geometry::CARTESIAN>;
+            mito::geometry::coordinates_t<parametric_dim, mito::geometry::CARTESIAN>;
 
       protected:
         // the function extracting the 0 component of a parametric point
