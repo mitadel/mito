@@ -13,18 +13,13 @@
 
 namespace mito::discretization {
 
-
-    template <geometry::geometric_simplex_c geometricSimplexT>
     class IsoparametricTriangle : public utilities::Invalidatable {
 
       protected:
         // the geometric simplex type
-        using geometric_simplex_type = geometricSimplexT;
-        // the parametric dimension
-        static constexpr int parametric_dim = 2;
+        using geometric_simplex_type = geometry::triangle_t<2>;
         // the parametric coordinates type
-        using parametric_coordinates_type =
-            mito::geometry::coordinates_t<parametric_dim, mito::geometry::CARTESIAN>;
+        using parametric_coordinates_type = geometry::coordinates_t<2, geometry::CARTESIAN>;
 
       protected:
         // the function extracting the 0 component of a parametric point

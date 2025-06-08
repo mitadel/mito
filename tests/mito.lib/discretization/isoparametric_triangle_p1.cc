@@ -16,8 +16,7 @@ using discretization_node_t = mito::discretization::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
 // first order isoparametric triangle
-using element_t =
-    typename mito::discretization::isoparametric_simplex<1, cell_t, coord_system_t>::type;
+using element_t = mito::discretization::isoparametric_simplex<1, cell_t>::type;
 // the barycentric coordinates type
 using barycentric_coordinates_t = typename element_t::barycentric_coordinates_type;
 

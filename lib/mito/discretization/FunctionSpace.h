@@ -30,8 +30,7 @@ namespace mito::discretization {
         // the degree of the finite element
         static constexpr int degree = p;
         // typedef for a finite element
-        using element_type =
-            typename isoparametric_simplex<degree, cell_type, coord_system_type>::type;
+        using element_type = typename isoparametric_simplex<degree, cell_type>::type;
         // typedef for a collection of finite elements
         using elements_type = utilities::segmented_vector_t<element_type>;
         // the discretization node type
