@@ -34,7 +34,7 @@ namespace mito::discretization {
             typename isoparametric_simplex<degree, cell_type, coord_system_type>::type;
         // typedef for a collection of finite elements
         using elements_type = utilities::segmented_vector_t<element_type>;
-        // the node type
+        // the discretization node type
         using discretization_node_type = typename element_type::node_type;
         // the nodes type
         using discretization_nodes_type = typename element_type::nodes_type;
