@@ -28,11 +28,11 @@ namespace mito::solvers::cuda {
         auto reset_system() -> void;
 
         // set (add or insert depending on the mode) the value of a matrix entry in the host copy
-        auto set_matrix_value(size_t, size_t, const mito::real, const InsertMode) -> void;
+        auto set_matrix_value(size_t, size_t, const double, const InsertMode) -> void;
 
         // set (add or insert depending on the mode) the value of a right-hand side entry in the
         // host copy
-        auto set_rhs_value(size_t, const mito::real, const InsertMode) -> void;
+        auto set_rhs_value(size_t, const double, const InsertMode) -> void;
 
         // finalize the linear system assembly
         auto finalize_assembly() -> void;
@@ -67,15 +67,15 @@ namespace mito::solvers::cuda {
 
       private:
         // host copy of the matrix
-        mito::real * _h_matrix;
+        double * _h_matrix;
         // host copy of the right-hand side
-        mito::real * _h_rhs;
+        double * _h_rhs;
         // host copy of the solution
-        mito::real * _h_solution;
+        double * _h_solution;
         // device copy of the matrix
-        mito::real * _d_matrix;
+        double * _d_matrix;
         // device copy of the right-hand side
-        mito::real * _d_rhs;
+        double * _d_rhs;
         // size of the linear system
         size_t _size;
         // flag to indicate if the solver has been initialized
