@@ -457,7 +457,7 @@ mito::solvers::cuda::CUDADenseSolver::_check_index_validity(size_t index) const 
     }
 
     // check if the index is valid and return false if it is not
-    if (index < 0 || index >= _size) {
+    if (index >= _size) {
         throw std::out_of_range(
             "Index " + std::to_string(index) + " is out of range. It must be between 0 and "
             + std::to_string(_size - 1) + ".");
