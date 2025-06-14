@@ -69,6 +69,10 @@ if(WITH_PETSC)
     mito_test_driver(tests/mito.lib/solvers/petsc_solve_linear_system.cc)
 endif()
 
+if(WITH_CUDA)
+    mito_test_driver(tests/mito.lib/solvers/cuda_dense_solver_solve_linear_system.cc)
+endif()
+
 # tensor
 mito_test_driver(tests/mito.lib/tensor/one_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/contractions.cc)
