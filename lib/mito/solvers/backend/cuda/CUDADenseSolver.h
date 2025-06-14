@@ -40,6 +40,10 @@ namespace mito::solvers::cuda {
         // solve the linear system
         auto solve() -> void;
 
+        // get the solution vector
+        template <class solutionT>
+        auto get_solution(solutionT & solution) const -> void;
+
       private:
         // initialize the cuSOLVER utilities
         auto _initialize_cusolver() -> void;
