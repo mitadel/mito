@@ -10,9 +10,9 @@
 namespace mito::solvers::cuda {
 
     // cuda dense solver
-    auto dense(const std::string & name)
+    auto dense()
     {
-        return dense_t(name);
+        return dense_t();
     }
 
 }

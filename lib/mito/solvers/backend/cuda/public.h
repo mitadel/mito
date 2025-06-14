@@ -14,13 +14,13 @@
 #include "forward.h"
 
 // published types
-// #include "api.h"
+#include "api.h"
 
 // classes
 #include "CUDADenseSolver.h"
 
 // factories implementation
-// #include "factories.h"
+#include "factories.h"
 
 
 // end of file
