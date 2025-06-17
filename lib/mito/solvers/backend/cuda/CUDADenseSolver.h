@@ -7,6 +7,25 @@
 #pragma once
 
 
+// a struct to hold the cusolver function pointers for different data types
+template <typename T>
+struct cusolver_traits;
+
+template <>
+struct cusolver_traits<double> {
+    static constexpr auto getrf_buffer_size = cusolverDnDgetrf_bufferSize;
+    static constexpr auto getrf = cusolverDnDgetrf;
+    static constexpr auto getrs = cusolverDnDgetrs;
+};
+
+template <>
+struct cusolver_traits<float> {
+    static constexpr auto getrf_buffer_size = cusolverDnSgetrf_bufferSize;
+    static constexpr auto getrf = cusolverDnSgetrf;
+    static constexpr auto getrs = cusolverDnSgetrs;
+};
+
+
 namespace mito::solvers::cuda {
 
     class CUDADenseSolver {

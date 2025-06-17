@@ -255,24 +255,31 @@ mito::solvers::cuda::CUDADenseSolver::solve() -> void
     mito::real * d_workspace = nullptr;
     int workspace_size = 0;
 
-    // get the workspace size for getrf (only double precision LU factorization is supported!)
-    // QUESTION: Should we check if mito::real is double or float and allocate the workspace
-    // memory accordingly?
-    CHECK_CUSOLVER_ERROR(cusolverDnDgetrf_bufferSize(
-        _cusolver_handle, _size, _size, _d_matrix, _size, &workspace_size));
+    // check if mito::real is either double or float and throw an error if it is not
+    static_assert(
+        std::is_same_v<mito::real, double> || std::is_same_v<mito::real, float>,
+        "Only double or float types are supported in the CUDA dense solver.");
+
+    // get the workspace size for the LU factorization
+    CHECK_CUSOLVER_ERROR(
+        cusolver_traits<mito::real>::getrf_buffer_size(
+            _cusolver_handle, _size, _size, _d_matrix, _size, &workspace_size));
 
     CHECK_CUDA_ERROR(cudaMalloc(&d_pivot, _size * sizeof(int)));
     CHECK_CUDA_ERROR(cudaMalloc(&d_info, sizeof(int)));
     CHECK_CUDA_ERROR(cudaMalloc(&d_workspace, workspace_size * sizeof(mito::real)));
 
     // perform LU factorization
-    CHECK_CUSOLVER_ERROR(cusolverDnDgetrf(
-        _cusolver_handle, _size, _size, _d_matrix, _size, d_workspace, d_pivot, d_info));
+    CHECK_CUSOLVER_ERROR(
+        cusolver_traits<mito::real>::getrf(
+            _cusolver_handle, _size, _size, _d_matrix, _size, d_workspace, d_pivot, d_info));
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // solve the linear system
-    CHECK_CUSOLVER_ERROR(cusolverDnDgetrs(
-        _cusolver_handle, CUBLAS_OP_N, _size, 1, _d_matrix, _size, d_pivot, _d_rhs, _size, d_info));
+    CHECK_CUSOLVER_ERROR(
+        cusolver_traits<mito::real>::getrs(
+            _cusolver_handle, CUBLAS_OP_N, _size, 1, _d_matrix, _size, d_pivot, _d_rhs, _size,
+            d_info));
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // copy the solution from device global memory to host memory
