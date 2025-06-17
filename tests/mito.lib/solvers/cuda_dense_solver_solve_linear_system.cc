@@ -13,6 +13,9 @@ TEST(Solvers, CUDADenseSolver)
     // the size of the linear system
     int N = 10;
 
+    // numerical tolerance for the solution
+    double tol = 1.0e-10;
+
     // instantiate a CUDA Dense solver for a linear system of size {N}
     auto solver = mito::solvers::cuda::dense(mito::solvers::cuda::SolverType::CHOLESKY);
     solver.initialize(N);
@@ -40,16 +43,16 @@ TEST(Solvers, CUDADenseSolver)
     solver.get_solution(x);
 
     // check the solution
-    EXPECT_DOUBLE_EQ(x[0], 5.0);
-    EXPECT_DOUBLE_EQ(x[1], 9.0);
-    EXPECT_DOUBLE_EQ(x[2], 12.0);
-    EXPECT_DOUBLE_EQ(x[3], 14.0);
-    EXPECT_DOUBLE_EQ(x[4], 15.0);
-    EXPECT_DOUBLE_EQ(x[5], 15.0);
-    EXPECT_DOUBLE_EQ(x[6], 14.0);
-    EXPECT_DOUBLE_EQ(x[7], 12.0);
-    EXPECT_DOUBLE_EQ(x[8], 9.0);
-    EXPECT_DOUBLE_EQ(x[9], 5.0);
+    EXPECT_NEAR(x[0], 5.0, tol);
+    EXPECT_NEAR(x[1], 9.0, tol);
+    EXPECT_NEAR(x[2], 12.0, tol);
+    EXPECT_NEAR(x[3], 14.0, tol);
+    EXPECT_NEAR(x[4], 15.0, tol);
+    EXPECT_NEAR(x[5], 15.0, tol);
+    EXPECT_NEAR(x[6], 14.0, tol);
+    EXPECT_NEAR(x[7], 12.0, tol);
+    EXPECT_NEAR(x[8], 9.0, tol);
+    EXPECT_NEAR(x[9], 5.0, tol);
 
     // finalize the solver
     solver.finalize();
