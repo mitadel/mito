@@ -157,7 +157,7 @@ mito::solvers::cuda::CUDADenseSolver::reset_system() -> void
 // add/insert {value} to matrix entry at ({row}, {col}) of the host copy
 auto
 mito::solvers::cuda::CUDADenseSolver::set_matrix_value(
-    size_t row, size_t col, const double value,
+    size_t row, size_t col, const mito::real value,
     const mito::solvers::cuda::InsertMode insert_mode = mito::solvers::cuda::InsertMode::ADD_VALUE)
     -> void
 {
@@ -186,7 +186,7 @@ mito::solvers::cuda::CUDADenseSolver::set_matrix_value(
 // add/insert {value} to rhs entry at {row} of the host copy
 auto
 mito::solvers::cuda::CUDADenseSolver::set_rhs_value(
-    size_t row, const double value,
+    size_t row, const mito::real value,
     const mito::solvers::cuda::InsertMode insert_mode = mito::solvers::cuda::InsertMode::ADD_VALUE)
     -> void
 {
@@ -244,25 +244,26 @@ mito::solvers::cuda::CUDADenseSolver::solve() -> void
 
     // copy the host matrix and rhs data to device global memory
     // IMPROVE: We should move the data through streams for better performance later!
+    CHECK_CUDA_ERROR(cudaMemcpy(
+        _d_matrix, _h_matrix, _size * _size * sizeof(mito::real), cudaMemcpyHostToDevice));
     CHECK_CUDA_ERROR(
-        cudaMemcpy(_d_matrix, _h_matrix, _size * _size * sizeof(double), cudaMemcpyHostToDevice));
-    CHECK_CUDA_ERROR(cudaMemcpy(_d_rhs, _h_rhs, _size * sizeof(double), cudaMemcpyHostToDevice));
+        cudaMemcpy(_d_rhs, _h_rhs, _size * sizeof(mito::real), cudaMemcpyHostToDevice));
 
     // allocate device memory for temporary variables in the LU factorization
     int * d_pivot = nullptr;
     int * d_info = nullptr;
-    double * d_workspace = nullptr;
+    mito::real * d_workspace = nullptr;
     int workspace_size = 0;
 
     // get the workspace size for getrf (only double precision LU factorization is supported!)
-    // QUESTION: Should we check if mito::real is double or float and allocate the workspace memory
-    // accordingly?
+    // QUESTION: Should we check if mito::real is double or float and allocate the workspace
+    // memory accordingly?
     CHECK_CUSOLVER_ERROR(cusolverDnDgetrf_bufferSize(
         _cusolver_handle, _size, _size, _d_matrix, _size, &workspace_size));
 
     CHECK_CUDA_ERROR(cudaMalloc(&d_pivot, _size * sizeof(int)));
     CHECK_CUDA_ERROR(cudaMalloc(&d_info, sizeof(int)));
-    CHECK_CUDA_ERROR(cudaMalloc(&d_workspace, workspace_size * sizeof(double)));
+    CHECK_CUDA_ERROR(cudaMalloc(&d_workspace, workspace_size * sizeof(mito::real)));
 
     // perform LU factorization
     CHECK_CUSOLVER_ERROR(cusolverDnDgetrf(
@@ -278,7 +279,7 @@ mito::solvers::cuda::CUDADenseSolver::solve() -> void
     // NOTE: _d_rhs contains the solution after the call to getrs as its contents are overwritten
     // by the solution vector
     CHECK_CUDA_ERROR(
-        cudaMemcpy(_h_solution, _d_rhs, _size * sizeof(double), cudaMemcpyDeviceToHost));
+        cudaMemcpy(_h_solution, _d_rhs, _size * sizeof(mito::real), cudaMemcpyDeviceToHost));
 
     // free the temporary device memory
     CHECK_CUDA_ERROR(cudaFree(d_pivot));
@@ -326,9 +327,10 @@ auto
 mito::solvers::cuda::CUDADenseSolver::_allocate_host_memory(size_t size) -> void
 {
     // try to allocate pinned memory on the host for faster transfers
-    cudaError_t err_pinned_alloc_matrix = cudaMallocHost(&_h_matrix, size * size * sizeof(double));
-    cudaError_t err_pinned_alloc_rhs = cudaMallocHost(&_h_rhs, size * sizeof(double));
-    cudaError_t err_pinned_alloc_solution = cudaMallocHost(&_h_solution, size * sizeof(double));
+    cudaError_t err_pinned_alloc_matrix =
+        cudaMallocHost(&_h_matrix, size * size * sizeof(mito::real));
+    cudaError_t err_pinned_alloc_rhs = cudaMallocHost(&_h_rhs, size * sizeof(mito::real));
+    cudaError_t err_pinned_alloc_solution = cudaMallocHost(&_h_solution, size * sizeof(mito::real));
 
     // check if the pinned memory allocation for matrix, rhs, and solution was successful
     if (err_pinned_alloc_matrix == cudaSuccess && err_pinned_alloc_rhs == cudaSuccess
@@ -348,9 +350,9 @@ mito::solvers::cuda::CUDADenseSolver::_allocate_host_memory(size_t size) -> void
 
     // try to allocate regular memory on the host
     try {
-        _h_matrix = new double[size * size];
-        _h_rhs = new double[size];
-        _h_solution = new double[size];
+        _h_matrix = new mito::real[size * size];
+        _h_rhs = new mito::real[size];
+        _h_solution = new mito::real[size];
         // set the flag to indicate that regular memory was allocated
         _allocated_host_memory_type = 2;
     } catch (const std::bad_alloc & e) {
@@ -367,8 +369,8 @@ auto
 mito::solvers::cuda::CUDADenseSolver::_allocate_device_memory(size_t size) -> void
 {
     // allocate global device memory for matrix, rhs, and solution
-    CHECK_CUDA_ERROR(cudaMalloc(&_d_matrix, size * size * sizeof(double)));
-    CHECK_CUDA_ERROR(cudaMalloc(&_d_rhs, size * sizeof(double)));
+    CHECK_CUDA_ERROR(cudaMalloc(&_d_matrix, size * size * sizeof(mito::real)));
+    CHECK_CUDA_ERROR(cudaMalloc(&_d_rhs, size * sizeof(mito::real)));
 
     // all done
     return;
