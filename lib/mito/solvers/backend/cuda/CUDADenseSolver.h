@@ -13,6 +13,11 @@ struct cusolver_traits;
 
 template <>
 struct cusolver_traits<double> {
+    // Cholesky factorization and solve routines for double precision
+    static constexpr auto potrf_buffer_size = cusolverDnDpotrf_bufferSize;
+    static constexpr auto potrf = cusolverDnDpotrf;
+    static constexpr auto potrs = cusolverDnDpotrs;
+    // LU factorization and solve routines for double precision
     static constexpr auto getrf_buffer_size = cusolverDnDgetrf_bufferSize;
     static constexpr auto getrf = cusolverDnDgetrf;
     static constexpr auto getrs = cusolverDnDgetrs;
@@ -20,6 +25,11 @@ struct cusolver_traits<double> {
 
 template <>
 struct cusolver_traits<float> {
+    // Cholesky factorization and solve routines for single precision
+    static constexpr auto potrf_buffer_size = cusolverDnSpotrf_bufferSize;
+    static constexpr auto potrf = cusolverDnSpotrf;
+    static constexpr auto potrs = cusolverDnSpotrs;
+    // LU factorization and solve routines for single precision
     static constexpr auto getrf_buffer_size = cusolverDnSgetrf_bufferSize;
     static constexpr auto getrf = cusolverDnSgetrf;
     static constexpr auto getrs = cusolverDnSgetrs;

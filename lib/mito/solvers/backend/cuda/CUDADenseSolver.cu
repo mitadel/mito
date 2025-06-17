@@ -252,7 +252,7 @@ mito::solvers::cuda::CUDADenseSolver::solve() -> void
     CHECK_CUDA_ERROR(
         cudaMemcpy(_d_rhs, _h_rhs, _size * sizeof(mito::real), cudaMemcpyHostToDevice));
 
-    // allocate device memory for temporary variables in the LU factorization
+    // allocate device memory for temporary variables in the factorization
     int * d_pivot = nullptr;
     int * d_info = nullptr;
     mito::real * d_workspace = nullptr;
@@ -263,26 +263,55 @@ mito::solvers::cuda::CUDADenseSolver::solve() -> void
         std::is_same_v<mito::real, double> || std::is_same_v<mito::real, float>,
         "Only double or float types are supported in the CUDA dense solver.");
 
-    // get the workspace size for the LU factorization
-    CHECK_CUSOLVER_ERROR(
-        cusolver_traits<mito::real>::getrf_buffer_size(
-            _cusolver_handle, _size, _size, _d_matrix, _size, &workspace_size));
+    // check the solver type is either LU or Cholesky
+    if (_solver_type != mito::solvers::cuda::SolverType::LU
+        && _solver_type != mito::solvers::cuda::SolverType::CHOLESKY) {
+        throw std::invalid_argument(
+            "Invalid solver type. Only LU and Cholesky solvers are supported in the CUDA dense "
+            "solver.");
+    }
+
+    // get the workspace size for the factorization
+    if (_solver_type == mito::solvers::cuda::SolverType::LU) {
+        CHECK_CUSOLVER_ERROR(
+            cusolver_traits<mito::real>::getrf_buffer_size(
+                _cusolver_handle, _size, _size, _d_matrix, _size, &workspace_size));
+    } else if (_solver_type == mito::solvers::cuda::SolverType::CHOLESKY) {
+        CHECK_CUSOLVER_ERROR(
+            cusolver_traits<mito::real>::potrf_buffer_size(
+                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, _d_matrix, _size,
+                &workspace_size));
+    }
 
     CHECK_CUDA_ERROR(cudaMalloc(&d_pivot, _size * sizeof(int)));
     CHECK_CUDA_ERROR(cudaMalloc(&d_info, sizeof(int)));
     CHECK_CUDA_ERROR(cudaMalloc(&d_workspace, workspace_size * sizeof(mito::real)));
 
-    // perform LU factorization
-    CHECK_CUSOLVER_ERROR(
-        cusolver_traits<mito::real>::getrf(
-            _cusolver_handle, _size, _size, _d_matrix, _size, d_workspace, d_pivot, d_info));
+    // perform the factorization
+    if (_solver_type == mito::solvers::cuda::SolverType::LU) {
+        CHECK_CUSOLVER_ERROR(
+            cusolver_traits<mito::real>::getrf(
+                _cusolver_handle, _size, _size, _d_matrix, _size, d_workspace, d_pivot, d_info));
+    } else if (_solver_type == mito::solvers::cuda::SolverType::CHOLESKY) {
+        CHECK_CUSOLVER_ERROR(
+            cusolver_traits<mito::real>::potrf(
+                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, _d_matrix, _size, d_workspace,
+                workspace_size, d_info));
+    }
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // solve the linear system
-    CHECK_CUSOLVER_ERROR(
-        cusolver_traits<mito::real>::getrs(
-            _cusolver_handle, CUBLAS_OP_N, _size, 1, _d_matrix, _size, d_pivot, _d_rhs, _size,
-            d_info));
+    if (_solver_type == mito::solvers::cuda::SolverType::LU) {
+        CHECK_CUSOLVER_ERROR(
+            cusolver_traits<mito::real>::getrs(
+                _cusolver_handle, CUBLAS_OP_N, _size, 1, _d_matrix, _size, d_pivot, _d_rhs, _size,
+                d_info));
+    } else if (_solver_type == mito::solvers::cuda::SolverType::CHOLESKY) {
+        CHECK_CUSOLVER_ERROR(
+            cusolver_traits<mito::real>::potrs(
+                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, 1, _d_matrix, _size, _d_rhs, _size,
+                d_info));
+    }
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // copy the solution from device global memory to host memory
