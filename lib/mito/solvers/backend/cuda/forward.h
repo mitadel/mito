@@ -12,6 +12,9 @@ namespace mito::solvers::cuda {
     // available insert modes for matrix and right-hand side entries
     enum InsertMode { ADD_VALUE, INSERT_VALUE };
 
+    // available solver types
+    enum SolverType { CHOLESKY, LU };
+
     // class for CUDA dense solver
     class CUDADenseSolver;
 }

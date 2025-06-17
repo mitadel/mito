@@ -59,7 +59,8 @@ cusolverGetErrorString(cusolverStatus_t status)
     } while (0)
 
 // constructor
-mito::solvers::cuda::CUDADenseSolver::CUDADenseSolver() :
+mito::solvers::cuda::CUDADenseSolver::CUDADenseSolver(mito::solvers::cuda::SolverType solver_type) :
+    _solver_type(solver_type),
     _h_matrix(nullptr),
     _h_rhs(nullptr),
     _h_solution(nullptr),

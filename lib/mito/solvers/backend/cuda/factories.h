@@ -10,9 +10,9 @@
 namespace mito::solvers::cuda {
 
     // cuda dense solver
-    auto dense()
+    auto dense(mito::solvers::cuda::SolverType solver_type = mito::solvers::cuda::SolverType::LU)
     {
-        return dense_t();
+        return dense_t(solver_type);
     }
 
 }

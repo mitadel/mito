@@ -31,7 +31,7 @@ namespace mito::solvers::cuda {
     class CUDADenseSolver {
       public:
         // constructor
-        CUDADenseSolver();
+        CUDADenseSolver(mito::solvers::cuda::SolverType);
 
         // destructor
         ~CUDADenseSolver();
@@ -89,6 +89,8 @@ namespace mito::solvers::cuda {
         auto _check_index_validity(size_t) const -> void;
 
       private:
+        // solver type
+        mito::solvers::cuda::SolverType _solver_type;
         // host copy of the matrix
         real * _h_matrix;
         // host copy of the right-hand side
