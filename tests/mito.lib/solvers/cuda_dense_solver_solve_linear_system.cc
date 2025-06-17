@@ -14,7 +14,7 @@ TEST(Solvers, CUDADenseSolver)
     int N = 10;
 
     // instantiate a CUDA Dense solver for a linear system of size {N}
-    auto solver = mito::solvers::cuda::dense();
+    auto solver = mito::solvers::cuda::dense(mito::solvers::cuda::SolverType::CHOLESKY);
     solver.initialize(N);
 
     // set matrix and right-hand side entries
