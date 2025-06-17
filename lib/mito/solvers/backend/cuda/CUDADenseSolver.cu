@@ -173,10 +173,12 @@ mito::solvers::cuda::CUDADenseSolver::set_matrix_value(
     _check_index_validity(col);
 
     // add/insert the value to the matrix entry in the host matrix
+    // NOTE: We store the matrix in column-major order since the cuSOLVER library expects the matrix
+    // to be in column-major order.
     if (insert_mode == mito::solvers::cuda::InsertMode::ADD_VALUE)
-        _h_matrix[row * _size + col] += value;
+        _h_matrix[col * _size + row] += value;
     else if (insert_mode == mito::solvers::cuda::InsertMode::INSERT_VALUE)
-        _h_matrix[row * _size + col] = value;
+        _h_matrix[col * _size + row] = value;
     else
         throw std::invalid_argument("Invalid insert mode. Use ADD_VALUE or INSERT_VALUE.");
 
