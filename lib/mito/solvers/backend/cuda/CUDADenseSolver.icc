@@ -8,9 +8,10 @@
 #error This header file contains implementation details of class mito::solvers::cuda::CUDADenseSolver
 #else
 
+template <typename realT>
 template <class solutionT>
 auto
-mito::solvers::cuda::CUDADenseSolver::get_solution(solutionT & solution) const -> void
+mito::solvers::cuda::CUDADenseSolver<realT>::get_solution(solutionT & solution) const -> void
 {
     // check if {_size} matches the size of {solution}
     assert(_size == std::size(solution));

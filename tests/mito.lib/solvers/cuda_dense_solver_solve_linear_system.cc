@@ -17,7 +17,7 @@ TEST(Solvers, CUDADenseSolverSymmetricLinearSystem)
     double tol = 1.0e-10;
 
     // instantiate a CUDA Dense solver for a linear system of size {N}
-    auto solver = mito::solvers::cuda::dense(mito::solvers::cuda::SolverType::CHOLESKY);
+    auto solver = mito::solvers::cuda::dense<mito::real>(mito::solvers::cuda::SolverType::CHOLESKY);
     solver.initialize(N);
 
     // set matrix and right-hand side entries
@@ -70,7 +70,7 @@ TEST(Solvers, CUDADenseSolverUnsymmetricLinearSystem)
     double tol = 1.0e-10;
 
     // instantiate a CUDA Dense solver for a linear system of size {N}
-    auto solver = mito::solvers::cuda::dense(mito::solvers::cuda::SolverType::LU);
+    auto solver = mito::solvers::cuda::dense<mito::real>(mito::solvers::cuda::SolverType::LU);
     solver.initialize(N);
 
     // set matrix and right-hand side entries

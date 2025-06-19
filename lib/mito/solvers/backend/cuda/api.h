@@ -10,7 +10,8 @@
 namespace mito::solvers::cuda {
 
     // cuda dense solver
-    using dense_t = CUDADenseSolver;
+    template<typename realT>
+    using dense_t = CUDADenseSolver<realT>;
 
 }
 
