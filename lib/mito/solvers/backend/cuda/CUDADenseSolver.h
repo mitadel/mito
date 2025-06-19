@@ -41,7 +41,7 @@ namespace mito::solvers::cuda {
     class CUDADenseSolver {
         public:
         // type alias for real_type numbers
-        using real_type = mito::real;
+        using real_type = double;
 
       public:
         // constructor

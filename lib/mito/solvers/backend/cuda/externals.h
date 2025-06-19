@@ -18,8 +18,5 @@
 #include <cuda_runtime.h>
 #include <cusolverDn.h>
 
-// support
-#include "../../../tensor.h"
-
 
 // end of file
