@@ -60,7 +60,7 @@ cusolverGetErrorString(cusolverStatus_t status)
 
 // constructor
 template<mito::solvers::cuda::real_c realT>
-mito::solvers::cuda::CUDADenseSolver<realT>::CUDADenseSolver(mito::solvers::cuda::SolverType solver_type) :
+mito::solvers::cuda::CUDADenseSolver<realT>::CUDADenseSolver(SolverType solver_type) :
     _solver_type(solver_type),
     _h_matrix(nullptr),
     _h_rhs(nullptr),
@@ -165,7 +165,7 @@ template<mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::set_matrix_value(
     size_t row, size_t col, const real_type value,
-    const mito::solvers::cuda::InsertMode insert_mode = mito::solvers::cuda::InsertMode::ADD_VALUE)
+    const InsertMode insert_mode = InsertMode::ADD_VALUE)
     -> void
 {
     // check if the system assembly is finalized and throw an error if it is
@@ -181,9 +181,9 @@ mito::solvers::cuda::CUDADenseSolver<realT>::set_matrix_value(
     // add/insert the value to the matrix entry in the host matrix
     // NOTE: We store the matrix in column-major order since the cuSOLVER library expects the matrix
     // to be in column-major order.
-    if (insert_mode == mito::solvers::cuda::InsertMode::ADD_VALUE)
+    if (insert_mode == InsertMode::ADD_VALUE)
         _h_matrix[col * _size + row] += value;
-    else if (insert_mode == mito::solvers::cuda::InsertMode::INSERT_VALUE)
+    else if (insert_mode == InsertMode::INSERT_VALUE)
         _h_matrix[col * _size + row] = value;
     else
         throw std::invalid_argument("Invalid insert mode. Use ADD_VALUE or INSERT_VALUE.");
@@ -197,7 +197,7 @@ template<mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::set_rhs_value(
     size_t row, const real_type value,
-    const mito::solvers::cuda::InsertMode insert_mode = mito::solvers::cuda::InsertMode::ADD_VALUE)
+    const InsertMode insert_mode = InsertMode::ADD_VALUE)
     -> void
 {
     // check if the system assembly is finalized and throw an error if it is
@@ -210,9 +210,9 @@ mito::solvers::cuda::CUDADenseSolver<realT>::set_rhs_value(
     _check_index_validity(row);
 
     // add/insert the value to the rhs entry in the host rhs
-    if (insert_mode == mito::solvers::cuda::InsertMode::ADD_VALUE)
+    if (insert_mode == InsertMode::ADD_VALUE)
         _h_rhs[row] += value;
-    else if (insert_mode == mito::solvers::cuda::InsertMode::INSERT_VALUE)
+    else if (insert_mode == InsertMode::INSERT_VALUE)
         _h_rhs[row] = value;
     else
         throw std::invalid_argument("Invalid insert mode. Use ADD_VALUE or INSERT_VALUE.");
@@ -273,19 +273,19 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
         "Only double or float types are supported in the CUDA dense solver.");
 
     // check the solver type is either LU or Cholesky
-    if (_solver_type != mito::solvers::cuda::SolverType::LU
-        && _solver_type != mito::solvers::cuda::SolverType::CHOLESKY) {
+    if (_solver_type != SolverType::LU
+        && _solver_type != SolverType::CHOLESKY) {
         throw std::invalid_argument(
             "Invalid solver type. Only LU and Cholesky solvers are supported in the CUDA dense "
             "solver.");
     }
 
     // get the workspace size for the factorization
-    if (_solver_type == mito::solvers::cuda::SolverType::LU) {
+    if (_solver_type == SolverType::LU) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::getrf_buffer_size(
                 _cusolver_handle, _size, _size, _d_matrix, _size, &workspace_size));
-    } else if (_solver_type == mito::solvers::cuda::SolverType::CHOLESKY) {
+    } else if (_solver_type == SolverType::CHOLESKY) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::potrf_buffer_size(
                 _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, _d_matrix, _size,
@@ -297,11 +297,11 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     CHECK_CUDA_ERROR(cudaMalloc(&d_workspace, workspace_size * sizeof(real_type)));
 
     // perform the factorization
-    if (_solver_type == mito::solvers::cuda::SolverType::LU) {
+    if (_solver_type == SolverType::LU) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::getrf(
                 _cusolver_handle, _size, _size, _d_matrix, _size, d_workspace, d_pivot, d_info));
-    } else if (_solver_type == mito::solvers::cuda::SolverType::CHOLESKY) {
+    } else if (_solver_type == SolverType::CHOLESKY) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::potrf(
                 _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, _d_matrix, _size, d_workspace,
@@ -310,12 +310,12 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // solve the linear system
-    if (_solver_type == mito::solvers::cuda::SolverType::LU) {
+    if (_solver_type == SolverType::LU) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::getrs(
                 _cusolver_handle, CUBLAS_OP_N, _size, 1, _d_matrix, _size, d_pivot, _d_rhs, _size,
                 d_info));
-    } else if (_solver_type == mito::solvers::cuda::SolverType::CHOLESKY) {
+    } else if (_solver_type == SolverType::CHOLESKY) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::potrs(
                 _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, 1, _d_matrix, _size, _d_rhs, _size,

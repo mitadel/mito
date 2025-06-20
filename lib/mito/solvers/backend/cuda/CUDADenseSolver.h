@@ -46,7 +46,7 @@ namespace mito::solvers::cuda {
 
       public:
         // constructor
-        CUDADenseSolver(mito::solvers::cuda::SolverType);
+        CUDADenseSolver(SolverType);
 
         // destructor
         ~CUDADenseSolver();
@@ -105,7 +105,7 @@ namespace mito::solvers::cuda {
 
       private:
         // solver type
-        mito::solvers::cuda::SolverType _solver_type;
+        SolverType _solver_type;
         // host copy of the matrix
         real_type * _h_matrix;
         // host copy of the right-hand side
