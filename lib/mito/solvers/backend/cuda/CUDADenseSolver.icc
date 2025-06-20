@@ -8,7 +8,7 @@
 #error This header file contains implementation details of class mito::solvers::cuda::CUDADenseSolver
 #else
 
-template <typename realT>
+template <mito::solvers::cuda::real_c realT>
 template <class solutionT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::get_solution(solutionT & solution) const -> void

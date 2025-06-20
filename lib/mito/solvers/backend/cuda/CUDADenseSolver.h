@@ -38,7 +38,7 @@ struct cusolver_traits<float> {
 
 namespace mito::solvers::cuda {
 
-    template<typename realT>
+    template<real_c realT>
     class CUDADenseSolver {
         public:
         // type alias for real numbers

@@ -10,7 +10,7 @@
 namespace mito::solvers::cuda {
 
     // cuda dense solver
-    template<typename realT>
+    template<real_c realT>
     auto dense(mito::solvers::cuda::SolverType solver_type = mito::solvers::cuda::SolverType::LU)
     {
         return dense_t<realT>(solver_type);
