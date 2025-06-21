@@ -20,8 +20,6 @@ namespace mito::discretization {
       public:
         // the number of discretization nodes
         static constexpr int n_nodes = 6;
-        // the node type
-        using node_type = discretization_node_t;
         // a collection of discretization nodes
         using nodes_type = std::array<node_type, n_nodes>;
         // type of a point in barycentric coordinates
