@@ -16,7 +16,7 @@ namespace mito::discretization {
     class IsoparametricTriangle : public utilities::Invalidatable {
       public:
         // the discretization node type
-        using node_type = discretization_node_t;
+        using discretization_node_type = discretization_node_t;
 
       protected:
         // the geometric simplex type

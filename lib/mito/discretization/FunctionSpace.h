@@ -34,9 +34,9 @@ namespace mito::discretization {
         // typedef for a collection of finite elements
         using elements_type = utilities::segmented_vector_t<element_type>;
         // the discretization node type
-        using discretization_node_type = typename element_type::node_type;
+        using discretization_node_type = typename element_type::discretization_node_type;
         // the nodes type
-        using discretization_nodes_type = typename element_type::nodes_type;
+        using discretization_nodes_type = typename element_type::discretization_nodes_type;
         // the constrained nodes type
         using constrained_nodes_type = std::set<discretization_node_type>;
 

@@ -21,7 +21,7 @@ namespace mito::discretization {
         // the number of discretization nodes
         static constexpr int n_nodes = 6;
         // a collection of discretization nodes
-        using nodes_type = std::array<node_type, n_nodes>;
+        using discretization_nodes_type = std::array<discretization_node_type, n_nodes>;
         // type of a point in barycentric coordinates
         using barycentric_coordinates_type =
             typename geometric_simplex_type::barycentric_coordinates_type;
@@ -31,9 +31,10 @@ namespace mito::discretization {
         using vector_type = tensor::vector_t<2>;
         // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
         // another data structure
-        using evaluated_shape_functions_type = std::map<node_type, mito::tensor::scalar_t>;
+        using evaluated_shape_functions_type =
+            std::map<discretization_node_type, mito::tensor::scalar_t>;
         using evaluated_shape_functions_gradients_type =
-            std::map<node_type, mito::tensor::vector_t<2>>;
+            std::map<discretization_node_type, mito::tensor::vector_t<2>>;
 
       private:
         // strip the namespace
@@ -61,10 +62,11 @@ namespace mito::discretization {
       public:
         // the default constructor
         inline IsoparametricTriangle2(
-            const geometric_simplex_type & geometric_simplex, const nodes_type & nodes,
-            const vector_type & x0, const vector_type & x1, const vector_type & x2) :
+            const geometric_simplex_type & geometric_simplex,
+            const discretization_nodes_type & discretization_nodes, const vector_type & x0,
+            const vector_type & x1, const vector_type & x2) :
             IsoparametricTriangle(geometric_simplex),
-            _nodes(nodes),
+            _discretization_nodes(discretization_nodes),
             _x0(x0),
             _x1(x1),
             _x2(x2)
@@ -86,8 +88,11 @@ namespace mito::discretization {
         inline IsoparametricTriangle2 & operator=(IsoparametricTriangle2 &&) noexcept = delete;
 
       public:
-        // get the nodes
-        inline auto nodes() const noexcept -> const nodes_type & { return _nodes; }
+        // get the discretization nodes
+        inline auto discretization_nodes() const noexcept -> const discretization_nodes_type &
+        {
+            return _discretization_nodes;
+        }
 
         // get all the shape functions evaluated at the point {xi} in barycentric coordinates
         inline auto shape(const barycentric_coordinates_type & xi) const
@@ -97,9 +102,12 @@ namespace mito::discretization {
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
             // return the shape functions evaluated at {xi}
-            return { { _nodes[0], std::get<0>(phi)(xi_p) }, { _nodes[1], std::get<1>(phi)(xi_p) },
-                     { _nodes[2], std::get<2>(phi)(xi_p) }, { _nodes[3], std::get<3>(phi)(xi_p) },
-                     { _nodes[4], std::get<4>(phi)(xi_p) }, { _nodes[5], std::get<5>(phi)(xi_p) } };
+            return { { _discretization_nodes[0], std::get<0>(phi)(xi_p) },
+                     { _discretization_nodes[1], std::get<1>(phi)(xi_p) },
+                     { _discretization_nodes[2], std::get<2>(phi)(xi_p) },
+                     { _discretization_nodes[3], std::get<3>(phi)(xi_p) },
+                     { _discretization_nodes[4], std::get<4>(phi)(xi_p) },
+                     { _discretization_nodes[5], std::get<5>(phi)(xi_p) } };
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
@@ -140,23 +148,23 @@ namespace mito::discretization {
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
             // return the spatial gradients of the shape functions evaluated at {xi}
-            return { { _nodes[0], std::get<0>(dphi)(xi_p) * J_inv },
-                     { _nodes[1], std::get<1>(dphi)(xi_p) * J_inv },
-                     { _nodes[2], std::get<2>(dphi)(xi_p) * J_inv },
-                     { _nodes[3], std::get<3>(dphi)(xi_p) * J_inv },
-                     { _nodes[4], std::get<4>(dphi)(xi_p) * J_inv },
-                     { _nodes[5], std::get<5>(dphi)(xi_p) * J_inv } };
+            return { { _discretization_nodes[0], std::get<0>(dphi)(xi_p) * J_inv },
+                     { _discretization_nodes[1], std::get<1>(dphi)(xi_p) * J_inv },
+                     { _discretization_nodes[2], std::get<2>(dphi)(xi_p) * J_inv },
+                     { _discretization_nodes[3], std::get<3>(dphi)(xi_p) * J_inv },
+                     { _discretization_nodes[4], std::get<4>(dphi)(xi_p) * J_inv },
+                     { _discretization_nodes[5], std::get<5>(dphi)(xi_p) * J_inv } };
         }
 
       private:
-        // the nodes of the simplex
-        const nodes_type _nodes;
+        // the discretization nodes of the simplex
+        const discretization_nodes_type _discretization_nodes;
         // QUESTION: alternatively to the coordinates of the vertices, we could store the points
         // associated with the vertices of the triangle, so the coordinates can be fetched from the
         // coordinate system
         //
         // TOFIX: perhaps these can be stored in the base class?
-        // the coordinates of the nodes of the triangle
+        // the coordinates of the discretization nodes of the triangle
         const vector_type _x0;
         const vector_type _x1;
         const vector_type _x2;
