@@ -8,19 +8,18 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangle2} represents a second order simplex living in 2D cartesian space
-// equipped with quadratic shape functions defined in the parametric space.
+// Class {IsoparametricTriangleP1} represents a second order simplex living in 2D cartesian space,
+// equipped with linear shape functions defined in the parametric space.
 
-// TODO: rename to {IsoparametricTriangleP1}, {IsoparametricTriangleP2}, ...
 
 namespace mito::discretization {
 
-    class IsoparametricTriangle2 : public IsoparametricTriangle {
+    class IsoparametricTriangleP1 : public IsoparametricTriangle {
 
       public:
-        // the number of discretization nodes
-        static constexpr int n_nodes = 6;
-        // a collection of discretization nodes
+        // the number of discretization discretization nodes
+        static constexpr int n_nodes = 3;
+        // a collection of discretization discretization nodes
         using discretization_nodes_type = std::array<discretization_node_type, n_nodes>;
         // type of a point in barycentric coordinates
         using barycentric_coordinates_type =
@@ -35,31 +34,22 @@ namespace mito::discretization {
             std::map<discretization_node_type, mito::tensor::vector_t<2>>;
 
       private:
-        // strip the namespace
-        static constexpr auto xi_0 = xi_0;
-        static constexpr auto xi_1 = xi_1;
-        static constexpr auto xi_2 = xi_2;
-
-        // quadratic shape functions on the triangle
-        static constexpr auto phi_3 = 4.0 * xi_0 * xi_1;
-        static constexpr auto phi_4 = 4.0 * xi_1 * xi_2;
-        static constexpr auto phi_5 = 4.0 * xi_0 * xi_2;
-        static constexpr auto phi_0 = xi_0 - 0.5 * phi_5 - 0.5 * phi_3;
-        static constexpr auto phi_1 = xi_1 - 0.5 * phi_3 - 0.5 * phi_4;
-        static constexpr auto phi_2 = xi_2 - 0.5 * phi_5 - 0.5 * phi_4;
+        // linear shape functions on the triangle
+        static constexpr auto phi_0 = xi_0;
+        static constexpr auto phi_1 = xi_1;
+        static constexpr auto phi_2 = xi_2;
 
         // the shape functions
-        static constexpr auto phi = std::make_tuple(phi_0, phi_1, phi_2, phi_3, phi_4, phi_5);
+        static constexpr auto phi = std::make_tuple(phi_0, phi_1, phi_2);
 
         // the gradients of the shape functions
         static constexpr auto dphi = std::make_tuple(
             mito::fields::gradient(phi_0), mito::fields::gradient(phi_1),
-            mito::fields::gradient(phi_2), mito::fields::gradient(phi_3),
-            mito::fields::gradient(phi_4), mito::fields::gradient(phi_5));
+            mito::fields::gradient(phi_2));
 
       public:
         // the default constructor
-        inline IsoparametricTriangle2(
+        inline IsoparametricTriangleP1(
             const geometric_simplex_type & geometric_simplex,
             const coordinate_system_type & coord_system,
             const discretization_nodes_type & discretization_nodes) :
@@ -68,19 +58,19 @@ namespace mito::discretization {
         {}
 
         // destructor
-        inline ~IsoparametricTriangle2() = default;
+        inline ~IsoparametricTriangleP1() = default;
 
         // delete move constructor
-        inline IsoparametricTriangle2(IsoparametricTriangle2 &&) noexcept = delete;
+        inline IsoparametricTriangleP1(IsoparametricTriangleP1 &&) noexcept = delete;
 
         // delete copy constructor
-        inline IsoparametricTriangle2(const IsoparametricTriangle2 &) = delete;
+        inline IsoparametricTriangleP1(const IsoparametricTriangleP1 &) = delete;
 
         // delete assignment operator
-        inline IsoparametricTriangle2 & operator=(const IsoparametricTriangle2 &) = delete;
+        inline IsoparametricTriangleP1 & operator=(const IsoparametricTriangleP1 &) = delete;
 
         // delete move assignment operator
-        inline IsoparametricTriangle2 & operator=(IsoparametricTriangle2 &&) noexcept = delete;
+        inline IsoparametricTriangleP1 & operator=(IsoparametricTriangleP1 &&) noexcept = delete;
 
       public:
         // get the discretization nodes
@@ -99,23 +89,15 @@ namespace mito::discretization {
             // return the shape functions evaluated at {xi}
             return { { _discretization_nodes[0], std::get<0>(phi)(xi_p) },
                      { _discretization_nodes[1], std::get<1>(phi)(xi_p) },
-                     { _discretization_nodes[2], std::get<2>(phi)(xi_p) },
-                     { _discretization_nodes[3], std::get<3>(phi)(xi_p) },
-                     { _discretization_nodes[4], std::get<4>(phi)(xi_p) },
-                     { _discretization_nodes[5], std::get<5>(phi)(xi_p) } };
+                     { _discretization_nodes[2], std::get<2>(phi)(xi_p) } };
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
         inline auto jacobian(const barycentric_coordinates_type & xi) const
         {
-            auto x3 = 0.5 * (_x0 + _x1);
-            auto x4 = 0.5 * (_x1 + _x2);
-            auto x5 = 0.5 * (_x2 + _x0);
-
             // assemble the isoparametric mapping from the barycentric coordinates to the actual
             // coordinates on the cell {cell}
-            auto x_cell =
-                _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2 + x3 * phi_3 + x4 * phi_4 + x5 * phi_5;
+            auto x_cell = _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2;
 
             // the parametric coordinates of the quadrature point
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
@@ -145,10 +127,7 @@ namespace mito::discretization {
             // return the spatial gradients of the shape functions evaluated at {xi}
             return { { _discretization_nodes[0], std::get<0>(dphi)(xi_p) * J_inv },
                      { _discretization_nodes[1], std::get<1>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[2], std::get<2>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[3], std::get<3>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[4], std::get<4>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[5], std::get<5>(dphi)(xi_p) * J_inv } };
+                     { _discretization_nodes[2], std::get<2>(dphi)(xi_p) * J_inv } };
         }
 
       private:

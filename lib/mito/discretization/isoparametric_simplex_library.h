@@ -8,8 +8,8 @@
 
 
 #include "IsoparametricTriangle.h"
-#include "IsoparametricTriangle1.h"
-#include "IsoparametricTriangle2.h"
+#include "IsoparametricTriangleP1.h"
+#include "IsoparametricTriangleP2.h"
 
 
 namespace mito::discretization {
@@ -22,13 +22,13 @@ namespace mito::discretization {
     // specialization for linear shape functions on triangles in 2D
     template <>
     struct isoparametric_simplex<1, geometry::triangle_t<2>> {
-        using type = IsoparametricTriangle1;
+        using type = IsoparametricTriangleP1;
     };
 
     // specialization for quadratic shape functions on triangles in 2D
     template <>
     struct isoparametric_simplex<2, geometry::triangle_t<2>> {
-        using type = IsoparametricTriangle2;
+        using type = IsoparametricTriangleP2;
     };
 }
 
