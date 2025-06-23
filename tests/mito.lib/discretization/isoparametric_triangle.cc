@@ -42,7 +42,7 @@ test_partition_of_unity(const auto & element)
         // the sum of the shape functions
         auto sum = 0.0;
 
-        // populate the linear system of equations
+        // add together all the shape functions at {xi}
         for (const auto & [_, phi_a] : phi) {
             sum += phi_a;
         }
@@ -71,7 +71,7 @@ test_gradient_consistency(const auto & element)
         // the sum of the shape functions
         auto sum = mito::tensor::vector_t<2>{ 0.0, 0.0 };
 
-        // populate the linear system of equations
+        // add together all the shape functions gradients at {xi}
         for (const auto & [_, dphi_a] : dphi) {
             sum += dphi_a;
         }
