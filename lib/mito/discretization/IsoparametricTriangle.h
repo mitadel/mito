@@ -33,10 +33,10 @@ namespace mito::discretization {
       protected:
         // the function extracting the 0 component of a parametric point
         static constexpr auto xi_0 =
-            mito::fields::field(mito::functions::component<parametric_coordinates_type, 0>);
+            fields::field(functions::component<parametric_coordinates_type, 0>);
         // the function extracting the 1 component of a parametric point
         static constexpr auto xi_1 =
-            mito::fields::field(mito::functions::component<parametric_coordinates_type, 1>);
+            fields::field(functions::component<parametric_coordinates_type, 1>);
         // the function extracting the 2 component of a parametric point
         static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
 

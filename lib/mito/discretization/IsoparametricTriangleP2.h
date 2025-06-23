@@ -28,10 +28,9 @@ namespace mito::discretization {
       private:
         // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
         // another data structure
-        using evaluated_shape_functions_type =
-            std::map<discretization_node_type, mito::tensor::scalar_t>;
+        using evaluated_shape_functions_type = std::map<discretization_node_type, tensor::scalar_t>;
         using evaluated_shape_functions_gradients_type =
-            std::map<discretization_node_type, mito::tensor::vector_t<2>>;
+            std::map<discretization_node_type, tensor::vector_t<2>>;
 
       private:
         // strip the namespace
@@ -52,9 +51,8 @@ namespace mito::discretization {
 
         // the gradients of the shape functions
         static constexpr auto dphi = std::make_tuple(
-            mito::fields::gradient(phi_0), mito::fields::gradient(phi_1),
-            mito::fields::gradient(phi_2), mito::fields::gradient(phi_3),
-            mito::fields::gradient(phi_4), mito::fields::gradient(phi_5));
+            fields::gradient(phi_0), fields::gradient(phi_1), fields::gradient(phi_2),
+            fields::gradient(phi_3), fields::gradient(phi_4), fields::gradient(phi_5));
 
       public:
         // the default constructor
@@ -120,7 +118,7 @@ namespace mito::discretization {
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
 
             // compute the gradient of the isoparametric mapping
-            auto J = mito::fields::gradient(x_cell)(xi_p);
+            auto J = fields::gradient(x_cell)(xi_p);
 
             // return the jacobian of the isoparametric mapping
             return J;
@@ -136,7 +134,7 @@ namespace mito::discretization {
             auto J = jacobian(xi);
 
             // the derivative of the coordinates with respect to the barycentric coordinates
-            auto J_inv = mito::tensor::inverse(J);
+            auto J_inv = tensor::inverse(J);
 
             // the parametric coordinates of the quadrature point
             auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
