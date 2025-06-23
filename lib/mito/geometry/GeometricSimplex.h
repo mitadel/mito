@@ -184,10 +184,10 @@ namespace mito::geometry {
 
       public:
         // accessor for the underlying vertex
-        auto vertex() const noexcept -> const vertex_type & { return _vertex; }
+        constexpr auto vertex() const noexcept -> const vertex_type & { return _vertex; }
 
         // accessor for the underlying point
-        auto point() const noexcept -> const point_type & { return _point; }
+        constexpr auto point() const noexcept -> const point_type & { return _point; }
 
       private:
         // the vertex that this node is attached to
