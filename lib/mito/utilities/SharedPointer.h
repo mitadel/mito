@@ -23,16 +23,16 @@ namespace mito::utilities {
         // interface
       public:
         // returns the id of this (oriented) simplex
-        inline auto id() const -> index_t<resource_type>;
+        constexpr auto id() const -> index_t<resource_type>;
 
         // accessor for the number of outstanding references
-        inline auto references() const -> int;
+        constexpr auto references() const -> int;
 
         // check if the handle is the null pointer
-        inline auto is_nullptr() const noexcept -> bool;
+        constexpr auto is_nullptr() const noexcept -> bool;
 
         // operator->
-        auto operator->() const noexcept -> handle_type;
+        constexpr auto operator->() const noexcept -> handle_type;
 
         // // operator*
         // auto operator*() const -> const resource_type &;
@@ -40,40 +40,40 @@ namespace mito::utilities {
         // meta methods
       public:
         // destructor
-        inline ~SharedPointer();
+        constexpr ~SharedPointer();
 
         // default constructor
-        inline SharedPointer();
+        constexpr SharedPointer();
 
         // constructor
-        inline SharedPointer(handle_type);
+        constexpr SharedPointer(handle_type);
 
         // copy constructor
-        inline SharedPointer(const shared_ptr_type &);
+        constexpr SharedPointer(const shared_ptr_type &);
 
         // move constructor
-        inline SharedPointer(shared_ptr_type &&) noexcept;
+        constexpr SharedPointer(shared_ptr_type &&) noexcept;
 
         // assignment operator
-        inline shared_ptr_type & operator=(const shared_ptr_type &);
+        constexpr shared_ptr_type & operator=(const shared_ptr_type &);
 
         // move assignment operator
-        inline shared_ptr_type & operator=(shared_ptr_type &&) noexcept;
+        constexpr shared_ptr_type & operator=(shared_ptr_type &&) noexcept;
 
       private:
         // accessor for {handle}
-        inline auto handle() const noexcept -> handle_type;
+        constexpr auto handle() const noexcept -> handle_type;
 
         // returns the resource corresponding to this resource id
-        static inline auto resource(index_t<resource_type>) -> handle_type;
+        static constexpr auto resource(index_t<resource_type>) -> handle_type;
 
         // reset the shared pointer
-        inline auto reset() -> void;
+        constexpr auto reset() -> void;
 
         // increment the reference count
-        inline auto _acquire() const -> void;
+        constexpr auto _acquire() const -> void;
         // decrement the reference count
-        inline auto _release() const -> void;
+        constexpr auto _release() const -> void;
 
         // data members
       private:
