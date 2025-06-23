@@ -69,14 +69,6 @@ namespace mito::discretization {
                     // get the nodes of the cell
                     const auto & nodes = cell.nodes();
 
-                    // the origin of the coordinate system
-                    auto origin = typename coord_system_type::coordinates_type{};
-
-                    // the coordinates of the nodes of the triangle
-                    auto x_0 = coord_system.coordinates(nodes[0]->point()) - origin;
-                    auto x_1 = coord_system.coordinates(nodes[1]->point()) - origin;
-                    auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
-
                     // add the nodes to the map (if the mesh node is already present in the map,
                     // then the present discretization node is used)
                     auto node_0 =
@@ -88,7 +80,7 @@ namespace mito::discretization {
 
                     // create a finite element for each cell and add it to the pile
                     _elements.emplace(
-                        cell, discretization_nodes_type{ node_0, node_1, node_2 }, x_0, x_1, x_2);
+                        cell, coord_system, discretization_nodes_type{ node_0, node_1, node_2 });
                 }
 
                 // populate the constrained nodes
@@ -123,14 +115,6 @@ namespace mito::discretization {
                     // get the nodes of the cell
                     const auto & nodes = cell.nodes();
 
-                    // the origin of the coordinate system
-                    auto origin = typename coord_system_type::coordinates_type{};
-
-                    // the coordinates of the nodes of the triangle
-                    auto x_0 = coord_system.coordinates(nodes[0]->point()) - origin;
-                    auto x_1 = coord_system.coordinates(nodes[1]->point()) - origin;
-                    auto x_2 = coord_system.coordinates(nodes[2]->point()) - origin;
-
                     // add the nodes to the map (if the mesh node is already present in the map,
                     // then the present discretization node is used)
                     auto node_0 =
@@ -161,9 +145,9 @@ namespace mito::discretization {
 
                     // create a finite element for each cell and add it to the pile
                     _elements.emplace(
-                        cell,
-                        discretization_nodes_type{ node_0, node_1, node_2, node_3, node_4, node_5 },
-                        x_0, x_1, x_2);
+                        cell, coord_system,
+                        discretization_nodes_type{ node_0, node_1, node_2, node_3, node_4,
+                                                   node_5 });
                 }
 
                 // populate the constrained nodes

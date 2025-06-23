@@ -27,8 +27,6 @@ namespace mito::discretization {
             typename geometric_simplex_type::barycentric_coordinates_type;
 
       private:
-        //
-        using vector_type = tensor::vector_t<2>;
         // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
         // another data structure
         using evaluated_shape_functions_type =
@@ -63,13 +61,10 @@ namespace mito::discretization {
         // the default constructor
         inline IsoparametricTriangle2(
             const geometric_simplex_type & geometric_simplex,
-            const discretization_nodes_type & discretization_nodes, const vector_type & x0,
-            const vector_type & x1, const vector_type & x2) :
-            IsoparametricTriangle(geometric_simplex),
-            _discretization_nodes(discretization_nodes),
-            _x0(x0),
-            _x1(x1),
-            _x2(x2)
+            const coordinate_system_type & coord_system,
+            const discretization_nodes_type & discretization_nodes) :
+            IsoparametricTriangle(geometric_simplex, coord_system),
+            _discretization_nodes(discretization_nodes)
         {}
 
         // destructor
@@ -159,15 +154,6 @@ namespace mito::discretization {
       private:
         // the discretization nodes of the simplex
         const discretization_nodes_type _discretization_nodes;
-        // QUESTION: alternatively to the coordinates of the vertices, we could store the points
-        // associated with the vertices of the triangle, so the coordinates can be fetched from the
-        // coordinate system
-        //
-        // TOFIX: perhaps these can be stored in the base class?
-        // the coordinates of the discretization nodes of the triangle
-        const vector_type _x0;
-        const vector_type _x1;
-        const vector_type _x2;
     };
 
 }    // namespace mito

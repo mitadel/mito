@@ -23,6 +23,12 @@ namespace mito::discretization {
         using geometric_simplex_type = geometry::triangle_t<2>;
         // the parametric coordinates type
         using parametric_coordinates_type = geometry::coordinates_t<2, geometry::CARTESIAN>;
+        // cartesian coordinates in 2D
+        using coordinates_type = geometry::coordinates_t<2, geometry::CARTESIAN>;
+        // the coordinate system type
+        using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
+        // the vector type
+        using vector_type = tensor::vector_t<2>;
 
       protected:
         // the function extracting the 0 component of a parametric point
@@ -36,8 +42,16 @@ namespace mito::discretization {
 
       public:
         // the default constructor
-        constexpr IsoparametricTriangle(const geometric_simplex_type & geometric_simplex) :
-            _geometric_simplex(geometric_simplex)
+        constexpr IsoparametricTriangle(
+            const geometric_simplex_type & geometric_simplex,
+            const coordinate_system_type & coord_system) :
+            _geometric_simplex(geometric_simplex),
+            _x0{ coord_system.coordinates(geometric_simplex.nodes()[0]->point())
+                 - coordinates_type{} },
+            _x1{ coord_system.coordinates(geometric_simplex.nodes()[1]->point())
+                 - coordinates_type{} },
+            _x2{ coord_system.coordinates(geometric_simplex.nodes()[2]->point())
+                 - coordinates_type{} }
         {}
 
         // destructor
@@ -66,6 +80,11 @@ namespace mito::discretization {
         // QUESTION: do we need to maintain a reference to the geometric simplex?
         // a const reference to the geometric simplex
         const geometric_simplex_type & _geometric_simplex;
+
+        // the coordinates of the discretization nodes of the triangle
+        const vector_type _x0;
+        const vector_type _x1;
+        const vector_type _x2;
     };
 
 }    // namespace mito

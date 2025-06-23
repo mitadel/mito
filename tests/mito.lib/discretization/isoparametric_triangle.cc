@@ -190,16 +190,10 @@ TEST(Fem, IsoparametricTriangle)
     // the coordinate system
     auto coord_system = coord_system_t();
 
-    // the origin of the coordinate system
-    auto origin = typename coord_system_t::coordinates_type{};
-
     // build nodes
-    auto coord_0 = coordinates_t{ 0.0, 0.0 };
-    auto node_0 = mito::geometry::node(coord_system, coord_0);
-    auto coord_1 = coordinates_t{ 1.0, 0.0 };
-    auto node_1 = mito::geometry::node(coord_system, coord_1);
-    auto coord_2 = coordinates_t{ 0.0, 1.0 };
-    auto node_2 = mito::geometry::node(coord_system, coord_2);
+    auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
+    auto node_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto node_2 = mito::geometry::node(coord_system, { 0.0, 1.0 });
 
     // make a geometric simplex
     auto geometric_simplex = mito::geometry::triangle<2>({ node_0, node_1, node_2 });
@@ -215,9 +209,8 @@ TEST(Fem, IsoparametricTriangle)
 
         // a finite element
         auto element_p1 = element_p1_t(
-            geometric_simplex,
-            { discretization_node_0, discretization_node_1, discretization_node_2 },
-            coord_0 - origin, coord_1 - origin, coord_2 - origin);
+            geometric_simplex, coord_system,
+            { discretization_node_0, discretization_node_1, discretization_node_2 });
 
         // check that first order shape functions are a partition of unity
         test_partition_of_unity(element_p1);
@@ -262,10 +255,9 @@ TEST(Fem, IsoparametricTriangle)
 
         // a finite element
         auto element_p2 = element_p2_t(
-            geometric_simplex,
+            geometric_simplex, coord_system,
             { discretization_node_0, discretization_node_1, discretization_node_2,
-              discretization_node_3, discretization_node_4, discretization_node_5 },
-            coord_0 - origin, coord_1 - origin, coord_2 - origin);
+              discretization_node_3, discretization_node_4, discretization_node_5 });
 
         // check that second order shape functions are a partition of unity
         test_partition_of_unity(element_p2);

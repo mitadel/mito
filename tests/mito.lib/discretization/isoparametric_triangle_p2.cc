@@ -43,16 +43,10 @@ TEST(Fem, IsoparametricTriangleP2)
     // the coordinate system
     auto coord_system = coord_system_t();
 
-    // the origin of the coordinate system
-    auto origin = typename coord_system_t::coordinates_type{};
-
     // build nodes
-    auto coord_0 = coordinates_t{ 0.0, 0.0 };
-    auto v0 = mito::geometry::node(coord_system, coord_0);
-    auto coord_1 = coordinates_t{ 1.0, 0.0 };
-    auto v1 = mito::geometry::node(coord_system, coord_1);
-    auto coord_2 = coordinates_t{ 1.0, 1.0 };
-    auto v2 = mito::geometry::node(coord_system, coord_2);
+    auto v0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
+    auto v1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto v2 = mito::geometry::node(coord_system, { 1.0, 1.0 });
 
     // make a geometric simplex
     auto geometric_simplex = mito::geometry::triangle<2>({ v0, v1, v2 });
@@ -67,8 +61,7 @@ TEST(Fem, IsoparametricTriangleP2)
 
     // a finite element
     auto element = element_t(
-        geometric_simplex, { node_0, node_1, node_2, node_3, node_4, node_5 }, coord_0 - origin,
-        coord_1 - origin, coord_2 - origin);
+        geometric_simplex, coord_system, { node_0, node_1, node_2, node_3, node_4, node_5 });
 
     // node 0 in barycentric coordinates
     auto n0 = barycentric_coordinates_t{ 1.0, 0.0, 0.0 };
