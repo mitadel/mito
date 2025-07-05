@@ -59,7 +59,7 @@ cusolverGetErrorString(cusolverStatus_t status)
     } while (0)
 
 // constructor
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 mito::solvers::cuda::CUDADenseSolver<realT>::CUDADenseSolver(SolverType solver_type) :
     _solver_type(solver_type),
     _h_matrix(nullptr),
@@ -71,7 +71,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::CUDADenseSolver(SolverType solver_t
     _is_solver_initialized(false),
     _allocated_host_memory_type(0),
     _is_assembly_finalized(false),
-    _cusolver_handle(nullptr),
+    _cusolver_handle(),
     _cuda_stream(nullptr)
 {
     // initialize cuSOLVER
@@ -79,14 +79,14 @@ mito::solvers::cuda::CUDADenseSolver<realT>::CUDADenseSolver(SolverType solver_t
 }
 
 // destructor
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 mito::solvers::cuda::CUDADenseSolver<realT>::~CUDADenseSolver()
 {
     // finalize cuSOLVER
     _finalize_cusolver();
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::initialize(size_t size) -> void
 {
@@ -121,7 +121,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::initialize(size_t size) -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::finalize() -> void
 {
@@ -141,7 +141,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::finalize() -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::reset_system() -> void
 {
@@ -161,12 +161,10 @@ mito::solvers::cuda::CUDADenseSolver<realT>::reset_system() -> void
 }
 
 // add/insert {value} to matrix entry at ({row}, {col}) of the host copy
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::set_matrix_value(
-    size_t row, size_t col, const real_type value,
-    const InsertMode insert_mode = InsertMode::ADD_VALUE)
-    -> void
+    size_t row, size_t col, const real_type value, const InsertMode insert_mode) -> void
 {
     // check if the system assembly is finalized and throw an error if it is
     if (_is_assembly_finalized) {
@@ -193,12 +191,10 @@ mito::solvers::cuda::CUDADenseSolver<realT>::set_matrix_value(
 }
 
 // add/insert {value} to rhs entry at {row} of the host copy
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::set_rhs_value(
-    size_t row, const real_type value,
-    const InsertMode insert_mode = InsertMode::ADD_VALUE)
-    -> void
+    size_t row, const real_type value, const InsertMode insert_mode) -> void
 {
     // check if the system assembly is finalized and throw an error if it is
     if (_is_assembly_finalized) {
@@ -221,7 +217,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::set_rhs_value(
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::finalize_assembly() -> void
 {
@@ -244,7 +240,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::finalize_assembly() -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
 {
@@ -258,8 +254,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     // IMPROVE: We should move the data through streams for better performance later!
     CHECK_CUDA_ERROR(cudaMemcpy(
         _d_matrix, _h_matrix, _size * _size * sizeof(real_type), cudaMemcpyHostToDevice));
-    CHECK_CUDA_ERROR(
-        cudaMemcpy(_d_rhs, _h_rhs, _size * sizeof(real_type), cudaMemcpyHostToDevice));
+    CHECK_CUDA_ERROR(cudaMemcpy(_d_rhs, _h_rhs, _size * sizeof(real_type), cudaMemcpyHostToDevice));
 
     // allocate device memory for temporary variables in the factorization
     int * d_pivot = nullptr;
@@ -273,8 +268,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
         "Only double or float types are supported in the CUDA dense solver.");
 
     // check the solver type is either LU or Cholesky
-    if (_solver_type != SolverType::LU
-        && _solver_type != SolverType::CHOLESKY) {
+    if (_solver_type != SolverType::LU && _solver_type != SolverType::CHOLESKY) {
         throw std::invalid_argument(
             "Invalid solver type. Only LU and Cholesky solvers are supported in the CUDA dense "
             "solver.");
@@ -324,8 +318,8 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // copy the solution from device global memory to host memory
-    // NOTE: _d_rhs contains the solution after the call to getrs as its contents are overwritten
-    // by the solution vector
+    // NOTE: _d_rhs contains the solution after the call to getrs/potrs as its contents are
+    // overwritten by the solution vector
     CHECK_CUDA_ERROR(
         cudaMemcpy(_h_solution, _d_rhs, _size * sizeof(real_type), cudaMemcpyDeviceToHost));
 
@@ -338,7 +332,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_initialize_cusolver() -> void
 {
@@ -355,7 +349,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_initialize_cusolver() -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_finalize_cusolver() -> void
 {
@@ -373,7 +367,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_finalize_cusolver() -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_allocate_host_memory(size_t size) -> void
 {
@@ -416,7 +410,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_allocate_host_memory(size_t size) 
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_allocate_device_memory(size_t size) -> void
 {
@@ -428,7 +422,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_allocate_device_memory(size_t size
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_initialize_host_data(size_t size) -> void
 {
@@ -452,7 +446,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_initialize_host_data(size_t size) 
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_free_host_memory() -> void
 {
@@ -485,7 +479,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_free_host_memory() -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_free_device_memory() -> void
 {
@@ -502,7 +496,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_free_device_memory() -> void
     return;
 }
 
-template<mito::solvers::cuda::real_c realT>
+template <mito::solvers::cuda::real_c realT>
 auto
 mito::solvers::cuda::CUDADenseSolver<realT>::_check_index_validity(size_t index) const -> void
 {

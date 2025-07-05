@@ -38,15 +38,15 @@ struct cusolver_traits<float> {
 
 namespace mito::solvers::cuda {
 
-    template<real_c realT>
+    template <real_c realT>
     class CUDADenseSolver {
-        public:
+      public:
         // type alias for real numbers
         using real_type = realT;
 
       public:
         // constructor
-        CUDADenseSolver(SolverType);
+        CUDADenseSolver(SolverType solver_type = SolverType::LU);
 
         // destructor
         ~CUDADenseSolver();
@@ -62,11 +62,15 @@ namespace mito::solvers::cuda {
         auto reset_system() -> void;
 
         // set (add or insert depending on the mode) the value of a matrix entry in the host copy
-        auto set_matrix_value(size_t, size_t, const real_type, const InsertMode) -> void;
+        auto set_matrix_value(
+            size_t row, size_t col, const real_type value,
+            const InsertMode insert_mode = InsertMode::INSERT_VALUE) -> void;
 
         // set (add or insert depending on the mode) the value of a right-hand side entry in the
         // host copy
-        auto set_rhs_value(size_t, const real_type, const InsertMode) -> void;
+        auto set_rhs_value(
+            size_t row, const real_type value,
+            const InsertMode insert_mode = InsertMode::INSERT_VALUE) -> void;
 
         // finalize the linear system assembly
         auto finalize_assembly() -> void;
@@ -86,13 +90,13 @@ namespace mito::solvers::cuda {
         auto _finalize_cusolver() -> void;
 
         // allocate the host memory for the matrix, right-hand side, and solution
-        auto _allocate_host_memory(size_t) -> void;
+        auto _allocate_host_memory(size_t size) -> void;
 
         // allocate the device memory for the matrix and right-hand side
-        auto _allocate_device_memory(size_t) -> void;
+        auto _allocate_device_memory(size_t size) -> void;
 
         // initialize the host data for the matrix, right-hand side, and solution
-        auto _initialize_host_data(size_t) -> void;
+        auto _initialize_host_data(size_t size) -> void;
 
         // deallocate the host memory for the matrix, right-hand side, and solution
         auto _free_host_memory() -> void;
@@ -101,7 +105,7 @@ namespace mito::solvers::cuda {
         auto _free_device_memory() -> void;
 
         // check the validity of the index in the matrix and right-hand side
-        auto _check_index_validity(size_t) const -> void;
+        auto _check_index_validity(size_t index) const -> void;
 
       private:
         // solver type
