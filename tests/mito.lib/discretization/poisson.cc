@@ -76,6 +76,10 @@ TEST(Fem, PoissonSquare)
            * mito::functions::sin(std::numbers::pi * y);
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
+    // the number of nodes per element
+    constexpr int n_nodes =
+        mito::utilities::base_type<decltype(function_space)>::element_type::n_nodes;
+
     // loop on all the cells of the mesh
     for (const auto & element : function_space.elements()) {
 
@@ -92,52 +96,59 @@ TEST(Fem, PoissonSquare)
             // precompute the common factor
             auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
 
-            // evaluate the spatial gradients of the element shape functions at {xi}
-            auto dphi = element.gradient(xi);
-
             // populate the linear system of equations
-            for (const auto & [node_a, dphi_a] : dphi) {
+            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.discretization_nodes()[a];
+                // evaluate the spatial gradient of the element's a-th shape function at {xi}
+                auto dphi_a = element.gradient<a>()(xi);
                 // get the equation number of {node_a}
                 int eq_a = equation_map.at(node_a);
                 assert(eq_a < N_equations);
-                if (eq_a == -1) {
-                    // skip boundary nodes
-                    continue;
+                if (eq_a != -1) {
+                    mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                        // get the b-th discretization node of the element
+                        const auto & node_b = element.discretization_nodes()[b];
+                        // evaluate the spatial gradient of the element's b-th shape
+                        // function at {xi}
+                        auto dphi_b = element.gradient<b>()(xi);
+                        // get the equation number of {node_b}
+                        int eq_b = equation_map.at(node_b);
+                        assert(eq_b < N_equations);
+                        // compute the entry of the stiffness matrix
+                        auto entry = 0.0;
+                        // non boundary nodes
+                        if (eq_b != -1) {
+                            entry = factor * dphi_a * dphi_b;
+                        }
+                        // assemble the value in the stiffness matrix
+                        solver.add_matrix_value(eq_a, eq_b, entry);
+                    });
                 }
-                for (const auto & [node_b, dphi_b] : dphi) {
-                    // get the equation number of {node_b}
-                    int eq_b = equation_map.at(node_b);
-                    assert(eq_b < N_equations);
-                    if (eq_b == -1) {
-                        // skip boundary nodes
-                        continue;
-                    }
-                    // compute the entry of the stiffness matrix
-                    auto entry = factor * dphi_a * dphi_b;
-                    // assemble the value in the stiffness matrix
-                    solver.add_matrix_value(eq_a, eq_b, entry);
-                }
-            }
-
-            // evaluate the element shape functions at {xi}
-            auto phi = element.shape(xi);
+            });
 
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
 
             // populate the right hand side
-            for (const auto & [node_a, phi_a] : phi) {
+            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.discretization_nodes()[a];
+                // evaluate the a-th shape function at {xi}
+                auto phi_a = element.shape<a>()(xi);
+
                 // get the equation number of {node_a}
                 int eq_a = equation_map.at(node_a);
                 assert(eq_a < N_equations);
-                if (eq_a == -1) {
-                    // skip boundary nodes
-                    continue;
+                // compute the entry of the right hand side
+                auto entry = 0.0;
+                // non boundary nodes
+                if (eq_a != -1) {
+                    entry = factor * f(coord) * phi_a;
                 }
-
                 // assemble the value in the right hand side
-                solver.add_rhs_value(eq_a, factor * f(coord) * phi_a);
-            }
+                solver.add_rhs_value(eq_a, entry);
+            });
         }
     }
 
@@ -214,8 +225,6 @@ TEST(Fem, PoissonSquare)
         for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
             // the barycentric coordinates of the quadrature point
             /*constexpr*/ auto xi = quadrature_rule.point(q);
-            // evaluate the element shape functions at {xi}
-            auto phi = element.shape(xi);
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
             // get the exact solution at {coord}
@@ -223,14 +232,18 @@ TEST(Fem, PoissonSquare)
             // assemble the numerical solution at {coord}
             auto u_numerical = 0.0;
             // loop on all the shape functions
-            for (const auto & [node_a, phi_a] : phi) {
-                // get the equation number of {node}
+            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.discretization_nodes()[a];
+                // evaluate the a-th shape function at {xi}
+                auto phi_a = element.shape<a>()(xi);
+                // get the equation number of {node_a}
                 int eq = equation_map.at(node_a);
                 if (eq != -1) {
                     // get the numerical solution at {coord}
                     u_numerical += u[eq] * phi_a;
                 }
-            }
+            });
             // get the error
             error_L2 += (u_exact - u_numerical) * (u_exact - u_numerical)
                       * quadrature_rule.weight(q) * volume;

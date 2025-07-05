@@ -61,36 +61,37 @@ TEST(Fem, IsoparametricTriangleP1)
 
     // node 0 in barycentric coordinates
     auto n0 = barycentric_coordinates_t{ 1.0, 0.0, 0.0 };
-    // the shape functions at node 0
-    auto phi_0 = element.shape(n0);
-    // check that the shape function at node 0 is 1.0
-    EXPECT_DOUBLE_EQ(1.0, phi_0.at(node_0));
-    // check that the shape function at node 1 is 0.0
-    EXPECT_DOUBLE_EQ(0.0, phi_0.at(node_1));
-    // check that the shape function at node 2 is 0.0
-    EXPECT_DOUBLE_EQ(0.0, phi_0.at(node_2));
-
     // node 1 in barycentric coordinates
     auto n1 = barycentric_coordinates_t{ 0.0, 1.0, 0.0 };
-    // the shape functions at node 1
-    auto phi_1 = element.shape(n1);
-    // check that the shape function at node 0 is 0.0
-    EXPECT_DOUBLE_EQ(0.0, phi_1.at(node_0));
-    // check that the shape function at node 1 is 1.0
-    EXPECT_DOUBLE_EQ(1.0, phi_1.at(node_1));
-    // check that the shape function at node 2 is 0.0
-    EXPECT_DOUBLE_EQ(0.0, phi_1.at(node_2));
-
     // node 2 in barycentric coordinates
     auto n2 = barycentric_coordinates_t{ 0.0, 0.0, 1.0 };
-    // the shape functions at node 2
-    auto phi_2 = element.shape(n2);
-    // check that the shape function at node 0 is 0.0
-    EXPECT_DOUBLE_EQ(0.0, phi_2.at(node_0));
+
+    // the shape function associated with local node {0}
+    auto phi_0 = element.shape<0>();
+    // check that the shape function at node 0 is 1.0
+    EXPECT_DOUBLE_EQ(1.0, phi_0(n0));
     // check that the shape function at node 1 is 0.0
-    EXPECT_DOUBLE_EQ(0.0, phi_2.at(node_1));
+    EXPECT_DOUBLE_EQ(0.0, phi_0(n1));
+    // check that the shape function at node 2 is 0.0
+    EXPECT_DOUBLE_EQ(0.0, phi_0(n2));
+
+    // the shape functions at node 1
+    auto phi_1 = element.shape<1>();
+    // check that the shape function at node 0 is 0.0
+    EXPECT_DOUBLE_EQ(0.0, phi_1(n0));
+    // check that the shape function at node 1 is 1.0
+    EXPECT_DOUBLE_EQ(1.0, phi_1(n1));
+    // check that the shape function at node 2 is 0.0
+    EXPECT_DOUBLE_EQ(0.0, phi_1(n2));
+
+    // the shape functions at node 2
+    auto phi_2 = element.shape<2>();
+    // check that the shape function at node 0 is 0.0
+    EXPECT_DOUBLE_EQ(0.0, phi_2(n0));
+    // check that the shape function at node 1 is 0.0
+    EXPECT_DOUBLE_EQ(0.0, phi_2(n1));
     // check that the shape function at node 2 is 1.0
-    EXPECT_DOUBLE_EQ(1.0, phi_2.at(node_2));
+    EXPECT_DOUBLE_EQ(1.0, phi_2(n2));
 
     // all done
     return;

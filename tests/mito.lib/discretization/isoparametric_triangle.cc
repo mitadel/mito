@@ -30,22 +30,21 @@ constexpr auto quadrature_rule = quadrature_rule_t();
 auto
 test_partition_of_unity(const auto & element)
 {
+    // the number of nodes per element
+    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
+
     // loop on the quadrature points
     for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
 
         // the barycentric coordinates of the quadrature point
         auto xi = quadrature_rule.point(q);
 
-        // evaluate the element shape functions at {xi}
-        auto phi = element.shape(xi);
-
         // the sum of the shape functions
         auto sum = 0.0;
 
         // add together all the shape functions at {xi}
-        for (const auto & [_, phi_a] : phi) {
-            sum += phi_a;
-        }
+        mito::tensor::constexpr_for_1<n_nodes>(
+            [&]<int a>() { sum += element.template shape<a>()(xi); });
 
         // check the sum of the shape functions
         EXPECT_DOUBLE_EQ(1.0, sum);
@@ -59,22 +58,21 @@ test_partition_of_unity(const auto & element)
 auto
 test_gradient_consistency(const auto & element)
 {
+    // the number of nodes per element
+    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
+
     // loop on the quadrature points
     for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
 
         // the barycentric coordinates of the quadrature point
         auto xi = quadrature_rule.point(q);
 
-        // evaluate the element shape functions gradients at {xi}
-        auto dphi = element.gradient(xi);
-
         // the sum of the shape functions
         auto sum = mito::tensor::vector_t<2>{ 0.0, 0.0 };
 
         // add together all the shape functions gradients at {xi}
-        for (const auto & [_, dphi_a] : dphi) {
-            sum += dphi_a;
-        }
+        mito::tensor::constexpr_for_1<n_nodes>(
+            [&]<int a>() { sum += element.template gradient<a>()(xi); });
 
         // check the sum of the shape functions gradients
         EXPECT_NEAR(0.0, sum[0], 3.0e-16);
@@ -95,8 +93,11 @@ test_stiffness_matrix(
     // create reporting channel
     journal::info_t channel("test_stiffness_matrix");
 
+    // the number of nodes per element
+    constexpr int n_nodes = elementT::n_nodes;
+
     // create a {n_nodes}x{n_nodes} matrix to store the elementary stiffness matrix
-    auto elementary_stiffness_matrix = mito::tensor::matrix_t<elementT::n_nodes>();
+    auto elementary_stiffness_matrix = mito::tensor::matrix_t<n_nodes>();
 
     // loop on the quadrature points
     for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -105,25 +106,30 @@ test_stiffness_matrix(
         auto xi = quadrature_rule.point(q);
 
         // area of the cell
-        auto area = 0.5 * mito::tensor::determinant(element.jacobian(xi));
-
-        // evaluate the element shape functions gradients at {xi}
-        auto dphi = element.gradient(xi);
+        auto area = 0.5 * mito::tensor::determinant(element.jacobian()(xi));
 
         // precompute the common factor for integration
         auto factor = quadrature_rule.weight(q) * area;
 
-        // populate the mass matrix
-        for (const auto & [node_a, dphi_a] : dphi) {
+        // populate the stiffness matrix
+        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+            // get the a-th discretization node of the element
+            const auto & node_a = element.discretization_nodes()[a];
+            // evaluate the spatial gradient of the element's a-th shape function at {xi}
+            auto dphi_a = element.template gradient<a>()(xi);
             // get the equation number of {node_a}
             int i = equation_map.at(node_a);
-            for (const auto & [node_b, dphi_b] : dphi) {
+            mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                // get the b-th discretization node of the element
+                const auto & node_b = element.discretization_nodes()[b];
+                // evaluate the spatial gradient of the element's b-th shape function at {xi}
+                auto dphi_b = element.template gradient<b>()(xi);
                 // get the equation number of {node_b}
                 int j = equation_map.at(node_b);
                 // assemble the {node_a, node_b} contribution to the mass matrix
                 elementary_stiffness_matrix[{ i, j }] += factor * dphi_a * dphi_b;
-            }
-        }
+            });
+        });
     }
 
     // compute the error
@@ -146,8 +152,11 @@ test_mass_matrix(
     // create reporting channel
     journal::info_t channel("test_mass_matrix");
 
+    // the number of nodes per element
+    constexpr int n_nodes = elementT::n_nodes;
+
     // create a {n_nodes}x{n_nodes} matrix to store the elementary stiffness matrix
-    auto elementary_mass_matrix = mito::tensor::matrix_t<elementT::n_nodes>();
+    auto elementary_mass_matrix = mito::tensor::matrix_t<n_nodes>();
 
     // loop on the quadrature points
     for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -155,24 +164,29 @@ test_mass_matrix(
         // the barycentric coordinates of the quadrature point
         auto xi = quadrature_rule.point(q);
 
-        // evaluate the element shape functions at {xi}
-        auto phi = element.shape(xi);
-
         // area of the cell
         auto factor =
-            0.5 * mito::tensor::determinant(element.jacobian(xi)) * quadrature_rule.weight(q);
+            0.5 * mito::tensor::determinant(element.jacobian()(xi)) * quadrature_rule.weight(q);
 
         // populate the mass matrix
-        for (const auto & [node_a, phi_a] : phi) {
+        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+            // get the a-th discretization node of the element
+            const auto & node_a = element.discretization_nodes()[a];
+            // evaluate element's a-th shape function at {xi}
+            auto phi_a = element.template shape<a>()(xi);
             // get the equation number of {node_a}
             int i = equation_map.at(node_a);
-            for (const auto & [node_b, phi_b] : phi) {
+            mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                // get the b-th discretization node of the element
+                const auto & node_b = element.discretization_nodes()[b];
+                // evaluate element's b-th shape function at {xi}
+                auto phi_b = element.template shape<b>()(xi);
                 // get the equation number of {node_b}
                 int j = equation_map.at(node_b);
                 // assemble the {node_a, node_b} contribution to the mass matrix
                 elementary_mass_matrix[{ i, j }] += factor * phi_a * phi_b;
-            }
-        }
+            });
+        });
     }
 
     // compute the error

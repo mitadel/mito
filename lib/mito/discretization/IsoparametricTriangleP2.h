@@ -26,13 +26,6 @@ namespace mito::discretization {
             typename geometric_simplex_type::barycentric_coordinates_type;
 
       private:
-        // TOFIX: the number of entries in the map is known at complie time, so maybe we should pick
-        // another data structure
-        using evaluated_shape_functions_type = std::map<discretization_node_type, tensor::scalar_t>;
-        using evaluated_shape_functions_gradients_type =
-            std::map<discretization_node_type, tensor::vector_t<2>>;
-
-      private:
         // strip the namespace
         static constexpr auto xi_0 = xi_0;
         static constexpr auto xi_1 = xi_1;
@@ -86,66 +79,69 @@ namespace mito::discretization {
             return _discretization_nodes;
         }
 
-        // get all the shape functions evaluated at the point {xi} in barycentric coordinates
-        inline auto shape(const barycentric_coordinates_type & xi) const
-            -> evaluated_shape_functions_type
+        // get the shape function associated with local node {a}
+        template <int a>
+        requires(a >= 0 && a < n_nodes)
+        inline auto shape() const
         {
-            // the parametric coordinates of the quadrature point
-            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+            // assemble the shape function associated with local node {a} as a function of
+            // barycentric coordinates
+            auto shape_function = [](const barycentric_coordinates_type & xi) -> tensor::scalar_t {
+                // strip the third barycentric coordinate
+                auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+                // return the a-th shape function evaluated at {xi}
+                return std::get<a>(phi)(xi_p);
+            };
 
-            // return the shape functions evaluated at {xi}
-            return { { _discretization_nodes[0], std::get<0>(phi)(xi_p) },
-                     { _discretization_nodes[1], std::get<1>(phi)(xi_p) },
-                     { _discretization_nodes[2], std::get<2>(phi)(xi_p) },
-                     { _discretization_nodes[3], std::get<3>(phi)(xi_p) },
-                     { _discretization_nodes[4], std::get<4>(phi)(xi_p) },
-                     { _discretization_nodes[5], std::get<5>(phi)(xi_p) } };
+            // and return it
+            return shape_function;
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
-        inline auto jacobian(const barycentric_coordinates_type & xi) const
+        inline auto jacobian() const
         {
-            auto x3 = 0.5 * (_x0 + _x1);
-            auto x4 = 0.5 * (_x1 + _x2);
-            auto x5 = 0.5 * (_x2 + _x0);
+            // assemble the jacobian as a function of barycentric coordinates
+            auto jacobian_function =
+                [&](const barycentric_coordinates_type & xi) -> tensor::matrix_t<2> {
+                auto x3 = 0.5 * (_x0 + _x1);
+                auto x4 = 0.5 * (_x1 + _x2);
+                auto x5 = 0.5 * (_x2 + _x0);
 
-            // assemble the isoparametric mapping from the barycentric coordinates to the actual
-            // coordinates on the cell {cell}
-            auto x_cell =
-                _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2 + x3 * phi_3 + x4 * phi_4 + x5 * phi_5;
+                // assemble the isoparametric mapping from the barycentric coordinates to the actual
+                // coordinates on the cell {cell}
+                auto x_cell =
+                    _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2 + x3 * phi_3 + x4 * phi_4 + x5 * phi_5;
 
-            // the parametric coordinates of the quadrature point
-            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+                // strip the third barycentric coordinate
+                auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+                // compute the gradient of the isoparametric mapping
+                return fields::gradient(x_cell)(xi_p);
+            };
 
-            // compute the gradient of the isoparametric mapping
-            auto J = fields::gradient(x_cell)(xi_p);
-
-            // return the jacobian of the isoparametric mapping
-            return J;
+            // and return it
+            return jacobian_function;
         }
 
-        // get all the shape functions gradients evaluated at the point {xi} in barycentric
-        // coordinates
-        inline auto gradient(const barycentric_coordinates_type & xi) const
-            -> evaluated_shape_functions_gradients_type
+        // get the gradient of the a-th shape function as a function of barycentric coordinates
+        template <int a>
+        requires(a >= 0 && a < n_nodes)
+        inline auto gradient() const
         {
-            // the jacobian of the mapping from the reference element to the physical element
-            // evaluated at {xi}
-            auto J = jacobian(xi);
-
-            // the derivative of the coordinates with respect to the barycentric coordinates
-            auto J_inv = tensor::inverse(J);
-
-            // the parametric coordinates of the quadrature point
-            auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
-
-            // return the spatial gradients of the shape functions evaluated at {xi}
-            return { { _discretization_nodes[0], std::get<0>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[1], std::get<1>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[2], std::get<2>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[3], std::get<3>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[4], std::get<4>(dphi)(xi_p) * J_inv },
-                     { _discretization_nodes[5], std::get<5>(dphi)(xi_p) * J_inv } };
+            // assemble the gradient as a function of barycentric coordinates
+            auto gradient_function =
+                [&](const barycentric_coordinates_type & xi) -> tensor::vector_t<2> {
+                // the jacobian of the mapping from the reference element to the physical element
+                // evaluated at {xi}
+                auto J = jacobian()(xi);
+                // the derivative of the coordinates with respect to the barycentric coordinates
+                auto J_inv = tensor::inverse(J);
+                // strip the third barycentric coordinate
+                auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
+                // return the spatial gradients of the shape functions evaluated at {xi}
+                return std::get<a>(dphi)(xi_p) * J_inv;
+            };
+            // and return it
+            return gradient_function;
         }
 
       private:
