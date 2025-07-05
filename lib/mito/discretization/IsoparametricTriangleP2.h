@@ -87,10 +87,8 @@ namespace mito::discretization {
             // assemble the shape function associated with local node {a} as a function of
             // barycentric coordinates
             auto shape_function = [](const barycentric_coordinates_type & xi) -> tensor::scalar_t {
-                // strip the third barycentric coordinate
-                auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
                 // return the a-th shape function evaluated at {xi}
-                return std::get<a>(phi)(xi_p);
+                return std::get<a>(phi)({ xi[0], xi[1] });
             };
 
             // and return it
@@ -112,10 +110,8 @@ namespace mito::discretization {
                 auto x_cell =
                     _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2 + x3 * phi_3 + x4 * phi_4 + x5 * phi_5;
 
-                // strip the third barycentric coordinate
-                auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
                 // compute the gradient of the isoparametric mapping
-                return fields::gradient(x_cell)(xi_p);
+                return fields::gradient(x_cell)({ xi[0], xi[1] });
             };
 
             // and return it
@@ -135,10 +131,8 @@ namespace mito::discretization {
                 auto J = jacobian()(xi);
                 // the derivative of the coordinates with respect to the barycentric coordinates
                 auto J_inv = tensor::inverse(J);
-                // strip the third barycentric coordinate
-                auto xi_p = parametric_coordinates_type{ xi[0], xi[1] };
                 // return the spatial gradients of the shape functions evaluated at {xi}
-                return std::get<a>(dphi)(xi_p) * J_inv;
+                return std::get<a>(dphi)({ xi[0], xi[1] }) * J_inv;
             };
             // and return it
             return gradient_function;
