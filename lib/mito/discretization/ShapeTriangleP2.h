@@ -11,11 +11,9 @@ namespace mito::discretization {
 
     class ShapeTriangleP2 {
 
-      private:
+      public:
         // the reference element
         using reference_element_type = ReferenceTriangle;
-
-      public:
         // the number of shape functions
         static constexpr int N = 6;
 
