@@ -42,16 +42,6 @@ namespace mito::discretization {
         return point_field_t<cloudT::dim, Y>(cloud.points(), name);
     }
 
-    // TOFIX: {constraints} should be a collection of constraints as opposed to an instance of a
-    // single constraint
-    // function space factory
-    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
-    constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints)
-    {
-        // build a function space on the manifold and return it
-        return function_space_t<p, manifoldT, constraintsT>(manifold, constraints);
-    }
-
     // discrete system factory
     template <class functionSpaceT>
     constexpr auto discrete_system(const functionSpaceT & function_space)

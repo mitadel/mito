@@ -17,19 +17,14 @@
 #include "api.h"
 
 // classes implementation
-#include "ReferenceTriangle.h"
-#include "ShapeTriangleP1.h"
-#include "ShapeTriangleP2.h"
 #include "DiscreteField.h"
 #include "DiscretizationNode.h"
-#include "isoparametric_simplex_library.h"
-#include "FunctionSpace.h"
 #include "DiscreteSystem.h"
+
+// finite elements implementation
+#include "fem.h"
 
 // factories implementation
 #include "factories.h"
-
-// utilities implementation
-#include "utilities.h"
 
 // end of file

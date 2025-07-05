@@ -9,9 +9,6 @@
 
 namespace mito::discretization {
 
-    // discretization node alias
-    using discretization_node_t = utilities::std_shared_ptr<const DiscretizationNode>;
-
     // nodal field
     template <int D, class Y>
     using nodal_field_t = DiscreteField<geometry::node_t<D>, Y>;
@@ -35,14 +32,6 @@ namespace mito::discretization {
     // point field factory
     template <class Y, geometry::point_cloud_c cloudT>
     constexpr auto point_field(const cloudT & cloud, std::string name);
-
-    // function space alias
-    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
-    using function_space_t = FunctionSpace<p, manifoldT, constraintsT>;
-
-    // function space factory
-    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
-    constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints);
 
     // discrete system alias
     template <class functionSpaceT>
