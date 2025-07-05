@@ -7,74 +7,30 @@
 #include <mito.h>
 
 
-// the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-// the type of coordinate system
-using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
-// the type of discretization node
-using discretization_node_t = mito::discretization::discretization_node_t;
-// the type of cell
-using cell_t = mito::geometry::triangle_t<2>;
-// second order isoparametric triangle
-using element_t = mito::discretization::isoparametric_simplex<2, cell_t>::type;
-// the barycentric coordinates type
-using barycentric_coordinates_t = typename element_t::barycentric_coordinates_type;
+// second order shape functions type
+using shape_t = mito::discretization::ShapeTriangleP2;
+// the parametric coordinates type
+using parametric_coordinates_t = shape_t::reference_element_type::parametric_coordinates_type;
 
 
-TEST(Fem, IsoparametricTriangleP2)
+TEST(Fem, ShapeTriangleP2)
 {
-    /**
-     * The reference triangle in barycentric coordinates:
-                (0,0,1)
-                  2
-            xi_2  +
-                  | .
-                  |   .
-                  |     .
- (1/2, 0, 1/2)  5 +       + 4 (0, 1/2, 1/2)
-                  |         .
-                  |           .
-                  |             .
-                  +-------+-------+ xi_1
-                  0       3       1
-            (1,0,0)   (1/2, 1/2, 0)   (0,1,0)
-    */
 
-    // the coordinate system
-    auto coord_system = coord_system_t();
-
-    // build nodes
-    auto v0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
-    auto v1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
-    auto v2 = mito::geometry::node(coord_system, { 1.0, 1.0 });
-
-    // make a geometric simplex
-    auto geometric_simplex = mito::geometry::triangle<2>({ v0, v1, v2 });
-
-    // build the discretization nodes
-    auto node_0 = discretization_node_t();
-    auto node_1 = discretization_node_t();
-    auto node_2 = discretization_node_t();
-    auto node_3 = discretization_node_t();
-    auto node_4 = discretization_node_t();
-    auto node_5 = discretization_node_t();
-
-    // a finite element
-    auto element = element_t(
-        geometric_simplex, coord_system, { node_0, node_1, node_2, node_3, node_4, node_5 });
+    // second order shape functions
+    auto element = shape_t();
 
     // node 0 in barycentric coordinates
-    auto n0 = barycentric_coordinates_t{ 1.0, 0.0, 0.0 };
+    auto n0 = parametric_coordinates_t{ 1.0, 0.0 };
     // node 1 in barycentric coordinates
-    auto n1 = barycentric_coordinates_t{ 0.0, 1.0, 0.0 };
+    auto n1 = parametric_coordinates_t{ 0.0, 1.0 };
     // node 2 in barycentric coordinates
-    auto n2 = barycentric_coordinates_t{ 0.0, 0.0, 1.0 };
+    auto n2 = parametric_coordinates_t{ 0.0, 0.0 };
     // node 3 in barycentric coordinates
-    auto n3 = barycentric_coordinates_t{ 0.5, 0.5, 0.0 };
+    auto n3 = parametric_coordinates_t{ 0.5, 0.5 };
     // node 4 in barycentric coordinates
-    auto n4 = barycentric_coordinates_t{ 0.0, 0.5, 0.5 };
+    auto n4 = parametric_coordinates_t{ 0.0, 0.5 };
     // node 5 in barycentric coordinates
-    auto n5 = barycentric_coordinates_t{ 0.5, 0.0, 0.5 };
+    auto n5 = parametric_coordinates_t{ 0.5, 0.0 };
 
     // the shape functions at node 0
     auto phi_0 = element.shape<0>();
