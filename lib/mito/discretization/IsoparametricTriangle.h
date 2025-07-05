@@ -17,10 +17,13 @@ namespace mito::discretization {
       public:
         // the discretization node type
         using discretization_node_type = discretization_node_t;
-
-      protected:
         // the geometric simplex type
         using geometric_simplex_type = geometry::triangle_t<2>;
+        // type of a point in barycentric coordinates
+        using barycentric_coordinates_type =
+            typename geometric_simplex_type::barycentric_coordinates_type;
+
+      protected:
         // cartesian coordinates in 2D
         using coordinates_type = geometry::coordinates_t<2, geometry::CARTESIAN>;
         // the coordinate system type

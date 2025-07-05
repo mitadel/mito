@@ -25,9 +25,6 @@ namespace mito::discretization {
         static constexpr int n_nodes = shape_functions_type::N;
         // a collection of discretization nodes
         using discretization_nodes_type = std::array<discretization_node_type, n_nodes>;
-        // type of a point in barycentric coordinates
-        using barycentric_coordinates_type =
-            typename geometric_simplex_type::barycentric_coordinates_type;
 
       public:
         // the default constructor
