@@ -7,9 +7,8 @@
 #pragma once
 
 
-#include "IsoparametricTriangle.h"
-#include "IsoparametricTriangleP1.h"
-#include "IsoparametricTriangleP2.h"
+#include "tri1/public.h"
+#include "tri2/public.h"
 
 
 namespace mito::discretization {
