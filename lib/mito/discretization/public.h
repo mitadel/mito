@@ -17,6 +17,9 @@
 #include "api.h"
 
 // classes implementation
+#include "ReferenceTriangle.h"
+#include "ShapeTriangleP1.h"
+#include "ShapeTriangleP2.h"
 #include "DiscreteField.h"
 #include "DiscretizationNode.h"
 #include "isoparametric_simplex_library.h"

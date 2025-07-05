@@ -17,35 +17,17 @@ namespace mito::discretization {
     class IsoparametricTriangleP2 : public IsoparametricTriangle {
 
       public:
+        // the type of shape functions
+        using shape_functions_type = ShapeTriangleP2;
+        // the linear shape functions
+        static constexpr auto shape_functions = shape_functions_type();
         // the number of discretization nodes
-        static constexpr int n_nodes = 6;
+        static constexpr int n_nodes = shape_functions_type::N;
         // a collection of discretization nodes
         using discretization_nodes_type = std::array<discretization_node_type, n_nodes>;
         // type of a point in barycentric coordinates
         using barycentric_coordinates_type =
             typename geometric_simplex_type::barycentric_coordinates_type;
-
-      private:
-        // strip the namespace
-        static constexpr auto xi_0 = xi_0;
-        static constexpr auto xi_1 = xi_1;
-        static constexpr auto xi_2 = xi_2;
-
-        // quadratic shape functions on the triangle
-        static constexpr auto phi_3 = 4.0 * xi_0 * xi_1;
-        static constexpr auto phi_4 = 4.0 * xi_1 * xi_2;
-        static constexpr auto phi_5 = 4.0 * xi_0 * xi_2;
-        static constexpr auto phi_0 = xi_0 - 0.5 * phi_5 - 0.5 * phi_3;
-        static constexpr auto phi_1 = xi_1 - 0.5 * phi_3 - 0.5 * phi_4;
-        static constexpr auto phi_2 = xi_2 - 0.5 * phi_5 - 0.5 * phi_4;
-
-        // the shape functions
-        static constexpr auto phi = std::make_tuple(phi_0, phi_1, phi_2, phi_3, phi_4, phi_5);
-
-        // the gradients of the shape functions
-        static constexpr auto dphi = std::make_tuple(
-            fields::gradient(phi_0), fields::gradient(phi_1), fields::gradient(phi_2),
-            fields::gradient(phi_3), fields::gradient(phi_4), fields::gradient(phi_5));
 
       public:
         // the default constructor
@@ -88,7 +70,7 @@ namespace mito::discretization {
             // barycentric coordinates
             auto shape_function = [](const barycentric_coordinates_type & xi) -> tensor::scalar_t {
                 // return the a-th shape function evaluated at {xi}
-                return std::get<a>(phi)({ xi[0], xi[1] });
+                return shape_functions.shape<a>()({ xi[0], xi[1] });
             };
 
             // and return it
@@ -104,12 +86,17 @@ namespace mito::discretization {
                 auto x3 = 0.5 * (_x0 + _x1);
                 auto x4 = 0.5 * (_x1 + _x2);
                 auto x5 = 0.5 * (_x2 + _x0);
-
+                // get the shape functions
+                auto phi_0 = shape_functions.shape<0>();
+                auto phi_1 = shape_functions.shape<1>();
+                auto phi_2 = shape_functions.shape<2>();
+                auto phi_3 = shape_functions.shape<3>();
+                auto phi_4 = shape_functions.shape<4>();
+                auto phi_5 = shape_functions.shape<5>();
                 // assemble the isoparametric mapping from the barycentric coordinates to the actual
                 // coordinates on the cell {cell}
                 auto x_cell =
                     _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2 + x3 * phi_3 + x4 * phi_4 + x5 * phi_5;
-
                 // compute the gradient of the isoparametric mapping
                 return fields::gradient(x_cell)({ xi[0], xi[1] });
             };
@@ -132,7 +119,7 @@ namespace mito::discretization {
                 // the derivative of the coordinates with respect to the barycentric coordinates
                 auto J_inv = tensor::inverse(J);
                 // return the spatial gradients of the shape functions evaluated at {xi}
-                return std::get<a>(dphi)({ xi[0], xi[1] }) * J_inv;
+                return shape_functions.dshape<a>()({ xi[0], xi[1] }) * J_inv;
             };
             // and return it
             return gradient_function;
