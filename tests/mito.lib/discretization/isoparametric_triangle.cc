@@ -114,14 +114,14 @@ test_stiffness_matrix(
         // populate the stiffness matrix
         mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
             // get the a-th discretization node of the element
-            const auto & node_a = element.discretization_nodes()[a];
+            const auto & node_a = element.connectivity()[a];
             // evaluate the spatial gradient of the element's a-th shape function at {xi}
             auto dphi_a = element.template gradient<a>()(xi);
             // get the equation number of {node_a}
             int i = equation_map.at(node_a);
             mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
                 // get the b-th discretization node of the element
-                const auto & node_b = element.discretization_nodes()[b];
+                const auto & node_b = element.connectivity()[b];
                 // evaluate the spatial gradient of the element's b-th shape function at {xi}
                 auto dphi_b = element.template gradient<b>()(xi);
                 // get the equation number of {node_b}
@@ -171,14 +171,14 @@ test_mass_matrix(
         // populate the mass matrix
         mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
             // get the a-th discretization node of the element
-            const auto & node_a = element.discretization_nodes()[a];
+            const auto & node_a = element.connectivity()[a];
             // evaluate element's a-th shape function at {xi}
             auto phi_a = element.template shape<a>()(xi);
             // get the equation number of {node_a}
             int i = equation_map.at(node_a);
             mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
                 // get the b-th discretization node of the element
-                const auto & node_b = element.discretization_nodes()[b];
+                const auto & node_b = element.connectivity()[b];
                 // evaluate element's b-th shape function at {xi}
                 auto phi_b = element.template shape<b>()(xi);
                 // get the equation number of {node_b}

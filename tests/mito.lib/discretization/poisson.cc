@@ -99,7 +99,7 @@ TEST(Fem, PoissonSquare)
             // populate the linear system of equations
             mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
                 // get the a-th discretization node of the element
-                const auto & node_a = element.discretization_nodes()[a];
+                const auto & node_a = element.connectivity()[a];
                 // evaluate the spatial gradient of the element's a-th shape function at {xi}
                 auto dphi_a = element.gradient<a>()(xi);
                 // get the equation number of {node_a}
@@ -108,7 +108,7 @@ TEST(Fem, PoissonSquare)
                 if (eq_a != -1) {
                     mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
                         // get the b-th discretization node of the element
-                        const auto & node_b = element.discretization_nodes()[b];
+                        const auto & node_b = element.connectivity()[b];
                         // evaluate the spatial gradient of the element's b-th shape
                         // function at {xi}
                         auto dphi_b = element.gradient<b>()(xi);
@@ -133,7 +133,7 @@ TEST(Fem, PoissonSquare)
             // populate the right hand side
             mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
                 // get the a-th discretization node of the element
-                const auto & node_a = element.discretization_nodes()[a];
+                const auto & node_a = element.connectivity()[a];
                 // evaluate the a-th shape function at {xi}
                 auto phi_a = element.shape<a>()(xi);
 
@@ -234,7 +234,7 @@ TEST(Fem, PoissonSquare)
             // loop on all the shape functions
             mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
                 // get the a-th discretization node of the element
-                const auto & node_a = element.discretization_nodes()[a];
+                const auto & node_a = element.connectivity()[a];
                 // evaluate the a-th shape function at {xi}
                 auto phi_a = element.shape<a>()(xi);
                 // get the equation number of {node_a}

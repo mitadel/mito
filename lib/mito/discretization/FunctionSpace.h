@@ -36,7 +36,7 @@ namespace mito::discretization {
         // the discretization node type
         using discretization_node_type = typename element_type::discretization_node_type;
         // the nodes type
-        using discretization_nodes_type = typename element_type::discretization_nodes_type;
+        using connectivity_type = typename element_type::connectivity_type;
         // the constrained nodes type
         using constrained_nodes_type = std::set<discretization_node_type>;
 
@@ -80,7 +80,7 @@ namespace mito::discretization {
 
                     // create a finite element for each cell and add it to the pile
                     _elements.emplace(
-                        cell, coord_system, discretization_nodes_type{ node_0, node_1, node_2 });
+                        cell, coord_system, connectivity_type{ node_0, node_1, node_2 });
                 }
 
                 // populate the constrained nodes
@@ -146,8 +146,7 @@ namespace mito::discretization {
                     // create a finite element for each cell and add it to the pile
                     _elements.emplace(
                         cell, coord_system,
-                        discretization_nodes_type{ node_0, node_1, node_2, node_3, node_4,
-                                                   node_5 });
+                        connectivity_type{ node_0, node_1, node_2, node_3, node_4, node_5 });
                 }
 
                 // populate the constrained nodes

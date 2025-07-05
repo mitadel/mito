@@ -24,16 +24,15 @@ namespace mito::discretization {
         // the number of discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
         // a collection of discretization nodes
-        using discretization_nodes_type = std::array<discretization_node_type, n_nodes>;
+        using connectivity_type = std::array<discretization_node_type, n_nodes>;
 
       public:
         // the default constructor
         inline IsoparametricTriangleP2(
             const geometric_simplex_type & geometric_simplex,
-            const coordinate_system_type & coord_system,
-            const discretization_nodes_type & discretization_nodes) :
+            const coordinate_system_type & coord_system, const connectivity_type & connectivity) :
             IsoparametricTriangle(geometric_simplex, coord_system),
-            _discretization_nodes(discretization_nodes)
+            _connectivity(connectivity)
         {}
 
         // destructor
@@ -53,9 +52,9 @@ namespace mito::discretization {
 
       public:
         // get the discretization nodes
-        inline auto discretization_nodes() const noexcept -> const discretization_nodes_type &
+        inline auto connectivity() const noexcept -> const connectivity_type &
         {
-            return _discretization_nodes;
+            return _connectivity;
         }
 
         // get the shape function associated with local node {a}
@@ -124,7 +123,7 @@ namespace mito::discretization {
 
       private:
         // the discretization nodes of the simplex
-        const discretization_nodes_type _discretization_nodes;
+        const connectivity_type _connectivity;
     };
 
 }    // namespace mito

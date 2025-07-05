@@ -14,7 +14,7 @@ namespace mito::discretization {
     inline auto get_nodes(const functionSpaceT & function_space, nodesCollectionT & nodes) -> void
     {
         for (const auto & element : function_space.elements()) {
-            for (const auto & node : element.discretization_nodes()) {
+            for (const auto & node : element.connectivity()) {
                 nodes.insert(node);
             }
         }
