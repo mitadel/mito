@@ -190,8 +190,8 @@ TEST(Fem, PoissonSquare)
 
     // the exact solution nodal field on the mesh
     auto exact_solution = mito::discretization::nodal_field<scalar_t>(mesh, "exact solution");
-    auto u_ex =
-        mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
+    auto u_ex = mito::fields::field(
+        mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y));
     // fill information in nodal field
     for (auto & [node, value] : exact_solution) {
         // get the position of {node}
@@ -213,7 +213,7 @@ TEST(Fem, PoissonSquare)
     writer.write();
 #endif
 
-    // compute the error
+    // compute the L2 error
     auto error_L2 = 0.0;
     // loop on all the cells of the mesh
     for (const auto & element : function_space.elements()) {
@@ -257,7 +257,48 @@ TEST(Fem, PoissonSquare)
     // check that the l2 error is reasonable
     EXPECT_TRUE(error_L2 < 0.02);
 
-    // TODO: add norm calculation for convergence study
+    // compute the H1 error
+    auto error_H1 = 0.0;
+    // loop on all the cells of the mesh
+    for (const auto & element : function_space.elements()) {
+        // get the corresponding cell
+        const auto & cell = element.geometric_simplex();
+        // volume of the cell
+        auto volume = manifold.volume(cell);
+        for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
+            // the barycentric coordinates of the quadrature point
+            auto xi = quadrature_rule.point(q);
+            // the coordinates of the quadrature point
+            auto coord = manifold.parametrization(cell, xi);
+            // exact solution gradient at {coord}
+            auto grad_u_exact = mito::fields::gradient(u_ex)(coord);
+            // assemble the numerical solution gradient at {coord}
+            auto grad_u_numerical = mito::tensor::vector_t<2>{ 0.0, 0.0 };
+            // loop on all the shape functions
+            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.connectivity()[a];
+                // evaluate the a-th shape function gradient at {xi}
+                auto dphi_a = element.gradient<a>()(xi);
+                // get the equation number of {node_a}
+                int eq = equation_map.at(node_a);
+                if (eq != -1) {
+                    // get the numerical solution gradient at {coord}
+                    grad_u_numerical += u[eq] * dphi_a;
+                }
+            });
+            // get the error
+            auto diff = grad_u_exact - grad_u_numerical;
+            error_H1 += mito::tensor::dot(diff, diff) * quadrature_rule.weight(q) * volume;
+        }
+    }
+    error_H1 = std::sqrt(error_H1);
+
+    // report
+    channel << "H1 error: " << error_H1 << journal::endl;
+
+    // check that the h1 error is reasonable
+    EXPECT_TRUE(error_H1 < 0.02);
 }
 
 // end of file
