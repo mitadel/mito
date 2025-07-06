@@ -11,9 +11,17 @@
 
 class Resource : public mito::utilities::Shareable {
   public:
-    Resource(int a) : _a(a) { std::cout << "Built resource " << _a << std::endl; }
+    Resource(int a) : _a(a)
+    {
+        journal::info_t channel("tests.resource");
+        channel << "Built resource " << _a << journal::endl;
+    }
 
-    ~Resource() { std::cout << "Destroying resource " << _a << std::endl; }
+    ~Resource()
+    {
+        journal::info_t channel("tests.~resource");
+        channel << "Destroying resource " << _a << journal::endl;
+    }
 
     int _a;
 };
