@@ -79,7 +79,7 @@ if(MITO_BUILD_TESTING)
     include(mito_tests_mito_lib)
 
     # add the mito extensions testsuite to the pile
-    # include(mito_tests_mito_ext) #TOFIX
+    include(mito_tests_mito_ext)
 endif()
 
 # if we are building the benchmarks
