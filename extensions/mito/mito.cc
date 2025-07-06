@@ -72,7 +72,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar field 2D
-    using scalar_function_2D_t = std::function<mito::tensor::scalar_t(coordinates_2D_t)>;
+    using scalar_function_2D_t = std::function<mito::tensor::scalar_t(const coordinates_2D_t &)>;
     using scalar_function_functor_2D_t = mito::functions::FunctionFromFunctor<scalar_function_2D_t>;
     using scalar_field_2D_t =
         decltype(mito::fields::field(std::declval<scalar_function_functor_2D_t>()));
@@ -89,7 +89,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito scalar field 3D
-    using scalar_function_3D_t = std::function<mito::tensor::scalar_t(coordinates_3D_t)>;
+    using scalar_function_3D_t = std::function<mito::tensor::scalar_t(const coordinates_3D_t &)>;
     using scalar_function_functor_3D_t = mito::functions::FunctionFromFunctor<scalar_function_3D_t>;
     using scalar_field_3D_t =
         decltype(mito::fields::field(std::declval<scalar_function_functor_3D_t>()));
