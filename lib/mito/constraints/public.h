@@ -17,6 +17,7 @@
 #include "api.h"
 
 // classes implementation
+#include "Constraint.h"
 #include "Dirichlet.h"
 
 // factories implementation

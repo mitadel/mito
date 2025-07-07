@@ -13,7 +13,7 @@ namespace mito::constraints {
 
     // class Dirichlet boundary condition
     template <class meshT, fields::field_c fieldT>
-    class Dirichlet {
+    class Dirichlet : Constraint {
         // types
       public:
         using domain_type = meshT;
