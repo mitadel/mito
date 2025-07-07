@@ -25,8 +25,6 @@ namespace mito::discretization {
         using cell_type = typename mesh_type::cell_type;
         // the mesh node type
         using mesh_node_type = typename cell_type::node_type;
-        // the coordinate system type
-        using coord_system_type = typename manifold_type::coordinate_system_type;
         // the degree of the finite element
         static constexpr int degree = p;
         // typedef for a finite element
