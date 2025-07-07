@@ -55,7 +55,7 @@ namespace mito::discretization {
 
             // get all the nodes in the function space
             std::set<node_type> nodes;
-            get_nodes(_function_space, nodes);
+            get_discretization_nodes(_function_space, nodes);
             channel << "Number of nodes: " << std::size(nodes) << journal::endl;
 
             // get the constrained nodes in the function space
