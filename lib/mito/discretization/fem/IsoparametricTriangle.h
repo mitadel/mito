@@ -8,7 +8,7 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangle} represents a second order simplex equipped parametric coordinates.
+// Class {IsoparametricTriangle} represents a second order simplex equipped barycentric coordinates.
 
 
 namespace mito::discretization {

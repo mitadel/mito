@@ -19,17 +19,17 @@ TEST(Fem, ShapeTriangleP2)
     // second order shape functions
     auto element = shape_t();
 
-    // node 0 in barycentric coordinates
+    // node 0 in parametric coordinates
     auto n0 = parametric_coordinates_t{ 1.0, 0.0 };
-    // node 1 in barycentric coordinates
+    // node 1 in parametric coordinates
     auto n1 = parametric_coordinates_t{ 0.0, 1.0 };
-    // node 2 in barycentric coordinates
+    // node 2 in parametric coordinates
     auto n2 = parametric_coordinates_t{ 0.0, 0.0 };
-    // node 3 in barycentric coordinates
+    // node 3 in parametric coordinates
     auto n3 = parametric_coordinates_t{ 0.5, 0.5 };
-    // node 4 in barycentric coordinates
+    // node 4 in parametric coordinates
     auto n4 = parametric_coordinates_t{ 0.0, 0.5 };
-    // node 5 in barycentric coordinates
+    // node 5 in parametric coordinates
     auto n5 = parametric_coordinates_t{ 0.5, 0.0 };
 
     // the shape functions at node 0
