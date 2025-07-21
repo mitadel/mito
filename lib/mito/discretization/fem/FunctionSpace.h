@@ -11,26 +11,23 @@ namespace mito::discretization {
 
     // Class {FunctionSpace} represents a collection of finite elements of order {p} defined on a
     // manifold and subjected to a set of constraints.
-    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    // TOFIX: add concept for element type
+    template <class elementT, constraints::constraint_c constraintsT>
     class FunctionSpace {
 
       public:
-        // the manifold type
-        using manifold_type = manifoldT;
         // the constraints type
         using constraints_type = constraintsT;
-        // the mesh type
-        using mesh_type = typename manifold_type::mesh_type;
-        // the cell type
-        using cell_type = typename mesh_type::cell_type;
-        // the mesh node type
-        using mesh_node_type = typename cell_type::node_type;
-        // the degree of the finite element
-        static constexpr int degree = p;
-        // typedef for a finite element
-        using element_type = typename isoparametric_simplex<degree, cell_type>::type;
+        // my template parameter, the finite element type
+        using element_type = elementT;
         // typedef for a collection of finite elements
         using elements_type = utilities::segmented_vector_t<element_type>;
+        // the degree of the finite element
+        static constexpr int degree = element_type::degree;
+        // the dimension of the physical space
+        static constexpr int dim = element_type::dim;
+        // assemble the mesh node type
+        using mesh_node_type = geometry::node_t<dim>;
         // the discretization node type
         using discretization_node_type = typename element_type::discretization_node_type;
         // the nodes type
@@ -46,8 +43,12 @@ namespace mito::discretization {
 
       public:
         // the constructor
-        constexpr FunctionSpace(
-            const manifold_type & manifold, const constraints_type & constraints) :
+        template <manifolds::manifold_c manifoldT>
+        // require compatibility between the manifold cell and the finite element cell
+        requires(std::is_same_v<
+                    typename manifoldT::mesh_type::cell_type,
+                    typename element_type::geometric_simplex_type>)
+        constexpr FunctionSpace(const manifoldT & manifold, const constraints_type & constraints) :
             _elements(100),
             _constraints(constraints),
             _node_map()

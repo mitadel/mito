@@ -13,7 +13,7 @@ namespace mito::discretization {
     class DiscretizationNode;
 
     // class function space
-    template <int p, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    template <class elementT, constraints::constraint_c constraintsT>
     class FunctionSpace;
 }
 
