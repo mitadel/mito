@@ -29,6 +29,92 @@ constexpr auto x = mito::functions::component<coordinates_t, 0>;
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
 
+auto
+fem_grad_grad_block(const auto & element, const auto & quadrature_rule) -> auto
+{
+    // the number of nodes per element
+    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
+
+    // the number of quadrature points per element
+    constexpr int n_quads = mito::utilities::base_type<decltype(quadrature_rule)>::npoints;
+
+    // a mito matrix type for the elementary matrix
+    using matrix_type = mito::tensor::matrix_t<n_nodes>;
+    matrix_type elementary_grad_grad;
+
+    // loop on the quadrature points
+    for (int q = 0; q < n_quads; ++q) {
+
+        // the barycentric coordinates of the quadrature point
+        /*constexpr*/ auto xi = quadrature_rule.point(q);
+
+        // precompute the common factor
+        auto factor = quadrature_rule.weight(q) * mito::tensor::determinant(element.jacobian()(xi));
+
+        // loop on the nodes of the element
+        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+            // evaluate the spatial gradient of the element's a-th shape function at {xi}
+            auto dphi_a = element.template gradient<a>()(xi);
+            // loop on the nodes of the element
+            mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                // evaluate the spatial gradient of the element's b-th shape
+                // function at {xi}
+                auto dphi_b = element.template gradient<b>()(xi);
+                // populate the elementary contribution to the matrix
+                elementary_grad_grad[{ a, b }] += factor * dphi_a * dphi_b;
+            });
+        });
+    }
+
+    // all done
+    return elementary_grad_grad;
+}
+
+auto
+fem_rhs_block(
+    const auto & element, const auto & quadrature_rule, const auto & function,
+    const auto & manifold /*TOFIX: do we really need the manifold?*/) -> auto
+{
+    // the number of nodes per element
+    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
+
+    // the number of quadrature points per element
+    constexpr int n_quads = mito::utilities::base_type<decltype(quadrature_rule)>::npoints;
+
+    // a mito vector type for the elementary rhs
+    using vector_type = mito::tensor::vector_t<n_nodes>;
+    vector_type elementary_rhs;
+
+    // loop on the quadrature points
+    for (int q = 0; q < n_quads; ++q) {
+
+        // the barycentric coordinates of the quadrature point
+        /*constexpr*/ auto xi = quadrature_rule.point(q);
+
+        // QUESTION: is accessing the geometric simplex really needed?
+        // get the corresponding cell
+        const auto & cell = element.geometric_simplex();
+
+        // the coordinates of the quadrature point
+        auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
+
+        // precompute the common factor
+        auto factor = quadrature_rule.weight(q) * mito::tensor::determinant(element.jacobian()(xi));
+
+        // loop on the nodes of the element
+        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+            // evaluate the a-th shape function at {xi}
+            auto phi_a = element.template shape<a>()(xi);
+            // populate the elementary contribution to the rhs
+            elementary_rhs[{ a }] += factor * function(coord) * phi_a;
+        });
+    }
+
+    // all done
+    return elementary_rhs;
+}
+
+
 TEST(Fem, PoissonSquare)
 {
     // make a channel
@@ -83,73 +169,48 @@ TEST(Fem, PoissonSquare)
     // loop on all the cells of the mesh
     for (const auto & element : function_space.elements()) {
 
-        // QUESTION: is accessing the geometric simplex really needed?
-        // get the corresponding cell
-        const auto & cell = element.geometric_simplex();
+        // assemble the elementary stiffness matrix
+        auto elementary_stiffness_matrix = fem_grad_grad_block(element, quadrature_rule);
 
-        // loop on the quadrature points
-        for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
-
-            // the barycentric coordinates of the quadrature point
-            /*constexpr*/ auto xi = quadrature_rule.point(q);
-
-            // precompute the common factor
-            auto factor = quadrature_rule.weight(q) * manifold.volume(cell);
-
-            // populate the linear system of equations
-            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                // get the a-th discretization node of the element
-                const auto & node_a = element.connectivity()[a];
-                // evaluate the spatial gradient of the element's a-th shape function at {xi}
-                auto dphi_a = element.gradient<a>()(xi);
-                // get the equation number of {node_a}
-                int eq_a = equation_map.at(node_a);
-                assert(eq_a < N_equations);
-                if (eq_a != -1) {
-                    mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
-                        // get the b-th discretization node of the element
-                        const auto & node_b = element.connectivity()[b];
-                        // evaluate the spatial gradient of the element's b-th shape
-                        // function at {xi}
-                        auto dphi_b = element.gradient<b>()(xi);
-                        // get the equation number of {node_b}
-                        int eq_b = equation_map.at(node_b);
-                        assert(eq_b < N_equations);
-                        // compute the entry of the stiffness matrix
-                        auto entry = 0.0;
-                        // non boundary nodes
-                        if (eq_b != -1) {
-                            entry = factor * dphi_a * dphi_b;
-                        }
+        // populate the linear system of equations
+        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+            // get the a-th discretization node of the element
+            const auto & node_a = element.connectivity()[a];
+            // get the equation number of {node_a}
+            int eq_a = equation_map.at(node_a);
+            assert(eq_a < N_equations);
+            if (eq_a != -1) {
+                mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                    // get the b-th discretization node of the element
+                    const auto & node_b = element.connectivity()[b];
+                    // get the equation number of {node_b}
+                    int eq_b = equation_map.at(node_b);
+                    assert(eq_b < N_equations);
+                    // non boundary nodes
+                    if (eq_b != -1) {
                         // assemble the value in the stiffness matrix
-                        solver.add_matrix_value(eq_a, eq_b, entry);
-                    });
-                }
-            });
+                        solver.add_matrix_value(eq_a, eq_b, elementary_stiffness_matrix[{ a, b }]);
+                    }
+                });
+            }
+        });
 
-            // the coordinates of the quadrature point
-            auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
+        // assemble the elementary right hand side
+        auto elementary_rhs = fem_rhs_block(element, quadrature_rule, f, manifold);
 
-            // populate the right hand side
-            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                // get the a-th discretization node of the element
-                const auto & node_a = element.connectivity()[a];
-                // evaluate the a-th shape function at {xi}
-                auto phi_a = element.shape<a>()(xi);
-
-                // get the equation number of {node_a}
-                int eq_a = equation_map.at(node_a);
-                assert(eq_a < N_equations);
-                // compute the entry of the right hand side
-                auto entry = 0.0;
-                // non boundary nodes
-                if (eq_a != -1) {
-                    entry = factor * f(coord) * phi_a;
-                }
+        // populate the right hand side
+        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+            // get the a-th discretization node of the element
+            const auto & node_a = element.connectivity()[a];
+            // get the equation number of {node_a}
+            int eq_a = equation_map.at(node_a);
+            assert(eq_a < N_equations);
+            // non boundary nodes
+            if (eq_a != -1) {
                 // assemble the value in the right hand side
-                solver.add_rhs_value(eq_a, entry);
-            });
-        }
+                solver.add_rhs_value(eq_a, elementary_rhs[{ a }]);
+            }
+        });
     }
 
     solver.solve();
