@@ -15,10 +15,12 @@ namespace mito::discretization {
 
     class IsoparametricTriangle : public utilities::Invalidatable {
       public:
+        // the dimension of the physical space
+        static constexpr int dim = 2;
         // the discretization node type
         using discretization_node_type = discretization_node_t;
         // the geometric simplex type
-        using geometric_simplex_type = geometry::triangle_t<2>;
+        using geometric_simplex_type = geometry::triangle_t<dim>;
         // type of a point in barycentric coordinates
         using barycentric_coordinates_type =
             typename geometric_simplex_type::barycentric_coordinates_type;
