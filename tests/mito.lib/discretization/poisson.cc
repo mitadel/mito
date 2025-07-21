@@ -56,8 +56,7 @@ fem_grad_grad_block(const auto & element, const auto & quadrature_rule) -> auto
             auto dphi_a = element.template gradient<a>()(xi);
             // loop on the nodes of the element
             mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
-                // evaluate the spatial gradient of the element's b-th shape
-                // function at {xi}
+                // evaluate the spatial gradient of the element's b-th shape function at {xi}
                 auto dphi_b = element.template gradient<b>()(xi);
                 // populate the elementary contribution to the matrix
                 elementary_grad_grad[{ a, b }] += factor * dphi_a * dphi_b;
