@@ -43,10 +43,9 @@ fem_grad_grad_block(const auto & element, const auto & quadrature_rule) -> auto
     matrix_type elementary_grad_grad;
 
     // loop on the quadrature points
-    for (int q = 0; q < n_quads; ++q) {
-
+    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         // the barycentric coordinates of the quadrature point
-        /*constexpr*/ auto xi = quadrature_rule.point(q);
+        constexpr auto xi = quadrature_rule.point(q);
 
         // precompute the common factor
         auto factor = quadrature_rule.weight(q) * mito::tensor::determinant(element.jacobian()(xi));
@@ -64,7 +63,7 @@ fem_grad_grad_block(const auto & element, const auto & quadrature_rule) -> auto
                 elementary_grad_grad[{ a, b }] += factor * dphi_a * dphi_b;
             });
         });
-    }
+    });
 
     // all done
     return elementary_grad_grad;
@@ -86,10 +85,9 @@ fem_rhs_block(
     vector_type elementary_rhs;
 
     // loop on the quadrature points
-    for (int q = 0; q < n_quads; ++q) {
-
+    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         // the barycentric coordinates of the quadrature point
-        /*constexpr*/ auto xi = quadrature_rule.point(q);
+        constexpr auto xi = quadrature_rule.point(q);
 
         // QUESTION: is accessing the geometric simplex really needed?
         // get the corresponding cell
@@ -108,7 +106,7 @@ fem_rhs_block(
             // populate the elementary contribution to the rhs
             elementary_rhs[{ a }] += factor * function(coord) * phi_a;
         });
-    }
+    });
 
     // all done
     return elementary_rhs;
