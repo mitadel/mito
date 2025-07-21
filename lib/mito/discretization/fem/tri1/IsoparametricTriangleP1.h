@@ -17,6 +17,8 @@ namespace mito::discretization {
     class IsoparametricTriangleP1 : public IsoparametricTriangle {
 
       public:
+        // the degree of the finite element
+        static constexpr int degree = 1;
         // the type of shape functions
         using shape_functions_type = ShapeTriangleP1;
         // the linear shape functions
