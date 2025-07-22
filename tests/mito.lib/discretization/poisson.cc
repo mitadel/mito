@@ -20,96 +20,10 @@ using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 2>;
 
 
-// instantiate the quadrature rule
-constexpr auto quadrature_rule = quadrature_rule_t();
-
 // the function extracting the x component of a 2D vector
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the function extracting the y component of a 2D vector
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
-
-
-auto
-fem_grad_grad_block(const auto & element, const auto & quadrature_rule) -> auto
-{
-    // the number of nodes per element
-    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
-
-    // the number of quadrature points per element
-    constexpr int n_quads = mito::utilities::base_type<decltype(quadrature_rule)>::npoints;
-
-    // a mito matrix type for the elementary matrix
-    using matrix_type = mito::tensor::matrix_t<n_nodes>;
-    matrix_type elementary_grad_grad;
-
-    // loop on the quadrature points
-    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
-        // the barycentric coordinates of the quadrature point
-        constexpr auto xi = quadrature_rule.point(q);
-
-        // precompute the common factor
-        auto factor = quadrature_rule.weight(q) * mito::tensor::determinant(element.jacobian()(xi));
-
-        // loop on the nodes of the element
-        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-            // evaluate the spatial gradient of the element's a-th shape function at {xi}
-            auto dphi_a = element.template gradient<a>()(xi);
-            // loop on the nodes of the element
-            mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
-                // evaluate the spatial gradient of the element's b-th shape function at {xi}
-                auto dphi_b = element.template gradient<b>()(xi);
-                // populate the elementary contribution to the matrix
-                elementary_grad_grad[{ a, b }] += factor * dphi_a * dphi_b;
-            });
-        });
-    });
-
-    // all done
-    return elementary_grad_grad;
-}
-
-auto
-fem_rhs_block(
-    const auto & element, const auto & quadrature_rule, const auto & function,
-    const auto & manifold /*TOFIX: do we really need the manifold?*/) -> auto
-{
-    // the number of nodes per element
-    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
-
-    // the number of quadrature points per element
-    constexpr int n_quads = mito::utilities::base_type<decltype(quadrature_rule)>::npoints;
-
-    // a mito vector type for the elementary rhs
-    using vector_type = mito::tensor::vector_t<n_nodes>;
-    vector_type elementary_rhs;
-
-    // loop on the quadrature points
-    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
-        // the barycentric coordinates of the quadrature point
-        constexpr auto xi = quadrature_rule.point(q);
-
-        // QUESTION: is accessing the geometric simplex really needed?
-        // get the corresponding cell
-        const auto & cell = element.geometric_simplex();
-
-        // the coordinates of the quadrature point
-        auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
-
-        // precompute the common factor
-        auto factor = quadrature_rule.weight(q) * mito::tensor::determinant(element.jacobian()(xi));
-
-        // loop on the nodes of the element
-        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-            // evaluate the a-th shape function at {xi}
-            auto phi_a = element.template shape<a>()(xi);
-            // populate the elementary contribution to the rhs
-            elementary_rhs[{ a }] += factor * function(coord) * phi_a;
-        });
-    });
-
-    // all done
-    return elementary_rhs;
-}
 
 
 TEST(Fem, PoissonSquare)
@@ -149,6 +63,17 @@ TEST(Fem, PoissonSquare)
     const auto & equation_map = discrete_system.equation_map();
     int N_equations = discrete_system.n_equations();
 
+    // TODO: blocks should be signed up with the discrete system. Then the loop on the elements
+    // should be handled by the system
+
+    // QUESTION: perhaps add the possibility to have a label for the blocks
+    // a grad-grad matrix block
+    auto fem_grad_grad_block =
+        mito::discretization::blocks::matrix_block<quadrature_rule_t>(manifold);
+
+    // a rhs block
+    auto fem_rhs_block = mito::discretization::blocks::vector_block<quadrature_rule_t>(manifold);
+
     // create a linear system of equations (PETSc Krylov solver)
     auto solver = mito::solvers::petsc::ksp("mysolver");
     solver.initialize(N_equations);
@@ -167,7 +92,7 @@ TEST(Fem, PoissonSquare)
     for (const auto & element : function_space.elements()) {
 
         // assemble the elementary stiffness matrix
-        auto elementary_stiffness_matrix = fem_grad_grad_block(element, quadrature_rule);
+        auto elementary_stiffness_matrix = fem_grad_grad_block.compute(element);
 
         // populate the linear system of equations
         mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -193,7 +118,7 @@ TEST(Fem, PoissonSquare)
         });
 
         // assemble the elementary right hand side
-        auto elementary_rhs = fem_rhs_block(element, quadrature_rule, f, manifold);
+        auto elementary_rhs = fem_rhs_block.compute(element, f);
 
         // populate the right hand side
         mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -270,6 +195,9 @@ TEST(Fem, PoissonSquare)
     // write output file
     writer.write();
 #endif
+
+    // instantiate the quadrature rule
+    auto quadrature_rule = quadrature_rule_t();
 
     // compute the L2 error
     auto error_L2 = 0.0;

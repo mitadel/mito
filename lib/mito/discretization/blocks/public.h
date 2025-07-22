@@ -17,15 +17,8 @@
 #include "api.h"
 
 // classes implementation
-#include "DiscreteField.h"
-#include "DiscretizationNode.h"
-#include "DiscreteSystem.h"
-
-// finite elements implementation
-#include "fem.h"
-
-// blocks implementation
-#include "blocks.h"
+#include "MatrixBlock.h"
+#include "VectorBlock.h"
 
 // factories implementation
 #include "factories.h"
