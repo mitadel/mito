@@ -52,11 +52,37 @@ namespace mito::discretization {
         // delete move assignment operator
         inline IsoparametricTriangleP1 & operator=(IsoparametricTriangleP1 &&) noexcept = delete;
 
+      private:
+        // the isoparametric mapping from barycentric coordinates to physical coordinates
+        inline auto _x_cell() const
+        {
+            // get the shape functions
+            auto phi_0 = shape_functions.shape<0>();
+            auto phi_1 = shape_functions.shape<1>();
+            auto phi_2 = shape_functions.shape<2>();
+
+            // return the isoparametric mapping from barycentric to physical coordinates
+            return _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2;
+        }
+
       public:
         // get the discretization nodes
         inline auto connectivity() const noexcept -> const connectivity_type &
         {
             return _connectivity;
+        }
+
+        // get the isoparametric mapping from barycentric coordinates to physical coordinates
+        inline auto parametrization() const
+        {
+            // assemble the physical coordinates from the barycentric coordinates
+            auto x_cell = [&](const barycentric_coordinates_type & xi) -> tensor::vector_t<2> {
+                // compute the gradient of the isoparametric mapping
+                return _x_cell()({ xi[0], xi[1] });
+            };
+
+            // and return it
+            return x_cell;
         }
 
         // get the shape function associated with local node {a}
@@ -81,15 +107,8 @@ namespace mito::discretization {
             // assemble the jacobian as a function of barycentric coordinates
             auto jacobian_function =
                 [&](const barycentric_coordinates_type & xi) -> tensor::matrix_t<2> {
-                // get the shape functions
-                auto phi_0 = shape_functions.shape<0>();
-                auto phi_1 = shape_functions.shape<1>();
-                auto phi_2 = shape_functions.shape<2>();
-                // assemble the isoparametric mapping from the barycentric coordinates to the actual
-                // coordinates on the cell {cell}
-                auto x_cell = _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2;
                 // compute the gradient of the isoparametric mapping
-                return fields::gradient(x_cell)({ xi[0], xi[1] });
+                return fields::gradient(_x_cell())({ xi[0], xi[1] });
             };
 
             // and return it
