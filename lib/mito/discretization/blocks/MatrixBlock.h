@@ -14,12 +14,11 @@ namespace mito::discretization::blocks {
     // TODO: implement sum and subtraction operators for the blocks (only for blocks that result in
     // the same elementary type)
 
-    template <class quadratureRuleT, class manifoldT>
+    template <class quadratureRuleT>
     class MatrixBlock {
 
       public:
-        // my template parameters
-        using manifold_type = manifoldT;
+        // my template parameter
         using quadrature_rule_type = quadratureRuleT;
 
         // instantiate the quadrature rule
@@ -27,7 +26,7 @@ namespace mito::discretization::blocks {
 
       public:
         // the constructor
-        constexpr MatrixBlock(const manifold_type & manifold) : _manifold(manifold) {}
+        constexpr MatrixBlock() {}
 
         // destructor
         constexpr ~MatrixBlock() = default;
@@ -66,19 +65,14 @@ namespace mito::discretization::blocks {
             using matrix_type = tensor::matrix_t<n_nodes>;
             matrix_type elementary_matrix;
 
-            // get the corresponding cell
-            const auto & cell = element.geometric_simplex();
-
-            // compute the volume of the cell
-            auto volume = _manifold.volume(cell);
-
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
                 // the barycentric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
                 // precompute the common factor
-                auto factor = quadrature_rule.weight(q) * volume;
+                auto factor =
+                    quadrature_rule.weight(q) * tensor::determinant(element.jacobian()(xi));
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -98,10 +92,6 @@ namespace mito::discretization::blocks {
             // all done
             return elementary_matrix;
         }
-
-      private:
-        // the manifold
-        const manifold_type & _manifold;
     };
 
 }    // namespace mito

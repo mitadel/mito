@@ -10,19 +10,19 @@
 namespace mito::discretization::blocks {
 
     // matrix block factory
-    template <class quadratureRuleT, class manifoldT>
-    constexpr auto matrix_block(const manifoldT & manifold)
+    template <class quadratureRuleT>
+    constexpr auto matrix_block()
     {
         // all done
-        return matrix_block_t<quadratureRuleT, manifoldT>(manifold);
+        return matrix_block_t<quadratureRuleT>();
     }
 
     // rhs block factory
-    template <class quadratureRuleT, class manifoldT>
-    constexpr auto vector_block(const manifoldT & manifold)
+    template <class quadratureRuleT>
+    constexpr auto vector_block()
     {
         // all done
-        return vector_block_t<quadratureRuleT, manifoldT>(manifold);
+        return vector_block_t<quadratureRuleT>();
     }
 
 }

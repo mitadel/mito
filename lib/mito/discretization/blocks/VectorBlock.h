@@ -9,12 +9,11 @@
 
 namespace mito::discretization::blocks {
 
-    template <class quadratureRuleT, class manifoldT>
+    template <class quadratureRuleT>
     class VectorBlock {
 
       public:
         // my template parameters
-        using manifold_type = manifoldT;
         using quadrature_rule_type = quadratureRuleT;
 
         // instantiate the quadrature rule
@@ -22,7 +21,7 @@ namespace mito::discretization::blocks {
 
       public:
         // the constructor
-        constexpr VectorBlock(const manifold_type & manifold) : _manifold(manifold) {}
+        constexpr VectorBlock() {}
 
         // destructor
         constexpr ~VectorBlock() = default;
@@ -56,22 +55,17 @@ namespace mito::discretization::blocks {
             using vector_type = tensor::vector_t<n_nodes>;
             vector_type elementary_rhs;
 
-            // get the corresponding cell
-            const auto & cell = element.geometric_simplex();
-
-            // compute the volume of the cell
-            auto volume = _manifold.volume(cell);
-
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
                 // the barycentric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
                 // the coordinates of the quadrature point
-                auto coord = _manifold.parametrization(cell, quadrature_rule.point(q));
+                auto coord = element.parametrization()(quadrature_rule.point(q));
 
                 // precompute the common factor
-                auto factor = quadrature_rule.weight(q) * volume;
+                auto factor =
+                    quadrature_rule.weight(q) * mito::tensor::determinant(element.jacobian()(xi));
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -85,10 +79,6 @@ namespace mito::discretization::blocks {
             // all done
             return elementary_rhs;
         }
-
-      private:
-        // the manifold
-        const manifold_type & _manifold;
     };
 
 }    // namespace mito

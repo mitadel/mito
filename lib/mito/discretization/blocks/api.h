@@ -10,20 +10,20 @@
 namespace mito::discretization::blocks {
 
     // matrix block
-    template <class quadratureRuleT, class manifoldT>
-    using matrix_block_t = MatrixBlock<quadratureRuleT, manifoldT>;
+    template <class quadratureRuleT>
+    using matrix_block_t = MatrixBlock<quadratureRuleT>;
 
     // matrix block factory
-    template <class quadratureRuleT, class manifoldT>
-    constexpr auto matrix_block(const manifoldT & manifold);
+    template <class quadratureRuleT>
+    constexpr auto matrix_block();
 
     // vector block
-    template <class quadratureRuleT, class manifoldT>
-    using vector_block_t = VectorBlock<quadratureRuleT, manifoldT>;
+    template <class quadratureRuleT>
+    using vector_block_t = VectorBlock<quadratureRuleT>;
 
     // vector block factory
-    template <class quadratureRuleT, class manifoldT>
-    constexpr auto vector_block(const manifoldT & manifold);
+    template <class quadratureRuleT>
+    constexpr auto vector_block();
 }
 
 

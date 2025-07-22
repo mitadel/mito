@@ -10,11 +10,11 @@
 namespace mito::discretization::blocks {
 
     // matrix block
-    template <class quadratureRuleT, class manifoldT>
+    template <class quadratureRuleT>
     class MatrixBlock;
 
     // rhs block
-    template <class quadratureRuleT, class manifoldT>
+    template <class quadratureRuleT>
     class VectorBlock;
 }
 

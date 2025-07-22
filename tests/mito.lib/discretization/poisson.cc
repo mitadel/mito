@@ -68,11 +68,10 @@ TEST(Fem, PoissonSquare)
 
     // QUESTION: perhaps add the possibility to have a label for the blocks
     // a grad-grad matrix block
-    auto fem_grad_grad_block =
-        mito::discretization::blocks::matrix_block<quadrature_rule_t>(manifold);
+    auto fem_grad_grad_block = mito::discretization::blocks::matrix_block<quadrature_rule_t>();
 
     // a rhs block
-    auto fem_rhs_block = mito::discretization::blocks::vector_block<quadrature_rule_t>(manifold);
+    auto fem_rhs_block = mito::discretization::blocks::vector_block<quadrature_rule_t>();
 
     // create a linear system of equations (PETSc Krylov solver)
     auto solver = mito::solvers::petsc::ksp("mysolver");
