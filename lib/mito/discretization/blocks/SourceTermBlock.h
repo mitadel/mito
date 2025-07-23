@@ -1,0 +1,79 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#pragma once
+
+
+namespace mito::discretization::blocks {
+
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    class SourceTermBlock :
+        public AssemblyBlock<elementT, tensor::vector_t<elementT::n_nodes>, quadratureRuleT> {
+
+      public:
+        // my parent class
+        using parent_type =
+            AssemblyBlock<elementT, tensor::vector_t<elementT::n_nodes>, quadratureRuleT>;
+
+        // my template parameters
+        using element_type = typename parent_type::element_type;
+        using elementary_block_type = typename parent_type::elementary_block_type;
+        using quadrature_rule_type = typename parent_type::quadrature_rule_type;
+
+        // the type of the source term function
+        using source_field_type = sourceFieldT;
+
+      public:
+        // constructor
+        SourceTermBlock(const source_field_type & source_field) : _source_field(source_field) {}
+
+      public:
+        // compute the elementary contribution of this block
+        auto compute(const element_type & element) const -> elementary_block_type override
+        {
+            // the number of nodes per element
+            constexpr int n_nodes = element_type::n_nodes;
+
+            // the number of quadrature points per element
+            constexpr int n_quads = quadrature_rule_type::npoints;
+
+            // the elementary rhs
+            elementary_block_type elementary_rhs;
+
+            // loop on the quadrature points
+            tensor::constexpr_for_1<n_quads>([&]<int q>() {
+                // the barycentric coordinates of the quadrature point
+                constexpr auto xi = parent_type::quadrature_rule.point(q);
+
+                // the coordinates of the quadrature point
+                auto coord = element.parametrization()(parent_type::quadrature_rule.point(q));
+
+                // precompute the common factor
+                auto factor = parent_type::quadrature_rule.weight(q)
+                            * mito::tensor::determinant(element.jacobian()(xi));
+
+                // loop on the nodes of the element
+                tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                    // evaluate the a-th shape function at {xi}
+                    auto phi_a = element.template shape<a>()(xi);
+                    // populate the elementary contribution to the rhs
+                    elementary_rhs[{ a }] += factor * _source_field(coord) * phi_a;
+                });
+            });
+
+            // all done
+            return elementary_rhs;
+        }
+
+      private:
+        // the source term field
+        const source_field_type & _source_field;
+    };
+
+}    // namespace mito
+
+
+// end of file

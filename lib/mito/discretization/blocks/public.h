@@ -17,8 +17,9 @@
 #include "api.h"
 
 // classes implementation
-#include "MatrixBlock.h"
-#include "VectorBlock.h"
+#include "AssemblyBlock.h"
+#include "GradGradBlock.h"
+#include "SourceTermBlock.h"
 
 // factories implementation
 #include "factories.h"

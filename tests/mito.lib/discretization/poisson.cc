@@ -19,6 +19,11 @@ using simplex_t = cell_t::simplex_type;
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 2>;
 
+// the degree of the finite element
+constexpr int degree = 2;
+// TOFIX: I don't like this syntax
+// typedef for a finite element
+using finite_element_t = typename mito::discretization::isoparametric_simplex<degree, cell_t>::type;
 
 // the function extracting the x component of a 2D vector
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
@@ -56,6 +61,7 @@ TEST(Fem, PoissonSquare)
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // the function space (linear elements on the manifold)
+    // TOFIX: function space should be template with respect to the finite element type
     auto function_space = mito::discretization::function_space<2>(manifold, constraints);
 
     // the discrete system
@@ -66,23 +72,24 @@ TEST(Fem, PoissonSquare)
     // TODO: blocks should be signed up with the discrete system. Then the loop on the elements
     // should be handled by the system
 
-    // QUESTION: perhaps add the possibility to have a label for the blocks
-    // a grad-grad matrix block
-    auto fem_grad_grad_block = mito::discretization::blocks::matrix_block<quadrature_rule_t>();
-
-    // a rhs block
-    auto fem_rhs_block = mito::discretization::blocks::vector_block<quadrature_rule_t>();
-
     // create a linear system of equations (PETSc Krylov solver)
     auto solver = mito::solvers::petsc::ksp("mysolver");
     solver.initialize(N_equations);
     solver.set_options("-ksp_type preonly -pc_type cholesky");
+
+    // a grad-grad matrix block
+    auto fem_lhs_block =
+        mito::discretization::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
 
     // the right hand side
     auto f = mito::fields::field(
         2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
         * mito::functions::sin(std::numbers::pi * y));
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
+
+    // a source term block
+    auto fem_rhs_block =
+        mito::discretization::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
 
     // the number of nodes per element
     constexpr int n_nodes =
@@ -92,7 +99,7 @@ TEST(Fem, PoissonSquare)
     for (const auto & element : function_space.elements()) {
 
         // assemble the elementary stiffness matrix
-        auto elementary_stiffness_matrix = fem_grad_grad_block.compute(element);
+        auto elementary_stiffness_matrix = fem_lhs_block.compute(element);
 
         // populate the linear system of equations
         mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -118,7 +125,7 @@ TEST(Fem, PoissonSquare)
         });
 
         // assemble the elementary right hand side
-        auto elementary_rhs = fem_rhs_block.compute(element, f);
+        auto elementary_rhs = fem_rhs_block.compute(element);
 
         // populate the right hand side
         mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {

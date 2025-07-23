@@ -10,19 +10,19 @@
 namespace mito::discretization::blocks {
 
     // matrix block factory
-    template <class quadratureRuleT>
-    constexpr auto matrix_block()
+    template <class elementT, class quadratureRuleT>
+    constexpr auto grad_grad_block()
     {
         // all done
-        return matrix_block_t<quadratureRuleT>();
+        return grad_grad_block_t<elementT, quadratureRuleT>();
     }
 
-    // rhs block factory
-    template <class quadratureRuleT>
-    constexpr auto vector_block()
+    // source term block factory
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    constexpr auto source_term_block(const sourceFieldT & f)
     {
         // all done
-        return vector_block_t<quadratureRuleT>();
+        return source_term_block_t<elementT, quadratureRuleT, sourceFieldT>(f);
     }
 
 }

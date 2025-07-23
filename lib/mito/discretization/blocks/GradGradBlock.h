@@ -14,65 +14,41 @@ namespace mito::discretization::blocks {
     // TODO: implement sum and subtraction operators for the blocks (only for blocks that result in
     // the same elementary type)
 
-    template <class quadratureRuleT>
-    class MatrixBlock {
+    template <class elementT, class quadratureRuleT>
+    class GradGradBlock :
+        public AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>, quadratureRuleT> {
 
       public:
-        // my template parameter
-        using quadrature_rule_type = quadratureRuleT;
+        // my parent class
+        using parent_type =
+            AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>, quadratureRuleT>;
 
-        // instantiate the quadrature rule
-        static constexpr auto quadrature_rule = quadrature_rule_type();
-
-      public:
-        // the constructor
-        constexpr MatrixBlock() {}
-
-        // destructor
-        constexpr ~MatrixBlock() = default;
-
-        // delete move constructor
-        constexpr MatrixBlock(MatrixBlock &&) noexcept = delete;
-
-        // delete copy constructor
-        constexpr MatrixBlock(const MatrixBlock &) = delete;
-
-        // delete assignment operator
-        constexpr MatrixBlock & operator=(const MatrixBlock &) = delete;
-
-        // delete move assignment operator
-        constexpr MatrixBlock & operator=(MatrixBlock &&) noexcept = delete;
+        // my template parameters
+        using element_type = typename parent_type::element_type;
+        using elementary_block_type = typename parent_type::elementary_block_type;
+        using quadrature_rule_type = typename parent_type::quadrature_rule_type;
 
       public:
-        // TODO: this represents a matrix block because here the return type is a matrix. How shall
-        // we make it general to a vector? Shall we have two classes: one MatrixBlock and one
-        // VectorBlock?
-
-        // TODO: for now this represents a grad-grad block but we should generalize it to represent
-        // any block
-
         // compute the elementary contribution of this block
-        template <class elementT>
-        auto compute(const elementT & element) const -> tensor::matrix_t<elementT::n_nodes>
+        auto compute(const element_type & element) const -> elementary_block_type override
         {
             // the number of nodes per element
-            constexpr int n_nodes = elementT::n_nodes;
+            constexpr int n_nodes = element_type::n_nodes;
 
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;
 
-            // a mito matrix type for the elementary matrix
-            using matrix_type = tensor::matrix_t<n_nodes>;
-            matrix_type elementary_matrix;
+            // the elementary matrix
+            elementary_block_type elementary_matrix;
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
                 // the barycentric coordinates of the quadrature point
-                constexpr auto xi = quadrature_rule.point(q);
+                constexpr auto xi = parent_type::quadrature_rule.point(q);
 
                 // precompute the common factor
-                auto factor =
-                    quadrature_rule.weight(q) * tensor::determinant(element.jacobian()(xi));
+                auto factor = parent_type::quadrature_rule.weight(q)
+                            * tensor::determinant(element.jacobian()(xi));
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {

@@ -9,21 +9,21 @@
 
 namespace mito::discretization::blocks {
 
-    // matrix block
-    template <class quadratureRuleT>
-    using matrix_block_t = MatrixBlock<quadratureRuleT>;
+    // grad grad block
+    template <class elementT, class quadratureRuleT>
+    using grad_grad_block_t = GradGradBlock<elementT, quadratureRuleT>;
 
-    // matrix block factory
-    template <class quadratureRuleT>
-    constexpr auto matrix_block();
+    // grad grad block factory
+    template <class elementT, class quadratureRuleT>
+    constexpr auto grad_grad_block();
 
-    // vector block
-    template <class quadratureRuleT>
-    using vector_block_t = VectorBlock<quadratureRuleT>;
+    // source term block
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    using source_term_block_t = SourceTermBlock<elementT, quadratureRuleT, sourceFieldT>;
 
-    // vector block factory
-    template <class quadratureRuleT>
-    constexpr auto vector_block();
+    // source term block factory
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    constexpr auto source_term_block(const sourceFieldT & f);
 }
 
 

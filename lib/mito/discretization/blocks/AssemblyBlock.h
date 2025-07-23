@@ -1,0 +1,55 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#pragma once
+
+
+namespace mito::discretization::blocks {
+
+    // TODO: implement sum and subtraction operators for the blocks (only for blocks that result in
+    // the same elementary type)
+
+    template <class elementT, class blockT, class quadratureRuleT>
+    class AssemblyBlock {
+
+      public:
+        // my template parameters
+        using element_type = elementT;
+        using elementary_block_type = blockT;
+        using quadrature_rule_type = quadratureRuleT;
+
+      public:
+        // instantiate the quadrature rule
+        static constexpr auto quadrature_rule = quadrature_rule_type();
+
+      public:
+        // the constructor
+        constexpr AssemblyBlock() {}
+
+        // destructor
+        constexpr ~AssemblyBlock() = default;
+
+        // delete move constructor
+        constexpr AssemblyBlock(AssemblyBlock &&) noexcept = delete;
+
+        // delete copy constructor
+        constexpr AssemblyBlock(const AssemblyBlock &) = delete;
+
+        // delete assignment operator
+        constexpr AssemblyBlock & operator=(const AssemblyBlock &) = delete;
+
+        // delete move assignment operator
+        constexpr AssemblyBlock & operator=(AssemblyBlock &&) noexcept = delete;
+
+      public:
+        // compute the elementary contribution of this block
+        virtual auto compute(const element_type & element) const -> elementary_block_type = 0;
+    };
+
+}    // namespace mito
+
+
+// end of file

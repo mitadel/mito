@@ -9,13 +9,17 @@
 
 namespace mito::discretization::blocks {
 
-    // matrix block
-    template <class quadratureRuleT>
-    class MatrixBlock;
+    // assembly block
+    template <class elementT, class blockT, class quadratureRuleT>
+    class AssemblyBlock;
 
-    // rhs block
-    template <class quadratureRuleT>
-    class VectorBlock;
+    // grad grad block
+    template <class elementT, class quadratureRuleT>
+    class GradGradBlock;
+
+    // source term block
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    class SourceTermBlock;
 }
 
 
