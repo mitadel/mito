@@ -21,9 +21,8 @@ using quadrature_rule_t =
 
 // the degree of the finite element
 constexpr int degree = 2;
-// TOFIX: I don't like this syntax
 // typedef for a finite element
-using finite_element_t = typename mito::discretization::isoparametric_simplex<degree, cell_t>::type;
+using finite_element_t = mito::discretization::isoparametric_simplex_t<degree, cell_t>;
 
 // the function extracting the x component of a 2D vector
 constexpr auto x = mito::functions::component<coordinates_t, 0>;

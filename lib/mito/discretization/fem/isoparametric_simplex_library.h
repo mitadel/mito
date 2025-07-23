@@ -29,6 +29,10 @@ namespace mito::discretization {
     struct isoparametric_simplex<2, geometry::triangle_t<2>> {
         using type = IsoparametricTriangleP2;
     };
+
+    // type alias for convenient access to the isoparametric simplex type
+    template <int degree, geometry::geometric_simplex_c geometricSimplexT>
+    using isoparametric_simplex_t = typename isoparametric_simplex<degree, geometricSimplexT>::type;
 }
 
 
