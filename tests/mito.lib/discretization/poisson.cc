@@ -79,8 +79,9 @@ TEST(Fem, PoissonSquare)
     solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // the right hand side
-    auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
-           * mito::functions::sin(std::numbers::pi * y);
+    auto f = mito::fields::field(
+        2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
+        * mito::functions::sin(std::numbers::pi * y));
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // the number of nodes per element
