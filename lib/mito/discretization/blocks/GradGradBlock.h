@@ -9,8 +9,6 @@
 
 namespace mito::discretization::blocks {
 
-    // TODO: unify vector and matrix block and allow distinction through a template parameter
-
     // TODO: implement sum and subtraction operators for the blocks (only for blocks that result in
     // the same elementary type)
 
