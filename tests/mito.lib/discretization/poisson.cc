@@ -214,9 +214,9 @@ TEST(Fem, PoissonSquare)
         // volume of the cell
         auto volume = manifold.volume(cell);
         // loop on the quadrature points
-        for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
+        mito::tensor::constexpr_for_1<quadrature_rule_t::npoints>([&]<int q>() {
             // the barycentric coordinates of the quadrature point
-            /*constexpr*/ auto xi = quadrature_rule.point(q);
+            constexpr auto xi = quadrature_rule.point(q);
             // the coordinates of the quadrature point
             auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
             // get the exact solution at {coord}
@@ -239,7 +239,7 @@ TEST(Fem, PoissonSquare)
             // get the error
             error_L2 += (u_exact - u_numerical) * (u_exact - u_numerical)
                       * quadrature_rule.weight(q) * volume;
-        }
+        });
     }
     error_L2 = std::sqrt(error_L2);
 
@@ -257,7 +257,7 @@ TEST(Fem, PoissonSquare)
         const auto & cell = element.geometric_simplex();
         // volume of the cell
         auto volume = manifold.volume(cell);
-        for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
+        mito::tensor::constexpr_for_1<quadrature_rule_t::npoints>([&]<int q>() {
             // the barycentric coordinates of the quadrature point
             auto xi = quadrature_rule.point(q);
             // the coordinates of the quadrature point
@@ -282,7 +282,7 @@ TEST(Fem, PoissonSquare)
             // get the error
             auto diff = grad_u_exact - grad_u_numerical;
             error_H1 += mito::tensor::dot(diff, diff) * quadrature_rule.weight(q) * volume;
-        }
+        });
     }
     error_H1 = std::sqrt(error_H1);
 
