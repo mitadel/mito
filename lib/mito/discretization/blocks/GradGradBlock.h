@@ -13,18 +13,20 @@ namespace mito::discretization::blocks {
     // the same elementary type)
 
     template <class elementT, class quadratureRuleT>
-    class GradGradBlock :
-        public AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>, quadratureRuleT> {
+    class GradGradBlock : public AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>> {
 
       public:
         // my parent class
-        using parent_type =
-            AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>, quadratureRuleT>;
+        using parent_type = AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>>;
 
         // my template parameters
         using element_type = typename parent_type::element_type;
         using elementary_block_type = typename parent_type::elementary_block_type;
-        using quadrature_rule_type = typename parent_type::quadrature_rule_type;
+        using quadrature_rule_type = quadratureRuleT;
+
+      public:
+        // instantiate the quadrature rule
+        static constexpr auto quadrature_rule = quadrature_rule_type();
 
       public:
         // compute the elementary contribution of this block
@@ -42,11 +44,11 @@ namespace mito::discretization::blocks {
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
                 // the barycentric coordinates of the quadrature point
-                constexpr auto xi = parent_type::quadrature_rule.point(q);
+                constexpr auto xi = quadrature_rule.point(q);
 
                 // precompute the common factor
-                auto factor = parent_type::quadrature_rule.weight(q)
-                            * tensor::determinant(element.jacobian()(xi));
+                auto factor =
+                    quadrature_rule.weight(q) * tensor::determinant(element.jacobian()(xi));
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {

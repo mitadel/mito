@@ -10,7 +10,7 @@
 namespace mito::discretization::blocks {
 
     // assembly block
-    template <class elementT, class blockT, class quadratureRuleT>
+    template <class elementT, class blockT>
     class AssemblyBlock;
 
     // grad grad block
