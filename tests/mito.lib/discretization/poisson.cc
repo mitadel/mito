@@ -222,7 +222,7 @@ TEST(Fem, PoissonSquare)
             // the barycentric coordinates of the quadrature point
             constexpr auto xi = quadrature_rule.point(q);
             // the coordinates of the quadrature point
-            auto coord = manifold.parametrization(cell, quadrature_rule.point(q));
+            auto coord = element.parametrization()(xi);
             // get the exact solution at {coord}
             auto u_exact = u_ex(coord);
             // assemble the numerical solution at {coord}
@@ -265,7 +265,7 @@ TEST(Fem, PoissonSquare)
             // the barycentric coordinates of the quadrature point
             auto xi = quadrature_rule.point(q);
             // the coordinates of the quadrature point
-            auto coord = manifold.parametrization(cell, xi);
+            auto coord = element.parametrization()(xi);
             // exact solution gradient at {coord}
             auto grad_u_exact = mito::fields::gradient(u_ex)(coord);
             // assemble the numerical solution gradient at {coord}
