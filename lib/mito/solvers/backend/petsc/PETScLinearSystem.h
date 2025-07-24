@@ -58,6 +58,9 @@ namespace mito::solvers::petsc {
         // add a value to a right-hand side entry
         auto add_rhs_value(index_type, const scalar_type &) -> void;
 
+        // accessor to the number of equations
+        auto n_equations() const -> int;
+
         // get the solution vector
         template <class solutionT>
         auto get_solution(solutionT & solution) const -> void;
@@ -76,6 +79,8 @@ namespace mito::solvers::petsc {
         vector_type _rhs;
         // the solution vector
         vector_type _solution;
+        // the number of equations
+        int _n_equations;
     };
 
 }    // namespace mito

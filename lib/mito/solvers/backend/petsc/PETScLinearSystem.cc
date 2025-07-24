@@ -10,7 +10,9 @@
 
 
 // constructor
-mito::solvers::petsc::PETScLinearSystem::PETScLinearSystem(const label_type & label) : _label(label)
+mito::solvers::petsc::PETScLinearSystem::PETScLinearSystem(const label_type & label) :
+    _label(label),
+    _n_equations(0)
 {}
 
 // destructor
@@ -20,6 +22,9 @@ mito::solvers::petsc::PETScLinearSystem::~PETScLinearSystem() {}
 auto
 mito::solvers::petsc::PETScLinearSystem::create(index_type size) -> void
 {
+    // take note of the number of equations
+    _n_equations = size;
+
     // create the vectors
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_solution));
     PetscCallVoid(VecSetSizes(_solution, PETSC_DECIDE, size));
@@ -124,6 +129,13 @@ mito::solvers::petsc::PETScLinearSystem::add_rhs_value(index_type row, const sca
     // all done
     return;
 }
+
+auto
+mito::solvers::petsc::PETScLinearSystem::n_equations() const -> int
+{
+    return _n_equations;
+}
+
 
 // print the linear system of equations of the petsc solver
 auto
