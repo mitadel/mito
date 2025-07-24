@@ -19,4 +19,21 @@
 #include <petscksp.h>
 
 
+namespace mito::solvers::petsc {
+
+    // initialize petsc
+    inline auto initialize() -> void
+    {
+        PetscCallVoid(PetscInitializeNoArguments());
+    }
+
+    // finalize petsc
+    inline auto finalize() -> void
+    {
+        PetscCallVoid(PetscFinalize());
+    }
+
+}
+
+
 // end of file

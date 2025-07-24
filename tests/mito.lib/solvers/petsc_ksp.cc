@@ -13,21 +13,25 @@ TEST(Solvers, PETScKSPSolver)
     // the size of the linear system
     int N = 10;
 
-    // instantiate a PETSc Krylov solver for a linear system of size {N}
-    auto solver = mito::solvers::petsc::ksp("mysolver");
-    solver.initialize(N);
+    // instantiate a PETSc linear system of size {N}
+    auto linear_system = mito::solvers::petsc::linear_system("mysystem");
+    linear_system.create(N);
+
+    // instantiate a PETSc Krylov solver for the linear system
+    auto solver = mito::solvers::petsc::ksp(linear_system);
+    solver.create();
     solver.set_options("-ksp_monitor");
 
     // set matrix and right-hand side entries
     for (int i = 0; i < N; i++) {
-        solver.insert_matrix_value(i, i, 2.0);
+        linear_system.insert_matrix_value(i, i, 2.0);
         if (i > 0) {
-            solver.insert_matrix_value(i, i - 1, -1.0);
+            linear_system.insert_matrix_value(i, i - 1, -1.0);
         }
         if (i < N - 1) {
-            solver.insert_matrix_value(i, i + 1, -1.0);
+            linear_system.insert_matrix_value(i, i + 1, -1.0);
         }
-        solver.insert_rhs_value(i, 1.0);
+        linear_system.insert_rhs_value(i, 1.0);
     }
 
     // solve the linear system
@@ -35,7 +39,7 @@ TEST(Solvers, PETScKSPSolver)
 
     // read the solution
     auto x = std::vector<double>(N);
-    solver.get_solution(x);
+    linear_system.get_solution(x);
 
     // check the solution
     EXPECT_DOUBLE_EQ(x[0], 5.0);
@@ -49,8 +53,11 @@ TEST(Solvers, PETScKSPSolver)
     EXPECT_DOUBLE_EQ(x[8], 9.0);
     EXPECT_DOUBLE_EQ(x[9], 5.0);
 
-    // finalize the solver
-    solver.finalize();
+    // destroy the system
+    linear_system.destroy();
+
+    // destroy the solver
+    solver.destroy();
 
     // all done
     return;
@@ -60,14 +67,14 @@ TEST(Solvers, PETScKSPSolver)
 int
 main(int argc, char ** argv)
 {
-    // initialize petsc
-    PetscInitialize(&argc, &argv, PETSC_NULLPTR, PETSC_NULLPTR);
+    // initialize PETSc
+    mito::solvers::petsc::initialize();
 
     ::testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();
 
-    // finalize petsc
-    PetscFinalize();
+    // finalize PETSc
+    mito::solvers::petsc::finalize();
 
     // all done
     return result;

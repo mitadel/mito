@@ -71,9 +71,14 @@ TEST(Fem, PoissonSquare)
     // TODO: blocks should be signed up with the discrete system. Then the loop on the elements
     // should be handled by the system
 
-    // create a linear system of equations (PETSc Krylov solver)
-    auto solver = mito::solvers::petsc::ksp("mysolver");
-    solver.initialize(N_equations);
+    // initialize PETSc
+    mito::solvers::petsc::initialize();
+
+    // create a PETSc linear system of equations and a Krylov solver
+    auto linear_system = mito::solvers::petsc::linear_system("mysystem");
+    linear_system.create(N_equations);
+    auto solver = mito::solvers::petsc::ksp(linear_system);
+    solver.create();
     solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // a grad-grad matrix block
@@ -117,7 +122,8 @@ TEST(Fem, PoissonSquare)
                     // non boundary nodes
                     if (eq_b != -1) {
                         // assemble the value in the stiffness matrix
-                        solver.add_matrix_value(eq_a, eq_b, elementary_stiffness_matrix[{ a, b }]);
+                        linear_system.add_matrix_value(
+                            eq_a, eq_b, elementary_stiffness_matrix[{ a, b }]);
                     }
                 });
             }
@@ -136,19 +142,17 @@ TEST(Fem, PoissonSquare)
             // non boundary nodes
             if (eq_a != -1) {
                 // assemble the value in the right hand side
-                solver.add_rhs_value(eq_a, elementary_rhs[{ a }]);
+                linear_system.add_rhs_value(eq_a, elementary_rhs[{ a }]);
             }
         });
     }
 
     solver.solve();
+    solver.destroy();
 
     // read the solution
     auto u = std::vector<double>(N_equations);
-    solver.get_solution(u);
-
-    // finalize the solver
-    solver.finalize();
+    linear_system.get_solution(u);
 
     // TOFIX: the solution should be assembled by the function space, which is aware of the
     // constraints and can populate the constrained nodes appropriately
@@ -291,6 +295,13 @@ TEST(Fem, PoissonSquare)
 
     // check that the h1 error is reasonable
     EXPECT_TRUE(error_H1 < 0.02);
+
+    // destroy the linear system
+    linear_system.destroy();
+
+    // TOFIX: move this to the class owning the petsc instance
+    // finalize PETSc
+    mito::solvers::petsc::finalize();
 }
 
 // end of file

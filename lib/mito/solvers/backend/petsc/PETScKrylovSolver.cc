@@ -4,115 +4,40 @@
 //
 
 
-#include "public.h"
+#include "forward.h"
+#include "externals.h"
+#include "PETScLinearSystem.h"
+#include "PETScKrylovSolver.h"
 
 
 // constructor
-mito::solvers::petsc::PETScKrylovSolver::PETScKrylovSolver(const label_type & name) :
-    _options_prefix(name + "_"),
-    _initialized_petsc(false)
+mito::solvers::petsc::PETScKrylovSolver::PETScKrylovSolver(linear_system_type & linear_system) :
+    _linear_system(linear_system),
+    _options_prefix(linear_system.label() + "_")
 {}
 
 // destructor
 mito::solvers::petsc::PETScKrylovSolver::~PETScKrylovSolver() {}
 
-// initialize PETSc if it has not been initialized before
+// create the Krylov solver
 auto
-mito::solvers::petsc::PETScKrylovSolver::_initialize_petsc() -> void
+mito::solvers::petsc::PETScKrylovSolver::create() -> void
 {
-    // check if PETSc has been initialized
-    PetscBool petsc_already_initialized;
-    PetscCallVoid(PetscInitialized(&petsc_already_initialized));
-
-    // if PETSc has not been initialized before
-    if (petsc_already_initialized == PETSC_FALSE) {
-        // initialize PETSc
-        PetscCallVoid(PetscInitializeNoArguments());
-        // and remember that you have initialized PETSc
-        _initialized_petsc = true;
-    }
-
-    // all done
-    return;
-}
-
-// finalize PETSc if it has been initialized by this instance
-auto
-mito::solvers::petsc::PETScKrylovSolver::_finalize_petsc() -> void
-{
-    // if PETSc was initialized by this instance
-    if (_initialized_petsc) {
-        // finalize PETSc
-        PetscCallVoid(PetscFinalize());
-    }
-
-    // all done
-    return;
-}
-
-auto
-mito::solvers::petsc::PETScKrylovSolver::_create_linear_system(index_type size) -> void
-{
-    // create the vectors
-    PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_solution));
-    PetscCallVoid(VecSetSizes(_solution, PETSC_DECIDE, size));
-    PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_rhs));
-    PetscCallVoid(VecSetSizes(_rhs, PETSC_DECIDE, size));
-
-    // create the matrix
-    PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
-    PetscCallVoid(MatSetSizes(_matrix, PETSC_DECIDE, PETSC_DECIDE, size, size));
-
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
-    PetscCallVoid(KSPSetOperators(_ksp, _matrix, _matrix));
+    PetscCallVoid(KSPSetOperators(_ksp, _linear_system._matrix, _linear_system._matrix));
     PetscCallVoid(KSPSetOptionsPrefix(_ksp, _options_prefix.c_str()));
 
-    // set the default options (do not allow the user to control the options for matrix and vectors)
-    PetscCallVoid(MatSetFromOptions(_matrix));
-    PetscCallVoid(VecSetFromOptions(_rhs));
-    PetscCallVoid(VecSetFromOptions(_solution));
-
     // all done
     return;
 }
 
+// destroy the Krylov solver
 auto
-mito::solvers::petsc::PETScKrylovSolver::_destroy_linear_system() -> void
+mito::solvers::petsc::PETScKrylovSolver::destroy() -> void
 {
-    // destroy  the matrix, right-hand side, solution, and Krylov solver
-    PetscCallVoid(MatDestroy(&_matrix));
-    PetscCallVoid(VecDestroy(&_solution));
-    PetscCallVoid(VecDestroy(&_rhs));
+    // destroy the Krylov solver
     PetscCallVoid(KSPDestroy(&_ksp));
-
-    // all done
-    return;
-}
-
-// initialize the petsc solver
-auto
-mito::solvers::petsc::PETScKrylovSolver::initialize(index_type size) -> void
-{
-    // initialize PETSc if it has not been initialized before
-    _initialize_petsc();
-
-    // create the matrix, right-hand side, solution, and Krylov solver
-    _create_linear_system(size);
-
-    // all done
-    return;
-}
-
-// finalize the petsc solver
-auto
-mito::solvers::petsc::PETScKrylovSolver::finalize() -> void
-{
-    // destroy the memory for the matrix, right-hand side, solution, and Krylov solver
-    _destroy_linear_system();
-
-    // finalize petsc if it has been initialized by this instance
-    _finalize_petsc();
 
     // all done
     return;
@@ -176,71 +101,15 @@ mito::solvers::petsc::PETScKrylovSolver::set_options(const options_type & option
     return;
 }
 
-// set the matrix entry at ({row}, {col}) to {value}
-auto
-mito::solvers::petsc::PETScKrylovSolver::insert_matrix_value(
-    index_type row, index_type col, const scalar_type & value) -> void
-{
-    // delegate to PETSc
-    PetscCallVoid(MatSetValue(_matrix, row, col, value, INSERT_VALUES));
-
-    // all done
-    return;
-}
-
-// add {value} to matrix entry at ({row}, {col})
-auto
-mito::solvers::petsc::PETScKrylovSolver::add_matrix_value(
-    index_type row, index_type col, const scalar_type & value) -> void
-{
-    // delegate to PETSc
-    PetscCallVoid(MatSetValue(_matrix, row, col, value, ADD_VALUES));
-
-    // all done
-    return;
-}
-
-// set the right-hand side entry at {row} to {value}
-auto
-mito::solvers::petsc::PETScKrylovSolver::insert_rhs_value(index_type row, const scalar_type & value)
-    -> void
-{
-    // delegate to PETSc
-    PetscCallVoid(VecSetValue(_rhs, row, value, INSERT_VALUES));
-
-    // all done
-    return;
-}
-
-// add {value} to right-hand side entry at {row}
-auto
-mito::solvers::petsc::PETScKrylovSolver::add_rhs_value(index_type row, const scalar_type & value)
-    -> void
-{
-    // delegate to PETSc
-    PetscCallVoid(VecSetValue(_rhs, row, value, ADD_VALUES));
-
-    // all done
-    return;
-}
-
 // solve the linear system
 auto
 mito::solvers::petsc::PETScKrylovSolver::solve() -> void
 {
-    // assemble matrix
-    PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FINAL_ASSEMBLY));
-    PetscCallVoid(MatAssemblyEnd(_matrix, MAT_FINAL_ASSEMBLY));
-
-    // // show the matrix and the right-hand-side
-    // PetscCallVoid(MatView(_matrix, PETSC_VIEWER_STDOUT_WORLD));
-    // PetscCallVoid(VecView(_rhs, PETSC_VIEWER_STDOUT_WORLD));
+    // assemble the linear system
+    _linear_system.assemble();
 
     // solve the linear system
-    PetscCallVoid(KSPSolve(_ksp, _rhs, _solution));
-
-    // // show the solution
-    // PetscCallVoid(VecView(_solution, PETSC_VIEWER_STDOUT_WORLD));
+    PetscCallVoid(KSPSolve(_ksp, _linear_system._rhs, _linear_system._solution));
 
     // all done
     return;
@@ -248,17 +117,13 @@ mito::solvers::petsc::PETScKrylovSolver::solve() -> void
 
 // print the linear system of equations of the petsc solver
 auto
-mito::solvers::petsc::PETScKrylovSolver::print() -> void
+mito::solvers::petsc::PETScKrylovSolver::print() const -> void
 {
     // create a reporting channel
     journal::info_t channel("mito.solvers.petsc.PETScKrylovSolver");
 
-    // print the matrix
-    channel << "Matrix:" << journal::endl;
-    PetscCallVoid(MatView(_matrix, PETSC_VIEWER_STDOUT_WORLD));
-    // print the right-hand side
-    channel << "Right-hand side:" << journal::endl;
-    PetscCallVoid(VecView(_rhs, PETSC_VIEWER_STDOUT_WORLD));
+    // print the linear system
+    _linear_system.print();
 
     // all done
     return;

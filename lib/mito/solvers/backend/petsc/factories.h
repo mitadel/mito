@@ -9,12 +9,17 @@
 
 namespace mito::solvers::petsc {
 
-    // petsc ksp solver
-    auto ksp(const std::string & name)
+    // petsc linear system
+    auto linear_system(const std::string & name)
     {
-        return ksp_t(name);
+        return linear_system_t(name);
     }
 
+    // petsc Krylov solver
+    auto ksp(linear_system_t & linear_system)
+    {
+        return ksp_t(linear_system);
+    }
 }
 
 

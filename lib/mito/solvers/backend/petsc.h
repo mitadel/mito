@@ -7,9 +7,8 @@
 #pragma once
 
 
-#ifdef WITH_PETSC
-#include "backend/petsc.h"
-#endif    // WITH_PETSC
+// publish the interface
+#include "petsc/public.h"
 
 
 // end of file

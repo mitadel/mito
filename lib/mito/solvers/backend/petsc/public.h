@@ -17,6 +17,7 @@
 #include "api.h"
 
 // classes
+#include "PETScLinearSystem.h"
 #include "PETScKrylovSolver.h"
 
 // factories implementation

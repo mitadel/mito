@@ -4,15 +4,15 @@
 //
 
 
-#if !defined(mito_solvers_backend_petsc_PETScKrylovSolver_icc)
-#error This header file contains implementation details of class mito::solvers::petsc::PETScKrylovSolver
+#if !defined(mito_solvers_backend_petsc_PETScLinearSystem_icc)
+#error This header file contains implementation details of class mito::solvers::petsc::PETScLinearSystem
 #else
 
 
 // get the solution at entry {row}
 template <class solutionT>
 auto
-mito::solvers::petsc::PETScKrylovSolver::get_solution(solutionT & solution) const -> void
+mito::solvers::petsc::PETScLinearSystem::get_solution(solutionT & solution) const -> void
 {
     // get a pointer to the beginning of {_solution}
     const scalar_type * u;
@@ -36,6 +36,6 @@ mito::solvers::petsc::PETScKrylovSolver::get_solution(solutionT & solution) cons
 }
 
 
-#endif    // mito_solvers_backend_petsc_PETScKrylovSolver_icc
+#endif    // mito_solvers_backend_petsc_PETScLinearSystem_icc
 
 // end of file

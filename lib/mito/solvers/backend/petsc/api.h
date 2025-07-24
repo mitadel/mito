@@ -9,6 +9,9 @@
 
 namespace mito::solvers::petsc {
 
+    // petsc linear system
+    using linear_system_t = PETScLinearSystem;
+
     // petsc Krlov solver
     using ksp_t = PETScKrylovSolver;
 
