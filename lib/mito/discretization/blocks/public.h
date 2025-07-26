@@ -20,6 +20,7 @@
 #include "AssemblyBlock.h"
 #include "GradGradBlock.h"
 #include "SourceTermBlock.h"
+#include "L2NormBlock.h"
 
 // factories implementation
 #include "factories.h"

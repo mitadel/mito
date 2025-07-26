@@ -20,6 +20,11 @@ namespace mito::discretization::blocks {
     // source term block
     template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
     class SourceTermBlock;
+
+    // L2 norm block
+    template <class elementT, class quadratureRuleT, fields::field_c fieldT>
+    class L2NormBlock;
+
 }
 
 
