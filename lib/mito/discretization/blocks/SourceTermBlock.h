@@ -9,6 +9,8 @@
 
 namespace mito::discretization::blocks {
 
+    // TOFIX: the source does not need to be necessarily a scalar field, it can be some other field
+    // see if we can use {field_c} instead of {scalar_field_c}
     template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
     class SourceTermBlock : public AssemblyBlock<elementT, tensor::vector_t<elementT::n_nodes>> {
 
