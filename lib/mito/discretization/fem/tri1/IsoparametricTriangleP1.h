@@ -76,10 +76,11 @@ namespace mito::discretization {
         inline auto parametrization() const
         {
             // assemble the physical coordinates from the barycentric coordinates
-            auto x_cell = [&](const barycentric_coordinates_type & xi) -> tensor::vector_t<2> {
-                // compute the gradient of the isoparametric mapping
-                return _x_cell()({ xi[0], xi[1] });
-            };
+            auto x_cell = functions::function(
+                [&](const barycentric_coordinates_type & xi) -> tensor::vector_t<2> {
+                    // compute the gradient of the isoparametric mapping
+                    return _x_cell()({ xi[0], xi[1] });
+                });
 
             // and return it
             return x_cell;
@@ -92,10 +93,11 @@ namespace mito::discretization {
         {
             // assemble the shape function associated with local node {a} as a function of
             // barycentric coordinates
-            auto shape_function = [](const barycentric_coordinates_type & xi) -> tensor::scalar_t {
-                // return the a-th shape function evaluated at {xi}
-                return shape_functions.shape<a>()({ xi[0], xi[1] });
-            };
+            auto shape_function = functions::function(
+                [](const barycentric_coordinates_type & xi) -> tensor::scalar_t {
+                    // return the a-th shape function evaluated at {xi}
+                    return shape_functions.shape<a>()({ xi[0], xi[1] });
+                });
 
             // and return it
             return shape_function;
@@ -105,11 +107,11 @@ namespace mito::discretization {
         inline auto jacobian() const
         {
             // assemble the jacobian as a function of barycentric coordinates
-            auto jacobian_function =
+            auto jacobian_function = functions::function(
                 [&](const barycentric_coordinates_type & xi) -> tensor::matrix_t<2> {
-                // compute the gradient of the isoparametric mapping
-                return fields::gradient(_x_cell())({ xi[0], xi[1] });
-            };
+                    // compute the gradient of the isoparametric mapping
+                    return fields::gradient(_x_cell())({ xi[0], xi[1] });
+                });
 
             // and return it
             return jacobian_function;
@@ -121,16 +123,16 @@ namespace mito::discretization {
         inline auto gradient() const
         {
             // assemble the gradient as a function of barycentric coordinates
-            auto gradient_function =
+            auto gradient_function = functions::function(
                 [&](const barycentric_coordinates_type & xi) -> tensor::vector_t<2> {
-                // the jacobian of the mapping from the reference element to the physical element
-                // evaluated at {xi}
-                auto J = jacobian()(xi);
-                // the derivative of the coordinates with respect to the barycentric coordinates
-                auto J_inv = tensor::inverse(J);
-                // return the spatial gradients of the shape functions evaluated at {xi}
-                return shape_functions.dshape<a>()({ xi[0], xi[1] }) * J_inv;
-            };
+                    // the jacobian of the mapping from the reference element to the physical
+                    // element evaluated at {xi}
+                    auto J = jacobian()(xi);
+                    // the derivative of the coordinates with respect to the barycentric coordinates
+                    auto J_inv = tensor::inverse(J);
+                    // return the spatial gradients of the shape functions evaluated at {xi}
+                    return shape_functions.dshape<a>()({ xi[0], xi[1] }) * J_inv;
+                });
             // and return it
             return gradient_function;
         }
