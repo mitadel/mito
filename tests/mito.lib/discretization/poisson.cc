@@ -200,14 +200,12 @@ TEST(Fem, PoissonSquare)
     auto error_L2 = 0.0;
     // loop on all the cells of the mesh
     for (const auto & element : function_space.elements()) {
-        // get the corresponding cell
-        const auto & cell = element.geometric_simplex();
-        // volume of the cell
-        auto volume = manifold.volume(cell);
         // loop on the quadrature points
         mito::tensor::constexpr_for_1<quadrature_rule_t::npoints>([&]<int q>() {
             // the barycentric coordinates of the quadrature point
             constexpr auto xi = quadrature_rule.point(q);
+            // jacobian of the element at {xi}
+            auto jacobian = mito::tensor::determinant(element.jacobian()(xi));
             // composition of the exact solution with the parametrization of the element
             auto u_ex_local = u_ex.function()(element.parametrization());
             // assemble the numerical solution at {xi}
@@ -227,7 +225,7 @@ TEST(Fem, PoissonSquare)
             });
             // get the error
             error_L2 += (u_ex_local(xi) - u_numerical) * (u_ex_local(xi) - u_numerical)
-                      * quadrature_rule.weight(q) * volume;
+                      * quadrature_rule.weight(q) * jacobian;
         });
     }
     error_L2 = std::sqrt(error_L2);
@@ -242,15 +240,12 @@ TEST(Fem, PoissonSquare)
     auto error_H1 = 0.0;
     // loop on all the cells of the mesh
     for (const auto & element : function_space.elements()) {
-        // get the corresponding cell
-        const auto & cell = element.geometric_simplex();
-        // volume of the cell
-        auto volume = manifold.volume(cell);
         mito::tensor::constexpr_for_1<quadrature_rule_t::npoints>([&]<int q>() {
             // the barycentric coordinates of the quadrature point
             auto xi = quadrature_rule.point(q);
-            // the coordinates of the quadrature point
-            auto coord = element.parametrization()(xi);
+            // jacobian of the element at {xi}
+
+            auto jacobian = mito::tensor::determinant(element.jacobian()(xi));
             // composition of the exact solution gradient with the parametrization of the element
             auto grad_u_ex_local =
                 mito::fields::gradient(u_ex).function()(element.parametrization());
@@ -271,7 +266,7 @@ TEST(Fem, PoissonSquare)
             });
             // get the error
             auto diff = grad_u_ex_local(xi) - grad_u_numerical;
-            error_H1 += mito::tensor::dot(diff, diff) * quadrature_rule.weight(q) * volume;
+            error_H1 += mito::tensor::dot(diff, diff) * quadrature_rule.weight(q) * jacobian;
         });
     }
     error_H1 = std::sqrt(error_H1);
