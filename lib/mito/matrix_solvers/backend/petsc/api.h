@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::solvers::petsc {
+namespace mito::matrix_solvers::petsc {
 
     // petsc linear system
     using linear_system_t = PETScLinearSystem;

@@ -72,12 +72,12 @@ TEST(Fem, PoissonSquare)
     // should be handled by the system
 
     // initialize PETSc
-    mito::solvers::petsc::initialize();
+    mito::petsc::initialize();
 
     // create a PETSc linear system of equations and a Krylov solver
-    auto linear_system = mito::solvers::petsc::linear_system("mysystem");
+    auto linear_system = mito::matrix_solvers::petsc::linear_system("mysystem");
     linear_system.create(N_equations);
-    auto solver = mito::solvers::petsc::ksp(linear_system);
+    auto solver = mito::matrix_solvers::petsc::ksp(linear_system);
     solver.create();
     solver.set_options("-ksp_type preonly -pc_type cholesky");
 
@@ -282,7 +282,7 @@ TEST(Fem, PoissonSquare)
 
     // TOFIX: move this to the class owning the petsc instance
     // finalize PETSc
-    mito::solvers::petsc::finalize();
+    mito::petsc::finalize();
 }
 
 // end of file

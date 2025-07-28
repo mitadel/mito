@@ -8,7 +8,7 @@
 
 
 // publish the interface
-#include "solvers/public.h"
+#include "matrix_solvers/public.h"
 
 
 // end of file

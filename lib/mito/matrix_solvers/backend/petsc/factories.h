@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::solvers::petsc {
+namespace mito::matrix_solvers::petsc {
 
     // petsc linear system
     auto linear_system(const std::string & name)

@@ -19,7 +19,7 @@
 #include <petscksp.h>
 
 
-namespace mito::solvers::petsc {
+namespace mito::petsc {
 
     // initialize petsc
     inline auto initialize() -> void

@@ -14,11 +14,11 @@ TEST(Solvers, PETScKSPSolver)
     int N = 10;
 
     // instantiate a PETSc linear system of size {N}
-    auto linear_system = mito::solvers::petsc::linear_system("mysystem");
+    auto linear_system = mito::matrix_solvers::petsc::linear_system("mysystem");
     linear_system.create(N);
 
     // instantiate a PETSc Krylov solver for the linear system
-    auto solver = mito::solvers::petsc::ksp(linear_system);
+    auto solver = mito::matrix_solvers::petsc::ksp(linear_system);
     solver.create();
     solver.set_options("-ksp_monitor");
 
@@ -68,13 +68,13 @@ int
 main(int argc, char ** argv)
 {
     // initialize PETSc
-    mito::solvers::petsc::initialize();
+    mito::petsc::initialize();
 
     ::testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();
 
     // finalize PETSc
-    mito::solvers::petsc::finalize();
+    mito::petsc::finalize();
 
     // all done
     return result;

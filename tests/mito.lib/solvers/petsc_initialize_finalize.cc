@@ -11,10 +11,10 @@
 TEST(Solvers, PETScInitializeFinalize)
 {
     // initialize PETSc
-    mito::solvers::petsc::initialize();
+    mito::petsc::initialize();
 
     // finalize PETSc
-    mito::solvers::petsc::finalize();
+    mito::petsc::finalize();
 }
 
 
