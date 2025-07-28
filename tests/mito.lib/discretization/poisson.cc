@@ -61,7 +61,7 @@ TEST(Fem, PoissonSquare)
 
     // the function space (linear elements on the manifold)
     // TOFIX: function space should be template with respect to the finite element type
-    auto function_space = mito::discretization::function_space<2>(manifold, constraints);
+    auto function_space = mito::discretization::function_space<degree>(manifold, constraints);
 
     // the discrete system
     auto discrete_system = mito::discretization::discrete_system(function_space);
