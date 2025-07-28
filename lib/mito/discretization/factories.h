@@ -34,6 +34,27 @@ namespace mito::discretization {
         return nodal_field_t<meshT::dim, Y>(nodes, name);
     }
 
+    // nodal field factory from a continuous field
+    template <fields::field_c fieldT>
+    constexpr auto nodal_field(
+        const mesh::mesh_c auto & mesh, const geometry::coordinate_system_c auto & coord_system,
+        const fieldT & field, std::string name)
+    {
+        // create a nodal field on the mesh
+        auto n_field = nodal_field<typename fieldT::output_type>(mesh, name);
+
+        // populate the nodal field with the values of the continuous field
+        for (auto & [node, value] : n_field) {
+            // get the position of {node}
+            auto coord = coord_system.coordinates(node->point());
+            // evaluate the continuousfield at {coord}
+            value = field(coord);
+        }
+
+        // return the nodal field
+        return n_field;
+    }
+
     // point field factory
     template <class Y, geometry::point_cloud_c cloudT>
     constexpr auto point_field(const cloudT & cloud, std::string name)

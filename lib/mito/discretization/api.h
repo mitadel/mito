@@ -29,6 +29,12 @@ namespace mito::discretization {
     template <class Y, int D>
     constexpr auto nodal_field(const mesh::mesh_c auto & mesh, std::string name);
 
+    // nodal field factory from a continuous field
+    template <fields::field_c fieldT>
+    constexpr auto nodal_field(
+        const mesh::mesh_c auto & mesh, const geometry::coordinate_system_c auto & coord_system,
+        const fieldT & field, std::string name);
+
     // point field factory
     template <class Y, geometry::point_cloud_c cloudT>
     constexpr auto point_field(const cloudT & cloud, std::string name);

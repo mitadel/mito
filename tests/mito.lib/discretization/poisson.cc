@@ -172,26 +172,15 @@ TEST(Fem, PoissonSquare)
     }
 
     // the forcing term nodal field on the mesh
-    auto forcing = mito::discretization::nodal_field<scalar_t>(mesh, "forcing term");
-    // fill information in nodal field
-    for (auto & [node, value] : forcing) {
-        // get the position of {node}
-        auto coord = coord_system.coordinates(node->point());
-        // evaluate the forcing at {coord}
-        value = f(coord);
-    }
+    auto forcing = mito::discretization::nodal_field(mesh, coord_system, f, "forcing term");
 
-    // the exact solution nodal field on the mesh
-    auto exact_solution = mito::discretization::nodal_field<scalar_t>(mesh, "exact solution");
+    // the exact solution field
     auto u_ex = mito::fields::field(
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y));
-    // fill information in nodal field
-    for (auto & [node, value] : exact_solution) {
-        // get the position of {node}
-        auto coord = coord_system.coordinates(node->point());
-        // evaluate the forcing at {coord}
-        value = u_ex(coord);
-    }
+
+    // the exact solution nodal field on the mesh
+    auto exact_solution =
+        mito::discretization::nodal_field(mesh, coord_system, u_ex, "exact solution");
 
 #ifdef WITH_VTK
     // write mesh to vtk file

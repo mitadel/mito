@@ -42,8 +42,8 @@ namespace mito::discretization {
         // delete copy constructor
         DiscreteField(const DiscreteField &) = delete;
 
-        // delete move copy constructor
-        DiscreteField(DiscreteField &&) = delete;
+        // default move constructor
+        DiscreteField(DiscreteField &&) = default;
 
         // delete copy assignment
         auto operator=(const DiscreteField &) -> DiscreteField & = delete;
