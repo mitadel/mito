@@ -26,11 +26,11 @@ namespace mito::discretization::blocks {
     }
 
     // L2 norm block factory
-    template <class elementT, class quadratureRuleT, fields::field_c fieldT>
-    constexpr auto l2_norm_block(const fieldT & f)
+    template <class elementT, class quadratureRuleT, functions::function_c functionT>
+    constexpr auto l2_norm_block(const functionT & f)
     {
         // all done
-        return l2_norm_block_t<elementT, quadratureRuleT, fieldT>(f);
+        return l2_norm_block_t<elementT, quadratureRuleT, functionT>(f);
     }
 
 }

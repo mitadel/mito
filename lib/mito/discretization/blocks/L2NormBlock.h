@@ -9,8 +9,10 @@
 
 namespace mito::discretization::blocks {
 
-    // TOFIX: the source does not need to be necessarily a scalar field, it can be some other field
-    template <class elementT, class quadratureRuleT, fields::field_c fieldT>
+    template <class elementT, class quadratureRuleT, functions::function_c functionT>
+    // require that {functionT} is a function in barycentric coordinates
+    requires(std::is_same_v<
+             typename functionT::input_type, typename quadratureRuleT::quadrature_point_type>)
     class L2NormBlock : public AssemblyBlock<elementT, tensor::scalar_t> {
 
       public:
@@ -23,7 +25,7 @@ namespace mito::discretization::blocks {
         using quadrature_rule_type = quadratureRuleT;
 
         // the type of the function to compute the L2 norm of
-        using field_type = fieldT;
+        using function_type = functionT;
 
       public:
         // instantiate the quadrature rule
@@ -31,15 +33,12 @@ namespace mito::discretization::blocks {
 
       public:
         // constructor
-        L2NormBlock(const field_type & field) : _field(field) {}
+        L2NormBlock(const function_type & function) : _function(function) {}
 
       public:
         // compute the elementary contribution of this block
         auto compute(const element_type & element) const -> elementary_block_type override
         {
-            // the number of nodes per element
-            constexpr int n_nodes = element_type::n_nodes;
-
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;
 
@@ -51,13 +50,10 @@ namespace mito::discretization::blocks {
                 // the barycentric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
-                // the coordinates of the quadrature point
-                auto coord = element.parametrization()(xi);
-
                 // populate the elementary contribution to the matrix
                 elementary_contribution += quadrature_rule.weight(q)
                                          * tensor::determinant(element.jacobian()(xi))
-                                         * _field(coord);
+                                         * _function(xi) * _function(xi);
             });
 
             // all done
@@ -65,8 +61,8 @@ namespace mito::discretization::blocks {
         }
 
       private:
-        // the field to compute the L2 norm of
-        const field_type & _field;
+        // the function to compute the L2 norm of
+        const function_type & _function;
     };
 
 }    // namespace mito
