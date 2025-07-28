@@ -208,11 +208,9 @@ TEST(Fem, PoissonSquare)
         mito::tensor::constexpr_for_1<quadrature_rule_t::npoints>([&]<int q>() {
             // the barycentric coordinates of the quadrature point
             constexpr auto xi = quadrature_rule.point(q);
-            // the coordinates of the quadrature point
-            auto coord = element.parametrization()(xi);
-            // get the exact solution at {coord}
-            auto u_exact = u_ex(coord);
-            // assemble the numerical solution at {coord}
+            // composition of the exact solution with the parametrization of the element
+            auto u_ex_local = u_ex.function()(element.parametrization());
+            // assemble the numerical solution at {xi}
             auto u_numerical = 0.0;
             // loop on all the shape functions
             mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -223,12 +221,12 @@ TEST(Fem, PoissonSquare)
                 // get the equation number of {node_a}
                 int eq = equation_map.at(node_a);
                 if (eq != -1) {
-                    // get the numerical solution at {coord}
+                    // get the numerical solution at {xi}
                     u_numerical += u[eq] * phi_a;
                 }
             });
             // get the error
-            error_L2 += (u_exact - u_numerical) * (u_exact - u_numerical)
+            error_L2 += (u_ex_local(xi) - u_numerical) * (u_ex_local(xi) - u_numerical)
                       * quadrature_rule.weight(q) * volume;
         });
     }
@@ -253,9 +251,10 @@ TEST(Fem, PoissonSquare)
             auto xi = quadrature_rule.point(q);
             // the coordinates of the quadrature point
             auto coord = element.parametrization()(xi);
-            // exact solution gradient at {coord}
-            auto grad_u_exact = mito::fields::gradient(u_ex)(coord);
-            // assemble the numerical solution gradient at {coord}
+            // composition of the exact solution gradient with the parametrization of the element
+            auto grad_u_ex_local =
+                mito::fields::gradient(u_ex).function()(element.parametrization());
+            // assemble the numerical solution gradient at {xi}
             auto grad_u_numerical = mito::tensor::vector_t<2>{ 0.0, 0.0 };
             // loop on all the shape functions
             mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -266,12 +265,12 @@ TEST(Fem, PoissonSquare)
                 // get the equation number of {node_a}
                 int eq = equation_map.at(node_a);
                 if (eq != -1) {
-                    // get the numerical solution gradient at {coord}
+                    // get the numerical solution gradient at {xi}
                     grad_u_numerical += u[eq] * dphi_a;
                 }
             });
             // get the error
-            auto diff = grad_u_exact - grad_u_numerical;
+            auto diff = grad_u_ex_local(xi) - grad_u_numerical;
             error_H1 += mito::tensor::dot(diff, diff) * quadrature_rule.weight(q) * volume;
         });
     }
