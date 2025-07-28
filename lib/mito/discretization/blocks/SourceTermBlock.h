@@ -53,7 +53,7 @@ namespace mito::discretization::blocks {
                 constexpr auto xi = quadrature_rule.point(q);
 
                 // the coordinates of the quadrature point
-                auto coord = element.parametrization()(quadrature_rule.point(q));
+                auto coord = element.parametrization()(xi);
 
                 // precompute the common factor
                 auto factor =
