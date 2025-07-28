@@ -22,7 +22,7 @@ namespace mito::discretization::blocks {
 
       public:
         // the constructor
-        constexpr AssemblyBlock() {}
+        constexpr AssemblyBlock() = default;
 
         // destructor
         constexpr ~AssemblyBlock() = default;
