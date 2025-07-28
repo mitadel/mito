@@ -171,18 +171,16 @@ TEST(Fem, PoissonSquare)
         }
     }
 
-    // the forcing term nodal field on the mesh
-    auto forcing = mito::discretization::nodal_field(mesh, coord_system, f, "forcing term");
-
     // the exact solution field
     auto u_ex = mito::fields::field(
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y));
 
-    // the exact solution nodal field on the mesh
+#ifdef WITH_VTK
+    // the forcing term nodal field on the mesh (for visualization)
+    auto forcing = mito::discretization::nodal_field(mesh, coord_system, f, "forcing term");
+    // the exact solution nodal field on the mesh (for visualization)
     auto exact_solution =
         mito::discretization::nodal_field(mesh, coord_system, u_ex, "exact solution");
-
-#ifdef WITH_VTK
     // write mesh to vtk file
     auto writer = mito::io::vtk::field_writer("poisson_square", mesh, coord_system);
     // sign {forcing} up with the writer
