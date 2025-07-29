@@ -24,6 +24,21 @@ namespace mito::discretization {
         return;
     }
 
+    // populate a container with a collection of all first order nodes in a function space (include
+    // only the mesh nodes, exclude the nodes of the subconnectivities)
+    template <function_space_c functionSpaceT, class nodesCollectionT>
+    inline auto get_mesh_discretization_nodes(
+        const functionSpaceT & function_space, nodesCollectionT & nodes) -> void
+    {
+        for (const auto & element : function_space.elements()) {
+            for (const auto & node : element.geometric_simplex().nodes()) {
+                nodes.insert(function_space.node_map().at(node));
+            }
+        }
+
+        // all done
+        return;
+    }
 }
 
 

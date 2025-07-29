@@ -63,6 +63,21 @@ namespace mito::discretization {
         return point_field_t<cloudT::dim, Y>(cloud.points(), name);
     }
 
+    // nodal field factory
+    template <class Y, function_space_c functionSpaceT>
+    constexpr auto nodal_field(const functionSpaceT & function_space, std::string name)
+    {
+        // assemble the node type
+        using node_type = functionSpaceT::discretization_node_type;
+
+        // get the nodes in the mesh
+        std::unordered_set<node_type, utilities::hash_function<node_type>> nodes;
+        get_mesh_discretization_nodes(function_space, nodes);
+
+        // build a nodal field on the discretization nodes collected from the function space
+        return nodal_field_t<Y>(nodes, name);
+    }
+
     // TOFIX: create a constructor that takes no constraints
 
     // TOFIX: {constraints} should be a collection of constraints as opposed to an instance of a

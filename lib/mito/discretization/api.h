@@ -20,6 +20,10 @@ namespace mito::discretization {
     template <int D, class Y>
     using point_field_t = DiscreteField<geometry::point_t<D>, Y>;
 
+    // nodal field
+    template <class Y>
+    using nodal_field_t = DiscreteField<discretization_node_t, Y>;
+
     // quadrature field alias
     template <class cellT, int Q, class Y>
     using quadrature_field_t = DiscreteField<cellT, std::array<Y, Q>>;
@@ -41,6 +45,10 @@ namespace mito::discretization {
     // point field factory
     template <class Y, geometry::point_cloud_c cloudT>
     constexpr auto point_field(const cloudT & cloud, std::string name);
+
+    // nodal field factory
+    template <class Y, function_space_c functionSpaceT>
+    constexpr auto nodal_field(const functionSpaceT & function_space, std::string name);
 
     // function space alias
     template <class elementT, constraints::constraint_c constraintsT>
