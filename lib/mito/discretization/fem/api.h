@@ -9,9 +9,6 @@
 
 namespace mito::discretization {
 
-    // discretization node alias
-    using discretization_node_t = utilities::std_shared_ptr<const DiscretizationNode>;
-
     // function space alias
     template <class elementT, constraints::constraint_c constraintsT>
     using function_space_t = FunctionSpace<elementT, constraintsT>;
