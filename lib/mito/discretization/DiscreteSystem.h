@@ -9,7 +9,7 @@
 
 namespace mito::discretization {
 
-    template <class functionSpaceT>
+    template <function_space_c functionSpaceT>
     class DiscreteSystem {
 
       private:

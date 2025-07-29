@@ -87,7 +87,7 @@ namespace mito::discretization {
     }
 
     // discrete system factory
-    template <class functionSpaceT>
+    template <function_space_c functionSpaceT>
     constexpr auto discrete_system(const functionSpaceT & function_space)
     {
         return discrete_system_t<functionSpaceT>(function_space);

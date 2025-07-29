@@ -10,7 +10,7 @@
 namespace mito::discretization {
 
     // populate a container with a collection of all nodes in a function space
-    template <class functionSpaceT, class nodesCollectionT>
+    template <function_space_c functionSpaceT, class nodesCollectionT>
     inline auto get_discretization_nodes(
         const functionSpaceT & function_space, nodesCollectionT & nodes) -> void
     {

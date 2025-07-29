@@ -20,8 +20,17 @@ namespace mito::discretization {
     template <class elementT, constraints::constraint_c constraintsT>
     class FunctionSpace;
 
+    // concept of a function space
+    template <class F>
+    concept function_space_c = requires(F c) {
+        // require that F only binds to {FunctionSpace} specializations
+        []<class elementT, constraints::constraint_c constraintsT>(
+            const FunctionSpace<elementT, constraintsT> &) {
+        }(c);
+    };
+
     // class discrete system
-    template <class functionSpaceT>
+    template <function_space_c functionSpaceT>
     class DiscreteSystem;
 }
 
