@@ -40,7 +40,7 @@ mito_test_driver(tests/mito.lib/constraints/dirichlet.cc)
 
 # discretization
 mito_test_driver(tests/mito.lib/discretization/quadrature_field.cc)
-mito_test_driver(tests/mito.lib/discretization/nodal_field.cc)
+mito_test_driver(tests/mito.lib/discretization/mesh_field.cc)
 mito_test_driver(tests/mito.lib/discretization/poisson.cc)
 mito_test_driver(tests/mito.lib/discretization/shape_functions_triangle_p1.cc)
 mito_test_driver(tests/mito.lib/discretization/shape_functions_triangle_p2.cc)

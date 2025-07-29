@@ -33,9 +33,9 @@ test()
         // get the original number of mesh cells
         original_mesh_cells = mesh.nCells();
 
-        // get the original number of mesh nodes by counting the nodes of a nodal field built on it
+        // get the original number of mesh nodes by counting the nodes of a mesh field built on it
         original_mesh_nodes =
-            mito::discretization::nodal_field<mito::tensor::scalar_t>(mesh, "field").size();
+            mito::discretization::mesh_field<mito::tensor::scalar_t>(mesh, "field").size();
 
         // write summit mesh
         mito::io::summit::writer("rectangle_copy", mesh, coord_system);
@@ -52,9 +52,9 @@ test()
         // get the reread number of mesh cells
         reread_mesh_cells = mesh.nCells();
 
-        // get the reread number of mesh nodes by counting the nodes of a nodal field built on it
+        // get the reread number of mesh nodes by counting the nodes of a mesh field built on it
         reread_mesh_nodes =
-            mito::discretization::nodal_field<mito::tensor::scalar_t>(mesh, "field").size();
+            mito::discretization::mesh_field<mito::tensor::scalar_t>(mesh, "field").size();
 
 #ifdef WITH_VTK
         // write mesh to vtk file

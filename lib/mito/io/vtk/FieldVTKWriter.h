@@ -18,7 +18,7 @@ namespace mito::io::vtk {
         template <mesh::mesh_c gridT>
         struct field_type<gridT> {
             template <class Y>
-            using type = discretization::nodal_field_t<gridT::dim, Y>;
+            using type = discretization::mesh_field_t<gridT::dim, Y>;
         };
 
         // specialization to {point_cloud_c} case

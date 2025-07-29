@@ -156,11 +156,11 @@ TEST(Fem, PoissonSquare)
 
     // TOFIX: the solution should be assembled by the function space, which is aware of the
     // constraints and can populate the constrained nodes appropriately
-    // the numerical solution nodal field on the mesh
-    auto solution = mito::discretization::nodal_field<scalar_t>(mesh, "numerical solution");
+    // the numerical solution mesh field on the mesh
+    auto solution = mito::discretization::mesh_field<scalar_t>(mesh, "numerical solution");
     // get the node map from the function space
     auto node_map = function_space.node_map();
-    // fill information in nodal field
+    // fill information in mesh field
     for (auto & [node, value] : solution) {
         auto discretization_node = node_map.at(node);
         // get the equation number of {node}
@@ -176,11 +176,11 @@ TEST(Fem, PoissonSquare)
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y));
 
 #ifdef WITH_VTK
-    // the forcing term nodal field on the mesh (for visualization)
-    auto forcing = mito::discretization::nodal_field(mesh, coord_system, f, "forcing term");
-    // the exact solution nodal field on the mesh (for visualization)
+    // the forcing term mesh field on the mesh (for visualization)
+    auto forcing = mito::discretization::mesh_field(mesh, coord_system, f, "forcing term");
+    // the exact solution mesh field on the mesh (for visualization)
     auto exact_solution =
-        mito::discretization::nodal_field(mesh, coord_system, u_ex, "exact solution");
+        mito::discretization::mesh_field(mesh, coord_system, u_ex, "exact solution");
     // write mesh to vtk file
     auto writer = mito::io::vtk::field_writer("poisson_square", mesh, coord_system);
     // sign {forcing} up with the writer
