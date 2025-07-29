@@ -20,7 +20,6 @@
 #include "ReferenceTriangle.h"
 #include "IsoparametricTriangle.h"
 #include "isoparametric_simplex_library.h"
-#include "FunctionSpace.h"
 
 // factories implementation
 #include "factories.h"

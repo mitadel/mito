@@ -19,6 +19,7 @@
 // classes implementation
 #include "DiscreteField.h"
 #include "DiscretizationNode.h"
+#include "FunctionSpace.h"
 #include "DiscreteSystem.h"
 
 // finite elements implementation

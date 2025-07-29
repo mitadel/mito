@@ -9,9 +9,6 @@
 
 namespace mito::discretization {
 
-    // class function space
-    template <class elementT, constraints::constraint_c constraintsT>
-    class FunctionSpace;
 }
 
 

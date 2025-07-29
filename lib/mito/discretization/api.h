@@ -42,6 +42,14 @@ namespace mito::discretization {
     template <class Y, geometry::point_cloud_c cloudT>
     constexpr auto point_field(const cloudT & cloud, std::string name);
 
+    // function space alias
+    template <class elementT, constraints::constraint_c constraintsT>
+    using function_space_t = FunctionSpace<elementT, constraintsT>;
+
+    // function space factory
+    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints);
+
     // discrete system alias
     template <class functionSpaceT>
     using discrete_system_t = DiscreteSystem<functionSpaceT>;
