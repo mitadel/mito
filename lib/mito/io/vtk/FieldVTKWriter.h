@@ -28,6 +28,13 @@ namespace mito::io::vtk {
             using type = discretization::point_field_t<gridT::dim, Y>;
         };
 
+        // specialization to {function_space_c} case
+        template <discretization::function_space_c functionSpaceT>
+        struct field_type<functionSpaceT> {
+            template <class Y>
+            using type = discretization::nodal_field_t<Y>;
+        };
+
         // utility function to get the data pointer
         template <typename Y>
         constexpr auto dim() -> int
@@ -93,7 +100,7 @@ namespace mito::io::vtk {
             vtkArray->SetNumberOfTuples(field_size);
 
             // populate the array
-            if constexpr (mesh::mesh_c<grid_type>) {
+            if constexpr (mesh::mesh_c<grid_type> or discretization::function_space_c<grid_type>) {
                 // get the nodes in the grid
                 const auto & nodes = _grid_writer.nodes();
 

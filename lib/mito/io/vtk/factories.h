@@ -25,6 +25,16 @@ namespace mito::io::vtk {
         return cloud_writer_t<cloudT, coordSystemT>(filename, cloud, coord_system);
     }
 
+    // vtk node writer factory
+    template <
+        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
+    auto grid_writer(
+        std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)
+    {
+        return node_writer_t<functionSpaceT, coordSystemT>(filename, node, coord_system);
+    }
+
     // vtk mesh field writer factory
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<meshT, coordSystemT>)
@@ -41,6 +51,17 @@ namespace mito::io::vtk {
     {
         return field_writer_t<cloud_writer_t<cloudT, coordSystemT>, coordSystemT>(
             filename, cloud, coord_system);
+    }
+
+    // vtk node field writer factory
+    template <
+        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
+    auto field_writer(
+        std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)
+    {
+        return field_writer_t<node_writer_t<functionSpaceT, coordSystemT>, coordSystemT>(
+            filename, node, coord_system);
     }
 
 #ifdef WITH_PARALLEL_VTK
@@ -62,6 +83,16 @@ namespace mito::io::vtk {
         return parallel_cloud_writer_t<cloudT, coordSystemT>(filename, cloud, coord_system);
     }
 
+    // parallel vtk node writer factory
+    template <
+        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
+    auto parallel_grid_writer(
+        std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)
+    {
+        return parallel_node_writer_t<functionSpaceT, coordSystemT>(filename, node, coord_system);
+    }
+
     // parallel vtk mesh field writer factory
     template <mesh::mesh_c meshT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<meshT, coordSystemT>)
@@ -81,8 +112,19 @@ namespace mito::io::vtk {
         return field_writer_t<parallel_cloud_writer_t<cloudT, coordSystemT>, coordSystemT>(
             filename, cloud, coord_system);
     }
-#endif    // WITH_PARALLEL_VTK
 
+    // parallel vtk node field writer factory
+    template <
+        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
+    auto parallel_field_writer(
+        std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)
+    {
+        return field_writer_t<parallel_node_writer_t<functionSpaceT, coordSystemT>, coordSystemT>(
+            filename, node, coord_system);
+    }
+
+#endif    // WITH_PARALLEL_VTK
 }
 
 

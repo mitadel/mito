@@ -28,6 +28,15 @@ namespace mito::io::vtk {
         && utilities::same_dim_c<cloudT, vtkGridWriterT>)
     class PointCloudVTKWriter;
 
+    // class node writer
+    template <
+        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT,
+        class vtkGridWriterT>
+    requires(
+        utilities::same_dim_c<functionSpaceT, coordSystemT>
+        && utilities::same_dim_c<functionSpaceT, vtkGridWriterT>)
+    class NodeVTKWriter;
+
     // class field writer
     template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
     class FieldVTKWriter;
