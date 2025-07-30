@@ -81,7 +81,7 @@ TEST(Fem, PoissonSquare)
     auto discrete_system =
         mito::discretization::discrete_system<linear_system_t>(function_space, "mysystem");
 
-    // TODO: {linear_system} is only needed in the solver, so we can skip this step
+    // instantiate a linear solver for the discrete system
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
     solver.create();
 
