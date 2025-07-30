@@ -15,11 +15,10 @@ TEST(Solvers, PETScKSPSolver)
 
     // instantiate a PETSc linear system of size {N}
     auto linear_system = mito::matrix_solvers::petsc::linear_system("mysystem");
-    linear_system.create(N);
 
     // instantiate a PETSc Krylov solver for the linear system
     auto solver = mito::matrix_solvers::petsc::ksp(linear_system);
-    solver.create();
+    solver.create(N);
     solver.set_options("-ksp_monitor");
 
     // set matrix and right-hand side entries
@@ -52,9 +51,6 @@ TEST(Solvers, PETScKSPSolver)
     EXPECT_DOUBLE_EQ(x[7], 12.0);
     EXPECT_DOUBLE_EQ(x[8], 9.0);
     EXPECT_DOUBLE_EQ(x[9], 5.0);
-
-    // destroy the system
-    linear_system.destroy();
 
     // destroy the solver
     solver.destroy();
