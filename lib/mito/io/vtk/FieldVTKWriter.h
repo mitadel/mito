@@ -116,10 +116,17 @@ namespace mito::io::vtk {
                     // get the index corresponding to the current point
                     vtkArray->SetTuple(index++, begin(field(point)));
                 }
+            } else {
+                // something went wrong: make a channel and report an error
+                journal::error_t channel("mito.field_vtk_writer.attach_field");
+                channel << "unkown {grid_type}" << journal::endl;
             }
 
             // insert array into output grid
             grid->GetPointData()->AddArray(vtkArray);
+
+            // all done
+            return;
         }
 
       public:
