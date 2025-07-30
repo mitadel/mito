@@ -72,7 +72,7 @@ namespace mito::discretization {
 
         // get the nodes in the mesh
         std::unordered_set<node_type, utilities::hash_function<node_type>> nodes;
-        get_mesh_discretization_nodes(function_space, nodes);
+        get_discretization_nodes(function_space, nodes);
 
         // build a nodal field on the discretization nodes collected from the function space
         return nodal_field_t<Y>(nodes, name);
