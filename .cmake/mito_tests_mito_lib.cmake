@@ -71,8 +71,8 @@ endif()
 
 # solvers
 if(WITH_PETSC)
-    mito_test_driver(tests/mito.lib/solvers/petsc_initialize_finalize.cc)
-    mito_test_driver(tests/mito.lib/solvers/petsc_ksp.cc)
+    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_initialize_finalize.cc)
+    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_ksp.cc)
 endif()
 
 # tensor
