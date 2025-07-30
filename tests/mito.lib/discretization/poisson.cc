@@ -127,19 +127,15 @@ TEST(Fem, PoissonSquare)
 
     // compute the L2 error
     auto error_L2 = discrete_system.compute_l2_error<quadrature_rule_t>(u_ex);
-
     // report
     channel << "L2 error: " << error_L2 << journal::endl;
-
     // check that the l2 error is reasonable
     EXPECT_TRUE(error_L2 < 0.02);
 
     // compute the H1 error
     auto error_H1 = discrete_system.compute_h1_error<quadrature_rule_t>(u_ex);
-
     // report
     channel << "H1 error: " << error_H1 << journal::endl;
-
     // check that the h1 error is reasonable
     EXPECT_TRUE(error_H1 < 0.02);
 
