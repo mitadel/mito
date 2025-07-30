@@ -45,7 +45,7 @@ namespace mito::discretization::blocks {
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary rhs
-            elementary_block_type elementary_rhs;
+            elementary_block_type elementary_rhs{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {

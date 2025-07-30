@@ -43,7 +43,7 @@ namespace mito::discretization::blocks {
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary contribution to the L2 norm
-            elementary_block_type elementary_contribution;
+            auto elementary_contribution = elementary_block_type{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
