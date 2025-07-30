@@ -69,7 +69,7 @@ TEST(Algebra, ScalarValuedFunctions)
     constexpr auto function16 = function1 * e0 + function1 * e1 + function1 * e2;
 
     // vector times scalar multiplication
-    constexpr auto alpha = mito::tensor::scalar_t(10);
+    constexpr auto alpha = mito::tensor::scalar_t{ 10 };
     constexpr auto function17 = alpha * function16;
     static_assert(function17(x) == alpha * function16(x));
 

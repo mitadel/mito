@@ -58,7 +58,7 @@ namespace mito::quadrature {
 
         auto integrate(const fields::scalar_field_c auto & f) const -> tensor::scalar_t
         {
-            auto result = tensor::scalar_t(0.0);
+            auto result = tensor::scalar_t{ 0.0 };
             // assemble elementary contributions
             for (const auto & cell : _manifold.elements()) {
                 for (auto q = 0; q < Q; ++q) {

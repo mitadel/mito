@@ -97,7 +97,7 @@ test_stiffness_matrix(
     constexpr int n_nodes = elementT::n_nodes;
 
     // create a {n_nodes}x{n_nodes} matrix to store the elementary stiffness matrix
-    auto elementary_stiffness_matrix = mito::tensor::matrix_t<n_nodes>();
+    auto elementary_stiffness_matrix = mito::tensor::matrix_t<n_nodes>{};
 
     // loop on the quadrature points
     for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -156,7 +156,7 @@ test_mass_matrix(
     constexpr int n_nodes = elementT::n_nodes;
 
     // create a {n_nodes}x{n_nodes} matrix to store the elementary stiffness matrix
-    auto elementary_mass_matrix = mito::tensor::matrix_t<n_nodes>();
+    auto elementary_mass_matrix = mito::tensor::matrix_t<n_nodes>{};
 
     // loop on the quadrature points
     for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
@@ -243,14 +243,14 @@ TEST(Fem, IsoparametricTriangle)
         // the analytical elementary stiffness matrix
         auto analytical_stiffness_matrix =
             1.0 / 2.0
-            * mito::tensor::matrix_t<3>({ 2.0, -1.0, -1.0, -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 });
+            * mito::tensor::matrix_t<3>{ 2.0, -1.0, -1.0, -1.0, 1.0, 0.0, -1.0, 0.0, 1.0 };
 
         // check that the elementary stiffness matrix is computed correctly
         test_stiffness_matrix(element_p1, equation_map, analytical_stiffness_matrix);
 
         // the analytical elementary mass matrix
         auto analytical_mass_matrix =
-            1.0 / 24.0 * mito::tensor::matrix_t<3>({ 2.0, 1.0, 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 2.0 });
+            1.0 / 24.0 * mito::tensor::matrix_t<3>{ 2.0, 1.0, 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 2.0 };
 
         test_mass_matrix(element_p1, equation_map, analytical_mass_matrix);
     }
@@ -291,25 +291,27 @@ TEST(Fem, IsoparametricTriangle)
         equation_map[discretization_node_5] = 5;
 
         // the analytical elementary stiffness matrix
-        auto analytical_stiffness_matrix = mito::tensor::matrix_t<6>(
-            { 1.0,        1.0 / 6.0,  1.0 / 6.0,  -2.0 / 3.0, 0.0,        -2.0 / 3.0,
-              1.0 / 6.0,  1.0 / 2.0,  0.0,        -2.0 / 3.0, 0.0,        0.0,
-              1.0 / 6.0,  0.0,        1.0 / 2.0,  0.0,        0.0,        -2.0 / 3.0,
-              -2.0 / 3.0, -2.0 / 3.0, 0.0,        8.0 / 3.0,  -4.0 / 3.0, 0.0,
-              0.0,        0.0,        0.0,        -4.0 / 3.0, 8.0 / 3.0,  -4.0 / 3.0,
-              -2.0 / 3.0, 0.0,        -2.0 / 3.0, 0.0,        -4.0 / 3.0, 8.0 / 3.0 });
+        auto analytical_stiffness_matrix = mito::tensor::matrix_t<6>{
+            1.0,        1.0 / 6.0,  1.0 / 6.0,  -2.0 / 3.0, 0.0,        -2.0 / 3.0,
+            1.0 / 6.0,  1.0 / 2.0,  0.0,        -2.0 / 3.0, 0.0,        0.0,
+            1.0 / 6.0,  0.0,        1.0 / 2.0,  0.0,        0.0,        -2.0 / 3.0,
+            -2.0 / 3.0, -2.0 / 3.0, 0.0,        8.0 / 3.0,  -4.0 / 3.0, 0.0,
+            0.0,        0.0,        0.0,        -4.0 / 3.0, 8.0 / 3.0,  -4.0 / 3.0,
+            -2.0 / 3.0, 0.0,        -2.0 / 3.0, 0.0,        -4.0 / 3.0, 8.0 / 3.0
+        };
 
         // check that the elementary stiffness matrix is computed correctly
         test_stiffness_matrix(element_p2, equation_map, analytical_stiffness_matrix);
 
         // the analytical elementary mass matrix
-        auto analytical_mass_matrix = mito::tensor::matrix_t<6>(
-            { 1.0 / 60.0,   -1.0 / 360.0, -1.0 / 360.0, 0.0,         -1.0 / 90.0, 0.0,
-              -1.0 / 360.0, 1.0 / 60.0,   -1.0 / 360.0, 0.0,         0.0,         -1.0 / 90.0,
-              -1.0 / 360.0, -1.0 / 360.0, 1.0 / 60.0,   -1.0 / 90.0, 0.0,         0.0,
-              0.0,          0.0,          -1.0 / 90.0,  4.0 / 45.0,  2.0 / 45.0,  2.0 / 45.0,
-              -1.0 / 90.0,  0.0,          0.0,          2.0 / 45.0,  4.0 / 45.0,  2.0 / 45.0,
-              0.0,          -1.0 / 90.0,  0.0,          2.0 / 45.0,  2.0 / 45.0,  4.0 / 45.0 });
+        auto analytical_mass_matrix = mito::tensor::matrix_t<6>{
+            1.0 / 60.0,   -1.0 / 360.0, -1.0 / 360.0, 0.0,         -1.0 / 90.0, 0.0,
+            -1.0 / 360.0, 1.0 / 60.0,   -1.0 / 360.0, 0.0,         0.0,         -1.0 / 90.0,
+            -1.0 / 360.0, -1.0 / 360.0, 1.0 / 60.0,   -1.0 / 90.0, 0.0,         0.0,
+            0.0,          0.0,          -1.0 / 90.0,  4.0 / 45.0,  2.0 / 45.0,  2.0 / 45.0,
+            -1.0 / 90.0,  0.0,          0.0,          2.0 / 45.0,  4.0 / 45.0,  2.0 / 45.0,
+            0.0,          -1.0 / 90.0,  0.0,          2.0 / 45.0,  2.0 / 45.0,  4.0 / 45.0
+        };
 
         test_mass_matrix(element_p2, equation_map, analytical_mass_matrix);
     }

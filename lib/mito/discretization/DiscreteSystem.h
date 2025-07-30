@@ -272,7 +272,7 @@ namespace mito::discretization {
             -> mito::tensor::scalar_t
         {
             // initialize the norm
-            auto norm = mito::tensor::scalar_t(0.0);
+            auto norm = mito::tensor::scalar_t{ 0.0 };
 
             // helper lambda to assemble the solution on a given element
             constexpr auto _assemble_element_solution = []<int... a>(
@@ -307,7 +307,7 @@ namespace mito::discretization {
             -> mito::tensor::scalar_t
         {
             // initialize the norm
-            auto norm = mito::tensor::scalar_t(0.0);
+            auto norm = mito::tensor::scalar_t{ 0.0 };
 
             // QUESTION: is there a proper place to put this method? Perhaps this belongs to the
             // isoparametric element class?
