@@ -200,7 +200,7 @@ namespace mito::discretization {
                 }
 
                 // assemble the elementary blocks into the linear system of equations
-                mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                tensor::constexpr_for_1<n_nodes>([&]<int a>() {
                     // get the a-th discretization node of the element
                     const auto & node_a = element.connectivity()[a];
                     // get the equation number of {node_a}
@@ -211,7 +211,7 @@ namespace mito::discretization {
                         // assemble the value in the right hand side
                         _linear_system.add_rhs_value(eq_a, elementary_vector[{ a }]);
                         // loop on the b-th discretization node of the element
-                        mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                        tensor::constexpr_for_1<n_nodes>([&]<int b>() {
                             // get the b-th discretization node of the element
                             const auto & node_b = element.connectivity()[b];
                             // get the equation number of {node_b}
@@ -269,16 +269,16 @@ namespace mito::discretization {
         // compute the L2 norm of the solution
         template <class quadratureRuleT>
         constexpr auto compute_l2_error(const fields::field_c auto & u_exact) const
-            -> mito::tensor::scalar_t
+            -> tensor::scalar_t
         {
             // initialize the norm
-            auto norm = mito::tensor::scalar_t{ 0.0 };
+            auto norm = tensor::scalar_t{ 0.0 };
 
             // helper lambda to assemble the solution on a given element
             constexpr auto _assemble_element_solution = []<int... a>(
                                                             const auto & element,
                                                             const auto & _solution_field,
-                                                            mito::tensor::integer_sequence<a...>) {
+                                                            tensor::integer_sequence<a...>) {
                 // assemble the solution field from the shape functions
                 return (
                     (element.template shape<a>() * _solution_field(element.connectivity()[a]))
@@ -289,7 +289,7 @@ namespace mito::discretization {
             for (const auto & element : _function_space.elements()) {
                 // assemble the solution field on this element
                 auto u_numerical = _assemble_element_solution(
-                    element, _solution_field, mito::tensor::make_integer_sequence<n_nodes>());
+                    element, _solution_field, tensor::make_integer_sequence<n_nodes>());
                 // assemble the elementary error field as a function of the barycentric coordinates
                 auto u_error = u_numerical - u_exact.function()(element.parametrization());
 
@@ -304,10 +304,10 @@ namespace mito::discretization {
         // compute the H1 norm of the solution
         template <class quadratureRuleT>
         constexpr auto compute_h1_error(const fields::field_c auto & u_exact) const
-            -> mito::tensor::scalar_t
+            -> tensor::scalar_t
         {
             // initialize the norm
-            auto norm = mito::tensor::scalar_t{ 0.0 };
+            auto norm = tensor::scalar_t{ 0.0 };
 
             // QUESTION: is there a proper place to put this method? Perhaps this belongs to the
             // isoparametric element class?
@@ -315,7 +315,7 @@ namespace mito::discretization {
             constexpr auto _assemble_element_solution = []<int... a>(
                                                             const auto & element,
                                                             const auto & _solution_field,
-                                                            mito::tensor::integer_sequence<a...>) {
+                                                            tensor::integer_sequence<a...>) {
                 // assemble the solution field from the shape functions
                 return (
                     (element.template shape<a>() * _solution_field(element.connectivity()[a]))
@@ -327,7 +327,7 @@ namespace mito::discretization {
             constexpr auto _assemble_element_solution_gradient =
                 []<int... a>(
                     const auto & element, const auto & _solution_field,
-                    mito::tensor::integer_sequence<a...>) {
+                    tensor::integer_sequence<a...>) {
                     // assemble the solution field from the shape functions
                     return (
                         (element.template gradient<a>()
@@ -339,12 +339,12 @@ namespace mito::discretization {
             for (const auto & element : _function_space.elements()) {
                 // assemble the solution field on this element
                 auto u_numerical = _assemble_element_solution(
-                    element, _solution_field, mito::tensor::make_integer_sequence<n_nodes>());
+                    element, _solution_field, tensor::make_integer_sequence<n_nodes>());
                 // assemble the elementary error field as a function of the barycentric coordinates
                 auto u_error = u_numerical - u_exact.function()(element.parametrization());
                 //
                 auto u_numerical_gradient = _assemble_element_solution_gradient(
-                    element, _solution_field, mito::tensor::make_integer_sequence<n_nodes>());
+                    element, _solution_field, tensor::make_integer_sequence<n_nodes>());
                 // assemble the elementary error gradient as a function of the barycentric
                 // coordinates
                 auto u_error_gradient =

@@ -57,7 +57,7 @@ namespace mito::discretization::blocks {
 
                 // precompute the common factor
                 auto factor =
-                    quadrature_rule.weight(q) * mito::tensor::determinant(element.jacobian()(xi));
+                    quadrature_rule.weight(q) * tensor::determinant(element.jacobian()(xi));
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
