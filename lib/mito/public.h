@@ -26,6 +26,7 @@
 #include "topology.h"
 #include "utilities.h"
 #include "matrix_solvers.h"
+#include "solvers.h"
 
 
 // end of file

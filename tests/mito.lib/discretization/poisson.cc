@@ -24,14 +24,25 @@ constexpr int degree = 2;
 // typedef for a finite element
 using finite_element_t = mito::discretization::isoparametric_simplex_t<degree, cell_t>;
 
+// typedef for a linear system of equations
+using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
+// typedef for a matrix solver
+using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
+
+// NOTE: component -> projection
 // the function extracting the x component of a 2D vector
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the function extracting the y component of a 2D vector
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
+// TODO: add unit tests for blocks individually
+
 
 TEST(Fem, PoissonSquare)
 {
+    // initialize PETSc
+    mito::petsc::initialize();
+
     // make a channel
     journal::info_t channel("tests.poisson_square");
 
@@ -63,22 +74,20 @@ TEST(Fem, PoissonSquare)
     // TOFIX: function space should be template with respect to the finite element type
     auto function_space = mito::discretization::function_space<degree>(manifold, constraints);
 
+    // TODO: all top level instances have names. Name should be the first argument. Then we can use
+    // names in the configuration file and in the hdf5 file. Check libuuid vs. leading namestring.
+    //
     // the discrete system
-    auto discrete_system = mito::discretization::discrete_system(function_space);
-    const auto & equation_map = discrete_system.equation_map();
-    int N_equations = discrete_system.n_equations();
+    auto discrete_system =
+        mito::discretization::discrete_system<linear_system_t>(function_space, "mysystem");
 
-    // TODO: blocks should be signed up with the discrete system. Then the loop on the elements
-    // should be handled by the system
-
-    // initialize PETSc
-    mito::petsc::initialize();
-
-    // create a PETSc linear system of equations and a Krylov solver
-    auto linear_system = mito::matrix_solvers::petsc::linear_system("mysystem");
-    linear_system.create(N_equations);
-    auto solver = mito::matrix_solvers::petsc::ksp(linear_system);
+    // TODO: {linear_system} is only needed in the solver, so we can skip this step
+    auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
     solver.create();
+
+    // QUESTION: do we need a method to set the options for the solver? Can this go in the
+    // constructor or in the create method?
+    // in the python layer, this will go in the configuration file
     solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // a grad-grad matrix block
@@ -95,85 +104,44 @@ TEST(Fem, PoissonSquare)
     auto fem_rhs_block =
         mito::discretization::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
 
-    // the number of nodes per element
-    constexpr int n_nodes =
-        mito::utilities::base_type<decltype(function_space)>::element_type::n_nodes;
+    // TODO:
+    // // monolithic discretization matrix = [A, B; C, D]
+    // auto weakform_lhs = fem_lhs_block;
+    // auto weakform_rhs = fem_rhs_block;
+    // auto weakform = weakform(weakform_lhs, weakform_rhs);
+    // discrete_system.set_weak_form(weakform);
 
-    // loop on all the cells of the mesh
-    for (const auto & element : function_space.elements()) {
+    // add the blocks to the discrete system
+    discrete_system.add_lhs_block(fem_lhs_block);
+    discrete_system.add_rhs_block(fem_rhs_block);
 
-        // assemble the elementary stiffness matrix
-        auto elementary_stiffness_matrix = fem_lhs_block.compute(element);
-
-        // populate the linear system of equations
-        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-            // get the a-th discretization node of the element
-            const auto & node_a = element.connectivity()[a];
-            // get the equation number of {node_a}
-            int eq_a = equation_map.at(node_a);
-            assert(eq_a < N_equations);
-            if (eq_a != -1) {
-                mito::tensor::constexpr_for_1<n_nodes>([&]<int b>() {
-                    // get the b-th discretization node of the element
-                    const auto & node_b = element.connectivity()[b];
-                    // get the equation number of {node_b}
-                    int eq_b = equation_map.at(node_b);
-                    assert(eq_b < N_equations);
-                    // non boundary nodes
-                    if (eq_b != -1) {
-                        // assemble the value in the stiffness matrix
-                        linear_system.add_matrix_value(
-                            eq_a, eq_b, elementary_stiffness_matrix[{ a, b }]);
-                    }
-                });
-            }
-        });
-
-        // assemble the elementary right hand side
-        auto elementary_rhs = fem_rhs_block.compute(element);
-
-        // populate the right hand side
-        mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-            // get the a-th discretization node of the element
-            const auto & node_a = element.connectivity()[a];
-            // get the equation number of {node_a}
-            int eq_a = equation_map.at(node_a);
-            assert(eq_a < N_equations);
-            // non boundary nodes
-            if (eq_a != -1) {
-                // assemble the value in the right hand side
-                linear_system.add_rhs_value(eq_a, elementary_rhs[{ a }]);
-            }
-        });
-    }
-
+    // solve the linear system
     solver.solve();
+
+    // free the solver
     solver.destroy();
-
-    // read the solution
-    auto u = std::vector<double>(N_equations);
-    linear_system.get_solution(u);
-
-    // TOFIX: the solution should be assembled by the function space, which is aware of the
-    // constraints and can populate the constrained nodes appropriately
-    // the numerical solution mesh field on the mesh
-    auto solution =
-        mito::discretization::nodal_field<scalar_t>(function_space, "numerical solution");
-    // get the node map from the function space
-    auto node_map = function_space.node_map();
-    // fill information in nodal field
-    for (auto & [node, value] : solution) {
-        // get the equation number of {node}
-        int eq = equation_map.at(node);
-        if (eq != -1) {
-            // read the solution at {eq}
-            value = u[eq];
-        }
-    }
 
     // the exact solution field
     auto u_ex = mito::fields::field(
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y));
+
+    // compute the L2 error
+    auto error_L2 = discrete_system.compute_l2_error<quadrature_rule_t>(u_ex);
+
+    // report
+    channel << "L2 error: " << error_L2 << journal::endl;
+
+    // check that the l2 error is reasonable
+    EXPECT_TRUE(error_L2 < 0.02);
+
+    // compute the H1 error
+    auto error_H1 = discrete_system.compute_h1_error<quadrature_rule_t>(u_ex);
+
+    // report
+    channel << "H1 error: " << error_H1 << journal::endl;
+
+    // check that the h1 error is reasonable
+    EXPECT_TRUE(error_H1 < 0.02);
 
 #ifdef WITH_VTK
     // the forcing term mesh field on the mesh (for visualization)
@@ -190,6 +158,8 @@ TEST(Fem, PoissonSquare)
     // write output file
     writer.write();
 
+    // get the solution field
+    const auto & solution = discrete_system.solution();
     // write mesh to vtk file
     auto writer_solution =
         mito::io::vtk::field_writer("poisson_square_solution", function_space, coord_system);
@@ -199,94 +169,6 @@ TEST(Fem, PoissonSquare)
     writer_solution.write();
 #endif
 
-    // instantiate the quadrature rule
-    auto quadrature_rule = quadrature_rule_t();
-
-    // compute the L2 error
-    auto error_L2 = 0.0;
-    // loop on all the cells of the mesh
-    for (const auto & element : function_space.elements()) {
-        // loop on the quadrature points
-        mito::tensor::constexpr_for_1<quadrature_rule_t::npoints>([&]<int q>() {
-            // the barycentric coordinates of the quadrature point
-            constexpr auto xi = quadrature_rule.point(q);
-            // jacobian of the element at {xi}
-            auto jacobian = mito::tensor::determinant(element.jacobian()(xi));
-            // composition of the exact solution with the parametrization of the element
-            auto u_ex_local = u_ex.function()(element.parametrization());
-            // assemble the numerical solution at {xi}
-            auto u_numerical = 0.0;
-            // loop on all the shape functions
-            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                // get the a-th discretization node of the element
-                const auto & node_a = element.connectivity()[a];
-                // evaluate the a-th shape function at {xi}
-                auto phi_a = element.shape<a>()(xi);
-                // get the equation number of {node_a}
-                int eq = equation_map.at(node_a);
-                if (eq != -1) {
-                    // get the numerical solution at {xi}
-                    u_numerical += u[eq] * phi_a;
-                }
-            });
-            // get the error
-            error_L2 += (u_ex_local(xi) - u_numerical) * (u_ex_local(xi) - u_numerical)
-                      * quadrature_rule.weight(q) * jacobian;
-        });
-    }
-    error_L2 = std::sqrt(error_L2);
-
-    // report
-    channel << "L2 error: " << error_L2 << journal::endl;
-
-    // check that the l2 error is reasonable
-    EXPECT_TRUE(error_L2 < 0.02);
-
-    // compute the H1 error
-    auto error_H1 = 0.0;
-    // loop on all the cells of the mesh
-    for (const auto & element : function_space.elements()) {
-        mito::tensor::constexpr_for_1<quadrature_rule_t::npoints>([&]<int q>() {
-            // the barycentric coordinates of the quadrature point
-            auto xi = quadrature_rule.point(q);
-            // jacobian of the element at {xi}
-
-            auto jacobian = mito::tensor::determinant(element.jacobian()(xi));
-            // composition of the exact solution gradient with the parametrization of the element
-            auto grad_u_ex_local =
-                mito::fields::gradient(u_ex).function()(element.parametrization());
-            // assemble the numerical solution gradient at {xi}
-            auto grad_u_numerical = mito::tensor::vector_t<2>{ 0.0, 0.0 };
-            // loop on all the shape functions
-            mito::tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                // get the a-th discretization node of the element
-                const auto & node_a = element.connectivity()[a];
-                // evaluate the a-th shape function gradient at {xi}
-                auto dphi_a = element.gradient<a>()(xi);
-                // get the equation number of {node_a}
-                int eq = equation_map.at(node_a);
-                if (eq != -1) {
-                    // get the numerical solution gradient at {xi}
-                    grad_u_numerical += u[eq] * dphi_a;
-                }
-            });
-            // get the error
-            auto diff = grad_u_ex_local(xi) - grad_u_numerical;
-            error_H1 += mito::tensor::dot(diff, diff) * quadrature_rule.weight(q) * jacobian;
-        });
-    }
-    error_H1 = std::sqrt(error_H1);
-
-    // report
-    channel << "H1 error: " << error_H1 << journal::endl;
-
-    // check that the h1 error is reasonable
-    EXPECT_TRUE(error_H1 < 0.02);
-
-    // destroy the linear system
-    linear_system.destroy();
-
-    // TOFIX: move this to the class owning the petsc instance
     // finalize PETSc
     mito::petsc::finalize();
 }

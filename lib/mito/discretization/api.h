@@ -59,12 +59,13 @@ namespace mito::discretization {
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints);
 
     // discrete system alias
-    template <function_space_c functionSpaceT>
-    using discrete_system_t = DiscreteSystem<functionSpaceT>;
+    template <class functionSpaceT, class linearSystemT>
+    using discrete_system_t = DiscreteSystem<functionSpaceT, linearSystemT>;
 
     // discrete system factory
-    template <function_space_c functionSpaceT>
-    constexpr auto discrete_system(const functionSpaceT & function_space);
+    template <class linearSystemT, class functionSpaceT>
+    constexpr auto discrete_system(
+        const functionSpaceT & function_space, const std::string & label);
 }
 
 

@@ -13,22 +13,14 @@
 // get the forward declarations
 #include "forward.h"
 
-// published types factories; this is the file you are looking for...
+// published type factories; this is the file you are looking for...
 #include "api.h"
 
-// blocks implementation
-#include "blocks.h"
-
 // classes implementation
-#include "DiscreteField.h"
-#include "DiscretizationNode.h"
-#include "FunctionSpace.h"
-#include "DiscreteSystem.h"
-
-// finite elements implementation
-#include "fem.h"
+#include "LinearSolver.h"
 
 // factories implementation
 #include "factories.h"
+
 
 // end of file

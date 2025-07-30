@@ -30,7 +30,7 @@ namespace mito::discretization {
     };
 
     // class discrete system
-    template <function_space_c functionSpaceT>
+    template <function_space_c functionSpaceT, class linearSystemT>
     class DiscreteSystem;
 }
 

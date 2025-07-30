@@ -22,8 +22,11 @@ mito::matrix_solvers::petsc::PETScKrylovSolver::~PETScKrylovSolver() {}
 
 // create the Krylov solver
 auto
-mito::matrix_solvers::petsc::PETScKrylovSolver::create() -> void
+mito::matrix_solvers::petsc::PETScKrylovSolver::create(int n_equations) -> void
 {
+    // create the linear system and allocate the memory
+    _linear_system.create(n_equations);
+
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
     PetscCallVoid(KSPSetOperators(_ksp, _linear_system._matrix, _linear_system._matrix));
@@ -37,6 +40,9 @@ mito::matrix_solvers::petsc::PETScKrylovSolver::create() -> void
 auto
 mito::matrix_solvers::petsc::PETScKrylovSolver::destroy() -> void
 {
+    // free the memory of the linear system
+    _linear_system.destroy();
+
     // destroy the Krylov solver
     PetscCallVoid(KSPDestroy(&_ksp));
 
