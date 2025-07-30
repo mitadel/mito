@@ -84,20 +84,17 @@ namespace mito::io::vtk {
         template <class Y>
         auto _attach_field(const field_type<Y> & field, std::string fieldname) -> void
         {
-            // get the number of entries in the field
-            auto field_size = field.size();
-
             // get the grid
             auto & grid = _grid_writer.grid();
 
-            // check the number of entries in the field equals the number of points in the grid
-            assert(field_size == grid->GetNumberOfPoints());
+            // get the number of points in the grid
+            auto n_points = grid->GetNumberOfPoints();
 
             // initialize a vtk array
             auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
             vtkArray->SetName(fieldname.data());
             vtkArray->SetNumberOfComponents(dim<Y>());
-            vtkArray->SetNumberOfTuples(field_size);
+            vtkArray->SetNumberOfTuples(n_points);
 
             // populate the array
             if constexpr (mesh::mesh_c<grid_type> or discretization::function_space_c<grid_type>) {
