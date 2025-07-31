@@ -161,6 +161,7 @@ mito_test_driver(tests/mito.lib/utilities/segmented_vector_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_subscript.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_print.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
+mito_test_driver(tests/mito.lib/utilities/named_class.cc)
 
 # quadrature
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)
