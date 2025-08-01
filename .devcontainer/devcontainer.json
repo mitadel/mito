@@ -1,0 +1,14 @@
+// .devcontainer/devcontainer.json
+{
+    "name": "mito",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/home/user/mito,type=bind"
+    ],
+    "extensions": [
+        "ms-vscode.cpptools-extension-pack"
+    ],
+    "remoteUser": "user"
+}
