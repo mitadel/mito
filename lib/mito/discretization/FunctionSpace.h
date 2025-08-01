@@ -169,7 +169,7 @@ namespace mito::discretization {
 
             // all done
             return;
-        };
+        }
 
         // destructor
         constexpr ~FunctionSpace() = default;
