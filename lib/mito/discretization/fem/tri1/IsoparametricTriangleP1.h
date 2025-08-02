@@ -41,25 +41,25 @@ namespace mito::discretization {
         inline ~IsoparametricTriangleP1() = default;
 
         // delete move constructor
-        inline IsoparametricTriangleP1(IsoparametricTriangleP1 &&) noexcept = delete;
+        constexpr IsoparametricTriangleP1(IsoparametricTriangleP1 &&) noexcept = delete;
 
         // delete copy constructor
-        inline IsoparametricTriangleP1(const IsoparametricTriangleP1 &) = delete;
+        constexpr IsoparametricTriangleP1(const IsoparametricTriangleP1 &) = delete;
 
         // delete assignment operator
-        inline IsoparametricTriangleP1 & operator=(const IsoparametricTriangleP1 &) = delete;
+        constexpr IsoparametricTriangleP1 & operator=(const IsoparametricTriangleP1 &) = delete;
 
         // delete move assignment operator
-        inline IsoparametricTriangleP1 & operator=(IsoparametricTriangleP1 &&) noexcept = delete;
+        constexpr IsoparametricTriangleP1 & operator=(IsoparametricTriangleP1 &&) noexcept = delete;
 
       private:
         // the isoparametric mapping from barycentric coordinates to physical coordinates
-        inline auto _x_cell() const
+        constexpr auto _x_cell() const
         {
             // get the shape functions
-            auto phi_0 = shape_functions.shape<0>();
-            auto phi_1 = shape_functions.shape<1>();
-            auto phi_2 = shape_functions.shape<2>();
+            constexpr auto phi_0 = shape_functions.shape<0>();
+            constexpr auto phi_1 = shape_functions.shape<1>();
+            constexpr auto phi_2 = shape_functions.shape<2>();
 
             // return the isoparametric mapping from barycentric to physical coordinates
             return _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2;
@@ -67,13 +67,13 @@ namespace mito::discretization {
 
       public:
         // get the discretization nodes
-        inline auto connectivity() const noexcept -> const connectivity_type &
+        constexpr auto connectivity() const noexcept -> const connectivity_type &
         {
             return _connectivity;
         }
 
         // get the isoparametric mapping from barycentric coordinates to physical coordinates
-        inline auto parametrization() const
+        constexpr auto parametrization() const
         {
             // assemble the physical coordinates from the barycentric coordinates
             auto x_cell = functions::function(
@@ -89,11 +89,11 @@ namespace mito::discretization {
         // get the shape function associated with local node {a}
         template <int a>
         requires(a >= 0 && a < n_nodes)
-        inline auto shape() const
+        constexpr auto shape() const
         {
             // assemble the shape function associated with local node {a} as a function of
             // barycentric coordinates
-            auto shape_function = functions::function(
+            constexpr auto shape_function = functions::function(
                 [](const barycentric_coordinates_type & xi) -> tensor::scalar_t {
                     // return the a-th shape function evaluated at {xi}
                     return shape_functions.shape<a>()({ xi[0], xi[1] });
@@ -104,7 +104,7 @@ namespace mito::discretization {
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
-        inline auto jacobian() const
+        constexpr auto jacobian() const
         {
             // assemble the jacobian as a function of barycentric coordinates
             auto jacobian_function = functions::function(
@@ -120,7 +120,7 @@ namespace mito::discretization {
         // get the gradient of the a-th shape function as a function of barycentric coordinates
         template <int a>
         requires(a >= 0 && a < n_nodes)
-        inline auto gradient() const
+        constexpr auto gradient() const
         {
             // assemble the gradient as a function of barycentric coordinates
             auto gradient_function = functions::function(

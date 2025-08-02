@@ -43,7 +43,7 @@ namespace mito::discretization {
         // get the a-th shape function
         template <int a>
         requires(a >= 0 && a < N)
-        inline auto shape() const
+        constexpr auto shape() const
         {
             // return the a-th shape function
             return std::get<a>(phi);
@@ -52,7 +52,7 @@ namespace mito::discretization {
         // get the a-th shape function's gradient
         template <int a>
         requires(a >= 0 && a < N)
-        inline auto dshape() const
+        constexpr auto dshape() const
         {
             // return the a-th shape function's gradient
             return std::get<a>(dphi);

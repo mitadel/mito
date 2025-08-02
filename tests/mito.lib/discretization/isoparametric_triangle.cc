@@ -30,25 +30,27 @@ constexpr auto quadrature_rule = quadrature_rule_t();
 auto
 test_partition_of_unity(const auto & element)
 {
+    // the number of quadrature points per element
+    constexpr int n_quads = quadrature_rule_t::npoints;
+
     // the number of nodes per element
     constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
 
     // loop on the quadrature points
-    for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
-
+    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         // the barycentric coordinates of the quadrature point
-        auto xi = quadrature_rule.point(q);
+        constexpr auto xi = quadrature_rule.point(q);
 
-        // the sum of the shape functions
-        auto sum = 0.0;
-
-        // add together all the shape functions at {xi}
-        mito::tensor::constexpr_for_1<n_nodes>(
-            [&]<int a>() { sum += element.template shape<a>()(xi); });
+        // compute the sum of the shape functions at {xi} for all nodes
+        constexpr auto sum =
+            ([]<int... a>(
+                 const auto & element, const auto & xi, mito::tensor::integer_sequence<a...>) {
+                return ((element.template shape<a>()(xi)) + ...);
+            })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
 
         // check the sum of the shape functions
-        EXPECT_DOUBLE_EQ(1.0, sum);
-    }
+        static_assert(1.0 == sum);
+    });
 
     // all done
     return;
@@ -58,26 +60,28 @@ test_partition_of_unity(const auto & element)
 auto
 test_gradient_consistency(const auto & element)
 {
+    // the number of quadrature points per element
+    constexpr int n_quads = quadrature_rule_t::npoints;
+
     // the number of nodes per element
     constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
 
     // loop on the quadrature points
-    for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
-
+    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         // the barycentric coordinates of the quadrature point
-        auto xi = quadrature_rule.point(q);
+        constexpr auto xi = quadrature_rule.point(q);
 
-        // the sum of the shape functions
-        auto sum = mito::tensor::vector_t<2>{ 0.0, 0.0 };
-
-        // add together all the shape functions gradients at {xi}
-        mito::tensor::constexpr_for_1<n_nodes>(
-            [&]<int a>() { sum += element.template gradient<a>()(xi); });
+        // compute the sum of the shape functions at {xi} for all nodes
+        auto sum =
+            ([]<int... a>(
+                 const auto & element, const auto & xi, mito::tensor::integer_sequence<a...>) {
+                return ((element.template gradient<a>()(xi)) + ...);
+            })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
 
         // check the sum of the shape functions gradients
         EXPECT_NEAR(0.0, sum[0], 3.0e-16);
         EXPECT_NEAR(0.0, sum[1], 3.0e-16);
-    }
+    });
 
     // all done
     return;
@@ -93,6 +97,9 @@ test_stiffness_matrix(
     // create reporting channel
     journal::info_t channel("test_stiffness_matrix");
 
+    // the number of quadrature points per element
+    constexpr int n_quads = quadrature_rule_t::npoints;
+
     // the number of nodes per element
     constexpr int n_nodes = elementT::n_nodes;
 
@@ -100,10 +107,9 @@ test_stiffness_matrix(
     auto elementary_stiffness_matrix = mito::tensor::matrix_t<n_nodes>{};
 
     // loop on the quadrature points
-    for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
-
+    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         // the barycentric coordinates of the quadrature point
-        auto xi = quadrature_rule.point(q);
+        constexpr auto xi = quadrature_rule.point(q);
 
         // area of the cell
         auto area = 0.5 * mito::tensor::determinant(element.jacobian()(xi));
@@ -130,7 +136,7 @@ test_stiffness_matrix(
                 elementary_stiffness_matrix[{ i, j }] += factor * dphi_a * dphi_b;
             });
         });
-    }
+    });
 
     // compute the error
     auto error = mito::tensor::norm(elementary_stiffness_matrix - analytical_stiffness_matrix);
@@ -152,6 +158,9 @@ test_mass_matrix(
     // create reporting channel
     journal::info_t channel("test_mass_matrix");
 
+    // the number of quadrature points per element
+    constexpr int n_quads = quadrature_rule_t::npoints;
+
     // the number of nodes per element
     constexpr int n_nodes = elementT::n_nodes;
 
@@ -159,10 +168,9 @@ test_mass_matrix(
     auto elementary_mass_matrix = mito::tensor::matrix_t<n_nodes>{};
 
     // loop on the quadrature points
-    for (int q = 0; q < quadrature_rule_t::npoints; ++q) {
-
+    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         // the barycentric coordinates of the quadrature point
-        auto xi = quadrature_rule.point(q);
+        constexpr auto xi = quadrature_rule.point(q);
 
         // area of the cell
         auto factor =
@@ -187,7 +195,7 @@ test_mass_matrix(
                 elementary_mass_matrix[{ i, j }] += factor * phi_a * phi_b;
             });
         });
-    }
+    });
 
     // compute the error
     auto error = mito::tensor::norm(elementary_mass_matrix - analytical_mass_matrix);
