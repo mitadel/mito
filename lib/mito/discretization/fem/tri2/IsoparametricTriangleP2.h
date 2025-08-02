@@ -116,8 +116,26 @@ namespace mito::discretization {
             // assemble the jacobian as a function of barycentric coordinates
             auto jacobian_function = functions::function(
                 [&](const barycentric_coordinates_type & xi) -> tensor::matrix_t<2> {
+                    auto x3 = 0.5 * (_x0 + _x1);
+                    auto x4 = 0.5 * (_x1 + _x2);
+                    auto x5 = 0.5 * (_x2 + _x0);
+
+                    // get the shape functions derivatives
+                    constexpr auto dphi_0 = shape_functions.dshape<0>();
+                    constexpr auto dphi_1 = shape_functions.dshape<1>();
+                    constexpr auto dphi_2 = shape_functions.dshape<2>();
+                    constexpr auto dphi_3 = shape_functions.dshape<3>();
+                    constexpr auto dphi_4 = shape_functions.dshape<4>();
+                    constexpr auto dphi_5 = shape_functions.dshape<5>();
+
                     // compute the gradient of the isoparametric mapping
-                    return fields::gradient(_x_cell())({ xi[0], xi[1] });
+                    return (
+                        tensor::dyadic(_x0, dphi_0({ xi[0], xi[1] }))
+                        + tensor::dyadic(_x1, dphi_1({ xi[0], xi[1] }))
+                        + tensor::dyadic(_x2, dphi_2({ xi[0], xi[1] }))
+                        + tensor::dyadic(x3, dphi_3({ xi[0], xi[1] }))
+                        + tensor::dyadic(x4, dphi_4({ xi[0], xi[1] }))
+                        + tensor::dyadic(x5, dphi_5({ xi[0], xi[1] })));
                 });
 
             // and return it
