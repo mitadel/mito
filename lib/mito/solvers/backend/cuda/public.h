@@ -19,6 +19,9 @@
 // classes
 #include "CUDADenseSolver.h"
 
+// error checks
+#include "CUDAErrorChecks.h"
+
 // factories implementation
 #include "factories.h"
 
