@@ -9,18 +9,18 @@
 #else
 
 template <mito::solvers::cuda::real_c realT>
-template <class solutionT>
 auto
-mito::solvers::cuda::CUDADenseSolver<realT>::get_solution(solutionT & solution) const -> void
+mito::solvers::cuda::CUDADenseSolver<realT>::get_solution(std::vector<real_type> & solution) const
+    -> void
 {
     // check if {_size} matches the size of {solution}
-    assert(_size == std::size(solution));
+    assert(this->_size == std::size(solution));
 
     // reset the entries in {solution}
     std::fill(std::begin(solution), std::end(solution), 0.0);
 
     // copy {_h_solution} into {solution}
-    std::copy(_h_solution, _h_solution + _size, std::begin(solution));
+    std::copy(_h_solution, _h_solution + this->_size, std::begin(solution));
 
     // all done
     return;

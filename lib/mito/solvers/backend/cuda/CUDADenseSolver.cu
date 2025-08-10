@@ -10,18 +10,14 @@
 // constructor
 template <mito::solvers::cuda::real_c realT>
 mito::solvers::cuda::CUDADenseSolver<realT>::CUDADenseSolver(SolverType solver_type) :
-    _solver_type(solver_type),
+    CUDASolver<realT>(solver_type),
     _h_matrix(nullptr),
     _h_rhs(nullptr),
     _h_solution(nullptr),
     _d_matrix(nullptr),
     _d_rhs(nullptr),
-    _size(0),
-    _is_solver_initialized(false),
     _allocated_host_memory_type(0),
-    _is_assembly_finalized(false),
-    _cusolver_handle(),
-    _cuda_stream(nullptr)
+    _cusolver_handle()
 {
     // initialize cuSOLVER
     _initialize_cusolver();
@@ -35,80 +31,6 @@ mito::solvers::cuda::CUDADenseSolver<realT>::~CUDADenseSolver()
     _finalize_cusolver();
 }
 
-template <mito::solvers::cuda::real_c realT>
-auto
-mito::solvers::cuda::CUDADenseSolver<realT>::initialize(size_t size) -> void
-{
-    // check if the solver is already initialized
-    if (_is_solver_initialized) {
-        throw std::logic_error(
-            "Solver is already initialized. Are you sure you want to reinitialize? Then call "
-            "finalize() first.");
-    }
-
-    // check if the size is valid
-    if (size <= 0) {
-        throw std::invalid_argument("Size of the linear system must be greater than zero.");
-    }
-
-    // save the size of the linear system
-    _size = size;
-
-    // allocate host memory
-    _allocate_host_memory(size);
-
-    // initialize host data
-    _initialize_host_data(size);
-
-    // allocate device memory
-    _allocate_device_memory(size);
-
-    // turn on the solver initialized flag
-    _is_solver_initialized = true;
-
-    // all done
-    return;
-}
-
-template <mito::solvers::cuda::real_c realT>
-auto
-mito::solvers::cuda::CUDADenseSolver<realT>::finalize() -> void
-{
-    // check if the solver is initialized
-    if (_is_solver_initialized) {
-        // free host memory
-        _free_host_memory();
-
-        // free device memory
-        _free_device_memory();
-    }
-
-    // reset the solver initialized flag
-    _is_solver_initialized = false;
-
-    // all done
-    return;
-}
-
-template <mito::solvers::cuda::real_c realT>
-auto
-mito::solvers::cuda::CUDADenseSolver<realT>::reset_system() -> void
-{
-    // check if the solver is initialized
-    if (!_is_solver_initialized) {
-        throw std::logic_error("Solver is not yet initialized. Call initialize() first.");
-    }
-
-    // fill the host matrix, rhs and solution with zeros
-    _initialize_host_data(_size);
-
-    // reset the assembly finalized flag
-    _is_assembly_finalized = false;
-
-    // all done
-    return;
-}
-
 // add/insert {value} to matrix entry at ({row}, {col}) of the host copy
 template <mito::solvers::cuda::real_c realT>
 auto
@@ -116,22 +38,22 @@ mito::solvers::cuda::CUDADenseSolver<realT>::set_matrix_value(
     size_t row, size_t col, const real_type value, const InsertMode insert_mode) -> void
 {
     // check if the system assembly is finalized and throw an error if it is
-    if (_is_assembly_finalized) {
+    if (this->_is_assembly_finalized) {
         throw std::logic_error(
             "System assembly is already finalized. Cannot add/insert values to the matrix.");
     }
 
     // check if the row and column indices are within bounds
-    _check_index_validity(row);
-    _check_index_validity(col);
+    this->_check_index_validity(row);
+    this->_check_index_validity(col);
 
     // add/insert the value to the matrix entry in the host matrix
     // NOTE: We store the matrix in column-major order since the cuSOLVER library expects the matrix
     // to be in column-major order.
     if (insert_mode == InsertMode::ADD_VALUE)
-        _h_matrix[col * _size + row] += value;
+        _h_matrix[col * this->_size + row] += value;
     else if (insert_mode == InsertMode::INSERT_VALUE)
-        _h_matrix[col * _size + row] = value;
+        _h_matrix[col * this->_size + row] = value;
     else
         throw std::invalid_argument("Invalid insert mode. Use ADD_VALUE or INSERT_VALUE.");
 
@@ -146,13 +68,13 @@ mito::solvers::cuda::CUDADenseSolver<realT>::set_rhs_value(
     size_t row, const real_type value, const InsertMode insert_mode) -> void
 {
     // check if the system assembly is finalized and throw an error if it is
-    if (_is_assembly_finalized) {
+    if (this->_is_assembly_finalized) {
         throw std::logic_error(
             "System assembly is already finalized. Cannot add/insert values to the rhs.");
     }
 
     // check if the row index is within bounds
-    _check_index_validity(row);
+    this->_check_index_validity(row);
 
     // add/insert the value to the rhs entry in the host rhs
     if (insert_mode == InsertMode::ADD_VALUE)
@@ -168,33 +90,10 @@ mito::solvers::cuda::CUDADenseSolver<realT>::set_rhs_value(
 
 template <mito::solvers::cuda::real_c realT>
 auto
-mito::solvers::cuda::CUDADenseSolver<realT>::finalize_assembly() -> void
-{
-    // check if the solver is initialized
-    if (!_is_solver_initialized) {
-        throw std::logic_error(
-            "Solver is not yet initialized. Call initialize() first, assemble the "
-            "system, and then finalize the assembly.");
-    }
-
-    // issue a warning that all entries should be set before finalizing the assembly
-    std::cerr
-        << "Warning: Finalizing assembly. Make sure all system entries are set before this step."
-        << std::endl;
-
-    // set the assembly finalized flag to true
-    _is_assembly_finalized = true;
-
-    // all done
-    return;
-}
-
-template <mito::solvers::cuda::real_c realT>
-auto
 mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
 {
     // check if the assembly is finalized
-    if (!_is_assembly_finalized) {
+    if (!this->_is_assembly_finalized) {
         throw std::logic_error(
             "System assembly is not yet finalized. Call finalize_assembly() first.");
     }
@@ -202,8 +101,10 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     // copy the host matrix and rhs data to device global memory
     // IMPROVE: We should move the data through streams for better performance later!
     CHECK_CUDA_ERROR(cudaMemcpy(
-        _d_matrix, _h_matrix, _size * _size * sizeof(real_type), cudaMemcpyHostToDevice));
-    CHECK_CUDA_ERROR(cudaMemcpy(_d_rhs, _h_rhs, _size * sizeof(real_type), cudaMemcpyHostToDevice));
+        _d_matrix, _h_matrix, this->_size * this->_size * sizeof(real_type),
+        cudaMemcpyHostToDevice));
+    CHECK_CUDA_ERROR(
+        cudaMemcpy(_d_rhs, _h_rhs, this->_size * sizeof(real_type), cudaMemcpyHostToDevice));
 
     // allocate device memory for temporary variables in the factorization
     int * d_pivot = nullptr;
@@ -211,58 +112,55 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     real_type * d_workspace = nullptr;
     int workspace_size = 0;
 
-    // check if real_type is either double or float and throw an error if it is not
-    static_assert(
-        std::is_same_v<real_type, double> || std::is_same_v<real_type, float>,
-        "Only double or float types are supported in the CUDA dense solver.");
-
     // check the solver type is either LU or Cholesky
-    if (_solver_type != SolverType::LU && _solver_type != SolverType::CHOLESKY) {
+    if (this->_solver_type != SolverType::LU && this->_solver_type != SolverType::CHOLESKY) {
         throw std::invalid_argument(
             "Invalid solver type. Only LU and Cholesky solvers are supported in the CUDA dense "
             "solver.");
     }
 
     // get the workspace size for the factorization
-    if (_solver_type == SolverType::LU) {
+    if (this->_solver_type == SolverType::LU) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::getrf_buffer_size(
-                _cusolver_handle, _size, _size, _d_matrix, _size, &workspace_size));
-    } else if (_solver_type == SolverType::CHOLESKY) {
+                _cusolver_handle, this->_size, this->_size, _d_matrix, this->_size,
+                &workspace_size));
+    } else if (this->_solver_type == SolverType::CHOLESKY) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::potrf_buffer_size(
-                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, _d_matrix, _size,
+                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, this->_size, _d_matrix, this->_size,
                 &workspace_size));
     }
 
-    CHECK_CUDA_ERROR(cudaMalloc(&d_pivot, _size * sizeof(int)));
+    CHECK_CUDA_ERROR(cudaMalloc(&d_pivot, this->_size * sizeof(int)));
     CHECK_CUDA_ERROR(cudaMalloc(&d_info, sizeof(int)));
     CHECK_CUDA_ERROR(cudaMalloc(&d_workspace, workspace_size * sizeof(real_type)));
 
     // perform the factorization
-    if (_solver_type == SolverType::LU) {
+    if (this->_solver_type == SolverType::LU) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::getrf(
-                _cusolver_handle, _size, _size, _d_matrix, _size, d_workspace, d_pivot, d_info));
-    } else if (_solver_type == SolverType::CHOLESKY) {
+                _cusolver_handle, this->_size, this->_size, _d_matrix, this->_size, d_workspace,
+                d_pivot, d_info));
+    } else if (this->_solver_type == SolverType::CHOLESKY) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::potrf(
-                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, _d_matrix, _size, d_workspace,
-                workspace_size, d_info));
+                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, this->_size, _d_matrix, this->_size,
+                d_workspace, workspace_size, d_info));
     }
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // solve the linear system
-    if (_solver_type == SolverType::LU) {
+    if (this->_solver_type == SolverType::LU) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::getrs(
-                _cusolver_handle, CUBLAS_OP_N, _size, 1, _d_matrix, _size, d_pivot, _d_rhs, _size,
-                d_info));
-    } else if (_solver_type == SolverType::CHOLESKY) {
+                _cusolver_handle, CUBLAS_OP_N, this->_size, 1, _d_matrix, this->_size, d_pivot,
+                _d_rhs, this->_size, d_info));
+    } else if (this->_solver_type == SolverType::CHOLESKY) {
         CHECK_CUSOLVER_ERROR(
             cusolver_traits<real_type>::potrs(
-                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, _size, 1, _d_matrix, _size, _d_rhs, _size,
-                d_info));
+                _cusolver_handle, CUBLAS_FILL_MODE_LOWER, this->_size, 1, _d_matrix, this->_size,
+                _d_rhs, this->_size, d_info));
     }
     CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
@@ -270,7 +168,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     // NOTE: _d_rhs contains the solution after the call to getrs/potrs as its contents are
     // overwritten by the solution vector
     CHECK_CUDA_ERROR(
-        cudaMemcpy(_h_solution, _d_rhs, _size * sizeof(real_type), cudaMemcpyDeviceToHost));
+        cudaMemcpy(_h_solution, _d_rhs, this->_size * sizeof(real_type), cudaMemcpyDeviceToHost));
 
     // free the temporary device memory
     CHECK_CUDA_ERROR(cudaFree(d_pivot));
@@ -289,10 +187,10 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_initialize_cusolver() -> void
     CHECK_CUSOLVER_ERROR(cusolverDnCreate(&_cusolver_handle));
 
     // create a cuda stream
-    CHECK_CUDA_ERROR(cudaStreamCreateWithPriority(&_cuda_stream, cudaStreamNonBlocking, 0));
+    CHECK_CUDA_ERROR(cudaStreamCreateWithPriority(&(this->_cuda_stream), cudaStreamNonBlocking, 0));
 
     // set the stream for the cuSOLVER handle
-    CHECK_CUSOLVER_ERROR(cusolverDnSetStream(_cusolver_handle, _cuda_stream));
+    CHECK_CUSOLVER_ERROR(cusolverDnSetStream(_cusolver_handle, this->_cuda_stream));
 
     // all done
     return;
@@ -306,11 +204,11 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_finalize_cusolver() -> void
     CHECK_CUSOLVER_ERROR(cusolverDnDestroy(_cusolver_handle));
 
     // destroy the cuda stream
-    CHECK_CUDA_ERROR(cudaStreamDestroy(_cuda_stream));
+    CHECK_CUDA_ERROR(cudaStreamDestroy(this->_cuda_stream));
 
     // reset the handle and stream pointers
     _cusolver_handle = nullptr;
-    _cuda_stream = nullptr;
+    this->_cuda_stream = nullptr;
 
     // all done
     return;
@@ -442,27 +340,6 @@ mito::solvers::cuda::CUDADenseSolver<realT>::_free_device_memory() -> void
     _d_matrix = nullptr;
     _d_rhs = nullptr;
 
-    return;
-}
-
-template <mito::solvers::cuda::real_c realT>
-auto
-mito::solvers::cuda::CUDADenseSolver<realT>::_check_index_validity(size_t index) const -> void
-{
-    // check if the solver is initialized
-    // QUESTION: checking multiple times for initialization may be inefficient?
-    if (!_is_solver_initialized) {
-        throw std::logic_error("Solver is not yet initialized. Call initialize() first.");
-    }
-
-    // check if the index is valid and return false if it is not
-    if (index >= _size) {
-        throw std::out_of_range(
-            "Index " + std::to_string(index) + " is out of range. It must be between 0 and "
-            + std::to_string(_size - 1) + ".");
-    }
-
-    // all done
     return;
 }
 
