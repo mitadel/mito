@@ -17,6 +17,7 @@
 #include "api.h"
 
 // classes
+#include "CUDASolver.h"
 #include "CUDADenseSolver.h"
 
 // error checks

@@ -23,7 +23,7 @@
 namespace mito::solvers::cuda {
 
     // concept for a real type
-    template<typename T>
+    template <typename T>
     concept real_c = std::is_floating_point_v<T>;
 
 }
