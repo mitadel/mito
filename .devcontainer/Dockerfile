@@ -70,6 +70,8 @@ RUN useradd -s /bin/bash --create-home --home-dir $HOME $USER \
     && usermod -aG sudo $USER \
     && chown -R $USER:$USER $HOME
 RUN echo "$USER:password" | chpasswd
+# copy the bashrc
+COPY --chown=${user}:${user} bashrc .bashrc
 
 # default user and work directory when running the container
 USER ${user}
