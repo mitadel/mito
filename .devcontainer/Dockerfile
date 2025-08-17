@@ -78,5 +78,7 @@ USER ${user}
 WORKDIR ${homedir}
 # remove annoying message on how to run a sudo command
 RUN touch ~/.sudo_as_admin_successful
+# configure git
+RUN git config --global pull.ff only
 
 # end of file
