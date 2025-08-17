@@ -171,8 +171,8 @@ namespace mito::discretization {
         // assemble the discrete system
         constexpr auto assemble() -> void
         {
-            // get the number of equations
-            int N_equations = _linear_system.n_equations();
+            // check that the number of equations matches that of the linear system
+            assert(_n_equations == _linear_system.n_equations());
 
             // QUESTION: can we flip the element and block loops? What is the expected layout in
             // memory?
@@ -205,7 +205,7 @@ namespace mito::discretization {
                     const auto & node_a = element.connectivity()[a];
                     // get the equation number of {node_a}
                     int eq_a = _equation_map.at(node_a);
-                    assert(eq_a < N_equations);
+                    assert(eq_a < _n_equations);
                     // non boundary nodes
                     if (eq_a != -1) {
                         // assemble the value in the right hand side
@@ -216,7 +216,7 @@ namespace mito::discretization {
                             const auto & node_b = element.connectivity()[b];
                             // get the equation number of {node_b}
                             int eq_b = _equation_map.at(node_b);
-                            assert(eq_b < N_equations);
+                            assert(eq_b < _n_equations);
                             // non boundary nodes
                             if (eq_b != -1) {
                                 // assemble the value in the stiffness matrix
@@ -232,11 +232,11 @@ namespace mito::discretization {
         // read the solution nodal field
         constexpr void read_solution()
         {
-            // get the number of equations
-            int N_equations = _linear_system.n_equations();
+            // check that the number of equations matches that of the linear system
+            assert(_n_equations == _linear_system.n_equations());
 
             // read the solution
-            auto u = std::vector<double>(N_equations);
+            auto u = std::vector<double>(_n_equations);
             _linear_system.get_solution(u);
 
             // TODO: ask the function space to populate the constrained nodes appropriately
