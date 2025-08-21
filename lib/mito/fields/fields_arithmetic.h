@@ -10,6 +10,14 @@
 // Arithmetic operations on Fields
 namespace mito::fields {
 
+    // addition of N fields fa + ... + fn
+    template <typename T, field_c... Fs>
+    constexpr auto linear_combination(std::array<T, sizeof...(Fs)> coeffs, const Fs &... fs)
+    requires(compatible_fields_c<Fs...>)
+    {
+        return field(functions::linear_combination(coeffs, fs.function()...));
+    }
+
     // addition of fields fa + fb
     template <field_c F1, field_c F2>
     constexpr auto operator+(const F1 & fA, const F2 & fB)

@@ -71,6 +71,9 @@ namespace mito::functions {
     template <int N, int D>
     [[maybe_unused]] constexpr auto x = component<tensor::vector_t<D>, N>;
 
+    // the linear combination
+    template <typename T, function_c... Funcs>
+    constexpr auto linear_combination(std::array<T, sizeof...(Funcs)> coeffs, Funcs... funcs);
 }
 
 

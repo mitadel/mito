@@ -123,6 +123,57 @@ namespace mito::functions {
         const G _g;
     };
 
+    // the linear combination of functions {Funcs} with coefficients of type {T}...
+    template <typename T, function_c... Funcs>
+    class LinearCombination : public function_linear_combination<T, Funcs...>::type {
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_linear_combination<T, Funcs...>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+
+      private:
+        // the number of functions in the linear combination
+        static constexpr std::size_t N = sizeof...(Funcs);
+        // the type of coefficients
+        using coefficients_type = std::array<T, N>;
+        // the type of functions
+        using functions_type = std::tuple<Funcs...>;
+
+      public:
+        // constructor
+        constexpr LinearCombination(const coefficients_type & coeffs, Funcs... funcs) :
+            _coeffs(coeffs),
+            _funcs(funcs...)
+        {}
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            // helper function to assemble the linear combination
+            auto eval = [&]<std::size_t... Is>(const input_type & x, std::index_sequence<Is...>) {
+                return ((_coeffs[Is] * std::get<Is>(_funcs)(x)) + ...);
+            };
+
+            // return the result of the linear combination
+            return eval(x, std::make_index_sequence<N>{});
+        }
+
+      public:
+        // accessor for the coefficients
+        constexpr auto coefficients() const -> const coefficients_type & { return _coeffs; }
+
+        // accessor for the functions
+        constexpr auto functions() const -> const functions_type & { return _funcs; }
+
+      private:
+        // the coefficients in the linear combination
+        coefficients_type _coeffs;
+        // the functions in the linear combination
+        functions_type _funcs;
+    };
 
     // the sum of a function with a constant
     template <tensor::tensor_or_scalar_c T, function_c F>

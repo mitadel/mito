@@ -68,6 +68,15 @@ namespace mito::functions {
         // the derivative of the transpose is the transpose of the derivative
         return functions::transpose(derivative<I...>(f.f()));
     }
+
+    // the {I...}-th first partial derivative of a linear combination
+    template <int... I, typename T, function_c... Funcs>
+    constexpr auto derivative(const LinearCombination<T, Funcs...> & f)
+    {
+        // the derivative of a linear combination is the linear combination of the derivatives
+        return linear_combination(
+            f.coefficients(), derivative<I...>(std::get<Funcs>(f.functions()))...);
+    }
 }
 
 

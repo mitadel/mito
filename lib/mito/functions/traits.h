@@ -99,6 +99,21 @@ namespace mito::functions {
             std::remove_cvref_t<typename functor_traits<F>::input_type>,
             typename functor_traits<F>::output_type>;
     };
+
+    // the type of the linear combination of functions {Funcs} with coefficients of type {T}...
+    template <typename T, function_c... Funcs>
+    // require that all the functions to combine take the same input type
+    requires(same_input_c<Funcs...>)
+    struct function_linear_combination {
+        // the input type (which is the same for all functions)
+        using input_type = typename std::tuple_element<0, std::tuple<Funcs...>>::type::input_type;
+        // the output of the linear combination
+        using output_type = sum_result_t<product_result_t<T, typename Funcs::output_type>...>;
+
+        // ... is the function that takes {input_type} in input and returns the type of the sum of
+        // the output types multiplied by the coefficients
+        using type = Function<input_type, output_type>;
+    };
 }
 
 
