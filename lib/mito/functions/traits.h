@@ -9,6 +9,30 @@
 
 namespace mito::functions {
 
+    // the type of the product of {C} and {X}
+    template <typename C, typename X>
+    using product_result_t = std::invoke_result_t<std::multiplies<>, C, X>;
+
+    // helper: fold "plus" over a pack of types
+    template <typename... Ts>
+    struct sum_result;
+
+    // helper: base case
+    template <typename T>
+    struct sum_result<T> {
+        using type = T;
+    };
+
+    // helper: recursion
+    template <typename T1, typename T2, typename... Rest>
+    struct sum_result<T1, T2, Rest...> {
+        using type = std::invoke_result_t<std::plus<>, T1, typename sum_result<T2, Rest...>::type>;
+    };
+
+    // the type of the sum of {Ts...}
+    template <typename... Ts>
+    using sum_result_t = typename sum_result<Ts...>::type;
+
     // the type of the sum of two functions...
     template <function_c F, function_c G>
     // ... which take the same input type {input_type}...
@@ -17,9 +41,7 @@ namespace mito::functions {
         // ... is the function that takes {input_type} in input and returns the type of the sum of
         // the output types
         using type = Function<
-            typename F::input_type,
-            typename std::invoke_result<
-                std::plus<>, typename F::output_type, typename G::output_type>::type>;
+            typename F::input_type, sum_result_t<typename F::output_type, typename G::output_type>>;
     };
 
     // the type of the product of two functions...
@@ -31,8 +53,7 @@ namespace mito::functions {
         // of the output types
         using type = Function<
             typename F::input_type,
-            typename std::invoke_result<
-                std::multiplies<>, typename F::output_type, typename G::output_type>::type>;
+            product_result_t<typename F::output_type, typename G::output_type>>;
     };
 
     // the type of the composition of two functions (F external, G internal)...
