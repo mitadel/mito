@@ -29,6 +29,14 @@ namespace mito::functions {
     template <class F>
     concept scalar_function_c = function_c<F> and tensor::scalar_c<typename F::output_type>;
 
+    // concept of functions taking the same input type
+    template <typename... Funcs>
+    concept same_input_c = (sizeof...(Funcs) <= 1) ||    // trivially true for 0 or 1
+                           (std::same_as<
+                                typename std::tuple_element_t<0, std::tuple<Funcs...>>::input_type,
+                                typename Funcs::input_type>
+                            && ...);
+
     // function composition
     template <function_c F, function_c G>
     class Composition;
