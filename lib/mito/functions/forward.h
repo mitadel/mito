@@ -9,10 +9,6 @@
 
 namespace mito::functions {
 
-    // the functor concept
-    template <class F>
-    concept functor_c = requires { &F::operator(); };
-
     // class {Function}
     template <class X, class Y>
     class Function;
@@ -24,6 +20,10 @@ namespace mito::functions {
         []<class X, class Y>(const Function<X, Y> &) {
         }(c);
     };
+
+    // the functor concept
+    template <class F>
+    concept functor_c = requires { &F::operator(); } and not function_c<F>;
 
     // concept of a scalar-valued function
     template <class F>
