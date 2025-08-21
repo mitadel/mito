@@ -60,10 +60,13 @@ namespace mito::fields {
     concept p_form_field_c = field_c<FIELD> and tensor::p_form_c<typename FIELD::output_type>;
 
     // concept of two fields being compatible with each other (i.e. defined on the same coordinates)
-    template <class FIELD1, class FIELD2>
-    // a scalar field  is a field returning a scalar
+    template <class... FIELDS>
     concept compatible_fields_c =
-        std::is_same_v<typename FIELD1::coordinates_type, typename FIELD2::coordinates_type>;
+        (sizeof...(FIELDS) <= 1) ||    // trivially true for 0 or 1
+        (std::same_as<
+             typename std::tuple_element_t<0, std::tuple<FIELDS...>>::coordinates_type,
+             typename FIELDS::coordinates_type>
+         && ...);
 }
 
 
