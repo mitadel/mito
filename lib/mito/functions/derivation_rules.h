@@ -54,11 +54,30 @@ namespace mito::functions {
         return -1.0 * derivative<I...>(f.f()) / (f.f() * f.f());
     }
 
-    // the chain rule for the  {I...}-th first partial derivative
+    // the chain rule for the  {I...}-th first partial derivative (f1(f2(x)) with f2 scalar valued)
     template <int... I, class F1, class F2>
+    requires(scalar_function_c<F2>)
     constexpr auto derivative(const Composition<F1, F2> & f)
     {
         return derivative<I...>(f.f1())(f.f2()) * derivative<I...>(f.f2());
+    }
+
+    // the chain rule for the  {I...}-th first partial derivative (f1(f2(x)) with f2 vector valued)
+    template <int... I, class F1, class F2>
+    requires(vector_function_c<F2>)
+    constexpr auto derivative(const Composition<F1, F2> & f)
+    {
+        // the number of components of the vector (output of F2)
+        constexpr int N = F2::output_type::size;
+
+        // helper function to compute the N partial derivatives
+        constexpr auto _derivative = []<size_t... J>(const auto & f, std::index_sequence<J...>) {
+            // the vector of the partial derivatives
+            return (
+                (derivative<J>(f.f1())(f.f2()) * derivative<I...>(f.f2() * tensor::e<J, N>)) + ...);
+        };
+
+        return _derivative(f, std::make_index_sequence<N>{});
     }
 
     // the derivative of the transpose of a function
