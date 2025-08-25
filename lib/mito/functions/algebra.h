@@ -96,6 +96,12 @@ namespace mito::functions {
     {
         return Transpose(f);
     }
+
+    // f inverse
+    constexpr auto inverse(const function_c auto & f)
+    {
+        return Inverse(f);
+    }
 }
 
 

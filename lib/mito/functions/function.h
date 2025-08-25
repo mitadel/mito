@@ -444,6 +444,43 @@ namespace mito::functions {
       private:
         const F _f;
     };
+
+    // function computing the inverse of a second order tensor
+    template <function_c F>
+    requires(tensor::square_matrix_c<typename F::output_type>)
+    class Inverse : public Function<typename F::input_type, typename F::output_type> {
+
+      public:
+        // the inverse function type
+        using inverse_type = Function<typename F::input_type, typename F::output_type>;
+        // the input type
+        using input_type = inverse_type::input_type;
+        // the output type
+        using output_type = inverse_type::output_type;
+
+      public:
+        // constructor
+        constexpr Inverse(const F & f) : _f(f) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return tensor::inverse(_f(x));
+        }
+
+        // the matrix function to invert
+        constexpr auto f() const -> const F & { return _f; }
+
+      private:
+        const F _f;
+    };
 }
 
 
