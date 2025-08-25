@@ -56,10 +56,12 @@ namespace mito::functions {
     template <class X, class Y>
     class Constant : public Function<X, Y> {
       public:
+        // the type of function (what I derive from)
+        using function_type = Function<X, Y>;
         // the input type
-        using input_type = Function<X, Y>::input_type;
+        using input_type = function_type::input_type;
         // the output type
-        using output_type = Function<X, Y>::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -89,11 +91,11 @@ namespace mito::functions {
     class Sum : public function_sum<F, G>::type {
       public:
         // the type of sum function (what I derive from)
-        using sum_type = function_sum<F, G>::type;
+        using function_type = function_sum<F, G>::type;
         // the input type of the sum
-        using input_type = sum_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = sum_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -188,11 +190,11 @@ namespace mito::functions {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_type<F>;
+        using function_type = functions::function_type<F>;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -227,11 +229,11 @@ namespace mito::functions {
     class Product : public function_product<F, G>::type {
       public:
         // the type of product function (what I derive from)
-        using product_type = function_product<F, G>::type;
+        using function_type = function_product<F, G>::type;
         // the input type of the sum
-        using input_type = product_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = product_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -269,11 +271,11 @@ namespace mito::functions {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_product<F, Constant<typename F::input_type, T>>::type;
+        using function_type = function_product<F, Constant<typename F::input_type, T>>::type;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -310,11 +312,11 @@ namespace mito::functions {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_product<Constant<typename F::input_type, T>, F>::type;
+        using function_type = function_product<Constant<typename F::input_type, T>, F>::type;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -350,11 +352,11 @@ namespace mito::functions {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_type<F>;
+        using function_type = functions::function_type<F>;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -384,11 +386,11 @@ namespace mito::functions {
 
       public:
         // the type of composition function (what I derive from)
-        using composition_type = function_composition<F, G>::type;
+        using function_type = function_composition<F, G>::type;
         // the input type of the composition
-        using input_type = composition_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the composition
-        using output_type = composition_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -421,12 +423,12 @@ namespace mito::functions {
     class Transpose : public function_transpose<F>::type {
 
       public:
-        // the transpose function type
-        using transpose_type = function_transpose<F>::type;
+        // the type of the function (what I derive from)
+        using function_type = function_transpose<F>::type;
         // the input type
-        using input_type = transpose_type::input_type;
+        using input_type = function_type::input_type;
         // the output type
-        using output_type = transpose_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -458,12 +460,12 @@ namespace mito::functions {
     class Inverse : public Function<typename F::input_type, typename F::output_type> {
 
       public:
-        // the inverse function type
-        using inverse_type = Function<typename F::input_type, typename F::output_type>;
+        // the type of the function (what I derive from)
+        using function_type = Function<typename F::input_type, typename F::output_type>;
         // the input type
-        using input_type = inverse_type::input_type;
+        using input_type = function_type::input_type;
         // the output type
-        using output_type = inverse_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
