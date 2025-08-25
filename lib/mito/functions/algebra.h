@@ -33,13 +33,13 @@ namespace mito::functions {
     // a * f
     constexpr auto operator*(const tensor::tensor_or_scalar_c auto & a, const function_c auto & f)
     {
-        return FunctionTimesConstant(f, a);
+        return ConstantTimesFunction(a, f);
     }
 
     // f * a
     constexpr auto operator*(const function_c auto & f, const tensor::tensor_or_scalar_c auto & a)
     {
-        return a * f;
+        return FunctionTimesConstant(f, a);
     }
 
     // f / a
