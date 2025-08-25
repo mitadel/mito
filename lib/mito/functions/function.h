@@ -149,6 +149,13 @@ namespace mito::functions {
             _funcs(funcs...)
         {}
 
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type
         {
