@@ -43,6 +43,13 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(x); }
 
@@ -77,6 +84,13 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type &) const -> output_type { return _c; }
 
@@ -106,6 +120,13 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -156,6 +177,13 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -210,6 +238,13 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(x) + _a; }
 
@@ -244,6 +279,13 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -291,6 +333,13 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(x) * _a; }
 
@@ -330,6 +379,13 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -403,6 +459,13 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(_g(x)); }
 
@@ -416,6 +479,46 @@ namespace mito::functions {
         const F _f;
         const G _g;
     };
+
+
+    template <subscriptable_function_c F>
+    class Subscript : public function_subscript<F>::type {
+
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_subscript<F>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+        // the type of index
+        using index_type = int;
+
+      public:
+        // constructor
+        constexpr Subscript(const F & f, const int i) : _f(f), _i(i) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type { return _f(x)[_i]; }
+
+        // the function to subscript
+        constexpr auto f() const -> const F & { return _f; }
+
+        // the index
+        constexpr auto index() const -> int { return _i; }
+
+      private:
+        const F _f;
+        const int _i;
+    };
+
 
     // function transposing a function of a second order tensor
     template <function_c F>
@@ -439,6 +542,13 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -476,6 +586,13 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is a tensor
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
         }
 
         // call operator

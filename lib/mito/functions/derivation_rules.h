@@ -88,6 +88,14 @@ namespace mito::functions {
         return functions::transpose(derivative<I...>(f.f()));
     }
 
+    // the {I...}-th first partial derivative of the {Subscript} function
+    template <int... I, class F>
+    constexpr auto derivative(const Subscript<F> & f)
+    {
+        // the derivative of the subscript is the subscript of the derivative
+        return Subscript(derivative<I...>(f.f()), f.index());
+    }
+
     // the {I...}-th first partial derivative of a linear combination
     template <int... I, typename T, function_c... Funcs>
     constexpr auto derivative(const LinearCombination<T, Funcs...> & f)

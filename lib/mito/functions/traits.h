@@ -66,6 +66,13 @@ namespace mito::functions {
         using type = Function<typename G::input_type, typename F::output_type>;
     };
 
+    // the type of the subscript of a tensor function...
+    template <subscriptable_function_c F>
+    struct function_subscript {
+        // ... is the function that takes the {input_type} of F and returns the scalar type 
+        using type = Function<typename F::input_type, typename F::output_type::scalar_type>;
+    };
+
     // the type of the transpose of a function...
     template <function_c F>
     // with matrix values...
