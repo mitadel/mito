@@ -27,15 +27,6 @@ constexpr auto barycentric_to_parametric =
     eta_0 * mito::tensor::e_0<2> + eta_1 * mito::tensor::e_1<2>;
 
 
-// assemble the gradient of f
-constexpr auto
-gradient(const auto & f)
-{
-    return mito::tensor::e_0<2> * mito::functions::derivative<0>(f)
-         + mito::tensor::e_1<2> * mito::functions::derivative<1>(f);
-}
-
-
 TEST(Fem, ShapeTriangleConstuctionP1)
 {
     // create a channel
@@ -58,20 +49,20 @@ TEST(Fem, ShapeTriangleConstuctionP1)
 
     // assemble the shape functions gradients as the partial derivatives of the shape functions with
     // respect to the parametric coordinates, seen as functions of barycentric coordinates
-    constexpr auto dN0 =
-        gradient(std::get<0>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
-    constexpr auto dN1 =
-        gradient(std::get<1>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
-    constexpr auto dN2 =
-        gradient(std::get<2>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN0 = mito::functions::derivative(std::get<0>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
+    constexpr auto dN1 = mito::functions::derivative(std::get<1>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
+    constexpr auto dN2 = mito::functions::derivative(std::get<2>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
 
     // barycenter in barycentric coordinates
     constexpr auto barycenter = barycentric_coordinates_type{ 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 };
 
     // check result
-    static_assert(dN0(barycenter) == std::get<0>(dphi)(barycenter));
-    static_assert(dN1(barycenter) == std::get<1>(dphi)(barycenter));
-    static_assert(dN2(barycenter) == std::get<2>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN0(barycenter)) == std::get<0>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN1(barycenter)) == std::get<1>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN2(barycenter)) == std::get<2>(dphi)(barycenter));
 
     // all done
     return;
@@ -107,29 +98,29 @@ TEST(Fem, ShapeTriangleConstuctionP2)
 
     // assemble the shape functions gradients as the partial derivatives of the shape functions with
     // respect to the parametric coordinates, seen as functions of barycentric coordinates
-    constexpr auto dN0 =
-        gradient(std::get<0>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
-    constexpr auto dN1 =
-        gradient(std::get<1>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
-    constexpr auto dN2 =
-        gradient(std::get<2>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
-    constexpr auto dN3 =
-        gradient(std::get<3>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
-    constexpr auto dN4 =
-        gradient(std::get<4>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
-    constexpr auto dN5 =
-        gradient(std::get<5>(phi)(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN0 = mito::functions::derivative(std::get<0>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
+    constexpr auto dN1 = mito::functions::derivative(std::get<1>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
+    constexpr auto dN2 = mito::functions::derivative(std::get<2>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
+    constexpr auto dN3 = mito::functions::derivative(std::get<3>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
+    constexpr auto dN4 = mito::functions::derivative(std::get<4>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
+    constexpr auto dN5 = mito::functions::derivative(std::get<5>(phi)(parametric_to_barycentric))(
+        barycentric_to_parametric);
 
     // barycenter in barycentric coordinates
     constexpr auto barycenter = barycentric_coordinates_type{ 1.0, 0.0, 0.0 };
 
     // check result
-    static_assert(dN0(barycenter) == std::get<0>(dphi)(barycenter));
-    static_assert(dN1(barycenter) == std::get<1>(dphi)(barycenter));
-    static_assert(dN2(barycenter) == std::get<2>(dphi)(barycenter));
-    static_assert(dN3(barycenter) == std::get<3>(dphi)(barycenter));
-    static_assert(dN4(barycenter) == std::get<4>(dphi)(barycenter));
-    static_assert(dN5(barycenter) == std::get<5>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN0(barycenter)) == std::get<0>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN1(barycenter)) == std::get<1>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN2(barycenter)) == std::get<2>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN3(barycenter)) == std::get<3>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN4(barycenter)) == std::get<4>(dphi)(barycenter));
+    static_assert(mito::tensor::row<0>(dN5(barycenter)) == std::get<5>(dphi)(barycenter));
 
     // all done
     return;
