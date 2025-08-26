@@ -33,6 +33,10 @@ namespace mito::functions {
     template <class F>
     concept vector_function_c = function_c<F> and tensor::vector_c<typename F::output_type>;
 
+    // concept of a tensor-valued function
+    template <class F>
+    concept tensor_function_c = function_c<F> and tensor::tensor_c<typename F::output_type>;
+
     // concept of functions taking the same input type
     template <typename... Funcs>
     concept same_input_c = (sizeof...(Funcs) <= 1) ||    // trivially true for 0 or 1
