@@ -12,8 +12,8 @@
 
 namespace mito::functions {
 
-    // function extracting the {I...} component of a tensor
-    template <class T, int... I>
+    // function extracting the I-th component of a tensor
+    template <class T, int I>
     class Component : public Function<T, tensor::scalar_t> {
 
       public:
@@ -31,7 +31,7 @@ namespace mito::functions {
         }
 
         // call operator
-        constexpr auto operator()(const input_type & x) const -> output_type { return x[{ I... }]; }
+        constexpr auto operator()(const input_type & x) const -> output_type { return x[I]; }
     };
 
 

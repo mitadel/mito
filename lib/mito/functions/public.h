@@ -33,6 +33,8 @@
 #include "library_derivatives.h"
 // the derivation rules
 #include "derivation_rules.h"
+// compact notation for partial derivatives
+#include "partial_derivatives.h"
 
 
 // end of file
