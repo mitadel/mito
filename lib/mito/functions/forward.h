@@ -25,17 +25,41 @@ namespace mito::functions {
     template <class F>
     concept functor_c = requires { &F::operator(); } and not function_c<F>;
 
+    // concept of a function defined on scalars
+    template <class F>
+    concept scalar_domain_function_c = function_c<F> and tensor::scalar_c<typename F::input_type>;
+
     // concept of a scalar-valued function
     template <class F>
-    concept scalar_function_c = function_c<F> and tensor::scalar_c<typename F::output_type>;
+    concept scalar_valued_function_c = function_c<F> and tensor::scalar_c<typename F::output_type>;
+
+    // concept of a scalar-valued function of scalars
+    template <class F>
+    concept scalar_function_c = scalar_domain_function_c<F> and scalar_valued_function_c<F>;
+
+    // concept of a function defined on vectors
+    template <class F>
+    concept vector_domain_function_c = function_c<F> and tensor::vector_c<typename F::input_type>;
 
     // concept of a vector-valued function
     template <class F>
-    concept vector_function_c = function_c<F> and tensor::vector_c<typename F::output_type>;
+    concept vector_valued_function_c = function_c<F> and tensor::vector_c<typename F::output_type>;
+
+    // concept of a vector-valued function of vectors
+    template <class F>
+    concept vector_function_c = vector_domain_function_c<F> and vector_valued_function_c<F>;
+
+    // concept of a function defined on tensors
+    template <class F>
+    concept tensor_domain_function_c = function_c<F> and tensor::tensor_c<typename F::input_type>;
 
     // concept of a tensor-valued function
     template <class F>
-    concept tensor_function_c = function_c<F> and tensor::tensor_c<typename F::output_type>;
+    concept tensor_valued_function_c = function_c<F> and tensor::tensor_c<typename F::output_type>;
+
+    // concept of a tensor-valued function of tensors
+    template <class F>
+    concept tensor_function_c = tensor_domain_function_c<F> and tensor_valued_function_c<F>;
 
     // concept of a subscriptable type
     template <class F>

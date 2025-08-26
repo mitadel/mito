@@ -80,13 +80,13 @@ namespace mito::functions {
 
     // a / f
     constexpr auto operator/(
-        const tensor::tensor_or_scalar_c auto & a, const scalar_function_c auto & f)
+        const tensor::tensor_or_scalar_c auto & a, const scalar_valued_function_c auto & f)
     {
         return a * Reciprocal(f);
     }
 
     // f1 / f2
-    constexpr auto operator/(const function_c auto & f1, const scalar_function_c auto & f2)
+    constexpr auto operator/(const function_c auto & f1, const scalar_valued_function_c auto & f2)
     {
         return f1 * Reciprocal(f2);
     }

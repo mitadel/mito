@@ -403,7 +403,7 @@ namespace mito::functions {
 
 
     // the reciprocal of a scalar function
-    template <scalar_function_c F>
+    template <scalar_valued_function_c F>
     class Reciprocal : public function_type<F> {
 
       public:

@@ -56,7 +56,7 @@ namespace mito::functions {
 
     // the chain rule for the  {I...}-th first partial derivative (f1(f2(x)) with f2 scalar valued)
     template <int... I, class F1, class F2>
-    requires(scalar_function_c<F2>)
+    requires(scalar_valued_function_c<F2>)
     constexpr auto derivative(const Composition<F1, F2> & f)
     {
         return derivative<I...>(f.f1())(f.f2()) * derivative<I...>(f.f2());
@@ -64,7 +64,7 @@ namespace mito::functions {
 
     // the chain rule for the  {I...}-th first partial derivative (f1(f2(x)) with f2 vector valued)
     template <int... I, class F1, class F2>
-    requires(vector_function_c<F2>)
+    requires(vector_valued_function_c<F2>)
     constexpr auto derivative(const Composition<F1, F2> & f)
     {
         // the number of components of the vector (output of F2)
