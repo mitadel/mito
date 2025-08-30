@@ -23,40 +23,34 @@ TEST(VectorFunctions, Components)
     static_assert(1.0 == x1(x));
 
     // the partial derivatives of x0
-    constexpr auto x0_0 = mito::functions::derivative<0>(x0);
-    constexpr auto x0_1 = mito::functions::derivative<1>(x0);
+    constexpr auto dx0 = mito::functions::derivative(x0);
+
     // check result
-    static_assert(1.0 == x0_0(x));
-    static_assert(0.0 == x0_1(x));
+    static_assert(1.0 == dx0(x)[0]);
+    static_assert(0.0 == dx0(x)[1]);
 
     // the partial derivatives of x1
-    constexpr auto x1_0 = mito::functions::derivative<0>(x1);
-    constexpr auto x1_1 = mito::functions::derivative<1>(x1);
+    constexpr auto dx1 = mito::functions::derivative(x1);
     // check result
-    static_assert(0.0 == x1_0(x));
-    static_assert(1.0 == x1_1(x));
+    static_assert(0.0 == dx1(x)[0]);
+    static_assert(1.0 == dx1(x)[1]);
 
     // the second partial derivatives of x0
-    constexpr auto x0_00 = mito::functions::derivative<0>(x0_0);
-    constexpr auto x0_01 = mito::functions::derivative<1>(x0_0);
-    constexpr auto x0_10 = mito::functions::derivative<0>(x0_1);
-    constexpr auto x0_11 = mito::functions::derivative<1>(x0_1);
+    constexpr auto ddx0 = mito::functions::derivative(dx0);
+
     // check result
-    static_assert(0.0 == x0_00(x));
-    static_assert(0.0 == x0_01(x));
-    static_assert(0.0 == x0_10(x));
-    static_assert(0.0 == x0_11(x));
+    static_assert(0.0 == ddx0(x)[{ 0, 0 }]);
+    static_assert(0.0 == ddx0(x)[{ 0, 1 }]);
+    static_assert(0.0 == ddx0(x)[{ 1, 0 }]);
+    static_assert(0.0 == ddx0(x)[{ 1, 1 }]);
 
     // the second partial derivatives of x1
-    constexpr auto x1_00 = mito::functions::derivative<0>(x1_0);
-    constexpr auto x1_01 = mito::functions::derivative<1>(x1_0);
-    constexpr auto x1_10 = mito::functions::derivative<0>(x1_1);
-    constexpr auto x1_11 = mito::functions::derivative<1>(x1_1);
+    constexpr auto ddx1 = mito::functions::derivative(dx1);
     // check result
-    static_assert(0.0 == x1_00(x));
-    static_assert(0.0 == x1_01(x));
-    static_assert(0.0 == x1_10(x));
-    static_assert(0.0 == x1_11(x));
+    static_assert(0.0 == ddx1(x)[{ 0, 0 }]);
+    static_assert(0.0 == ddx1(x)[{ 0, 1 }]);
+    static_assert(0.0 == ddx1(x)[{ 1, 0 }]);
+    static_assert(0.0 == ddx1(x)[{ 1, 1 }]);
 }
 
 
@@ -73,17 +67,15 @@ TEST(Derivatives, PartialDerivatives)
     // sin(x0 * x1)
     constexpr auto sin = mito::functions::sin(x0 * x1);
 
-    // the partial derivative of sin(x0 * x1) wrt to x0
-    constexpr auto sin_0 = mito::functions::derivative<0>(sin);
-    // the partial derivative of sin(x0 * x1) wrt to x1
-    constexpr auto sin_1 = mito::functions::derivative<1>(sin);
+    // the partial derivatives of sin(x0 * x1) wrt to x0 and x1
+    constexpr auto dsin = mito::functions::derivative(sin);
 
     // cos(x0 * x1)
     constexpr auto cos = mito::functions::cos(x0 * x1);
 
     // check result
-    static_assert((cos * x1)(x) == sin_0(x));
-    static_assert((cos * x0)(x) == sin_1(x));
+    static_assert((cos * x1)(x) == dsin[0](x));
+    static_assert((cos * x0)(x) == dsin[1](x));
 }
 
 
