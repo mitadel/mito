@@ -19,6 +19,9 @@ TEST(Derivatives, Subscript)
     // a vector function R -> R^2x3
     constexpr auto f = mito::functions::sin * mito::tensor::e_12<2, 3>;
 
+    // check that evaluating and subscripting is the same than subscripting and evaluating
+    static_assert(f(x)[5] == f[5](x));
+
     // check that the derivative of the subscript is the subscript of the derivative
     static_assert(mito::functions::derivative(f[5])(x) == mito::functions::derivative(f)(x)[5]);
 }
