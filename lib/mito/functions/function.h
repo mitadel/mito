@@ -43,7 +43,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -84,7 +84,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -122,7 +122,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -179,7 +179,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -238,7 +238,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -281,7 +281,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -333,7 +333,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -381,7 +381,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -459,7 +459,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -544,7 +544,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
@@ -588,7 +588,7 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
-        // subscript operator: only available if {output_type} is a tensor
+        // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
         {
