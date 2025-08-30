@@ -14,6 +14,7 @@ mito_test_driver(tests/mito.lib/functions/derivative_subscript.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_product.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_inverse.cc)
 mito_test_driver(tests/mito.lib/functions/partial_derivatives.cc)
+mito_test_driver(tests/mito.lib/functions/tensor_derivatives.cc)
 
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
