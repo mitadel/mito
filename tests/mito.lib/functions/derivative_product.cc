@@ -108,10 +108,10 @@ TEST(Derivatives, ScalarProduct)
     constexpr auto a = mito::tensor::vector_t<2>{ -1.0, 1.0 };
 
     // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::tensor::e_0<2>;
+    constexpr auto e0 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_0<2>);
 
     // the function returning the constant e1 unit vector in 2D
-    constexpr auto e1 = mito::tensor::e_1<2>;
+    constexpr auto e1 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_1<2>);
 
     // the function extracting the x_0 component of a 2D vector
     constexpr auto x0 = mito::functions::x<0, 2>;
@@ -127,8 +127,8 @@ TEST(Derivatives, ScalarProduct)
     constexpr auto f_1 = mito::functions::derivative<1>(f);
 
     // check result
-    static_assert(a * e0 == f_0(x));
-    static_assert(a * e1 == f_1(x));
+    static_assert(a * e0(x) == f_0(x));
+    static_assert(a * e1(x) == f_1(x));
 }
 
 
