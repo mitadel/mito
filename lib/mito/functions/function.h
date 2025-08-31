@@ -50,6 +50,13 @@ namespace mito::functions {
             return Subscript(*this, i);
         }
 
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(x); }
 
@@ -91,6 +98,13 @@ namespace mito::functions {
             return Subscript(*this, i);
         }
 
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type &) const -> output_type { return _c; }
 
@@ -125,6 +139,13 @@ namespace mito::functions {
         // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
         {
             return Subscript(*this, i);
         }
@@ -182,6 +203,13 @@ namespace mito::functions {
         // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
         {
             return Subscript(*this, i);
         }
@@ -245,6 +273,13 @@ namespace mito::functions {
             return Subscript(*this, i);
         }
 
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(x) + _a; }
 
@@ -284,6 +319,13 @@ namespace mito::functions {
         // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
         {
             return Subscript(*this, i);
         }
@@ -340,6 +382,13 @@ namespace mito::functions {
             return Subscript(*this, i);
         }
 
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(x) * _a; }
 
@@ -384,6 +433,13 @@ namespace mito::functions {
         // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
         {
             return Subscript(*this, i);
         }
@@ -462,6 +518,13 @@ namespace mito::functions {
         // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
         {
             return Subscript(*this, i);
         }
@@ -551,6 +614,13 @@ namespace mito::functions {
             return Subscript(*this, i);
         }
 
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type
         {
@@ -591,6 +661,13 @@ namespace mito::functions {
         // subscript operator: only available if {output_type} is subscriptable
         constexpr auto operator[](int i) const
         requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
         {
             return Subscript(*this, i);
         }
