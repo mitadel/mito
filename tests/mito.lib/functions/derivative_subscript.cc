@@ -13,7 +13,7 @@ using std::numbers::pi;
 
 TEST(Derivatives, Subscript)
 {
-    // a matrix
+    // a scalar
     constexpr auto x = pi / 4.0;
 
     // a vector function R -> R^2x3
