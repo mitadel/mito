@@ -84,7 +84,7 @@ namespace mito::functions {
     class Composition;
 
     // function subscript
-    template <subscriptable_function_c F>
+    template <subscriptable_function_c F, typename indexT>
     class Subscript;
 }
 

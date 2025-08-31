@@ -89,8 +89,8 @@ namespace mito::functions {
     }
 
     // the I-th first partial derivative of the {Subscript} function
-    template <int I, class F>
-    constexpr auto derivative(const Subscript<F> & f)
+    template <int I, class F, typename indexT>
+    constexpr auto derivative(const Subscript<F, indexT> & f)
     {
         // the derivative of the subscript is the subscript of the derivative
         return Subscript(derivative<I>(f.f()), f.index());

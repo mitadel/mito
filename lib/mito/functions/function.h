@@ -481,7 +481,7 @@ namespace mito::functions {
     };
 
 
-    template <subscriptable_function_c F>
+    template <subscriptable_function_c F, typename indexT>
     class Subscript : public function_subscript<F>::type {
 
       public:
@@ -492,11 +492,11 @@ namespace mito::functions {
         // the output type
         using output_type = function_type::output_type;
         // the type of index
-        using index_type = int;
+        using index_type = indexT;
 
       public:
         // constructor
-        constexpr Subscript(const F & f, const int i) : _f(f), _i(i) {}
+        constexpr Subscript(const F & f, const index_type i) : _f(f), _i(i) {}
 
         // call operator for function composition
         template <function_c H>
@@ -512,11 +512,11 @@ namespace mito::functions {
         constexpr auto f() const -> const F & { return _f; }
 
         // the index
-        constexpr auto index() const -> int { return _i; }
+        constexpr auto index() const -> index_type { return _i; }
 
       private:
         const F _f;
-        const int _i;
+        const index_type _i;
     };
 
 
