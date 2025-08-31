@@ -69,9 +69,9 @@ namespace mito::functions {
         return derivative<I>(f.f1())(f.f2()) * derivative<I>(f.f2());
     }
 
-    // the chain rule for the I-th first partial derivative (f1(f2(x)) with f2 vector valued)
+    // the chain rule for the I-th first partial derivative (f1(f2(x)) with f2 tensor function)
     template <int I, class F1, class F2>
-    requires(vector_valued_function_c<F2>)
+    requires(tensor_function_c<F2>)
     constexpr auto derivative(const Composition<F1, F2> & f)
     {
         // the number of components of the vector (output of F2)
@@ -80,8 +80,7 @@ namespace mito::functions {
         // helper function to compute the N partial derivatives
         constexpr auto _derivative = []<size_t... J>(const auto & f, std::index_sequence<J...>) {
             // the vector of the partial derivatives
-            return (
-                (derivative<J>(f.f1())(f.f2()) * derivative<I>(f.f2() * tensor::e<J, N>)) + ...);
+            return ((derivative<J>(f.f1())(f.f2()) * derivative<I>(f.f2()[J])) + ...);
         };
 
         return _derivative(f, std::make_index_sequence<N>{});
