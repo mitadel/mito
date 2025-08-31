@@ -12,6 +12,13 @@
 
 namespace mito::functions {
 
+    // the I-th first partial derivative of a constant
+    template <int I, tensor::tensor_or_scalar_c T>
+    constexpr auto derivative(const T &)
+    {
+        return tensor::zero<T>;
+    }
+
     // the I-th first partial derivative of a function sum
     template <int I, class F1, class F2>
     constexpr auto derivative(const Sum<F1, F2> & f)
