@@ -20,6 +20,10 @@
 #include <cusolverDn.h>
 
 
+// utilities
+#include "utilities.h"
+
+
 namespace mito::solvers::cuda {
 
     // concept for a real type
