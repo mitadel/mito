@@ -34,8 +34,6 @@ namespace mito::manifolds {
         using coordinates_type = coordsT;
         // typedef for a coordinates system
         using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
-        // typedef for a point in parametric coordinates
-        using parametric_point_type = typename cell_type::barycentric_coordinates_type;
 
       public:
         constexpr Manifold(
@@ -83,27 +81,6 @@ namespace mito::manifolds {
         {
             // get the coordinates of the point attached to vertex {v}
             return _coordinate_system.coordinates(v->point());
-        }
-
-        constexpr auto parametrization(
-            const cell_type & cell, const parametric_point_type & point) const -> coordinates_type
-        {
-            // get the coordinates of the first node
-            auto coord_0 = coordinates(cell.nodes()[0]);
-
-            // the vector going from {coord_0} to the position of the parametric point (initialize
-            // with the zero vector)
-            auto result = coord_0 - coord_0;
-
-            // loop on the element nodes
-            int v = 0;
-            for (const auto & node : cell.nodes()) {
-                result += (coordinates(node) - coord_0) * point[v];
-                ++v;
-            }
-
-            // return the coordinates of the parametric point
-            return coord_0 + result;
         }
 
         constexpr auto print() const -> void

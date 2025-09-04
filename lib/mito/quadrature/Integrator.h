@@ -41,7 +41,8 @@ namespace mito::quadrature {
                 // the canonical element to the coordinate of the quadrature point
                 _coordinates.insert(
                     element.simplex(),
-                    { _manifold.parametrization(element, _quadratureRule.point(q))... });
+                    { element.parametrization(
+                        _quadratureRule.point(q), _manifold.coordinate_system())... });
             }
 
             // all done

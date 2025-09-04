@@ -132,6 +132,30 @@ namespace mito::geometry {
         // return the composition of this simplex in terms of its vertices
         constexpr auto nodes() const -> const nodes_type & { return _nodes; }
 
+        template <coordinate_system_c coordinateSystemT>
+        constexpr auto parametrization(
+            const barycentric_coordinates_type & point,
+            const coordinateSystemT & coordinate_system) const
+            -> coordinateSystemT::coordinates_type
+        {
+            // get the coordinates of the first node
+            auto coord_0 = coordinate_system.coordinates(_nodes[0]->point());
+
+            // the vector going from {coord_0} to the position of the parametric point (initialize
+            // with the zero vector)
+            auto result = coord_0 - coord_0;
+
+            // loop on the element nodes
+            int v = 0;
+            for (const auto & node : _nodes) {
+                result += (coordinate_system.coordinates(node->point()) - coord_0) * point[v];
+                ++v;
+            }
+
+            // return the coordinates of the parametric point
+            return coord_0 + result;
+        }
+
       private:
         // the simplex nodes
         nodes_type _nodes;
