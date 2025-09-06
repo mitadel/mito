@@ -8,7 +8,7 @@
 
 
 // publish the interface
-#include "fem/public.h"
+#include "elements/public.h"
 
 
 // end of file

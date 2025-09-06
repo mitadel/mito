@@ -24,7 +24,7 @@
 #include "DiscreteSystem.h"
 
 // finite elements implementation
-#include "fem.h"
+#include "elements.h"
 
 // factories implementation
 #include "factories.h"
