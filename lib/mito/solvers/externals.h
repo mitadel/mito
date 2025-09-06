@@ -8,7 +8,6 @@
 
 
 // support
-#include "../discretization.h"
 #include "../journal.h"
 
 
