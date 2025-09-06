@@ -29,6 +29,10 @@ namespace mito::geometry {
     template <int D>
     class Point;
 
+    // reference simplex
+    template <int N>
+    class ReferenceSimplex;
+
     // class geometric simplex
     template <int N, int D>
     requires((N >= 0) && (N <= D) && (D > 0))

@@ -33,6 +33,7 @@
 // classes implementation
 #include "CoordinateSystem.h"
 #include "Point.h"
+#include "ReferenceSimplex.h"
 #include "GeometricSimplex.h"
 #include "PointCloud.h"
 
