@@ -54,9 +54,11 @@ namespace mito::geometry {
         template <int I>
         using cell_topological_family_type = typename topology::cell_family<simplex_type, I>;
 
+        // the reference simplex type
+        using reference_simplex_type = reference_simplex_t<order>;
+
         // type of a point in barycentric coordinates
-        using barycentric_coordinates_type =
-            typename simplex_type::resource_type::barycentric_coordinates_type;
+        using barycentric_coordinates_type = reference_simplex_type::barycentric_coordinates_type;
 
       private:
         constexpr auto _sanity_check() const -> bool

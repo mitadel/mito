@@ -14,7 +14,7 @@ namespace mito::geometry {
 
       public:
         // the barycentric coordinates type
-        using barycentric_coordinates_type = geometry::coordinates_t<N, geometry::CARTESIAN>;
+        using barycentric_coordinates_type = geometry::coordinates_t<N + 1, geometry::CARTESIAN>;
 
         // the function extracting the I component of a parametric point
         template <int I>

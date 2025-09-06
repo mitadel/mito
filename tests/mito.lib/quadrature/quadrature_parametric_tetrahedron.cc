@@ -8,11 +8,17 @@
 #include <mito/quadrature.h>
 
 
+// the type of quadrature
+using mito::quadrature::GAUSS;
+// the reference tetrahedron type
+using reference_tetrahedron_t = mito::geometry::reference_tetrahedron_t;
+
+
 TEST(ParametricTetrahedron, Order1)
 {
     // a Gauss quadrature rule on tetrahedrons with degree of exactness 1
-    constexpr auto quadrature_rule = mito::quadrature::quadrature_rule<
-        mito::quadrature::GAUSS, mito::topology::tetrahedron_t, 1>();
+    constexpr auto quadrature_rule =
+        mito::quadrature::quadrature_rule<GAUSS, reference_tetrahedron_t, 1>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -38,8 +44,8 @@ TEST(ParametricTetrahedron, Order1)
 TEST(ParametricTetrahedron, Order2)
 {
     // a Gauss quadrature rule on tetrahedrons with degree of exactness 2
-    constexpr auto quadrature_rule = mito::quadrature::quadrature_rule<
-        mito::quadrature::GAUSS, mito::topology::tetrahedron_t, 2>();
+    constexpr auto quadrature_rule =
+        mito::quadrature::quadrature_rule<GAUSS, reference_tetrahedron_t, 2>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;

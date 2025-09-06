@@ -18,11 +18,12 @@ namespace mito::quadrature {
         // publish my template parameters
         using manifold_type = manifoldT;
         using cell_type = typename manifold_type::cell_type::simplex_type;
+        using reference_cell_type = typename manifold_type::cell_type::reference_simplex_type;
         using coordinates_type = typename manifold_type::coordinates_type;
 
       private:
         // quadrature_type, cell_type, and r identify a specific quadrature rule
-        using quadrature_rule_type = quadrature_rule_t<quadratureT, cell_type, r>;
+        using quadrature_rule_type = quadrature_rule_t<quadratureT, reference_cell_type, r>;
         // the quadrature rule
         static constexpr auto _quadratureRule = quadrature_rule_type();
         // the number of quadrature points

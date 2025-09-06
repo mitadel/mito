@@ -4,15 +4,20 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/topology.h>
 #include <mito/quadrature.h>
+
+
+// the type of quadrature
+using mito::quadrature::GAUSS;
+// the reference segment type
+using reference_segment_t = mito::geometry::reference_segment_t;
 
 
 TEST(ParametricSegment, Order1)
 {
     // a Gauss quadrature rule on segments with degree of exactness 1
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::segment_t, 1>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_segment_t, 1>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -36,7 +41,7 @@ TEST(ParametricSegment, Order2)
 {
     // a Gauss quadrature rule on segments with degree of exactness 2
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::segment_t, 2>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_segment_t, 2>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;

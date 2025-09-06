@@ -13,11 +13,11 @@ using scalar_t = mito::tensor::scalar_t;
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
-// the type of simplex
-using simplex_t = cell_t::simplex_type;
+// the reference simplex
+using reference_simplex_t = mito::geometry::reference_triangle_t;
 // Gauss quadrature on triangles with degree of exactness 2
 using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, simplex_t, 2>;
+    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
 
 // the degree of the finite element
 constexpr int degree = 2;

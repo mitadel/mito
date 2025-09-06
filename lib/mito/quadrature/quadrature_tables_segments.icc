@@ -10,10 +10,10 @@
 namespace mito::quadrature {
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::segment_t, 1>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_segment_t, 1>() -> auto
     {
         constexpr int Q = 1;
-        using table_type = Table<topology::segment_t, Q>;
+        using table_type = Table<geometry::reference_segment_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         return table_type({ /*{point}, weight*/
@@ -21,10 +21,10 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::segment_t, 2>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_segment_t, 2>() -> auto
     {
         constexpr int Q = 2;
-        using table_type = Table<topology::segment_t, Q>;
+        using table_type = Table<geometry::reference_segment_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         constexpr auto a = 0.788675134594813;

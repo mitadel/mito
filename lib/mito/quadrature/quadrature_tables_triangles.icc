@@ -10,10 +10,10 @@
 namespace mito::quadrature {
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 1>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_triangle_t, 1>() -> auto
     {
         constexpr int Q = 1;
-        using table_type = Table<topology::triangle_t, Q>;
+        using table_type = Table<geometry::reference_triangle_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         return table_type({ /*{point}, weight*/
@@ -21,10 +21,10 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 2>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_triangle_t, 2>() -> auto
     {
         constexpr int Q = 3;
-        using table_type = Table<topology::triangle_t, Q>;
+        using table_type = Table<geometry::reference_triangle_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         return table_type(
@@ -35,10 +35,10 @@ namespace mito::quadrature {
     }
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 3>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_triangle_t, 3>() -> auto
     {
         constexpr int Q = 6;
-        using table_type = Table<topology::triangle_t, Q>;
+        using table_type = Table<geometry::reference_triangle_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         constexpr auto a = 0.16288285039589191090016180418490635;
@@ -57,10 +57,10 @@ namespace mito::quadrature {
 
     // Dunavant's Rule #4, Hammer–Stroud-type rule
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::triangle_t, 4>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_triangle_t, 4>() -> auto
     {
         constexpr int Q = 6;
-        using table_type = Table<topology::triangle_t, Q>;
+        using table_type = Table<geometry::reference_triangle_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         constexpr auto a = 0.816847572980458513080857;

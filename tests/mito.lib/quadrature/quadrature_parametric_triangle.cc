@@ -8,11 +8,17 @@
 #include <mito/quadrature.h>
 
 
+// the type of quadrature
+using mito::quadrature::GAUSS;
+// the reference triangle type
+using reference_triangle_t = mito::geometry::reference_triangle_t;
+
+
 TEST(ParametricTriangle, Order1)
 {
     // a Gauss quadrature rule on triangles with degree of exactness 1
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 1>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 1>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -39,7 +45,7 @@ TEST(ParametricTriangle, Order2)
 {
     // a Gauss quadrature rule on triangles with degree of exactness 2
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 2>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 2>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -69,7 +75,7 @@ TEST(ParametricTriangle, Order3)
 {
     // a Gauss quadrature rule on triangles with degree of exactness 3
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 3>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 3>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -102,7 +108,7 @@ TEST(ParametricTriangle, Order4)
 {
     // a Gauss quadrature rule on triangles with degree of exactness 4
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 4>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 4>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;

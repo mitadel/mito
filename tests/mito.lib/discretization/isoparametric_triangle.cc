@@ -15,9 +15,11 @@ using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
+// the reference simplex
+using reference_simplex_t = mito::geometry::reference_triangle_t;
 // Gauss quadrature on triangles with degree of exactness 4
 using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, cell_t::simplex_type, 4>;
+    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 4>;
 // the equation map type (map associating an equation number to each node degree of freedom)
 using equation_map_type = std::map<discretization_node_t, int>;
 
