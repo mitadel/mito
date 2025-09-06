@@ -18,21 +18,21 @@ namespace mito::io::vtk {
         template <mesh::mesh_c gridT>
         struct field_type<gridT> {
             template <class Y>
-            using type = discretization::mesh_field_t<gridT::dim, Y>;
+            using type = discrete::mesh_field_t<gridT::dim, Y>;
         };
 
         // specialization to {point_cloud_c} case
         template <geometry::point_cloud_c gridT>
         struct field_type<gridT> {
             template <class Y>
-            using type = discretization::point_field_t<gridT::dim, Y>;
+            using type = discrete::point_field_t<gridT::dim, Y>;
         };
 
         // specialization to {function_space_c} case
         template <discretization::function_space_c functionSpaceT>
         struct field_type<functionSpaceT> {
             template <class Y>
-            using type = discretization::nodal_field_t<Y>;
+            using type = discrete::nodal_field_t<Y>;
         };
 
         // utility function to get the data pointer

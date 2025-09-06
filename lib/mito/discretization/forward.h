@@ -9,13 +9,6 @@
 
 namespace mito::discretization {
 
-    // class discretization node
-    class DiscretizationNode;
-
-    // class discrete field
-    template <class keyT, class Y>
-    class DiscreteField;
-
     // class function space
     template <class elementT, constraints::constraint_c constraintsT>
     class FunctionSpace;

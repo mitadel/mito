@@ -11,11 +11,7 @@
 #include <string>
 
 // support
-#include "../journal.h"
-#include "../manifolds.h"
-#include "../constraints.h"
-#include "../discrete.h"
+#include "../mesh.h"
 #include "../utilities.h"
-
 
 // end of file

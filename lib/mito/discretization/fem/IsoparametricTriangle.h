@@ -18,7 +18,7 @@ namespace mito::discretization {
         // the dimension of the physical space
         static constexpr int dim = 2;
         // the discretization node type
-        using discretization_node_type = discretization_node_t;
+        using discretization_node_type = discrete::discretization_node_t;
         // the geometric simplex type
         using geometric_simplex_type = geometry::triangle_t<dim>;
         // type of a point in barycentric coordinates

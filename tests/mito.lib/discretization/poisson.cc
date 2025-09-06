@@ -141,10 +141,9 @@ TEST(Fem, PoissonSquare)
 
 #ifdef WITH_VTK
     // the forcing term mesh field on the mesh (for visualization)
-    auto forcing = mito::discretization::mesh_field(mesh, coord_system, f, "forcing term");
+    auto forcing = mito::discrete::mesh_field(mesh, coord_system, f, "forcing term");
     // the exact solution mesh field on the mesh (for visualization)
-    auto exact_solution =
-        mito::discretization::mesh_field(mesh, coord_system, u_ex, "exact solution");
+    auto exact_solution = mito::discrete::mesh_field(mesh, coord_system, u_ex, "exact solution");
     // write mesh to vtk file
     auto writer = mito::io::vtk::field_writer("poisson_square_data", mesh, coord_system);
     // sign {forcing} up with the writer

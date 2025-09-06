@@ -11,6 +11,7 @@
 #include "journal.h"
 #include "tensor.h"
 #include "functions.h"
+#include "discrete.h"
 #include "discretization.h"
 #include "constraints.h"
 #include "coordinates.h"

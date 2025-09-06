@@ -22,4 +22,7 @@
 #include <vtkMPIController.h>
 #endif    // WITH_PARALLEL_VTK
 
+// support
+#include "../../discrete.h"
+
 // end of file

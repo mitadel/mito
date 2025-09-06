@@ -35,7 +35,7 @@ namespace mito::discretization {
         // the solution field type
         using solution_field_type = tensor::scalar_t;
         // the nodal field type
-        using nodal_field_type = nodal_field_t<solution_field_type>;
+        using nodal_field_type = discrete::nodal_field_t<solution_field_type>;
         // TOFIX: rename to {n_element_nodes}
         // the number of nodes per element
         static constexpr int n_nodes = element_type::n_nodes;

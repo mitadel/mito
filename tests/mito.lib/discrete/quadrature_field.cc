@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/discretization.h>
+#include <mito/discrete.h>
 
 
 // pick a cell type
@@ -14,7 +14,7 @@ constexpr int Q = 1;
 // a type for the field
 using vector_type = mito::tensor::vector_t<2>;
 // assemble the quadrature field
-using quadrature_field_type = mito::discretization::quadrature_field_t<cell_type, Q, vector_type>;
+using quadrature_field_type = mito::discrete::quadrature_field_t<cell_type, Q, vector_type>;
 
 // an empty topology
 auto & topology = mito::topology::topology();

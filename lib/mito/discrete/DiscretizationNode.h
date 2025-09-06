@@ -12,7 +12,7 @@
  *
  */
 
-namespace mito::discretization {
+namespace mito::discrete {
 
     class DiscretizationNode : public utilities::Invalidatable {
 

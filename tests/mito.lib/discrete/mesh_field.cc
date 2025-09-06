@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/discretization.h>
+#include <mito/discrete.h>
 #include <mito/mesh.h>
 #include <mito/io.h>
 
@@ -23,7 +23,7 @@ TEST(Discretization, NodalFieldSphere)
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
     // a mesh field on the mesh
-    auto mesh_field = mito::discretization::mesh_field<mito::tensor::vector_t<3>>(mesh, "normal");
+    auto mesh_field = mito::discrete::mesh_field<mito::tensor::vector_t<3>>(mesh, "normal");
 
     // the normal field to the submanifold
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {

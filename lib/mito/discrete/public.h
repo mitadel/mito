@@ -16,15 +16,9 @@
 // published types factories; this is the file you are looking for...
 #include "api.h"
 
-// blocks implementation
-#include "blocks.h"
-
 // classes implementation
-#include "FunctionSpace.h"
-#include "DiscreteSystem.h"
-
-// finite elements implementation
-#include "fem.h"
+#include "DiscreteField.h"
+#include "DiscretizationNode.h"
 
 // factories implementation
 #include "factories.h"

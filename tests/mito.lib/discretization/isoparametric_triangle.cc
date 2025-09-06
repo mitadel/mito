@@ -12,7 +12,7 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 // the type of coordinate system
 using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
 // the type of discretization node
-using discretization_node_t = mito::discretization::discretization_node_t;
+using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
 // Gauss quadrature on triangles with degree of exactness 4

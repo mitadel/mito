@@ -40,9 +40,11 @@ mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 # constraints
 mito_test_driver(tests/mito.lib/constraints/dirichlet.cc)
 
+# discrete
+mito_test_driver(tests/mito.lib/discrete/quadrature_field.cc)
+mito_test_driver(tests/mito.lib/discrete/mesh_field.cc)
+
 # discretization
-mito_test_driver(tests/mito.lib/discretization/quadrature_field.cc)
-mito_test_driver(tests/mito.lib/discretization/mesh_field.cc)
 mito_test_driver(tests/mito.lib/discretization/poisson.cc)
 mito_test_driver(tests/mito.lib/discretization/shape_functions_triangle_construction.cc)
 mito_test_driver(tests/mito.lib/discretization/shape_functions_triangle_p1.cc)
