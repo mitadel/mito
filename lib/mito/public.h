@@ -12,7 +12,7 @@
 #include "tensor.h"
 #include "functions.h"
 #include "discrete.h"
-#include "discretization.h"
+#include "fem.h"
 #include "constraints.h"
 #include "coordinates.h"
 #include "geometry.h"
