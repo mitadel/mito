@@ -26,8 +26,7 @@ namespace mito::io::vtk {
     }
 
     // vtk node writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto grid_writer(
         std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)
@@ -54,8 +53,7 @@ namespace mito::io::vtk {
     }
 
     // vtk node field writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto field_writer(
         std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)
@@ -84,8 +82,7 @@ namespace mito::io::vtk {
     }
 
     // parallel vtk node writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto parallel_grid_writer(
         std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)
@@ -114,8 +111,7 @@ namespace mito::io::vtk {
     }
 
     // parallel vtk node field writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto parallel_field_writer(
         std::string filename, const functionSpaceT & node, const coordSystemT & coord_system)

@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     // Class {FunctionSpace} represents a collection of finite elements of order {p} defined on a
     // manifold and subjected to a set of constraints.

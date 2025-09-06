@@ -20,8 +20,7 @@ namespace mito::io::vtk {
     using cloud_writer_t = PointCloudVTKWriter<cloudT, coordSystemT, GridVTKWriter<cloudT::dim>>;
 
     // node writer alias
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     using node_writer_t =
         NodeVTKWriter<functionSpaceT, coordSystemT, GridVTKWriter<functionSpaceT::dim>>;
@@ -41,8 +40,7 @@ namespace mito::io::vtk {
     auto grid_writer(std::string filename, const cloudT & cloud, const coordSystemT & coord_system);
 
     // node writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto grid_writer(
         std::string filename, const functionSpaceT & function_space,
@@ -60,8 +58,7 @@ namespace mito::io::vtk {
         std::string filename, const cloudT & cloud, const coordSystemT & coord_system);
 
     // node field writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto field_writer(
         std::string filename, const functionSpaceT & function_space,
@@ -81,8 +78,7 @@ namespace mito::io::vtk {
         PointCloudVTKWriter<cloudT, coordSystemT, ParallelGridVTKWriter<cloudT::dim>>;
 
     // parallel node writer alias
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     using parallel_node_writer_t =
         NodeVTKWriter<functionSpaceT, coordSystemT, ParallelGridVTKWriter<functionSpaceT::dim>>;
@@ -100,8 +96,7 @@ namespace mito::io::vtk {
         std::string filename, const cloudT & cloud, const coordSystemT & coord_system);
 
     // parallel node writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto parallel_node_writer(
         std::string filename, const functionSpaceT & function_space,
@@ -120,8 +115,7 @@ namespace mito::io::vtk {
         std::string filename, const cloudT & cloud, const coordSystemT & coord_system);
 
     // parallel node field writer factory
-    template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
+    template <fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT>
     requires(utilities::same_dim_c<functionSpaceT, coordSystemT>)
     auto parallel_field_writer(
         std::string filename, const functionSpaceT & function_space,

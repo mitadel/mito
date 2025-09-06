@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     // class function space
     template <class elementT, constraints::constraint_c constraintsT>

@@ -22,7 +22,7 @@ using quadrature_rule_t =
 // the degree of the finite element
 constexpr int degree = 2;
 // typedef for a finite element
-using finite_element_t = mito::discretization::isoparametric_simplex_t<degree, cell_t>;
+using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
 
 // typedef for a linear system of equations
 using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
@@ -72,14 +72,13 @@ TEST(Fem, PoissonSquare)
 
     // the function space (linear elements on the manifold)
     // TOFIX: function space should be template with respect to the finite element type
-    auto function_space = mito::discretization::function_space<degree>(manifold, constraints);
+    auto function_space = mito::fem::function_space<degree>(manifold, constraints);
 
     // TODO: all top level instances have names. Name should be the first argument. Then we can use
     // names in the configuration file and in the hdf5 file. Check libuuid vs. leading namestring.
     //
     // the discrete system
-    auto discrete_system =
-        mito::discretization::discrete_system<linear_system_t>(function_space, "mysystem");
+    auto discrete_system = mito::fem::discrete_system<linear_system_t>(function_space, "mysystem");
 
     // instantiate a linear solver for the discrete system
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
@@ -91,8 +90,7 @@ TEST(Fem, PoissonSquare)
     solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // a grad-grad matrix block
-    auto fem_lhs_block =
-        mito::discretization::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
+    auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
 
     // the right hand side
     auto f = mito::fields::field(
@@ -102,7 +100,7 @@ TEST(Fem, PoissonSquare)
 
     // a source term block
     auto fem_rhs_block =
-        mito::discretization::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
+        mito::fem::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
 
     // TODO:
     // // monolithic discretization matrix = [A, B; C, D]

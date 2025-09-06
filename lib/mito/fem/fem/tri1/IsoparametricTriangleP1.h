@@ -12,7 +12,7 @@
 // equipped with linear shape functions defined in the parametric space.
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     class IsoparametricTriangleP1 : public IsoparametricTriangle {
 

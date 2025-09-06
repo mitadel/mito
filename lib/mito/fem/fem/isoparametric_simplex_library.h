@@ -11,7 +11,7 @@
 #include "tri2/public.h"
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     // struct storing the type of an isoparametric simplex of polynomial degree {degree} on a
     // geometric simplex of type {geometricSimplexT}

@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization::blocks {
+namespace mito::fem::blocks {
 
     template <class elementT, class quadratureRuleT, functions::function_c functionT>
     // require that {functionT} is a function in barycentric coordinates

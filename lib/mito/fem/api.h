@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     // nodal field factory
     template <class Y, function_space_c functionSpaceT>

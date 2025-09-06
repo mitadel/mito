@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     // populate a container with a collection of all nodes in a function space
     template <function_space_c functionSpaceT, class nodesCollectionT>

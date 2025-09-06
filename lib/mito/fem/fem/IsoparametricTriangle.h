@@ -11,7 +11,7 @@
 // Class {IsoparametricTriangle} represents a second order simplex equipped barycentric coordinates.
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     class IsoparametricTriangle : public utilities::Invalidatable {
       public:

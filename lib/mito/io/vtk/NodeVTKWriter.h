@@ -13,7 +13,7 @@ namespace mito::io::vtk {
     // should be generalized to write on any discretization node type, including nodes of higher
     // order elements
     template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT,
+        fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT,
         class vtkGridWriterT>
     requires(
         utilities::same_dim_c<functionSpaceT, coordSystemT>

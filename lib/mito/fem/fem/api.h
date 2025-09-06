@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
 }
 

@@ -69,7 +69,7 @@ namespace mito::solvers {
     };
 
 
-}    // namespace mito::discretization
+}    // namespace mito::fem
 
 
 // end of file

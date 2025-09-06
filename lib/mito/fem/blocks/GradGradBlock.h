@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization::blocks {
+namespace mito::fem::blocks {
 
     // TODO: implement sum and subtraction operators for the blocks (only for blocks that result in
     // the same elementary type)

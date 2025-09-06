@@ -8,7 +8,7 @@
 
 
 // second order shape functions type
-using shape_t = mito::discretization::ShapeTriangleP2;
+using shape_t = mito::fem::ShapeTriangleP2;
 // the parametric coordinates type
 using parametric_coordinates_t = shape_t::reference_element_type::parametric_coordinates_type;
 

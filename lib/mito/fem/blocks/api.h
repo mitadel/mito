@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization::blocks {
+namespace mito::fem::blocks {
 
     // assembly block
     template <class elementT, class blockT>

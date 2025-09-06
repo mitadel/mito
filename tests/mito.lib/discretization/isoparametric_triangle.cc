@@ -222,7 +222,7 @@ TEST(Fem, IsoparametricTriangle)
 
     {
         // first order isoparametric triangle
-        using element_p1_t = mito::discretization::isoparametric_simplex<1, cell_t>::type;
+        using element_p1_t = mito::fem::isoparametric_simplex<1, cell_t>::type;
 
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
@@ -265,7 +265,7 @@ TEST(Fem, IsoparametricTriangle)
 
     {
         // second order isoparametric triangle
-        using element_p2_t = mito::discretization::isoparametric_simplex<2, cell_t>::type;
+        using element_p2_t = mito::fem::isoparametric_simplex<2, cell_t>::type;
 
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();

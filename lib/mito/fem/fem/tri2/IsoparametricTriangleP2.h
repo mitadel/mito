@@ -12,7 +12,7 @@
 // equipped with quadratic shape functions defined in the parametric space.
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     class IsoparametricTriangleP2 : public IsoparametricTriangle {
 

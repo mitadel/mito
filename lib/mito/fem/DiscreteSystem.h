@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization {
+namespace mito::fem {
 
     // TOFIX: for now the discrete system is one per function space. We should figure out a way to
     // extend the design to the case that there are multiple finite element discretizations that

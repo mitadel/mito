@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization::blocks {
+namespace mito::fem::blocks {
 
     // TOFIX: the source does not need to be necessarily a scalar field, it can be some other field
     // see if we can use {field_c} instead of {scalar_field_c}

@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::discretization::blocks {
+namespace mito::fem::blocks {
 
     // matrix block factory
     template <class elementT, class quadratureRuleT>

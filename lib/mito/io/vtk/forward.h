@@ -30,7 +30,7 @@ namespace mito::io::vtk {
 
     // class node writer
     template <
-        discretization::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT,
+        fem::function_space_c functionSpaceT, geometry::coordinate_system_c coordSystemT,
         class vtkGridWriterT>
     requires(
         utilities::same_dim_c<functionSpaceT, coordSystemT>
