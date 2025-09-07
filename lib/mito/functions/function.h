@@ -115,19 +115,23 @@ namespace mito::functions {
 
 
     // the sum of two functions
-    template <function_c F, function_c G>
-    class Sum : public function_sum<F, G>::type {
+    template <function_c... Funcs>
+    class Summation : public function_sum<Funcs...>::type {
       public:
         // the type of sum function (what I derive from)
-        using function_type = function_sum<F, G>::type;
+        using function_type = function_sum<Funcs...>::type;
         // the input type of the sum
         using input_type = function_type::input_type;
         // the output type of the sum
         using output_type = function_type::output_type;
 
+      private:
+        // the type of functions
+        using functions_type = std::tuple<Funcs...>;
+
       public:
         // constructor
-        constexpr Sum(const F & f, const G & g) : _f(f), _g(g) {}
+        constexpr Summation(Funcs... funcs) : _funcs(funcs...) {}
 
         // call operator for function composition
         template <function_c H>
@@ -153,18 +157,16 @@ namespace mito::functions {
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type
         {
-            return _f(x) + _g(x);
+            // the sum of all functions
+            return std::apply([&](const auto &... funcs) { return (funcs(x) + ...); }, _funcs);
         }
 
-        // the first in the sum
-        constexpr auto f1() const -> const F & { return _f; }
-
-        // the second in the sum
-        constexpr auto f2() const -> const G & { return _g; }
+        // accessor for the functions in the summation
+        constexpr auto functions() const -> const functions_type & { return _funcs; }
 
       private:
-        const F _f;
-        const G _g;
+        // the functions in the summation
+        functions_type _funcs;
     };
 
     // the linear combination of functions {Funcs} with coefficients of type {T}...

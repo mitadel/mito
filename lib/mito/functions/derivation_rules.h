@@ -20,10 +20,11 @@ namespace mito::functions {
     }
 
     // the I-th first partial derivative of a function sum
-    template <int I, class F1, class F2>
-    constexpr auto derivative(const Sum<F1, F2> & f)
+    template <int I, function_c... Funcs>
+    constexpr auto derivative(const Summation<Funcs...> & f)
     {
-        return derivative<I>(f.f1()) + derivative<I>(f.f2());
+        return std::apply(
+            [&](const auto &... funcs) { return (derivative<I>(funcs) + ...); }, f.functions());
     }
 
     // the I-th first partial derivative of a constant plus a function

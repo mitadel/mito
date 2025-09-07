@@ -23,6 +23,13 @@ namespace mito::functions {
         return FunctionFromFunctor<F>(std::forward<F>(f));
     }
 
+    // returns the summation of functions
+    template <function_c... Funcs>
+    constexpr auto summation(Funcs... funcs)
+    {
+        return Summation<Funcs...>(std::forward<Funcs>(funcs)...);
+    }
+
     // returns the linear combination
     template <typename T, function_c... Funcs>
     constexpr auto linear_combination(std::array<T, sizeof...(Funcs)> coeffs, Funcs... funcs)
