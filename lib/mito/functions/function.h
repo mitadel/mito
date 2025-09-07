@@ -686,6 +686,60 @@ namespace mito::functions {
       private:
         const F _f;
     };
+
+    // function computing the dyadic of two vector valued functions
+    template <vector_valued_function_c F1, vector_valued_function_c F2>
+    class DyadicProduct : public function_dyadic_product<F1, F2>::type {
+
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_dyadic_product<F1, F2>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+
+      public:
+        // constructor
+        constexpr DyadicProduct(const F1 & f1, const F2 & f2) : _f1(f1), _f2(f2) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return tensor::dyadic(_f1(x), _f2(x));
+        }
+
+        // the first function in the dyadic product
+        constexpr auto f1() const -> const F1 & { return _f1; }
+
+        // the second function in the dyadic product
+        constexpr auto f2() const -> const F2 & { return _f2; }
+
+      private:
+        const F1 _f1;
+        const F2 _f2;
+    };
 }
 
 

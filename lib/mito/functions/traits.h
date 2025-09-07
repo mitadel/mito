@@ -124,6 +124,31 @@ namespace mito::functions {
         // the output types multiplied by the coefficients
         using type = Function<input_type, output_type>;
     };
+
+    // the type of the dyadic product of two vector-valued functions...
+    template <vector_valued_function_c F, vector_valued_function_c G>
+    requires(
+        // ... which take the same input type {input_type}...
+        std::is_same_v<typename F::input_type, typename G::input_type>
+        // ... and return vectors of same size ...
+        && F::output_type::size == G::output_type::size)
+    struct function_dyadic_product {
+        // the common input type
+        using input_type = typename F::input_type;
+        // the scalar type of the output of the first function
+        using scalar_type_1 = typename F::output_type::scalar_type;
+        // the scalar type of the output of the second function
+        using scalar_type_2 = typename G::output_type::scalar_type;
+        // the dimension of the two vectors in output
+        static constexpr int output_dimension = F::output_type::size;
+        // the type of the sum of the outputs
+        using output_type = tensor::matrix_t<
+            F::output_type::size, F::output_type::size,
+            product_result_t<scalar_type_1, scalar_type_2>>;
+        // ... is the function that takes {input_type} in input and returns the type of the dyadic
+        // product of the output types
+        using type = Function<input_type, output_type>;
+    };
 }
 
 

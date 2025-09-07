@@ -102,6 +102,13 @@ namespace mito::functions {
     {
         return Inverse(f);
     }
+
+    // dyadic product of vector-valued functions f and g
+    constexpr auto dyadic(
+        const vector_valued_function_c auto & f, const vector_valued_function_c auto & g)
+    {
+        return DyadicProduct(f, g);
+    }
 }
 
 
