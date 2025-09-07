@@ -26,11 +26,8 @@ namespace mito::solvers::cuda {
         // initialize the CUDA dense solver
         auto initialize(size_t size) -> void;
 
-        // finalize the CUDA dense solver
-        auto finalize() -> void;
-
         // reset the linear system (i.e. the host copy of the matrix, right-hand side and solution)
-        auto reset_system() -> void;
+        virtual auto reset_system() -> void = 0;
 
         // set (add or insert depending on the mode) the value of a matrix entry in the host copy
         virtual auto set_matrix_value(
@@ -41,7 +38,7 @@ namespace mito::solvers::cuda {
         // host copy
         virtual auto set_rhs_value(
             size_t row, const real_type value,
-            const InsertMode insert_mode = InsertMode::INSERT_VALUE) -> void = 0;
+            const InsertMode insert_mode = InsertMode::INSERT_VALUE) -> void;
 
         // finalize the linear system assembly
         auto finalize_assembly() -> void;
@@ -50,7 +47,8 @@ namespace mito::solvers::cuda {
         virtual auto solve() -> void = 0;
 
         // get the solution vector
-        virtual auto get_solution(std::vector<real_type> & solution) const -> void = 0;
+        template <class solutionT>
+        auto get_solution(solutionT & solution) const -> void;
 
       protected:
         // initialize the cuSOLVER utilities
@@ -65,19 +63,16 @@ namespace mito::solvers::cuda {
         // allocate the device memory for the matrix and right-hand side
         virtual auto _allocate_device_memory(size_t size) -> void = 0;
 
-        // initialize the host data for the matrix, right-hand side, and solution
-        virtual auto _initialize_host_data(size_t size) -> void = 0;
-
-        // deallocate the host memory for the matrix, right-hand side, and solution
-        virtual auto _free_host_memory() -> void = 0;
-
-        // deallocate the device memory for the matrix and right-hand side
-        virtual auto _free_device_memory() -> void = 0;
-
         // check the validity of the index in the matrix and right-hand side
         auto _check_index_validity(size_t index) const -> void;
 
       protected:
+        // host copy of the right-hand side
+        HostArray<real_type> _h_rhs;
+        // host copy of the solution
+        HostArray<real_type> _h_solution;
+        // device copy of the right-hand side
+        DeviceArray<real_type> _d_rhs;
         // solver type
         SolverType _solver_type;
         // size of the linear system
@@ -90,5 +85,12 @@ namespace mito::solvers::cuda {
         cudaStream_t _cuda_stream;
     };
 }
+
+
+// get the template definitions
+#define mito_solvers_backend_cuda_CUDASolver_icc
+#include "CUDASolver.icc"
+#undef mito_solvers_backend_cuda_CUDASolver_icc
+
 
 // end of file

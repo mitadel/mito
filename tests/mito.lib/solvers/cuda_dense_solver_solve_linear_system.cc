@@ -54,9 +54,6 @@ TEST(Solvers, CUDADenseSolverSymmetricLinearSystem)
     EXPECT_NEAR(x[8], 9.0, tol);
     EXPECT_NEAR(x[9], 5.0, tol);
 
-    // finalize the solver
-    solver.finalize();
-
     // all done
     return;
 }
@@ -106,9 +103,6 @@ TEST(Solvers, CUDADenseSolverUnsymmetricLinearSystem)
     EXPECT_NEAR(x[7], 1.9221579012193621, tol);
     EXPECT_NEAR(x[8], 1.8126616578396353, tol);
     EXPECT_NEAR(x[9], 1.4063308289198175, tol);
-
-    // finalize the solver
-    solver.finalize();
 
     // all done
     return;

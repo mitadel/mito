@@ -10,6 +10,9 @@
 // constructor
 template <mito::solvers::cuda::real_c realT>
 mito::solvers::cuda::CUDASolver<realT>::CUDASolver(SolverType solver_type) :
+    _h_rhs(),
+    _h_solution(),
+    _d_rhs(),
     _solver_type(solver_type),
     _size(0),
     _is_solver_initialized(false),
@@ -29,8 +32,8 @@ mito::solvers::cuda::CUDASolver<realT>::initialize(size_t size) -> void
     // check if the solver is already initialized
     if (_is_solver_initialized) {
         throw std::logic_error(
-            "Solver is already initialized. Are you sure you want to reinitialize? Then call "
-            "finalize() first.");
+            "Solver is already initialized. You are not allowed to re-initialize it. If you want "
+            "to re-initialize, you need to create a new solver instance.");
     }
 
     // check if the size is valid
@@ -44,9 +47,6 @@ mito::solvers::cuda::CUDASolver<realT>::initialize(size_t size) -> void
     // allocate host memory
     _allocate_host_memory(size);
 
-    // initialize host data
-    _initialize_host_data(size);
-
     // allocate device memory
     _allocate_device_memory(size);
 
@@ -57,40 +57,28 @@ mito::solvers::cuda::CUDASolver<realT>::initialize(size_t size) -> void
     return;
 }
 
+// add/insert {value} to rhs entry at {row} of the host copy
 template <mito::solvers::cuda::real_c realT>
 auto
-mito::solvers::cuda::CUDASolver<realT>::finalize() -> void
+mito::solvers::cuda::CUDASolver<realT>::set_rhs_value(
+    size_t row, const real_type value, const InsertMode insert_mode) -> void
 {
-    // check if the solver is initialized
-    if (_is_solver_initialized) {
-        // free host memory
-        _free_host_memory();
-
-        // free device memory
-        _free_device_memory();
+    // check if the system assembly is finalized and throw an error if it is
+    if (_is_assembly_finalized) {
+        throw std::logic_error(
+            "System assembly is already finalized. Cannot add/insert values to the rhs.");
     }
 
-    // reset the solver initialized flag
-    _is_solver_initialized = false;
+    // check if the row index is within bounds
+    this->_check_index_validity(row);
 
-    // all done
-    return;
-}
-
-template <mito::solvers::cuda::real_c realT>
-auto
-mito::solvers::cuda::CUDASolver<realT>::reset_system() -> void
-{
-    // check if the solver is initialized
-    if (!_is_solver_initialized) {
-        throw std::logic_error("Solver is not yet initialized. Call initialize() first.");
-    }
-
-    // fill the host matrix, rhs and solution with zeros
-    _initialize_host_data(_size);
-
-    // reset the assembly finalized flag
-    _is_assembly_finalized = false;
+    // add/insert the value to the rhs entry in the host rhs
+    if (insert_mode == InsertMode::ADD_VALUE)
+        _h_rhs[row] += value;
+    else if (insert_mode == InsertMode::INSERT_VALUE)
+        _h_rhs[row] = value;
+    else
+        throw std::invalid_argument("Invalid insert mode. Use ADD_VALUE or INSERT_VALUE.");
 
     // all done
     return;

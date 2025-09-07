@@ -57,17 +57,11 @@ namespace mito::solvers::cuda {
             size_t row, size_t col, const real_type value,
             const InsertMode insert_mode = InsertMode::INSERT_VALUE) -> void override;
 
-        // set (add or insert depending on the mode) the value of a right-hand side entry in the
-        // host copy
-        auto set_rhs_value(
-            size_t row, const real_type value,
-            const InsertMode insert_mode = InsertMode::INSERT_VALUE) -> void override;
+        // reset the linear system (i.e. the host copy of the matrix, right-hand side and solution)
+        auto reset_system() -> void override;
 
         // solve the linear system
         auto solve() -> void override;
-
-        // get the solution vector
-        auto get_solution(std::vector<real_type> & solution) const -> void override;
 
       private:
         // initialize the cuSOLVER utilities
@@ -82,41 +76,15 @@ namespace mito::solvers::cuda {
         // allocate the device memory for the matrix and right-hand side
         auto _allocate_device_memory(size_t size) -> void override;
 
-        // initialize the host data for the matrix, right-hand side, and solution
-        auto _initialize_host_data(size_t size) -> void override;
-
-        // deallocate the host memory for the matrix, right-hand side, and solution
-        auto _free_host_memory() -> void override;
-
-        // deallocate the device memory for the matrix and right-hand side
-        auto _free_device_memory() -> void override;
-
       private:
         // host copy of the matrix
-        real_type * _h_matrix;
-        // host copy of the right-hand side
-        real_type * _h_rhs;
-        // host copy of the solution
-        real_type * _h_solution;
+        HostArray<real_type> _h_matrix;
         // device copy of the matrix
-        real_type * _d_matrix;
-        // device copy of the right-hand side
-        real_type * _d_rhs;
-        // flag to indicate which type of host memory has been allocated
-        // 0: no memory allocated
-        // 1: pinned memory allocated
-        // 2: pageable (regular) memory allocated
-        int _allocated_host_memory_type;
+        DeviceArray<real_type> _d_matrix;
         // cuSOLVER handle
         cusolverDnHandle_t _cusolver_handle;
     };
 }
-
-
-// get the template definitions
-#define mito_solvers_backend_cuda_CUDADenseSolver_icc
-#include "CUDADenseSolver.icc"
-#undef mito_solvers_backend_cuda_CUDADenseSolver_icc
 
 
 // end of file

@@ -16,7 +16,7 @@ namespace mito::solvers::cuda {
     enum SolverType { CHOLESKY, LU };
 
     // class for CUDA dense solver
-    template<real_c realT>
+    template <real_c realT>
     class CUDADenseSolver;
 }
 
