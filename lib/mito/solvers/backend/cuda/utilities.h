@@ -172,6 +172,126 @@ namespace mito::solvers::cuda {
         // type of memory
         HostMemoryType _memory_type;
     };
+
+    // a utility class to manage device memory
+    template <std::floating_point T>
+    class DeviceArray {
+      public:
+        using real_type = T;
+
+      public:
+        // default constructor
+        DeviceArray() : _data(nullptr), _size(0) {}
+
+        // allocate on construction
+        explicit DeviceArray(std::size_t size) : DeviceArray() { allocate(size); }
+
+        // destructor
+        ~DeviceArray() { _free_memory(); }
+
+        // delete copy constructor
+        DeviceArray(const DeviceArray &) = delete;
+
+        // delete copy assignment operator
+        DeviceArray & operator=(const DeviceArray &) = delete;
+
+        // enable move semantics
+        DeviceArray(DeviceArray && other) noexcept : _data(other._data), _size(other._size)
+        {
+            // reset the state of the moved-from object
+            other._data = nullptr;
+            other._size = 0;
+        }
+
+        DeviceArray & operator=(DeviceArray && other) noexcept
+        {
+            if (this != &other) {
+                // free existing memory and acquire new memory
+                _free_memory();
+                _data = other._data;
+                _size = other._size;
+                // reset the state of the moved-from object
+                other._data = nullptr;
+                other._size = 0;
+            }
+            return *this;
+        }
+
+        // allocate or reallocate memory for the array
+        void allocate(std::size_t size)
+        {
+            if (_size == size)
+                return;
+
+            // free old memory if any
+            _free_memory();
+
+            _size = size;
+            if (_size == 0)
+                return;
+
+            // allocate device memory
+            cudaError_t error = cudaMalloc((void **) &_data, size * sizeof(real_type));
+            if (error != cudaSuccess) {
+                throw std::runtime_error(
+                    "[DeviceArray] Error: Failed to allocate device memory: "
+                    + std::string(cudaGetErrorString(error)));
+            }
+
+            // all done
+            return;
+        }
+
+        // zero out the device array
+        void zero()
+        {
+            if (_data) {
+                cudaError_t error = cudaMemset(_data, 0, _size * sizeof(real_type));
+                if (error != cudaSuccess) {
+                    throw std::runtime_error(
+                        "[DeviceArray] Error: Failed to zero out device memory: "
+                        + std::string(cudaGetErrorString(error)));
+                }
+            }
+        }
+
+        // data accessor
+        real_type * data() { return _data; }
+
+        // const data accessor
+        const real_type * data() const { return _data; }
+
+        // size accessor
+        std::size_t size() const { return _size; }
+
+      private:
+        // free the memory in the array
+        void _free_memory()
+        {
+            if (!_data)
+                return;
+
+            // free the memory
+            cudaError_t error = cudaFree(_data);
+            if (error != cudaSuccess) {
+                std::cerr << "[DeviceArray] Error: Failed to free device memory: "
+                          << cudaGetErrorString(error) << "\n";
+            }
+
+            // reset the state
+            _data = nullptr;
+            _size = 0;
+
+            // all done
+            return;
+        }
+
+      private:
+        // pointer to the data
+        real_type * _data;
+        // size of the array
+        std::size_t _size;
+    };
 }
 
 
