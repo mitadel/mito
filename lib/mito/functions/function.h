@@ -131,7 +131,7 @@ namespace mito::functions {
 
       public:
         // constructor
-        constexpr Summation(Funcs... funcs) : _funcs(funcs...) {}
+        constexpr Summation(const Funcs &... funcs) : _funcs(funcs...) {}
 
         // call operator for function composition
         template <function_c H>
@@ -190,7 +190,7 @@ namespace mito::functions {
 
       public:
         // constructor
-        constexpr LinearCombination(const coefficients_type & coeffs, Funcs... funcs) :
+        constexpr LinearCombination(const coefficients_type & coeffs, const Funcs &... funcs) :
             _coeffs(coeffs),
             _funcs(funcs...)
         {}
