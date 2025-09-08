@@ -21,9 +21,6 @@ namespace mito::fem {
         using discretization_node_type = discrete::discretization_node_t;
         // the geometric simplex type
         using geometric_simplex_type = geometry::triangle_t<dim>;
-        // type of a point in barycentric coordinates
-        using barycentric_coordinates_type =
-            typename geometric_simplex_type::barycentric_coordinates_type;
 
       protected:
         // cartesian coordinates in 2D
