@@ -9,8 +9,8 @@
 
 // second order shape functions type
 using shape_t = mito::fem::ShapeTriangleP2;
-// the parametric coordinates type
-using parametric_coordinates_t = shape_t::reference_element_type::parametric_coordinates_type;
+// the barycentric coordinates type
+using barycentric_coordinates_t = shape_t::reference_element_type::barycentric_coordinates_type;
 
 
 TEST(Fem, ShapeTriangleP2)
@@ -18,18 +18,18 @@ TEST(Fem, ShapeTriangleP2)
     // second order shape functions
     constexpr auto element = shape_t();
 
-    // node 0 in parametric coordinates
-    constexpr auto n0 = parametric_coordinates_t{ 1.0, 0.0 };
-    // node 1 in parametric coordinates
-    constexpr auto n1 = parametric_coordinates_t{ 0.0, 1.0 };
-    // node 2 in parametric coordinates
-    constexpr auto n2 = parametric_coordinates_t{ 0.0, 0.0 };
-    // node 3 in parametric coordinates
-    constexpr auto n3 = parametric_coordinates_t{ 0.5, 0.5 };
-    // node 4 in parametric coordinates
-    constexpr auto n4 = parametric_coordinates_t{ 0.0, 0.5 };
-    // node 5 in parametric coordinates
-    constexpr auto n5 = parametric_coordinates_t{ 0.5, 0.0 };
+    // node 0 in barycentric coordinates
+    constexpr auto n0 = barycentric_coordinates_t{ 1.0, 0.0, 0.0 };
+    // node 1 in barycentric coordinates
+    constexpr auto n1 = barycentric_coordinates_t{ 0.0, 1.0, 0.0 };
+    // node 2 in barycentric coordinates
+    constexpr auto n2 = barycentric_coordinates_t{ 0.0, 0.0, 1.0 };
+    // node 3 in barycentric coordinates
+    constexpr auto n3 = barycentric_coordinates_t{ 0.5, 0.5, 0.0 };
+    // node 4 in barycentric coordinates
+    constexpr auto n4 = barycentric_coordinates_t{ 0.0, 0.5, 0.5 };
+    // node 5 in barycentric coordinates
+    constexpr auto n5 = barycentric_coordinates_t{ 0.5, 0.0, 0.5 };
 
     // the shape functions at node 0
     constexpr auto phi_0 = element.shape<0>();

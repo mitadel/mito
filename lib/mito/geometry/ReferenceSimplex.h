@@ -14,12 +14,11 @@ namespace mito::geometry {
 
       public:
         // the barycentric coordinates type
-        using barycentric_coordinates_type = geometry::coordinates_t<N + 1, geometry::CARTESIAN>;
+        using barycentric_coordinates_type = tensor::vector_t<N + 1>;
 
         // the function extracting the I component of a parametric point
         template <int I>
-        static constexpr auto xi =
-            fields::field(functions::component<barycentric_coordinates_type, I>);
+        static constexpr auto xi = functions::component<barycentric_coordinates_type, I>;
     };
 
 }    // namespace mito

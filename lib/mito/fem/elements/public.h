@@ -17,7 +17,6 @@
 #include "api.h"
 
 // classes implementation
-#include "ReferenceTriangle.h"
 #include "IsoparametricTriangle.h"
 #include "isoparametric_simplex_library.h"
 

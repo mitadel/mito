@@ -13,15 +13,15 @@ namespace mito::fem {
 
       public:
         // the reference element
-        using reference_element_type = ReferenceTriangle;
+        using reference_element_type = geometry::reference_triangle_t;
         // the number of shape functions
         static constexpr int N = 6;
 
       private:
         // get the parametric coordinates from the reference element
-        static constexpr auto xi_0 = reference_element_type::xi_0;
-        static constexpr auto xi_1 = reference_element_type::xi_1;
-        static constexpr auto xi_2 = reference_element_type::xi_2;
+        static constexpr auto xi_0 = reference_element_type::xi<0>;
+        static constexpr auto xi_1 = reference_element_type::xi<1>;
+        static constexpr auto xi_2 = reference_element_type::xi<2>;
 
         // quadratic shape functions on the triangle
         static constexpr auto phi_3 = 4.0 * xi_0 * xi_1;
@@ -36,11 +36,15 @@ namespace mito::fem {
 
         // the gradients of the shape functions
         static constexpr auto dphi = std::make_tuple(
-            fields::gradient(phi_0), fields::gradient(phi_1), fields::gradient(phi_2),
-            fields::gradient(phi_3), fields::gradient(phi_4), fields::gradient(phi_5));
+            tensor::e_0<2> * (1.0 - 2.0 * xi_1 - 2.0 * xi_2 + 2.0 * xi_0),
+            tensor::e_1<2> * (1.0 - 2.0 * xi_0 - 2.0 * xi_2 + 2.0 * xi_1),
+            (tensor::e_0<2> + tensor::e_1<2>) *(-1.0 - 2.0 * xi_2 + 2.0 * xi_0 + 2.0 * xi_1),
+            tensor::e_0<2> * (4.0 * xi_1) + tensor::e_1<2> * (4.0 * xi_0),
+            tensor::e_0<2> * (-4.0 * xi_1) + tensor::e_1<2> * (4.0 * xi_2 - 4.0 * xi_1),
+            tensor::e_0<2> * (4.0 * xi_2 - 4.0 * xi_0) + tensor::e_1<2> * (-4.0 * xi_0));
 
       public:
-        // get the a-th shape function
+        // get the a-th shape function as a function of barycentric coordinates
         template <int a>
         requires(a >= 0 && a < N)
         constexpr auto shape() const
@@ -49,7 +53,7 @@ namespace mito::fem {
             return std::get<a>(phi);
         }
 
-        // get the a-th shape function's gradient
+        // get the a-th shape function's gradient as a function of barycentric coordinates
         template <int a>
         requires(a >= 0 && a < N)
         constexpr auto dshape() const

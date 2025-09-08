@@ -21,6 +21,9 @@ namespace mito::fem {
         static constexpr int degree = 1;
         // the type of shape functions
         using shape_functions_type = ShapeTriangleP1;
+        // the barycentric coordinates type
+        using barycentric_coordinates_type =
+            typename shape_functions_type::barycentric_coordinates_type;
         // the linear shape functions
         static constexpr auto shape_functions = shape_functions_type();
         // the number of discretization discretization nodes
@@ -52,19 +55,6 @@ namespace mito::fem {
         // delete move assignment operator
         constexpr IsoparametricTriangleP1 & operator=(IsoparametricTriangleP1 &&) noexcept = delete;
 
-      private:
-        // the isoparametric mapping from barycentric coordinates to physical coordinates
-        constexpr auto _x_cell() const
-        {
-            // get the shape functions
-            constexpr auto phi_0 = shape_functions.shape<0>();
-            constexpr auto phi_1 = shape_functions.shape<1>();
-            constexpr auto phi_2 = shape_functions.shape<2>();
-
-            // return the isoparametric mapping from barycentric to physical coordinates
-            return _x0 * phi_0 + _x1 * phi_1 + _x2 * phi_2;
-        }
-
       public:
         // get the discretization nodes
         constexpr auto connectivity() const noexcept -> const connectivity_type &
@@ -75,15 +65,14 @@ namespace mito::fem {
         // get the isoparametric mapping from barycentric coordinates to physical coordinates
         constexpr auto parametrization() const
         {
-            // assemble the physical coordinates from the barycentric coordinates
-            auto x_cell = functions::function(
-                [&](const barycentric_coordinates_type & xi) -> tensor::vector_t<2> {
-                    // compute the gradient of the isoparametric mapping
-                    return _x_cell()({ xi[0], xi[1] });
-                });
+            // get the shape functions
+            constexpr auto phi_0 = shape_functions.shape<0>();
+            constexpr auto phi_1 = shape_functions.shape<1>();
+            constexpr auto phi_2 = shape_functions.shape<2>();
 
-            // and return it
-            return x_cell;
+            // return the isoparametric mapping from parametric to physical coordinates
+            return mito::functions::linear_combination(
+                std::array{ _x0, _x1, _x2 }, phi_0, phi_1, phi_2);
         }
 
         // get the shape function associated with local node {a}
@@ -91,16 +80,8 @@ namespace mito::fem {
         requires(a >= 0 && a < n_nodes)
         constexpr auto shape() const
         {
-            // assemble the shape function associated with local node {a} as a function of
-            // barycentric coordinates
-            constexpr auto shape_function = functions::function(
-                [](const barycentric_coordinates_type & xi) -> tensor::scalar_t {
-                    // return the a-th shape function evaluated at {xi}
-                    return shape_functions.shape<a>()({ xi[0], xi[1] });
-                });
-
-            // and return it
-            return shape_function;
+            // return the shape functions
+            return shape_functions.shape<a>();
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
@@ -116,9 +97,8 @@ namespace mito::fem {
 
                     // compute the gradient of the isoparametric mapping
                     return (
-                        tensor::dyadic(_x0, dphi_0({ xi[0], xi[1] }))
-                        + tensor::dyadic(_x1, dphi_1({ xi[0], xi[1] }))
-                        + tensor::dyadic(_x2, dphi_2({ xi[0], xi[1] })));
+                        tensor::dyadic(_x0, dphi_0(xi)) + tensor::dyadic(_x1, dphi_1(xi))
+                        + tensor::dyadic(_x2, dphi_2(xi)));
                 });
 
             // and return it
@@ -130,19 +110,8 @@ namespace mito::fem {
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
-            // assemble the gradient as a function of barycentric coordinates
-            auto gradient_function = functions::function(
-                [&](const barycentric_coordinates_type & xi) -> tensor::vector_t<2> {
-                    // the jacobian of the mapping from the reference element to the physical
-                    // element evaluated at {xi}
-                    auto J = jacobian()(xi);
-                    // the derivative of the coordinates with respect to the barycentric coordinates
-                    auto J_inv = tensor::inverse(J);
-                    // return the spatial gradients of the shape functions evaluated at {xi}
-                    return shape_functions.dshape<a>()({ xi[0], xi[1] }) * J_inv;
-                });
-            // and return it
-            return gradient_function;
+            // return the (physical) gradient of the a-th shape function
+            return shape_functions.dshape<a>() * functions::inverse(jacobian());
         }
 
       private:
