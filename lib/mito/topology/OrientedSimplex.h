@@ -34,9 +34,6 @@ namespace mito::topology {
         template <int I>
         using cell_family_type = simplex_t<I>;
 
-        // type of a point in barycentric coordinates
-        using barycentric_coordinates_type = std::array<double, n_vertices>;
-
         // private constructors: only the OrientedSimplexFactory has the right to instantiate
         // oriented simplices
       private:
