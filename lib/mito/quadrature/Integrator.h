@@ -37,8 +37,9 @@ namespace mito::quadrature {
         {
             // loop on elements
             for (const auto & element : _manifold.elements()) {
-                // use manifold parametrization to map the position of quadrature points in
-                // the canonical element to the coordinate of the quadrature point
+                // use element parametrization and manifold's coordinate systemto map the position
+                // of quadrature points in the canonical element to the coordinate of the quadrature
+                // point
                 _coordinates.insert(
                     element.simplex(),
                     { element.parametrization(
