@@ -21,7 +21,7 @@ namespace mito::fem {
         // get the parametric coordinates from the reference element
         static constexpr auto xi_0 = reference_element_type::xi<0>;
         static constexpr auto xi_1 = reference_element_type::xi<1>;
-        static constexpr auto xi_2 = reference_element_type::xi<2>;
+        static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
 
         // quadratic shape functions on the triangle
         static constexpr auto phi_3 = 4.0 * xi_0 * xi_1;

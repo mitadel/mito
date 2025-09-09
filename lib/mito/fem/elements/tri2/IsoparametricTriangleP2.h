@@ -22,8 +22,8 @@ namespace mito::fem {
         // the type of shape functions
         using shape_functions_type = ShapeTriangleP2;
         // type of a point in barycentric coordinates
-        using barycentric_coordinates_type =
-            typename shape_functions_type::reference_element_type::barycentric_coordinates_type;
+        using parametric_coordinates_type =
+            typename shape_functions_type::reference_element_type::parametric_coordinates_type;
         // the linear shape functions
         static constexpr auto shape_functions = shape_functions_type();
         // the number of discretization nodes
@@ -96,7 +96,7 @@ namespace mito::fem {
         {
             // assemble the jacobian as a function of barycentric coordinates
             auto jacobian_function = functions::function(
-                [&](const barycentric_coordinates_type & xi) -> tensor::matrix_t<2> {
+                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<2> {
                     auto x3 = 0.5 * (_x0 + _x1);
                     auto x4 = 0.5 * (_x1 + _x2);
                     auto x5 = 0.5 * (_x2 + _x0);

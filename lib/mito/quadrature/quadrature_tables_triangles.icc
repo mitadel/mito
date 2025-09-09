@@ -17,7 +17,7 @@ namespace mito::quadrature {
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         return table_type({ /*{point}, weight*/
-                            point_weight_pair_type({ 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 }, 1.0) });
+                            point_weight_pair_type({ 1.0 / 3.0, 1.0 / 3.0 }, 1.0) });
     }
 
     template <>
@@ -27,11 +27,10 @@ namespace mito::quadrature {
         using table_type = Table<geometry::reference_triangle_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
-        return table_type(
-            { /*{point}, weight*/
-              point_weight_pair_type({ 2.0 / 3.0, 1.0 / 6.0, 1.0 / 6.0 }, 1.0 / 3.0),
-              point_weight_pair_type({ 1.0 / 6.0, 2.0 / 3.0, 1.0 / 6.0 }, 1.0 / 3.0),
-              point_weight_pair_type({ 1.0 / 6.0, 1.0 / 6.0, 2.0 / 3.0 }, 1.0 / 3.0) });
+        return table_type({ /*{point}, weight*/
+                            point_weight_pair_type({ 2.0 / 3.0, 1.0 / 6.0 }, 1.0 / 3.0),
+                            point_weight_pair_type({ 1.0 / 6.0, 2.0 / 3.0 }, 1.0 / 3.0),
+                            point_weight_pair_type({ 1.0 / 6.0, 1.0 / 6.0 }, 1.0 / 3.0) });
     }
 
     template <>
@@ -47,12 +46,12 @@ namespace mito::quadrature {
         constexpr auto w2 = 0.05218353089235368507981901063125638;
 
         return table_type({ /*{point}, weight*/
-                            point_weight_pair_type({ 1.0 - 2.0 * a, a, a }, w1),
-                            point_weight_pair_type({ a, 1.0 - 2.0 * a, a }, w1),
-                            point_weight_pair_type({ a, a, 1.0 - 2.0 * a }, w1),
-                            point_weight_pair_type({ 1.0 - 2.0 * b, b, b }, w2),
-                            point_weight_pair_type({ b, 1.0 - 2.0 * b, b }, w2),
-                            point_weight_pair_type({ b, b, 1.0 - 2.0 * b }, w2) });
+                            point_weight_pair_type({ 1.0 - 2.0 * a, a }, w1),
+                            point_weight_pair_type({ a, 1.0 - 2.0 * a }, w1),
+                            point_weight_pair_type({ a, a }, w1),
+                            point_weight_pair_type({ 1.0 - 2.0 * b, b }, w2),
+                            point_weight_pair_type({ b, 1.0 - 2.0 * b }, w2),
+                            point_weight_pair_type({ b, b }, w2) });
     }
 
     // Dunavant's Rule #4, Hammer–Stroud-type rule
@@ -70,13 +69,11 @@ namespace mito::quadrature {
         constexpr auto w1 = 0.109951743655321867638326;
         constexpr auto w2 = 0.223381589678011465695007;
 
-        return table_type({ /*{point}, weight*/
-                            point_weight_pair_type({ a, b, 1.0 - a - b }, w1),
-                            point_weight_pair_type({ b, a, 1.0 - a - b }, w1),
-                            point_weight_pair_type({ b, b, 1.0 - 2.0 * b }, w1),
-                            point_weight_pair_type({ c, d, 1.0 - c - d }, w2),
-                            point_weight_pair_type({ d, c, 1.0 - c - d }, w2),
-                            point_weight_pair_type({ d, d, 1.0 - 2.0 * d }, w2) });
+        return table_type(
+            { /*{point}, weight*/
+              point_weight_pair_type({ a, b }, w1), point_weight_pair_type({ b, a }, w1),
+              point_weight_pair_type({ b, b }, w1), point_weight_pair_type({ c, d }, w2),
+              point_weight_pair_type({ d, c }, w2), point_weight_pair_type({ d, d }, w2) });
     }
 
 }    // namespace mito

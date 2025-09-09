@@ -13,12 +13,12 @@ namespace mito::geometry {
     class ReferenceSimplex {
 
       public:
-        // the barycentric coordinates type
-        using barycentric_coordinates_type = tensor::vector_t<N + 1>;
+        // the type of coordinates in the parametric space
+        using parametric_coordinates_type = tensor::vector_t<N>;
 
         // the function extracting the I component of a parametric point
         template <int I>
-        static constexpr auto xi = functions::component<barycentric_coordinates_type, I>;
+        static constexpr auto xi = functions::component<parametric_coordinates_type, I>;
     };
 
 }    // namespace mito

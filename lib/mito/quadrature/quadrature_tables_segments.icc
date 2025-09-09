@@ -17,7 +17,7 @@ namespace mito::quadrature {
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         return table_type({ /*{point}, weight*/
-                            point_weight_pair_type({ 0.5, 0.5 }, 1.0) });
+                            point_weight_pair_type({ 0.5 }, 1.0) });
     }
 
     template <>
@@ -32,7 +32,7 @@ namespace mito::quadrature {
 
         return table_type(
             { /*{point}, weight*/
-              point_weight_pair_type({ a, b }, 0.5), point_weight_pair_type({ b, a }, 0.5) });
+              point_weight_pair_type({ a }, 0.5), point_weight_pair_type({ b }, 0.5) });
     }
 
 }    // namespace mito

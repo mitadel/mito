@@ -10,7 +10,7 @@
 // first order shape functions type
 using shape_t = mito::fem::ShapeTriangleP1;
 // the barycentric coordinates type
-using barycentric_coordinates_type = shape_t::reference_element_type::barycentric_coordinates_type;
+using parametric_coordinates_type = shape_t::reference_element_type::parametric_coordinates_type;
 
 
 TEST(Fem, ShapeTriangleP1)
@@ -19,11 +19,11 @@ TEST(Fem, ShapeTriangleP1)
     constexpr auto element = shape_t();
 
     // node 0 in parametric coordinates
-    constexpr auto n0 = barycentric_coordinates_type{ 1.0, 0.0, 0.0 };
+    constexpr auto n0 = parametric_coordinates_type{ 1.0, 0.0 };
     // node 1 in parametric coordinates
-    constexpr auto n1 = barycentric_coordinates_type{ 0.0, 1.0, 0.0 };
+    constexpr auto n1 = parametric_coordinates_type{ 0.0, 1.0 };
     // node 2 in parametric coordinates
-    constexpr auto n2 = barycentric_coordinates_type{ 0.0, 0.0, 1.0 };
+    constexpr auto n2 = parametric_coordinates_type{ 0.0, 0.0 };
 
     // the shape function associated with local node {0}
     constexpr auto phi_0 = element.shape<0>();
