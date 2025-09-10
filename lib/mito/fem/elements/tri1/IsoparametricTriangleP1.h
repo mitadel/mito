@@ -71,7 +71,7 @@ namespace mito::fem {
             constexpr auto phi_2 = shape_functions.shape<2>();
 
             // return the isoparametric mapping from parametric to physical coordinates
-            return mito::functions::linear_combination(
+            return mito::fields::linear_combination(
                 std::array{ _x0, _x1, _x2 }, phi_0, phi_1, phi_2);
         }
 

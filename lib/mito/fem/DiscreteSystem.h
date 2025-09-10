@@ -291,11 +291,12 @@ namespace mito::fem {
                 auto u_numerical = _assemble_element_solution(
                     element, _solution_field, tensor::make_integer_sequence<n_nodes>());
                 // assemble the elementary error field as a function of the barycentric coordinates
-                auto u_error = u_numerical - u_exact.function()(element.parametrization());
+                auto u_error =
+                    u_numerical - u_exact.function()(element.parametrization().function());
 
                 // compute the elementary contribution to the L2 norm
-                norm +=
-                    blocks::l2_norm_block<element_type, quadratureRuleT>(u_error).compute(element);
+                norm += blocks::l2_norm_block<element_type, quadratureRuleT>(u_error.function())
+                            .compute(element);
             }
 
             return std::sqrt(norm);
@@ -341,7 +342,8 @@ namespace mito::fem {
                 auto u_numerical = _assemble_element_solution(
                     element, _solution_field, tensor::make_integer_sequence<n_nodes>());
                 // assemble the elementary error field as a function of the barycentric coordinates
-                auto u_error = u_numerical - u_exact.function()(element.parametrization());
+                auto u_error =
+                    u_numerical - u_exact.function()(element.parametrization().function());
                 //
                 auto u_numerical_gradient = _assemble_element_solution_gradient(
                     element, _solution_field, tensor::make_integer_sequence<n_nodes>());
@@ -349,12 +351,13 @@ namespace mito::fem {
                 // coordinates
                 auto u_error_gradient =
                     u_numerical_gradient
-                    - fields::gradient(u_exact).function()(element.parametrization());
+                    - fields::gradient(u_exact).function()(element.parametrization().function());
                 // compute the elementary contributions to the H1 norm
-                norm +=
-                    blocks::l2_norm_block<element_type, quadratureRuleT>(u_error).compute(element)
-                    + blocks::l2_norm_block<element_type, quadratureRuleT>(u_error_gradient)
-                          .compute(element);
+                norm += blocks::l2_norm_block<element_type, quadratureRuleT>(u_error.function())
+                            .compute(element)
+                      + blocks::l2_norm_block<element_type, quadratureRuleT>(
+                            u_error_gradient.function())
+                            .compute(element);
             }
 
             return std::sqrt(norm);

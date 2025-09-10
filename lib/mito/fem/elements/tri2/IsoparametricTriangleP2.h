@@ -72,7 +72,7 @@ namespace mito::fem {
             constexpr auto phi_5 = shape_functions.shape<5>();
 
             // return the isoparametric mapping from barycentric to physical coordinates
-            return mito::functions::linear_combination(
+            return mito::fields::linear_combination(
                 std::array{ _x0, _x1, _x2, x3, x4, x5 }, phi_0, phi_1, phi_2, phi_3, phi_4, phi_5);
         }
 

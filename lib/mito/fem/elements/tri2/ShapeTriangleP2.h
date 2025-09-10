@@ -36,12 +36,8 @@ namespace mito::fem {
 
         // the gradients of the shape functions
         static constexpr auto dphi = std::make_tuple(
-            tensor::e_0<2> * (1.0 - 2.0 * xi_1 - 2.0 * xi_2 + 2.0 * xi_0),
-            tensor::e_1<2> * (1.0 - 2.0 * xi_0 - 2.0 * xi_2 + 2.0 * xi_1),
-            (tensor::e_0<2> + tensor::e_1<2>) *(-1.0 - 2.0 * xi_2 + 2.0 * xi_0 + 2.0 * xi_1),
-            tensor::e_0<2> * (4.0 * xi_1) + tensor::e_1<2> * (4.0 * xi_0),
-            tensor::e_0<2> * (-4.0 * xi_1) + tensor::e_1<2> * (4.0 * xi_2 - 4.0 * xi_1),
-            tensor::e_0<2> * (4.0 * xi_2 - 4.0 * xi_0) + tensor::e_1<2> * (-4.0 * xi_0));
+            fields::gradient(phi_0), fields::gradient(phi_1), fields::gradient(phi_2),
+            fields::gradient(phi_3), fields::gradient(phi_4), fields::gradient(phi_5));
 
       public:
         // get the a-th shape function as a function of barycentric coordinates
