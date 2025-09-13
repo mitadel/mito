@@ -125,8 +125,19 @@ namespace mito::fem {
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
-            // return the (physical) gradient of the a-th shape function
-            return shape_functions.dshape<a>() * functions::inverse(jacobian());
+            // assemble the gradient as a function of barycentric coordinates
+            auto gradient_function =
+                fields::field([&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
+                    // the jacobian of the mapping from the reference element to the physical
+                    // element evaluated at {xi}
+                    auto J = jacobian()(xi);
+                    // the derivative of the coordinates with respect to the barycentric coordinates
+                    auto J_inv = tensor::inverse(J);
+                    // return the spatial gradients of the shape functions evaluated at {xi}
+                    return shape_functions.dshape<a>()(xi) * J_inv;
+                });
+            // and return it
+            return gradient_function;
         }
 
       private:
