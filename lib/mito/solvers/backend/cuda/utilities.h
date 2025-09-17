@@ -292,6 +292,216 @@ namespace mito::solvers::cuda {
         // size of the array
         std::size_t _size;
     };
+
+    // a utility class to manage device memory for sparse matrices in CSR format
+    template <std::floating_point T>
+    class DeviceSparseMatrix {
+      public:
+        using real_type = T;
+        using index_type = int;
+
+      public:
+        // default constructor
+        DeviceSparseMatrix() :
+            _values(nullptr),
+            _row_offsets(nullptr),
+            _col_indices(nullptr),
+            _rows(0),
+            _cols(0),
+            _nnz(0)
+        {}
+
+        // allocate on construction
+        explicit DeviceSparseMatrix(std::size_t rows, std::size_t cols, std::size_t nnz) :
+            DeviceSparseMatrix()
+        {
+            allocate(rows, cols, nnz);
+        }
+
+        // destructor
+        ~DeviceSparseMatrix() { _free_memory(); }
+
+        // delete copy constructor
+        DeviceSparseMatrix(const DeviceSparseMatrix &) = delete;
+
+        // delete copy assignment operator
+        DeviceSparseMatrix & operator=(const DeviceSparseMatrix &) = delete;
+
+        // enable move semantics
+        DeviceSparseMatrix(DeviceSparseMatrix && other) noexcept :
+            _values(other._values),
+            _row_offsets(other._row_offsets),
+            _col_indices(other._col_indices),
+            _rows(other._rows),
+            _cols(other._cols),
+            _nnz(other._nnz)
+        {
+            // reset the state of the moved-from object
+            other._values = nullptr;
+            other._row_offsets = nullptr;
+            other._col_indices = nullptr;
+            other._rows = 0;
+            other._cols = 0;
+            other._nnz = 0;
+        }
+
+        DeviceSparseMatrix & operator=(DeviceSparseMatrix && other) noexcept
+        {
+            if (this != &other) {
+                // free existing memory and acquire new memory
+                _free_memory();
+                _values = other._values;
+                _row_offsets = other._row_offsets;
+                _col_indices = other._col_indices;
+                _rows = other._rows;
+                _cols = other._cols;
+                _nnz = other._nnz;
+                // reset the state of the moved-from object
+                other._values = nullptr;
+                other._row_offsets = nullptr;
+                other._col_indices = nullptr;
+                other._rows = 0;
+                other._cols = 0;
+                other._nnz = 0;
+            }
+            return *this;
+        }
+
+        // allocate or reallocate memory for the matrix
+        void allocate(std::size_t rows, std::size_t cols, std::size_t nnz)
+        {
+            if (_rows == rows && _cols == cols && _nnz == nnz)
+                return;
+
+            // free old memory if any
+            _free_memory();
+
+            _rows = rows;
+            _cols = cols;
+            _nnz = nnz;
+            if (_rows == 0 || _cols == 0 || _nnz == 0)    // no memory to allocate
+                return;
+
+            // allocate device memory for the CSR representation
+            cudaError_t error;
+
+            error = cudaMalloc((void **) &_values, _nnz * sizeof(real_type));
+            if (error != cudaSuccess) {
+                throw std::runtime_error(
+                    "[DeviceSparseMatrix] Error: Failed to allocate values array: "
+                    + std::string(cudaGetErrorString(error)));
+            }
+
+            error = cudaMalloc((void **) &_row_offsets, (_rows + 1) * sizeof(index_type));
+            if (error != cudaSuccess) {
+                throw std::runtime_error(
+                    "[DeviceSparseMatrix] Error: Failed to allocate row offsets array: "
+                    + std::string(cudaGetErrorString(error)));
+            }
+
+            error = cudaMalloc((void **) &_col_indices, _nnz * sizeof(index_type));
+            if (error != cudaSuccess) {
+                throw std::runtime_error(
+                    "[DeviceSparseMatrix] Error: Failed to allocate column indices array: "
+                    + std::string(cudaGetErrorString(error)));
+            }
+
+            // all done
+            return;
+        }
+
+        // zero out the device matrix
+        void zero()
+        {
+            if (_values) {
+                cudaError_t error = cudaMemset(_values, 0, _nnz * sizeof(real_type));
+                if (error != cudaSuccess) {
+                    throw std::runtime_error(
+                        "[DeviceSparseMatrix] Error: Failed to zero out device memory: "
+                        + std::string(cudaGetErrorString(error)));
+                }
+            }
+        }
+
+        // values accessor
+        real_type * values() { return _values; }
+
+        // row offsets accessor
+        index_type * row_offsets() { return _row_offsets; }
+
+        // column indices accessor
+        index_type * col_indices() { return _col_indices; }
+
+        // const values accessor
+        const real_type * values() const { return _values; }
+
+        // const row offsets accessor
+        const index_type * row_offsets() const { return _row_offsets; }
+
+        // const column indices accessor
+        const index_type * col_indices() const { return _col_indices; }
+
+        // row number accessor
+        size_t rows() const { return _rows; }
+
+        // column number accessor
+        size_t cols() const { return _cols; }
+
+        // non-zero entries accessor
+        size_t nnz() const { return _nnz; }
+
+      private:
+        // free the memory in the matrix
+        void _free_memory()
+        {
+            if (_values) {
+                cudaError_t error = cudaFree(_values);
+                if (error != cudaSuccess) {
+                    std::cerr << "[DeviceSparseMatrix] Error: Failed to free values array: "
+                              << cudaGetErrorString(error) << "\n";
+                }
+            }
+            if (_row_offsets) {
+                cudaError_t error = cudaFree(_row_offsets);
+                if (error != cudaSuccess) {
+                    std::cerr << "[DeviceSparseMatrix] Error: Failed to free row offsets array: "
+                              << cudaGetErrorString(error) << "\n";
+                }
+            }
+            if (_col_indices) {
+                cudaError_t error = cudaFree(_col_indices);
+                if (error != cudaSuccess) {
+                    std::cerr << "[DeviceSparseMatrix] Error: Failed to free column indices array: "
+                              << cudaGetErrorString(error) << "\n";
+                }
+            }
+
+            // reset the state
+            _values = nullptr;
+            _row_offsets = nullptr;
+            _col_indices = nullptr;
+            _rows = 0;
+            _cols = 0;
+            _nnz = 0;
+
+            // all done
+            return;
+        }
+
+      private:
+        // pointer to the non-zero values
+        real_type * _values;
+        // pointer to the row offsets
+        index_type * _row_offsets;
+        // pointer to the column indices
+        index_type * _col_indices;
+        // number of rows
+        size_t _rows;
+        // number of columns
+        size_t _cols;
+        // number of non-zero entries
+        size_t _nnz;
+    };
 }
 
 
