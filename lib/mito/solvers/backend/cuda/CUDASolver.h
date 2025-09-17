@@ -23,7 +23,7 @@ namespace mito::solvers::cuda {
         ~CUDASolver();
 
       public:
-        // initialize the CUDA dense solver
+        // initialize the CUDA solver
         auto initialize(size_t size) -> void;
 
         // reset the linear system (i.e. the host copy of the matrix, right-hand side and solution)

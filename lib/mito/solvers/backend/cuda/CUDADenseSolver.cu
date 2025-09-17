@@ -89,7 +89,6 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     }
 
     // copy the host matrix and rhs data to device global memory
-    // IMPROVE: We should move the data through streams for better performance later!
     CHECK_CUDA_ERROR(cudaMemcpy(
         _d_matrix.data(), _h_matrix.data(), this->_size * this->_size * sizeof(real_type),
         cudaMemcpyHostToDevice));
