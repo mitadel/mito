@@ -72,7 +72,7 @@ TEST(Solvers, CUDASparseSolverUnsymmetricLinearSystem)
 
     // instantiate a CUDA Sparse solver for a linear system of size {N}
     auto solver = mito::solvers::cuda::sparse<mito::real>(mito::solvers::cuda::SolverType::LU);
-    solver.initialize(N, 3);    // 3 non-zero entries per row
+    solver.initialize(N);    // non-zeros per row are not set
 
     // set matrix and right-hand side entries
     for (int i = 0; i < N; i++) {
