@@ -19,6 +19,7 @@ if (WITH_CUDA)
 set(MITO_SOURCES ${MITO_SOURCES}
     lib/mito/solvers/backend/cuda/CUDASolver.cu
     lib/mito/solvers/backend/cuda/CUDADenseSolver.cu
+    lib/mito/solvers/backend/cuda/CUDASparseSolver.cu
 )
 endif()
 

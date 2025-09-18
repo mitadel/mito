@@ -19,6 +19,9 @@
 // classes
 #include "CUDASolver.h"
 #include "CUDADenseSolver.h"
+#ifdef WITH_EIGEN
+#include "CUDASparseSolver.h"
+#endif    // WITH_EIGEN
 
 // error checks
 #include "CUDAErrorChecks.h"

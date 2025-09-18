@@ -18,6 +18,10 @@ namespace mito::solvers::cuda {
     // class for CUDA dense solver
     template <real_c realT>
     class CUDADenseSolver;
+
+    // class for CUDA sparse solver
+    template <real_c realT>
+    class CUDASparseSolver;
 }
 
 

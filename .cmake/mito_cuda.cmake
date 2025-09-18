@@ -27,6 +27,27 @@ if(WITH_CUDA)
         set(CMAKE_CUDA_HOST_COMPILER "${CMAKE_CXX_COMPILER}" CACHE FILEPATH "Host compiler for NVCC")
     endif()
     message(STATUS "Using CUDA host compiler: ${CMAKE_CUDA_HOST_COMPILER}")
+    # disable offline compilation support warnings
+    target_compile_options(mito PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:-Wno-deprecated-gpu-targets>)
+    # find Eigen for CUDA sparse solver
+    find_package(Eigen3 3.3 QUIET NO_MODULE)
+    if(Eigen3_FOUND)
+        # add Eigen compiler definition
+        message(STATUS "Found Eigen3: ${EIGEN3_INCLUDE_DIR}")
+        add_definitions(-DWITH_EIGEN)
+        # add include directories for Eigen
+        target_include_directories(mito PUBLIC ${EIGEN3_INCLUDE_DIR})
+        # disable warnings due to incompatible return types in Eigen
+        target_compile_options(mito PUBLIC $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr>)
+        # find cudss library
+        find_package(cudss REQUIRED)
+        # include cudss headers
+        target_include_directories(mito PUBLIC ${cudss_INCLUDE_DIR})
+        # link against cudss libraries
+        target_link_libraries(mito PUBLIC cudss)
+    else()
+        message(WARNING "Eigen3 not found. CUDA sparse solver parts will be disabled.")
+    endif()
 endif()
 
 

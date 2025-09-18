@@ -58,3 +58,13 @@ cusolverGetErrorString(cusolverStatus_t status)
             exit(EXIT_FAILURE);                                                                    \
         }                                                                                          \
     } while (0)
+
+// cuDSS error checking macro
+#define CHECK_CUDSS_ERROR(call)                                                        \
+    do {                                                                               \
+        cudssStatus_t status = (call);                                                 \
+        if (status != CUDSS_STATUS_SUCCESS) {                                          \
+            fprintf(stderr, "cuDSS error: %d at %s:%d\n", status, __FILE__, __LINE__); \
+            exit(EXIT_FAILURE);                                                        \
+        }                                                                              \
+    } while (0)

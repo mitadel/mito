@@ -13,11 +13,17 @@
 #include <cassert>
 #include <iostream>
 #include <type_traits>
+#ifdef WITH_EIGEN
+#include <Eigen/Sparse>    // for sparse matrix support
+#endif                     // WITH_EIGEN
 
 
 // cuda support
 #include <cuda_runtime.h>
 #include <cusolverDn.h>
+#ifdef WITH_EIGEN
+#include <cudss.h>
+#endif    // WITH_EIGEN
 
 
 // utilities
