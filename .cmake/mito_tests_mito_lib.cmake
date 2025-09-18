@@ -71,6 +71,7 @@ endif()
 
 if(WITH_CUDA)
     mito_test_driver(tests/mito.lib/solvers/cuda_dense_solver_solve_linear_system.cc)
+    mito_test_driver(tests/mito.lib/solvers/cuda_sparse_solver_solve_linear_system.cc)
 endif()
 
 # tensor
