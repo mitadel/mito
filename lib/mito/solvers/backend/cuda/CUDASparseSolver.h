@@ -23,7 +23,7 @@ namespace mito::solvers::cuda {
 
       public:
         // initialize the CUDA sparse solver
-        auto initialize(size_t size, size_t nnz = -1) -> void;
+        auto initialize(size_t size, size_t nnz = 0) -> void;
 
         // set (add or insert depending on the mode) the value of a matrix entry in the host copy
         auto set_matrix_value(

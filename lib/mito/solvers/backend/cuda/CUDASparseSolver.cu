@@ -39,8 +39,8 @@ mito::solvers::cuda::CUDASparseSolver<realT>::initialize(size_t size, size_t nnz
     // NOTE: This is just an estimate. The actual number of non-zero entries may be less than
     // nnz. But it is better to set it to a reasonable value to avoid multiple reallocations.
     // In general, over-allocating is better than under-allocating.
-    nnz <= 0 ? _h_matrix.reserve(Eigen::VectorXi::Constant(size, size)) :
-               _h_matrix.reserve(Eigen::VectorXi::Constant(size, nnz));
+    (nnz == 0) ? _h_matrix.reserve(Eigen::VectorXi::Constant(size, size)) :
+                 _h_matrix.reserve(Eigen::VectorXi::Constant(size, nnz));
 
     // all done
     return;
