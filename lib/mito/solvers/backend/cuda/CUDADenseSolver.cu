@@ -95,6 +95,7 @@ mito::solvers::cuda::CUDADenseSolver<realT>::solve() -> void
     CHECK_CUDA_ERROR(cudaMemcpy(
         this->_d_rhs.data(), this->_h_rhs.data(), this->_size * sizeof(real_type),
         cudaMemcpyHostToDevice));
+    CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // allocate device memory for temporary variables in the factorization
     int * d_pivot = nullptr;

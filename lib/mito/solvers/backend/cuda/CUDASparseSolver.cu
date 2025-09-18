@@ -146,6 +146,7 @@ mito::solvers::cuda::CUDASparseSolver<realT>::solve() -> void
     CHECK_CUDA_ERROR(cudaMemcpy(
         this->_d_rhs.data(), this->_h_rhs.data(), this->_size * sizeof(real_type),
         cudaMemcpyHostToDevice));
+    CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // cuDSS data structures to solve the linear system
     cudssConfig_t config;
@@ -191,13 +192,16 @@ mito::solvers::cuda::CUDASparseSolver<realT>::solve() -> void
     // Stage 1: reordering & symbolic factorization
     CHECK_CUDSS_ERROR(
         cudssExecute(_cudss_handle, CUDSS_PHASE_ANALYSIS, config, data, d_A, d_x, d_b));
+    CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // Stage 2: numerical factorization
     CHECK_CUDSS_ERROR(
         cudssExecute(_cudss_handle, CUDSS_PHASE_FACTORIZATION, config, data, d_A, d_x, d_b));
+    CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // Stage 3: solve the system
     CHECK_CUDSS_ERROR(cudssExecute(_cudss_handle, CUDSS_PHASE_SOLVE, config, data, d_A, d_x, d_b));
+    CHECK_CUDA_ERROR(cudaDeviceSynchronize());
 
     // copy the solution back to host
     CHECK_CUDA_ERROR(cudaMemcpy(
