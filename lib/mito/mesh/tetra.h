@@ -188,7 +188,7 @@ namespace mito::mesh {
         for (const auto & cell : mesh.cells()) {
 
             // get the nodes of the cell in the order dictated by the orientation
-            auto nodes = cell.nodes();
+            const auto & nodes = cell.nodes();
 
             // helper function to expand array to parameter pack
             constexpr auto _subdivide =
