@@ -46,8 +46,7 @@ namespace mito::fem {
         template <manifolds::manifold_c manifoldT>
         // require compatibility between the manifold cell and the finite element cell
         requires(std::is_same_v<
-                    typename manifoldT::mesh_type::cell_type,
-                    typename element_type::geometric_simplex_type>)
+                    typename manifoldT::mesh_type::cell_type, typename element_type::cell_type>)
         constexpr FunctionSpace(const manifoldT & manifold, const constraints_type & constraints) :
             _elements(100),
             _constraints(constraints),

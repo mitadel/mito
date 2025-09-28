@@ -19,8 +19,8 @@ namespace mito::fem {
         static constexpr int dim = 2;
         // the discretization node type
         using discretization_node_type = discrete::discretization_node_t;
-        // the geometric simplex type
-        using geometric_simplex_type = geometry::triangle_t<dim>;
+        // the underlying cell type
+        using cell_type = geometry::triangle_t<dim>;
 
       protected:
         // cartesian coordinates in 2D
@@ -33,15 +33,11 @@ namespace mito::fem {
       public:
         // the default constructor
         constexpr IsoparametricTriangle(
-            const geometric_simplex_type & geometric_simplex,
-            const coordinate_system_type & coord_system) :
-            _geometric_simplex(geometric_simplex),
-            _x0{ coord_system.coordinates(geometric_simplex.nodes()[0]->point())
-                 - coordinates_type{} },
-            _x1{ coord_system.coordinates(geometric_simplex.nodes()[1]->point())
-                 - coordinates_type{} },
-            _x2{ coord_system.coordinates(geometric_simplex.nodes()[2]->point())
-                 - coordinates_type{} }
+            const cell_type & cell, const coordinate_system_type & coord_system) :
+            _cell(cell),
+            _x0{ coord_system.coordinates(cell.nodes()[0]->point()) - coordinates_type{} },
+            _x1{ coord_system.coordinates(cell.nodes()[1]->point()) - coordinates_type{} },
+            _x2{ coord_system.coordinates(cell.nodes()[2]->point()) - coordinates_type{} }
         {}
 
         // destructor
@@ -61,15 +57,12 @@ namespace mito::fem {
 
       public:
         // get the geometric simplex
-        constexpr auto geometric_simplex() const noexcept -> const geometric_simplex_type &
-        {
-            return _geometric_simplex;
-        }
+        constexpr auto cell() const noexcept -> const cell_type & { return _cell; }
 
       protected:
         // QUESTION: do we need to maintain a reference to the geometric simplex?
         // a const reference to the geometric simplex
-        const geometric_simplex_type & _geometric_simplex;
+        const cell_type & _cell;
 
         // the coordinates of the discretization nodes of the triangle
         const vector_type _x0;

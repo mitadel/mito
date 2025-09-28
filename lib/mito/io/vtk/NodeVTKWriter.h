@@ -51,7 +51,7 @@ namespace mito::io::vtk {
             // loop over the elements
             for (const auto & element : function_space.elements()) {
                 // get the cell associated with the element
-                const auto & cell = element.geometric_simplex();
+                const auto & cell = element.cell();
                 // loop over the nodes of the cell
                 for (const auto & node : cell.nodes()) {
                     // try to insert the point in the map
@@ -70,11 +70,10 @@ namespace mito::io::vtk {
             // loop over the elements
             for (const auto & element : function_space.elements()) {
                 // get the cell associated with the element
-                const auto & cell = element.geometric_simplex();
+                const auto & cell = element.cell();
 
                 // create vtk cell
-                auto cellVtk =
-                    vtkCellPointer<typename element_type::geometric_simplex_type::simplex_type>();
+                auto cellVtk = vtkCellPointer<typename element_type::cell_type::simplex_type>();
 
                 // local index for the points of the cell
                 auto indexLocalPointVtk = 0;

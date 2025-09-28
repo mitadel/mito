@@ -34,8 +34,8 @@ namespace mito::fem {
       public:
         // the default constructor
         inline IsoparametricTriangleP2(
-            const geometric_simplex_type & geometric_simplex,
-            const coordinate_system_type & coord_system, const connectivity_type & connectivity) :
+            const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
+            const connectivity_type & connectivity) :
             IsoparametricTriangle(geometric_simplex, coord_system),
             _connectivity(connectivity)
         {}
