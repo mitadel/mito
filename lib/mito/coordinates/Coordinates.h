@@ -47,7 +47,7 @@ namespace mito::geometry {
         constexpr Coordinates(mito::tensor::scalar_t (&&coords)[D]) : _array(std::move(coords)) {}
 
         // constructor
-        constexpr Coordinates(const array_t coords) : _array(coords) {}
+        constexpr Coordinates(const array_t & coords) : _array(coords) {}
 
         // constructor from parameter pack
         template <class... T>
