@@ -71,8 +71,7 @@ TEST(Fem, PoissonSquare)
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // the function space (linear elements on the manifold)
-    // TOFIX: function space should be template with respect to the finite element type
-    auto function_space = mito::fem::function_space<degree>(manifold, constraints);
+    auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
     // TODO: all top level instances have names. Name should be the first argument. Then we can use
     // names in the configuration file and in the hdf5 file. Check libuuid vs. leading namestring.
