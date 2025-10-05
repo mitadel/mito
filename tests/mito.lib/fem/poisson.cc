@@ -61,10 +61,10 @@ TEST(Fem, PoissonSquare)
     // the zero field
     auto zero = mito::fields::field(mito::functions::zero<coordinates_t>);
 
-    // get all the nodes on the mesh boundary
+    // get the boundary mesh
     auto boundary_mesh = mito::mesh::boundary(mesh);
 
-    // the Dirichlet boundary condition
+    // set homogeneous Dirichlet boundary condition
     auto constraints = mito::constraints::dirichlet_bc(boundary_mesh, zero);
 
     // create the body manifold
@@ -112,7 +112,7 @@ TEST(Fem, PoissonSquare)
     discrete_system.add_lhs_block(fem_lhs_block);
     discrete_system.add_rhs_block(fem_rhs_block);
 
-    // solve the linear system
+    // solve the system
     solver.solve();
 
     // free the solver

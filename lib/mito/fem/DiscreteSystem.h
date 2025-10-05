@@ -55,7 +55,7 @@ namespace mito::fem {
         using rhs_assembly_blocks_type = std::vector<const rhs_assembly_block_type *>;
 
       public:
-        // the default constructor
+        // constructor
         constexpr DiscreteSystem(
             const label_type & label, const function_space_type & function_space) :
             _function_space(function_space),
