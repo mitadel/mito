@@ -22,6 +22,7 @@
 // classes implementation
 #include "FunctionSpace.h"
 #include "DiscreteSystem.h"
+#include "Weakform.h"
 
 // finite elements implementation
 #include "elements.h"

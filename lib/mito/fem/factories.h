@@ -39,11 +39,20 @@ namespace mito::fem {
         return function_space_t<elementT, constraintsT>(manifold, constraints);
     }
 
-    // discrete system factory
-    template <class linearSystemT, class functionSpaceT>
-    constexpr auto discrete_system(const std::string & label, const functionSpaceT & function_space)
+    // weakform factory
+    template <class finiteElementT>
+    constexpr auto weakform()
     {
-        return discrete_system_t<functionSpaceT, linearSystemT>(label, function_space);
+        return weakform_t<finiteElementT>();
+    }
+
+    // discrete system factory
+    template <class linearSystemT, class functionSpaceT, class weakformT>
+    constexpr auto discrete_system(
+        const std::string & label, const functionSpaceT & function_space,
+        const weakformT & weakform)
+    {
+        return discrete_system_t<functionSpaceT, linearSystemT>(label, function_space, weakform);
     }
 }
 

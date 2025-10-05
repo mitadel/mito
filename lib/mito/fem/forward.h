@@ -22,6 +22,10 @@ namespace mito::fem {
         }(c);
     };
 
+    // weakform alias
+    template <class finiteElementT>
+    class Weakform;
+
     // class discrete system
     template <function_space_c functionSpaceT, class linearSystemT>
     class DiscreteSystem;

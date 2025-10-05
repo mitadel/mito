@@ -73,16 +73,6 @@ TEST(Fem, PoissonSquare)
     // the function space (linear elements on the manifold)
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
-    // the discrete system
-    auto discrete_system = mito::fem::discrete_system<linear_system_t>("mysystem", function_space);
-
-    // instantiate a linear solver for the discrete system
-    auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
-    solver.create();
-
-    // set options for the matrix solver
-    solver.set_options("-ksp_type preonly -pc_type cholesky");
-
     // a grad-grad matrix block
     auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
 
@@ -96,16 +86,21 @@ TEST(Fem, PoissonSquare)
     auto fem_rhs_block =
         mito::fem::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
 
-    // TODO:
-    // // monolithic discretization matrix = [A, B; C, D]
-    // auto weakform_lhs = fem_lhs_block;
-    // auto weakform_rhs = fem_rhs_block;
-    // auto weakform = weakform(weakform_lhs, weakform_rhs);
-    // discrete_system.set_weak_form(weakform);
+    // create the weak form and populate it with the blocks
+    auto weakform = mito::fem::weakform<finite_element_t>();
+    weakform.add_block(fem_lhs_block);
+    weakform.add_block(fem_rhs_block);
 
-    // add the blocks to the discrete system
-    discrete_system.add_lhs_block(fem_lhs_block);
-    discrete_system.add_rhs_block(fem_rhs_block);
+    // the discrete system
+    auto discrete_system =
+        mito::fem::discrete_system<linear_system_t>("mysystem", function_space, weakform);
+
+    // instantiate a linear solver for the discrete system
+    auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
+    solver.create();
+
+    // set options for the backend {petsc} matrix solver
+    solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // solve the system
     solver.solve();
