@@ -41,9 +41,9 @@ namespace mito::fem {
 
     // discrete system factory
     template <class linearSystemT, class functionSpaceT>
-    constexpr auto discrete_system(const functionSpaceT & function_space, const std::string & label)
+    constexpr auto discrete_system(const std::string & label, const functionSpaceT & function_space)
     {
-        return discrete_system_t<functionSpaceT, linearSystemT>(function_space, label);
+        return discrete_system_t<functionSpaceT, linearSystemT>(label, function_space);
     }
 }
 

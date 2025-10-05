@@ -57,7 +57,7 @@ namespace mito::fem {
       public:
         // the default constructor
         constexpr DiscreteSystem(
-            const function_space_type & function_space, const label_type & label) :
+            const label_type & label, const function_space_type & function_space) :
             _function_space(function_space),
             _equation_map(),
             _solution_field(nodal_field<solution_field_type>(function_space, label + ".solution")),

@@ -77,7 +77,7 @@ TEST(Fem, PoissonSquare)
     // names in the configuration file and in the hdf5 file. Check libuuid vs. leading namestring.
     //
     // the discrete system
-    auto discrete_system = mito::fem::discrete_system<linear_system_t>(function_space, "mysystem");
+    auto discrete_system = mito::fem::discrete_system<linear_system_t>("mysystem", function_space);
 
     // instantiate a linear solver for the discrete system
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
