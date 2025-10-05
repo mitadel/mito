@@ -73,9 +73,6 @@ TEST(Fem, PoissonSquare)
     // the function space (linear elements on the manifold)
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
-    // TODO: all top level instances have names. Name should be the first argument. Then we can use
-    // names in the configuration file and in the hdf5 file. Check libuuid vs. leading namestring.
-    //
     // the discrete system
     auto discrete_system = mito::fem::discrete_system<linear_system_t>("mysystem", function_space);
 
@@ -83,9 +80,7 @@ TEST(Fem, PoissonSquare)
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
     solver.create();
 
-    // QUESTION: do we need a method to set the options for the solver? Can this go in the
-    // constructor or in the create method?
-    // in the python layer, this will go in the configuration file
+    // set options for the matrix solver
     solver.set_options("-ksp_type preonly -pc_type cholesky");
 
     // a grad-grad matrix block
