@@ -97,7 +97,6 @@ TEST(Fem, PoissonSquare)
 
     // instantiate a linear solver for the discrete system
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
-    solver.create();
 
     // set options for the backend {petsc} matrix solver
     solver.set_options("-ksp_type preonly -pc_type cholesky");

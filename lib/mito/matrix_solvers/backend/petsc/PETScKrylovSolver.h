@@ -29,7 +29,7 @@ namespace mito::matrix_solvers::petsc {
 
       public:
         // create the Krylov solver
-        auto create(int) -> void;
+        auto create() -> void;
 
         // destroy the Krylov solver
         auto destroy() -> void;

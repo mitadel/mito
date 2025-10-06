@@ -62,6 +62,9 @@ namespace mito::fem {
             // print the number of equations
             channel << "Number of equations: " << _n_equations << journal::endl;
 
+            // create the linear system and allocate the memory
+            _linear_system.create(_n_equations);
+
             // all done
             return;
         }

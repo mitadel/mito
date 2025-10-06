@@ -27,11 +27,10 @@ namespace mito::solvers {
         constexpr LinearSolver(discrete_system_type & discrete_system) :
             _discrete_system(discrete_system),
             _matrix_solver(_discrete_system.linear_system())
-        {}
-
-        // TOFIX: the need to explicitly call {create} just holds for petsc matrix solvers...
-        // create the matrix solver
-        auto create() -> void { return _matrix_solver.create(_discrete_system.n_equations()); }
+        {
+            // create the matrix solver
+            _matrix_solver.create();
+        }
 
         // destroy the matrix solver
         auto destroy() -> void { return _matrix_solver.destroy(); }
