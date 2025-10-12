@@ -11,6 +11,9 @@ namespace mito::geometry {
 
     template <int N>
     class ReferenceSimplex {
+      public:
+        // the order of the reference simplex
+        constexpr static int order = N;
 
       public:
         // the type of coordinates in the parametric space
