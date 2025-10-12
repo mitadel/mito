@@ -21,7 +21,7 @@ namespace mito::fem {
         static constexpr int degree = 1;
         // the type of shape functions
         using shape_functions_type = ShapeTriangleP1;
-        // the barycentric coordinates type
+        // the parametric coordinates type
         using parametric_coordinates_type =
             typename shape_functions_type::parametric_coordinates_type;
         // the linear shape functions

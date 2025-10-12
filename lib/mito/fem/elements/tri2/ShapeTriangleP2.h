@@ -40,7 +40,7 @@ namespace mito::fem {
             fields::gradient(phi_3), fields::gradient(phi_4), fields::gradient(phi_5));
 
       public:
-        // get the a-th shape function as a function of barycentric coordinates
+        // get the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < N)
         constexpr auto shape() const
@@ -49,7 +49,7 @@ namespace mito::fem {
             return std::get<a>(phi);
         }
 
-        // get the a-th shape function's gradient as a function of barycentric coordinates
+        // get the a-th shape function's gradient as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < N)
         constexpr auto dshape() const

@@ -43,7 +43,7 @@ namespace mito::fem::blocks {
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
-                // the barycentric coordinates of the quadrature point
+                // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
                 // precompute the common factor

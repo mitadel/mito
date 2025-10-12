@@ -14,14 +14,14 @@ namespace mito::fem {
       public:
         // the reference element
         using reference_element_type = geometry::reference_triangle_t;
-        // the barycentric coordinates type
+        // the parametric coordinates type
         using parametric_coordinates_type =
             typename reference_element_type::parametric_coordinates_type;
         // the number of shape functions
         static constexpr int N = 3;
 
       private:
-        // linear shape functions on the reference triangle in barycentric coordinates
+        // linear shape functions on the reference triangle in parametric coordinates
         static constexpr auto xi_0 = reference_element_type::xi<0>;
         static constexpr auto xi_1 = reference_element_type::xi<1>;
         static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
@@ -39,7 +39,7 @@ namespace mito::fem {
             fields::gradient(phi_0), fields::gradient(phi_1), fields::gradient(phi_2));
 
       public:
-        // get the a-th shape function as a function of barycentric coordinates
+        // get the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < N)
         constexpr auto shape() const
@@ -48,7 +48,7 @@ namespace mito::fem {
             return std::get<a>(phi);
         }
 
-        // get the a-th shape function's derivative as a function of barycentric coordinates
+        // get the a-th shape function's derivative as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < N)
         constexpr auto dshape() const
