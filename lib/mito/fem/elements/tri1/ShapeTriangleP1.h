@@ -14,9 +14,6 @@ namespace mito::fem {
       public:
         // the reference element
         using reference_element_type = geometry::reference_triangle_t;
-        // the parametric coordinates type
-        using parametric_coordinates_type =
-            typename reference_element_type::parametric_coordinates_type;
         // the number of shape functions
         static constexpr int N = 3;
 
