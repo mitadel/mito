@@ -66,7 +66,7 @@ TEST(Fem, IsoparametricTriangle)
         auto error = mito::tensor::norm(computed_block - analytical_block);
 
         // check the error is reasonable
-        EXPECT_NEAR(0.0, error, 1.e-14);
+        EXPECT_NEAR(0.0, error, 1.e-16);
     }
 
     {
@@ -107,7 +107,7 @@ TEST(Fem, IsoparametricTriangle)
         auto error = mito::tensor::norm(computed_block - analytical_block);
 
         // check the error is reasonable
-        EXPECT_NEAR(0.0, error, 1.e-14);
+        EXPECT_NEAR(0.0, error, 1.e-16);
     }
 
     // all done
