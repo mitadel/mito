@@ -17,6 +17,10 @@ namespace mito::fem::blocks {
     template <class elementT, class quadratureRuleT>
     class GradGradBlock;
 
+    // mass block
+    template <class elementT, class quadratureRuleT>
+    class MassBlock;
+
     // source term block
     template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
     class SourceTermBlock;

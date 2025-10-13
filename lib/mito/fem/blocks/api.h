@@ -21,6 +21,14 @@ namespace mito::fem::blocks {
     template <class elementT, class quadratureRuleT>
     constexpr auto grad_grad_block();
 
+    // mass block
+    template <class elementT, class quadratureRuleT>
+    using mass_block_t = MassBlock<elementT, quadratureRuleT>;
+
+    // mass block factory
+    template <class elementT, class quadratureRuleT>
+    constexpr auto mass_block();
+
     // source term block
     template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
     using source_term_block_t = SourceTermBlock<elementT, quadratureRuleT, sourceFieldT>;

@@ -19,6 +19,7 @@
 // classes implementation
 #include "AssemblyBlock.h"
 #include "GradGradBlock.h"
+#include "MassBlock.h"
 #include "SourceTermBlock.h"
 #include "L2NormBlock.h"
 
