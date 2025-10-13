@@ -9,9 +9,6 @@
 
 namespace mito::fem::blocks {
 
-    // TODO: implement sum and subtraction operators for the blocks (only for blocks that result in
-    // the same elementary type)
-
     template <class elementT, class quadratureRuleT>
     class GradGradBlock : public AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>> {
 

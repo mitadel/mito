@@ -21,71 +21,8 @@ using reference_simplex_t = mito::geometry::reference_triangle_t;
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 4>;
 
-
 // instantiate the quadrature rule
 constexpr auto quadrature_rule = quadrature_rule_t();
-
-
-// test that all shape functions sum to 1.0 at any quadrature point
-auto
-test_partition_of_unity(const auto & element)
-{
-    // the number of quadrature points per element
-    constexpr int n_quads = quadrature_rule_t::npoints;
-
-    // the number of nodes per element
-    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
-
-    // loop on the quadrature points
-    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
-        // the barycentric coordinates of the quadrature point
-        constexpr auto xi = quadrature_rule.point(q);
-
-        // compute the sum of the shape functions at {xi} for all nodes
-        constexpr auto sum =
-            ([]<int... a>(
-                 const auto & element, const auto & xi, mito::tensor::integer_sequence<a...>) {
-                return ((element.template shape<a>()(xi)) + ...);
-            })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
-
-        // check the sum of the shape functions
-        static_assert(1.0 == sum);
-    });
-
-    // all done
-    return;
-}
-
-// test that the gradients of all shape functions sum to 0.0 at any quadrature point
-auto
-test_gradient_consistency(const auto & element)
-{
-    // the number of quadrature points per element
-    constexpr int n_quads = quadrature_rule_t::npoints;
-
-    // the number of nodes per element
-    constexpr int n_nodes = mito::utilities::base_type<decltype(element)>::n_nodes;
-
-    // loop on the quadrature points
-    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
-        // the barycentric coordinates of the quadrature point
-        constexpr auto xi = quadrature_rule.point(q);
-
-        // compute the sum of the shape functions at {xi} for all nodes
-        auto sum =
-            ([]<int... a>(
-                 const auto & element, const auto & xi, mito::tensor::integer_sequence<a...>) {
-                return ((element.template gradient<a>()(xi)) + ...);
-            })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
-
-        // check the sum of the shape functions gradients
-        EXPECT_NEAR(0.0, sum[0], 3.0e-16);
-        EXPECT_NEAR(0.0, sum[1], 3.0e-16);
-    });
-
-    // all done
-    return;
-}
 
 
 TEST(Fem, IsoparametricTriangle)
@@ -115,11 +52,22 @@ TEST(Fem, IsoparametricTriangle)
             geometric_simplex, coord_system,
             { discretization_node_0, discretization_node_1, discretization_node_2 });
 
-        // check that first order shape functions are a partition of unity
-        test_partition_of_unity(element_p1);
+        // a grad-grad matrix block
+        auto grad_grad_block =
+            mito::fem::blocks::grad_grad_block<element_p1_t, quadrature_rule_t>();
 
-        // check that the gradients of first order shape functions sum to 0.0
-        test_gradient_consistency(element_p1);
+        // the analytical elementary stiffness matrix
+        auto analytical_block = 1.0 / 2.0 * mito::tensor::matrix_t<3>{ 2.0, -1.0, -1.0, -1.0, 1.0,
+                                                                       0.0, -1.0, 0.0,  1.0 };
+
+        // compute the elementary contribution of the block
+        auto computed_block = grad_grad_block.compute(element_p1);
+
+        // compute the error
+        auto error = mito::tensor::norm(computed_block - analytical_block);
+
+        // check the error is reasonable
+        EXPECT_NEAR(0.0, error, 1.e-14);
     }
 
     {
@@ -140,11 +88,28 @@ TEST(Fem, IsoparametricTriangle)
             { discretization_node_0, discretization_node_1, discretization_node_2,
               discretization_node_3, discretization_node_4, discretization_node_5 });
 
-        // check that second order shape functions are a partition of unity
-        test_partition_of_unity(element_p2);
+        // a grad-grad matrix block
+        auto grad_grad_block =
+            mito::fem::blocks::grad_grad_block<element_p2_t, quadrature_rule_t>();
 
-        // check that the gradients of second order shape functions sum to 0.0
-        test_gradient_consistency(element_p2);
+        // the analytical elementary stiffness matrix
+        auto analytical_block = mito::tensor::matrix_t<6>{
+            1.0,        1.0 / 6.0,  1.0 / 6.0,  -2.0 / 3.0, 0.0,        -2.0 / 3.0,
+            1.0 / 6.0,  1.0 / 2.0,  0.0,        -2.0 / 3.0, 0.0,        0.0,
+            1.0 / 6.0,  0.0,        1.0 / 2.0,  0.0,        0.0,        -2.0 / 3.0,
+            -2.0 / 3.0, -2.0 / 3.0, 0.0,        8.0 / 3.0,  -4.0 / 3.0, 0.0,
+            0.0,        0.0,        0.0,        -4.0 / 3.0, 8.0 / 3.0,  -4.0 / 3.0,
+            -2.0 / 3.0, 0.0,        -2.0 / 3.0, 0.0,        -4.0 / 3.0, 8.0 / 3.0
+        };
+
+        // compute the elementary contribution of the block
+        auto computed_block = grad_grad_block.compute(element_p2);
+
+        // compute the error
+        auto error = mito::tensor::norm(computed_block - analytical_block);
+
+        // check the error is reasonable
+        EXPECT_NEAR(0.0, error, 1.e-14);
     }
 
     // all done
