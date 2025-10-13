@@ -16,12 +16,9 @@ namespace mito::fem::blocks {
     class L2NormBlock : public AssemblyBlock<elementT, tensor::scalar_t> {
 
       public:
-        // my parent class
-        using parent_type = AssemblyBlock<elementT, tensor::scalar_t>;
-
         // my template parameters
-        using element_type = typename parent_type::element_type;
-        using elementary_block_type = typename parent_type::elementary_block_type;
+        using element_type = elementT;
+        using elementary_block_type = tensor::scalar_t;
         using quadrature_rule_type = quadratureRuleT;
 
         // the type of the function to compute the L2 norm of

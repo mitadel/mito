@@ -13,12 +13,9 @@ namespace mito::fem::blocks {
     class GradGradBlock : public AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>> {
 
       public:
-        // my parent class
-        using parent_type = AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>>;
-
         // my template parameters
-        using element_type = typename parent_type::element_type;
-        using elementary_block_type = typename parent_type::elementary_block_type;
+        using element_type = elementT;
+        using elementary_block_type = tensor::matrix_t<element_type::n_nodes>;
         using quadrature_rule_type = quadratureRuleT;
 
       public:
