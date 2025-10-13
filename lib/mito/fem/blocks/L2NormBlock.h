@@ -50,10 +50,15 @@ namespace mito::fem::blocks {
                 // the barycentric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
+                // the quadrature weight at this point scaled with the area of the canonical simplex
+                constexpr auto w =
+                    element_type::canonical_element_type::area * quadrature_rule.weight(q);
+
+                // precompute the common factor
+                auto factor = w * tensor::determinant(element.jacobian()(xi));
+
                 // populate the elementary contribution to the matrix
-                elementary_contribution += quadrature_rule.weight(q)
-                                         * tensor::determinant(element.jacobian()(xi))
-                                         * _function(xi) * _function(xi);
+                elementary_contribution += factor * _function(xi) * _function(xi);
             });
 
             // all done

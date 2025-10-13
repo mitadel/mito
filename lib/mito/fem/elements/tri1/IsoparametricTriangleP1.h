@@ -21,9 +21,11 @@ namespace mito::fem {
         static constexpr int degree = 1;
         // the type of shape functions
         using shape_functions_type = ShapeTriangleP1;
+        // the canonical element type
+        using canonical_element_type = typename shape_functions_type::reference_element_type;
         // the parametric coordinates type
         using parametric_coordinates_type =
-            typename shape_functions_type::reference_element_type::parametric_coordinates_type;
+            typename canonical_element_type::parametric_coordinates_type;
         // the linear shape functions
         static constexpr auto shape_functions = shape_functions_type();
         // the number of discretization discretization nodes
