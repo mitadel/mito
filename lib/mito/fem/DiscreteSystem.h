@@ -38,9 +38,8 @@ namespace mito::fem {
         using solution_field_type = tensor::scalar_t;
         // the nodal field type
         using nodal_field_type = discrete::nodal_field_t<solution_field_type>;
-        // TOFIX: rename to {n_element_nodes}
         // the number of nodes per element
-        static constexpr int n_nodes = element_type::n_nodes;
+        static constexpr int n_element_nodes = element_type::n_nodes;
 
       public:
         // constructor
@@ -156,7 +155,7 @@ namespace mito::fem {
                 auto [elementary_matrix, elementary_vector] = _weakform.compute_blocks(element);
 
                 // assemble the elementary blocks into the linear system of equations
-                tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
                     // get the a-th discretization node of the element
                     const auto & node_a = element.connectivity()[a];
                     // get the equation number of {node_a}
@@ -167,7 +166,7 @@ namespace mito::fem {
                         // assemble the value in the right hand side
                         _linear_system.add_rhs_value(eq_a, elementary_vector[{ a }]);
                         // loop on the b-th discretization node of the element
-                        tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                        tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
                             // get the b-th discretization node of the element
                             const auto & node_b = element.connectivity()[b];
                             // get the equation number of {node_b}
@@ -245,7 +244,7 @@ namespace mito::fem {
             for (const auto & element : _function_space.elements()) {
                 // assemble the solution field on this element
                 auto u_numerical = _assemble_element_solution(
-                    element, _solution_field, tensor::make_integer_sequence<n_nodes>());
+                    element, _solution_field, tensor::make_integer_sequence<n_element_nodes>());
                 // assemble the elementary error field as a function of the barycentric coordinates
                 auto u_error =
                     u_numerical - u_exact.function()(element.parametrization().function());
@@ -296,13 +295,13 @@ namespace mito::fem {
             for (const auto & element : _function_space.elements()) {
                 // assemble the solution field on this element
                 auto u_numerical = _assemble_element_solution(
-                    element, _solution_field, tensor::make_integer_sequence<n_nodes>());
+                    element, _solution_field, tensor::make_integer_sequence<n_element_nodes>());
                 // assemble the elementary error field as a function of the barycentric coordinates
                 auto u_error =
                     u_numerical - u_exact.function()(element.parametrization().function());
                 //
                 auto u_numerical_gradient = _assemble_element_solution_gradient(
-                    element, _solution_field, tensor::make_integer_sequence<n_nodes>());
+                    element, _solution_field, tensor::make_integer_sequence<n_element_nodes>());
                 // assemble the elementary error gradient as a function of the barycentric
                 // coordinates
                 auto u_error_gradient =
