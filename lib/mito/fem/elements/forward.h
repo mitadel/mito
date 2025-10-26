@@ -13,6 +13,11 @@ namespace mito::fem {
     template <class elementT, discretization_t discretizationT>
     struct Discretizer;
 
+    // struct storing the type of an isoparametric simplex of polynomial degree {degree} on a
+    // geometric simplex of type {geometricSimplexT}
+    template <int degree, geometry::geometric_simplex_c geometricSimplexT>
+    struct isoparametric_simplex;
+
 }
 
 

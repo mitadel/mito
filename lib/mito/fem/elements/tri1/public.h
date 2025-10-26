@@ -12,5 +12,8 @@
 #include "IsoparametricTriangleP1.h"
 #include "DiscretizerCG.h"
 
+// published types and factories
+#include "api.h"
+
 
 // end of file

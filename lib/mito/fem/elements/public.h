@@ -18,8 +18,10 @@
 
 // classes implementation
 #include "IsoparametricTriangle.h"
-#include "isoparametric_simplex_library.h"
 #include "Discretizer.h"
+
+// library of finite elements
+#include "elements_library.h"
 
 // factories implementation
 #include "factories.h"
