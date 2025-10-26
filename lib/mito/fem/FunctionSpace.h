@@ -30,12 +30,8 @@ namespace mito::fem {
         using mesh_node_type = geometry::node_t<dim>;
         // the discretization node type
         using discretization_node_type = typename element_type::discretization_node_type;
-        // the nodes type
-        using connectivity_type = typename element_type::connectivity_type;
         // the constrained nodes type
         using constrained_nodes_type = std::set<discretization_node_type>;
-
-      private:
         // the type of a map between the mesh nodes and discretization nodes
         using map_type = std::unordered_map<
             mesh_node_type, discretization_node_type, utilities::hash_function<mesh_node_type>>;
@@ -52,122 +48,23 @@ namespace mito::fem {
             _constraints(constraints),
             _node_map()
         {
-            // TOFIX: the following code is for a CG discretization, we should define this as a
-            // function some place else and just call it here
-
             // first order discretization
             if constexpr (degree == 1) {
-
-                // get the coordinate system of the manifold
-                const auto & coord_system = manifold.coordinate_system();
-
-                // loop on the cells of the mesh
-                for (const auto & cell : manifold.elements()) {
-
-                    // get the nodes of the cell
-                    const auto & nodes = cell.nodes();
-
-                    // add the nodes to the map (if the mesh node is already present in the map,
-                    // then the present discretization node is used)
-                    auto node_0 =
-                        _node_map.insert({ nodes[0], discretization_node_type() }).first->second;
-                    auto node_1 =
-                        _node_map.insert({ nodes[1], discretization_node_type() }).first->second;
-                    auto node_2 =
-                        _node_map.insert({ nodes[2], discretization_node_type() }).first->second;
-
-                    // create a finite element for each cell and add it to the pile
-                    _elements.emplace(
-                        cell, coord_system, connectivity_type{ node_0, node_1, node_2 });
-                }
-
-                // populate the constrained nodes
-                for (const auto & cell : constraints.domain().cells()) {
-                    for (const auto & node : cell.nodes()) {
-                        // get the discretization node associated with the mesh node from the map
-                        auto it = _node_map.find(node);
-                        // add the node to the constrained nodes
-                        _constrained_nodes.insert(it->second);
-                    }
-                }
+                // discretize the manifold with first order continuous Galerkin
+                discretize_triangleP1_CG(
+                    manifold, constraints, _elements, _node_map, _constrained_nodes);
+                // all done
+                return;
             }
 
             // second order discretization
             if constexpr (degree == 2) {
-                // id type of mesh nodes
-                using mesh_node_id_t = utilities::index_t<mesh_node_type>;
-
-                // the type of a map between the two vertices and the middle discretization nodes
-                using mid_nodes_map_type =
-                    std::map<std::array<mesh_node_id_t, 2>, discretization_node_type>;
-
-                // create a map to store the mid nodes
-                auto mid_nodes_map = mid_nodes_map_type();
-
-                // get the coordinate system of the manifold
-                const auto & coord_system = manifold.coordinate_system();
-
-                // loop on the cells of the mesh
-                for (const auto & cell : manifold.elements()) {
-
-                    // get the nodes of the cell
-                    const auto & nodes = cell.nodes();
-
-                    // add the nodes to the map (if the mesh node is already present in the map,
-                    // then the present discretization node is used)
-                    auto node_0 =
-                        _node_map.insert({ nodes[0], discretization_node_type() }).first->second;
-                    auto node_1 =
-                        _node_map.insert({ nodes[1], discretization_node_type() }).first->second;
-                    auto node_2 =
-                        _node_map.insert({ nodes[2], discretization_node_type() }).first->second;
-
-                    auto ordered_nodes_3 = (node_0.id() < node_1.id()) ?
-                                               std::array{ node_0.id(), node_1.id() } :
-                                               std::array{ node_1.id(), node_0.id() };
-                    auto node_3 =
-                        mid_nodes_map.insert({ ordered_nodes_3, discretization_node_type() })
-                            .first->second;
-                    auto ordered_nodes_4 = (node_1.id() < node_2.id()) ?
-                                               std::array{ node_1.id(), node_2.id() } :
-                                               std::array{ node_2.id(), node_1.id() };
-                    auto node_4 =
-                        mid_nodes_map.insert({ ordered_nodes_4, discretization_node_type() })
-                            .first->second;
-                    auto ordered_nodes_5 = (node_2.id() < node_0.id()) ?
-                                               std::array{ node_2.id(), node_0.id() } :
-                                               std::array{ node_0.id(), node_2.id() };
-                    auto node_5 =
-                        mid_nodes_map.insert({ ordered_nodes_5, discretization_node_type() })
-                            .first->second;
-
-                    // create a finite element for each cell and add it to the pile
-                    _elements.emplace(
-                        cell, coord_system,
-                        connectivity_type{ node_0, node_1, node_2, node_3, node_4, node_5 });
-                }
-
-                // populate the constrained nodes
-                for (const auto & cell : constraints.domain().cells()) {
-                    for (const auto & node : cell.nodes()) {
-                        // get the discretization node associated with the mesh node from the map
-                        auto it = _node_map.find(node);
-                        // add the node to the constrained nodes
-                        _constrained_nodes.insert(it->second);
-                    }
-                    auto node_0 = _node_map.at(cell.nodes()[0]);
-                    auto node_1 = _node_map.at(cell.nodes()[1]);
-                    auto ordered_nodes = (node_0.id() < node_1.id()) ?
-                                             std::array{ node_0.id(), node_1.id() } :
-                                             std::array{ node_1.id(), node_0.id() };
-                    auto node = mid_nodes_map.at(ordered_nodes);
-                    // add the node to the constrained nodes
-                    _constrained_nodes.insert(node);
-                }
+                // discretize the manifold with second order continuous Galerkin
+                discretize_triangleP2_CG(
+                    manifold, constraints, _elements, _node_map, _constrained_nodes);
+                // all done
+                return;
             }
-
-            // all done
-            return;
         }
 
         // destructor

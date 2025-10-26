@@ -10,6 +10,10 @@
 // classes implementation
 #include "ShapeTriangleP1.h"
 #include "IsoparametricTriangleP1.h"
+#include "DiscretizeTriangleP1CG.h"
 
+
+// published types and factories
+#include "api.h"
 
 // end of file
