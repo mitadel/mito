@@ -44,7 +44,7 @@ namespace mito::fem {
         requires(std::is_same_v<
                     typename manifoldT::mesh_type::cell_type, typename element_type::cell_type>)
         constexpr FunctionSpace(const manifoldT & manifold, const constraints_type & constraints) :
-            _elements(100),
+            _elements(manifold.nElements()),
             _constraints(constraints),
             _node_map()
         {
