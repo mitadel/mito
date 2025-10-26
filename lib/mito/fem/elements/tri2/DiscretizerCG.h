@@ -9,43 +9,29 @@
 
 namespace mito::fem {
 
-    template <constraints::constraint_c constraintsT>
-    class DiscretizeTriangle2CG {
-
-      private:
-        // the element type
-        using element_type = IsoparametricTriangleP2;
-        // the constraints type
-        using constraints_type = constraintsT;
-        // the function space type
-        using function_space_type = FunctionSpace<element_type, constraints_type>;
-        // the mesh node type
-        using mesh_node_type = typename function_space_type::mesh_node_type;
-        // the discretization node type
-        using discretization_node_type = typename function_space_type::discretization_node_type;
-        // the elements type
-        using elements_type = typename function_space_type::elements_type;
-        // the nodes type
-        using connectivity_type = typename element_type::connectivity_type;
-        // the constrained nodes type
-        using constrained_nodes_type = typename function_space_type::constrained_nodes_type;
-        // the type of a map between the mesh nodes and discretization nodes
-        using map_type = typename function_space_type::map_type;
-
-      public:
-        // discretize {manifold} with second order isoparametric triangles subject to {constraints}
-        // this method creates three data structures representing the discretization: a collection
-        // of discrete elements, a map between the nodes in a mesh and the discretization nodes, and
-        // a set of constrained nodes
-        template <manifolds::manifold_c manifoldT>
-        // require compatibility between the manifold cell and the finite element cell
-        requires(std::is_same_v<
-                 typename manifoldT::mesh_type::cell_type, typename element_type::cell_type>)
-        static void discretize(
-            const manifoldT & manifold, const constraints_type & constraints,
-            elements_type & elements, map_type & node_map,
-            constrained_nodes_type & constrained_nodes)
+    // discretizer specialization for {IsoparametricTriangleP2} with continuous Galerkin
+    template <>
+    struct Discretizer<IsoparametricTriangleP2, discretization_t::CG> {
+        template <
+            typename manifoldT, typename constraintsT, typename elements_type, typename map_type,
+            typename constrained_nodes_type>
+        static void apply(
+            const manifoldT & manifold, const constraintsT & constraints, elements_type & elements,
+            map_type & node_map, constrained_nodes_type & constrained_nodes)
         {
+            // the dimension of the physical space
+            constexpr int dim = IsoparametricTriangleP2::dim;
+
+            // assemble the mesh node type
+            using mesh_node_type = geometry::node_t<dim>;
+
+            // the discretization node type
+            using discretization_node_type =
+                typename IsoparametricTriangleP2::discretization_node_type;
+
+            // the connectivity type
+            using connectivity_type = typename IsoparametricTriangleP2::connectivity_type;
+
             // id type of mesh nodes
             using mesh_node_id_t = utilities::index_t<mesh_node_type>;
 

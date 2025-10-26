@@ -9,6 +9,10 @@
 
 namespace mito::fem {
 
+    // the struct that implements the discretization strategy
+    template <class elementT, discretization_t discretizationT>
+    struct Discretizer;
+
 }
 
 

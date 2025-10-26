@@ -13,6 +13,9 @@ namespace mito::fem {
     template <class Y, function_space_c functionSpaceT>
     constexpr auto nodal_field(const functionSpaceT & function_space, std::string name);
 
+    // the possible discretization types: continuous Galerking (CG) vs. discontinuous Galerkin (DG)
+    enum class discretization_t { CG, DG };
+
     // function space alias
     template <class elementT, constraints::constraint_c constraintsT>
     using function_space_t = FunctionSpace<elementT, constraintsT>;

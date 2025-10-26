@@ -19,6 +19,7 @@
 // classes implementation
 #include "IsoparametricTriangle.h"
 #include "isoparametric_simplex_library.h"
+#include "Discretizer.h"
 
 // factories implementation
 #include "factories.h"

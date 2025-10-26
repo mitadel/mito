@@ -39,7 +39,9 @@ namespace mito::fem {
 
       public:
         // the constructor
-        template <manifolds::manifold_c manifoldT>
+        template <
+            manifolds::manifold_c manifoldT,
+            discretization_t discretizationT = discretization_t::CG>
         // require compatibility between the manifold cell and the finite element cell
         requires(std::is_same_v<
                     typename manifoldT::mesh_type::cell_type, typename element_type::cell_type>)
@@ -48,23 +50,9 @@ namespace mito::fem {
             _constraints(constraints),
             _node_map()
         {
-            // first order discretization
-            if constexpr (degree == 1) {
-                // discretize the manifold with first order continuous Galerkin
-                discretize_triangleP1_CG(
-                    manifold, constraints, _elements, _node_map, _constrained_nodes);
-                // all done
-                return;
-            }
-
-            // second order discretization
-            if constexpr (degree == 2) {
-                // discretize the manifold with second order continuous Galerkin
-                discretize_triangleP2_CG(
-                    manifold, constraints, _elements, _node_map, _constrained_nodes);
-                // all done
-                return;
-            }
+            // discretize the manifold subject to the constraints
+            discretize<element_type, discretizationT>(
+                manifold, constraints, _elements, _node_map, _constrained_nodes);
         }
 
         // destructor
