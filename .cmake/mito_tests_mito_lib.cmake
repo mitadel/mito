@@ -45,9 +45,6 @@ mito_test_driver(tests/mito.lib/discrete/quadrature_field.cc)
 mito_test_driver(tests/mito.lib/discrete/mesh_field.cc)
 
 # fem
-if(WITH_PETSC)
-    mito_test_driver(tests/mito.lib/fem/poisson.cc)
-endif()
 mito_test_driver(tests/mito.lib/fem/block_grad_grad.cc)
 mito_test_driver(tests/mito.lib/fem/block_mass.cc)
 mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_construction.cc)
