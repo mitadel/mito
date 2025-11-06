@@ -13,10 +13,12 @@ def myfunction(x):
 
 field = mito.ScalarField2D(myfunction)
 
+# Create coordinate system
+coord_system = mito.CoordinateSystem2D()
 # Read mesh
-mesh = mito.SimplicialMesh2D("square.summit")
+mesh = mito.SimplicialMesh2D("square.summit", coord_system)
 # Create manifold from mesh
-manifold = mito.ManifoldTriangle2D(mesh)
+manifold = mito.ManifoldTriangle2D(mesh, coord_system)
 # Create integrator
 integrator = mito.GaussIntegrator2Triangle2D(manifold)
 

@@ -15,6 +15,9 @@ using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN
 
 TEST(ParallelVtkWriter, CloudField)
 {
+    // make a channel
+    journal::info_t channel("tests.parallel_vtk_writer.cloud_field");
+
     // the simulation representative
     auto & simulation = mito::simulation::simulation();
 
@@ -73,7 +76,7 @@ TEST(ParallelVtkWriter, CloudField)
         auto & coordinates = coord_system.coordinates(point);
         // compute the value of the normal field at those coordinates
         value = normal_field(coordinates);
-        std::cout << coordinates << " " << value << std::endl;
+        channel << coordinates << " " << value << journal::endl;
     }
 
     // write mesh to vtk file
