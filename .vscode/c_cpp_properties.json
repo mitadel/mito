@@ -4,6 +4,7 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}/lib",
+                "${workspaceFolder}/lib/mito",
                 "/opt/local/include/gcc/c++",
                 "/usr/local/gtest/include",
                 "/usr/local/pyre/include"
