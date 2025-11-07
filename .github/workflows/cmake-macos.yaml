@@ -40,7 +40,7 @@ jobs:
           brew install make cmake metis open-mpi
           # install {google-benchmark} from source to make sure it is built with the same compiler
           brew install --build-from-source --cc=gcc-14 google-benchmark
-          brew tap-new mito/vtk && brew extract --version=9.5.1 vtk mito/vtk && brew install mito/vtk/vtk@9.5.1
+          brew tap-new mito/vtk && brew extract --version=9.1.0 vtk mito/vtk && brew install mito/vtk/vtk@9.1.0
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
