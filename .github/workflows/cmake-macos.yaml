@@ -41,7 +41,7 @@ jobs:
           # install {google-benchmark} from source to make sure it is built with the same compiler
           brew install --build-from-source --cc=gcc-14 google-benchmark
           brew log --formula vtk
-          brew tap-new mito/vtk && brew extract --version=9.1.0 vtk mito/vtk && brew install mito/vtk/vtk@9.1.0
+          brew tap-new mito/vtk && brew extract --version=9.5.1 vtk mito/vtk && brew install mito/vtk/vtk@9.5.1
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -51,7 +51,7 @@ jobs:
       - name: install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install distro 'numpy<2.0' pybind11 pytest vtk=9.1.0
+          pip3 install distro 'numpy<2.0' pybind11 pytest vtk=9.5.1
 
       - name: checkout gtest
         uses: actions/checkout@v3
