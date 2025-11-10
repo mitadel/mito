@@ -40,8 +40,6 @@ jobs:
           brew install make cmake metis open-mpi
           # install {google-benchmark} from source to make sure it is built with the same compiler
           brew install --build-from-source --cc=gcc-14 google-benchmark
-          # build {vtk} from source with {gcc-14}
-          brew install --build-from-source --cc=gcc-14 vtk
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -51,7 +49,7 @@ jobs:
       - name: install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip3 install distro 'numpy<2.0' pybind11 pytest vtk
+          pip3 install distro 'numpy<2.0' pybind11 pytest
 
       - name: checkout gtest
         uses: actions/checkout@v3
@@ -172,7 +170,7 @@ jobs:
           mkdir build
           cd build
           echo " -- configuring the build"
-          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_CXX_COMPILER=${cxx} -DPython_EXECUTABLE=${pythonLocation}/bin/python${pythonVersion} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -DMITO_BUILD_BENCHMARKS=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest -DWITH_VTK=ON -DWITH_METIS=ON ${{github.workspace}}/mito
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_CXX_COMPILER=${cxx} -DPython_EXECUTABLE=${pythonLocation}/bin/python${pythonVersion} -Dpybind11_DIR=${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11/share/cmake/pybind11 -DMITO_BUILD_TESTING=ON -DMITO_BUILD_BENCHMARKS=ON -Dpyre_DIR=${{runner.temp}}/pyre_install/share/cmake/pyre -DGTest_DIR=${{runner.temp}}/gtest_install/lib/cmake/GTest -DWITH_VTK=OFF -DWITH_METIS=ON ${{github.workspace}}/mito
           echo " -- building mito"
           make -j 2 install
         env:
