@@ -6,35 +6,34 @@
 #include <mito.h>
 
 
-// the scalar type
-using scalar_t = mito::tensor::scalar_t;
-// the type of coordinates
+// cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-// the type of cell
+
+// simplicial cells in 2D
 using cell_t = mito::geometry::triangle_t<2>;
+// second degree finite elements
+constexpr int degree = 2;
+// assemble the finite element type
+using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
+
 // the reference simplex
 using reference_simplex_t = mito::geometry::reference_triangle_t;
+// degree of exactness for the quadrature rule
+constexpr int doe = 2;
 // Gauss quadrature on triangles with degree of exactness 2
 using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
-
-// the degree of the finite element
-constexpr int degree = 2;
-// typedef for a finite element
-using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
+    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, doe>;
 
 // typedef for a linear system of equations
 using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
 // typedef for a matrix solver
 using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
 
-// NOTE: component -> projection
-// the function extracting the x component of a 2D vector
+// the x scalar field in 2D
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
-// the function extracting the y component of a 2D vector
+// the y scalar field in 2D
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
-// TODO: add unit tests for blocks individually
 
 int
 main()
@@ -57,17 +56,17 @@ main()
     // const auto subdivisions = 1;
     // auto mesh = mito::mesh::tetra(original_mesh, coord_system, subdivisions);
 
-    // the zero field
-    auto zero = mito::fields::field(mito::functions::zero<coordinates_t>);
+    // create the body manifold
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // get the boundary mesh
     auto boundary_mesh = mito::mesh::boundary(mesh);
 
+    // the zero field
+    auto zero = mito::fields::field(mito::functions::zero<coordinates_t>);
+
     // set homogeneous Dirichlet boundary condition
     auto constraints = mito::constraints::dirichlet_bc(boundary_mesh, zero);
-
-    // create the body manifold
-    auto manifold = mito::manifolds::manifold(mesh, coord_system);
 
     // the function space (linear elements on the manifold)
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
