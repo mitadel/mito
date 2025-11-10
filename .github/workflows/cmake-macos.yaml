@@ -153,8 +153,6 @@ jobs:
           find ${pythonLocation}/lib/python${pythonVersion}/site-packages/pybind11
           echo " -- pytest"
           pip3 show pytest
-          echo " -- vtk"
-          pip3 show vtk
         env:
           pythonVersion: ${{matrix.python}}
 
