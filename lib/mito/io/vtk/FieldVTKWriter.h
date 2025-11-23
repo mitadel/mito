@@ -9,23 +9,54 @@
 
 namespace mito::io::vtk {
 
-    // the type of the grid writer depending on the type of grid and on the coordinate system
-    template <class gridT>
-    struct field_type;
+    namespace {
+        // the type of the grid writer depending on the type of grid and on the coordinate system
+        template <class gridT>
+        struct field_type;
 
-    // specialization to {mesh_c} case
-    template <mesh::mesh_c gridT>
-    struct field_type<gridT> {
-        template <class Y>
-        using type = discretization::nodal_field_t<gridT::dim, Y>;
-    };
+        // specialization to {mesh_c} case
+        template <mesh::mesh_c gridT>
+        struct field_type<gridT> {
+            template <class Y>
+            using type = discrete::mesh_field_t<gridT::dim, Y>;
+        };
 
-    // specialization to {point_cloud_c} case
-    template <geometry::point_cloud_c gridT>
-    struct field_type<gridT> {
-        template <class Y>
-        using type = discretization::point_field_t<gridT::dim, Y>;
-    };
+        // specialization to {point_cloud_c} case
+        template <geometry::point_cloud_c gridT>
+        struct field_type<gridT> {
+            template <class Y>
+            using type = discrete::point_field_t<gridT::dim, Y>;
+        };
+
+        // specialization to {function_space_c} case
+        template <fem::function_space_c functionSpaceT>
+        struct field_type<functionSpaceT> {
+            template <class Y>
+            using type = discrete::nodal_field_t<Y>;
+        };
+
+        // utility function to get the data pointer
+        template <typename Y>
+        constexpr auto dim() -> int
+        {
+            if constexpr (std::is_arithmetic_v<Y>) {
+                return 1;
+            } else {
+                return Y::size;
+            }
+        }
+
+        // utility function to get the data pointer
+        template <typename Y>
+        auto begin(Y & value)
+        {
+            if constexpr (std::is_arithmetic_v<Y>) {
+                return &value;
+            } else {
+                return std::begin(value);
+            }
+        }
+    }
 
     template <class gridWriterT, geometry::coordinate_system_c coordSystemT>
     class FieldVTKWriter {
@@ -53,30 +84,27 @@ namespace mito::io::vtk {
         template <class Y>
         auto _attach_field(const field_type<Y> & field, std::string fieldname) -> void
         {
-            // get the number of entries in the field
-            auto field_size = field.size();
-
             // get the grid
             auto & grid = _grid_writer.grid();
 
-            // check the number of entries in the field equals the number of points in the grid
-            assert(field_size == grid->GetNumberOfPoints());
+            // get the number of points in the grid
+            auto n_points = grid->GetNumberOfPoints();
 
             // initialize a vtk array
             auto vtkArray = vtkSmartPointer<vtkDoubleArray>::New();
             vtkArray->SetName(fieldname.data());
-            vtkArray->SetNumberOfComponents(Y::size);
-            vtkArray->SetNumberOfTuples(field_size);
+            vtkArray->SetNumberOfComponents(dim<Y>());
+            vtkArray->SetNumberOfTuples(n_points);
 
             // populate the array
-            if constexpr (mesh::mesh_c<grid_type>) {
+            if constexpr (mesh::mesh_c<grid_type> or fem::function_space_c<grid_type>) {
                 // get the nodes in the grid
                 const auto & nodes = _grid_writer.nodes();
 
                 // populate the array with the nodal values
                 for (const auto & [node, index] : nodes) {
                     // get the index corresponding to the current node
-                    vtkArray->SetTuple(index, field(node).begin());
+                    vtkArray->SetTuple(index, begin(field(node)));
                 }
             } else if constexpr (geometry::point_cloud_c<grid_type>) {
                 // get the points in the grid
@@ -86,12 +114,19 @@ namespace mito::io::vtk {
                 int index = 0;
                 for (const auto & point : points) {
                     // get the index corresponding to the current point
-                    vtkArray->SetTuple(index++, field(point).begin());
+                    vtkArray->SetTuple(index++, begin(field(point)));
                 }
+            } else {
+                // something went wrong: make a channel and report an error
+                journal::error_t channel("mito.field_vtk_writer.attach_field");
+                channel << "unkown {grid_type}" << journal::endl;
             }
 
             // insert array into output grid
             grid->GetPointData()->AddArray(vtkArray);
+
+            // all done
+            return;
         }
 
       public:

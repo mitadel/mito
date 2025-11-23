@@ -11,7 +11,9 @@
 #include "journal.h"
 #include "tensor.h"
 #include "functions.h"
-#include "discretization.h"
+#include "discrete.h"
+#include "fem.h"
+#include "constraints.h"
 #include "coordinates.h"
 #include "geometry.h"
 #include "io.h"
@@ -24,6 +26,7 @@
 #include "simulation.h"
 #include "topology.h"
 #include "utilities.h"
+#include "matrix_solvers.h"
 #include "solvers.h"
 
 

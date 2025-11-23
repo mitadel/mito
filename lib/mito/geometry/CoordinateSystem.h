@@ -28,12 +28,13 @@ namespace mito::geometry {
 
       public:
         // constructor
-        CoordinateSystem() : _coordinates_map() {}
+        constexpr CoordinateSystem() : _coordinates_map() {}
 
         // constructor for change of coordinates
         template <coordinates_c otherCoordT>
         requires(coordT::dim == otherCoordT::dim)
-        CoordinateSystem(const CoordinateSystem<otherCoordT> & other_coord_sys) : _coordinates_map()
+        constexpr CoordinateSystem(const CoordinateSystem<otherCoordT> & other_coord_sys) :
+            _coordinates_map()
         {
             // loop on the points and coordinates of the other coordinate system
             for (const auto & [point, coord] : other_coord_sys) {
@@ -43,24 +44,24 @@ namespace mito::geometry {
         }
 
         // destructor
-        ~CoordinateSystem() = default;
+        constexpr ~CoordinateSystem() = default;
 
       private:
         // delete copy constructor
-        CoordinateSystem(const CoordinateSystem<coordT> &) = delete;
+        constexpr CoordinateSystem(const CoordinateSystem<coordT> &) = delete;
 
         // delete move constructor
-        CoordinateSystem(CoordinateSystem<coordT> &&) noexcept = delete;
+        constexpr CoordinateSystem(CoordinateSystem<coordT> &&) noexcept = delete;
 
         // delete assignment operator
-        void operator=(const CoordinateSystem<coordT> &) = delete;
+        constexpr void operator=(const CoordinateSystem<coordT> &) = delete;
 
         // delete move assignment operator
-        void operator=(CoordinateSystem<coordT> &&) noexcept = delete;
+        constexpr void operator=(CoordinateSystem<coordT> &&) noexcept = delete;
 
       public:
         // place the {point} at location {coord}
-        auto place(const point_type & point, const coordinates_type & coord) -> void
+        constexpr auto place(const point_type & point, const coordinates_type & coord) -> void
         {
             // record the new point-coordinates pair
             auto ret = _coordinates_map.emplace(point, coord);
@@ -81,14 +82,14 @@ namespace mito::geometry {
         }
 
         // fetch the coordinates at point {point}
-        auto coordinates(const point_type & point) const -> const coordinates_type &
+        constexpr auto coordinates(const point_type & point) const -> const coordinates_type &
         {
             // look-up the coordinates of the point in the map
             return _coordinates_map.at(point);
         }
 
         // get the coordinates of the midpoint between {point_a} and {point_b}
-        auto midpoint(const point_type & point_a, const point_type & point_b) const
+        constexpr auto midpoint(const point_type & point_a, const point_type & point_b) const
             -> coordinates_type
         {
             // easy enough
@@ -96,8 +97,8 @@ namespace mito::geometry {
         }
 
         // support for ranged for loops
-        inline auto begin() const { return std::begin(_coordinates_map); }
-        inline auto end() const { return std::end(_coordinates_map); }
+        constexpr auto begin() const { return std::begin(_coordinates_map); }
+        constexpr auto end() const { return std::end(_coordinates_map); }
 
       private:
         // the coordinates of all points

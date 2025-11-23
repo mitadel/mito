@@ -9,7 +9,7 @@
 #else
 
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::StdSharedPointer<resourceT>::id() const -> index_t<resourceT>
 {
     // the id is the (immutable) address of this object
@@ -19,13 +19,13 @@ mito::utilities::StdSharedPointer<resourceT>::id() const -> index_t<resourceT>
 template <class resourceT>
 template <class... Args>
 requires(std::is_constructible_v<resourceT, Args...>)
-mito::utilities::StdSharedPointer<resourceT>::StdSharedPointer(Args &&... args) :
+constexpr mito::utilities::StdSharedPointer<resourceT>::StdSharedPointer(Args &&... args) :
     _ptr(std::make_shared<resourceT>(std::forward<Args>(args)...))
 {}
 
 // operator->
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::StdSharedPointer<resourceT>::operator->() const noexcept
     -> mito::utilities::StdSharedPointer<resourceT>::handle_type
 {

@@ -69,7 +69,7 @@ TEST(Algebra, ScalarValuedFunctions)
     constexpr auto function16 = function1 * e0 + function1 * e1 + function1 * e2;
 
     // vector times scalar multiplication
-    constexpr auto alpha = mito::tensor::scalar_t(10);
+    constexpr auto alpha = mito::tensor::scalar_t{ 10 };
     constexpr auto function17 = alpha * function16;
     static_assert(function17(x) == alpha * function16(x));
 
@@ -138,4 +138,19 @@ TEST(Algebra, ScalarProduct)
 
     // check result
     static_assert(0.1 == (x0 * x1)(x));
+}
+
+
+TEST(Algebra, DyadicProduct)
+{
+    // a 2D vector
+    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
+
+    // the function returning the constant e0 unit vector in 2D
+    constexpr auto e0 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_0<2>);
+
+    // check result
+    static_assert(
+        mito::tensor::dyadic(mito::tensor::e_0<2>, mito::tensor::e_0<2>)
+        == mito::functions::dyadic(e0, e0)(x));
 }

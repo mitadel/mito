@@ -8,11 +8,17 @@
 #include <mito/quadrature.h>
 
 
+// the type of quadrature
+using mito::quadrature::GAUSS;
+// the reference tetrahedron type
+using reference_tetrahedron_t = mito::geometry::reference_tetrahedron_t;
+
+
 TEST(ParametricTetrahedron, Order1)
 {
     // a Gauss quadrature rule on tetrahedrons with degree of exactness 1
-    constexpr auto quadrature_rule = mito::quadrature::quadrature_rule<
-        mito::quadrature::GAUSS, mito::topology::tetrahedron_t, 1>();
+    constexpr auto quadrature_rule =
+        mito::quadrature::quadrature_rule<GAUSS, reference_tetrahedron_t, 1>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -23,13 +29,13 @@ TEST(ParametricTetrahedron, Order1)
     };
 
     // area of the parametric tetrahedron
-    constexpr auto area = 1.0 / 3.0;
+    constexpr auto area = 1.0 / 6.0;
 
     // integral of f on the parametric tetrahedron
     constexpr auto integral = area * quadrature_rule.weight(0) * f(quadrature_rule.point(0));
 
     // exact solution
-    constexpr auto exact = 1.0 / 12.0;
+    constexpr auto exact = 1.0 / 24.0;
 
     // check result
     static_assert(std::fabs(integral - exact) < 1.e-16);
@@ -38,8 +44,8 @@ TEST(ParametricTetrahedron, Order1)
 TEST(ParametricTetrahedron, Order2)
 {
     // a Gauss quadrature rule on tetrahedrons with degree of exactness 2
-    constexpr auto quadrature_rule = mito::quadrature::quadrature_rule<
-        mito::quadrature::GAUSS, mito::topology::tetrahedron_t, 2>();
+    constexpr auto quadrature_rule =
+        mito::quadrature::quadrature_rule<GAUSS, reference_tetrahedron_t, 2>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -50,7 +56,7 @@ TEST(ParametricTetrahedron, Order2)
     };
 
     // area of the parametric tetrahedron
-    constexpr auto area = 1.0 / 3.0;
+    constexpr auto area = 1.0 / 6.0;
 
     // integral of f on the parametric tetrahedron
     constexpr auto integral = area
@@ -60,7 +66,7 @@ TEST(ParametricTetrahedron, Order2)
                                + quadrature_rule.weight(3) * f(quadrature_rule.point(3)));
 
     // exact solution
-    constexpr auto exact = 1.0 / 30.0;
+    constexpr auto exact = 1.0 / 60.0;
 
     // check result
     static_assert(std::fabs(integral - exact) < 1.e-16);

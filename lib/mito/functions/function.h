@@ -43,6 +43,20 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type { return _f(x); }
 
@@ -56,10 +70,12 @@ namespace mito::functions {
     template <class X, class Y>
     class Constant : public Function<X, Y> {
       public:
+        // the type of function (what I derive from)
+        using function_type = Function<X, Y>;
         // the input type
-        using input_type = Function<X, Y>::input_type;
+        using input_type = function_type::input_type;
         // the output type
-        using output_type = Function<X, Y>::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -75,6 +91,20 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type &) const -> output_type { return _c; }
 
@@ -85,19 +115,23 @@ namespace mito::functions {
 
 
     // the sum of two functions
-    template <function_c F, function_c G>
-    class Sum : public function_sum<F, G>::type {
+    template <function_c... Funcs>
+    class Summation : public function_sum<Funcs...>::type {
       public:
         // the type of sum function (what I derive from)
-        using sum_type = function_sum<F, G>::type;
+        using function_type = function_sum<Funcs...>::type;
         // the input type of the sum
-        using input_type = sum_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = sum_type::output_type;
+        using output_type = function_type::output_type;
+
+      private:
+        // the type of functions
+        using functions_type = std::tuple<Funcs...>;
 
       public:
         // constructor
-        constexpr Sum(const F & f, const G & g) : _f(f), _g(g) {}
+        constexpr Summation(const Funcs &... funcs) : _funcs(funcs...) {}
 
         // call operator for function composition
         template <function_c H>
@@ -106,23 +140,107 @@ namespace mito::functions {
             return Composition(*this, f);
         }
 
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
         // call operator
         constexpr auto operator()(const input_type & x) const -> output_type
         {
-            return _f(x) + _g(x);
+            // the sum of all functions
+            return std::apply([&](const auto &... funcs) { return (funcs(x) + ...); }, _funcs);
         }
 
-        // the first in the sum
-        constexpr auto f1() const -> const F & { return _f; }
-
-        // the second in the sum
-        constexpr auto f2() const -> const G & { return _g; }
+        // accessor for the functions in the summation
+        constexpr auto functions() const -> const functions_type & { return _funcs; }
 
       private:
-        const F _f;
-        const G _g;
+        // the functions in the summation
+        functions_type _funcs;
     };
 
+    // the linear combination of functions {Funcs} with coefficients of type {T}...
+    template <typename T, function_c... Funcs>
+    class LinearCombination : public function_linear_combination<T, Funcs...>::type {
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_linear_combination<T, Funcs...>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+
+      private:
+        // the number of functions in the linear combination
+        static constexpr std::size_t N = sizeof...(Funcs);
+        // the type of coefficients
+        using coefficients_type = std::array<T, N>;
+        // the type of functions
+        using functions_type = std::tuple<Funcs...>;
+
+      public:
+        // constructor
+        constexpr LinearCombination(const coefficients_type & coeffs, const Funcs &... funcs) :
+            _coeffs(coeffs),
+            _funcs(funcs...)
+        {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            // helper function to assemble the linear combination
+            auto eval = [&]<std::size_t... Is>(const input_type & x, std::index_sequence<Is...>) {
+                return ((_coeffs[Is] * std::get<Is>(_funcs)(x)) + ...);
+            };
+
+            // return the result of the linear combination
+            return eval(x, std::make_index_sequence<N>{});
+        }
+
+      public:
+        // accessor for the coefficients
+        constexpr auto coefficients() const -> const coefficients_type & { return _coeffs; }
+
+        // accessor for the functions
+        constexpr auto functions() const -> const functions_type & { return _funcs; }
+
+      private:
+        // the coefficients in the linear combination
+        coefficients_type _coeffs;
+        // the functions in the linear combination
+        functions_type _funcs;
+    };
 
     // the sum of a function with a constant
     template <tensor::tensor_or_scalar_c T, function_c F>
@@ -130,11 +248,11 @@ namespace mito::functions {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_type<F>;
+        using function_type = functions::function_type<F>;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -148,6 +266,20 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -169,11 +301,11 @@ namespace mito::functions {
     class Product : public function_product<F, G>::type {
       public:
         // the type of product function (what I derive from)
-        using product_type = function_product<F, G>::type;
+        using function_type = function_product<F, G>::type;
         // the input type of the sum
-        using input_type = product_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = product_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -184,6 +316,20 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -211,11 +357,11 @@ namespace mito::functions {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_product<F, Constant<typename F::input_type, T>>::type;
+        using function_type = function_product<F, Constant<typename F::input_type, T>>::type;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -229,6 +375,20 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -252,11 +412,11 @@ namespace mito::functions {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_product<Constant<typename F::input_type, T>, F>::type;
+        using function_type = function_product<Constant<typename F::input_type, T>, F>::type;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -270,6 +430,20 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -287,16 +461,16 @@ namespace mito::functions {
 
 
     // the reciprocal of a scalar function
-    template <scalar_function_c F>
+    template <scalar_valued_function_c F>
     class Reciprocal : public function_type<F> {
 
       public:
         // the type of function (what I derive from)
-        using my_function_type = function_type<F>;
+        using function_type = functions::function_type<F>;
         // the input type of the sum
-        using input_type = my_function_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the sum
-        using output_type = my_function_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -326,11 +500,11 @@ namespace mito::functions {
 
       public:
         // the type of composition function (what I derive from)
-        using composition_type = function_composition<F, G>::type;
+        using function_type = function_composition<F, G>::type;
         // the input type of the composition
-        using input_type = composition_type::input_type;
+        using input_type = function_type::input_type;
         // the output type of the composition
-        using output_type = composition_type::output_type;
+        using output_type = function_type::output_type;
 
       public:
         // constructor
@@ -341,6 +515,20 @@ namespace mito::functions {
         constexpr auto operator()(const H & f) const
         {
             return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
         }
 
         // call operator
@@ -355,6 +543,202 @@ namespace mito::functions {
       private:
         const F _f;
         const G _g;
+    };
+
+
+    template <subscriptable_function_c F, typename indexT>
+    class Subscript : public function_subscript<F>::type {
+
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_subscript<F>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+        // the type of index
+        using index_type = indexT;
+
+      public:
+        // constructor
+        constexpr Subscript(const F & f, const index_type i) : _f(f), _i(i) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type { return _f(x)[_i]; }
+
+        // the function to subscript
+        constexpr auto f() const -> const F & { return _f; }
+
+        // the index
+        constexpr auto index() const -> index_type { return _i; }
+
+      private:
+        const F _f;
+        const index_type _i;
+    };
+
+
+    // function transposing a function of a second order tensor
+    template <function_c F>
+    requires(tensor::matrix_c<typename F::output_type>)
+    class Transpose : public function_transpose<F>::type {
+
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_transpose<F>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+
+      public:
+        // constructor
+        constexpr Transpose(const F & f) : _f(f) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return tensor::transpose(_f(x));
+        }
+
+        // the function to transpose
+        constexpr auto f() const -> const F & { return _f; }
+
+      private:
+        const F _f;
+    };
+
+    // function computing the inverse of a second order tensor
+    template <function_c F>
+    requires(tensor::square_matrix_c<typename F::output_type>)
+    class Inverse : public Function<typename F::input_type, typename F::output_type> {
+
+      public:
+        // the type of the function (what I derive from)
+        using function_type = Function<typename F::input_type, typename F::output_type>;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+
+      public:
+        // constructor
+        constexpr Inverse(const F & f) : _f(f) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return tensor::inverse(_f(x));
+        }
+
+        // the matrix function to invert
+        constexpr auto f() const -> const F & { return _f; }
+
+      private:
+        const F _f;
+    };
+
+    // function computing the dyadic of two vector valued functions
+    template <vector_valued_function_c F1, vector_valued_function_c F2>
+    class DyadicProduct : public function_dyadic_product<F1, F2>::type {
+
+      public:
+        // the type of the function (what I derive from)
+        using function_type = function_dyadic_product<F1, F2>::type;
+        // the input type
+        using input_type = function_type::input_type;
+        // the output type
+        using output_type = function_type::output_type;
+
+      public:
+        // constructor
+        constexpr DyadicProduct(const F1 & f1, const F2 & f2) : _f1(f1), _f2(f2) {}
+
+        // call operator for function composition
+        template <function_c H>
+        constexpr auto operator()(const H & f) const
+        {
+            return Composition(*this, f);
+        }
+
+        // subscript operator: only available if {output_type} is subscriptable
+        constexpr auto operator[](int i) const
+        requires subscriptable_c<output_type>
+        {
+            return Subscript(*this, i);
+        }
+
+        // subscript operator with multi-index: only available if {output_type} is a tensor
+        template <tensor::tensor_c outputT = output_type>
+        constexpr auto operator[](const typename outputT::index_t & i) const
+        {
+            return Subscript(*this, i);
+        }
+
+        // call operator
+        constexpr auto operator()(const input_type & x) const -> output_type
+        {
+            return tensor::dyadic(_f1(x), _f2(x));
+        }
+
+        // the first function in the dyadic product
+        constexpr auto f1() const -> const F1 & { return _f1; }
+
+        // the second function in the dyadic product
+        constexpr auto f2() const -> const F2 & { return _f2; }
+
+      private:
+        const F1 _f1;
+        const F2 _f2;
     };
 }
 

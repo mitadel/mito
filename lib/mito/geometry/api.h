@@ -17,6 +17,10 @@ namespace mito::geometry {
     template <int D>
     using point_t = utilities::shared_ptr<const Point<D>>;
 
+    // reference simplex alias
+    template <int N>
+    using reference_simplex_t = ReferenceSimplex<N>;
+
     // geometric simplex alias
     template <int N, int D>
     using geometric_simplex_t = GeometricSimplex<N, D>;
@@ -24,6 +28,15 @@ namespace mito::geometry {
     // node alias
     template <int D>
     using node_t = utilities::std_shared_ptr<const geometric_simplex_t<0, D>>;
+
+    // reference segment alias
+    using reference_segment_t = reference_simplex_t<1>;
+
+    // reference triangle alias
+    using reference_triangle_t = reference_simplex_t<2>;
+
+    // reference tetrahedron alias
+    using reference_tetrahedron_t = reference_simplex_t<3>;
 
     // segment alias
     template <int D>

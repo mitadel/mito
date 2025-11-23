@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/simulation.h>
-#include <mito/discretization.h>
+#include <mito/discrete.h>
 #include <mito/mesh.h>
 #include <mito/io.h>
 
@@ -38,8 +38,8 @@ TEST(ParallelVtkWriter, MeshField)
     std::ifstream fileStream(mesh_file);
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<3>>(fileStream, coord_system);
 
-    // a nodal field on the mesh
-    auto nodal_field = mito::discretization::nodal_field<mito::tensor::vector_t<3>>(mesh, "normal");
+    // a mesh field on the mesh
+    auto mesh_field = mito::discrete::mesh_field<mito::tensor::vector_t<3>>(mesh, "normal");
 
     // the normal field to the ball
     constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
@@ -50,8 +50,8 @@ TEST(ParallelVtkWriter, MeshField)
              + std::cos(theta) * mito::tensor::e_2<3>;
     });
 
-    // fill information in nodal field
-    for (auto & [node, value] : nodal_field) {
+    // fill information in mesh field
+    for (auto & [node, value] : mesh_field) {
         // get the coordinates of the node
         auto & coordinates = coord_system.coordinates(node->point());
         // compute the value of the normal field at those coordinates
@@ -60,8 +60,8 @@ TEST(ParallelVtkWriter, MeshField)
 
     // write mesh to vtk file
     auto writer = mito::io::vtk::parallel_field_writer("sphere_mesh_field", mesh, coord_system);
-    // sign {nodal_field} up with the writer
-    writer.record(nodal_field);
+    // sign {mesh_field} up with the writer
+    writer.record(mesh_field);
     // write output file
     writer.write();
 

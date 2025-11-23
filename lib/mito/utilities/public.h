@@ -27,6 +27,7 @@
 #include "SegmentedVector.h"
 #include "Repository.h"
 #include "SegmentedContainerIterator.h"
+#include "NamedClass.h"
 
 // factories implementation
 #include "factories.h"

@@ -51,7 +51,7 @@ namespace mito::fields {
     }
 
     // field1 / field2
-    template <field_c F1, functions::scalar_function_c F2>
+    template <field_c F1, functions::scalar_valued_function_c F2>
     constexpr auto operator/(const F1 & f1, const F2 & f2)
     {
         return field(f1.function() / f2);

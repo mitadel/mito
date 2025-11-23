@@ -7,9 +7,20 @@
 #pragma once
 
 
-#ifdef WITH_PETSC
-#include "backend/petsc/public.h"
-#endif    // WITH_PETSC
+// external packages
+#include "externals.h"
+
+// get the forward declarations
+#include "forward.h"
+
+// published type factories; this is the file you are looking for...
+#include "api.h"
+
+// classes implementation
+#include "LinearSolver.h"
+
+// factories implementation
+#include "factories.h"
 
 
 // end of file

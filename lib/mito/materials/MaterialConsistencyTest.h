@@ -32,7 +32,7 @@ class mito::materials::MaterialConsistencyTest {
         auto F_perturbed = F;
 
         // initialize the energy increment tensor
-        auto energy_increment = mito::tensor::matrix_t<3>();
+        auto energy_increment = mito::tensor::matrix_t<3>{};
 
         // for each component of the deformation gradient
         for (int i = 0; i < 3; i++) {

@@ -24,6 +24,7 @@
 #include "GridVTKWriter.h"
 #include "MeshVTKWriter.h"
 #include "PointCloudVTKWriter.h"
+#include "NodeVTKWriter.h"
 #include "FieldVTKWriter.h"
 #ifdef WITH_PARALLEL_VTK
 #include "ParallelGridVTKWriter.h"

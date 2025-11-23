@@ -13,7 +13,7 @@ using std::numbers::pi;
 using mito::tensor::scalar_t;
 
 
-TEST(Derivatives, Composition)
+TEST(Derivatives, Scalar)
 {
     // pi sixths
     constexpr auto pi_sixth = pi / 6.0;
@@ -46,6 +46,49 @@ TEST(Derivatives, Composition)
     constexpr auto pow2_sin_i = mito::functions::derivative(pow2_sin);
     // check result
     static_assert(2.0 * pow1(sin(pi_sixth)) * cos(pi_sixth) == pow2_sin_i(pi_sixth));
+}
+
+
+// the coordinates type
+using coordinates_type_2D = mito::tensor::vector_t<2>;
+using coordinates_type_3D = mito::tensor::vector_t<3>;
+
+
+TEST(Derivatives, Vector)
+{
+    // components 2D
+    constexpr auto a = mito::functions::component<coordinates_type_2D, 0>;
+    constexpr auto b = mito::functions::component<coordinates_type_2D, 1>;
+
+    // a vector function R^2 -> R^3 (internal in the composition)
+    constexpr auto g = a * b * mito::tensor::e<1, 3> + (a + b) * mito::tensor::e<2, 3>;
+
+    // components 3D
+    constexpr auto x = mito::functions::component<coordinates_type_3D, 0>;
+    constexpr auto y = mito::functions::component<coordinates_type_3D, 1>;
+    constexpr auto z = mito::functions::component<coordinates_type_3D, 2>;
+
+    // a vector function R^3 -> R^3 (external in the composition)
+    constexpr auto f =
+        x * mito::tensor::e<0, 3> + y * mito::tensor::e<1, 3> + z * mito::tensor::e<2, 3>;
+
+    // the composition of f and g (R^2 -> R^3)
+    constexpr auto h = f(g);
+
+    // pick a point
+    constexpr auto p = coordinates_type_2D{ 1.0, 2.0 };
+
+    // f(g) = a * b * mito::tensor::e<1, 3> + (a + b) * mito::tensor::e<2, 3>
+    static_assert(
+        h(p) == p[0] * p[1] * mito::tensor::e<1, 3> + (p[0] + p[1]) * mito::tensor::e<2, 3>);
+
+    // the derivative of h
+    constexpr auto h_0 = mito::functions::derivative<0>(h);
+    constexpr auto h_1 = mito::functions::derivative<1>(h);
+
+    // check the result
+    static_assert(h_0(p) == p[1] * mito::tensor::e<1, 3> + mito::tensor::e<2, 3>);
+    static_assert(h_1(p) == p[0] * mito::tensor::e<1, 3> + mito::tensor::e<2, 3>);
 }
 
 

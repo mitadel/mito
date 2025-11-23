@@ -8,11 +8,17 @@
 #include <mito/quadrature.h>
 
 
+// the type of quadrature
+using mito::quadrature::GAUSS;
+// the reference triangle type
+using reference_triangle_t = mito::geometry::reference_triangle_t;
+
+
 TEST(ParametricTriangle, Order1)
 {
     // a Gauss quadrature rule on triangles with degree of exactness 1
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 1>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 1>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -39,7 +45,7 @@ TEST(ParametricTriangle, Order2)
 {
     // a Gauss quadrature rule on triangles with degree of exactness 2
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 2>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 2>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
@@ -69,12 +75,12 @@ TEST(ParametricTriangle, Order3)
 {
     // a Gauss quadrature rule on triangles with degree of exactness 3
     constexpr auto quadrature_rule =
-        mito::quadrature::quadrature_rule<mito::quadrature::GAUSS, mito::topology::triangle_t, 3>();
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 3>();
 
     // the parametric point type
     using point_t = decltype(quadrature_rule)::quadrature_point_type;
 
-    // a quadratic function of the parametric coordinates x_0^2
+    // a quadratic function of the parametric coordinates x_0^3
     constexpr auto f = [](const point_t & x) -> mito::tensor::scalar_t {
         return x[0] * x[0] * x[0];
     };
@@ -82,7 +88,7 @@ TEST(ParametricTriangle, Order3)
     // area of the parametric triangle
     constexpr auto area = 0.5;
 
-    // integral of f on the parametric triangle [0, 1]
+    // integral of f on the parametric triangle
     constexpr auto integral = area
                             * (quadrature_rule.weight(0) * f(quadrature_rule.point(0))
                                + quadrature_rule.weight(1) * f(quadrature_rule.point(1))
@@ -91,8 +97,41 @@ TEST(ParametricTriangle, Order3)
                                + quadrature_rule.weight(4) * f(quadrature_rule.point(4))
                                + quadrature_rule.weight(5) * f(quadrature_rule.point(5)));
 
-    // exact solution (1/3 x^3) at x = 1
+    // exact solution
     constexpr auto exact = 1.0 / 20.0;
+
+    // check result
+    static_assert(std::fabs(integral - exact) < 1.e-16);
+}
+
+TEST(ParametricTriangle, Order4)
+{
+    // a Gauss quadrature rule on triangles with degree of exactness 4
+    constexpr auto quadrature_rule =
+        mito::quadrature::quadrature_rule<GAUSS, reference_triangle_t, 4>();
+
+    // the parametric point type
+    using point_t = decltype(quadrature_rule)::quadrature_point_type;
+
+    // a polynomial of degree 4 in parametric coordinates
+    constexpr auto f = [](const point_t & x) -> mito::tensor::scalar_t {
+        return x[0] * x[0] * x[0] * x[0];
+    };
+
+    // area of the parametric triangle
+    constexpr auto area = 0.5;
+
+    // integral of f on the parametric triangle
+    constexpr auto integral = area
+                            * (quadrature_rule.weight(0) * f(quadrature_rule.point(0))
+                               + quadrature_rule.weight(1) * f(quadrature_rule.point(1))
+                               + quadrature_rule.weight(2) * f(quadrature_rule.point(2))
+                               + quadrature_rule.weight(3) * f(quadrature_rule.point(3))
+                               + quadrature_rule.weight(4) * f(quadrature_rule.point(4))
+                               + quadrature_rule.weight(5) * f(quadrature_rule.point(5)));
+
+    // exact solution
+    constexpr auto exact = 1.0 / 30.0;
 
     // check result
     static_assert(std::fabs(integral - exact) < 1.e-16);

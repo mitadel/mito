@@ -10,23 +10,22 @@
 namespace mito::quadrature {
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::tetrahedron_t, 1>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_tetrahedron_t, 1>() -> auto
     {
         constexpr int Q = 1;
-        using table_type = Table<topology::tetrahedron_t, Q>;
+        using table_type = Table<geometry::reference_tetrahedron_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         /*Hammer rule*/
-        return table_type(
-            { /*{point}, weight*/
-              point_weight_pair_type({ 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0 }, 1.0) });
+        return table_type({ /*{point}, weight*/
+                            point_weight_pair_type({ 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0 }, 1.0) });
     }
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, topology::tetrahedron_t, 2>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_tetrahedron_t, 2>() -> auto
     {
         constexpr int Q = 4;
-        using table_type = Table<topology::tetrahedron_t, Q>;
+        using table_type = Table<geometry::reference_tetrahedron_t, Q>;
         using point_weight_pair_type = table_type::point_weight_pair_type;
 
         constexpr auto a = 0.5854101966249685;
@@ -34,10 +33,10 @@ namespace mito::quadrature {
 
         /*Hammer rule*/
         return table_type({ /*{point}, weight*/
-                            point_weight_pair_type({ a, b, b, b }, 1.0 / 4.0),
-                            point_weight_pair_type({ b, a, b, b }, 1.0 / 4.0),
-                            point_weight_pair_type({ b, b, a, b }, 1.0 / 4.0),
-                            point_weight_pair_type({ b, b, b, a }, 1.0 / 4.0) });
+                            point_weight_pair_type({ a, b, b }, 1.0 / 4.0),
+                            point_weight_pair_type({ b, a, b }, 1.0 / 4.0),
+                            point_weight_pair_type({ b, b, a }, 1.0 / 4.0),
+                            point_weight_pair_type({ b, b, b }, 1.0 / 4.0) });
     }
 
 }    // namespace mito

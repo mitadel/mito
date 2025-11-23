@@ -42,41 +42,41 @@ namespace mito::tensor {
     template <int D>
     constexpr auto e_2 = e<2, D>;
 
-    template <int D>
-    requires(D > 0)
-    constexpr auto e_00 = unit<matrix_t<D>, 0, 0>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 0 && D2 > 0)
+    constexpr auto e_00 = unit<matrix_t<D1, D2>, 0, 0>;
 
-    template <int D>
-    requires(D > 1)
-    constexpr auto e_01 = unit<matrix_t<D>, 0, 1>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 0 && D2 > 1)
+    constexpr auto e_01 = unit<matrix_t<D1, D2>, 0, 1>;
 
-    template <int D>
-    requires(D > 1)
-    constexpr auto e_10 = unit<matrix_t<D>, 1, 0>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 1 && D2 > 0)
+    constexpr auto e_10 = unit<matrix_t<D1, D2>, 1, 0>;
 
-    template <int D>
-    requires(D > 1)
-    constexpr auto e_11 = unit<matrix_t<D>, 1, 1>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 1 && D2 > 1)
+    constexpr auto e_11 = unit<matrix_t<D1, D2>, 1, 1>;
 
-    template <int D>
-    requires(D > 2)
-    constexpr auto e_02 = unit<matrix_t<D>, 0, 2>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 0 && D2 > 2)
+    constexpr auto e_02 = unit<matrix_t<D1, D2>, 0, 2>;
 
-    template <int D>
-    requires(D > 2)
-    constexpr auto e_20 = unit<matrix_t<D>, 2, 0>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 2 && D2 > 0)
+    constexpr auto e_20 = unit<matrix_t<D1, D2>, 2, 0>;
 
-    template <int D>
-    requires(D > 2)
-    constexpr auto e_12 = unit<matrix_t<D>, 1, 2>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 1 && D2 > 2)
+    constexpr auto e_12 = unit<matrix_t<D1, D2>, 1, 2>;
 
-    template <int D>
-    requires(D > 2)
-    constexpr auto e_21 = unit<matrix_t<D>, 2, 1>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 2 && D2 > 1)
+    constexpr auto e_21 = unit<matrix_t<D1, D2>, 2, 1>;
 
-    template <int D>
-    requires(D > 2)
-    constexpr auto e_22 = unit<matrix_t<D>, 2, 2>;
+    template <int D1, int D2 = D1>
+    requires(D1 > 2 && D2 > 2)
+    constexpr auto e_22 = unit<matrix_t<D1, D2>, 2, 2>;
 
     template <int D>
     requires(D > 0)

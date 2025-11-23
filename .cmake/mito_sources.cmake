@@ -10,7 +10,8 @@ set(MITO_SOURCES ${CMAKE_CURRENT_BINARY_DIR}/lib/mito/version.cc)
 # the mito petsc backend
 if (WITH_PETSC)
 set(MITO_SOURCES ${MITO_SOURCES}
-    lib/mito/solvers/backend/petsc/PETScKrylovSolver.cc
+lib/mito/matrix_solvers/backend/petsc/PETScLinearSystem.cc
+lib/mito/matrix_solvers/backend/petsc/PETScKrylovSolver.cc
 )
 endif()
 

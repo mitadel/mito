@@ -20,5 +20,9 @@ mito_benchmark_driver(benchmarks/mito.lib/integration/integration.cc)
 # fields
 mito_benchmark_driver(benchmarks/mito.lib/fields/laplacian.cc)
 
+if(WITH_PETSC)
+    # poisson boundary value problem
+    mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
+endif()
 
 # end of file

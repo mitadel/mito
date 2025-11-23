@@ -13,7 +13,8 @@
 #include "../journal.h"
 #include "../manifolds.h"
 #include "../math.h"
-#include "../discretization.h"
+#include "../discrete.h"
+#include "../geometry.h"
 
 
 // end of file

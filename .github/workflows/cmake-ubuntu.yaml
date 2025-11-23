@@ -27,7 +27,7 @@ jobs:
         target: [Debug, Release]
         python: ["3.12"]
         suite: [gcc]
-        suiteVersion: ["13"]
+        suiteVersion: ["14"]
         include:
           - suite: gcc
             cc: gcc
@@ -38,10 +38,6 @@ jobs:
         run: |
           echo " -- update the package cache"
           sudo apt update
-          echo " -- upgradables"
-          sudo apt list --upgradable
-          echo " -- upgrade"
-          sudo apt dist-upgrade
           echo " -- install our dependencies"
           sudo apt install -y make cmake libgtest-dev libbenchmark-dev libvtk9-dev libopenmpi-dev libmetis-dev valgrind petsc-dev
 
@@ -61,7 +57,7 @@ jobs:
           repository: pyre/pyre
           fetch-depth: 0
           path: ${{github.workspace}}/pyre
-          ref: main
+          ref: tensor
 
       - name: retrieve pyre commit SHA
         id: pyre-sha

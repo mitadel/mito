@@ -9,7 +9,7 @@
 #else
 
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::id() const -> index_t<resourceT>
 {
     // the id is the (immutable) address of this object
@@ -17,7 +17,7 @@ mito::utilities::SharedPointer<resourceT>::id() const -> index_t<resourceT>
 }
 
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::resource(index_t<resourceT> index) -> handle_type
 {
     // the id is the (immutable) address of this object
@@ -26,7 +26,7 @@ mito::utilities::SharedPointer<resourceT>::resource(index_t<resourceT> index) ->
 
 // interface
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::handle() const noexcept
     -> mito::utilities::SharedPointer<resourceT>::handle_type
 {
@@ -35,7 +35,7 @@ mito::utilities::SharedPointer<resourceT>::handle() const noexcept
 }
 
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::references() const -> int
 {
     // return the count of outstanding references
@@ -43,7 +43,7 @@ mito::utilities::SharedPointer<resourceT>::references() const -> int
 }
 
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::reset() -> void
 {
     // release my current handle
@@ -57,7 +57,7 @@ mito::utilities::SharedPointer<resourceT>::reset() -> void
 }
 
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::is_nullptr() const noexcept -> bool
 {
     // all done
@@ -66,7 +66,7 @@ mito::utilities::SharedPointer<resourceT>::is_nullptr() const noexcept -> bool
 
 // operator->
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::operator->() const noexcept
     -> mito::utilities::SharedPointer<resourceT>::handle_type
 {
@@ -86,7 +86,7 @@ mito::utilities::SharedPointer<resourceT>::operator->() const noexcept
 
 // destructor
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT>::~SharedPointer()
+constexpr mito::utilities::SharedPointer<resourceT>::~SharedPointer()
 {
     // release my current handle
     _release();
@@ -94,12 +94,13 @@ mito::utilities::SharedPointer<resourceT>::~SharedPointer()
 
 // default constructor (invalid shared handle)
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT>::SharedPointer() : _handle(nullptr)
+constexpr mito::utilities::SharedPointer<resourceT>::SharedPointer() : _handle(nullptr)
 {}
 
 // the constructor
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT>::SharedPointer(handle_type resource) : _handle(resource)
+constexpr mito::utilities::SharedPointer<resourceT>::SharedPointer(handle_type resource) :
+    _handle(resource)
 {
     // grab a reference to the shared handle
     _acquire();
@@ -107,7 +108,7 @@ mito::utilities::SharedPointer<resourceT>::SharedPointer(handle_type resource) :
 
 // the copy constructor
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT>::SharedPointer(
+constexpr mito::utilities::SharedPointer<resourceT>::SharedPointer(
     const mito::utilities::SharedPointer<resourceT> & other) :
     _handle(other._handle)
 {
@@ -117,7 +118,7 @@ mito::utilities::SharedPointer<resourceT>::SharedPointer(
 
 // the move constructor
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT>::SharedPointer(
+constexpr mito::utilities::SharedPointer<resourceT>::SharedPointer(
     mito::utilities::SharedPointer<resourceT> && other) noexcept :
     _handle(std::move(other._handle))
 {
@@ -127,7 +128,7 @@ mito::utilities::SharedPointer<resourceT>::SharedPointer(
 
 // assignment operator
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT> &
+constexpr mito::utilities::SharedPointer<resourceT> &
 mito::utilities::SharedPointer<resourceT>::operator=(
     const mito::utilities::SharedPointer<resourceT> & other)
 {
@@ -147,7 +148,7 @@ mito::utilities::SharedPointer<resourceT>::operator=(
 
 // move assignment operator
 template <class resourceT>
-mito::utilities::SharedPointer<resourceT> &
+constexpr mito::utilities::SharedPointer<resourceT> &
 mito::utilities::SharedPointer<resourceT>::operator=(
     mito::utilities::SharedPointer<resourceT> && other) noexcept
 {
@@ -168,7 +169,7 @@ mito::utilities::SharedPointer<resourceT>::operator=(
 
 // interface
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::_acquire() const -> void
 {
     // acquire resource (increment reference count)
@@ -178,7 +179,7 @@ mito::utilities::SharedPointer<resourceT>::_acquire() const -> void
 }
 
 template <class resourceT>
-auto
+constexpr auto
 mito::utilities::SharedPointer<resourceT>::_release() const -> void
 {
     // if the handle is in valid state

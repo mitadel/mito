@@ -10,9 +10,11 @@ mito_test_driver(tests/mito.lib/functions/derivative_constants.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_chain_rule.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_higher_order.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_sum.cc)
+mito_test_driver(tests/mito.lib/functions/derivative_subscript.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_product.cc)
 mito_test_driver(tests/mito.lib/functions/derivative_inverse.cc)
 mito_test_driver(tests/mito.lib/functions/partial_derivatives.cc)
+mito_test_driver(tests/mito.lib/functions/tensor_derivatives.cc)
 
 #  geometry
 mito_test_driver(tests/mito.lib/geometry/coordinates.cc)
@@ -35,9 +37,20 @@ mito_test_driver(tests/mito.lib/geometry/euclidean_metric_space.cc)
 mito_test_driver(tests/mito.lib/geometry/polar_metric_space.cc)
 mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 
-# discretization
-mito_test_driver(tests/mito.lib/discretization/quadrature_field.cc)
-mito_test_driver(tests/mito.lib/discretization/nodal_field.cc)
+# constraints
+mito_test_driver(tests/mito.lib/constraints/dirichlet.cc)
+
+# discrete
+mito_test_driver(tests/mito.lib/discrete/quadrature_field.cc)
+mito_test_driver(tests/mito.lib/discrete/mesh_field.cc)
+
+# fem
+mito_test_driver(tests/mito.lib/fem/block_grad_grad.cc)
+mito_test_driver(tests/mito.lib/fem/block_mass.cc)
+mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_construction.cc)
+mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p1.cc)
+mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p2.cc)
+mito_test_driver(tests/mito.lib/fem/isoparametric_triangle.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)
@@ -64,9 +77,8 @@ endif()
 
 # solvers
 if(WITH_PETSC)
-    mito_test_driver(tests/mito.lib/solvers/petsc_external_initialize.cc)
-    mito_test_driver(tests/mito.lib/solvers/petsc_internal_initialize.cc)
-    mito_test_driver(tests/mito.lib/solvers/petsc_solve_linear_system.cc)
+    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_initialize_finalize.cc)
+    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_ksp.cc)
 endif()
 
 # tensor
@@ -78,7 +90,10 @@ mito_test_driver(tests/mito.lib/tensor/tensor_product_forms.cc)
 # fields
 mito_test_driver(tests/mito.lib/fields/fields.cc)
 mito_test_driver(tests/mito.lib/fields/fields_traits.cc)
+mito_test_driver(tests/mito.lib/fields/calculus_identities.cc)
 mito_test_driver(tests/mito.lib/fields/calculus_scalar_field.cc)
+mito_test_driver(tests/mito.lib/fields/calculus_vector_field.cc)
+mito_test_driver(tests/mito.lib/fields/gradient_non_square.cc)
 mito_test_driver(tests/mito.lib/fields/polar_metric_field.cc)
 mito_test_driver(tests/mito.lib/fields/spherical_metric_field.cc)
 
@@ -152,6 +167,7 @@ mito_test_driver(tests/mito.lib/utilities/segmented_vector_iterator.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_subscript.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_print.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
+mito_test_driver(tests/mito.lib/utilities/named_class.cc)
 
 # quadrature
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)

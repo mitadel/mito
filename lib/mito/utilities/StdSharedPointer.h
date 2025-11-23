@@ -22,32 +22,32 @@ namespace mito::utilities {
         // interface
       public:
         // returns the id of this (oriented) simplex
-        inline auto id() const -> index_t<resource_type>;
+        constexpr auto id() const -> index_t<resource_type>;
 
         // operator->
-        auto operator->() const noexcept -> handle_type;
+        constexpr auto operator->() const noexcept -> handle_type;
 
         // meta methods
       public:
         // constructor
         template <class... Args>
         requires(std::is_constructible_v<resource_type, Args...>)
-        inline StdSharedPointer(Args &&... args);
+        constexpr StdSharedPointer(Args &&... args);
 
         // destructor
-        inline ~StdSharedPointer() = default;
+        constexpr ~StdSharedPointer() = default;
 
         // copy constructor
-        inline StdSharedPointer(const shared_ptr_type &) = default;
+        constexpr StdSharedPointer(const shared_ptr_type &) = default;
 
         // move constructor
-        inline StdSharedPointer(shared_ptr_type &&) noexcept = default;
+        constexpr StdSharedPointer(shared_ptr_type &&) noexcept = default;
 
         // assignment operator
-        inline StdSharedPointer & operator=(const shared_ptr_type &) = default;
+        constexpr StdSharedPointer & operator=(const shared_ptr_type &) = default;
 
         // move assignment operator
-        inline StdSharedPointer & operator=(shared_ptr_type &&) noexcept = default;
+        constexpr StdSharedPointer & operator=(shared_ptr_type &&) noexcept = default;
 
         // data members
       private:
@@ -55,14 +55,14 @@ namespace mito::utilities {
     };
 
     template <class resourceT>
-    inline bool operator==(
+    constexpr bool operator==(
         const StdSharedPointer<resourceT> & lhs, const StdSharedPointer<resourceT> & rhs)
     {
         return lhs.id() == rhs.id();
     }
 
     template <class resourceT>
-    inline auto operator<=>(
+    constexpr auto operator<=>(
         const StdSharedPointer<resourceT> & lhs, const StdSharedPointer<resourceT> & rhs)
     {
         // delegate to ids

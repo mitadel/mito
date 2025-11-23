@@ -22,10 +22,6 @@ namespace mito::manifolds {
         static constexpr int D = cellT::dim;
         // the dimension of the manifold (that is that of the cell)
         static constexpr int N = cellT::order;
-        // the dimension of the parametric space
-        static constexpr int parametricDim = parametric_dim<typename cellT::simplex_type>();
-        // typedef for a point in parametric coordinates
-        using parametric_point_type = manifolds::parametric_point_t<parametricDim>;
 
       public:
         // typedef for cell type
@@ -68,6 +64,15 @@ namespace mito::manifolds {
         Manifold & operator=(Manifold &&) noexcept = delete;
 
       public:
+        // accessor for the mesh
+        constexpr auto mesh() const noexcept -> const mesh_type & { return _mesh; }
+
+        // accessor for the coordinate system
+        constexpr auto coordinate_system() const noexcept -> const coordinate_system_type &
+        {
+            return _coordinate_system;
+        }
+
         constexpr auto elements() const noexcept -> const cells_type & { return _mesh.cells(); }
 
         constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
@@ -76,27 +81,6 @@ namespace mito::manifolds {
         {
             // get the coordinates of the point attached to vertex {v}
             return _coordinate_system.coordinates(v->point());
-        }
-
-        constexpr auto parametrization(
-            const cell_type & cell, const parametric_point_type & point) const -> coordinates_type
-        {
-            // get the coordinates of the first node
-            auto coord_0 = coordinates(cell.nodes()[0]);
-
-            // the vector going from {coord_0} to the position of the parametric point (initialize
-            // with the zero vector)
-            auto result = coord_0 - coord_0;
-
-            // loop on the element nodes
-            int v = 0;
-            for (const auto & node : cell.nodes()) {
-                result += (coordinates(node) - coord_0) * point[v];
-                ++v;
-            }
-
-            // return the coordinates of the parametric point
-            return coord_0 + result;
         }
 
         constexpr auto print() const -> void
