@@ -64,7 +64,7 @@ namespace mito::functions {
     constexpr auto function(F && f);
 
     // the function extracting the N-th component from an input argument of type {T}
-    template <class T, int N>
+    template <subscriptable_c T, int N>
     [[maybe_unused]] constexpr auto component = Component<T, N>();
 
     // the linear combination
