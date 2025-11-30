@@ -38,8 +38,7 @@ TEST(Manifolds, SphericalGradient)
     constexpr auto phi = mito::geometry::spherical::phi;
 
     // a scalar field
-    constexpr auto f =
-        mito::fields::field(r * mito::functions::sin(theta) * mito::functions::cos(phi));
+    constexpr auto f = r * mito::functions::sin(theta) * mito::functions::cos(phi);
 
     // df/dr = sin(theta) * cos(phi)
     constexpr auto df0 = mito::fields::derivative<0>(f);

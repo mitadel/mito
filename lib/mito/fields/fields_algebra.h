@@ -10,39 +10,14 @@
 // Algebraic operations on Fields
 namespace mito::fields {
 
-    // f^(-1)
-    template <tensor_field_c F>
-    constexpr auto inverse(const F & f)
-    {
-        using coordinates_type = typename F::coordinates_type;
-        return field(
-            functions::function([f](const coordinates_type & x) { return inverse(f(x)); }));
-    }
-
     // det(f)
     template <tensor_field_c F>
     constexpr auto determinant(const F & f)
     {
-        using coordinates_type = typename F::coordinates_type;
-        return field(functions::function([f](const coordinates_type & x) -> mito::tensor::scalar_t {
+        using coordinates_type = typename F::input_type;
+        return functions::function([f](const coordinates_type & x) -> mito::tensor::scalar_t {
             return determinant(f(x));
-        }));
-    }
-
-    // f transpose
-    template <tensor_field_c F>
-    constexpr auto transpose(const F & f)
-    {
-        return field(functions::transpose(f.function()));
-    }
-
-    // sqrt(f)
-    template <scalar_field_c F>
-    constexpr auto sqrt(const F & f)
-    {
-        using coordinates_type = typename F::coordinates_type;
-        return field(functions::function(
-            [f](const coordinates_type & x) -> mito::tensor::scalar_t { return std::sqrt(f(x)); }));
+        });
     }
 
     // the tensor product of two fields of one-forms
@@ -50,9 +25,9 @@ namespace mito::fields {
     constexpr auto tensor(const F1 & fA, const F2 & fB)
     requires(compatible_fields_c<F1, F2>)
     {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function(
-            [fA, fB](const coordinates_type & x) -> auto { return tensor::tensor(fA(x), fB(x)); }));
+        using coordinates_type = typename F1::input_type;
+        return functions::function(
+            [fA, fB](const coordinates_type & x) -> auto { return tensor::tensor(fA(x), fB(x)); });
     }
 
     // the tensor product of three fields of one-forms
@@ -60,7 +35,7 @@ namespace mito::fields {
     constexpr auto tensor(const F1 & fA, const F2 & fB, const F3 & fC)
     requires(compatible_fields_c<F1, F2> && compatible_fields_c<F1, F3>)
     {
-        using coordinates_type = typename F1::coordinates_type;
+        using coordinates_type = typename F1::input_type;
         return field(functions::function([fA, fB, fC](const coordinates_type & x) -> auto {
             return tensor::tensor(fA(x), fB(x), fC(x));
         }));
@@ -78,9 +53,9 @@ namespace mito::fields {
     constexpr auto wedge(const F1 & fA, const F2 & fB)
     requires(compatible_fields_c<F1, F2>)
     {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function(
-            [fA, fB](const coordinates_type & x) { return tensor::wedge(fA(x), fB(x)); }));
+        using coordinates_type = typename F1::input_type;
+        return functions::function(
+            [fA, fB](const coordinates_type & x) { return tensor::wedge(fA(x), fB(x)); });
     }
 
     // the wedge product of three fields of one-forms
@@ -88,10 +63,10 @@ namespace mito::fields {
     constexpr auto wedge(const F1 & fA, const F2 & fB, const F3 & fC)
     requires(compatible_fields_c<F1, F2> && compatible_fields_c<F1, F3>)
     {
-        using coordinates_type = typename F1::coordinates_type;
-        return field(functions::function([fA, fB, fC](const coordinates_type & x) {
+        using coordinates_type = typename F1::input_type;
+        return functions::function([fA, fB, fC](const coordinates_type & x) {
             return tensor::wedge(fA(x), fB(x), fC(x));
-        }));
+        });
     }
 }
 

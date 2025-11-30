@@ -29,7 +29,7 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
 
     // a scalar field
-    constexpr auto f = mito::fields::field(x_0 * x_1);
+    constexpr auto f = x_0 * x_1;
 
     // df/dx[0] = x1
     constexpr auto df0 = mito::fields::derivative<0>(f);

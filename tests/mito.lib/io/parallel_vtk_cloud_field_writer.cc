@@ -62,7 +62,7 @@ TEST(ParallelVtkWriter, CloudField)
     auto point_field = mito::discrete::point_field<mito::tensor::vector_t<3>>(cloud, "normal");
 
     // the normal field to the submanifold
-    constexpr auto normal_field = mito::fields::field([](const coordinates_t & x) -> auto {
+    constexpr auto normal_field = mito::functions::function([](const coordinates_t & x) -> auto {
         mito::tensor::scalar_t phi = std::atan2(x[1], x[0]);
         mito::tensor::scalar_t theta = std::atan2(std::hypot(x[1], x[0]), x[2]);
         return std::sin(theta) * std::cos(phi) * mito::tensor::e_0<3>

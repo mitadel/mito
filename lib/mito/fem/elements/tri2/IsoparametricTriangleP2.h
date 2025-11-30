@@ -74,7 +74,7 @@ namespace mito::fem {
             constexpr auto phi_5 = shape_functions.shape<5>();
 
             // return the isoparametric mapping from barycentric to physical coordinates
-            return mito::fields::linear_combination(
+            return functions::linear_combination(
                 std::array{ _x0, _x1, _x2, x3, x4, x5 }, phi_0, phi_1, phi_2, phi_3, phi_4, phi_5);
         }
 
@@ -128,8 +128,8 @@ namespace mito::fem {
         constexpr auto gradient() const
         {
             // assemble the gradient as a function of barycentric coordinates
-            auto gradient_function =
-                fields::field([&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
+            auto gradient_function = functions::function(
+                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
                     // the jacobian of the mapping from the reference element to the physical
                     // element evaluated at {xi}
                     auto J = jacobian()(xi);

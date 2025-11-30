@@ -17,11 +17,8 @@ static constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 
 TEST(Fields, Traits)
 {
-    // cos(x0 * x1)
-    constexpr auto cos = mito::functions::cos(x0 * x1);
-
     // a scalar field
-    constexpr auto f = mito::fields::field(cos);
+    constexpr auto f = mito::functions::cos(x0 * x1);
 
     // assert that {f} is a scalar field
     static_assert(mito::fields::scalar_field_c<decltype(f)>);
@@ -35,7 +32,7 @@ TEST(Fields, Traits)
         mito::fields::uniform_field<coordinates_t>(mito::tensor::e_1<2>);
 
     // a vector field
-    constexpr auto g = mito::fields::field(cos * (e0 + e1));
+    constexpr auto g = f * (e0 + e1);
     // assert that {g} is a vector field
     static_assert(mito::fields::vector_field_c<decltype(g)>);
 

@@ -49,7 +49,7 @@ TEST(Identities, DivGrad)
 
     // the divergence of the gradient transposed of {f}
     constexpr auto div_grad_T =
-        mito::fields::divergence(mito::fields::transpose(mito::fields::gradient(f)));
+        mito::fields::divergence(mito::functions::transpose(mito::fields::gradient(f)));
 
     // the gradient of the divergence of {f}
     constexpr auto grad_div = mito::fields::gradient(mito::fields::divergence(f));

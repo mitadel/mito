@@ -24,8 +24,7 @@ namespace mito::geometry {
 
         // the function extracting the I component of a parametric point
         template <int I>
-        static constexpr auto xi =
-            fields::field(functions::component<parametric_coordinates_type, I>);
+        static constexpr auto xi = functions::component<parametric_coordinates_type, I>;
     };
 
 }    // namespace mito

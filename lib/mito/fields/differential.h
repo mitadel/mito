@@ -15,7 +15,7 @@ namespace mito::fields {
     constexpr auto derivative(const field_c auto & f)
     {
         // the {I...}-th first partial derivative
-        return field(mito::functions::derivative<I...>(f.function()));
+        return mito::functions::derivative<I...>(f);
     }
 
     // function to compute the gradient of a scalar field
@@ -23,7 +23,7 @@ namespace mito::fields {
     constexpr auto gradient(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
 
@@ -41,7 +41,7 @@ namespace mito::fields {
     constexpr auto gradient(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
         // the number of components of the vector field
@@ -72,7 +72,7 @@ namespace mito::fields {
     constexpr auto divergence(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
 
@@ -91,7 +91,7 @@ namespace mito::fields {
     constexpr auto divergence(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
 

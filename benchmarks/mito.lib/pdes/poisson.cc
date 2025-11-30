@@ -63,7 +63,7 @@ main()
     auto boundary_mesh = mito::mesh::boundary(mesh);
 
     // the zero field
-    auto zero = mito::fields::field(mito::functions::zero<coordinates_t>);
+    auto zero = mito::functions::zero<coordinates_t>;
 
     // set homogeneous Dirichlet boundary condition
     auto constraints = mito::constraints::dirichlet_bc(boundary_mesh, zero);
@@ -75,9 +75,8 @@ main()
     auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
 
     // the right hand side
-    auto f = mito::fields::field(
-        2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
-        * mito::functions::sin(std::numbers::pi * y));
+    auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
+           * mito::functions::sin(std::numbers::pi * y);
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // a source term block
@@ -106,8 +105,8 @@ main()
     solver.destroy();
 
     // the exact solution field
-    auto u_ex = mito::fields::field(
-        mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y));
+    auto u_ex =
+        mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
 
     // compute the L2 error
     auto error_L2 = discrete_system.compute_l2_error<quadrature_rule_t>(u_ex);

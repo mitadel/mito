@@ -47,7 +47,7 @@ laplacian_mito(const coordinates_t & x)
     constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 
     // a scalar field
-    constexpr auto f = mito::fields::field(mito::functions::pow<4>(x0 * x1));
+    constexpr auto f = mito::functions::pow<4>(x0 * x1);
 
     // the gradient of {f}
     constexpr auto gradient = mito::fields::gradient(f);

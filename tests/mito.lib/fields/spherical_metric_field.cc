@@ -35,14 +35,14 @@ TEST(Manifolds, SphericalCoordinates)
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt + (e_p * e_p) * e_pp;
 
     // the inverse metric field
-    constexpr auto g_inv = mito::fields::inverse(g);
+    constexpr auto g_inv = mito::functions::inverse(g);
 
     // the basis one-forms
-    constexpr auto dr = mito::fields::field(
+    constexpr auto dr = mito::functions::function(
         [e_r, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_r(x), g_inv(x)); });
-    constexpr auto dt = mito::fields::field(
+    constexpr auto dt = mito::functions::function(
         [e_t, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_t(x), g_inv(x)); });
-    constexpr auto dp = mito::fields::field(
+    constexpr auto dp = mito::functions::function(
         [e_p, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_p(x), g_inv(x)); });
 
     // a point in space
@@ -64,7 +64,7 @@ TEST(Manifolds, SphericalCoordinates)
 
     // the metric volume element
     constexpr auto w =
-        mito::fields::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt, dp);
+        mito::functions::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt, dp);
 
     constexpr auto dr_scalar = mito::tensor::scalar_t{ 0.01 };
     constexpr auto dt_scalar = mito::tensor::scalar_t{ 0.01 };

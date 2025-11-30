@@ -33,7 +33,7 @@ TEST(Manifolds, PolarGradient)
     constexpr auto theta = mito::geometry::polar::theta;
 
     // a scalar field
-    constexpr auto f = mito::fields::field(r * mito::functions::sin(theta));
+    constexpr auto f = r * mito::functions::sin(theta);
 
     // df/dr = sin(theta)
     constexpr auto df0 = mito::fields::derivative<0>(f);

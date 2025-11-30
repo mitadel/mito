@@ -68,7 +68,7 @@ TEST(Quadrature, Square)
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 
     // a scalar field
-    auto f = mito::fields::field(mito::functions::cos(x_0 * x_1));
+    auto f = mito::functions::cos(x_0 * x_1);
     // integrate the field
     real result = bodyIntegrator.integrate(f);
     // the exact solution
@@ -80,7 +80,7 @@ TEST(Quadrature, Square)
     EXPECT_NEAR(result, exact, 1.e-3);
 
     // a scalar field
-    auto f_one = mito::fields::field(mito::functions::constant<coordinates_t>(1.0));
+    auto f_one = mito::functions::constant<coordinates_t>(1.0);
     // integrate the field
     result = bodyIntegrator.integrate(f_one);    // exact 1.0
     // report
@@ -90,7 +90,7 @@ TEST(Quadrature, Square)
     EXPECT_DOUBLE_EQ(result, 1.0);
 
     // a scalar field
-    auto f_linear = mito::fields::field(x_0);
+    auto f_linear = x_0;
     // integrate the field
     result = bodyIntegrator.integrate(f_linear);    // exact 0.5
     // report
@@ -100,7 +100,7 @@ TEST(Quadrature, Square)
     EXPECT_DOUBLE_EQ(result, 0.5);
 
     // a scalar function
-    auto f_xy = mito::fields::field(x_0 * x_1);
+    auto f_xy = x_0 * x_1;
     // integrate the field
     result = bodyIntegrator.integrate(f_xy);    // exact 0.25
     // report
@@ -110,7 +110,7 @@ TEST(Quadrature, Square)
     EXPECT_DOUBLE_EQ(result, 0.25);
 
     // a scalar function
-    auto f_xx = mito::fields::field(x_0 * x_0);
+    auto f_xx = x_0 * x_0;
     // integrate the field
     result = bodyIntegrator.integrate(f_xx);    // exact 1.0 / 3.0
     // report

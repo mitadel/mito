@@ -9,22 +9,6 @@
 
 namespace mito::fields {
 
-    // field alias
-    template <functions::function_c F>
-    using field_t = Field<F>;
-
-    // factory for fields
-    template <functions::function_c F>
-    constexpr auto field(const F & f) -> field_t<F>;
-
-    // factory for fields
-    template <functions::function_c F>
-    constexpr auto field(F && f) -> field_t<F>;
-
-    // factory for fields (from functors)
-    template <functions::functor_c F>
-    constexpr auto field(F && f) -> field_t<F>;
-
     // uniform field
     template <geometry::coordinates_c coordType, class Y>
     constexpr auto uniform_field(const Y & constant);
