@@ -9,12 +9,6 @@
 
 namespace mito::fields {
 
-    // uniform field
-    template <geometry::coordinates_c coordType, class Y>
-    constexpr auto uniform_field(const Y & constant)
-    {
-        return mito::functions::constant<coordType>(constant);
-    }
 }
 
 
