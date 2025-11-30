@@ -10,16 +10,6 @@
 // Algebraic operations on Fields
 namespace mito::fields {
 
-    // det(f)
-    template <tensor_field_c F>
-    constexpr auto determinant(const F & f)
-    {
-        using coordinates_type = typename F::input_type;
-        return functions::function([f](const coordinates_type & x) -> mito::tensor::scalar_t {
-            return determinant(f(x));
-        });
-    }
-
     // the tensor product of two fields of one-forms
     template <one_form_field_c F1, one_form_field_c F2>
     constexpr auto tensor(const F1 & fA, const F2 & fB)

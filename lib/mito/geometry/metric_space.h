@@ -56,7 +56,7 @@ namespace mito::geometry {
       public:
         // the metric volume form
         static constexpr auto w =
-            functions::sqrt(fields::determinant(g)) * _wedge(tensor::make_integer_sequence<D>{});
+            functions::sqrt(functions::determinant(g)) * _wedge(tensor::make_integer_sequence<D>{});
 
         // get the metric equivalent vector field to a given one-form field
         static constexpr auto metric_equivalent(const fields::one_form_field_c auto & one_form);

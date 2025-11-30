@@ -53,7 +53,7 @@ TEST(Fields, PolarCoordinates)
 
     // the metric volume element
     constexpr auto w =
-        mito::functions::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt);
+        mito::functions::sqrt(mito::functions::determinant(g)) * mito::fields::wedge(dr, dt);
 
     constexpr auto dr_scalar = mito::tensor::scalar_t{ 0.01 };
     constexpr auto dt_scalar = mito::tensor::scalar_t{ 0.01 };
