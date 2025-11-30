@@ -37,7 +37,7 @@ TEST(Fields, Traits)
     static_assert(mito::fields::vector_field_c<decltype(g)>);
 
     // a second-order tensor field (2x2 identity tensor field in 3 dimensional space)
-    constexpr auto i = mito::fields::identity_tensor_field<coordinates_t, 3>;
+    constexpr auto i = mito::functions::identity<coordinates_t, 3>();
     // assert that {i} is a tensor field
     static_assert(mito::fields::tensor_field_c<decltype(i)>);
     // assert that {i} is a symmetric tensor field

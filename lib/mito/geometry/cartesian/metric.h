@@ -15,7 +15,7 @@ namespace mito::geometry {
         static constexpr auto field()
         {
             // return the identity field
-            return fields::identity_tensor_field<cartesian_coordinates_t<D>, D>;
+            return functions::identity<cartesian_coordinates_t<D>, D>();
         }
     };
 }
