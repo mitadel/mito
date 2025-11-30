@@ -101,23 +101,26 @@ TEST(Derivatives, Power)
 
 TEST(Derivatives, ScalarProduct)
 {
-    // a 2D vector
-    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
+    // vectors in 2D
+    using vector_t = mito::tensor::vector_t<2>;
 
     // a 2D vector
-    constexpr auto a = mito::tensor::vector_t<2>{ -1.0, 1.0 };
+    constexpr auto x = vector_t{ 0.1, 1.0 };
+
+    // a 2D vector
+    constexpr auto a = vector_t{ -1.0, 1.0 };
 
     // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_0<2>);
+    constexpr auto e0 = mito::functions::constant<vector_t>(mito::tensor::e_0<2>);
 
     // the function returning the constant e1 unit vector in 2D
-    constexpr auto e1 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_1<2>);
+    constexpr auto e1 = mito::functions::constant<vector_t>(mito::tensor::e_1<2>);
 
     // the function extracting the x_0 component of a 2D vector
-    constexpr auto x0 = mito::functions::x<0, 2>;
+    constexpr auto x0 = mito::functions::component<vector_t, 0>;
 
     // the function extracting the x_1 component of a 2D vector
-    constexpr auto x1 = mito::functions::x<1, 2>;
+    constexpr auto x1 = mito::functions::component<vector_t, 1>;
 
     // a function {f}
     constexpr auto f = a * (x0 * e0 + x1 * e1);
@@ -134,11 +137,14 @@ TEST(Derivatives, ScalarProduct)
 
 TEST(Derivatives, ScalarProductConstant)
 {
-    // a 2D vector
-    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
+    // vectors in 2D
+    using vector_t = mito::tensor::vector_t<2>;
 
     // a 2D vector
-    constexpr auto a = mito::tensor::vector_t<2>{ -1.0, 1.0 };
+    constexpr auto x = vector_t{ 0.1, 1.0 };
+
+    // a 2D vector
+    constexpr auto a = vector_t{ -1.0, 1.0 };
 
     // the constant e0 unit vector in 2D
     constexpr auto e0 = mito::tensor::e_0<2>;
@@ -147,10 +153,10 @@ TEST(Derivatives, ScalarProductConstant)
     constexpr auto e1 = mito::tensor::e_1<2>;
 
     // the function extracting the x_0 component of a 2D vector
-    constexpr auto x0 = mito::functions::x<0, 2>;
+    constexpr auto x0 = mito::functions::component<vector_t, 0>;
 
     // the function extracting the x_1 component of a 2D vector
-    constexpr auto x1 = mito::functions::x<1, 2>;
+    constexpr auto x1 = mito::functions::component<vector_t, 1>;
 
     // a function {f}
     constexpr auto f = a * (x0 * e0 + x1 * e1);
