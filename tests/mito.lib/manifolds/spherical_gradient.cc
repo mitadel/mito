@@ -41,13 +41,13 @@ TEST(Manifolds, SphericalGradient)
     constexpr auto f = r * mito::functions::sin(theta) * mito::functions::cos(phi);
 
     // df/dr = sin(theta) * cos(phi)
-    constexpr auto df0 = mito::fields::derivative<0>(f);
+    constexpr auto df0 = mito::functions::derivative<0>(f);
 
     // df/dtheta = r * cos(theta) * cos(phi)
-    constexpr auto df1 = mito::fields::derivative<1>(f);
+    constexpr auto df1 = mito::functions::derivative<1>(f);
 
     // df/dphi = - r * cos(theta) * sin(phi)
-    constexpr auto df2 = mito::fields::derivative<2>(f);
+    constexpr auto df2 = mito::functions::derivative<2>(f);
 
     // a point in space {r = 2.0, theta = pi / 6.0, phi = pi / 6.0}
     constexpr auto x = mito::geometry::spherical::coordinates({ 2.0, pi_sixth, pi_fourth });

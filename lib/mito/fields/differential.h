@@ -10,14 +10,6 @@
 // Differential operators on Fields
 namespace mito::fields {
 
-    // the {I...}-th first partial derivative of a field
-    template <int... I>
-    constexpr auto derivative(const field_c auto & f)
-    {
-        // the {I...}-th first partial derivative
-        return mito::functions::derivative<I...>(f);
-    }
-
     // function to compute the gradient of a scalar field
     template <scalar_field_c F>
     constexpr auto gradient(const F & field)
@@ -30,7 +22,9 @@ namespace mito::fields {
         // helper function to compute the gradient of a scalar
         constexpr auto _grad = []<size_t... I>(const F & field, std::index_sequence<I...>) {
             // the vector of the partial derivatives
-            return ((derivative<I>(field) * uniform_field<coordinate_t>(tensor::e<I, D>)) + ...);
+            return (
+                (functions::derivative<I>(field) * uniform_field<coordinate_t>(tensor::e<I, D>))
+                + ...);
         };
 
         return _grad(field, std::make_index_sequence<D>{});
@@ -54,7 +48,7 @@ namespace mito::fields {
                 // the tensor of the partial derivatives
                 // (\partial field_I / \partial x_K ) * e_IK, I = 0, ..., N-1, K = 0, ..., D-1
                 return (
-                    (derivative<K>(field * uniform_field<coordinate_t>(tensor::e<I, N>))
+                    (functions::derivative<K>(field * uniform_field<coordinate_t>(tensor::e<I, N>))
                      * uniform_field<coordinate_t>(tensor::unit<tensor::matrix_t<N, D>, I, K>))
                     + ...);
             };
@@ -79,7 +73,9 @@ namespace mito::fields {
         // helper function to compute the divergence of a vector field
         constexpr auto _div = []<size_t... I>(const F & field, std::index_sequence<I...>) {
             // the summation of the I-th partial derivative of the I-th component
-            return ((derivative<I>(field * uniform_field<coordinate_t>(tensor::e<I, D>))) + ...);
+            return (
+                (functions::derivative<I>(field * uniform_field<coordinate_t>(tensor::e<I, D>)))
+                + ...);
         };
 
         // all done
@@ -102,7 +98,7 @@ namespace mito::fields {
                 // the vector of the partial derivatives
                 // (\partial field_KI / \partial x_I) * e_K
                 return (
-                    (derivative<I>(
+                    (functions::derivative<I>(
                          (field * uniform_field<coordinate_t>(tensor::e<I, D>))
                          * uniform_field<coordinate_t>(tensor::e<K, D>))
                      * uniform_field<coordinate_t>(tensor::e<K, D>))

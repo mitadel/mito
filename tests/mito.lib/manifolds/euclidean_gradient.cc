@@ -32,10 +32,10 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto f = x_0 * x_1;
 
     // df/dx[0] = x1
-    constexpr auto df0 = mito::fields::derivative<0>(f);
+    constexpr auto df0 = mito::functions::derivative<0>(f);
 
     // df/dx[1] = x0
-    constexpr auto df1 = mito::fields::derivative<1>(f);
+    constexpr auto df1 = mito::functions::derivative<1>(f);
 
     // a point in space
     constexpr auto x = mito::geometry::cartesian::coordinates({ 1.0, 1.0 });
