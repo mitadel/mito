@@ -39,8 +39,8 @@ TEST(Quadrature, FlipSegment)
     constexpr auto v_3 = cross / mito::tensor::norm(cross);
 
     // the normal and binormal fields to the segment
-    constexpr auto normal_field_1 = mito::fields::uniform_field<coordinates_t>(v_2);
-    constexpr auto normal_field_2 = mito::fields::uniform_field<coordinates_t>(v_3);
+    constexpr auto normal_field_1 = mito::functions::constant<coordinates_t>(v_2);
+    constexpr auto normal_field_2 = mito::functions::constant<coordinates_t>(v_3);
 
     // the integrand
     auto f =

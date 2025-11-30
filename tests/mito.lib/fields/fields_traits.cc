@@ -10,6 +10,10 @@
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 
+// the basis for vectors in 2D
+static constexpr auto e_0 = mito::tensor::e_0<2>;
+static constexpr auto e_1 = mito::tensor::e_1<2>;
+
 // the function extracting the components of 2D vector
 static constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
 static constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
@@ -23,16 +27,8 @@ TEST(Fields, Traits)
     // assert that {f} is a scalar field
     static_assert(mito::fields::scalar_field_c<decltype(f)>);
 
-    // the function returning the constant e0 unit vector in 2D
-    [[maybe_unused]] constexpr auto e0 =
-        mito::fields::uniform_field<coordinates_t>(mito::tensor::e_0<2>);
-
-    // the function returning the constant e1 unit vector in 2D
-    [[maybe_unused]] constexpr auto e1 =
-        mito::fields::uniform_field<coordinates_t>(mito::tensor::e_1<2>);
-
     // a vector field
-    constexpr auto g = f * (e0 + e1);
+    constexpr auto g = f * (e_0 + e_1);
     // assert that {g} is a vector field
     static_assert(mito::fields::vector_field_c<decltype(g)>);
 

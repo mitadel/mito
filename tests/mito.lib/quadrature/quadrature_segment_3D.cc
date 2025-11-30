@@ -38,8 +38,8 @@ TEST(Quadrature, Segment3D)
     constexpr auto cross = mito::tensor::cross(v_1, v_2);
     constexpr auto v_3 = cross / mito::tensor::norm(cross);
 
-    constexpr auto normal_field_1 = mito::fields::uniform_field<coordinates_t>(v_2);
-    constexpr auto normal_field_2 = mito::fields::uniform_field<coordinates_t>(v_3);
+    constexpr auto normal_field_1 = mito::functions::constant<coordinates_t>(v_2);
+    constexpr auto normal_field_2 = mito::functions::constant<coordinates_t>(v_3);
 
     // the integrand
     auto f = mito::functions::function([](const coordinates_t & x) { return x[0] * x[1]; });

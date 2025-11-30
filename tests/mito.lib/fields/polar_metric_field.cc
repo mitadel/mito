@@ -20,12 +20,12 @@ static constexpr auto r = mito::functions::component<coordinates_t, 0>;
 TEST(Fields, PolarCoordinates)
 {
     // the basis for vector fields (e_r and e_theta)
-    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_0<2>);
-    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::tensor::e_1<2>);
+    constexpr auto e_r = mito::functions::constant<coordinates_t>(mito::tensor::e_0<2>);
+    constexpr auto e_t = r * mito::functions::constant<coordinates_t>(mito::tensor::e_1<2>);
 
     // the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
-    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_00<2>);
-    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_11<2>);
+    constexpr auto e_rr = mito::functions::constant<coordinates_t>(mito::tensor::e_00<2>);
+    constexpr auto e_tt = mito::functions::constant<coordinates_t>(mito::tensor::e_11<2>);
 
     // the metric field
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt;

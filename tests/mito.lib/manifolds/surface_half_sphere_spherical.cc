@@ -19,7 +19,7 @@ using cartesian_coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
 
 // the basis for vector fields
 static constexpr auto e_r =
-    mito::fields::uniform_field<spherical_coordinates_t>(mito::tensor::e_0<3>);
+    mito::functions::constant<spherical_coordinates_t>(mito::tensor::e_0<3>);
 
 
 TEST(Manifolds, HalfSphereSpherical)
