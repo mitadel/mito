@@ -99,7 +99,7 @@ namespace mito::discrete {
         inline auto cend() const { return std::cend(_map_entry_to_values); }
 
       private:
-        // the underlying mapping of entries to nodal values
+        // the underlying mapping of entries to values
         map_type _map_entry_to_values;
 
         // the name of the field
