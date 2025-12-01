@@ -41,7 +41,7 @@ mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 mito_test_driver(tests/mito.lib/constraints/dirichlet.cc)
 
 # discrete
-mito_test_driver(tests/mito.lib/discrete/quadrature_field.cc)
+mito_test_driver(tests/mito.lib/discrete/point_field.cc)
 mito_test_driver(tests/mito.lib/discrete/mesh_field.cc)
 
 # fem
