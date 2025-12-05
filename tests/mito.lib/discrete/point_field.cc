@@ -10,9 +10,9 @@
 // pick a dimension in space
 constexpr auto D = 3;
 // a type for the field
-using vector_type = mito::tensor::vector_t<2>;
+using vector_t = mito::tensor::vector_t<2>;
 // assemble the quadrature field
-using point_field_type = mito::discrete::point_field_t<D, vector_type>;
+using point_field_t = mito::discrete::point_field_t<D, vector_t>;
 
 // fetch the point cloud
 auto & cloud = mito::geometry::point_cloud<D>();
@@ -21,7 +21,7 @@ auto point = cloud.point();
 
 
 void
-constFunction(const point_field_type & field)
+constFunction(const point_field_t & field)
 {
     // get a (deep) copy of the vector field at {point}
     auto vector = field(point);
@@ -33,10 +33,10 @@ constFunction(const point_field_type & field)
     return;
 }
 
-TEST(Discretization, QuadratureFields)
+TEST(Discretization, PointFields)
 {
-    // a quadrature field
-    auto field = point_field_type("field");
+    // a point field
+    auto field = point_field_t("field");
 
     // insert one entry using the default value
     field.insert(point);
