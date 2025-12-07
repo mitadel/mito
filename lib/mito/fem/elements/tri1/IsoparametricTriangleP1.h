@@ -64,18 +64,6 @@ namespace mito::fem {
             return _connectivity;
         }
 
-        // get the isoparametric mapping from barycentric coordinates to physical coordinates
-        constexpr auto parametrization() const
-        {
-            // get the shape functions
-            constexpr auto phi_0 = shape_functions.shape<0>();
-            constexpr auto phi_1 = shape_functions.shape<1>();
-            constexpr auto phi_2 = shape_functions.shape<2>();
-
-            // return the isoparametric mapping from parametric to physical coordinates
-            return functions::linear_combination(std::array{ _x0, _x1, _x2 }, phi_0, phi_1, phi_2);
-        }
-
         // get the shape function associated with local node {a}
         template <int a>
         requires(a >= 0 && a < n_nodes)

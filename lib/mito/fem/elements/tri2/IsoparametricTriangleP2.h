@@ -58,26 +58,6 @@ namespace mito::fem {
         constexpr IsoparametricTriangleP2 & operator=(IsoparametricTriangleP2 &&) noexcept = delete;
 
       public:
-        // get the isoparametric mapping from barycentric coordinates to physical coordinates
-        constexpr auto parametrization() const
-        {
-            auto x3 = 0.5 * (_x0 + _x1);
-            auto x4 = 0.5 * (_x1 + _x2);
-            auto x5 = 0.5 * (_x2 + _x0);
-
-            // get the shape functions
-            constexpr auto phi_0 = shape_functions.shape<0>();
-            constexpr auto phi_1 = shape_functions.shape<1>();
-            constexpr auto phi_2 = shape_functions.shape<2>();
-            constexpr auto phi_3 = shape_functions.shape<3>();
-            constexpr auto phi_4 = shape_functions.shape<4>();
-            constexpr auto phi_5 = shape_functions.shape<5>();
-
-            // return the isoparametric mapping from barycentric to physical coordinates
-            return functions::linear_combination(
-                std::array{ _x0, _x1, _x2, x3, x4, x5 }, phi_0, phi_1, phi_2, phi_3, phi_4, phi_5);
-        }
-
         // get the discretization nodes
         constexpr auto connectivity() const noexcept -> const connectivity_type &
         {
