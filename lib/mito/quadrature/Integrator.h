@@ -37,13 +37,12 @@ namespace mito::quadrature {
         {
             // loop on elements
             for (const auto & element : _manifold.elements()) {
-                // use element parametrization and manifold's coordinate systemto map the position
-                // of quadrature points in the canonical element to the coordinate of the quadrature
-                // point
+                // get element parametrization under the manifold's coordinate system
+                const auto parametrization = element.parametrization(_manifold.coordinate_system());
+                // populate the field with the coordinates of the quadrature points in physical
+                // space
                 _coordinates.insert(
-                    element.simplex(),
-                    { element.parametrization(
-                        _quadratureRule.point(q), _manifold.coordinate_system())... });
+                    element.simplex(), { parametrization(_quadratureRule.point(q))... });
             }
 
             // all done
