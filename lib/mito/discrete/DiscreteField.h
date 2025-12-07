@@ -73,8 +73,12 @@ namespace mito::discrete {
          */
         inline auto insert(const key_type & key, const value_type & entry = value_type()) -> void
         {
+            // check that the entry is not already present
+            // (emplace does not overwrite existing entries)
+            assert(_map_entry_to_values.find(key) == std::cend(_map_entry_to_values));
+
             // add a new entry to the field
-            _map_entry_to_values[key] = entry;
+            _map_entry_to_values.emplace(key, entry);
 
             // all done
             return;
