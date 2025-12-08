@@ -37,6 +37,12 @@ namespace mito::fem {
     // class finite element field
     template <class fieldValueT>
     class FemField;
+
+    // concept of a localizable field
+    template <class F, class E>
+    concept localizable_field_c = requires(const F & f, const E & e) {
+        { f.localize(e) };
+    };
 }
 
 
