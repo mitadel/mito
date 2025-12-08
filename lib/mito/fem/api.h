@@ -25,10 +25,6 @@ namespace mito::fem {
     template <class fieldValueT>
     using fem_field_t = FemField<fieldValueT>;
 
-    // fem field factory
-    template <class fieldValueT>
-    constexpr auto fem_field(const fieldValueT &);
-
     // the possible discretization types: continuous Galerking (CG) vs. discontinuous Galerkin (DG)
     enum class discretization_t { CG, DG };
 
