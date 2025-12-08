@@ -9,10 +9,6 @@
 
 namespace mito::fem {
 
-    // nodal field factory
-    template <class Y, function_space_c functionSpaceT>
-    constexpr auto nodal_field(const functionSpaceT & function_space, std::string name);
-
     // domain field alias
     template <fields::field_c F>
     using domain_field_t = DomainField<F>;
