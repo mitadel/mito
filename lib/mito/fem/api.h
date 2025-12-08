@@ -13,6 +13,14 @@ namespace mito::fem {
     template <class Y, function_space_c functionSpaceT>
     constexpr auto nodal_field(const functionSpaceT & function_space, std::string name);
 
+    // domain field alias
+    template <fields::field_c F>
+    using domain_field_t = DomainField<F>;
+
+    // domain field factory
+    template <fields::field_c F>
+    constexpr auto domain_field(const F &);
+
     // the possible discretization types: continuous Galerking (CG) vs. discontinuous Galerkin (DG)
     enum class discretization_t { CG, DG };
 

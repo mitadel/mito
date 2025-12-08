@@ -21,6 +21,7 @@
 
 // classes implementation
 #include "FunctionSpace.h"
+#include "DomainField.h"
 #include "DiscreteSystem.h"
 #include "Weakform.h"
 

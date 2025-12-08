@@ -24,6 +24,14 @@ namespace mito::fem {
         return discrete::nodal_field_t<Y>(nodes, name);
     }
 
+    // domain field factory
+    template <fields::field_c F>
+    constexpr auto domain_field(const F & field)
+    {
+        // build a domain field from the given function
+        return domain_field_t<F>(field);
+    }
+
     // TOFIX: create a constructor that takes no constraints
 
     // TOFIX: {constraints} should be a collection of constraints as opposed to an instance of a

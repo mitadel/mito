@@ -29,6 +29,11 @@ namespace mito::fem {
     // class discrete system
     template <function_space_c functionSpaceT, class linearSystemT>
     class DiscreteSystem;
+
+    // class domain field
+    template <fields::field_c F>
+    class DomainField;
+
 }
 
 
