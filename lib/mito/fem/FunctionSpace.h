@@ -35,7 +35,9 @@ namespace mito::fem {
         // the type of a map between the mesh nodes and discretization nodes
         using map_type = std::unordered_map<
             mesh_node_type, discretization_node_type, utilities::hash_function<mesh_node_type>>;
-
+        // a finite element field type
+        template <class fieldValueT>
+        using fem_field_type = fem_field_t<fieldValueT>;
 
       public:
         // the constructor
@@ -89,6 +91,21 @@ namespace mito::fem {
 
         // accessor for the node map
         constexpr auto node_map() const noexcept -> const map_type & { return _node_map; }
+
+        // hand out an preallocated fem field for all the discretization nodes with name {name}
+        template <class fieldValueT>
+        constexpr auto fem_field(std::string name) const -> fem_field_type<fieldValueT>
+        {
+            // assemble the node type
+            using node_type = discretization_node_type;
+
+            // get the discretization nodes
+            std::unordered_set<node_type, utilities::hash_function<node_type>> nodes;
+            get_discretization_nodes(*this, nodes);
+
+            // build a nodal field on the discretization nodes collected from the function space
+            return fem_field_t<fieldValueT>(discrete::nodal_field_t<fieldValueT>(nodes, name));
+        }
 
       private:
         // a collection of finite elements

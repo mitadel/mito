@@ -30,7 +30,7 @@ namespace mito::fem {
 
       public:
         // constructor from temporary nodal field
-        FemField(nodal_field_type && nodal_field) : _nodal_field(nodal_field) {}
+        FemField(nodal_field_type && nodal_field) : _nodal_field(std::move(nodal_field)) {}
 
         // default destructor
         ~FemField() = default;
