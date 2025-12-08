@@ -220,61 +220,6 @@ namespace mito::fem {
         // accessor to the number of equations
         constexpr auto n_equations() const noexcept -> int { return _n_equations; }
 
-        // compute the L2 norm of the solution
-        template <class quadratureRuleT>
-        constexpr auto compute_l2_error(const auto /*TOFIX*/ & u_exact) const -> tensor::scalar_t
-        {
-            // initialize the norm
-            auto norm = tensor::scalar_t{ 0.0 };
-
-            // loop on all the cells of the mesh
-            for (const auto & element : _function_space.elements()) {
-                // assemble the solution field on this element
-                auto u_numerical = _solution_field.localize(element);
-                // localize the exact solution on this element
-                auto u_exact_local = u_exact.localize(element);
-                // assemble the elementary error field as a function of the barycentric coordinates
-                auto u_error = u_numerical - u_exact_local;
-
-                // compute the elementary contribution to the L2 norm
-                norm +=
-                    blocks::l2_norm_block<element_type, quadratureRuleT>(u_error).compute(element);
-            }
-
-            return std::sqrt(norm);
-        }
-
-        // compute the H1 norm of the solution
-        template <class quadratureRuleT>
-        constexpr auto compute_h1_error(const auto /*TOFIX*/ & u_exact) const -> tensor::scalar_t
-        {
-            // initialize the norm
-            auto norm = tensor::scalar_t{ 0.0 };
-
-            // loop on all the cells of the mesh
-            for (const auto & element : _function_space.elements()) {
-                // assemble the solution field on this element
-                auto u_numerical = _solution_field.localize(element);
-                // localize the exact solution on this element
-                auto u_exact_local = u_exact.localize(element);
-                // assemble the elementary error field as a function of the barycentric coordinates
-                auto u_error = u_numerical - u_exact_local;
-                // assemble the gradient of the solution field on this element
-                auto u_numerical_gradient = fields::gradient(u_numerical);
-                // localize the gradient of the exact solution on this element
-                auto u_exact_gradient = fields::gradient(u_exact_local);
-                // assemble the elementary error field as a function of the barycentric coordinates
-                auto u_error_gradient = u_numerical_gradient - u_exact_gradient;
-                // compute the elementary contributions to the H1 norm
-                norm +=
-                    blocks::l2_norm_block<element_type, quadratureRuleT>(u_error).compute(element)
-                    + blocks::l2_norm_block<element_type, quadratureRuleT>(u_error_gradient)
-                          .compute(element);
-            }
-
-            return std::sqrt(norm);
-        }
-
       private:
         // a const reference to the function space
         const function_space_type & _function_space;

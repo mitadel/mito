@@ -104,19 +104,22 @@ main()
     // free the solver
     solver.destroy();
 
+    // get the solution field
+    auto & solution = discrete_system.solution();
+
     // the exact solution field
     auto u_ex =
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
 
     // compute the L2 error
-    auto error_L2 =
-        discrete_system.compute_l2_error<quadrature_rule_t>(mito::fem::domain_field(u_ex));
+    auto error_L2 = mito::fem::compute_l2_norm<quadrature_rule_t>(
+        function_space, solution, mito::fem::domain_field(u_ex));
     // report
     channel << "L2 error: " << error_L2 << journal::endl;
 
     // compute the H1 error
-    auto error_H1 =
-        discrete_system.compute_h1_error<quadrature_rule_t>(mito::fem::domain_field(u_ex));
+    auto error_H1 = mito::fem::compute_h1_norm<quadrature_rule_t>(
+        function_space, solution, mito::fem::domain_field(u_ex));
     // report
     channel << "H1 error: " << error_H1 << journal::endl;
 

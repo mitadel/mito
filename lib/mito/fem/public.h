@@ -35,4 +35,7 @@
 // factories implementation
 #include "factories.h"
 
+// norms implementation
+#include "norms.h"
+
 // end of file
