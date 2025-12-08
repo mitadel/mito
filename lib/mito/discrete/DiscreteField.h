@@ -12,15 +12,16 @@ namespace mito::discrete {
     template <class keyT, class valueT>
     class DiscreteField {
 
-      private:
-        // the key type
-        using key_type = keyT;
-        // the value type
+      public:
+        // the input type of the field
+        using input_type = keyT;
+        // the value type returned by the field
         using value_type = valueT;
 
-        // a map from {key_type} to {value_type} values
+      private:
+        // a map from {input_type} to {value_type} values
         using map_type =
-            std::unordered_map<key_type, value_type, utilities::hash_function<key_type>>;
+            std::unordered_map<input_type, value_type, utilities::hash_function<input_type>>;
 
       public:
         // constructor
@@ -55,7 +56,7 @@ namespace mito::discrete {
         /**
          * accessor for the value of a given entry
          */
-        inline auto operator()(const key_type & key) const -> const value_type &
+        inline auto operator()(const input_type & key) const -> const value_type &
         {
             return _map_entry_to_values.at(key);
         }
@@ -63,7 +64,7 @@ namespace mito::discrete {
         /**
          * mutator for the value of a given entry
          */
-        inline auto operator()(const key_type & key) -> value_type &
+        inline auto operator()(const input_type & key) -> value_type &
         {
             return _map_entry_to_values.at(key);
         }
@@ -71,7 +72,7 @@ namespace mito::discrete {
         /**
          * insert a new entry to the field
          */
-        inline auto insert(const key_type & key, const value_type & entry = value_type()) -> void
+        inline auto insert(const input_type & key, const value_type & entry = value_type()) -> void
         {
             // check that the entry is not already present
             // (emplace does not overwrite existing entries)
