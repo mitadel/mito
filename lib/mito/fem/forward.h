@@ -34,6 +34,9 @@ namespace mito::fem {
     template <fields::field_c F>
     class DomainField;
 
+    // class finite element field
+    template <class fieldValueT>
+    class FemField;
 }
 
 
