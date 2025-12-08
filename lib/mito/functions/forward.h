@@ -49,9 +49,11 @@ namespace mito::functions {
     template <class F>
     concept vector_function_c = vector_domain_function_c<F> and vector_valued_function_c<F>;
 
-    // concept of a function defined on tensors
+    // concept of a function defined on tensors or coordinates
     template <class F>
-    concept tensor_domain_function_c = function_c<F> and tensor::tensor_c<typename F::input_type>;
+    concept tensor_domain_function_c = function_c<F>
+                                   and (tensor::tensor_c<typename F::input_type>
+                                        or geometry::coordinates_c<typename F::input_type>);
 
     // concept of a tensor-valued function
     template <class F>
