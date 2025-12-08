@@ -52,6 +52,7 @@ mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p1.cc)
 mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p2.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_triangle.cc)
 mito_test_driver(tests/mito.lib/fem/domain_field.cc)
+mito_test_driver(tests/mito.lib/fem/fem_field.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)
