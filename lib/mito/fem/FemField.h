@@ -79,6 +79,12 @@ namespace mito::fem {
                 element, _nodal_field, tensor::make_integer_sequence<element_type::n_nodes>{});
         }
 
+        // iterators on the nodal field
+        constexpr auto begin() noexcept { return _nodal_field.begin(); }
+        constexpr auto end() noexcept { return _nodal_field.end(); }
+        constexpr auto begin() const noexcept { return _nodal_field.begin(); }
+        constexpr auto end() const noexcept { return _nodal_field.end(); }
+
       private:
         // the field with the nodal values of the field
         nodal_field_type _nodal_field;
