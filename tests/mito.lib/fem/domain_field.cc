@@ -29,9 +29,9 @@ TEST(Fem, DomainField)
     auto field = mito::fem::domain_field(x * y);
 
     // create some nodes
-    auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
-    auto node_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
-    auto node_2 = mito::geometry::node(coord_system, { 0.0, 1.0 });
+    auto node_0 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto node_1 = mito::geometry::node(coord_system, { 0.0, 1.0 });
+    auto node_2 = mito::geometry::node(coord_system, { 0.0, 0.0 });
 
     // create a geometric simplex
     auto geometric_simplex = mito::geometry::triangle<2>({ node_0, node_1, node_2 });
@@ -49,6 +49,16 @@ TEST(Fem, DomainField)
 
     // check the value
     EXPECT_DOUBLE_EQ(value, (x * y)({ 1.0 / 3.0, 1.0 / 3.0 }));
+
+    // compute the gradient of the localized field with respect to the barycentric coordinates
+    auto gradient = mito::fields::gradient(localized_field);
+
+    // evaluate the localized field gradient at the center of the triangle
+    auto value_gradient = gradient({ 1.0 / 3.0, 1.0 / 3.0 });
+
+    // check the value of the gradient at the center of the triangle
+    EXPECT_DOUBLE_EQ(value_gradient[0], y({ 1.0 / 3.0, 1.0 / 3.0 }));
+    EXPECT_DOUBLE_EQ(value_gradient[1], x({ 1.0 / 3.0, 1.0 / 3.0 }));
 
     // all done
     return;
