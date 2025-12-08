@@ -49,16 +49,13 @@ namespace mito::fem {
 
       public:
         // get a read-only nodal value at {node}
-        auto nodal_value(const node_type & node) const -> const field_value_type &
+        auto operator()(const node_type & node) const -> const field_value_type &
         {
             return _nodal_field(node);
         }
 
         // get a mutable nodal value at {node}
-        auto nodal_value(const node_type & node) -> field_value_type &
-        {
-            return _nodal_field(node);
-        }
+        auto operator()(const node_type & node) -> field_value_type & { return _nodal_field(node); }
 
         // QUESTION: how do we guarantee that {element} is compatible with the function space that
         // built this field?
