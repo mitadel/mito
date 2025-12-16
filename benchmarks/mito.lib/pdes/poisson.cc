@@ -105,7 +105,7 @@ main()
     solver.destroy();
 
     // get the solution field
-    auto & solution = discrete_system.solution();
+    const auto & solution = discrete_system.solution();
 
     // the exact solution field
     auto u_ex =
@@ -137,8 +137,6 @@ main()
     // write output file
     writer.write();
 
-    // get the solution field
-    const auto & solution = discrete_system.solution();
     // write mesh to vtk file
     auto writer_solution =
         mito::io::vtk::field_writer("poisson_square_solution", function_space, coord_system);
