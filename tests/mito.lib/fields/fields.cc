@@ -21,7 +21,7 @@ TEST(Fields, VectorFields)
     constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 
     // a scalar field
-    constexpr auto f = mito::fields::field(cos(x0 * x1));
+    constexpr auto f = cos(x0 * x1);
 
     // a point in space
     constexpr auto x = mito::geometry::coordinates<coordinates_t>({ 0.0, 0.0 });
@@ -36,7 +36,7 @@ TEST(Fields, VectorFields)
     constexpr auto e1 = mito::functions::constant<coordinates_t>(mito::tensor::e_1<2>);
 
     // a vector field
-    constexpr auto g = mito::fields::field(cos(x0 * x1) * (e0 + e1));
+    constexpr auto g = cos(x0 * x1) * (e0 + e1);
 
     // check value of field at {x}
     static_assert(g(x) == mito::tensor::vector_t<2>{ 1.0, 1.0 });

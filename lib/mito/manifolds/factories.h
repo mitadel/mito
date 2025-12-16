@@ -72,7 +72,7 @@ namespace mito::manifolds {
         // if the submanifold is a line (either in 2D or 3D) then use one placeholder {_}
         if constexpr (mesh_type::order == 1) {
             // the restriction of the metric volume form to the submanifold
-            auto wS = fields::field(
+            auto wS = functions::function(
                 [w, normal_field...](const coordsT & x) { return w(x)(normal_field(x)..., _); });
 
             // return the manifold
@@ -82,7 +82,7 @@ namespace mito::manifolds {
         // if the submanifold is a surface (in 3D) then use two placeholders {_, _}
         if constexpr (mesh_type::order == 2) {
             // the restriction of the metric volume element to the submanifold
-            auto wS = fields::field(
+            auto wS = functions::function(
                 [w, normal_field...](const coordsT & x) { return w(x)(normal_field(x)..., _, _); });
 
             // return the manifold

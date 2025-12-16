@@ -34,7 +34,7 @@ TEST(Constraints, Dirichlet)
     auto mesh = mito::io::summit::reader<cell_t>(fileStream, coord_system);
 
     // the value of the Dirichlet boundary condition
-    auto bc_value = mito::fields::field(mito::functions::sqrt(x * x + y * y));
+    auto bc_value = mito::functions::sqrt(x * x + y * y);
 
     // get all the nodes on the mesh boundary
     auto boundary_mesh = mito::mesh::boundary(mesh);

@@ -21,11 +21,11 @@ namespace mito::geometry {
             constexpr auto t = functions::component<spherical_coordinates_t, 1>;
 
             // the function returning the constant e_00 tensor in 3D
-            constexpr auto e_rr = fields::uniform_field<spherical_coordinates_t>(tensor::e_00<3>);
+            constexpr auto e_rr = functions::constant<spherical_coordinates_t>(tensor::e_00<3>);
             // the function returning the constant e_11 tensor in 3D
-            constexpr auto e_tt = fields::uniform_field<spherical_coordinates_t>(tensor::e_11<3>);
+            constexpr auto e_tt = functions::constant<spherical_coordinates_t>(tensor::e_11<3>);
             // the function returning the constant e_11 tensor in 3D
-            constexpr auto e_pp = fields::uniform_field<spherical_coordinates_t>(tensor::e_22<3>);
+            constexpr auto e_pp = functions::constant<spherical_coordinates_t>(tensor::e_22<3>);
 
             // return the metric field in spherical coordinates
             return e_rr + functions::pow<2>(r) * e_tt

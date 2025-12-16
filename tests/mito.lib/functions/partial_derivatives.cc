@@ -9,16 +9,19 @@
 
 TEST(VectorFunctions, Components)
 {
+    // vectors in 2D
+    using vector_t = mito::tensor::vector_t<2>;
+
     // a 2D vector
-    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
+    constexpr auto x = vector_t{ 0.1, 1.0 };
 
     // the function extracting the x_0 component
-    constexpr auto x0 = mito::functions::x<0, 2>;
+    constexpr auto x0 = mito::functions::component<vector_t, 0>;
     // check result
     static_assert(0.1 == x0(x));
 
     // the function extracting the x_1 component
-    constexpr auto x1 = mito::functions::x<1, 2>;
+    constexpr auto x1 = mito::functions::component<vector_t, 1>;
     // check result
     static_assert(1.0 == x1(x));
 
@@ -56,13 +59,16 @@ TEST(VectorFunctions, Components)
 
 TEST(Derivatives, PartialDerivatives)
 {
+    // vectors in 2D
+    using vector_t = mito::tensor::vector_t<2>;
+
     // a 2D vector
-    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
+    constexpr auto x = vector_t{ 0.1, 1.0 };
 
     // the function extracting the x_0 component
-    constexpr auto x0 = mito::functions::x<0, 2>;
+    constexpr auto x0 = mito::functions::component<vector_t, 0>;
     // the function extracting the x_1 component
-    constexpr auto x1 = mito::functions::x<1, 2>;
+    constexpr auto x1 = mito::functions::component<vector_t, 1>;
 
     // sin(x0 * x1)
     constexpr auto sin = mito::functions::sin(x0 * x1);

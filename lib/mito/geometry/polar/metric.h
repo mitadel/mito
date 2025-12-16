@@ -18,9 +18,9 @@ namespace mito::geometry {
             constexpr auto r = functions::component<polar_coordinates_t, 0>;
 
             // the function returning the constant e_00 tensor in 2D
-            constexpr auto e_rr = fields::uniform_field<polar_coordinates_t>(tensor::e_00<2>);
+            constexpr auto e_rr = functions::constant<polar_coordinates_t>(tensor::e_00<2>);
             // the function returning the constant e_11 tensor in 2D
-            constexpr auto e_tt = fields::uniform_field<polar_coordinates_t>(tensor::e_11<2>);
+            constexpr auto e_tt = functions::constant<polar_coordinates_t>(tensor::e_11<2>);
 
             // return the metric field in polar coordinates
             return e_rr + functions::pow<2>(r) * e_tt;

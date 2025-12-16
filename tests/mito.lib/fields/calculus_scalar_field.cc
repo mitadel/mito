@@ -31,7 +31,7 @@ TEST(Laplacian, ScalarFields)
     constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
 
     // a scalar field
-    constexpr auto f = mito::fields::field(sin(x0 * x1));
+    constexpr auto f = sin(x0 * x1);
 
     // the gradient of {f}
     constexpr auto gradient = mito::fields::gradient(f);

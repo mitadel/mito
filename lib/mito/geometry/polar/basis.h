@@ -25,12 +25,12 @@ namespace mito::geometry {
         {
             if constexpr (I == 0) {
                 // return e_r
-                return fields::uniform_field<polar_coordinates_t>(mito::tensor::e_0<2>);
+                return functions::constant<polar_coordinates_t>(mito::tensor::e_0<2>);
             }
 
             if constexpr (I == 1) {
                 // e_theta
-                return _r * fields::uniform_field<polar_coordinates_t>(mito::tensor::e_1<2>);
+                return _r * functions::constant<polar_coordinates_t>(mito::tensor::e_1<2>);
             }
         }
     };

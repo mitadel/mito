@@ -16,6 +16,16 @@ namespace mito::functions {
         return Constant<X, Y>(c);
     }
 
+    // returns the order N identity tensor as a function of X
+    template <class X, int N>
+    constexpr auto identity()
+    {
+        // the order N identity tensor
+        constexpr auto id = tensor::identity<N>;
+        // return the identity ad a constant function
+        return constant<X>(id);
+    }
+
     // returns the function wrapping the functor {f}
     template <functor_c F>
     constexpr auto function(F && f)

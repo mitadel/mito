@@ -36,7 +36,7 @@ namespace mito::geometry {
         static constexpr auto g = metric<coordinates_type>::field();
 
         // the inverse metric field in coordinates {coordinates_type}
-        static constexpr auto g_inv = fields::inverse(g);
+        static constexpr auto g_inv = functions::inverse(g);
 
         // get the I-th basis element for one-form fields
         template <int I>
@@ -56,7 +56,7 @@ namespace mito::geometry {
       public:
         // the metric volume form
         static constexpr auto w =
-            fields::sqrt(fields::determinant(g)) * _wedge(tensor::make_integer_sequence<D>{});
+            functions::sqrt(functions::determinant(g)) * _wedge(tensor::make_integer_sequence<D>{});
 
         // get the metric equivalent vector field to a given one-form field
         static constexpr auto metric_equivalent(const fields::one_form_field_c auto & one_form);
@@ -71,7 +71,7 @@ namespace mito::geometry {
         const fields::one_form_field_c auto & one_form)
     {
         // return a vector field that, once evaluated at {x}...
-        return fields::field(functions::function([one_form](const coordinates_type & x) {
+        return functions::function([one_form](const coordinates_type & x) {
             // returns the contraction of the inverse metric with the components of the one
             // form
             auto _one_form_components = [one_form, x]<int... K>(tensor::integer_sequence<K...>) {
@@ -80,7 +80,7 @@ namespace mito::geometry {
 
             // all done
             return _one_form_components(tensor::make_integer_sequence<D>{});
-        }));
+        });
     }
 
     template <coordinates_c coordsT>
@@ -98,10 +98,10 @@ namespace mito::geometry {
     requires(fields::compatible_fields_c<vectorFieldT, tensorFieldT>)
     {
         // return a one form field that, once evaluated at {x}...
-        return fields::field(functions::function([vector, matrix](const coordinates_type & x) {
+        return functions::function([vector, matrix](const coordinates_type & x) {
             // returns the metric equivalent form to {vector(x)}
             return tensor::one_form(vector(x), matrix(x));
-        }));
+        });
     }
 }    // namespace mito
 

@@ -12,6 +12,7 @@
 // support
 #include "../journal.h"
 #include "../tensor.h"
+#include "../coordinates.h"
 
 
 // end of file

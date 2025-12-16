@@ -87,7 +87,7 @@ TEST(DivergenceTheorem, Mesh2D)
     // the normals calculations
 
     // the normal to the boundary
-    constexpr auto n = mito::fields::field([](const coordinates_t & x) {
+    constexpr auto n = mito::functions::function([](const coordinates_t & x) {
         // the left, right, bottom and top normals
         return (x[0] == 0.0) * (-e0(x)) + (x[0] == 1.0) * e0(x) + (x[1] == 0.0) * (-e1(x))
              + (x[1] == 1.0) * e1(x);

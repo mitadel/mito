@@ -41,7 +41,7 @@ mito_test_driver(tests/mito.lib/geometry/spherical_metric_space.cc)
 mito_test_driver(tests/mito.lib/constraints/dirichlet.cc)
 
 # discrete
-mito_test_driver(tests/mito.lib/discrete/quadrature_field.cc)
+mito_test_driver(tests/mito.lib/discrete/point_field.cc)
 mito_test_driver(tests/mito.lib/discrete/mesh_field.cc)
 
 # fem
@@ -51,6 +51,8 @@ mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_construction.cc)
 mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p1.cc)
 mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p2.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_triangle.cc)
+mito_test_driver(tests/mito.lib/fem/domain_field.cc)
+mito_test_driver(tests/mito.lib/fem/fem_field.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)

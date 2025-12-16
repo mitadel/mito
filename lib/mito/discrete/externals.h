@@ -9,6 +9,7 @@
 
 // externals
 #include <string>
+#include <cassert>
 
 // support
 #include "../mesh.h"

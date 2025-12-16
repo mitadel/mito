@@ -9,18 +9,9 @@
 
 namespace mito::fields {
 
-    // class field
-    template <functions::function_c F>
-    requires(geometry::coordinates_c<typename F::input_type>)
-    class Field;
-
-    // concept of a field
-    template <class FIELD>
-    concept field_c = requires(FIELD c) {
-        // require that F only binds to {Field<F>} specializations or derived classes
-        []<functions::function_c F>(const Field<F> &) {
-        }(c);
-    };
+    // concept of a field: a field is a function of coordinates
+    template <class F>
+    concept field_c = functions::function_c<F> && geometry::coordinates_c<typename F::input_type>;
 
     // concept of a field {FIELD} being a scalar field
     template <class FIELD>
@@ -64,8 +55,8 @@ namespace mito::fields {
     concept compatible_fields_c =
         (sizeof...(FIELDS) <= 1) ||    // trivially true for 0 or 1
         (std::same_as<
-             typename std::tuple_element_t<0, std::tuple<FIELDS...>>::coordinates_type,
-             typename FIELDS::coordinates_type>
+             typename std::tuple_element_t<0, std::tuple<FIELDS...>>::input_type,
+             typename FIELDS::input_type>
          && ...);
 }
 

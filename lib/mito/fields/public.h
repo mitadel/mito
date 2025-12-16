@@ -16,15 +16,9 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// classes implementation
-#include "Field.h"
-
 // factories implementation
 #include "factories.h"
 
-// arithmetic operations on fields
-#include "fields_arithmetic.h"
-#include "fields_functions_arithmetic.h"
 // algebraic operations on fields
 #include "fields_algebra.h"
 // differential calculus on fields
