@@ -45,3 +45,9 @@ if(@WITH_PETSC@)
   # add compiler definitions
   add_definitions(-DWITH_PETSC)
 endif(@WITH_PETSC@)
+
+# cuda dependency
+if(@WITH_CUDA@)
+  # add compiler definitions
+  add_definitions(-DWITH_CUDA)
+endif(@WITH_CUDA@)

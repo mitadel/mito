@@ -13,19 +13,21 @@
 // get the forward declarations
 #include "forward.h"
 
-// published type factories; this is the file you are looking for...
+// published types
 #include "api.h"
 
-// classes implementation
-#include "LinearSolver.h"
+// classes
+#include "CUDASolver.h"
+#include "CUDADenseSolver.h"
+#ifdef WITH_EIGEN
+#include "CUDASparseSolver.h"
+#endif    // WITH_EIGEN
+
+// error checks
+#include "CUDAErrorChecks.h"
 
 // factories implementation
 #include "factories.h"
-
-
-#ifdef WITH_CUDA
-#include "backend/cuda/public.h"
-#endif    // WITH_CUDA
 
 
 // end of file

@@ -1,0 +1,32 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_solvers_backend_cuda_CUDASolver_icc)
+#error This header file contains implementation details of class mito::solvers::cuda::CUDASolver
+#else
+
+template <mito::solvers::cuda::real_c realT>
+template <class solutionT>
+auto
+mito::solvers::cuda::CUDASolver<realT>::get_solution(solutionT & solution) const -> void
+{
+    // check if {_size} matches the size of {solution}
+    assert(_size == std::size(solution));
+
+    // reset the entries in {solution}
+    std::fill(std::begin(solution), std::end(solution), 0.0);
+
+    // copy {_h_solution} into {solution}
+    std::copy(_h_solution.data(), _h_solution.data() + _size, std::begin(solution));
+
+    // all done
+    return;
+}
+
+#endif    // mito_solvers_backend_cuda_CUDASolver_icc
+
+
+// end of file
