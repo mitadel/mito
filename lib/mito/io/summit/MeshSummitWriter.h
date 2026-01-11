@@ -33,11 +33,13 @@ namespace mito::io {
       public:
         // constructor
         MeshSummitWriter(
-            std::string filename, const mesh_type & mesh, const coord_system_type & coord_system) :
+            std::string filename, const mesh_type & mesh, const coord_system_type & coord_system,
+            std::string element_type) :
             Writer(filename),
             _mesh(mesh),
             _coord_system(coord_system),
-            _points()
+            _points(),
+            _element_type(element_type)
         {
             // index assigned to each point (start counting from 1, summit mesh convention)
             auto index = 1;
@@ -93,7 +95,7 @@ namespace mito::io {
                     outfile << _points.at(node->point()) << " ";
                 }
                 // TOFIX: material label is always 1 for now
-                outfile << 1 << std::endl;
+                outfile << 1 << " " << _element_type << std::endl;
             }
 
             // close the file
@@ -112,6 +114,9 @@ namespace mito::io {
 
         // a collection of points in the mesh
         points_type _points;
+
+        // the type of element
+        std::string _element_type;
     };
 
 }    // namespace mito::io
