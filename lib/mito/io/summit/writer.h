@@ -13,10 +13,11 @@ namespace mito::io::summit {
     requires(utilities::same_dim_c<cellT, coordT>)
     auto writer(
         std::string filename, const mito::mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<coordT> & coordinate_system) -> void
+        const geometry::coordinate_system_t<coordT> & coordinate_system,
+        std::string element_type = "") -> void
     {
         // create a writer
-        auto mesh_writer = mesh_writer_t(filename, mesh, coordinate_system);
+        auto mesh_writer = mesh_writer_t(filename, mesh, coordinate_system, element_type);
         // write
         return mesh_writer.write();
     }
