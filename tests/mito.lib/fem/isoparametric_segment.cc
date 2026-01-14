@@ -42,14 +42,14 @@ test_partition_of_unity(const auto & element)
         constexpr auto xi = quadrature_rule.point(q);
 
         // compute the sum of the shape functions at {xi} for all nodes
-        auto sum =
+        constexpr auto sum =
             ([]<int... a>(
                  const auto & element, const auto & xi, mito::tensor::integer_sequence<a...>) {
                 return ((element.template shape<a>()(xi)) + ...);
             })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
 
         // check the sum of the shape functions
-        EXPECT_NEAR(1.0, sum, 1.0e-15);
+        static_assert(1.0 == sum);
     });
 
     // all done
