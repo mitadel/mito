@@ -28,9 +28,9 @@ namespace mito::fem {
             typename canonical_element_type::parametric_coordinates_type;
         // the linear shape functions
         static constexpr auto shape_functions = shape_functions_type();
-        // the number of discretization discretization nodes
+        // the number of discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
-        // a collection of discretization discretization nodes
+        // a collection of discretization nodes
         using connectivity_type = std::array<discretization_node_type, n_nodes>;
 
       public:
