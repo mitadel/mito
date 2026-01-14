@@ -46,11 +46,15 @@ mito_test_driver(tests/mito.lib/discrete/mesh_field.cc)
 
 # fem
 mito_test_driver(tests/mito.lib/fem/block_grad_grad.cc)
+mito_test_driver(tests/mito.lib/fem/block_grad_grad_segment.cc)
 mito_test_driver(tests/mito.lib/fem/block_mass.cc)
+mito_test_driver(tests/mito.lib/fem/block_mass_segment.cc)
 mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_construction.cc)
 mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p1.cc)
 mito_test_driver(tests/mito.lib/fem/shape_functions_triangle_p2.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_triangle.cc)
+mito_test_driver(tests/mito.lib/fem/shape_functions_segment_p1.cc)
+mito_test_driver(tests/mito.lib/fem/isoparametric_segment.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)

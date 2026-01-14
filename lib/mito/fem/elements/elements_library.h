@@ -7,6 +7,7 @@
 #pragma once
 
 
+#include "seg1/public.h"
 #include "tri1/public.h"
 #include "tri2/public.h"
 
