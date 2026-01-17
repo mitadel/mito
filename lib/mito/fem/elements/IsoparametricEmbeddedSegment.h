@@ -1,0 +1,75 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#pragma once
+
+
+// DESIGN NOTES
+// Class {IsoparametricEmbeddedSegment} represents a first order simplex (segment) embedded in 2D
+// space, equipped with parametric coordinates.
+
+
+namespace mito::fem {
+
+    class IsoparametricEmbeddedSegment : public utilities::Invalidatable {
+      public:
+        // the dimension of the physical space
+        static constexpr int dim = 2;
+        // the discretization node type
+        using discretization_node_type = discrete::discretization_node_t;
+        // the underlying cell type
+        using cell_type = geometry::segment_t<dim>;
+
+      protected:
+        // cartesian coordinates in 2D
+        using coordinates_type = geometry::coordinates_t<2, geometry::CARTESIAN>;
+        // the coordinate system type
+        using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
+        // the vector type
+        using vector_type = tensor::vector_t<2>;
+
+      public:
+        // the default constructor
+        constexpr IsoparametricEmbeddedSegment(
+            const cell_type & cell, const coordinate_system_type & coord_system) :
+            _cell(cell),
+            _x0{ coord_system.coordinates(cell.nodes()[0]->point()) - coordinates_type{} },
+            _x1{ coord_system.coordinates(cell.nodes()[1]->point()) - coordinates_type{} }
+        {}
+
+        // destructor
+        constexpr ~IsoparametricEmbeddedSegment() = default;
+
+        // delete move constructor
+        constexpr IsoparametricEmbeddedSegment(IsoparametricEmbeddedSegment &&) noexcept = delete;
+
+        // delete copy constructor
+        constexpr IsoparametricEmbeddedSegment(const IsoparametricEmbeddedSegment &) = delete;
+
+        // delete assignment operator
+        constexpr IsoparametricEmbeddedSegment & operator=(const IsoparametricEmbeddedSegment &) = delete;
+
+        // delete move assignment operator
+        constexpr IsoparametricEmbeddedSegment & operator=(IsoparametricEmbeddedSegment &&) noexcept = delete;
+
+      public:
+        // get the geometric simplex
+        constexpr auto cell() const noexcept -> const cell_type & { return _cell; }
+
+      protected:
+        // QUESTION: do we need to maintain a reference to the geometric simplex?
+        // a const reference to the geometric simplex
+        const cell_type & _cell;
+
+        // the coordinates of the discretization nodes of the segment
+        const vector_type _x0;
+        const vector_type _x1;
+    };
+
+}    // namespace mito
+
+
+// end of file

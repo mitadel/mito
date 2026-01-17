@@ -19,6 +19,7 @@
 // classes implementation
 #include "IsoparametricSegment.h"
 #include "IsoparametricTriangle.h"
+#include "IsoparametricEmbeddedSegment.h"
 #include "Discretizer.h"
 
 // library of finite elements
