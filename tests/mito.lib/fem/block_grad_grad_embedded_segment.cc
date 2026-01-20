@@ -30,9 +30,10 @@ TEST(Fem, BlockGradGradEmbeddedSegment)
     // the coordinate system
     auto coord_system = coord_system_t();
 
-    // build nodes (unit-length horizontal segment embedded in 2D)
+    // build nodes (unit-length diagonal segment embedded in 2D)
+    constexpr auto inv_sqrt2 = 1.0 / std::sqrt(2.0);
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
-    auto node_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto node_1 = mito::geometry::node(coord_system, { inv_sqrt2, inv_sqrt2 });
 
     // make a geometric simplex
     auto geometric_simplex = mito::geometry::segment<2>({ node_0, node_1 });
