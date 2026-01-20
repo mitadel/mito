@@ -7,13 +7,13 @@
 #include <mito.h>
 
 
-// the type of coordinates
+// the type of coordinates (2D physical space for embedded segments)
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 // the type of coordinate system
 using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
 // the type of discretization node
 using discretization_node_t = mito::discrete::discretization_node_t;
-// the type of cell
+// the type of cell (segment embedded in 2D)
 using cell_t = mito::geometry::segment_t<2>;
 // the reference simplex
 using reference_simplex_t = mito::geometry::reference_segment_t;
@@ -87,37 +87,77 @@ test_gradient_consistency(const auto & element)
     return;
 }
 
+// test that the arc length computed via the Jacobian measure matches the expected value
+auto
+test_arc_length(const auto & element, double expected_length)
+{
+    // the element type
+    using element_t = mito::utilities::base_type<decltype(element)>;
+
+    // the number of quadrature points per element
+    constexpr int n_quads = quadrature_rule_t::npoints;
+
+    // compute the arc length by integrating 1 over the segment using the Jacobian measure
+    double arc_length = 0.0;
+    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
+        constexpr auto xi = quadrature_rule.point(q);
+        constexpr auto w = element_t::canonical_element_type::area * quadrature_rule.weight(q);
+        arc_length += w * mito::fem::blocks::jacobian_measure(element.jacobian()(xi));
+    });
+
+    // check the arc length
+    EXPECT_NEAR(expected_length, arc_length, 1.0e-15);
+
+    // all done
+    return;
+}
 
 TEST(Fem, IsoparametricEmbeddedSegment)
 {
     // the coordinate system
     auto coord_system = coord_system_t();
 
-    // build nodes
+    // build nodes for a diagonal segment from (0,0) to (3,4) - length 5
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
-    auto node_1 = mito::geometry::node(coord_system, { 1.0, 0.0 });
+    auto node_1 = mito::geometry::node(coord_system, { 3.0, 4.0 });
 
     // make a geometric simplex
     auto geometric_simplex = mito::geometry::segment<2>({ node_0, node_1 });
 
+    // first order isoparametric embedded segment
+    using element_p1_t = mito::fem::isoparametric_simplex_t<1, cell_t>;
+
+    // build the discretization nodes
+    auto discretization_node_0 = discretization_node_t();
+    auto discretization_node_1 = discretization_node_t();
+
+    // a finite element
+    auto element_p1 = element_p1_t(
+        geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 });
+
+    // check that first order shape functions are a partition of unity
+    test_partition_of_unity(element_p1);
+
+    // check that the gradients of first order shape functions sum to 0.0
+    test_gradient_consistency(element_p1);
+
+    // check that the arc length is sqrt(3^2 + 4^2) = 5
+    test_arc_length(element_p1, 5.0);
+
+    // check the gradient values at the midpoint for the (0,0) to (3,4) segment
     {
-        // first order isoparametric segment
-        using element_p1_t = mito::fem::isoparametric_simplex_t<1, cell_t>;
+        auto xi = mito::geometry::reference_segment_t::parametric_coordinates_type{ 0.5 };
+        auto grad_0 = element_p1.gradient<0>()(xi);
+        auto grad_1 = element_p1.gradient<1>()(xi);
 
-        // build the discretization nodes
-        auto discretization_node_0 = discretization_node_t();
-        auto discretization_node_1 = discretization_node_t();
-
-        // a finite element
-        auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system,
-            { discretization_node_0, discretization_node_1 });
-
-        // check that first order shape functions are a partition of unity
-        test_partition_of_unity(element_p1);
-
-        // check that the gradients of first order shape functions sum to 0.0
-        test_gradient_consistency(element_p1);
+        // for linear shape functions, the gradients should be constant and opposite
+        // the gradient should be in the direction of the segment: (3/5, 4/5) / 5 = (3/25, 4/25)
+        // phi_0 decreases from 1 to 0, so grad_0 = (-3/25, -4/25)
+        // phi_1 increases from 0 to 1, so grad_1 = (3/25, 4/25)
+        EXPECT_NEAR(-3.0 / 25.0, grad_0[0], 1.0e-15);
+        EXPECT_NEAR(-4.0 / 25.0, grad_0[1], 1.0e-15);
+        EXPECT_NEAR(3.0 / 25.0, grad_1[0], 1.0e-15);
+        EXPECT_NEAR(4.0 / 25.0, grad_1[1], 1.0e-15);
     }
 
     // all done
