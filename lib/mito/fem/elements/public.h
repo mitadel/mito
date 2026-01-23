@@ -17,6 +17,7 @@
 #include "api.h"
 
 // classes implementation
+#include "IsoparametricSegment.h"
 #include "IsoparametricTriangle.h"
 #include "Discretizer.h"
 
