@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 
@@ -65,12 +65,11 @@ namespace mito::utilities {
         }
 
         // dereference (case non reference-counted object)
-        constexpr auto operator*() const -> resource_type &
-        requires(!reference_countable_c<resource_type>)
-        {
-            // return the resource
-            return *(_segmented_iterator.ptr());
-        }
+        constexpr auto operator*() const
+            -> resource_type & requires(!reference_countable_c<resource_type>) {
+                // return the resource
+                return *(_segmented_iterator.ptr());
+            }
 
         // operator->
         constexpr auto operator->() const noexcept -> pointer_type
@@ -116,7 +115,7 @@ namespace mito::utilities {
         segmented_iterator_type _segmented_iterator;
 
         // befriend operator==
-        friend constexpr auto operator==<SegmentedContainerT>(
+        friend constexpr auto operator== <SegmentedContainerT>(
             const SegmentedContainerIterator<SegmentedContainerT> & it1,
             const SegmentedContainerIterator<SegmentedContainerT> & it2) noexcept -> bool;
 

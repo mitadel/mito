@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 // code guard
@@ -48,7 +48,8 @@ namespace mito::fem {
             }
 
             // populate the constrained nodes
-            // In 1D, constraints.domain() is a set of nodes, not a mesh with cells, so we loop on the nodes directly
+            // In 1D, constraints.domain() is a set of nodes, not a mesh with cells, so we loop on
+            // the nodes directly
             for (const auto & node : constraints.domain()) {
                 // get the discretization node associated with the mesh node from the map
                 auto it = node_map.find(node);

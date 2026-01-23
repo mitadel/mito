@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 #include <gtest/gtest.h>
@@ -47,12 +47,12 @@ TEST(Fem, ShapeTriangleConstuctionP1)
 
     // assemble the shape functions gradients as the partial derivatives of the shape functions with
     // respect to the parametric coordinates, seen as functions of barycentric coordinates
-    constexpr auto dN0 = mito::functions::derivative(phi_0(parametric_to_barycentric))(
-        barycentric_to_parametric);
-    constexpr auto dN1 = mito::functions::derivative(phi_1(parametric_to_barycentric))(
-        barycentric_to_parametric);
-    constexpr auto dN2 = mito::functions::derivative(phi_2(parametric_to_barycentric))(
-        barycentric_to_parametric);
+    constexpr auto dN0 =
+        mito::functions::derivative(phi_0(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN1 =
+        mito::functions::derivative(phi_1(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN2 =
+        mito::functions::derivative(phi_2(parametric_to_barycentric))(barycentric_to_parametric);
 
     // barycenter in barycentric coordinates
     constexpr auto barycenter = barycentric_coordinates_type{ 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 };
@@ -94,18 +94,18 @@ TEST(Fem, ShapeTriangleConstuctionP2)
 
     // assemble the shape functions gradients as the partial derivatives of the shape functions with
     // respect to the parametric coordinates, seen as functions of barycentric coordinates
-    constexpr auto dN0 = mito::functions::derivative(phi_0(parametric_to_barycentric))(
-        barycentric_to_parametric);
-    constexpr auto dN1 = mito::functions::derivative(phi_1(parametric_to_barycentric))(
-        barycentric_to_parametric);
-    constexpr auto dN2 = mito::functions::derivative(phi_2(parametric_to_barycentric))(
-        barycentric_to_parametric);
-    constexpr auto dN3 = mito::functions::derivative(phi_3(parametric_to_barycentric))(
-        barycentric_to_parametric);
-    constexpr auto dN4 = mito::functions::derivative(phi_4(parametric_to_barycentric))(
-        barycentric_to_parametric);
-    constexpr auto dN5 = mito::functions::derivative(phi_5(parametric_to_barycentric))(
-        barycentric_to_parametric);
+    constexpr auto dN0 =
+        mito::functions::derivative(phi_0(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN1 =
+        mito::functions::derivative(phi_1(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN2 =
+        mito::functions::derivative(phi_2(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN3 =
+        mito::functions::derivative(phi_3(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN4 =
+        mito::functions::derivative(phi_4(parametric_to_barycentric))(barycentric_to_parametric);
+    constexpr auto dN5 =
+        mito::functions::derivative(phi_5(parametric_to_barycentric))(barycentric_to_parametric);
 
     // barycenter in barycentric coordinates
     constexpr auto barycenter = barycentric_coordinates_type{ 1.0, 0.0, 0.0 };
