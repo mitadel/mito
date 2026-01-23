@@ -57,6 +57,9 @@ namespace mito::fem {
         // get a mutable nodal value at {node}
         auto operator()(const node_type & node) -> field_value_type & { return _nodal_field(node); }
 
+        // accessor to the underlying nodal field (read-only)
+        auto nodal_values() const -> const nodal_field_type & { return _nodal_field; }
+
         // QUESTION: how do we guarantee that {element} is compatible with the function space that
         // built this field?
         // TODO: add concept that constrains {elementT} to be a finite element type

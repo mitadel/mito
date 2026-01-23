@@ -141,7 +141,7 @@ main()
     auto writer_solution =
         mito::io::vtk::field_writer("poisson_square_solution", function_space, coord_system);
     // sign {solution} up with the writer
-    writer_solution.record(solution);
+    writer_solution.record(solution.nodal_values(), "numerical solution");
     // write output file
     writer_solution.write();
 #endif
