@@ -8,8 +8,8 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegmentP1} represents a first order simplex (segment) living in 1D cartesian space,
-// equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricSegmentP1} represents a first order simplex (segment) living in 1D cartesian
+// space, equipped with linear shape functions defined in the parametric space.
 
 
 namespace mito::fem {
