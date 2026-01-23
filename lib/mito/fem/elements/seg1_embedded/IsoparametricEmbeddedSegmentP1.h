@@ -8,7 +8,7 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricEmbeddedSegmentP1} represents a first order simplex (segment) living in 2D
+// Class {IsoparametricEmbeddedSegmentP1} represents a first order simplex (segment) embedded in 2D
 // cartesian space, equipped with linear shape functions defined in the 1D parametric space.
 // The key difference from IsoparametricSegmentP1 is the non-square Jacobian (2x1 matrix) and
 // the gradient computation that accounts for the embedded geometry.
@@ -16,7 +16,7 @@
 
 namespace mito::fem {
 
-    class IsoparametricEmbeddedSegmentP1 : public IsoparametricEmbeddedSegment {
+    class IsoparametricEmbeddedSegmentP1 : public IsoparametricSegment<2> {
 
       public:
         // the degree of the finite element
@@ -40,7 +40,7 @@ namespace mito::fem {
         inline IsoparametricEmbeddedSegmentP1(
             const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
             const connectivity_type & connectivity) :
-            IsoparametricEmbeddedSegment(geometric_simplex, coord_system),
+            IsoparametricSegment<2>(geometric_simplex, coord_system),
             _connectivity(connectivity)
         {}
 

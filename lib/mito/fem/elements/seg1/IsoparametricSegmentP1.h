@@ -14,7 +14,7 @@
 
 namespace mito::fem {
 
-    class IsoparametricSegmentP1 : public IsoparametricSegment {
+    class IsoparametricSegmentP1 : public IsoparametricSegment<1> {
 
       public:
         // the degree of the finite element
@@ -38,7 +38,7 @@ namespace mito::fem {
         inline IsoparametricSegmentP1(
             const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
             const connectivity_type & connectivity) :
-            IsoparametricSegment(geometric_simplex, coord_system),
+            IsoparametricSegment<1>(geometric_simplex, coord_system),
             _connectivity(connectivity)
         {}
 

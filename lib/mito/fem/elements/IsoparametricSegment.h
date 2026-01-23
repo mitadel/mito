@@ -9,22 +9,22 @@
 
 // DESIGN NOTES
 // Class {IsoparametricSegment} represents a first order simplex (segment) equipped with parametric
-// coordinates.
+// coordinates. The template parameter D specifies the dimension of the physical space in which
+// the segment lives (D=1 for a segment in 1D, D=2 for a segment embedded in 2D, etc.).
 
 
 namespace mito::fem {
 
+    template <int dim>
     class IsoparametricSegment : public utilities::Invalidatable {
       public:
-        // the dimension of the physical space
-        static constexpr int dim = 1;
         // the discretization node type
         using discretization_node_type = discrete::discretization_node_t;
         // the underlying cell type
         using cell_type = geometry::segment_t<dim>;
 
       protected:
-        // cartesian coordinates in 1D
+        // cartesian coordinates in dim dimensions
         using coordinates_type = geometry::coordinates_t<dim, geometry::CARTESIAN>;
         // the coordinate system type
         using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
