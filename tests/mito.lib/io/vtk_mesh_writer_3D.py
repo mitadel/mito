@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+# Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 #
 
 import pytest

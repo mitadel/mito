@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 #include <gtest/gtest.h>
@@ -109,8 +109,7 @@ TEST(Fem, IsoparametricSegment)
 
         // a finite element
         auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system,
-            { discretization_node_0, discretization_node_1 });
+            geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 });
 
         // check that first order shape functions are a partition of unity
         test_partition_of_unity(element_p1);

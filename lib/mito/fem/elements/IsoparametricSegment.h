@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 // code guard
@@ -8,7 +8,8 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegment} represents a first order simplex (segment) equipped with parametric coordinates.
+// Class {IsoparametricSegment} represents a first order simplex (segment) equipped with parametric
+// coordinates.
 
 
 namespace mito::fem {

@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 // code guard
@@ -202,16 +202,14 @@ namespace mito::mesh {
         }
 
         // insert {cell} in mesh
-        inline auto insert(const cell_type & cell) -> cell_type &
-        requires(N == 0)
-        {
-            // add the cell to the collection of cells
-            return _cells.emplace(cell);
-        }
+      inline auto insert(const cell_type & cell) -> cell_type & requires(N == 0) {
+          // add the cell to the collection of cells
+          return _cells.emplace(cell);
+      }
 
-      private:
-        // container to store the mesh cells
-        cells_type _cells;
+      private :
+          // container to store the mesh cells
+          cells_type _cells;
 
         // container to store how many times a cell appears with a given orientation
         orientation_map_type _orientations;

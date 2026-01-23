@@ -1,6 +1,6 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 // code guard
@@ -29,8 +29,8 @@ namespace mito::fem {
         static constexpr auto phi = std::make_tuple(phi_0, phi_1);
 
         // the gradients of the shape functions
-        static constexpr auto dphi = std::make_tuple(
-            fields::gradient(phi_0), fields::gradient(phi_1));
+        static constexpr auto dphi =
+            std::make_tuple(fields::gradient(phi_0), fields::gradient(phi_1));
 
       public:
         // get the a-th shape function as a function of parametric coordinates

@@ -30,4 +30,4 @@ written by the Author(s).
 
 Henri Werij, Dean of Faculty of Aerospace Engineering, Technische Universiteit Delft.
 
-© 2020-2024, the MiTo Authors
+© 2020-2026, the MiTo Authors
