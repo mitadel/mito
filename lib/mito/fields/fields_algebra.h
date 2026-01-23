@@ -26,9 +26,9 @@ namespace mito::fields {
     requires(compatible_fields_c<F1, F2> && compatible_fields_c<F1, F3>)
     {
         using coordinates_type = typename F1::input_type;
-        return field(functions::function([fA, fB, fC](const coordinates_type & x) -> auto {
+        return functions::function([fA, fB, fC](const coordinates_type & x) -> auto {
             return tensor::tensor(fA(x), fB(x), fC(x));
-        }));
+        });
     }
 
     // the wedge product of one field of one-forms (trivial case)
