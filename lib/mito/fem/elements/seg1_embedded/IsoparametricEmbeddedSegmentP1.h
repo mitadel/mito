@@ -48,16 +48,19 @@ namespace mito::fem {
         inline ~IsoparametricEmbeddedSegmentP1() = default;
 
         // delete move constructor
-        constexpr IsoparametricEmbeddedSegmentP1(IsoparametricEmbeddedSegmentP1 &&) noexcept = delete;
+        constexpr IsoparametricEmbeddedSegmentP1(IsoparametricEmbeddedSegmentP1 &&) noexcept =
+            delete;
 
         // delete copy constructor
         constexpr IsoparametricEmbeddedSegmentP1(const IsoparametricEmbeddedSegmentP1 &) = delete;
 
         // delete assignment operator
-        constexpr IsoparametricEmbeddedSegmentP1 & operator=(const IsoparametricEmbeddedSegmentP1 &) = delete;
+        constexpr IsoparametricEmbeddedSegmentP1 & operator=(
+            const IsoparametricEmbeddedSegmentP1 &) = delete;
 
         // delete move assignment operator
-        constexpr IsoparametricEmbeddedSegmentP1 & operator=(IsoparametricEmbeddedSegmentP1 &&) noexcept = delete;
+        constexpr IsoparametricEmbeddedSegmentP1 & operator=(
+            IsoparametricEmbeddedSegmentP1 &&) noexcept = delete;
 
       public:
         // get the discretization nodes
@@ -112,15 +115,16 @@ namespace mito::fem {
         constexpr auto gradient() const
         {
             // assemble the gradient as a function of parametric coordinates
-            auto gradient_function =
-                functions::function([&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
+            auto gradient_function = functions::function(
+                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
                     // the jacobian of the mapping from the reference element to the physical
                     // element evaluated at {xi}
                     auto J = jacobian()(xi);
                     // for the embedded case, the gradient is: grad(phi) = dphi/dxi * J / |J|^2
                     // this follows from: dphi/dx = grad(phi)^T * J, with grad(phi) parallel to J
-                    auto J_norm_squared = J[{0, 0}] * J[{0, 0}] + J[{1, 0}] * J[{1, 0}];
-                    auto J_scaled = tensor::vector_t<2>{ J[{0, 0}] / J_norm_squared, J[{1, 0}] / J_norm_squared };
+                    auto J_norm_squared = J[{ 0, 0 }] * J[{ 0, 0 }] + J[{ 1, 0 }] * J[{ 1, 0 }];
+                    auto J_scaled = tensor::vector_t<2>{ J[{ 0, 0 }] / J_norm_squared,
+                                                         J[{ 1, 0 }] / J_norm_squared };
                     // return the spatial gradients of the shape functions evaluated at {xi}
                     return shape_functions.dshape<a>()(xi) * J_scaled;
                 });

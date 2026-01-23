@@ -50,10 +50,12 @@ namespace mito::fem {
         constexpr IsoparametricEmbeddedSegment(const IsoparametricEmbeddedSegment &) = delete;
 
         // delete assignment operator
-        constexpr IsoparametricEmbeddedSegment & operator=(const IsoparametricEmbeddedSegment &) = delete;
+        constexpr IsoparametricEmbeddedSegment & operator=(const IsoparametricEmbeddedSegment &) =
+            delete;
 
         // delete move assignment operator
-        constexpr IsoparametricEmbeddedSegment & operator=(IsoparametricEmbeddedSegment &&) noexcept = delete;
+        constexpr IsoparametricEmbeddedSegment & operator=(
+            IsoparametricEmbeddedSegment &&) noexcept = delete;
 
       public:
         // get the geometric simplex
