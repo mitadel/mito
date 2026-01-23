@@ -48,8 +48,7 @@ TEST(Fem, BlockGradGradEmbeddedSegment)
 
         // a finite element
         auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system,
-            { discretization_node_0, discretization_node_1 });
+            geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 });
 
         // a grad-grad matrix block
         auto grad_grad_block =

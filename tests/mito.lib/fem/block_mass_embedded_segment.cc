@@ -48,15 +48,13 @@ TEST(Fem, BlockMassEmbeddedSegment)
 
         // a finite element
         auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system,
-            { discretization_node_0, discretization_node_1 });
+            geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 });
 
         // a mass matrix block
         auto mass_block = mito::fem::blocks::mass_block<element_p1_t, quadrature_rule_t>();
 
         // the analytical elementary mass matrix (same as 1D for unit-length segment)
-        auto analytical_block =
-            1.0 / 6.0 * mito::tensor::matrix_t<2>{ 2.0, 1.0, 1.0, 2.0 };
+        auto analytical_block = 1.0 / 6.0 * mito::tensor::matrix_t<2>{ 2.0, 1.0, 1.0, 2.0 };
 
         // compute the elementary contribution of the block
         auto computed_block = mass_block.compute(element_p1);
