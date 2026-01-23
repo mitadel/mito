@@ -25,11 +25,11 @@ namespace mito::fem {
 
       protected:
         // cartesian coordinates in 1D
-        using coordinates_type = geometry::coordinates_t<1, geometry::CARTESIAN>;
+        using coordinates_type = geometry::coordinates_t<dim, geometry::CARTESIAN>;
         // the coordinate system type
         using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
         // the vector type
-        using vector_type = tensor::vector_t<1>;
+        using vector_type = tensor::vector_t<dim>;
 
       public:
         // the default constructor
