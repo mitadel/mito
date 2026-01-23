@@ -13,7 +13,7 @@
 namespace mito::functions {
 
     // function extracting the I-th component of a tensor
-    template <class T, int I>
+    template <subscriptable_c T, int I>
     class Component : public Function<T, tensor::scalar_t> {
 
       public:

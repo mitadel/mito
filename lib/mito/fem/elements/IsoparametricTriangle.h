@@ -35,6 +35,7 @@ namespace mito::fem {
         constexpr IsoparametricTriangle(
             const cell_type & cell, const coordinate_system_type & coord_system) :
             _cell(cell),
+            _coord_system(coord_system),
             _x0{ coord_system.coordinates(cell.nodes()[0]->point()) - coordinates_type{} },
             _x1{ coord_system.coordinates(cell.nodes()[1]->point()) - coordinates_type{} },
             _x2{ coord_system.coordinates(cell.nodes()[2]->point()) - coordinates_type{} }
@@ -59,10 +60,15 @@ namespace mito::fem {
         // get the geometric simplex
         constexpr auto cell() const noexcept -> const cell_type & { return _cell; }
 
+        // get the mapping from parametric coordinates to physical coordinates
+        constexpr auto parametrization() const { return _cell.parametrization(_coord_system); }
+
       protected:
-        // QUESTION: do we need to maintain a reference to the geometric simplex?
         // a const reference to the geometric simplex
         const cell_type & _cell;
+
+        // a const reference to the coordinate system
+        const coordinate_system_type & _coord_system;
 
         // the coordinates of the discretization nodes of the triangle
         const vector_type _x0;

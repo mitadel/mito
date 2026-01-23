@@ -29,6 +29,20 @@ namespace mito::fem {
     // class discrete system
     template <function_space_c functionSpaceT, class linearSystemT>
     class DiscreteSystem;
+
+    // class domain field
+    template <fields::field_c F>
+    class DomainField;
+
+    // class finite element field
+    template <class fieldValueT>
+    class FemField;
+
+    // concept of a localizable field
+    template <class F, class E>
+    concept localizable_field_c = requires(const F & f, const E & e) {
+        { f.localize(e) };
+    };
 }
 
 

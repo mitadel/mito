@@ -88,6 +88,9 @@ namespace mito::geometry {
             return _coordinates_map.at(point);
         }
 
+        // get the zero coordinates
+        constexpr auto origin() const -> coordinates_type { return coordinates_type{}; }
+
         // get the coordinates of the midpoint between {point_a} and {point_b}
         constexpr auto midpoint(const point_type & point_a, const point_type & point_b) const
             -> coordinates_type

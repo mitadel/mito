@@ -20,24 +20,24 @@ static constexpr auto r = mito::functions::component<coordinates_t, 0>;
 TEST(Fields, PolarCoordinates)
 {
     // the basis for vector fields (e_r and e_theta)
-    constexpr auto e_r = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_0<2>);
-    constexpr auto e_t = r * mito::fields::uniform_field<coordinates_t>(mito::tensor::e_1<2>);
+    constexpr auto e_r = mito::functions::constant<coordinates_t>(mito::tensor::e_0<2>);
+    constexpr auto e_t = r * mito::functions::constant<coordinates_t>(mito::tensor::e_1<2>);
 
     // the basis for diagonal second-order tensor fields (e_rr and e_thetatheta)
-    constexpr auto e_rr = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_00<2>);
-    constexpr auto e_tt = mito::fields::uniform_field<coordinates_t>(mito::tensor::e_11<2>);
+    constexpr auto e_rr = mito::functions::constant<coordinates_t>(mito::tensor::e_00<2>);
+    constexpr auto e_tt = mito::functions::constant<coordinates_t>(mito::tensor::e_11<2>);
 
     // the metric field
     constexpr auto g = (e_r * e_r) * e_rr + (e_t * e_t) * e_tt;
 
     // the inverse metric field
-    constexpr auto g_inv = mito::fields::inverse(g);
+    constexpr auto g_inv = mito::functions::inverse(g);
 
     // the basis one-forms
-    constexpr auto dr = mito::fields::field(
+    constexpr auto dr = mito::functions::function(
         [e_r, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_r(x), g_inv(x)); });
 
-    constexpr auto dt = mito::fields::field(
+    constexpr auto dt = mito::functions::function(
         [e_t, g_inv](const coordinates_t & x) { return mito::tensor::one_form(e_t(x), g_inv(x)); });
 
     // a point in space
@@ -53,7 +53,7 @@ TEST(Fields, PolarCoordinates)
 
     // the metric volume element
     constexpr auto w =
-        mito::fields::sqrt(mito::fields::determinant(g)) * mito::fields::wedge(dr, dt);
+        mito::functions::sqrt(mito::functions::determinant(g)) * mito::fields::wedge(dr, dt);
 
     constexpr auto dr_scalar = mito::tensor::scalar_t{ 0.01 };
     constexpr auto dt_scalar = mito::tensor::scalar_t{ 0.01 };

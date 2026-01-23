@@ -27,7 +27,7 @@ TEST(Manifolds, Triangle3D)
     // the normal vector to the submanifold
     constexpr auto cross = mito::tensor::cross(x_1 - x_0, x_2 - x_0);
     constexpr auto normal_vector = cross / mito::tensor::norm(cross);
-    constexpr auto normal_field = mito::fields::uniform_field<coordinates_t>(normal_vector);
+    constexpr auto normal_field = mito::functions::constant<coordinates_t>(normal_vector);
 
     // create a submanifold on {mesh} with the appropriate normal field
     auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);

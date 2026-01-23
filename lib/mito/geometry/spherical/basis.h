@@ -28,18 +28,18 @@ namespace mito::geometry {
         {
             if constexpr (I == 0) {
                 // return e_r
-                return fields::uniform_field<spherical_coordinates_t>(mito::tensor::e_0<3>);
+                return functions::constant<spherical_coordinates_t>(mito::tensor::e_0<3>);
             }
 
             if constexpr (I == 1) {
                 // return e_theta
-                return _r * fields::uniform_field<spherical_coordinates_t>(mito::tensor::e_1<3>);
+                return _r * functions::constant<spherical_coordinates_t>(mito::tensor::e_1<3>);
             }
 
             if constexpr (I == 2) {
                 // return e_phi
                 return _r * functions::sin(_theta)
-                     * fields::uniform_field<spherical_coordinates_t>(mito::tensor::e_2<3>);
+                     * functions::constant<spherical_coordinates_t>(mito::tensor::e_2<3>);
             }
         }
     };

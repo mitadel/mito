@@ -7,9 +7,12 @@
 #include <mito/functions.h>
 
 
-// the coordinates functions in 2D space
-static constexpr auto x0 = mito::functions::x<0, 2>;
-static constexpr auto x1 = mito::functions::x<1, 2>;
+// vectors in 2D
+using vector_t = mito::tensor::vector_t<2>;
+
+// the components of vectors in 2D space
+static constexpr auto x0 = mito::functions::component<vector_t, 0>;
+static constexpr auto x1 = mito::functions::component<vector_t, 1>;
 
 // unit vectors in 3D
 static constexpr auto e0 = mito::tensor::e_0<3>;

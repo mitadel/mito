@@ -19,8 +19,13 @@
 // blocks implementation
 #include "blocks.h"
 
+// utilities implementation
+#include "utilities.h"
+
 // classes implementation
 #include "FunctionSpace.h"
+#include "FemField.h"
+#include "DomainField.h"
 #include "DiscreteSystem.h"
 #include "Weakform.h"
 
@@ -29,5 +34,8 @@
 
 // factories implementation
 #include "factories.h"
+
+// norms implementation
+#include "norms.h"
 
 // end of file

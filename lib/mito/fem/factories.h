@@ -9,19 +9,12 @@
 
 namespace mito::fem {
 
-    // nodal field factory
-    template <class Y, function_space_c functionSpaceT>
-    constexpr auto nodal_field(const functionSpaceT & function_space, std::string name)
+    // domain field factory
+    template <fields::field_c F>
+    constexpr auto domain_field(const F & field)
     {
-        // assemble the node type
-        using node_type = functionSpaceT::discretization_node_type;
-
-        // get the nodes in the mesh
-        std::unordered_set<node_type, utilities::hash_function<node_type>> nodes;
-        get_discretization_nodes(function_space, nodes);
-
-        // build a nodal field on the discretization nodes collected from the function space
-        return discrete::nodal_field_t<Y>(nodes, name);
+        // build a domain field from the given function
+        return domain_field_t<F>(field);
     }
 
     // TOFIX: create a constructor that takes no constraints

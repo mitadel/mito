@@ -97,6 +97,12 @@ namespace mito::functions {
         return Transpose(f);
     }
 
+    // determinant of f
+    constexpr auto determinant(const function_c auto & f)
+    {
+        return Determinant(f);
+    }
+
     // f inverse
     constexpr auto inverse(const function_c auto & f)
     {

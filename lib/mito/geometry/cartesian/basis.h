@@ -19,7 +19,7 @@ namespace mito::geometry {
         requires(I >= 0 && I < D)
         static constexpr auto e()
         {
-            return fields::uniform_field<cartesian_coordinates_t<D>>(tensor::e<I, D>);
+            return functions::constant<cartesian_coordinates_t<D>>(tensor::e<I, D>);
         }
     };
 }

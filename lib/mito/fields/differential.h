@@ -10,27 +10,22 @@
 // Differential operators on Fields
 namespace mito::fields {
 
-    // the {I...}-th first partial derivative of a field
-    template <int... I>
-    constexpr auto derivative(const field_c auto & f)
-    {
-        // the {I...}-th first partial derivative
-        return field(mito::functions::derivative<I...>(f.function()));
-    }
-
     // function to compute the gradient of a scalar field
     template <scalar_field_c F>
     constexpr auto gradient(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
 
         // helper function to compute the gradient of a scalar
         constexpr auto _grad = []<size_t... I>(const F & field, std::index_sequence<I...>) {
             // the vector of the partial derivatives
-            return ((derivative<I>(field) * uniform_field<coordinate_t>(tensor::e<I, D>)) + ...);
+            return (
+                (functions::derivative<I>(field)
+                 * functions::constant<coordinate_t>(tensor::e<I, D>))
+                + ...);
         };
 
         return _grad(field, std::make_index_sequence<D>{});
@@ -41,7 +36,7 @@ namespace mito::fields {
     constexpr auto gradient(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
         // the number of components of the vector field
@@ -54,8 +49,10 @@ namespace mito::fields {
                 // the tensor of the partial derivatives
                 // (\partial field_I / \partial x_K ) * e_IK, I = 0, ..., N-1, K = 0, ..., D-1
                 return (
-                    (derivative<K>(field * uniform_field<coordinate_t>(tensor::e<I, N>))
-                     * uniform_field<coordinate_t>(tensor::unit<tensor::matrix_t<N, D>, I, K>))
+                    (functions::derivative<K>(
+                         field * functions::constant<coordinate_t>(tensor::e<I, N>))
+                     * functions::constant<coordinate_t>(
+                         tensor::unit<tensor::matrix_t<N, D>, I, K>))
                     + ...);
             };
 
@@ -72,14 +69,17 @@ namespace mito::fields {
     constexpr auto divergence(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
 
         // helper function to compute the divergence of a vector field
         constexpr auto _div = []<size_t... I>(const F & field, std::index_sequence<I...>) {
             // the summation of the I-th partial derivative of the I-th component
-            return ((derivative<I>(field * uniform_field<coordinate_t>(tensor::e<I, D>))) + ...);
+            return (
+                (functions::derivative<I>(
+                    field * functions::constant<coordinate_t>(tensor::e<I, D>)))
+                + ...);
         };
 
         // all done
@@ -91,7 +91,7 @@ namespace mito::fields {
     constexpr auto divergence(const F & field)
     {
         // the type of coordinate
-        using coordinate_t = F::coordinates_type;
+        using coordinate_t = F::input_type;
         // the spatial dimension of the field
         constexpr int D = coordinate_t::dim;
 
@@ -102,10 +102,10 @@ namespace mito::fields {
                 // the vector of the partial derivatives
                 // (\partial field_KI / \partial x_I) * e_K
                 return (
-                    (derivative<I>(
-                         (field * uniform_field<coordinate_t>(tensor::e<I, D>))
-                         * uniform_field<coordinate_t>(tensor::e<K, D>))
-                     * uniform_field<coordinate_t>(tensor::e<K, D>))
+                    (functions::derivative<I>(
+                         (field * functions::constant<coordinate_t>(tensor::e<I, D>))
+                         * functions::constant<coordinate_t>(tensor::e<K, D>))
+                     * functions::constant<coordinate_t>(tensor::e<K, D>))
                     + ...);
             };
 

@@ -17,20 +17,23 @@ using std::numbers::pi;
 
 TEST(Algebra, ScalarValuedFunctions)
 {
+    // vectors in 2D
+    using vector_t = mito::tensor::vector_t<2>;
+
     // a vector
-    constexpr mito::tensor::vector_t<2> x = { 1.0, pi };
+    constexpr vector_t x = { 1.0, pi };
 
     // the function extracting the x_0 component
-    constexpr auto x0 = mito::functions::x<0, 2>;
+    constexpr auto x0 = mito::functions::component<vector_t, 0>;
 
     // the function extracting the x_1 component
-    constexpr auto x1 = mito::functions::x<1, 2>;
+    constexpr auto x1 = mito::functions::component<vector_t, 1>;
 
     // a scalar-valued function
     constexpr auto function1 = mito::functions::cos(x0 * x1);
 
     // a scalar-valued function
-    constexpr auto function2 = 5.0 * mito::functions::one<mito::tensor::vector_t<2>>;
+    constexpr auto function2 = 5.0 * mito::functions::one<vector_t>;
 
     // the sum of the two scalar functions
     constexpr auto function3 = function1 + function2;
@@ -61,9 +64,9 @@ TEST(Algebra, ScalarValuedFunctions)
     constexpr auto function12 = (function1 + function2) / function1;
     static_assert((function1(x) + function2(x)) / function1(x) == function12(x));
 
-    constexpr auto e0 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_0<3>);
-    constexpr auto e1 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_1<3>);
-    constexpr auto e2 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_2<3>);
+    constexpr auto e0 = mito::functions::constant<vector_t>(mito::tensor::e_0<3>);
+    constexpr auto e1 = mito::functions::constant<vector_t>(mito::tensor::e_1<3>);
+    constexpr auto e2 = mito::functions::constant<vector_t>(mito::tensor::e_2<3>);
 
     // a vector function
     constexpr auto function16 = function1 * e0 + function1 * e1 + function1 * e2;
@@ -82,12 +85,16 @@ TEST(Algebra, ScalarValuedFunctions)
 
 TEST(Algebra, TensorValuedFunctions)
 {
+    // vectors in 3D
+    using vector_t = mito::tensor::vector_t<3>;
+
     // the function extracting the x_0 component of a 3D vector
-    constexpr auto x0 = mito::functions::x<0, 3>;
+    constexpr auto x0 = mito::functions::component<vector_t, 0>;
     // the function extracting the x_1 component of a 3D vector
-    constexpr auto x1 = mito::functions::x<1, 3>;
+    constexpr auto x1 = mito::functions::component<vector_t, 1>;
     // the function extracting the x_2 component of a 3D vector
-    constexpr auto x2 = mito::functions::x<2, 3>;
+    constexpr auto x2 = mito::functions::component<vector_t, 2>;
+
     // the cosine function
     constexpr auto cos = mito::functions::cos;
 
@@ -122,19 +129,23 @@ TEST(Algebra, TensorValuedFunctions)
 
 TEST(Algebra, ScalarProduct)
 {
+    // vectors in 2D
+    using vector_t = mito::tensor::vector_t<2>;
+
     // a 2D vector
-    constexpr auto x = mito::tensor::vector_t<2>{ 0.1, 1.0 };
+    constexpr auto x = vector_t{ 0.1, 1.0 };
 
     // the function returning the constant e0 unit vector in 2D
-    constexpr auto e0 = mito::functions::constant<mito::tensor::vector_t<2>>(mito::tensor::e_0<2>);
+    constexpr auto e0 = mito::functions::constant<vector_t>(mito::tensor::e_0<2>);
 
     // check result
     static_assert(1.0 == (e0 * e0)(x));
 
     // the function extracting the x_0 component
-    constexpr auto x0 = mito::functions::x<0, 2>;
+    constexpr auto x0 = mito::functions::component<vector_t, 0>;
+
     // the function extracting the x_1 component
-    constexpr auto x1 = mito::functions::x<1, 2>;
+    constexpr auto x1 = mito::functions::component<vector_t, 1>;
 
     // check result
     static_assert(0.1 == (x0 * x1)(x));

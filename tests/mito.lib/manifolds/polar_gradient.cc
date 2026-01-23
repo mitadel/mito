@@ -33,13 +33,13 @@ TEST(Manifolds, PolarGradient)
     constexpr auto theta = mito::geometry::polar::theta;
 
     // a scalar field
-    constexpr auto f = mito::fields::field(r * mito::functions::sin(theta));
+    constexpr auto f = r * mito::functions::sin(theta);
 
     // df/dr = sin(theta)
-    constexpr auto df0 = mito::fields::derivative<0>(f);
+    constexpr auto df0 = mito::functions::derivative<0>(f);
 
     // df/dtheta = r * cos(theta)
-    constexpr auto df1 = mito::fields::derivative<1>(f);
+    constexpr auto df1 = mito::functions::derivative<1>(f);
 
     // a point in space {r = 2.0, theta = pi / 6.0}
     constexpr auto x = mito::geometry::polar::coordinates({ 2.0, pi_sixth });

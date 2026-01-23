@@ -31,12 +31,6 @@ constexpr auto pi_fourth = std::numbers::pi / 4.0;
 
 TEST(Gradient, NonSquare)
 {
-    // the field returning the constant {e_0} unit vector in 2D
-    constexpr auto e0 = mito::fields::uniform_field<coordinates_t>(e_0);
-
-    // the field returning the constant {e_1} unit vector in 2D
-    constexpr auto e1 = mito::fields::uniform_field<coordinates_t>(e_1);
-
     // the sine function
     constexpr auto sin = mito::functions::sin;
 
@@ -53,7 +47,7 @@ TEST(Gradient, NonSquare)
     constexpr auto x2 = mito::functions::component<coordinates_t, 2>;
 
     // a vector field
-    constexpr auto f = (sin(x0 * x1) + x2) * e0 + (cos(x0 * x1) - x2) * e1;
+    constexpr auto f = (sin(x0 * x1) + x2) * e_0 + (cos(x0 * x1) - x2) * e_1;
 
     // a point in space
     constexpr auto x = mito::geometry::coordinates<coordinates_t>({ pi_sixth, pi_fourth, 1.0 });

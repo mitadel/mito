@@ -63,7 +63,7 @@ main()
     auto boundary_mesh = mito::mesh::boundary(mesh);
 
     // the zero field
-    auto zero = mito::fields::field(mito::functions::zero<coordinates_t>);
+    auto zero = mito::functions::zero<coordinates_t>;
 
     // set homogeneous Dirichlet boundary condition
     auto constraints = mito::constraints::dirichlet_bc(boundary_mesh, zero);
@@ -75,9 +75,8 @@ main()
     auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
 
     // the right hand side
-    auto f = mito::fields::field(
-        2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
-        * mito::functions::sin(std::numbers::pi * y));
+    auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
+           * mito::functions::sin(std::numbers::pi * y);
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // a source term block
@@ -105,17 +104,22 @@ main()
     // free the solver
     solver.destroy();
 
+    // get the solution field
+    const auto & solution = discrete_system.solution();
+
     // the exact solution field
-    auto u_ex = mito::fields::field(
-        mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y));
+    auto u_ex =
+        mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
 
     // compute the L2 error
-    auto error_L2 = discrete_system.compute_l2_error<quadrature_rule_t>(u_ex);
+    auto error_L2 = mito::fem::compute_l2_norm<quadrature_rule_t>(
+        function_space, solution, mito::fem::domain_field(u_ex));
     // report
     channel << "L2 error: " << error_L2 << journal::endl;
 
     // compute the H1 error
-    auto error_H1 = discrete_system.compute_h1_error<quadrature_rule_t>(u_ex);
+    auto error_H1 = mito::fem::compute_h1_norm<quadrature_rule_t>(
+        function_space, solution, mito::fem::domain_field(u_ex));
     // report
     channel << "H1 error: " << error_H1 << journal::endl;
 
@@ -133,13 +137,11 @@ main()
     // write output file
     writer.write();
 
-    // get the solution field
-    const auto & solution = discrete_system.solution();
     // write mesh to vtk file
     auto writer_solution =
         mito::io::vtk::field_writer("poisson_square_solution", function_space, coord_system);
     // sign {solution} up with the writer
-    writer_solution.record(solution);
+    writer_solution.record(solution.nodal_values(), "numerical solution");
     // write output file
     writer_solution.write();
 #endif

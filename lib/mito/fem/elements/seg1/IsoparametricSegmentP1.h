@@ -8,8 +8,8 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegmentP1} represents a first order simplex (segment) living in 1D cartesian space,
-// equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricSegmentP1} represents a first order simplex (segment) living in 1D cartesian
+// space, equipped with linear shape functions defined in the parametric space.
 
 
 namespace mito::fem {
@@ -72,8 +72,7 @@ namespace mito::fem {
             constexpr auto phi_1 = shape_functions.shape<1>();
 
             // return the isoparametric mapping from parametric to physical coordinates
-            return mito::fields::linear_combination(
-                std::array{ _x0, _x1 }, phi_0, phi_1);
+            return mito::functions::linear_combination(std::array{ _x0, _x1 }, phi_0, phi_1);
         }
 
         // get the shape function associated with local node {a}
@@ -111,8 +110,8 @@ namespace mito::fem {
         constexpr auto gradient() const
         {
             // assemble the gradient as a function of parametric coordinates
-            auto gradient_function =
-                fields::field([&](const parametric_coordinates_type & xi) -> tensor::vector_t<1> {
+            auto gradient_function = functions::function(
+                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<1> {
                     // the jacobian of the mapping from the reference element to the physical
                     // element evaluated at {xi}
                     auto J = jacobian()(xi);

@@ -27,7 +27,4 @@
 // factories implementation
 #include "factories.h"
 
-// utilities implementation
-#include "utilities.h"
-
 // end of file

@@ -36,8 +36,8 @@ namespace mito::fem {
         // solutions
         // the solution field type
         using solution_field_type = tensor::scalar_t;
-        // the nodal field type
-        using nodal_field_type = discrete::nodal_field_t<solution_field_type>;
+        // the fem field type
+        using fem_field_type = fem_field_t<solution_field_type>;
         // the number of nodes per element
         static constexpr int n_element_nodes = element_type::n_nodes;
 
@@ -49,7 +49,8 @@ namespace mito::fem {
             _function_space(function_space),
             _weakform(weakform),
             _equation_map(),
-            _solution_field(nodal_field<solution_field_type>(function_space, label + ".solution")),
+            _solution_field(
+                function_space.template fem_field<solution_field_type>(label + ".solution")),
             _linear_system(label)
         {
             // make a channel
@@ -198,13 +199,11 @@ namespace mito::fem {
 
             // get the node map from the function space
             auto node_map = _function_space.node_map();
-            // fill information in nodal field
-            for (auto & [node, value] : _solution_field) {
-                // get the equation number of {node}
-                int eq = _equation_map.at(node);
+            // fill information in finite element field
+            for (auto & [node, eq] : _equation_map) {
                 if (eq != -1) {
-                    // read the solution at {eq}
-                    value = u[eq];
+                    // note the solution on the solution field
+                    _solution_field(node) = u[eq];
                 }
             }
 
@@ -212,111 +211,14 @@ namespace mito::fem {
             return;
         }
 
-        // accessor to the solution nodal field
-        constexpr auto solution() const noexcept -> const nodal_field_type &
+        // accessor to the solution finite element field
+        constexpr auto solution() const noexcept -> const fem_field_type &
         {
             return _solution_field;
         }
 
         // accessor to the number of equations
         constexpr auto n_equations() const noexcept -> int { return _n_equations; }
-
-        // compute the L2 norm of the solution
-        template <class quadratureRuleT>
-        constexpr auto compute_l2_error(const fields::field_c auto & u_exact) const
-            -> tensor::scalar_t
-        {
-            // initialize the norm
-            auto norm = tensor::scalar_t{ 0.0 };
-
-            // helper lambda to assemble the solution on a given element
-            constexpr auto _assemble_element_solution = []<int... a>(
-                                                            const auto & element,
-                                                            const auto & _solution_field,
-                                                            tensor::integer_sequence<a...>) {
-                // assemble the solution field from the shape functions
-                return (
-                    (element.template shape<a>() * _solution_field(element.connectivity()[a]))
-                    + ...);
-            };
-
-            // loop on all the cells of the mesh
-            for (const auto & element : _function_space.elements()) {
-                // assemble the solution field on this element
-                auto u_numerical = _assemble_element_solution(
-                    element, _solution_field, tensor::make_integer_sequence<n_element_nodes>());
-                // assemble the elementary error field as a function of the barycentric coordinates
-                auto u_error =
-                    u_numerical - u_exact.function()(element.parametrization().function());
-
-                // compute the elementary contribution to the L2 norm
-                norm += blocks::l2_norm_block<element_type, quadratureRuleT>(u_error.function())
-                            .compute(element);
-            }
-
-            return std::sqrt(norm);
-        }
-
-        // compute the H1 norm of the solution
-        template <class quadratureRuleT>
-        constexpr auto compute_h1_error(const fields::field_c auto & u_exact) const
-            -> tensor::scalar_t
-        {
-            // initialize the norm
-            auto norm = tensor::scalar_t{ 0.0 };
-
-            // QUESTION: is there a proper place to put this method? Perhaps this belongs to the
-            // isoparametric element class?
-            // helper lambda to assemble the solution on a given element
-            constexpr auto _assemble_element_solution = []<int... a>(
-                                                            const auto & element,
-                                                            const auto & _solution_field,
-                                                            tensor::integer_sequence<a...>) {
-                // assemble the solution field from the shape functions
-                return (
-                    (element.template shape<a>() * _solution_field(element.connectivity()[a]))
-                    + ...);
-            };
-
-            // TOFIX: we should deduce this from {_assemble_element_solution}
-            // helper lambda to assemble the solution on a given element
-            constexpr auto _assemble_element_solution_gradient =
-                []<int... a>(
-                    const auto & element, const auto & _solution_field,
-                    tensor::integer_sequence<a...>) {
-                    // assemble the solution field from the shape functions
-                    return (
-                        (element.template gradient<a>()
-                         * _solution_field(element.connectivity()[a]))
-                        + ...);
-                };
-
-            // loop on all the cells of the mesh
-            for (const auto & element : _function_space.elements()) {
-                // assemble the solution field on this element
-                auto u_numerical = _assemble_element_solution(
-                    element, _solution_field, tensor::make_integer_sequence<n_element_nodes>());
-                // assemble the elementary error field as a function of the barycentric coordinates
-                auto u_error =
-                    u_numerical - u_exact.function()(element.parametrization().function());
-                //
-                auto u_numerical_gradient = _assemble_element_solution_gradient(
-                    element, _solution_field, tensor::make_integer_sequence<n_element_nodes>());
-                // assemble the elementary error gradient as a function of the barycentric
-                // coordinates
-                auto u_error_gradient =
-                    u_numerical_gradient
-                    - fields::gradient(u_exact).function()(element.parametrization().function());
-                // compute the elementary contributions to the H1 norm
-                norm += blocks::l2_norm_block<element_type, quadratureRuleT>(u_error.function())
-                            .compute(element)
-                      + blocks::l2_norm_block<element_type, quadratureRuleT>(
-                            u_error_gradient.function())
-                            .compute(element);
-            }
-
-            return std::sqrt(norm);
-        }
 
       private:
         // a const reference to the function space
@@ -328,8 +230,8 @@ namespace mito::fem {
         // the equation map
         equation_map_type _equation_map;
 
-        // the solution nodal field
-        nodal_field_type _solution_field;
+        // the solution finite element field
+        fem_field_type _solution_field;
 
         // the linear system of equations
         linear_system_type _linear_system;

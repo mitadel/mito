@@ -15,6 +15,9 @@
 #include <memory>
 #include <type_traits>
 #include <cstdint>
+#include <string>
+#include <typeinfo>
+#include <cxxabi.h>
 
 // support
 #include "../journal.h"
