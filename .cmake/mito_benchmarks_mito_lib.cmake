@@ -21,8 +21,10 @@ mito_benchmark_driver(benchmarks/mito.lib/integration/integration.cc)
 mito_benchmark_driver(benchmarks/mito.lib/fields/laplacian.cc)
 
 if(WITH_PETSC)
-    # poisson boundary value problem
+    # poisson boundary value problem on a unit square
     mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
+    # poisson boundary value problem on a hollow disk
+    mito_benchmark_driver(benchmarks/mito.lib/pdes/laplacian_hollow_disk.cc)
 endif()
 
 # end of file
