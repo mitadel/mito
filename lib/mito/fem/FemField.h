@@ -65,12 +65,12 @@ namespace mito::fem {
         // localize the field on {element}
         auto localize(const element_type & element) const -> auto
         {
-            // helper lambda to assemble the solution on {element}
+            // helper lambda to assemble the field localization on {element}
             constexpr auto _assemble = []<int... a>(
                                            const element_type & element,
                                            const nodal_field_type & field,
                                            tensor::integer_sequence<a...>) {
-                // assemble the solution field from the shape functions
+                // assemble the field localization from the shape functions
                 return ((element.template shape<a>() * field(element.connectivity()[a])) + ...);
             };
             return _assemble(
