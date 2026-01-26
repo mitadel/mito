@@ -41,7 +41,15 @@ namespace mito::fem {
     // concept of a localizable field
     template <class F, class E>
     concept localizable_field_c = requires(const F & f, const E & e) {
-        { f.localize(e) };
+        { localize(f, e) };
+    };
+
+    // concept of a fem field
+    template <class F>
+    concept fem_field_c = requires(F c) {
+        // require that F only binds to {FemField} specializations
+        []<class fieldValueT, class functionSpaceT>(const FemField<fieldValueT, functionSpaceT> &) {
+        }(c);
     };
 }
 

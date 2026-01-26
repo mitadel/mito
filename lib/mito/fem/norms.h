@@ -26,9 +26,9 @@ namespace mito::fem {
         // loop on all the elements of the function space
         for (const auto & element : function_space.elements()) {
             // localize {u1} on this element
-            auto u1_local = u1.localize(element);
+            auto u1_local = localize(u1, element);
             // localize {u2} on this element
-            auto u2_local = u2.localize(element);
+            auto u2_local = localize(u2, element);
             // compute the elementary contribution to the norm
             norm += blocks::l2_norm_block<element_type, quadratureRuleT>(u1_local - u2_local)
                         .compute(element);
@@ -55,9 +55,9 @@ namespace mito::fem {
         // loop on all the elements of the function space
         for (const auto & element : function_space.elements()) {
             // localize {u1} on this element
-            auto u1_local = u1.localize(element);
+            auto u1_local = localize(u1, element);
             // localize {u2} on this element
-            auto u2_local = u2.localize(element);
+            auto u2_local = localize(u2, element);
             // assemble the gradient of the solution field on this element
             auto u1_local_gradient = fields::gradient(u1_local);
             // localize the gradient of the exact solution on this element
