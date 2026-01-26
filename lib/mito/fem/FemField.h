@@ -17,7 +17,7 @@ namespace mito::fem {
 
     // TODO: implement higher-dimensional fields (e.g. vector fields, tensor fields, ...)
 
-    template <class fieldValueT>
+    template <class fieldValueT, class functionSpaceT>
     class FemField {
 
       private:
@@ -27,6 +27,8 @@ namespace mito::fem {
         using nodal_field_type = discrete::nodal_field_t<field_value_type>;
         // the node type
         using node_type = typename nodal_field_type::input_type;
+        // the element type
+        using element_type = typename functionSpaceT::element_type;
 
       public:
         // constructor from temporary nodal field
@@ -60,16 +62,9 @@ namespace mito::fem {
         // accessor to the underlying nodal field (read-only)
         auto nodal_values() const -> const nodal_field_type & { return _nodal_field; }
 
-        // QUESTION: how do we guarantee that {element} is compatible with the function space that
-        // built this field?
-        // TODO: add concept that constrains {elementT} to be a finite element type
-        // localize the function on {element}
-        template <class elementT>
-        auto localize(const elementT & element) const -> auto
+        // localize the field on {element}
+        auto localize(const element_type & element) const -> auto
         {
-            // the element type
-            using element_type = elementT;
-
             // helper lambda to assemble the solution on {element}
             constexpr auto _assemble = []<int... a>(
                                            const element_type & element,

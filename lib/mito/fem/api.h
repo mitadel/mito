@@ -18,8 +18,8 @@ namespace mito::fem {
     constexpr auto domain_field(const F &);
 
     // finite element field alias
-    template <class fieldValueT>
-    using fem_field_t = FemField<fieldValueT>;
+    template <class fieldValueT, class functionSpaceT>
+    using fem_field_t = FemField<fieldValueT, functionSpaceT>;
 
     // the possible discretization types: continuous Galerking (CG) vs. discontinuous Galerkin (DG)
     enum class discretization_t { CG, DG };

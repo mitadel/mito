@@ -35,7 +35,7 @@ namespace mito::fem {
     class DomainField;
 
     // class finite element field
-    template <class fieldValueT>
+    template <class fieldValueT, class functionSpaceT>
     class FemField;
 
     // concept of a localizable field
