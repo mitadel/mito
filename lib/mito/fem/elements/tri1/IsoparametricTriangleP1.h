@@ -92,20 +92,34 @@ namespace mito::fem {
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
+        // returns a D×2 matrix (columns are the two tangent/director vectors)
         constexpr auto jacobian() const
         {
             // assemble the jacobian as a function of barycentric coordinates
             auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<2> {
-                    // get the shape functions derivatives
+                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<D, 2> {
+                    // get the shape functions derivatives (these are 2D vectors in parametric
+                    // space)
                     constexpr auto dphi_0 = shape_functions.dshape<0>();
                     constexpr auto dphi_1 = shape_functions.dshape<1>();
                     constexpr auto dphi_2 = shape_functions.dshape<2>();
 
                     // compute the gradient of the isoparametric mapping
-                    return (
-                        tensor::dyadic(_x0, dphi_0(xi)) + tensor::dyadic(_x1, dphi_1(xi))
-                        + tensor::dyadic(_x2, dphi_2(xi)));
+                    // this is the outer product of position vectors with gradient vectors
+                    if constexpr (D == 2) {
+                        return (
+                            tensor::dyadic(this->_x0, dphi_0(xi))
+                            + tensor::dyadic(this->_x1, dphi_1(xi))
+                            + tensor::dyadic(this->_x2, dphi_2(xi)));
+                    } else if constexpr (D == 3) {
+                        // For embedded triangle in 3D, we need D×2 matrix
+                        auto dxi0 = this->_x0 * dphi_0(xi)[0] + this->_x1 * dphi_1(xi)[0]
+                                  + this->_x2 * dphi_2(xi)[0];
+                        auto dxi1 = this->_x0 * dphi_0(xi)[1] + this->_x1 * dphi_1(xi)[1]
+                                  + this->_x2 * dphi_2(xi)[1];
+                        return tensor::matrix_t<3, 2>{ dxi0[0], dxi1[0], dxi0[1],
+                                                       dxi1[1], dxi0[2], dxi1[2] };
+                    }
                 });
 
             // and return it

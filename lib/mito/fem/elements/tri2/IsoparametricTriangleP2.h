@@ -92,14 +92,15 @@ namespace mito::fem {
         }
 
         // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
+        // returns a D×2 matrix (columns are the two tangent/director vectors)
         constexpr auto jacobian() const
         {
             // assemble the jacobian as a function of barycentric coordinates
             auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<2> {
-                    auto x3 = 0.5 * (_x0 + _x1);
-                    auto x4 = 0.5 * (_x1 + _x2);
-                    auto x5 = 0.5 * (_x2 + _x0);
+                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<D, 2> {
+                    auto x3 = 0.5 * (this->_x0 + this->_x1);
+                    auto x4 = 0.5 * (this->_x1 + this->_x2);
+                    auto x5 = 0.5 * (this->_x2 + this->_x0);
 
                     // get the shape functions derivatives
                     constexpr auto dphi_0 = shape_functions.dshape<0>();
@@ -110,10 +111,23 @@ namespace mito::fem {
                     constexpr auto dphi_5 = shape_functions.dshape<5>();
 
                     // compute the gradient of the isoparametric mapping
-                    return (
-                        tensor::dyadic(_x0, dphi_0(xi)) + tensor::dyadic(_x1, dphi_1(xi))
-                        + tensor::dyadic(_x2, dphi_2(xi)) + tensor::dyadic(x3, dphi_3(xi))
-                        + tensor::dyadic(x4, dphi_4(xi)) + tensor::dyadic(x5, dphi_5(xi)));
+                    if constexpr (D == 2) {
+                        return (
+                            tensor::dyadic(this->_x0, dphi_0(xi))
+                            + tensor::dyadic(this->_x1, dphi_1(xi))
+                            + tensor::dyadic(this->_x2, dphi_2(xi)) + tensor::dyadic(x3, dphi_3(xi))
+                            + tensor::dyadic(x4, dphi_4(xi)) + tensor::dyadic(x5, dphi_5(xi)));
+                    } else if constexpr (D == 3) {
+                        // For embedded triangle in 3D
+                        auto dxi0 = this->_x0 * dphi_0(xi)[0] + this->_x1 * dphi_1(xi)[0]
+                                  + this->_x2 * dphi_2(xi)[0] + x3 * dphi_3(xi)[0]
+                                  + x4 * dphi_4(xi)[0] + x5 * dphi_5(xi)[0];
+                        auto dxi1 = this->_x0 * dphi_0(xi)[1] + this->_x1 * dphi_1(xi)[1]
+                                  + this->_x2 * dphi_2(xi)[1] + x3 * dphi_3(xi)[1]
+                                  + x4 * dphi_4(xi)[1] + x5 * dphi_5(xi)[1];
+                        return tensor::matrix_t<3, 2>{ dxi0[0], dxi1[0], dxi0[1],
+                                                       dxi1[1], dxi0[2], dxi1[2] };
+                    }
                 });
 
             // and return it

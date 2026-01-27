@@ -21,15 +21,23 @@ namespace mito::fem {
     template <geometry::coordinates_c coordsT, class VolumeFormT>
     class IsoparametricSegment : public utilities::Invalidatable {
       public:
+        // dimension of the parametric space
+        static constexpr int N = 1;
+        // ambient dimension from coordinate type
+        static constexpr int D = coordsT::dim;
+
+        // the Jacobian is a D×N matrix (for a segment: D×1, a
+        // column vector)
+        using jacobian_type = tensor::matrix_t<D, N>;
+
         // the discretization node type
         using discretization_node_type = discrete::discretization_node_t;
         // the underlying cell type
-        using cell_type = geometry::segment_t<dim>;
+        using cell_type = geometry::segment_t<D>;
 
       protected:
-        // cartesian coordinates in dim dimensions
-        using coordinates_type = geometry::coordinates_t<dim, geometry::CARTESIAN>;
-        // the coordinate system type
+        // coordinate types
+        using coordinates_type = coordsT;
         using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
         // the vector type
         using vector_type = tensor::vector_t<D>;

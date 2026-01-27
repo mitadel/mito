@@ -104,19 +104,27 @@ namespace mito::fem {
         }
 
         // get the jacobian of the isoparametric mapping from parametric to actual coordinates
+        // returns a D×1 matrix (the tangent/director vector as a column)
         constexpr auto jacobian() const
         {
             // assemble the jacobian as a function of parametric coordinates
             auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<1> {
+                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<D, 1> {
                     // get the shape functions derivatives
                     constexpr auto dphi_0 = shape_functions.dshape<0>();
                     constexpr auto dphi_1 = shape_functions.dshape<1>();
 
-                    // compute the jacobian of the isoparametric mapping: dx/dxi
-                    auto dx_dxi = _x0 * dphi_0(xi) + _x1 * dphi_1(xi);
-                    // wrap the result in a 1x1 matrix
-                    return tensor::matrix_t<1>{ dx_dxi };
+                    // compute the tangent vector: dx/dxi
+                    auto dx_dxi = this->_x0 * dphi_0(xi) + this->_x1 * dphi_1(xi);
+
+                    // wrap the tangent vector as a D×1 matrix
+                    if constexpr (D == 1) {
+                        return tensor::matrix_t<1, 1>{ dx_dxi[0] };
+                    } else if constexpr (D == 2) {
+                        return tensor::matrix_t<2, 1>{ dx_dxi[0], dx_dxi[1] };
+                    } else if constexpr (D == 3) {
+                        return tensor::matrix_t<3, 1>{ dx_dxi[0], dx_dxi[1], dx_dxi[2] };
+                    }
                 });
 
             // and return it
