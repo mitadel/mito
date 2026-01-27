@@ -136,15 +136,7 @@ namespace mito::fem {
                 // get the tangent vector from the Jacobian
                 auto J = jacobian()(xi);
                 // extract the tangent vector from the D×1 matrix
-                auto tangent = [&J]() {
-                    if constexpr (D == 1) {
-                        return tensor::vector_t<1>{ J[{ 0, 0 }] };
-                    } else if constexpr (D == 2) {
-                        return tensor::vector_t<2>{ J[{ 0, 0 }], J[{ 1, 0 }] };
-                    } else if constexpr (D == 3) {
-                        return tensor::vector_t<3>{ J[{ 0, 0 }], J[{ 1, 0 }], J[{ 2, 0 }] };
-                    }
-                }();
+                auto tangent = pyre::tensor::col<0>(J);
 
                 // contract the volume form with the tangent vector
                 // for N=1, no factorial needed (1/1! = 1)

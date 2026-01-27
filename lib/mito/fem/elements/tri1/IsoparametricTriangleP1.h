@@ -106,20 +106,10 @@ namespace mito::fem {
 
                     // compute the gradient of the isoparametric mapping
                     // this is the outer product of position vectors with gradient vectors
-                    if constexpr (D == 2) {
-                        return (
-                            tensor::dyadic(this->_x0, dphi_0(xi))
-                            + tensor::dyadic(this->_x1, dphi_1(xi))
-                            + tensor::dyadic(this->_x2, dphi_2(xi)));
-                    } else if constexpr (D == 3) {
-                        // For embedded triangle in 3D, we need D×2 matrix
-                        auto dxi0 = this->_x0 * dphi_0(xi)[0] + this->_x1 * dphi_1(xi)[0]
-                                  + this->_x2 * dphi_2(xi)[0];
-                        auto dxi1 = this->_x0 * dphi_0(xi)[1] + this->_x1 * dphi_1(xi)[1]
-                                  + this->_x2 * dphi_2(xi)[1];
-                        return tensor::matrix_t<3, 2>{ dxi0[0], dxi1[0], dxi0[1],
-                                                       dxi1[1], dxi0[2], dxi1[2] };
-                    }
+                    return (
+                        tensor::dyadic(this->_x0, dphi_0(xi))
+                        + tensor::dyadic(this->_x1, dphi_1(xi))
+                        + tensor::dyadic(this->_x2, dphi_2(xi)));
                 });
 
             // and return it
@@ -138,21 +128,8 @@ namespace mito::fem {
                 auto J = jacobian()(xi);
 
                 // extract tangent vectors from the D×2 matrix
-                auto tangent_0 = [&J]() {
-                    if constexpr (D == 2) {
-                        return tensor::vector_t<2>{ J[{ 0, 0 }], J[{ 1, 0 }] };
-                    } else if constexpr (D == 3) {
-                        return tensor::vector_t<3>{ J[{ 0, 0 }], J[{ 1, 0 }], J[{ 2, 0 }] };
-                    }
-                }();
-
-                auto tangent_1 = [&J]() {
-                    if constexpr (D == 2) {
-                        return tensor::vector_t<2>{ J[{ 0, 1 }], J[{ 1, 1 }] };
-                    } else if constexpr (D == 3) {
-                        return tensor::vector_t<3>{ J[{ 0, 1 }], J[{ 1, 1 }], J[{ 2, 1 }] };
-                    }
-                }();
+                auto tangent_0 = pyre::tensor::col<0>(J);
+                auto tangent_1 = pyre::tensor::col<1>(J);
 
                 // contract the volume form with both tangent vectors
                 // for N=2, include factorial (1/2!)
