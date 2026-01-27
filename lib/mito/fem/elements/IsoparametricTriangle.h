@@ -29,6 +29,9 @@ namespace mito::fem {
         // the Jacobian is a D×N matrix (for a triangle: D×2)
         using jacobian_type = tensor::matrix_t<D, N>;
 
+        // the metric space provides g, g_inv for this coordinate system
+        using metric_space_type = geometry::metric_space<coordsT>;
+
         // the discretization node type
         using discretization_node_type = discrete::discretization_node_t;
         // the underlying cell type
@@ -77,6 +80,15 @@ namespace mito::fem {
 
         // get the mapping from parametric coordinates to physical coordinates
         constexpr auto parametrization() const { return _cell.parametrization(_coord_system); }
+
+      protected:
+        // access to metric tensor at a point (for gradient computation)
+        static constexpr auto g(const coordinates_type & x) { return metric_space_type::g(x); }
+
+        static constexpr auto g_inv(const coordinates_type & x)
+        {
+            return metric_space_type::g_inv(x);
+        }
 
       protected:
         // a const reference to the geometric simplex

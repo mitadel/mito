@@ -30,6 +30,9 @@ namespace mito::fem {
         // column vector)
         using jacobian_type = tensor::matrix_t<D, N>;
 
+        // the metric space provides g, g_inv for this coordinate system
+        using metric_space_type = geometry::metric_space<coordsT>;
+
         // the discretization node type
         using discretization_node_type = discrete::discretization_node_t;
         // the underlying cell type
@@ -74,6 +77,15 @@ namespace mito::fem {
       public:
         // get the geometric simplex
         constexpr auto cell() const noexcept -> const cell_type & { return _cell; }
+
+      protected:
+        // access to metric tensor at a point (for gradient computation)
+        static constexpr auto g(const coordinates_type & x) { return metric_space_type::g(x); }
+
+        static constexpr auto g_inv(const coordinates_type & x)
+        {
+            return metric_space_type::g_inv(x);
+        }
 
       protected:
         // QUESTION: do we need to maintain a reference to the geometric simplex?

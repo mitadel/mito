@@ -21,6 +21,7 @@ namespace mito::fem {
 
       private:
         using base_type = IsoparametricTriangle<coordsT, VolumeFormT>;
+        using metric_space_type = typename base_type::metric_space_type;
 
       public:
         static constexpr int D = base_type::D;    // ambient dimension
@@ -138,20 +139,30 @@ namespace mito::fem {
         }
 
         // get the gradient of the a-th shape function as a function of barycentric coordinates
+        // returns a contravariant vector (raised index)
         template <int a>
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
             // assemble the gradient as a function of barycentric coordinates
-            auto gradient_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
-                    // the jacobian of the mapping from the reference element to the physical
-                    // element evaluated at {xi}
+            auto gradient_function =
+                functions::function([&](const parametric_coordinates_type & xi) -> vector_type {
+                    // physical point
+                    auto x = this->parametrization()(xi);
+
+                    // jacobian matrix (D×2 for surfaces)
                     auto J = jacobian()(xi);
-                    // the derivative of the coordinates with respect to the barycentric coordinates
-                    auto J_inv = tensor::inverse(J);
-                    // return the spatial gradients of the shape functions evaluated at {xi}
-                    return shape_functions.dshape<a>()(xi) * J_inv;
+
+                    // metric tensors at the physical point
+                    auto g = base_type::g(x);
+                    auto g_inv = base_type::g_inv(x);
+
+                    // parametric derivative (2D vector for N=2)
+                    constexpr auto dphi_dxi = shape_functions.dshape<a>();
+                    auto dphi_dxi_val = dphi_dxi(xi);
+
+                    // compute gradient (handles both square and embedded cases)
+                    return fem::compute_gradient<D, N>(J, g, g_inv, dphi_dxi_val);
                 });
             // and return it
             return gradient_function;
