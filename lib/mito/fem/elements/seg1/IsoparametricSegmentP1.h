@@ -118,13 +118,7 @@ namespace mito::fem {
                     auto dx_dxi = this->_x0 * dphi_0(xi) + this->_x1 * dphi_1(xi);
 
                     // wrap the tangent vector as a D×1 matrix
-                    if constexpr (D == 1) {
-                        return tensor::matrix_t<1, 1>{ dx_dxi[0] };
-                    } else if constexpr (D == 2) {
-                        return tensor::matrix_t<2, 1>{ dx_dxi[0], dx_dxi[1] };
-                    } else if constexpr (D == 3) {
-                        return tensor::matrix_t<3, 1>{ dx_dxi[0], dx_dxi[1], dx_dxi[2] };
-                    }
+                    return tensor::as_column_matrix<D>(dx_dxi);
                 });
 
             // and return it
