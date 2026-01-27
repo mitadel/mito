@@ -8,13 +8,19 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangleP1} represents a second order simplex living in 2D cartesian space,
-// equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricTriangleP1} represents a second order simplex equipped with linear shape
+// functions defined in the parametric space. This unified implementation works for:
+//   - Triangles in any coordinate system (Cartesian, polar, spherical, etc.)
+//   - Triangles in any embedding (2D in 2D, 2D in 3D, etc.)
 
 
 namespace mito::fem {
 
-    class IsoparametricTriangleP1 : public IsoparametricTriangle {
+    template <geometry::coordinates_c coordsT, class VolumeFormT>
+    class IsoparametricTriangleP1 : public IsoparametricTriangle<coordsT, VolumeFormT> {
+
+      private:
+        using base_type = IsoparametricTriangle<coordsT, VolumeFormT>;
 
       public:
         // the degree of the finite element
@@ -31,14 +37,21 @@ namespace mito::fem {
         // the number of discretization discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
         // a collection of discretization discretization nodes
-        using connectivity_type = std::array<discretization_node_type, n_nodes>;
+        using connectivity_type = std::array<typename base_type::discretization_node_type, n_nodes>;
+
+        // import types from base
+        using typename base_type::cell_type;
+        using typename base_type::coordinate_system_type;
+        using typename base_type::coordinates_type;
+        using typename base_type::vector_type;
+        using typename base_type::volume_form_type;
 
       public:
         // the default constructor
         inline IsoparametricTriangleP1(
             const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
-            const connectivity_type & connectivity) :
-            IsoparametricTriangle(geometric_simplex, coord_system),
+            const connectivity_type & connectivity, const volume_form_type & volume_form) :
+            base_type(geometric_simplex, coord_system, volume_form),
             _connectivity(connectivity)
         {}
 

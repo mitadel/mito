@@ -8,13 +8,19 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegmentP1} represents a first order simplex (segment) living in 1D cartesian
-// space, equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricSegmentP1} represents a first order simplex (segment) equipped with linear
+// shape functions defined in the parametric space. This unified implementation works for:
+//   - Segments in any coordinate system (Cartesian, polar, spherical, etc.)
+//   - Segments in any embedding (1D in 1D, 1D in 2D, 1D in 3D, etc.)
 
 
 namespace mito::fem {
 
-    class IsoparametricSegmentP1 : public IsoparametricSegment<1> {
+    template <geometry::coordinates_c coordsT, class VolumeFormT>
+    class IsoparametricSegmentP1 : public IsoparametricSegment<coordsT, VolumeFormT> {
+
+      private:
+        using base_type = IsoparametricSegment<coordsT, VolumeFormT>;
 
       public:
         // the degree of the finite element
@@ -31,14 +37,21 @@ namespace mito::fem {
         // the number of discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
         // a collection of discretization nodes
-        using connectivity_type = std::array<discretization_node_type, n_nodes>;
+        using connectivity_type = std::array<typename base_type::discretization_node_type, n_nodes>;
+
+        // import types from base
+        using typename base_type::cell_type;
+        using typename base_type::coordinate_system_type;
+        using typename base_type::coordinates_type;
+        using typename base_type::vector_type;
+        using typename base_type::volume_form_type;
 
       public:
         // the default constructor
         inline IsoparametricSegmentP1(
             const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
-            const connectivity_type & connectivity) :
-            IsoparametricSegment<1>(geometric_simplex, coord_system),
+            const connectivity_type & connectivity, const volume_form_type & volume_form) :
+            base_type(geometric_simplex, coord_system, volume_form),
             _connectivity(connectivity)
         {}
 
