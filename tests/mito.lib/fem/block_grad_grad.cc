@@ -38,9 +38,16 @@ TEST(Fem, IsoparametricTriangle)
     // make a geometric simplex
     auto geometric_simplex = mito::geometry::triangle<2>({ node_0, node_1, node_2 });
 
+    // create a mesh with a single triangle
+    auto mesh = mito::mesh::mesh<cell_t>();
+    mesh.insert({ node_0, node_1, node_2 });
+
+    // create the manifold
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
+
     {
         // first order isoparametric triangle
-        using element_p1_t = mito::fem::isoparametric_simplex_t<1, cell_t>;
+        using element_p1_t = mito::fem::isoparametric_simplex_t<1, decltype(manifold)>;
 
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
@@ -50,7 +57,8 @@ TEST(Fem, IsoparametricTriangle)
         // a finite element
         auto element_p1 = element_p1_t(
             geometric_simplex, coord_system,
-            { discretization_node_0, discretization_node_1, discretization_node_2 });
+            { discretization_node_0, discretization_node_1, discretization_node_2 },
+            manifold.volume_form());
 
         // a grad-grad matrix block
         auto grad_grad_block =
@@ -72,7 +80,7 @@ TEST(Fem, IsoparametricTriangle)
 
     {
         // second order isoparametric triangle
-        using element_p2_t = mito::fem::isoparametric_simplex_t<2, cell_t>;
+        using element_p2_t = mito::fem::isoparametric_simplex_t<2, decltype(manifold)>;
 
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
@@ -86,7 +94,8 @@ TEST(Fem, IsoparametricTriangle)
         auto element_p2 = element_p2_t(
             geometric_simplex, coord_system,
             { discretization_node_0, discretization_node_1, discretization_node_2,
-              discretization_node_3, discretization_node_4, discretization_node_5 });
+              discretization_node_3, discretization_node_4, discretization_node_5 },
+            manifold.volume_form());
 
         // a grad-grad matrix block
         auto grad_grad_block =

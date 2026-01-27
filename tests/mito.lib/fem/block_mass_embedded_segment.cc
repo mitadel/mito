@@ -38,9 +38,17 @@ TEST(Fem, BlockMassEmbeddedSegment)
     // make a geometric simplex
     auto geometric_simplex = mito::geometry::segment<2>({ node_0, node_1 });
 
+    // create a mesh with the single segment
+    auto mesh = mito::mesh::mesh<cell_t>();
+    mesh.insert({ node_0, node_1 });
+
+    // create a submanifold (1D embedded in 2D requires normal field)
+    auto normal_field = mito::functions::constant<coordinates_t>(mito::tensor::vector_t<2>{ -inv_sqrt2, inv_sqrt2 });
+    auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
+
     {
         // first order isoparametric embedded segment
-        using element_p1_t = mito::fem::isoparametric_simplex_t<1, cell_t>;
+        using element_p1_t = mito::fem::isoparametric_simplex_t<1, decltype(manifold)>;
 
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
@@ -48,7 +56,8 @@ TEST(Fem, BlockMassEmbeddedSegment)
 
         // a finite element
         auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 });
+            geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 },
+            manifold.volume_form());
 
         // a mass matrix block
         auto mass_block = mito::fem::blocks::mass_block<element_p1_t, quadrature_rule_t>();

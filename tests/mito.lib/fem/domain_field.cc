@@ -11,6 +11,8 @@
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
 // the type of coordinate system
 using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
+// the type of cell
+using cell_t = mito::geometry::triangle_t<2>;
 // the x scalar field in 2D
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the y scalar field in 2D
@@ -36,8 +38,16 @@ TEST(Fem, DomainField)
     // create a geometric simplex
     auto geometric_simplex = mito::geometry::triangle<2>({ node_0, node_1, node_2 });
 
+    // create a mesh with a single triangle
+    auto mesh = mito::mesh::mesh<cell_t>();
+    mesh.insert({ node_0, node_1, node_2 });
+
+    // create the manifold
+    auto manifold = mito::manifolds::manifold(mesh, coord_system);
+
     // an isoparametric triangle
-    auto element = mito::fem::IsoparametricTriangle(geometric_simplex, coord_system);
+    auto element =
+        mito::fem::IsoparametricTriangle(geometric_simplex, coord_system, manifold.volume_form());
 
     // TOFIX: This syntax should also be allowed: field.localize(geometric_simplex).
     // However, in case, the coordinate system should be passed somehow to the function.

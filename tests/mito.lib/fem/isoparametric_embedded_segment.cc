@@ -87,7 +87,7 @@ test_gradient_consistency(const auto & element)
     return;
 }
 
-// test that the arc length computed via the Jacobian measure matches the expected value
+// test that the arc length computed via the volume element matches the expected value
 auto
 test_arc_length(const auto & element, double expected_length)
 {
@@ -97,12 +97,12 @@ test_arc_length(const auto & element, double expected_length)
     // the number of quadrature points per element
     constexpr int n_quads = quadrature_rule_t::npoints;
 
-    // compute the arc length by integrating 1 over the segment using the Jacobian measure
+    // compute the arc length by integrating 1 over the segment using the volume element
     double arc_length = 0.0;
     mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         constexpr auto xi = quadrature_rule.point(q);
         constexpr auto w = element_t::canonical_element_type::area * quadrature_rule.weight(q);
-        arc_length += w * mito::fem::blocks::jacobian_measure(element.jacobian()(xi));
+        arc_length += w * element.volume_element()(xi);
     });
 
     // check the arc length
@@ -124,8 +124,20 @@ TEST(Fem, IsoparametricEmbeddedSegment)
     // make a geometric simplex
     auto geometric_simplex = mito::geometry::segment<2>({ node_0, node_1 });
 
+    // create a mesh with a single segment
+    auto mesh = mito::mesh::mesh<cell_t>();
+    mesh.insert({ node_0, node_1 });
+
+    // create normal field for the submanifold (perpendicular to segment direction)
+    // segment direction is (3,4)/5 = (0.6, 0.8), so normal is (-0.8, 0.6)
+    auto normal_field = mito::functions::constant<coordinates_t>(
+        mito::tensor::vector_t<2>{ -0.8, 0.6 });
+
+    // create the submanifold
+    auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
+
     // first order isoparametric embedded segment
-    using element_p1_t = mito::fem::isoparametric_simplex_t<1, cell_t>;
+    using element_p1_t = mito::fem::isoparametric_simplex_t<1, decltype(manifold)>;
 
     // build the discretization nodes
     auto discretization_node_0 = discretization_node_t();
@@ -133,7 +145,8 @@ TEST(Fem, IsoparametricEmbeddedSegment)
 
     // a finite element
     auto element_p1 = element_p1_t(
-        geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 });
+        geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 },
+        manifold.volume_form());
 
     // check that first order shape functions are a partition of unity
     test_partition_of_unity(element_p1);
