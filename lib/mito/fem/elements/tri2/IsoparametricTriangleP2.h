@@ -23,6 +23,11 @@ namespace mito::fem {
         using base_type = IsoparametricTriangle<coordsT, VolumeFormT>;
 
       public:
+        static constexpr int D = base_type::D;    // ambient dimension
+        static constexpr int N =
+            base_type::N;                // dimension of the parametric space (=2 for triangle)
+        static constexpr int dim = D;    // expected by FunctionSpace
+
         // the degree of the finite element
         static constexpr int degree = 2;
         // the type of shape functions
@@ -113,6 +118,39 @@ namespace mito::fem {
 
             // and return it
             return jacobian_function;
+        }
+
+        // volume element: contract the volume form with the two tangent vectors
+        constexpr auto volume_element() const
+        {
+            return functions::function([&](const parametric_coordinates_type & xi) {
+                // physical point
+                auto x = this->parametrization()(xi);
+
+                // get the two tangent vectors from the Jacobian
+                auto J = jacobian()(xi);
+
+                // extract tangent vectors from the D×2 matrix
+                auto tangent_0 = [&J]() {
+                    if constexpr (D == 2) {
+                        return tensor::vector_t<2>{ J[{ 0, 0 }], J[{ 1, 0 }] };
+                    } else if constexpr (D == 3) {
+                        return tensor::vector_t<3>{ J[{ 0, 0 }], J[{ 1, 0 }], J[{ 2, 0 }] };
+                    }
+                }();
+
+                auto tangent_1 = [&J]() {
+                    if constexpr (D == 2) {
+                        return tensor::vector_t<2>{ J[{ 0, 1 }], J[{ 1, 1 }] };
+                    } else if constexpr (D == 3) {
+                        return tensor::vector_t<3>{ J[{ 0, 1 }], J[{ 1, 1 }], J[{ 2, 1 }] };
+                    }
+                }();
+
+                // contract the volume form with both tangent vectors
+                // for N=2, include factorial (1/2!)
+                return (1.0 / 2.0) * this->_volume_form(x)(tangent_0, tangent_1);
+            });
         }
 
         // get the gradient of the a-th shape function as a function of barycentric coordinates

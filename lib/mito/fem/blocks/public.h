@@ -16,9 +16,6 @@
 // published types factories; this is the file you are looking for...
 #include "api.h"
 
-// utilities (must be included before blocks that use jacobian_measure)
-#include "utilities.h"
-
 // classes implementation
 #include "AssemblyBlock.h"
 #include "GradGradBlock.h"

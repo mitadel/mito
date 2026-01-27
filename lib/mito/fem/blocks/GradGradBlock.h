@@ -44,8 +44,8 @@ namespace mito::fem::blocks {
                 constexpr auto w =
                     element_type::canonical_element_type::area * quadrature_rule.weight(q);
 
-                // precompute the common factor
-                auto factor = w * jacobian_measure(element.jacobian()(xi));
+                // precompute the common factor using the element's volume element
+                auto factor = w * element.volume_element()(xi);
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {

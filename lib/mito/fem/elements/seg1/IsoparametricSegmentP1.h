@@ -23,6 +23,11 @@ namespace mito::fem {
         using base_type = IsoparametricSegment<coordsT, VolumeFormT>;
 
       public:
+        static constexpr int D = base_type::D;    // ambient dimension
+        static constexpr int N =
+            base_type::N;                // dimension of the parametric space (=1 for segment)
+        static constexpr int dim = D;    // expected by FunctionSpace
+
         // the degree of the finite element
         static constexpr int degree = 1;
         // the type of shape functions
@@ -85,7 +90,8 @@ namespace mito::fem {
             constexpr auto phi_1 = shape_functions.shape<1>();
 
             // return the isoparametric mapping from parametric to physical coordinates
-            return mito::functions::linear_combination(std::array{ _x0, _x1 }, phi_0, phi_1);
+            return mito::functions::linear_combination(
+                std::array{ this->_x0, this->_x1 }, phi_0, phi_1);
         }
 
         // get the shape function associated with local node {a}
@@ -115,6 +121,33 @@ namespace mito::fem {
 
             // and return it
             return jacobian_function;
+        }
+
+        // volume element: contract the volume form with the tangent vector
+        // this follows the same pattern as Manifold::_volume, but for one tangent vector
+        constexpr auto volume_element() const
+        {
+            return functions::function([&](const parametric_coordinates_type & xi) {
+                // physical point
+                auto x = parametrization()(xi);
+
+                // get the tangent vector from the Jacobian
+                auto J = jacobian()(xi);
+                // extract the tangent vector from the D×1 matrix
+                auto tangent = [&J]() {
+                    if constexpr (D == 1) {
+                        return tensor::vector_t<1>{ J[{ 0, 0 }] };
+                    } else if constexpr (D == 2) {
+                        return tensor::vector_t<2>{ J[{ 0, 0 }], J[{ 1, 0 }] };
+                    } else if constexpr (D == 3) {
+                        return tensor::vector_t<3>{ J[{ 0, 0 }], J[{ 1, 0 }], J[{ 2, 0 }] };
+                    }
+                }();
+
+                // contract the volume form with the tangent vector
+                // for N=1, no factorial needed (1/1! = 1)
+                return this->_volume_form(x)(tangent);
+            });
         }
 
         // get the gradient of the a-th shape function as a function of parametric coordinates
