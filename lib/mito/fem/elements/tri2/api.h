@@ -8,13 +8,7 @@
 
 
 namespace mito::fem {
-
-    // specialization for quadratic shape functions on triangles in 2D
-    template <>
-    struct isoparametric_simplex<2, geometry::triangle_t<2>> {
-        using type = IsoparametricTriangleP2;
-    };
-
+    // no element specializations needed here - see elements_library.h for the unified API
 }
 
 
