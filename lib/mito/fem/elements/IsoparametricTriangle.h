@@ -8,7 +8,7 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangle} represents a second order simplex equipped with barycentric
+// Class {IsoparametricTriangle} represents a 2-simplex equipped with barycentric
 // coordinates. Template parameters:
 //   - coordsT: The coordinate type (determines ambient dimension D and coordinate system)
 //   - VolumeFormT: The type of the volume form (N-form for integration)

@@ -8,7 +8,7 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegment} represents a first order simplex (segment) equipped with parametric
+// Class {IsoparametricSegment} represents a 1-simplex equipped with parametric
 // coordinates. Template parameters:
 //   - coordsT: The coordinate type (determines ambient dimension D and coordinate system)
 //   - VolumeFormT: The type of the volume form (N-form for integration)
@@ -26,8 +26,7 @@ namespace mito::fem {
         // ambient dimension from coordinate type
         static constexpr int D = coordsT::dim;
 
-        // the Jacobian is a D×N matrix (for a segment: D×1, a
-        // column vector)
+        // the Jacobian is a D×N matrix (for a segment: D×1, a column vector)
         using jacobian_type = tensor::matrix_t<D, N>;
 
         // the metric space provides g, g_inv for this coordinate system

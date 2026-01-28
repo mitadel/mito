@@ -8,7 +8,7 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangleP2} represents a second order simplex equipped with quadratic shape
+// Class {IsoparametricTriangleP2} represents a 2-simplex equipped with quadratic shape
 // functions defined in the parametric space. This unified implementation works for:
 //   - Triangles in any coordinate system (Cartesian, polar, spherical, etc.)
 //   - Triangles in any embedding (2D in 2D, 2D in 3D, etc.)

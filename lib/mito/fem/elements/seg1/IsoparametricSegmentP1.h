@@ -8,7 +8,7 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegmentP1} represents a first order simplex (segment) equipped with linear
+// Class {IsoparametricSegmentP1} represents a 1-simplex equipped with linear
 // shape functions defined in the parametric space. This unified implementation works for:
 //   - Segments in any coordinate system (Cartesian, polar, spherical, etc.)
 //   - Segments in any embedding (1D in 1D, 1D in 2D, 1D in 3D, etc.)
