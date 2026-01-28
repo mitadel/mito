@@ -124,6 +124,8 @@ namespace mito::fem {
         }
 
         // volume element: contract the volume form with the two tangent vectors
+        // we don't include the 1/N! factorial here because it's already included
+        // in the canonical_element_type::area used by the assembly blocks
         constexpr auto volume_element() const
         {
             return functions::function([&](const parametric_coordinates_type & xi) {
@@ -138,8 +140,7 @@ namespace mito::fem {
                 auto tangent_1 = pyre::tensor::col<1>(J);
 
                 // contract the volume form with both tangent vectors
-                // for N=2, include factorial (1/2!)
-                return (1.0 / 2.0) * this->_volume_form(x)(tangent_0, tangent_1);
+                return this->_volume_form(x)(tangent_0, tangent_1);
             });
         }
 
