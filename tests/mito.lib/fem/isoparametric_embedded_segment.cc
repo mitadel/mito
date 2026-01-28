@@ -129,9 +129,10 @@ TEST(Fem, IsoparametricEmbeddedSegment)
     mesh.insert({ node_0, node_1 });
 
     // create normal field for the submanifold (perpendicular to segment direction)
-    // segment direction is (3,4)/5 = (0.6, 0.8), so normal is (-0.8, 0.6)
-    auto normal_field = mito::functions::constant<coordinates_t>(
-        mito::tensor::vector_t<2>{ -0.8, 0.6 });
+    // segment direction is (3,4)/5 = (0.6, 0.8), so normal is (0.8, -0.6)
+    // (rotated 90° clockwise to get positive orientation with w(normal, tangent) > 0)
+    auto normal_field =
+        mito::functions::constant<coordinates_t>(mito::tensor::vector_t<2>{ 0.8, -0.6 });
 
     // create the submanifold
     auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);

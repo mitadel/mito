@@ -43,8 +43,10 @@ TEST(Fem, BlockGradGradEmbeddedSegment)
     mesh.insert({ node_0, node_1 });
 
     // create normal field for the submanifold (perpendicular to diagonal)
+    // diagonal direction is (inv_sqrt2, inv_sqrt2), so normal is (inv_sqrt2, -inv_sqrt2)
+    // (rotated 90° clockwise to get positive orientation with w(normal, tangent) > 0)
     auto normal_field = mito::functions::constant<coordinates_t>(
-        mito::tensor::vector_t<2>{ -inv_sqrt2, inv_sqrt2 });
+        mito::tensor::vector_t<2>{ inv_sqrt2, -inv_sqrt2 });
 
     // create the submanifold
     auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
