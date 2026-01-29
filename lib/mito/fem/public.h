@@ -25,7 +25,6 @@
 // classes implementation
 #include "FunctionSpace.h"
 #include "FemField.h"
-#include "DomainField.h"
 #include "DiscreteSystem.h"
 #include "Weakform.h"
 
@@ -34,6 +33,9 @@
 
 // factories implementation
 #include "factories.h"
+
+// localize implementation
+#include "localize.h"
 
 // norms implementation
 #include "norms.h"

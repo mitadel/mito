@@ -17,16 +17,16 @@ constexpr auto x = mito::functions::component<coordinates_t, 0>;
 constexpr auto y = mito::functions::component<coordinates_t, 1>;
 
 
-TEST(Fem, DomainField)
+TEST(Fem, LocalizeField)
 {
     // create a channel
-    journal::info_t channel("tests.domain_field");
+    journal::info_t channel("tests.localize_field");
 
     // the coordinate system
     auto coord_system = coord_system_t();
 
-    // create a domain field
-    auto field = mito::fem::domain_field(x * y);
+    // create a field
+    auto field = x * y;
 
     // create some nodes
     auto node_0 = mito::geometry::node(coord_system, { 1.0, 0.0 });
@@ -39,10 +39,8 @@ TEST(Fem, DomainField)
     // an isoparametric triangle
     auto element = mito::fem::IsoparametricTriangle(geometric_simplex, coord_system);
 
-    // TOFIX: This syntax should also be allowed: field.localize(geometric_simplex).
-    // However, in case, the coordinate system should be passed somehow to the function.
     // localize the field on the simplex
-    auto localized_field = field.localize(element);
+    auto localized_field = mito::fem::localize(field, element);
 
     // evaluate the localized field at the center of the triangle
     auto value = localized_field({ 1.0 / 3.0, 1.0 / 3.0 });
