@@ -37,7 +37,7 @@ namespace mito::fem {
         // the solution field type
         using solution_field_type = tensor::scalar_t;
         // the fem field type
-        using fem_field_type = fem_field_t<solution_field_type>;
+        using fem_field_type = fem_field_t<solution_field_type, function_space_type>;
         // the number of nodes per element
         static constexpr int n_element_nodes = element_type::n_nodes;
 

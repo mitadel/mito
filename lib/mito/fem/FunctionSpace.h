@@ -16,6 +16,8 @@ namespace mito::fem {
     class FunctionSpace {
 
       public:
+        // the function space type
+        using function_space_type = FunctionSpace<elementT, constraintsT>;
         // the constraints type
         using constraints_type = constraintsT;
         // my template parameter, the finite element type
@@ -37,7 +39,7 @@ namespace mito::fem {
             mesh_node_type, discretization_node_type, utilities::hash_function<mesh_node_type>>;
         // a finite element field type
         template <class fieldValueT>
-        using fem_field_type = fem_field_t<fieldValueT>;
+        using fem_field_type = fem_field_t<fieldValueT, function_space_type>;
 
       public:
         // the constructor
@@ -104,7 +106,8 @@ namespace mito::fem {
             get_discretization_nodes(*this, nodes);
 
             // build a nodal field on the discretization nodes collected from the function space
-            return fem_field_t<fieldValueT>(discrete::nodal_field_t<fieldValueT>(nodes, name));
+            return fem_field_t<fieldValueT, function_space_type>(
+                discrete::nodal_field_t<fieldValueT>(nodes, name));
         }
 
       private:
