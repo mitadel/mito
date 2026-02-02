@@ -9,6 +9,10 @@
 
 namespace mito::geometry::cartesian {
 
+    // the type of cartesian coordinates in {D} dimensions
+    template <int D>
+    using coordinates_t = geometry::coordinates_t<D, geometry::CARTESIAN>;
+
     // the metric tensor field
     template <int D>
     constexpr auto metric = geometry::metric<cartesian_coordinates_t<D>>::field();
