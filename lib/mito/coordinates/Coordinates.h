@@ -114,7 +114,9 @@ namespace mito::geometry {
         };
 
         // print the coordinates
+        os << "( ";
         _print(os, coord, std::make_index_sequence<D>{});
+        os << " )";
 
         // all done
         return os;
