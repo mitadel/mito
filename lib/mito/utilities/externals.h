@@ -18,6 +18,7 @@
 #include <string>
 #include <typeinfo>
 #include <cxxabi.h>
+#include <unordered_map>
 
 // support
 #include "../journal.h"
