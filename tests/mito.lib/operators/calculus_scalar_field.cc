@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/fields.h>
+#include <mito/operators.h>
 
 
 // the type of coordinates
@@ -34,7 +34,7 @@ TEST(Laplacian, ScalarFields)
     constexpr auto f = sin(x0 * x1);
 
     // the gradient of {f}
-    constexpr auto gradient = mito::fields::gradient(f);
+    constexpr auto gradient = mito::operators::gradient(f);
 
     // a point in space
     constexpr auto x = mito::geometry::coordinates<coordinates_t>({ pi_sixth, 1.0 });
@@ -43,7 +43,7 @@ TEST(Laplacian, ScalarFields)
     static_assert(gradient(x) == (cos(x0 * x1) * x1 * e_0 + cos(x0 * x1) * x0 * e_1)(x));
 
     // the laplacian (divergence of gradient)
-    constexpr auto laplacian = mito::fields::divergence(gradient);
+    constexpr auto laplacian = mito::operators::divergence(gradient);
 
     // check result
     static_assert(laplacian(x) == (-sin(x0 * x1) * x1 * x1 - sin(x0 * x1) * x0 * x0)(x));

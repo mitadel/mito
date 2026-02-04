@@ -4,7 +4,7 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/fields.h>
+#include <mito/operators.h>
 
 
 // the type of coordinates
@@ -53,7 +53,7 @@ TEST(Gradient, NonSquare)
     constexpr auto x = mito::geometry::coordinates<coordinates_t>({ pi_sixth, pi_fourth, 1.0 });
 
     // the gradient of {f}
-    constexpr auto gradient = mito::fields::gradient(f);
+    constexpr auto gradient = mito::operators::gradient(f);
 
     // create a channel
     journal::info_t channel("tests.gradient_non_square");

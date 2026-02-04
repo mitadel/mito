@@ -30,7 +30,7 @@ namespace mito::fem {
 
         // the gradients of the shape functions
         static constexpr auto dphi =
-            std::make_tuple(fields::gradient(phi_0), fields::gradient(phi_1));
+            std::make_tuple(operators::gradient(phi_0), operators::gradient(phi_1));
 
       public:
         // get the a-th shape function as a function of parametric coordinates

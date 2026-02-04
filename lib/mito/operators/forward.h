@@ -6,8 +6,11 @@
 // code guard
 #pragma once
 
-// support
-#include "../../operators.h"
+
+namespace mito::operators {
+
+
+}
 
 
 // end of file

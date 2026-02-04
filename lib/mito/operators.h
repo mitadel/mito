@@ -6,8 +6,9 @@
 // code guard
 #pragma once
 
-// support
-#include "../../operators.h"
+
+// publish the interface
+#include "operators/public.h"
 
 
 // end of file

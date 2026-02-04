@@ -59,9 +59,9 @@ namespace mito::fem {
             // localize {u2} on this element
             auto u2_local = localize(u2, element);
             // assemble the gradient of the solution field on this element
-            auto u1_local_gradient = fields::gradient(u1_local);
+            auto u1_local_gradient = operators::gradient(u1_local);
             // localize the gradient of the exact solution on this element
-            auto u2_local_gradient = fields::gradient(u2_local);
+            auto u2_local_gradient = operators::gradient(u2_local);
             // compute the elementary contributions to the H1 norm
             norm += blocks::l2_norm_block<element_type, quadratureRuleT>(u1_local - u2_local)
                         .compute(element)

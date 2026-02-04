@@ -8,10 +8,10 @@
 
 
 // Differential operators on Fields
-namespace mito::fields {
+namespace mito::operators {
 
     // function to compute the gradient of a scalar field
-    template <scalar_field_c F>
+    template <fields::scalar_field_c F>
     constexpr auto gradient(const F & field)
     {
         // the type of coordinate
@@ -32,7 +32,7 @@ namespace mito::fields {
     }
 
     // function to compute the gradient of a vector field
-    template <vector_field_c F>
+    template <fields::vector_field_c F>
     constexpr auto gradient(const F & field)
     {
         // the type of coordinate
@@ -65,7 +65,7 @@ namespace mito::fields {
     }
 
     // function to compute the divergence of a vector field
-    template <vector_field_c F>
+    template <fields::vector_field_c F>
     constexpr auto divergence(const F & field)
     {
         // the type of coordinate
@@ -87,7 +87,7 @@ namespace mito::fields {
     }
 
     // function to compute the divergence of a tensor field
-    template <tensor_field_c F>
+    template <fields::tensor_field_c F>
     constexpr auto divergence(const F & field)
     {
         // the type of coordinate

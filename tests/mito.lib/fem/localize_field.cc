@@ -49,7 +49,7 @@ TEST(Fem, LocalizeField)
     EXPECT_DOUBLE_EQ(value, (x * y)({ 1.0 / 3.0, 1.0 / 3.0 }));
 
     // compute the gradient of the localized field with respect to the barycentric coordinates
-    auto gradient = mito::fields::gradient(localized_field);
+    auto gradient = mito::operators::gradient(localized_field);
 
     // evaluate the localized field gradient at the center of the triangle
     auto value_gradient = gradient({ 1.0 / 3.0, 1.0 / 3.0 });

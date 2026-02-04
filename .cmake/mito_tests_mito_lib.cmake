@@ -96,10 +96,6 @@ mito_test_driver(tests/mito.lib/tensor/tensor_product_forms.cc)
 # fields
 mito_test_driver(tests/mito.lib/fields/fields.cc)
 mito_test_driver(tests/mito.lib/fields/fields_traits.cc)
-mito_test_driver(tests/mito.lib/fields/calculus_identities.cc)
-mito_test_driver(tests/mito.lib/fields/calculus_scalar_field.cc)
-mito_test_driver(tests/mito.lib/fields/calculus_vector_field.cc)
-mito_test_driver(tests/mito.lib/fields/gradient_non_square.cc)
 mito_test_driver(tests/mito.lib/fields/polar_metric_field.cc)
 mito_test_driver(tests/mito.lib/fields/spherical_metric_field.cc)
 
@@ -150,6 +146,12 @@ if(WITH_METIS)
         mito_test_driver_mpi(tests/mito.lib/mesh/metis_partitioner_mpi_load_mesh.cc 2)
     endif()
 endif()
+
+# operators
+mito_test_driver(tests/mito.lib/operators/calculus_identities.cc)
+mito_test_driver(tests/mito.lib/operators/calculus_scalar_field.cc)
+mito_test_driver(tests/mito.lib/operators/calculus_vector_field.cc)
+mito_test_driver(tests/mito.lib/operators/gradient_non_square.cc)
 
 # topology
 mito_test_driver(tests/mito.lib/topology/cell_edges.cc)

@@ -32,7 +32,7 @@ TEST(DivergenceTheorem, Mesh2D)
     constexpr auto f = x0 * x1 * e0 + x0 * x0 * e1;
 
     // build a scalar field with divergence of field
-    constexpr auto div = mito::fields::divergence(f);
+    constexpr auto div = mito::operators::divergence(f);
 
     /**
      * Mesh with four cells:

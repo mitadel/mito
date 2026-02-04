@@ -6,8 +6,8 @@
 // get the benchmark library
 #include <benchmark/benchmark.h>
 
-// get the mito materials
-#include <mito/fields.h>
+// get the mito differential operators
+#include <mito/operators.h>
 
 
 // the type of coordinates
@@ -50,10 +50,10 @@ laplacian_mito(const coordinates_t & x)
     constexpr auto f = mito::functions::pow<4>(x0 * x1);
 
     // the gradient of {f}
-    constexpr auto gradient = mito::fields::gradient(f);
+    constexpr auto gradient = mito::operators::gradient(f);
 
     // the laplacian (divergence of gradient)
-    constexpr auto laplacian = mito::fields::divergence(gradient);
+    constexpr auto laplacian = mito::operators::divergence(gradient);
 
     // evaluate the laplacian at {x}
     auto result = laplacian(x);
