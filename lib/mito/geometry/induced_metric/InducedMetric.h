@@ -92,6 +92,62 @@ namespace mito::geometry {
             auto g_inv_induced = g_inv(xi);
             return J * (g_inv_induced * dphi_dxi);
         }
+
+      public:
+        // Basis elements for the parametric space (static, from parametric metric space)
+        template <int I>
+        requires(I >= 0 && I < N)
+        static constexpr auto e = parametric_metric_space_type::template e<I>;
+
+      private:
+        // Helper to create one-form from vector field and inverse induced metric
+        template <int I>
+        constexpr auto _dx() const
+        {
+            return functions::function([this](const parametric_coordinates_type & xi) {
+                // Get basis vector in parametric space
+                auto e_i = parametric_metric_space_type::template e<I>(xi);
+                // Get inverse induced metric
+                auto g_inv_induced = this->g_inv(xi);
+                // Return the one-form: dx^i = g_inv * e_i
+                return tensor::one_form(e_i, g_inv_induced);
+            });
+        }
+
+        // Helper to wedge all N basis one-forms
+        template <int... J>
+        constexpr auto _wedge(tensor::integer_sequence<J...>) const
+        requires(sizeof...(J) == N)
+        {
+            // Wedge all dx^J one-forms
+            return fields::wedge(_dx<J>()...);
+        }
+
+      public:
+        // The induced metric volume form (N-form on parametric domain)
+        // w = sqrt(det(g_induced)) * (dx^0 ∧ dx^1 ∧ ... ∧ dx^(N-1))
+        constexpr auto w() const
+        {
+            // Create volume element field
+            auto volume_element_field =
+                functions::function([this](const parametric_coordinates_type & xi) {
+                    return this->volume_element(xi);
+                });
+
+            // Wedge the basis one-forms
+            auto wedge_forms = _wedge(tensor::make_integer_sequence<N>{});
+
+            // Return scaled wedge product
+            return volume_element_field * wedge_forms;
+        }
+
+        // Basis one-forms (for convenience, if needed)
+        template <int I>
+        requires(I >= 0 && I < N)
+        constexpr auto dx() const
+        {
+            return _dx<I>();
+        }
     };
 
 }    // namespace mito::geometry
