@@ -31,7 +31,7 @@
 #include "spherical.h"
 
 // induced metric (submanifolds)
-#include "induced/public.h"
+#include "induced_metric/public.h"
 
 // classes implementation
 #include "CoordinateSystem.h"
