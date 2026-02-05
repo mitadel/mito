@@ -30,6 +30,9 @@
 #include "polar.h"
 #include "spherical.h"
 
+// induced metric (submanifolds)
+#include "induced/public.h"
+
 // classes implementation
 #include "CoordinateSystem.h"
 #include "Point.h"
