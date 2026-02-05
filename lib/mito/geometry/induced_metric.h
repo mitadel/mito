@@ -8,7 +8,7 @@
 
 
 // publish the induced metric interface
-#include "induced/public.h"
+#include "induced_metric/public.h"
 
 
 // end of file
