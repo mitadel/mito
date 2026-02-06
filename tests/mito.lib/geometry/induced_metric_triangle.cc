@@ -99,6 +99,25 @@ TEST(Geometry, InducedMetricTriangle2D)
     auto dphi3 = mito::tensor::vector_t<2>{ 2.0, 3.0 };
     auto grad3 = metric.gradient(dphi3, xi);
     test_gradient_directions(dphi3, grad3, J);
+
+    // volume form test: w should give signed area of parallelogram spanned by two vectors
+    auto w = metric.w();
+    auto v1 = mito::tensor::vector_t<2>{ 1.0, 0.0 };
+    auto v2 = mito::tensor::vector_t<2>{ 0.0, 1.0 };
+    EXPECT_DOUBLE_EQ(1.0, w(xi)(v1, v2));    // volume_element = 1
+
+    // test antisymmetry: w(v2, v1) = -w(v1, v2)
+    EXPECT_DOUBLE_EQ(-1.0, w(xi)(v2, v1));
+
+    // test with scaled vectors
+    auto v1_scaled = mito::tensor::vector_t<2>{ 2.0, 0.0 };
+    auto v2_scaled = mito::tensor::vector_t<2>{ 0.0, 3.0 };
+    EXPECT_DOUBLE_EQ(6.0, w(xi)(v1_scaled, v2_scaled));    // should scale as 2*3 = 6
+
+    // test with linearly dependent vectors (area should be zero)
+    auto v3 = mito::tensor::vector_t<2>{ 1.0, 0.0 };
+    auto v4 = mito::tensor::vector_t<2>{ 2.0, 0.0 };
+    EXPECT_DOUBLE_EQ(0.0, w(xi)(v3, v4));
 }
 
 
@@ -155,6 +174,19 @@ TEST(Geometry, InducedMetricTriangle3D)
     EXPECT_DOUBLE_EQ(0.0, sum[0]);
     EXPECT_DOUBLE_EQ(0.0, sum[1]);
     EXPECT_DOUBLE_EQ(0.0, sum[2]);
+
+    // volume form test: w(director0, director1) gives the area element
+    auto w = metric.w();
+    auto director0 = mito::tensor::vector_t<2>{ 1.0, 0.0 };
+    auto director1 = mito::tensor::vector_t<2>{ 0.0, 1.0 };
+    EXPECT_DOUBLE_EQ(std::sqrt(2.0), w(xi)(director0, director1));
+
+    // test antisymmetry
+    EXPECT_DOUBLE_EQ(-std::sqrt(2.0), w(xi)(director1, director0));
+
+    // test with linearly dependent vectors
+    auto v_parallel = mito::tensor::vector_t<2>{ 2.0, 0.0 };
+    EXPECT_DOUBLE_EQ(0.0, w(xi)(director0, v_parallel));
 }
 
 
