@@ -99,28 +99,20 @@ namespace mito::geometry {
         requires(I >= 0 && I < N)
         static constexpr auto e = parametric_metric_space_type::template e<I>;
 
-      private:
-        // Helper to create one-form from vector field and inverse induced metric
+      public:
+        // Basis one-forms in parametric space (standard Euclidean dual basis)
         template <int I>
-        constexpr auto _dx() const
-        {
-            return functions::function([this](const parametric_coordinates_type & xi) {
-                // Get basis vector in parametric space
-                auto e_i = parametric_metric_space_type::template e<I>(xi);
-                // Get inverse induced metric
-                auto g_inv_induced = this->g_inv(xi);
-                // Return the one-form: dx^i = g_inv * e_i
-                return tensor::one_form(e_i, g_inv_induced);
-            });
-        }
+        requires(I >= 0 && I < N)
+        static constexpr auto dx = parametric_metric_space_type::template dx<I>;
 
+      private:
         // Helper to wedge all N basis one-forms
         template <int... J>
-        constexpr auto _wedge(tensor::integer_sequence<J...>) const
+        static constexpr auto _wedge(tensor::integer_sequence<J...>)
         requires(sizeof...(J) == N)
         {
             // Wedge all dx^J one-forms
-            return fields::wedge(_dx<J>()...);
+            return fields::wedge(dx<J>...);
         }
 
       public:
@@ -139,14 +131,6 @@ namespace mito::geometry {
 
             // Return scaled wedge product
             return volume_element_field * wedge_forms;
-        }
-
-        // Basis one-forms (for convenience, if needed)
-        template <int I>
-        requires(I >= 0 && I < N)
-        constexpr auto dx() const
-        {
-            return _dx<I>();
         }
     };
 
