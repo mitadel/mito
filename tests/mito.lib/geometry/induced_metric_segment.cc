@@ -120,6 +120,19 @@ TEST(Geometry, InducedMetricSegment2D)
     // trigonometric test: phi(xi) = sin(xi), dphi/dxi = cos(xi)
     auto grad_trig = metric.gradient(std::cos(xi[0]), xi);
     EXPECT_DOUBLE_EQ(std::cos(xi[0]), directional_derivative(grad_trig, J, 0));
+
+    // volume form test: w(tangent) = volume_element * tangent
+    auto w = metric.w();
+    auto tangent = mito::tensor::vector_t<1>{ 1.0 };
+    EXPECT_DOUBLE_EQ(5.0, w(xi)(tangent));    // volume_element = 5
+
+    // test scaling property
+    auto tangent2 = mito::tensor::vector_t<1>{ 2.0 };
+    EXPECT_DOUBLE_EQ(10.0, w(xi)(tangent2));
+
+    // test with negative tangent
+    auto tangent_neg = mito::tensor::vector_t<1>{ -1.0 };
+    EXPECT_DOUBLE_EQ(-5.0, w(xi)(tangent_neg));
 }
 
 
@@ -161,6 +174,15 @@ TEST(Geometry, InducedMetricSegment3D)
     // trigonometric test: phi(xi) = sin(xi), dphi/dxi = cos(xi)
     auto grad_trig = metric.gradient(std::cos(xi[0]), xi);
     EXPECT_DOUBLE_EQ(std::cos(xi[0]), directional_derivative(grad_trig, J, 0));
+
+    // volume form test: w(tangent) = volume_element * tangent
+    auto w = metric.w();
+    auto tangent = mito::tensor::vector_t<1>{ 1.0 };
+    EXPECT_DOUBLE_EQ(std::sqrt(3.0), w(xi)(tangent));    // volume_element = sqrt(3)
+
+    // test scaling property
+    auto tangent2 = mito::tensor::vector_t<1>{ 0.5 };
+    EXPECT_DOUBLE_EQ(0.5 * std::sqrt(3.0), w(xi)(tangent2));
 }
 
 
