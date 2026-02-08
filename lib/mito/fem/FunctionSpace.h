@@ -9,9 +9,11 @@
 
 namespace mito::fem {
 
-    // Class {FunctionSpace} represents a collection of finite elements of order {p} defined on a
-    // manifold and subjected to a set of constraints.
     // TOFIX: add concept for element type
+    /// @brief A collection of finite elements of order `p` defined on a manifold and subjected to a
+    /// set of constraints.
+    /// @tparam elementT The type of the finite element.
+    /// @tparam constraintsT The type of the constraints.
     template <class elementT, constraints::constraint_c constraintsT>
     class FunctionSpace {
 
