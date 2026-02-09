@@ -3,7 +3,7 @@
 # Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 #
 
-name: Documentation
+name: documentation
 
 on:
   push:
