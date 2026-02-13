@@ -13,8 +13,6 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 using cell_t = mito::geometry::triangle_t<2>;
 // second degree finite elements
 constexpr int degree = 2;
-// assemble the finite element type
-using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
 
 // the reference simplex
 using reference_simplex_t = mito::geometry::reference_triangle_t;
@@ -58,6 +56,9 @@ main()
 
     // create the body manifold
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
+
+    // assemble the finite element type
+    using finite_element_t = mito::fem::isoparametric_simplex_t<degree, decltype(manifold)>;
 
     // get the boundary mesh
     auto boundary_mesh = mito::mesh::boundary(mesh);

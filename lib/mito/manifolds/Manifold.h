@@ -16,8 +16,6 @@ namespace mito::manifolds {
       private:
         // typedef for node
         using node_type = cellT::node_type;
-        // the volume form type
-        using volume_form_type = volumeFormT;
         // the physical dimension of the manifold (that is that of the cell)
         static constexpr int D = cellT::dim;
         // the dimension of the manifold (that is that of the cell)
@@ -34,6 +32,8 @@ namespace mito::manifolds {
         using coordinates_type = coordsT;
         // typedef for a coordinates system
         using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
+        // the volume form type (public for element type extraction)
+        using volume_form_type = volumeFormT;
 
       public:
         constexpr Manifold(
@@ -71,6 +71,12 @@ namespace mito::manifolds {
         constexpr auto coordinate_system() const noexcept -> const coordinate_system_type &
         {
             return _coordinate_system;
+        }
+
+        // accessor for the volume form
+        constexpr auto volume_form() const noexcept -> const volume_form_type &
+        {
+            return _volume_form;
         }
 
         constexpr auto elements() const noexcept -> const cells_type & { return _mesh.cells(); }

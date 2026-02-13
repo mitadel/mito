@@ -8,15 +8,27 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegmentP1} represents a first order simplex (segment) living in 1D cartesian
-// space, equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricSegmentP1} represents a 1-simplex equipped with linear
+// shape functions defined in the parametric space. This unified implementation works for:
+//   - Segments in any coordinate system (Cartesian, polar, spherical, etc.)
+//   - Segments in any embedding (1D in 1D, 1D in 2D, 1D in 3D, etc.)
 
 
 namespace mito::fem {
 
-    class IsoparametricSegmentP1 : public IsoparametricSegment {
+    template <geometry::coordinates_c coordsT, class VolumeFormT>
+    class IsoparametricSegmentP1 : public IsoparametricSegment<coordsT, VolumeFormT> {
+
+      private:
+        using base_type = IsoparametricSegment<coordsT, VolumeFormT>;
+        using metric_space_type = typename base_type::metric_space_type;
 
       public:
+        static constexpr int D = base_type::D;    // ambient dimension
+        static constexpr int N =
+            base_type::N;                // dimension of the parametric space (=1 for segment)
+        static constexpr int dim = D;    // expected by FunctionSpace
+
         // the degree of the finite element
         static constexpr int degree = 1;
         // the type of shape functions
@@ -31,14 +43,21 @@ namespace mito::fem {
         // the number of discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
         // a collection of discretization nodes
-        using connectivity_type = std::array<discretization_node_type, n_nodes>;
+        using connectivity_type = std::array<typename base_type::discretization_node_type, n_nodes>;
+
+        // import types from base
+        using typename base_type::cell_type;
+        using typename base_type::coordinate_system_type;
+        using typename base_type::coordinates_type;
+        using typename base_type::vector_type;
+        using typename base_type::volume_form_type;
 
       public:
         // the default constructor
         inline IsoparametricSegmentP1(
             const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
-            const connectivity_type & connectivity) :
-            IsoparametricSegment(geometric_simplex, coord_system),
+            const connectivity_type & connectivity, const volume_form_type & volume_form) :
+            base_type(geometric_simplex, coord_system, volume_form),
             _connectivity(connectivity)
         {}
 
@@ -72,7 +91,8 @@ namespace mito::fem {
             constexpr auto phi_1 = shape_functions.shape<1>();
 
             // return the isoparametric mapping from parametric to physical coordinates
-            return mito::functions::linear_combination(std::array{ _x0, _x1 }, phi_0, phi_1);
+            return mito::functions::linear_combination(
+                std::array{ this->_x0, this->_x1 }, phi_0, phi_1);
         }
 
         // get the shape function associated with local node {a}
@@ -85,40 +105,71 @@ namespace mito::fem {
         }
 
         // get the jacobian of the isoparametric mapping from parametric to actual coordinates
+        // returns a D×1 matrix (the tangent/director vector as a column)
         constexpr auto jacobian() const
         {
             // assemble the jacobian as a function of parametric coordinates
             auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<1> {
+                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<D, 1> {
                     // get the shape functions derivatives
                     constexpr auto dphi_0 = shape_functions.dshape<0>();
                     constexpr auto dphi_1 = shape_functions.dshape<1>();
 
-                    // compute the jacobian of the isoparametric mapping: dx/dxi
-                    auto dx_dxi = _x0 * dphi_0(xi) + _x1 * dphi_1(xi);
-                    // wrap the result in a 1x1 matrix
-                    return tensor::matrix_t<1>{ dx_dxi };
+                    // compute the tangent vector: dx/dxi
+                    auto dx_dxi = this->_x0 * dphi_0(xi) + this->_x1 * dphi_1(xi);
+
+                    // wrap the tangent vector as a D×1 matrix
+                    return tensor::as_column_matrix<D>(dx_dxi);
                 });
 
             // and return it
             return jacobian_function;
         }
 
+        // volume element: contract the volume form with the tangent vector
+        // this follows the same pattern as Manifold::_volume, but for one tangent vector
+        constexpr auto volume_element() const
+        {
+            return functions::function([&](const parametric_coordinates_type & xi) {
+                // physical point
+                auto x = parametrization()(xi);
+
+                // get the tangent vector from the Jacobian
+                auto J = jacobian()(xi);
+                // extract the tangent vector from the D×1 matrix
+                auto tangent = pyre::tensor::col<0>(J);
+
+                // contract the volume form with the tangent vector
+                // for N=1, no factorial needed (1/1! = 1)
+                return this->_volume_form(x)(tangent);
+            });
+        }
+
         // get the gradient of the a-th shape function as a function of parametric coordinates
+        // returns a contravariant vector (raised index)
         template <int a>
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
             // assemble the gradient as a function of parametric coordinates
-            auto gradient_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<1> {
-                    // the jacobian of the mapping from the reference element to the physical
-                    // element evaluated at {xi}
+            auto gradient_function =
+                functions::function([&](const parametric_coordinates_type & xi) -> vector_type {
+                    // physical point
+                    auto x = parametrization()(xi);
+
+                    // jacobian matrix (D×1 for curves)
                     auto J = jacobian()(xi);
-                    // the derivative of the coordinates with respect to the parametric coordinates
-                    auto J_inv = tensor::inverse(J);
-                    // return the spatial gradients of the shape functions evaluated at {xi}
-                    return shape_functions.dshape<a>()(xi) * J_inv;
+
+                    // metric tensors at the physical point
+                    auto g = base_type::g(x);
+                    auto g_inv = base_type::g_inv(x);
+
+                    // parametric derivative (scalar for N=1)
+                    constexpr auto dphi_dxi = shape_functions.dshape<a>();
+                    auto dphi_dxi_val = dphi_dxi(xi);
+
+                    // compute gradient (handles both square and embedded cases)
+                    return fem::compute_gradient<D, N>(J, g, g_inv, dphi_dxi_val);
                 });
             // and return it
             return gradient_function;
