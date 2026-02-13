@@ -85,7 +85,10 @@ namespace mito::io {
             // write the points to file in an order determined by their index
             for (const auto & point : points_vector) {
                 const auto & coord = _coord_system.coordinates(point);
-                outfile << std::setprecision(15) << coord << std::endl;
+                outfile << std::setprecision(15);
+                for (int d = 0; d < D; ++d)
+                    outfile << coord[d] << " ";
+                outfile << std::endl;
             }
 
             // write the cells to file
