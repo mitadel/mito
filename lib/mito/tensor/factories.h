@@ -47,6 +47,18 @@ namespace mito::tensor {
             return matrix * vector * v;
         });
     }
+    // pack N column vectors of dimension D into a D x N matrix
+    template <int N, int D>
+    constexpr auto matrix_from_columns(const std::array<vector_t<D>, N> & columns) -> matrix_t<D, N>
+    {
+        matrix_t<D, N> result;
+        for (int j = 0; j < N; ++j) {
+            for (int i = 0; i < D; ++i) {
+                result[{ i, j }] = columns[j][i];
+            }
+        }
+        return result;
+    }
 }
 
 
