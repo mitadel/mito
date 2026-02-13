@@ -84,18 +84,6 @@ namespace mito::geometry {
         // components accessor
         constexpr auto operator[](int i) const -> tensor::scalar_t { return _array[i]; }
 
-        auto print() const -> void
-        {
-            // make a channel
-            journal::info_t channel("mito.coordinates");
-
-            // print the coordinates of the point
-            channel << _array;
-
-            // all done
-            return;
-        }
-
       private:
         // the array of coordinates
         array_t _array;
