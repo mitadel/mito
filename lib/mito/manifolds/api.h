@@ -10,8 +10,8 @@
 namespace mito::manifolds {
 
     // manifold alias
-    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
-    using manifold_t = Manifold<cellT, coordsT, volumeFormT>;
+    template <class cellT, geometry::coordinates_c coordsT, class metricFieldT>
+    using manifold_t = Manifold<cellT, coordsT, metricFieldT>;
 
     // factory of manifolds from a mesh and a coordinate system
     template <class cellT, geometry::coordinates_c coordsT>
@@ -19,12 +19,12 @@ namespace mito::manifolds {
         const mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<coordsT> & coordinate_system);
 
-    // factory submanifold from a mesh, a coordinate system and set of normal fields
-    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
-    constexpr auto submanifold(
+    // factory of manifolds with explicit metric field
+    template <class cellT, geometry::coordinates_c coordsT, class metricFieldT>
+    constexpr auto manifold(
         const mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<coordsT> & coordinate_system,
-        const mito::fields::vector_field_c auto & normal_field);
+        const metricFieldT & metric_field);
 }
 
 
