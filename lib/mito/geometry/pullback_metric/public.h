@@ -10,14 +10,8 @@
 // get the forward declarations
 #include "forward.h"
 
-// get the induced metric class
-#include "InducedMetric.h"
-
-// get the factories
-#include "factories.h"
-
-// get the api
-#include "api.h"
+// get the pullback metric specialization
+#include "metric.h"
 
 
 // end of file

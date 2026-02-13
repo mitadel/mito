@@ -7,8 +7,8 @@
 #pragma once
 
 
-// publish the induced metric interface
-#include "induced_metric/public.h"
+// publish the pullback metric interface (replaces induced metric)
+#include "pullback_metric/public.h"
 
 
 // end of file
