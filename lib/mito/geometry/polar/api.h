@@ -9,6 +9,10 @@
 
 namespace mito::geometry::polar {
 
+    // the type of cartesian coordinates in {D} dimensions
+    template <int D>
+    using coordinates_t = geometry::coordinates_t<D, geometry::POLAR>;
+
     // the metric tensor field
     constexpr auto metric = geometry::metric<polar_coordinates_t>::field();
 

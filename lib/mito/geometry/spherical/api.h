@@ -9,6 +9,10 @@
 
 namespace mito::geometry::spherical {
 
+    // the type of cartesian coordinates in {D} dimensions
+    template <int D>
+    using coordinates_t = geometry::coordinates_t<D, geometry::SPHERICAL>;
+
     // the metric tensor field
     constexpr auto metric = geometry::metric<spherical_coordinates_t>::field();
 
