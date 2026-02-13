@@ -9,15 +9,15 @@
 
 namespace mito::manifolds {
 
-    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
+    template <class cellT, geometry::coordinates_c coordsT, class metricFieldT>
     requires(cellT::dim == coordsT::dim)
     class Manifold {
 
       private:
         // typedef for node
         using node_type = cellT::node_type;
-        // the volume form type
-        using volume_form_type = volumeFormT;
+        // the metric field type
+        using metric_field_type = metricFieldT;
         // the physical dimension of the manifold (that is that of the cell)
         static constexpr int D = cellT::dim;
         // the dimension of the manifold (that is that of the cell)
@@ -38,10 +38,10 @@ namespace mito::manifolds {
       public:
         constexpr Manifold(
             const mesh_type & mesh, const coordinate_system_type & coordinate_system,
-            volume_form_type volume_form) :
+            metric_field_type metric_field) :
             _mesh(mesh),
             _coordinate_system(coordinate_system),
-            _volume_form(volume_form)
+            _metric_field(metric_field)
         {}
 
         // destructor
@@ -123,19 +123,21 @@ namespace mito::manifolds {
         }
 
       private:
-        // computes the volume of a cell
-        template <int... J>
-        constexpr auto _volume(const cell_type & cell, tensor::integer_sequence<J...>) const
+        // computes the volume of a cell via Riemannian formula (1/N!) * sqrt(det(J^T g J))
+        template <int... Is>
+        constexpr auto _volume(const cell_type & cell, tensor::integer_sequence<Is...>) const
             -> tensor::scalar_t
-        requires(sizeof...(J) == N)
+        requires(sizeof...(Is) == N)
         {
             // get the director edges of this cell and the point where they stem from
             auto [point, directors] = mito::geometry::directors(cell, _coordinate_system);
-            // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
-            // contracted with the cell directors
-            auto volume = 1.0 / mito::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
-            // all done
-            return volume;
+            // evaluate the ambient metric at the base point
+            auto g = _metric_field(point);
+            // assemble the Jacobian from the directors (D x N matrix)
+            auto J = mito::tensor::matrix_from_columns<N, D>(directors);
+            // compute the volume as (1/N!) * sqrt(det(J^T g J))
+            return 1.0 / mito::tensor::factorial<N>()
+                 * std::sqrt(mito::tensor::determinant(mito::tensor::transpose(J) * g * J));
         }
 
       private:
@@ -143,8 +145,8 @@ namespace mito::manifolds {
         const mesh_type & _mesh;
         // the coordinate system
         const coordinate_system_type & _coordinate_system;
-        // the volume form
-        volume_form_type _volume_form;
+        // the metric field
+        metric_field_type _metric_field;
     };
 
 }    // namespace mito
