@@ -23,4 +23,9 @@
 #include "factories.h"
 
 
+#ifdef WITH_CUDA
+#include "backend/cuda/public.h"
+#endif    // WITH_CUDA
+
+
 // end of file
