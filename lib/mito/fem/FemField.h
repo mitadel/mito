@@ -7,16 +7,15 @@
 #pragma once
 
 
-// DESIGN NOTES
-// Class {FemField} represents a finite element field defined via its nodal values on a set of
-// discretization nodes. The field can be localized on finite elements via the {localize} method,
-// which assembles the field values on the element from the nodal values and the element shape
-// functions.
-
 namespace mito::fem {
 
     // TODO: implement higher-dimensional fields (e.g. vector fields, tensor fields, ...)
 
+    /// @brief A finite element field defined via its nodal values on a set of discretization nodes.
+    /// The field can be localized on finite elements via the `localize` method, which assembles the
+    /// field values on the element from the nodal values and the element shape functions.
+    /// @tparam fieldValueT The type of the field value.
+    /// @tparam functionSpaceT The type of the function space.
     template <class fieldValueT, class functionSpaceT>
     class FemField {
 
