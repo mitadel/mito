@@ -10,6 +10,7 @@
 #
 
 set -e
+set -o pipefail  # Make pipelines fail if any command fails
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 TUTORIAL_BASE_DIR="$REPO_ROOT/tutorial"
@@ -82,8 +83,6 @@ for tutorial_dir in "$TUTORIAL_BASE_DIR"/*; do
     continue
   fi
 
-  BUILT_COUNT=$((BUILT_COUNT + 1))
-
   # Find and run the executable
   if [ -x "$BUILD_DIR/main" ]; then
     exe="$BUILD_DIR/main"
@@ -93,6 +92,7 @@ for tutorial_dir in "$TUTORIAL_BASE_DIR"/*; do
   fi
 
   if [ -n "$exe" ] && [ -x "$exe" ]; then
+    BUILT_COUNT=$((BUILT_COUNT + 1))
     echo "Running: $exe"
     # Run with timeout (300 seconds) and capture output
     if timeout 300 "$exe" > "$OUTPUT_DIR/output.txt" 2>&1; then
@@ -107,7 +107,8 @@ for tutorial_dir in "$TUTORIAL_BASE_DIR"/*; do
       fi
     fi
   else
-    echo "Warning: No executable found for $tutorial_name"
+    echo "Error: No executable found for $tutorial_name"
+    FAILED_COUNT=$((FAILED_COUNT + 1))
   fi
 
   # Copy generated artifacts (VTU, PNG, etc.) to output directory
