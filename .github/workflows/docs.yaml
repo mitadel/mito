@@ -38,6 +38,7 @@ jobs:
         with:
           repository: pyre/pyre
           ref: tensor
+          fetch-depth: 0
           path: pyre-src
 
       - name: Build and install pyre
@@ -119,6 +120,7 @@ jobs:
         with:
           repository: pyre/pyre
           ref: tensor
+          fetch-depth: 0
           path: pyre-src
 
       - name: Build and install pyre
