@@ -24,6 +24,7 @@ mkdir -p "$STATIC_OUTPUT_DIR"
 # Counter for reporting
 TUTORIAL_COUNT=0
 BUILT_COUNT=0
+FAILED_COUNT=0
 
 echo "=========================================="
 echo "Building and running C++ tutorials..."
@@ -67,12 +68,17 @@ for tutorial_dir in "$TUTORIAL_BASE_DIR"/*; do
 
   # Configure CMake
   echo "Configuring CMake..."
-  cmake -S "$tutorial_dir" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -20
+  if ! cmake -S "$tutorial_dir" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -20; then
+    echo "Error: CMake configuration failed for $tutorial_name"
+    FAILED_COUNT=$((FAILED_COUNT + 1))
+    continue
+  fi
 
   # Build
   echo "Building..."
   if ! cmake --build "$BUILD_DIR" -- -j$(nproc) 2>&1 | tail -20; then
-    echo "Warning: Build failed for $tutorial_name"
+    echo "Error: Build failed for $tutorial_name"
+    FAILED_COUNT=$((FAILED_COUNT + 1))
     continue
   fi
 
@@ -118,10 +124,18 @@ echo "=========================================="
 echo "Tutorial build summary:"
 echo "  Total tutorials found: $TUTORIAL_COUNT"
 echo "  Successfully built: $BUILT_COUNT"
+echo "  Failed: $FAILED_COUNT"
 echo "  Outputs saved to: $DOCS_OUTPUT_DIR"
 echo "=========================================="
 
 # Make outputs readable by web server
 chmod -R a+r "$DOCS_OUTPUT_DIR" || true
+
+# Exit with error if any tutorial failed
+if [ $FAILED_COUNT -gt 0 ]; then
+  echo ""
+  echo "Error: $FAILED_COUNT tutorial(s) failed to build"
+  exit 1
+fi
 
 exit 0
