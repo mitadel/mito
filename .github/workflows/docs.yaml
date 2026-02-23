@@ -19,22 +19,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Doxygen and build tools
+      - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y doxygen build-essential cmake g++-14
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
-      - name: Install documentation dependencies
-        run: pip install -r docs/requirements.txt
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r docs/requirements.txt
+          pip install 'numpy<2.0' pybind11
+
+      - name: Checkout pyre
+        uses: actions/checkout@v4
+        with:
+          repository: pyre/pyre
+          ref: tensor
+          path: pyre-src
+
+      - name: Build and install pyre
+        run: |
+          mkdir -p pyre-build
+          cd pyre-build
+          cmake -DCMAKE_INSTALL_PREFIX=/tmp/pyre-install \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_C_COMPILER=gcc-14 \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DPython_ROOT_DIR=$pythonLocation \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ../pyre-src
+          make -j$(nproc)
+          make install
 
       - name: Build and install mito
         run: |
           mkdir -p build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/mito -DMITO_BUILD_TESTING=OFF -DMITO_BUILD_BENCHMARKS=OFF ..
+          cmake -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_INSTALL_PREFIX=/usr/local/mito \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DMITO_BUILD_TESTING=OFF \
+                -DMITO_BUILD_BENCHMARKS=OFF \
+                -DWITH_MPI=OFF \
+                -DWITH_VTK=OFF \
+                -DWITH_PETSC=OFF \
+                -Dpyre_DIR=/tmp/pyre-install/share/cmake/pyre \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ..
           make -j$(nproc)
           sudo make install
 
@@ -66,22 +100,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Doxygen and build tools
+      - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y doxygen build-essential cmake g++-14
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.12"
 
-      - name: Install documentation dependencies
-        run: pip install -r docs/requirements.txt
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r docs/requirements.txt
+          pip install 'numpy<2.0' pybind11
+
+      - name: Checkout pyre
+        uses: actions/checkout@v4
+        with:
+          repository: pyre/pyre
+          ref: tensor
+          path: pyre-src
+
+      - name: Build and install pyre
+        run: |
+          mkdir -p pyre-build
+          cd pyre-build
+          cmake -DCMAKE_INSTALL_PREFIX=/tmp/pyre-install \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_C_COMPILER=gcc-14 \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DPython_ROOT_DIR=$pythonLocation \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ../pyre-src
+          make -j$(nproc)
+          make install
 
       - name: Build and install mito
         run: |
           mkdir -p build
           cd build
-          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/mito -DMITO_BUILD_TESTING=OFF -DMITO_BUILD_BENCHMARKS=OFF ..
+          cmake -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_INSTALL_PREFIX=/usr/local/mito \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DMITO_BUILD_TESTING=OFF \
+                -DMITO_BUILD_BENCHMARKS=OFF \
+                -DWITH_MPI=OFF \
+                -DWITH_VTK=OFF \
+                -DWITH_PETSC=OFF \
+                -Dpyre_DIR=/tmp/pyre-install/share/cmake/pyre \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ..
           make -j$(nproc)
           sudo make install
 
