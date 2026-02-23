@@ -13,6 +13,8 @@ and then built into the final HTML using [Sphinx](https://www.sphinx-doc.org/).
 ## Build Instructions
 
 ```bash
+.github/scripts/build_and_run_tutorials.sh
+cd docs
 doxygen Doxyfile
 make html
 ```
