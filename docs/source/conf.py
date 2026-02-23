@@ -15,6 +15,9 @@ import sys
 
 sys.path.insert(0, os.path.abspath("."))
 
+# Allow access to repository-level tutorial files
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+TUTORIAL_ROOT = os.path.join(REPO_ROOT, 'tutorial')
 
 # -- Project information -----------------------------------------------------
 
@@ -33,6 +36,8 @@ author = "the MiTo Authors"
 extensions = [
     "sphinx.ext.mathjax",
     "breathe",
+    "sphinx_copybutton",
+    "sphinxcontrib.programoutput",
 ]
 
 source_suffix = {".rst": "restructuredtext"}

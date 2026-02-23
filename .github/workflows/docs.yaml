@@ -19,8 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Doxygen
-        run: sudo apt-get update && sudo apt-get install -y doxygen
+      - name: Install Doxygen and build tools
+        run: sudo apt-get update && sudo apt-get install -y doxygen build-essential cmake g++-14
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,6 +29,9 @@ jobs:
 
       - name: Install documentation dependencies
         run: pip install -r docs/requirements.txt
+
+      - name: Build and run C++ tutorials
+        run: chmod +x .github/scripts/build_and_run_tutorials.sh && .github/scripts/build_and_run_tutorials.sh
 
       - name: Build documentation
         run: |
@@ -55,8 +58,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Doxygen
-        run: sudo apt-get update && sudo apt-get install -y doxygen
+      - name: Install Doxygen and build tools
+        run: sudo apt-get update && sudo apt-get install -y doxygen build-essential cmake g++-14
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -65,6 +68,9 @@ jobs:
 
       - name: Install documentation dependencies
         run: pip install -r docs/requirements.txt
+
+      - name: Build and run C++ tutorials
+        run: chmod +x .github/scripts/build_and_run_tutorials.sh && .github/scripts/build_and_run_tutorials.sh
 
       - name: Build documentation
         run: |
