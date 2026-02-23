@@ -143,7 +143,7 @@ namespace mito::geometry {
                                            const auto & nodes, const auto & coordinate_system,
                                            tensor::integer_sequence<a...>) {
                 // get the origin of the coordinate system
-                auto origin = coordinate_system.origin();
+                const auto origin = coordinate_system.origin();
 
                 // assemble the parametrization as x0 * xi<0> + ...
                 // where {xi<a>} are the barycentric coordinates on the reference simplex and the
