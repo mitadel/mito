@@ -26,6 +26,7 @@ Code Reference
 
    geometry
    fem
+   tutorials
 
 :ref:`genindex`
 
