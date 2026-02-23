@@ -69,7 +69,23 @@ for tutorial_dir in "$TUTORIAL_BASE_DIR"/*; do
 
   # Configure CMake
   echo "Configuring CMake..."
-  if ! cmake -S "$tutorial_dir" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -20; then
+  CMAKE_ARGS=(
+    -S "$tutorial_dir"
+    -B "$BUILD_DIR"
+    -DCMAKE_BUILD_TYPE=Release
+  )
+  
+  # Add mito_DIR if we can find it
+  if [ -d "/usr/local/mito/share/cmake/mito" ]; then
+    CMAKE_ARGS+=(-Dmito_DIR=/usr/local/mito/share/cmake/mito)
+  fi
+  
+  # Add pyre_DIR for CI environment
+  if [ -d "/tmp/pyre-install/share/cmake/pyre" ]; then
+    CMAKE_ARGS+=(-Dpyre_DIR=/tmp/pyre-install/share/cmake/pyre)
+  fi
+  
+  if ! cmake "${CMAKE_ARGS[@]}" 2>&1 | tail -20; then
     echo "Error: CMake configuration failed for $tutorial_name"
     FAILED_COUNT=$((FAILED_COUNT + 1))
     continue
