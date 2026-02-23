@@ -30,6 +30,14 @@ jobs:
       - name: Install documentation dependencies
         run: pip install -r docs/requirements.txt
 
+      - name: Build and install mito
+        run: |
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/mito -DMITO_BUILD_TESTING=OFF -DMITO_BUILD_BENCHMARKS=OFF ..
+          make -j$(nproc)
+          sudo make install
+
       - name: Build and run C++ tutorials
         run: chmod +x .github/scripts/build_and_run_tutorials.sh && .github/scripts/build_and_run_tutorials.sh
 
@@ -68,6 +76,14 @@ jobs:
 
       - name: Install documentation dependencies
         run: pip install -r docs/requirements.txt
+
+      - name: Build and install mito
+        run: |
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/mito -DMITO_BUILD_TESTING=OFF -DMITO_BUILD_BENCHMARKS=OFF ..
+          make -j$(nproc)
+          sudo make install
 
       - name: Build and run C++ tutorials
         run: chmod +x .github/scripts/build_and_run_tutorials.sh && .github/scripts/build_and_run_tutorials.sh
