@@ -70,11 +70,6 @@ html_context = {
     "conf_py_path": "/docs/source/",  # Path in the repo to your documentation source files
 }
 
-myst_enable_extensions = [
-    "dollarmath",
-    "amsmath",
-]
-
 breathe_projects = {"MiTo": "../xml/"}
 breathe_default_project = "MiTo"
 breathe_implementation_filename_extensions = [".c", ".cc", ".cpp"]
