@@ -42,8 +42,3 @@ What This Example Shows
    - Divergence on the body via volume integral
    - Field flux through the boundary via surface integral
    - Confirming they are (approximately) equal
-
-Generated Artifacts
-===================
-
-This tutorial produces a VTU mesh file (``poisson_square_data.vtu``) that can be visualized in ParaView.
