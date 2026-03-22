@@ -9,9 +9,9 @@
 
 namespace mito::geometry {
 
-    // specialization for the Euclidean metric
+    // specialization for the Euclidean metric in cartesian coordinates
     template <int D>
-    struct metric<cartesian_coordinates_t<D>> {
+    struct euclidean_metric<cartesian_coordinates_t<D>> {
         static constexpr auto field()
         {
             // return the identity field

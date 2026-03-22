@@ -33,7 +33,7 @@ namespace mito::geometry {
         static constexpr auto e = basis<coordinates_type>::template e<I>();
 
         // the metric field in coordinates {coordinates_type}
-        static constexpr auto g = metric<coordinates_type>::field();
+        static constexpr auto g = euclidean_metric<coordinates_type>::field();
 
         // the inverse metric field in coordinates {coordinates_type}
         static constexpr auto g_inv = functions::inverse(g);

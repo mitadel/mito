@@ -9,9 +9,9 @@
 
 namespace mito::geometry {
 
-    // the metric tensor field in {coordsT} coordinates
+    // the Euclidean metric tensor field in {coordsT} coordinates
     template <coordinates_c coordsT>
-    struct metric {};
+    struct euclidean_metric {};
 
 }
 

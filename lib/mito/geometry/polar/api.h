@@ -13,8 +13,8 @@ namespace mito::geometry::polar {
     template <int D>
     using coordinates_t = geometry::coordinates_t<D, geometry::POLAR>;
 
-    // the metric tensor field
-    constexpr auto metric = geometry::metric<polar_coordinates_t>::field();
+    // the Euclidean metric tensor field
+    constexpr auto euclidean_metric = geometry::euclidean_metric<polar_coordinates_t>::field();
 
     // factory for polar coordinates
     constexpr auto coordinates = &geometry::coordinates<polar_coordinates_t>;
