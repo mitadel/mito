@@ -9,9 +9,8 @@
 
 namespace mito::geometry::polar {
 
-    // the type of cartesian coordinates in {D} dimensions
-    template <int D>
-    using coordinates_t = geometry::coordinates_t<D, geometry::POLAR>;
+    // polar coordinates
+    using coordinates_t = polar_coordinates_t;
 
     // the Euclidean metric tensor field
     constexpr auto euclidean_metric = geometry::euclidean_metric<polar_coordinates_t>::field();
