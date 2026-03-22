@@ -69,6 +69,13 @@ namespace mito::geometry {
         []<int D>(const PointCloud<D> &) {
         }(c);
     };
+
+    // concept of a metric compatible with a given coordinate system
+    template <class metricT, class coordsT>
+    concept compatible_metric_c =
+        coordinates_c<coordsT> && requires(const metricT & g, const coordsT & x) {
+            { g(x) };
+        };
 }
 
 
