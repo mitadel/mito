@@ -13,6 +13,18 @@ namespace mito::geometry {
     template <coordinates_c coordsT>
     struct metric {};
 
+
+    // specialization: pullback of ambient metric along a parametrization field
+    template <class ambient_metricT>
+    struct pullback_metric<ambient_metricT> {
+        static constexpr auto field(const fields::field_c auto & parametrization)
+        {
+            auto g_ambient = ambient_metricT::field();
+            auto jacobian = functions::derivative(parametrization);
+            return functions::transpose(jacobian) * g_ambient(parametrization) * jacobian;
+        }
+    };
+
 }
 
 
