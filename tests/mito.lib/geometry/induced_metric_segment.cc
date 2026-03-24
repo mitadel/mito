@@ -5,6 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/geometry.h>
+#include <mito/fields.h>
 #include <cmath>
 
 
@@ -13,177 +14,102 @@ using coordinates_2d_t = mito::geometry::coordinates_t<2, mito::geometry::CARTES
 using coordinates_3d_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
 
-// helper function to compute directional derivative: grad · J_col
-// this computes the inner product of the gradient with a tangent vector (column of Jacobian)
-template <int AMBIENT_DIM, int PARAM_DIM>
-double
-directional_derivative(
-    const mito::tensor::vector_t<AMBIENT_DIM> & grad,
-    const mito::tensor::matrix_t<AMBIENT_DIM, PARAM_DIM> & J, int col_index)
-{
-    double result = 0.0;
-    for (int i = 0; i < AMBIENT_DIM; ++i) {
-        result += grad[i] * J[{ i, col_index }];
-    }
-    return result;
-}
-
-// helper function to compute gradient magnitude
-template <int DIM>
-double
-gradient_magnitude(const mito::tensor::vector_t<DIM> & grad)
-{
-    double result = 0.0;
-    for (int i = 0; i < DIM; ++i) {
-        result += grad[i] * grad[i];
-    }
-    return std::sqrt(result);
-}
-
-
 TEST(Geometry, InducedMetricSegment1D)
 {
-    // unit segment in 1D: x(xi) = xi, J = 1, g_induced = 1,
-    // volume_element = 1 (equals length of segment)
-    auto jacobian = [](const coordinates_1d_t &) {
-        return mito::tensor::matrix_t<1, 1>{ 1.0 };
-    };
-    auto parametrization = [](const coordinates_1d_t & xi) {
-        return mito::geometry::cartesian::coordinates({ xi[0] });
-    };
+    // unit segment in 1D: x(xi) = 3*xi, J = [3], g_induced = [9],
+    // volume_element = 3 (equals length of segment)
 
-    auto metric = mito::geometry::induced_metric<1, coordinates_1d_t, coordinates_1d_t>(
-        jacobian, parametrization);
+    auto xi_0 = mito::functions::component<coordinates_1d_t, 0>;
+    constexpr auto e_0 = mito::geometry::basis<coordinates_1d_t>::template e<0>();
+    auto parametrization = 3.0 * xi_0 * e_0;
+
+    using ambient_metric_t = mito::geometry::metric<coordinates_1d_t>;
+    auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     auto xi = mito::geometry::cartesian::coordinates<1>({ 0.5 });
-    auto g_val = metric.g(xi);
-    EXPECT_DOUBLE_EQ(1.0, mito::tensor::trace(g_val));    // check g
-    EXPECT_DOUBLE_EQ(1.0, metric.volume_element(xi));     // check segment length
 
-    // check inverse metric
-    auto g_inv = metric.g_inv(xi);
-    EXPECT_DOUBLE_EQ(1.0, mito::tensor::trace(g_inv));
+    // evaluate the metric at xi (1D pullback collapses to scalar: g = J^2 = 9)
+    auto g_val = g_field(xi);
+    EXPECT_DOUBLE_EQ(9.0, mito::tensor::trace(g_val));
 
-    // gradient: dphi/dxi = 1, check ⟨grad, tangent⟩ = dphi/dxi
-    auto grad = metric.gradient(1.0, xi);
-    auto J = jacobian(xi);
-    EXPECT_DOUBLE_EQ(1.0, directional_derivative(grad, J, 0));
-
-    // gradient magnitude: |grad| = 1/|tangent| = 1
-    EXPECT_DOUBLE_EQ(1.0, gradient_magnitude(grad));
-
-    // nonlinear test: phi(xi) = xi^2, dphi/dxi = 2*xi
-    auto grad_nonlinear = metric.gradient(2.0 * xi[0], xi);
-    EXPECT_DOUBLE_EQ(2.0 * xi[0], directional_derivative(grad_nonlinear, J, 0));
-
-    // trigonometric test: phi(xi) = sin(xi), dphi/dxi = cos(xi)
-    auto grad_trig = metric.gradient(std::cos(xi[0]), xi);
-    EXPECT_DOUBLE_EQ(std::cos(xi[0]), directional_derivative(grad_trig, J, 0));
+    // check volume element equals sqrt(det(g)): segment length = 3
+    EXPECT_DOUBLE_EQ(3.0, std::sqrt(mito::tensor::determinant(g_val)));
 }
 
 
 TEST(Geometry, InducedMetricSegment2D)
 {
-    // diagonal segment from (0,0) to (3,4): x(xi) = (3*xi, 4*xi), J = [3; 4], g_induced = 25,
+    // diagonal segment from (0,0) to (3,4): x(xi) = (3*xi, 4*xi), J = [3; 4], g_induced = [25],
     // volume element = 5 (equals length of segment)
-    auto jacobian = [](const coordinates_1d_t &) {
-        return mito::tensor::matrix_t<2, 1>{ 3.0, 4.0 };
-    };
-    auto parametrization = [](const coordinates_1d_t & xi) {
-        return mito::geometry::cartesian::coordinates({ 3.0 * xi[0], 4.0 * xi[0] });
-    };
 
-    auto metric = mito::geometry::induced_metric<1, coordinates_2d_t, coordinates_1d_t>(
-        jacobian, parametrization);
+    auto xi_0 = mito::functions::component<coordinates_1d_t, 0>;
+    constexpr auto e_0 = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<0, 2>);
+    constexpr auto e_1 = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<1, 2>);
+    auto parametrization = 3.0 * xi_0 * e_0 + 4.0 * xi_0 * e_1;
+
+    using ambient_metric_t = mito::geometry::metric<coordinates_2d_t>;
+    auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     auto xi = mito::geometry::cartesian::coordinates<1>({ 0.5 });
-    auto g_val = metric.g(xi);
-    EXPECT_DOUBLE_EQ(25.0, mito::tensor::trace(g_val));    // check g
-    EXPECT_DOUBLE_EQ(5.0, metric.volume_element(xi));      // check segment length
 
-    // check inverse metric: g * g_inv should be identity
-    auto g_inv = metric.g_inv(xi);
-    EXPECT_DOUBLE_EQ(1.0 / 25.0, mito::tensor::trace(g_inv));
+    // evaluate the metric tensor at xi
+    auto g_val = g_field(xi);
+    EXPECT_DOUBLE_EQ(25.0, mito::tensor::trace(g_val));
 
-    // gradient: dphi/dxi = 1, check ⟨grad, tangent⟩ = dphi/dxi
-    auto grad = metric.gradient(1.0, xi);
-    auto J = jacobian(xi);
-    EXPECT_DOUBLE_EQ(1.0, directional_derivative(grad, J, 0));
-
-    // gradient magnitude: |grad| = 1/|tangent| = 1/5
-    EXPECT_DOUBLE_EQ(0.2, gradient_magnitude(grad));
-
-    // nonlinear test: phi(xi) = xi^2, dphi/dxi = 2*xi
-    auto grad_nonlinear = metric.gradient(2.0 * xi[0], xi);
-    EXPECT_DOUBLE_EQ(2.0 * xi[0], directional_derivative(grad_nonlinear, J, 0));
-
-    // trigonometric test: phi(xi) = sin(xi), dphi/dxi = cos(xi)
-    auto grad_trig = metric.gradient(std::cos(xi[0]), xi);
-    EXPECT_DOUBLE_EQ(std::cos(xi[0]), directional_derivative(grad_trig, J, 0));
-
-    // volume form test: w(tangent) = volume_element * tangent
-    auto w = metric.w();
-    auto tangent = mito::tensor::vector_t<1>{ 1.0 };
-    EXPECT_DOUBLE_EQ(5.0, w(xi)(tangent));    // volume_element = 5
-
-    // test scaling property
-    auto tangent2 = mito::tensor::vector_t<1>{ 2.0 };
-    EXPECT_DOUBLE_EQ(10.0, w(xi)(tangent2));
-
-    // test with negative tangent
-    auto tangent_neg = mito::tensor::vector_t<1>{ -1.0 };
-    EXPECT_DOUBLE_EQ(-5.0, w(xi)(tangent_neg));
+    // check volume element equals sqrt(det(g)): segment length = 5
+    EXPECT_DOUBLE_EQ(5.0, std::sqrt(mito::tensor::determinant(g_val)));
 }
 
+
+TEST(Geometry, InducedMetricSegment2D_CircularArc)
+{
+    // circular arc in 2D: x(t) = (R cos(t), R sin(t)), R = 3
+    // J(t) = [-R sin(t); R cos(t)], g = J^T * I * J = R² (constant despite varying Jacobian)
+    // volume element = R = 3
+
+    auto t = mito::functions::component<coordinates_1d_t, 0>;
+    constexpr auto e_x = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<0, 2>);
+    constexpr auto e_y = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<1, 2>);
+    auto parametrization =
+        3.0 * mito::functions::cos(t) * e_x + 3.0 * mito::functions::sin(t) * e_y;
+
+    using ambient_metric_t = mito::geometry::metric<coordinates_2d_t>;
+    auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
+
+    // evaluate at two different points to confirm the field is position-independent
+    auto xi_1 = mito::geometry::cartesian::coordinates<1>({ M_PI / 6.0 });
+    auto g_val_1 = g_field(xi_1);
+    EXPECT_DOUBLE_EQ(9.0, mito::tensor::trace(g_val_1));
+    EXPECT_DOUBLE_EQ(3.0, std::sqrt(mito::tensor::determinant(g_val_1)));
+
+    auto xi_2 = mito::geometry::cartesian::coordinates<1>({ M_PI / 3.0 });
+    auto g_val_2 = g_field(xi_2);
+    EXPECT_DOUBLE_EQ(9.0, mito::tensor::trace(g_val_2));
+    EXPECT_DOUBLE_EQ(3.0, std::sqrt(mito::tensor::determinant(g_val_2)));
+}
 
 TEST(Geometry, InducedMetricSegment3D)
 {
-    // segment in 3D from (0,0,0) to (1,1,1): J = [1;1;1], g_induced = 3,
+    // segment in 3D from (0,0,0) to (1,1,1): x(xi) = (xi, xi, xi), J = [1;1;1], g_induced = [3],
     // volume_element = sqrt(3) (equals length of segment)
-    auto jacobian = [](const coordinates_1d_t &) {
-        return mito::tensor::matrix_t<3, 1>{ 1.0, 1.0, 1.0 };
-    };
-    auto parametrization = [](const coordinates_1d_t & xi) {
-        return mito::geometry::cartesian::coordinates({ xi[0], xi[0], xi[0] });
-    };
 
-    auto metric = mito::geometry::induced_metric<1, coordinates_3d_t, coordinates_1d_t>(
-        jacobian, parametrization);
+    auto xi_0 = mito::functions::component<coordinates_1d_t, 0>;
+    constexpr auto e_0 = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<0, 3>);
+    constexpr auto e_1 = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<1, 3>);
+    constexpr auto e_2 = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<2, 3>);
+    auto parametrization = xi_0 * e_0 + xi_0 * e_1 + xi_0 * e_2;
+
+    using ambient_metric_t = mito::geometry::metric<coordinates_3d_t>;
+    auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     auto xi = mito::geometry::cartesian::coordinates<1>({ 0.25 });
-    auto g_val = metric.g(xi);
-    EXPECT_DOUBLE_EQ(3.0, mito::tensor::trace(g_val));              // check g
-    EXPECT_DOUBLE_EQ(std::sqrt(3.0), metric.volume_element(xi));    // check segment length
 
-    // check inverse metric
-    auto g_inv = metric.g_inv(xi);
-    EXPECT_DOUBLE_EQ(1.0 / 3.0, mito::tensor::trace(g_inv));
+    // evaluate the metric tensor at xi
+    auto g_val = g_field(xi);
+    EXPECT_DOUBLE_EQ(3.0, mito::tensor::trace(g_val));
 
-    // gradient: dphi/dxi = 1, check ⟨grad, tangent⟩ = dphi/dxi
-    auto grad = metric.gradient(1.0, xi);
-    auto J = jacobian(xi);
-    EXPECT_DOUBLE_EQ(1.0, directional_derivative(grad, J, 0));
-
-    // gradient magnitude: |grad| = 1/|tangent| = 1/sqrt(3)
-    EXPECT_DOUBLE_EQ(1.0 / std::sqrt(3.0), gradient_magnitude(grad));
-
-    // nonlinear test: phi(xi) = xi^2, dphi/dxi = 2*xi
-    auto grad_nonlinear = metric.gradient(2.0 * xi[0], xi);
-    EXPECT_DOUBLE_EQ(2.0 * xi[0], directional_derivative(grad_nonlinear, J, 0));
-
-    // trigonometric test: phi(xi) = sin(xi), dphi/dxi = cos(xi)
-    auto grad_trig = metric.gradient(std::cos(xi[0]), xi);
-    EXPECT_DOUBLE_EQ(std::cos(xi[0]), directional_derivative(grad_trig, J, 0));
-
-    // volume form test: w(tangent) = volume_element * tangent
-    auto w = metric.w();
-    auto tangent = mito::tensor::vector_t<1>{ 1.0 };
-    EXPECT_DOUBLE_EQ(std::sqrt(3.0), w(xi)(tangent));    // volume_element = sqrt(3)
-
-    // test scaling property
-    auto tangent2 = mito::tensor::vector_t<1>{ 0.5 };
-    EXPECT_DOUBLE_EQ(0.5 * std::sqrt(3.0), w(xi)(tangent2));
+    // check volume element equals sqrt(det(g)): segment length = sqrt(3)
+    EXPECT_DOUBLE_EQ(std::sqrt(3.0), std::sqrt(mito::tensor::determinant(g_val)));
 }
-
 
 // end of file
