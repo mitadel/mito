@@ -20,6 +20,7 @@
 #include "fields.h"
 #include "manifolds.h"
 #include "materials.h"
+#include "operators.h"
 #include "math.h"
 #include "mesh.h"
 #include "quadrature.h"
