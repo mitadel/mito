@@ -38,6 +38,8 @@ namespace mito::geometry {
         using coordinates_type = Coordinates<D, coordT>;
         // publish the dimension of the physical space
         static constexpr int dim = D;
+        // publish the size of the underlying array
+        static constexpr int size = array_t::size;
 
       public:
         // default constructor
