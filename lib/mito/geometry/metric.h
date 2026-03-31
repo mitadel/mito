@@ -16,7 +16,7 @@ namespace mito::geometry {
 
     // specialization: pullback of ambient metric along a parametrization field
     template <class ambient_metricT>
-    struct pullback_metric<ambient_metricT> {
+    struct pullback_metric {
         static constexpr auto field(const fields::field_c auto & parametrization)
         {
             auto g_ambient = ambient_metricT::field();
