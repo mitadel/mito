@@ -100,6 +100,20 @@ namespace mito::mesh {
             return _cells;
         }
 
+        inline auto nodes() const -> auto
+        {
+            using nodes_t = std::unordered_set<node_type, utilities::hash_function<node_type>>;
+            nodes_t nodes;
+
+            for (const auto & cell : _cells) {
+                for (const auto & node : cell.nodes()) {
+                    nodes.insert(node);
+                }
+            }
+            // all done
+            return nodes;
+        }
+
         // erase cell at location {cell}
         inline auto erase(cell_type & cell) -> void
         {
