@@ -35,6 +35,7 @@ RUN apt install -y bash-completion
 RUN apt install -y make
 RUN apt install -y vim
 RUN apt install -y sudo
+RUN apt install -y clang-format-19
 
 # install mito dependencies
 RUN apt install -y libgtest-dev
