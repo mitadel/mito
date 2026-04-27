@@ -29,7 +29,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/lib",
-                "/usr/local/gtest/include",
+                "/usr/include/gtest",
                 "/usr/local/pyre/include"
             ],
             "defines": [],
