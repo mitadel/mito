@@ -134,7 +134,7 @@ namespace mito::manifolds {
             // evaluate the ambient metric at the base point
             auto g = _metric_field(point);
             // assemble the Jacobian from the directors (D x N matrix)
-            auto J = mito::tensor::matrix_from_columns<N, D>(directors);
+            auto J = mito::tensor::columns(directors[Is]...);
             // compute the volume as (1/N!) * sqrt(det(J^T g J))
             return 1.0 / mito::tensor::factorial<N>()
                  * std::sqrt(mito::tensor::determinant(mito::tensor::transpose(J) * g * J));
