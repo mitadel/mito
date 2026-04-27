@@ -77,12 +77,6 @@ namespace mito::manifolds {
 
         constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
-        constexpr auto coordinates(const node_type & v) const -> const coordinates_type &
-        {
-            // get the coordinates of the point attached to vertex {v}
-            return _coordinate_system.coordinates(v->point());
-        }
-
         constexpr auto print() const -> void
         {
             // make a channel
