@@ -78,8 +78,8 @@ test_gradient_consistency(const auto & element)
                 return ((element.template gradient<a>()(xi)) + ...);
             })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
 
-        // check the sum of the shape functions gradients
-        EXPECT_NEAR(0.0, sum, 3.0e-16);
+        // check that the sum of the shape functions gradients is the zero vector
+        EXPECT_NEAR(0.0, mito::tensor::norm(sum), 3.0e-16);
     });
 
     // all done
