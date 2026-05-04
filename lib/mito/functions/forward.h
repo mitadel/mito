@@ -57,7 +57,9 @@ namespace mito::functions {
 
     // concept of a tensor-valued function
     template <class F>
-    concept tensor_valued_function_c = function_c<F> and tensor::tensor_c<typename F::output_type>;
+    concept tensor_valued_function_c = function_c<F>
+                                   and (tensor::tensor_c<typename F::output_type>
+                                        or geometry::coordinates_c<typename F::output_type>);
 
     // concept of a tensor-valued function of tensors
     template <class F>
