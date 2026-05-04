@@ -42,7 +42,9 @@ TEST(Quadrature, Segment)
 
     // integrate exp(-x) on (0, 1)
     auto integral = integrator.integrate(f_exp);
-    EXPECT_NEAR(integral, (std::exp(1) - 1) / std::exp(1), 1.e-13);
+
+    // check result
+    EXPECT_NEAR(integral, (std::exp(1.0) - 1.0) / std::exp(1.0), 1.e-13);
 }
 
 // end of file
