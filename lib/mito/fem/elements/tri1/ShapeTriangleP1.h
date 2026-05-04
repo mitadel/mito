@@ -21,7 +21,7 @@ namespace mito::fem {
         // linear shape functions on the reference triangle in parametric coordinates
         static constexpr auto xi_0 = reference_element_type::xi<0>;
         static constexpr auto xi_1 = reference_element_type::xi<1>;
-        static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
+        static constexpr auto xi_2 = reference_element_type::xi<2>;
 
         // linear shape functions on the triangle
         static constexpr auto phi_0 = xi_0;
