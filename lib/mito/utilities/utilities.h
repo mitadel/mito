@@ -24,6 +24,12 @@ namespace mito::utilities {
     template <typename T>
     using base_type = typename std::remove_cvref_t<T>;
 
+    // tuple like concept
+    template <class T>
+    concept tuple_like_c = requires { typename std::tuple_size<std::remove_cvref_t<T>>::type; };
+
+    // use tuple size as provided by the standard library
+    using std::tuple_size_v;
 }
 
 

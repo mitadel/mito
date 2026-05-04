@@ -21,7 +21,6 @@ namespace mito::tensor {
     template <class F>
     concept vector_or_dummy_c = vector_c<F> or std::is_same_v<F, dummy_vector>;
 
-
     // class for P-forms
     template <int P, class F>
     class Form {
@@ -44,6 +43,14 @@ namespace mito::tensor {
             return _f(args...);
         }
 
+        // contraction from a tuple-like input
+        template <class tupleT>
+        constexpr auto operator()(const tupleT & args) const
+        requires(utilities::tuple_like_c<tupleT> && utilities::tuple_size_v<tupleT> == P)
+        {
+            return std::apply([this](const auto &... args) { return (*this)(args...); }, args);
+        }
+
       private:
         // the action of the form
         F _f;
@@ -64,11 +71,19 @@ namespace mito::tensor {
         constexpr Form(F f) : _f{ f } {}
 
         // contraction with a vector
-        template <class X>
-        constexpr auto operator()(const X & x) const -> mito::tensor::scalar_t
-        requires(!std::is_same_v<X, dummy_vector>)
+        template <vector_or_dummy_c... argsT>
+        constexpr auto operator()(argsT... args) const
+        requires(sizeof...(argsT) == 1)
         {
-            return _f(x);
+            return _f(args...);
+        }
+
+        // contraction from a tuple-like input
+        template <class tupleT>
+        constexpr auto operator()(const tupleT & args) const
+        requires(utilities::tuple_like_c<tupleT> && utilities::tuple_size_v<tupleT> == 1)
+        {
+            return std::apply([this](const auto &... args) { return (*this)(args...); }, args);
         }
 
         // contraction with a dummy vector (do not perform contraction)

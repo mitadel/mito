@@ -11,6 +11,7 @@
 #include <cassert>
 #include <queue>
 #include <vector>
+#include <tuple>
 #include <utility>
 #include <memory>
 #include <type_traits>
