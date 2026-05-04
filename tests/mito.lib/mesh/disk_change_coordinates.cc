@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/io.h>
-#include <mito/manifolds.h>
+#include <mito/mesh.h>
 
 
 // cartesian coordinates in 2D
@@ -28,18 +28,21 @@ area_change_coordinates(std::string mesh_file_name) -> mito::tensor::scalar_t
     // perform change of coordinates from {coordT1} to {coordT2}
     auto coord_system_changed = mito::geometry::coordinate_system<coordT2>(coord_system);
 
-    // create a manifold on {mesh} with the coordinate system {coordT2}
-    auto manifold = mito::manifolds::manifold(mesh, coord_system_changed);
+    // the metric space
+    using metric_space_t = mito::geometry::metric_space<coordT2>;
 
-    // compute the area of the manifold
-    auto area = manifold.volume();
+    // loop over the mesh cells
+    auto area = 0.0;
+    for (const auto & cell : mesh.cells()) {
+        area += mito::geometry::volume(cell, coord_system_changed, metric_space_t::w);
+    }
 
     // all done
     return area;
 }
 
 
-TEST(Manifolds, Disk)
+TEST(Mesh, Disk)
 {
     // compute the area in polar coordinates on a cartesian mesh
     auto area_polar = area_change_coordinates<cartesian_coordinates_t, polar_coordinates_t>(
