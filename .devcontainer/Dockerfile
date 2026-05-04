@@ -51,6 +51,11 @@ RUN apt install -y python3-pytest
 # install pyre dependencies
 RUN apt install -y pybind11-dev
 
+# install gcc-14 and g++-14
+RUN apt install -y gcc-14 g++-14
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
+
 # install pyre
 WORKDIR ${homedir}
 RUN git clone https://github.com/pyre/pyre \
