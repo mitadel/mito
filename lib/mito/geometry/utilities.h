@@ -74,6 +74,22 @@ namespace mito::geometry {
         return _directors(simplex, coordinate_system, tensor::make_integer_sequence<N>{});
     }
 
+    // computes the volume of {cell} given a coordinate system and a volume form
+    template <int N, int D, coordinates_c coordT>
+    requires(coordT::dim == D)
+    constexpr auto volume(
+        const geometric_simplex_t<N, D> & simplex, const coordinate_system_t<coordT> & coord_system,
+        const /*TOFIX: tensor::p_form_field_c*/ auto & volume_form) -> tensor::scalar_t
+    {
+        // get the director edges of this cell and the point where they stem from
+        auto [point, directors] = mito::geometry::directors(simplex, coord_system);
+        // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
+        // contracted with the cell directors
+        auto volume = 1.0 / mito::tensor::factorial<N>() * volume_form(point)(directors);
+        // all done
+        return volume;
+    }
+
     // builds a geometric simplex based on a topological simplex {simplex} with the vertex-point
     // pairing as appears in {nodes}
     template <int D, int N, class nodesT>
