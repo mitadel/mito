@@ -12,6 +12,9 @@
 // cartesian coordinates in 3D
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
 
+// the metric space type
+using metric_space_t = mito::geometry::metric_space<coordinates_t>;
+
 
 TEST(Tetra, Cube)
 {
@@ -26,15 +29,16 @@ TEST(Tetra, Cube)
     // do tetra mesh refinement
     const auto subdivisions = 2;
     auto tetra_mesh = mito::mesh::tetra(mesh, coord_system, subdivisions);
-    // assert that the refined mesh has 8 times more elements than the original one
+
+    // check that the refined mesh has 8 times more elements than the original one
     EXPECT_EQ(tetra_mesh.nCells(), std::pow(8, subdivisions) * mesh.nCells());
 
-    // compute the volume of the original mesh
-    auto volume_mesh = mito::manifolds::manifold(mesh, coord_system).volume();
+    // loop over the mesh cells
+    auto volume = 0.0;
+    for (const auto & cell : tetra_mesh.cells()) {
+        volume += mito::geometry::volume(cell, coord_system, metric_space_t::w);
+    }
 
-    // compute the volume of the refined mesh
-    auto volume_tetra_mesh = mito::manifolds::manifold(tetra_mesh, coord_system).volume();
-
-    // assert that the two volumes coincide
-    EXPECT_NEAR(volume_mesh, volume_tetra_mesh, 1.e-13);
+    // check that the result of the calculation is correct
+    EXPECT_NEAR(volume, 1.0, 1e-13);
 }
