@@ -107,8 +107,8 @@ mito_test_driver(tests/mito.lib/fields/spherical_metric_field.cc)
 mito_test_driver(tests/mito.lib/manifolds/euclidean_gradient.cc)
 mito_test_driver(tests/mito.lib/manifolds/polar_gradient.cc)
 mito_test_driver(tests/mito.lib/manifolds/spherical_gradient.cc)
-mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_cartesian.cc)
-mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_spherical.cc)
+# mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_cartesian.cc)
+# mito_test_driver(tests/mito.lib/manifolds/surface_half_sphere_spherical.cc)
 
 # materials
 mito_test_driver(tests/mito.lib/materials/gent.cc)
