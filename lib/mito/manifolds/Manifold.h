@@ -24,23 +24,29 @@ namespace mito::manifolds {
         static constexpr int N = cellT::order;
 
       public:
+        // my type
+        using manifold_type = Manifold<cellT, coordsT, volumeFormT>;
+        // my element view type
+        using manifold_elements_view_type = manifold_elements_view_t<manifold_type>;
         // typedef for cell type
         using cell_type = cellT;
+        // typedef for a set of coordinates
+        using coordinates_type = coordsT;
         // typedef for mesh type
         using mesh_type = mesh::mesh_t<cell_type>;
         // typedef for the cell type
         using cells_type = mesh_type::cells_type;
-        // typedef for a set of coordinates
-        using coordinates_type = coordsT;
+        // typedef for the atlas
+        using atlas_type = atlas_t<cell_type, coordinates_type>;
         // typedef for a coordinates system
-        using coordinate_system_type = geometry::coordinate_system_t<coordinates_type>;
+        using coordinate_system_type = atlas_type::coordinate_system_type;
 
       public:
         constexpr Manifold(
             const mesh_type & mesh, const coordinate_system_type & coordinate_system,
             volume_form_type volume_form) :
             _mesh(mesh),
-            _coordinate_system(coordinate_system),
+            _atlas(coordinate_system),
             _volume_form(volume_form)
         {}
 
@@ -67,13 +73,8 @@ namespace mito::manifolds {
         // accessor for the mesh
         constexpr auto mesh() const noexcept -> const mesh_type & { return _mesh; }
 
-        // accessor for the coordinate system
-        constexpr auto coordinate_system() const noexcept -> const coordinate_system_type &
-        {
-            return _coordinate_system;
-        }
-
-        constexpr auto elements() const noexcept -> const cells_type & { return _mesh.cells(); }
+        // return an iterable view of the manifold elements
+        constexpr auto elements() const noexcept { return manifold_elements_view_type{ *this }; }
 
         constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
 
@@ -99,46 +100,28 @@ namespace mito::manifolds {
             }
         }
 
-        constexpr auto volume() const -> tensor::scalar_t
-        {
-            tensor::scalar_t result = 0.0;
-            for (const auto & cell : _mesh.cells()) {
-                result += volume(cell);
-            }
-            // all done
-            return result;
-        }
-
-        // computes the volume of {cell}
-        constexpr auto volume(const cell_type & cell) const -> tensor::scalar_t
-        {
-            // all done
-            return _volume(cell, tensor::make_integer_sequence<N>{});
-        }
-
       private:
-        // computes the volume of a cell
-        template <int... J>
-        constexpr auto _volume(const cell_type & cell, tensor::integer_sequence<J...>) const
-            -> tensor::scalar_t
-        requires(sizeof...(J) == N)
+        // return the manifold element associated to a cell
+        constexpr auto element(const cell_type & cell) const
         {
-            // get the director edges of this cell and the point where they stem from
-            auto [point, directors] = mito::geometry::directors(cell, _coordinate_system);
-            // compute the volume of a N-order simplicial cell as (1/N!) times the volume form
-            // contracted with the cell directors
-            auto volume = 1.0 / mito::tensor::factorial<N>() * _volume_form(point)(directors[J]...);
-            // all done
-            return volume;
+            // get the parametrization of this cell
+            auto phi = _atlas.parametrization(cell);
+            // get the metric volume form of this cell
+            auto w = _volume_form;
+            // assemble and return the manifold element
+            return parametrized_element(cell, phi, w);
         }
 
       private:
         // the underlying mesh
         const mesh_type & _mesh;
-        // the coordinate system
-        const coordinate_system_type & _coordinate_system;
+        // the atlas
+        atlas_type _atlas;
         // the volume form
         volume_form_type _volume_form;
+
+        // frienship with the manifold elements view
+        friend manifold_elements_view_type;
     };
 
 }    // namespace mito

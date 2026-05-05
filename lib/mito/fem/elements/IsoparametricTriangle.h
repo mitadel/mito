@@ -60,9 +60,6 @@ namespace mito::fem {
         // get the geometric simplex
         constexpr auto cell() const noexcept -> const cell_type & { return _cell; }
 
-        // get the mapping from parametric coordinates to physical coordinates
-        constexpr auto parametrization() const { return _cell.parametrization(_coord_system); }
-
       protected:
         // a const reference to the geometric simplex
         const cell_type & _cell;

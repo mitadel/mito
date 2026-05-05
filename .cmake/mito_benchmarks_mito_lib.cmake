@@ -22,7 +22,7 @@ mito_benchmark_driver(benchmarks/mito.lib/operators/laplacian.cc)
 
 if(WITH_PETSC)
     # poisson boundary value problem
-    mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
+    # mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
 endif()
 
 # end of file

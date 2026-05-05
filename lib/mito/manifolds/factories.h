@@ -9,6 +9,25 @@
 
 namespace mito::manifolds {
 
+    // factory of atlases from a coordinate system
+    template <class cellT, geometry::coordinates_c coordsT>
+    // compatible dimension of physical embedding of cell and type of coordinates
+    requires(cellT::dim == coordsT::dim)
+    constexpr auto atlas(const geometry::coordinate_system_t<coordsT> & coordinate_system)
+    {
+        return atlas_t<cellT, coordsT>(coordinate_system);
+    }
+
+    // factory of manifold elements from a cell, a parametrization, and a metric volume form
+    template <class cellT, class parametrizationT, class metricVolumeFormT>
+    constexpr auto parametrized_element(
+        const cellT & cell, const parametrizationT & parametrization,
+        const metricVolumeFormT & metric_volume_form)
+    {
+        return parametrized_element_t<cellT, parametrizationT, metricVolumeFormT>(
+            cell, parametrization, metric_volume_form);
+    }
+
     // factory manifold
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     constexpr auto manifold(

@@ -9,6 +9,19 @@
 
 namespace mito::manifolds {
 
+    // class atlas
+    template <class cellT, geometry::coordinates_c coordsT>
+    requires(cellT::dim == coordsT::dim)
+    class Atlas;
+
+    // class parametrized element
+    template <class cellT, class parametrizationT, class metricVolumeFormT>
+    class ParametrizedElement;
+
+    // class manifold elements view
+    template <class manifoldT>
+    class ManifoldElementsView;
+
     // class manifold
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     requires(cellT::dim == coordsT::dim)
