@@ -160,7 +160,7 @@ namespace mito::geometry {
       private:
         // the simplex nodes
         nodes_type _nodes;
-        // the shared pointer to the footprint
+        // the underlying oriented simplex footprint
         simplex_type _simplex;
     };
 
