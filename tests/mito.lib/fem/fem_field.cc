@@ -12,10 +12,6 @@ using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN
 
 // simplicial cells in 2D
 using cell_t = mito::geometry::triangle_t<2>;
-// first degree finite elements
-constexpr int degree = 1;
-// assemble the finite element type
-using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
 // the x scalar field in 2D
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the y scalar field in 2D
@@ -33,6 +29,11 @@ TEST(Fem, FemField)
 
     // create the body manifold
     auto manifold = mito::manifolds::manifold(mesh, coord_system);
+
+    // first degree finite elements
+    constexpr int degree = 1;
+    // assemble the finite element type
+    using finite_element_t = mito::fem::isoparametric_simplex_t<degree, decltype(manifold)>;
 
     // TOFIX: it should not be mandatory to set constraints to create a function space, let's remove
     // this bit once we implement constraints properly

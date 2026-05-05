@@ -10,8 +10,9 @@
 namespace mito::fem {
 
     // discretizer specialization for {IsoparametricSegmentP1} with continuous Galerkin
-    template <>
-    struct Discretizer<IsoparametricSegmentP1, discretization_t::CG> {
+    // agnostic of the coordinate type and volume form
+    template <geometry::coordinates_c coordsT, class VolumeFormT>
+    struct Discretizer<IsoparametricSegmentP1<coordsT, VolumeFormT>, discretization_t::CG> {
         template <
             typename manifoldT, typename constraintsT, typename elements_type, typename map_type,
             typename constrained_nodes_type>
@@ -19,16 +20,20 @@ namespace mito::fem {
             const manifoldT & manifold, const constraintsT & constraints, elements_type & elements,
             map_type & node_map, constrained_nodes_type & constrained_nodes)
         {
+            // the element type
+            using element_type = IsoparametricSegmentP1<coordsT, VolumeFormT>;
 
             // the discretization node type
-            using discretization_node_type =
-                typename IsoparametricSegmentP1::discretization_node_type;
+            using discretization_node_type = typename element_type::discretization_node_type;
 
             // the connectivity type
-            using connectivity_type = typename IsoparametricSegmentP1::connectivity_type;
+            using connectivity_type = typename element_type::connectivity_type;
 
             // get the coordinate system of the manifold
             const auto & coord_system = manifold.coordinate_system();
+
+            // get the volume form from the manifold
+            const auto & volume_form = manifold.volume_form();
 
             // loop on the cells of the mesh
             for (const auto & cell : manifold.elements()) {
@@ -43,8 +48,10 @@ namespace mito::fem {
                 auto node_1 =
                     node_map.insert({ nodes[1], discretization_node_type() }).first->second;
 
-                // create a finite element for each cell and add it to the pile
-                elements.emplace(cell, coord_system, connectivity_type{ node_0, node_1 });
+                // create a finite element for each cell and add it to the pile, passing the volume
+                // form to the element
+                elements.emplace(
+                    cell, coord_system, connectivity_type{ node_0, node_1 }, volume_form);
             }
 
             // populate the constrained nodes

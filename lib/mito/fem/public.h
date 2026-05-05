@@ -19,6 +19,9 @@
 // blocks implementation
 #include "blocks.h"
 
+// gradient computation utilities
+#include "gradient.h"
+
 // utilities implementation
 #include "utilities.h"
 

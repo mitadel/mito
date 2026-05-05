@@ -8,13 +8,7 @@
 
 
 namespace mito::fem {
-
-    // specialization for linear shape functions on segments in 1D
-    template <>
-    struct isoparametric_simplex<1, geometry::segment_t<1>> {
-        using type = IsoparametricSegmentP1;
-    };
-
+    // no specializations needed here - see elements_library.h for the unified API
 }
 
 
