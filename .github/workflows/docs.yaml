@@ -1,0 +1,177 @@
+# -*- yaml -*-
+#
+# Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
+#
+
+name: documentation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz build-essential cmake gcc-14 g++-14
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r docs/requirements.txt
+          pip install 'numpy<2.0' pybind11
+
+      - name: Checkout pyre
+        uses: actions/checkout@v4
+        with:
+          repository: pyre/pyre
+          ref: tensor
+          fetch-depth: 0
+          path: pyre-src
+
+      - name: Build and install pyre
+        run: |
+          mkdir -p pyre-build
+          cd pyre-build
+          cmake -DCMAKE_INSTALL_PREFIX=/tmp/pyre-install \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_C_COMPILER=gcc-14 \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DPython_ROOT_DIR=$pythonLocation \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ../pyre-src
+          make -j$(nproc)
+          make install
+
+      - name: Build and install mito
+        run: |
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_INSTALL_PREFIX=/usr/local/mito \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DMITO_BUILD_TESTING=OFF \
+                -DMITO_BUILD_BENCHMARKS=OFF \
+                -DWITH_MPI=OFF \
+                -DWITH_VTK=OFF \
+                -DWITH_PETSC=OFF \
+                -Dpyre_DIR=/tmp/pyre-install/share/cmake/pyre \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ..
+          make -j$(nproc)
+          sudo make install
+
+      - name: Build and run C++ tutorials
+        run: chmod +x .github/scripts/build_and_run_tutorials.sh && .github/scripts/build_and_run_tutorials.sh
+
+      - name: Build documentation
+        run: |
+          cd docs
+          doxygen Doxyfile
+          make html
+
+      - name: Upload documentation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-html
+          path: docs/build/html
+          retention-days: 2
+
+  build-and-deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz build-essential cmake gcc-14 g++-14
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install -r docs/requirements.txt
+          pip install 'numpy<2.0' pybind11
+
+      - name: Checkout pyre
+        uses: actions/checkout@v4
+        with:
+          repository: pyre/pyre
+          ref: tensor
+          fetch-depth: 0
+          path: pyre-src
+
+      - name: Build and install pyre
+        run: |
+          mkdir -p pyre-build
+          cd pyre-build
+          cmake -DCMAKE_INSTALL_PREFIX=/tmp/pyre-install \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_C_COMPILER=gcc-14 \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DPython_ROOT_DIR=$pythonLocation \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ../pyre-src
+          make -j$(nproc)
+          make install
+
+      - name: Build and install mito
+        run: |
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_INSTALL_PREFIX=/usr/local/mito \
+                -DCMAKE_CXX_COMPILER=g++-14 \
+                -DMITO_BUILD_TESTING=OFF \
+                -DMITO_BUILD_BENCHMARKS=OFF \
+                -DWITH_MPI=OFF \
+                -DWITH_VTK=OFF \
+                -DWITH_PETSC=OFF \
+                -Dpyre_DIR=/tmp/pyre-install/share/cmake/pyre \
+                -Dpybind11_DIR=$(python3 -c "import pybind11; print(pybind11.get_cmake_dir())") \
+                ..
+          make -j$(nproc)
+          sudo make install
+
+      - name: Build and run C++ tutorials
+        run: chmod +x .github/scripts/build_and_run_tutorials.sh && .github/scripts/build_and_run_tutorials.sh
+
+      - name: Build documentation
+        run: |
+          cd docs
+          doxygen Doxyfile
+          make html
+
+      - name: Set up Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/build/html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
