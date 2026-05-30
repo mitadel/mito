@@ -25,10 +25,10 @@ namespace mito::fem {
     }
 
     // weakform factory
-    template <class finiteElementT>
-    constexpr auto weakform()
+    template <class lhsBlockT, class rhsBlockT>
+    constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block)
     {
-        return weakform_t<finiteElementT>();
+        return weakform_t<lhsBlockT, rhsBlockT>(lhs_block, rhs_block);
     }
 
     // discrete system factory
@@ -37,7 +37,8 @@ namespace mito::fem {
         const std::string & label, const functionSpaceT & function_space,
         const weakformT & weakform)
     {
-        return discrete_system_t<functionSpaceT, linearSystemT>(label, function_space, weakform);
+        return discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
+            label, function_space, weakform);
     }
 }
 

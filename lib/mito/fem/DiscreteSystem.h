@@ -13,7 +13,7 @@ namespace mito::fem {
     // extend the design to the case that there are multiple finite element discretizations that
     // end up on the same linear system.
 
-    template <function_space_c functionSpaceT, class linearSystemT>
+    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
     class DiscreteSystem {
 
       private:
@@ -22,7 +22,7 @@ namespace mito::fem {
         // the element type
         using element_type = typename function_space_type::element_type;
         // the weakform type
-        using weakform_type = weakform_t<element_type>;
+        using weakform_type = weakformT;
         // the linear system type
         using linear_system_type = linearSystemT;
         // the label type

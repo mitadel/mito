@@ -84,9 +84,7 @@ main()
         mito::fem::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
 
     // create the weak form and populate it with the blocks
-    auto weakform = mito::fem::weakform<finite_element_t>();
-    weakform.add_block(fem_lhs_block);
-    weakform.add_block(fem_rhs_block);
+    auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
 
     // the discrete system
     auto discrete_system =

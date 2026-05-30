@@ -13,7 +13,7 @@ namespace mito::fem::blocks {
     // require that {functionT} is a function in barycentric coordinates
     requires(std::is_same_v<
              typename functionT::input_type, typename quadratureRuleT::quadrature_point_type>)
-    class L2NormBlock : public AssemblyBlock<elementT, tensor::scalar_t> {
+    class L2NormBlock {
 
       public:
         // my template parameters
@@ -34,7 +34,7 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        auto compute(const element_type & element) const -> elementary_block_type override
+        auto compute(const element_type & element) const -> elementary_block_type
         {
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;

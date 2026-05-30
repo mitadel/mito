@@ -22,12 +22,17 @@ namespace mito::fem {
         }(c);
     };
 
+    template <class lhsBlockT, class rhsBlockT>
+    concept compatible_assembly_blocks_c =
+        std::is_same_v<typename lhsBlockT::element_type, typename rhsBlockT::element_type>;
+
     // weakform alias
-    template <class finiteElementT>
+    template <class lhsBlockT, class rhsBlockT>
+    requires compatible_assembly_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform;
 
     // class discrete system
-    template <function_space_c functionSpaceT, class linearSystemT>
+    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
     class DiscreteSystem;
 
     // class domain field

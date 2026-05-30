@@ -25,21 +25,22 @@ namespace mito::fem {
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints);
 
     // weakform alias
-    template <class finiteElementT>
-    using weakform_t = Weakform<finiteElementT>;
+    template <class lhsBlockT, class rhsBlockT>
+    using weakform_t = Weakform<lhsBlockT, rhsBlockT>;
 
     // weakform factory
-    template <class finiteElementT>
-    constexpr auto weakform();
+    template <class lhsBlockT, class rhsBlockT>
+    constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block);
 
     // discrete system alias
-    template <class functionSpaceT, class linearSystemT>
-    using discrete_system_t = DiscreteSystem<functionSpaceT, linearSystemT>;
+    template <class functionSpaceT, class weakformT, class linearSystemT>
+    using discrete_system_t = DiscreteSystem<functionSpaceT, weakformT, linearSystemT>;
 
     // discrete system factory
-    template <class linearSystemT, class functionSpaceT>
+    template <class linearSystemT, class functionSpaceT, class weakformT>
     constexpr auto discrete_system(
-        const functionSpaceT & function_space, const std::string & label);
+        const functionSpaceT & function_space, const weakformT & weakform,
+        const std::string & label);
 }
 
 

@@ -9,10 +9,6 @@
 
 namespace mito::fem::blocks {
 
-    // assembly block
-    template <class elementT, class blockT>
-    class AssemblyBlock;
-
     // grad grad block
     template <class elementT, class quadratureRuleT>
     class GradGradBlock;

@@ -10,7 +10,7 @@
 namespace mito::fem::blocks {
 
     template <class elementT, class quadratureRuleT>
-    class GradGradBlock : public AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>> {
+    class GradGradBlock {
 
       public:
         // my template parameters
@@ -24,7 +24,7 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        auto compute(const element_type & element) const -> elementary_block_type override
+        auto compute(const element_type & element) const -> elementary_block_type
         {
             // the number of nodes per element
             constexpr int n_nodes = element_type::n_nodes;
