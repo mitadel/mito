@@ -8,8 +8,8 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangleP1} represents a second order simplex living in 2D cartesian space,
-// equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricTriangleP1} represents a second order simplex (triangle) living in 2D
+// cartesian space, equipped with linear shape functions defined in the parametric space.
 
 
 namespace mito::fem {
@@ -28,7 +28,7 @@ namespace mito::fem {
             typename canonical_element_type::parametric_coordinates_type;
         // the linear shape functions
         static constexpr auto shape_functions = shape_functions_type();
-        // the number of discretization discretization nodes
+        // the number of discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
         // a collection of discretization discretization nodes
         using connectivity_type = std::array<discretization_node_type, n_nodes>;
@@ -73,10 +73,10 @@ namespace mito::fem {
             return shape_functions.shape<a>();
         }
 
-        // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
+        // get the jacobian of the isoparametric mapping from parametric to actual coordinates
         constexpr auto jacobian() const
         {
-            // assemble the jacobian as a function of barycentric coordinates
+            // assemble the jacobian as a function of parametric coordinates
             auto jacobian_function = functions::function(
                 [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<2> {
                     // get the shape functions derivatives
@@ -84,7 +84,7 @@ namespace mito::fem {
                     constexpr auto dphi_1 = shape_functions.dshape<1>();
                     constexpr auto dphi_2 = shape_functions.dshape<2>();
 
-                    // compute the gradient of the isoparametric mapping
+                    // compute the jacobian of the isoparametric mapping
                     return (
                         tensor::dyadic(_x0, dphi_0(xi)) + tensor::dyadic(_x1, dphi_1(xi))
                         + tensor::dyadic(_x2, dphi_2(xi)));
@@ -94,18 +94,18 @@ namespace mito::fem {
             return jacobian_function;
         }
 
-        // get the gradient of the a-th shape function as a function of barycentric coordinates
+        // get the gradient of the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
-            // assemble the gradient as a function of barycentric coordinates
+            // assemble the gradient as a function of parametric coordinates
             auto gradient_function = functions::function(
                 [&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
                     // the jacobian of the mapping from the reference element to the physical
                     // element evaluated at {xi}
                     auto J = jacobian()(xi);
-                    // the derivative of the coordinates with respect to the barycentric coordinates
+                    // the derivative of the coordinates with respect to the parametric coordinates
                     auto J_inv = tensor::inverse(J);
                     // return the spatial gradients of the shape functions evaluated at {xi}
                     return shape_functions.dshape<a>()(xi) * J_inv;
