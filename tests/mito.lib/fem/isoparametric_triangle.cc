@@ -38,7 +38,7 @@ test_partition_of_unity(const auto & element)
 
     // loop on the quadrature points
     mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
-        // the barycentric coordinates of the quadrature point
+        // the parametric coordinates of the quadrature point
         constexpr auto xi = quadrature_rule.point(q);
 
         // compute the sum of the shape functions at {xi} for all nodes
@@ -68,7 +68,7 @@ test_gradient_consistency(const auto & element)
 
     // loop on the quadrature points
     mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
-        // the barycentric coordinates of the quadrature point
+        // the parametric coordinates of the quadrature point
         constexpr auto xi = quadrature_rule.point(q);
 
         // compute the sum of the shape functions at {xi} for all nodes

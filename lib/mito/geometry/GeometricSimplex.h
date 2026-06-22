@@ -57,7 +57,7 @@ namespace mito::geometry {
         // the reference simplex type
         using reference_simplex_type = reference_simplex_t<order>;
 
-        // type of a point in barycentric coordinates
+        // type of a point in parametric coordinates
         using parametric_coordinates_type = reference_simplex_type::parametric_coordinates_type;
 
       private:

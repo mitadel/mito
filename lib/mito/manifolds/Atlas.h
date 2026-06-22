@@ -61,7 +61,7 @@ namespace mito::manifolds {
                 // get the origin of the coordinate system
                 auto origin = coord_system.origin();
                 // assemble the parametrization as x0 * xi<0> + ...
-                // where {xi<a>} are the barycentric coordinates on the reference simplex and the
+                // where {xi<a>} are the parametric coordinates on the reference simplex and the
                 // {xa} are the position vectors of the nodes
                 return (
                     ((cell.template xi<a>()

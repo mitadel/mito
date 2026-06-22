@@ -9,7 +9,7 @@
 
 // first order shape functions type
 using shape_t = mito::fem::ShapeTriangleP1;
-// the barycentric coordinates type
+// the parametric coordinates type
 using parametric_coordinates_type = shape_t::reference_element_type::parametric_coordinates_type;
 
 

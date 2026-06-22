@@ -10,7 +10,7 @@
 namespace mito::fem::blocks {
 
     template <class elementT, class quadratureRuleT, functions::function_c functionT>
-    // require that {functionT} is a function in barycentric coordinates
+    // require that {functionT} is a function in parametric coordinates
     requires(std::is_same_v<
              typename functionT::input_type, typename quadratureRuleT::quadrature_point_type>)
     class L2NormBlock {
