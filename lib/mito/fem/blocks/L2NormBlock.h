@@ -42,7 +42,7 @@ namespace mito::fem::blocks {
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary contribution to the L2 norm
-            elementary_block_type elementary_contribution{};
+            elementary_block_type norm{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
@@ -60,11 +60,11 @@ namespace mito::fem::blocks {
                 auto factor = w * tensor::determinant(element.jacobian()(xi));
 
                 // populate the elementary contribution to the matrix
-                elementary_contribution += factor * _function(xi) * _function(xi);
+                norm += factor * _function(xi) * _function(xi);
             });
 
             // all done
-            return elementary_contribution;
+            return norm;
         }
 
       private:
