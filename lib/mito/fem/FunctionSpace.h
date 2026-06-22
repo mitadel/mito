@@ -17,7 +17,6 @@ namespace mito::fem {
 
       public:
         // my template parameter, the finite element type
-        using element_type = finiteElementT;
         using finite_element_type = finiteElementT;
         // the manifold type
         using manifold_type = manifoldT;
@@ -100,6 +99,8 @@ namespace mito::fem {
         {
             // assemble and return the finite element from the manifold element and the localization
             // of the connectivity table to this cell
+            // QUESTION: manifold element is morally the local geometry of the cell. Shall we call
+            // it that way?
             return finite_element<finite_element_type>(
                 _manifold.element(cell), _connectivity_table.at(cell.simplex().id()));
         }
@@ -137,6 +138,12 @@ namespace mito::fem {
         }
 
       private:
+        // TOFIX: similarly to the manifold, which should not own (a reference to) the mesh, the
+        // function space should not own (a reference to) the manifold.
+        // the manifold should be able to endow the mesh elements with metric information, and the
+        // function space should be able to endow the mesh elements with shape functions
+        // Then we don't even need views!
+        // to the manifold on which the function space is defined
         const manifold_type & _manifold;
 
         // TOFIX: this should be a collection of constraints. Also, constraints may involve
@@ -159,6 +166,8 @@ namespace mito::fem {
         // (we need to know how the solution maps to the mesh nodes). I am not sure this is a good
         // reason to build and store this map, though. Also, if we plan to keep this map, we should
         // come up with a better name
+        // TOFIX: discretization node should be a struct containing the mesh node and the local node
+        // index, so that we can get rid of this map
         // a map between the mesh nodes and discretization nodes
         map_type _node_map;
 
