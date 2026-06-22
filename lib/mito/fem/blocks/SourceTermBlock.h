@@ -56,7 +56,7 @@ namespace mito::fem::blocks {
 
                 // the quadrature weight at this point scaled with the area of the canonical simplex
                 constexpr auto w =
-                    elementType::canonical_element_type::area * quadrature_rule.weight(q);
+                    elementType::canonical_element_type::measure * quadrature_rule.weight(q);
 
                 // precompute the common factor
                 auto factor = w * tensor::determinant(element.jacobian()(xi));

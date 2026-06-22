@@ -52,7 +52,7 @@ namespace mito::quadrature {
                     const auto x_q = _quadratureRule.point(q);
                     // get the quadrature weight and scale it by the reference simplex area
                     const auto w_q =
-                        _quadratureRule.weight(q) * cell_type::reference_simplex_type::area;
+                        _quadratureRule.weight(q) * cell_type::reference_simplex_type::measure;
                     // construct the metric volume element at {x} by contracting the metric volume
                     // form with the tangent vectors at {x}
                     const auto dV = w(phi(x_q))(tensor::columns(J(x_q)));

@@ -15,8 +15,8 @@ namespace mito::geometry {
         // the order of the reference simplex
         constexpr static int order = N;
 
-        // the area of the reference simplex
-        constexpr static double area = 1.0 / mito::tensor::factorial<order>();
+        // the measure of the reference simplex
+        constexpr static double measure = 1.0 / mito::tensor::factorial<order>();
 
       private:
         // helper to compute 1 - xi0 - xi1 - ... - xi(N-1)
