@@ -35,12 +35,6 @@ namespace mito::manifolds {
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     using manifold_t = Manifold<cellT, coordsT, volumeFormT>;
 
-    // factory of manifolds from a mesh and a coordinate system
-    template <class cellT, geometry::coordinates_c coordsT>
-    constexpr auto manifold(
-        const mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<coordsT> & coordinate_system);
-
     // factory submanifold from a mesh, a coordinate system and set of normal fields
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     constexpr auto submanifold(

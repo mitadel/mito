@@ -38,27 +38,7 @@ namespace mito::manifolds {
         return manifold_t<cellT, coordsT, volumeFormT>(mesh, coordinate_system, volume_form);
     }
 
-    // factory of manifolds from a mesh and a coordinate system
-    template <class cellT, geometry::coordinates_c coordsT>
-    constexpr auto manifold(
-        const mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<coordsT> & coordinate_system)
-    {
-        // the mesh type
-        using mesh_type = mesh::mesh_t<cellT>;
-
-        // assert that the manifold is of the highest dimension
-        static_assert(mesh_type::dim == mesh_type::order);
-
-        // the metric space type
-        using metric_space_type = geometry::euclidean_metric_space<coordsT>;
-
-        // get the metric volume form
-        constexpr auto volume_form = metric_space_type::w;
-
-        // return a new manifold
-        return manifold(mesh, coordinate_system, volume_form);
-    }
+    // TOFIX: this function only works for Euclidean metric spaces
 
     // factory of submanifolds from a mesh, a coordinate system and set of normal fields
     template <class cellT, geometry::coordinates_c coordsT, mito::fields::vector_field_c... fieldsT>

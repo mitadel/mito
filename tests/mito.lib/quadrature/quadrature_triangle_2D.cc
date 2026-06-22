@@ -13,6 +13,8 @@ using mito::quadrature::GAUSS;
 
 // alias for a set of cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// the euclidean metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // the function extracting the {x_0} components of a 2D vector
 constexpr auto x_0 = mito::geometry::cartesian::x_0<2>;
@@ -63,7 +65,7 @@ TEST(Quadrature, Square)
     mesh.insert({ node_4, node_0, node_3 });
 
     // This instantiates a quad rule on the cells (pairing cell type and degree of exactness)
-    auto bodyManifold = mito::manifolds::manifold(mesh, coord_system);
+    auto bodyManifold = mito::manifolds::manifold(mesh, coord_system, metric_space_t::w);
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);
 

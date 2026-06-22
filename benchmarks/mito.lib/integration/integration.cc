@@ -8,6 +8,8 @@
 
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// the metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // the function extracting the {x_0} components of a 2D vector
 constexpr auto x_0 = mito::geometry::cartesian::x_0<2>;
@@ -67,7 +69,7 @@ main()
     auto tetra_mesh = mito::mesh::tetra(mesh, coord_system, subdivisions);
 
     // create manifold from the mesh
-    auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system);
+    auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system, metric_space_t::w);
 
     // instantiate a scalar field
     auto f = mito::functions::cos(x_0 * x_1);

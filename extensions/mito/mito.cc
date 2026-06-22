@@ -135,10 +135,11 @@ PYBIND11_MODULE(mito, m)
         // done
         ;
 
-
+    // alias for a the euclidean metric space in 2D
+    using euclidean_metric_2D_t = mito::geometry::euclidean_metric_space<coordinates_2D_t>;
     // alias for a manifold of triangles embedded in 2D
-    using manifold_triangle_2D_t = decltype(mito::manifolds::manifold(
-        std::declval<mesh_triangle_2D_t>(), std::declval<coordinate_system_2D_t>()));
+    using manifold_triangle_2D_t = mito::manifolds::manifold_t<
+        cell_2D_t, coordinates_2D_t, std::remove_cvref_t<decltype(euclidean_metric_2D_t::w)>>;
     // the mito manifold interface
     mito::py::class_<manifold_triangle_2D_t>(m, "ManifoldTriangle2D")
         // the constructor
@@ -147,7 +148,7 @@ PYBIND11_MODULE(mito, m)
             mito::py::init(
                 [](const mesh_triangle_2D_t & mesh, const coordinate_system_2D_t & coord_system) {
                     // create the manifold
-                    return mito::manifolds::manifold(mesh, coord_system);
+                    return mito::manifolds::manifold(mesh, coord_system, euclidean_metric_2D_t::w);
                 }))
         // done
         ;

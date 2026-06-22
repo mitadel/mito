@@ -8,6 +8,8 @@
 
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// the metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // simplicial cells in 2D
 using cell_t = mito::geometry::triangle_t<2>;
@@ -57,7 +59,7 @@ main()
     // auto mesh = mito::mesh::tetra(original_mesh, coord_system, subdivisions);
 
     // create the body manifold
-    auto manifold = mito::manifolds::manifold(mesh, coord_system);
+    auto manifold = mito::manifolds::manifold(mesh, coord_system, metric_space_t::w);
 
     // get the boundary mesh
     auto boundary_mesh = mito::mesh::boundary(mesh);
