@@ -11,6 +11,7 @@ namespace mito::fem {
 
     // factory of finite element from a parametrized element
     template <class finiteElementTraits, class parametrizedElementT>
+    requires compatible_element_type_c<parametrizedElementT, finiteElementTraits>
     constexpr auto finite_element(
         const parametrizedElementT & element,
         const typename finiteElementTraits::connectivity_type & connectivity)
