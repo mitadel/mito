@@ -38,8 +38,6 @@ namespace mito::manifolds {
         return manifold_t<cellT, coordsT, volumeFormT>(mesh, coordinate_system, volume_form);
     }
 
-    // TOFIX: this function only works for Euclidean metric spaces
-
     // factory of submanifolds from a mesh, a coordinate system and set of normal fields
     template <class cellT, geometry::coordinates_c coordsT, mito::fields::vector_field_c... fieldsT>
     constexpr auto submanifold(
