@@ -10,6 +10,7 @@
 // strip namespace
 using namespace mito;
 using namespace mito::fields;
+using namespace mito::operators;
 using namespace mito::tensor;
 
 // the type of coordinates

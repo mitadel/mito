@@ -9,6 +9,7 @@
 // strip namespace
 using namespace mito;
 using namespace mito::fields;
+using namespace mito::operators;
 using mito::quadrature::GAUSS;
 
 // the type of coordinates
