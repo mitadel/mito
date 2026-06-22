@@ -43,8 +43,8 @@ namespace mito::fem::blocks {
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;
 
-            // the elementary rhs
-            elementary_block_type elementary_rhs{};
+            // the elementary vector
+            elementary_block_type elementary_vector{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
@@ -65,13 +65,13 @@ namespace mito::fem::blocks {
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
                     // evaluate the a-th shape function at {xi}
                     auto phi_a = element.template shape<a>()(xi);
-                    // populate the elementary contribution to the rhs
-                    elementary_rhs[{ a }] += factor * _source_field(coord) * phi_a;
+                    // populate the elementary contribution to the vector
+                    elementary_vector[{ a }] += factor * _source_field(coord) * phi_a;
                 });
             });
 
             // all done
-            return elementary_rhs;
+            return elementary_vector;
         }
 
       private:
