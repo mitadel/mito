@@ -51,7 +51,7 @@ namespace mito::manifolds {
         static_assert(mesh_type::dim == mesh_type::order);
 
         // the metric space type
-        using metric_space_type = geometry::metric_space<coordsT>;
+        using metric_space_type = geometry::euclidean_metric_space<coordsT>;
 
         // get the metric volume form
         constexpr auto volume_form = metric_space_type::w;
@@ -75,7 +75,7 @@ namespace mito::manifolds {
         static_assert(mesh_type::dim - mesh_type::order == sizeof...(fieldsT));
 
         // the metric space type
-        using metric_space_type = geometry::metric_space<coordsT>;
+        using metric_space_type = geometry::euclidean_metric_space<coordsT>;
 
         // get the metric volume form
         constexpr auto w = metric_space_type::w;

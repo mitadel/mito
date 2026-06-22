@@ -29,7 +29,7 @@ area_change_coordinates(std::string mesh_file_name) -> mito::tensor::scalar_t
     auto coord_system_changed = mito::geometry::coordinate_system<coordT2>(coord_system);
 
     // the metric space
-    using metric_space_t = mito::geometry::metric_space<coordT2>;
+    using metric_space_t = mito::geometry::euclidean_metric_space<coordT2>;
 
     // loop over the mesh cells
     auto area = 0.0;

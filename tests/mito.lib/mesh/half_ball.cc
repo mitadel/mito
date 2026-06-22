@@ -25,7 +25,8 @@ TEST(Mesh, HalfBall)
         mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
 
     // the metric space
-    using cartesian_metric_space_t = mito::geometry::metric_space<cartesian_coordinates_t>;
+    using cartesian_metric_space_t =
+        mito::geometry::euclidean_metric_space<cartesian_coordinates_t>;
 
     // loop over the mesh cells
     auto volume_cartesian = 0.0;
@@ -38,7 +39,8 @@ TEST(Mesh, HalfBall)
         mito::geometry::coordinate_system<spherical_coordinates_t>(coord_system);
 
     // the metric space
-    using spherical_metric_space_t = mito::geometry::metric_space<spherical_coordinates_t>;
+    using spherical_metric_space_t =
+        mito::geometry::euclidean_metric_space<spherical_coordinates_t>;
 
     // loop over the mesh cells
     auto volume_spherical = 0.0;

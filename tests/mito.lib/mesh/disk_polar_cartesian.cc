@@ -26,7 +26,7 @@ area(std::string mesh_file_name) -> mito::tensor::scalar_t
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(filestream, coord_system);
 
     // the metric space
-    using metric_space_t = mito::geometry::metric_space<coordT>;
+    using metric_space_t = mito::geometry::euclidean_metric_space<coordT>;
 
     // loop over the mesh cells
     auto area = 0.0;

@@ -19,7 +19,7 @@
 // support
 #include "basis.h"
 #include "metric.h"
-#include "metric_space.h"
+#include "euclidean_metric_space.h"
 
 // algebra
 #include "algebra_coordinates.h"

@@ -10,7 +10,7 @@
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
 // the metric space type
-using metric_space_t = mito::geometry::metric_space<coordinates_t>;
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the type of discretization node
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell

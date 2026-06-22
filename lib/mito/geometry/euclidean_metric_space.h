@@ -10,7 +10,7 @@
 namespace mito::geometry {
 
     template <coordinates_c coordsT>
-    struct metric_space {
+    struct euclidean_metric_space {
 
       private:
         // the physical dimension of the manifold (that is that of the cell)
@@ -67,7 +67,7 @@ namespace mito::geometry {
 
 
     template <coordinates_c coordsT>
-    constexpr auto metric_space<coordsT>::metric_equivalent(
+    constexpr auto euclidean_metric_space<coordsT>::metric_equivalent(
         const fields::one_form_field_c auto & one_form)
     {
         // return a vector field that, once evaluated at {x}...
@@ -84,7 +84,7 @@ namespace mito::geometry {
     }
 
     template <coordinates_c coordsT>
-    constexpr auto metric_space<coordsT>::metric_equivalent(
+    constexpr auto euclidean_metric_space<coordsT>::metric_equivalent(
         const fields::vector_field_c auto & vector)
     {
         // return a one form field that, once evaluated at {x}...
@@ -93,7 +93,7 @@ namespace mito::geometry {
 
     template <coordinates_c coordsT>
     template <fields::vector_field_c vectorFieldT, fields::symmetric_tensor_field_c tensorFieldT>
-    constexpr auto metric_space<coordsT>::_one_form(
+    constexpr auto euclidean_metric_space<coordsT>::_one_form(
         const vectorFieldT & vector, const tensorFieldT & matrix)
     requires(fields::compatible_fields_c<vectorFieldT, tensorFieldT>)
     {
