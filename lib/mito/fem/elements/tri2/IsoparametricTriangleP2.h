@@ -19,9 +19,9 @@ namespace mito::fem {
 
       public:
         // the underlying type of parametrized element
-        using element_type = parametrizedElementT;
+        using parametrized_element_type = parametrizedElementT;
         // the underlying mesh cell type
-        using mesh_cell_type = typename element_type::cell_type;
+        using mesh_cell_type = typename parametrized_element_type::cell_type;
 
         // the degree of the finite element
         static constexpr int degree = 2;
@@ -45,7 +45,7 @@ namespace mito::fem {
       public:
         // the default constructor
         inline IsoparametricTriangleP2(
-            const element_type & element, const connectivity_type & connectivity) :
+            const parametrized_element_type & element, const connectivity_type & connectivity) :
             _element(element),
             _connectivity(connectivity)
         {
@@ -149,7 +149,7 @@ namespace mito::fem {
 
       private:
         // the parametrized element (geometric information)
-        const element_type _element;
+        const parametrized_element_type _element;
         // the finite element connectivity
         const connectivity_type _connectivity;
     };
