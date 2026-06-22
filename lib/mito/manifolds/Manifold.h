@@ -9,15 +9,15 @@
 
 namespace mito::manifolds {
 
-    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
+    template <class cellT, geometry::coordinates_c coordsT, class metricVolumeFormT>
     requires(cellT::dim == coordsT::dim)
     class Manifold {
 
       private:
         // typedef for node
         using node_type = cellT::node_type;
-        // the volume form type
-        using volume_form_type = volumeFormT;
+        // the metric volume form type
+        using metric_volume_form_type = metricVolumeFormT;
         // the physical dimension of the manifold (that is that of the cell)
         static constexpr int D = cellT::dim;
         // the dimension of the manifold (that is that of the cell)
@@ -25,7 +25,7 @@ namespace mito::manifolds {
 
       public:
         // my type
-        using manifold_type = Manifold<cellT, coordsT, volumeFormT>;
+        using manifold_type = Manifold<cellT, coordsT, metric_volume_form_type>;
         // my element view type
         using manifold_elements_view_type = manifold_elements_view_t<manifold_type>;
         // typedef for cell type
@@ -44,10 +44,10 @@ namespace mito::manifolds {
       public:
         constexpr Manifold(
             const mesh_type & mesh, const coordinate_system_type & coordinate_system,
-            volume_form_type volume_form) :
+            metric_volume_form_type metric_volume_form) :
             _mesh(mesh),
             _atlas(coordinate_system),
-            _volume_form(volume_form)
+            _metric_volume_form(metric_volume_form)
         {}
 
         // destructor
@@ -105,7 +105,7 @@ namespace mito::manifolds {
             // get the parametrization of this cell
             auto phi = _atlas.parametrization(cell);
             // get the metric volume form of this cell
-            auto w = _volume_form;
+            auto w = _metric_volume_form;
             // assemble and return the manifold element
             return parametrized_element(cell, phi, w);
         }
@@ -115,8 +115,8 @@ namespace mito::manifolds {
         const mesh_type & _mesh;
         // the atlas
         atlas_type _atlas;
-        // the volume form
-        volume_form_type _volume_form;
+        // the metric volume form
+        metric_volume_form_type _metric_volume_form;
 
         // frienship with the manifold elements view
         friend manifold_elements_view_type;
