@@ -76,8 +76,6 @@ namespace mito::manifolds {
         // return an iterable view of the manifold elements
         constexpr auto elements() const noexcept { return manifold_elements_view_type{ *this }; }
 
-        constexpr auto nElements() const noexcept -> int { return std::size(_mesh.cells()); }
-
         constexpr auto print() const -> void
         {
             // make a channel
