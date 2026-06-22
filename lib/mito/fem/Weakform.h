@@ -18,14 +18,10 @@ namespace mito::fem {
         using lhs_block_type = lhsBlockT;
         // the type of the right hand side assembly block
         using rhs_block_type = rhsBlockT;
-        // the element type
-        using element_type = typename lhsBlockT::element_type;
-        // the number of nodes per element
-        static constexpr int n_element_nodes = element_type::n_nodes;
         // the elementary matrix type
-        using elementary_matrix_type = tensor::matrix_t<n_element_nodes>;
+        using elementary_matrix_type = typename lhs_block_type::elementary_block_type;
         // the elementary vector type
-        using elementary_vector_type = tensor::vector_t<n_element_nodes>;
+        using elementary_vector_type = typename rhs_block_type::elementary_block_type;
 
       public:
         // constructor
@@ -51,7 +47,8 @@ namespace mito::fem {
 
       public:
         // compute the elementary contributions to matrix and right-hand side from the weakform
-        constexpr auto compute_blocks(const element_type & element) const
+        template <class elementType>
+        constexpr auto compute_blocks(const elementType & element) const
             -> std::pair<elementary_matrix_type, elementary_vector_type>
         {
             // the elementary matrix

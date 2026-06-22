@@ -100,7 +100,7 @@ namespace mito::manifolds {
             }
         }
 
-      private:
+      public:
         // return the manifold element associated to a cell
         constexpr auto element(const cell_type & cell) const
         {

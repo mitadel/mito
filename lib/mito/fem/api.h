@@ -10,19 +10,24 @@
 namespace mito::fem {
 
     // finite element field alias
-    template <class fieldValueT, class functionSpaceT>
-    using fem_field_t = FemField<fieldValueT, functionSpaceT>;
+    template <class fieldValueT>
+    using fem_field_t = FemField<fieldValueT>;
 
     // the possible discretization types: continuous Galerking (CG) vs. discontinuous Galerkin (DG)
     enum class discretization_t { CG, DG };
 
     // function space alias
-    template <class elementT, constraints::constraint_c constraintsT>
-    using function_space_t = FunctionSpace<elementT, constraintsT>;
+    template <class elementT, class manifoldT, constraints::constraint_c constraintsT>
+    using function_space_t = FunctionSpace<elementT, manifoldT, constraintsT>;
 
     // function space factory
-    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    template <
+        class elementT, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints);
+
+    // function space elements view alias
+    template <class functionSpaceT>
+    using function_space_elements_view_t = FunctionSpaceElementsView<functionSpaceT>;
 
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>

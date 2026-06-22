@@ -14,11 +14,22 @@
 
 namespace mito::fem {
 
-    class IsoparametricTriangleP2 : public IsoparametricTriangle {
+    template <class parametrizedElementT>
+    class IsoparametricTriangleP2 : public utilities::Invalidatable {
 
       public:
+        // the underlying type of parametrized element
+        using element_type = parametrizedElementT;
+        // the underlying mesh cell type
+        using mesh_cell_type = typename element_type::cell_type;
+
         // the degree of the finite element
         static constexpr int degree = 2;
+        // the traits of this element
+        using traits = finite_element_family<mesh_cell_type, degree>;
+        // the connectivity type of the element
+        using connectivity_type = traits::connectivity_type;
+
         // the type of shape functions
         using shape_functions_type = ShapeTriangleP2;
         // the canonical element type
@@ -30,23 +41,23 @@ namespace mito::fem {
         static constexpr auto shape_functions = shape_functions_type();
         // the number of discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
-        // a collection of discretization nodes
-        using connectivity_type = std::array<discretization_node_type, n_nodes>;
 
       public:
         // the default constructor
         inline IsoparametricTriangleP2(
-            const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
-            const connectivity_type & connectivity) :
-            IsoparametricTriangle(geometric_simplex, coord_system),
+            const element_type & element, const connectivity_type & connectivity) :
+            _element(element),
             _connectivity(connectivity)
-        {}
+        {
+            // check consistency between the number of nodes and the number of shape functions
+            static_assert(n_nodes == traits::n_nodes);
+        }
 
         // destructor
         inline ~IsoparametricTriangleP2() = default;
 
-        // delete move constructor
-        constexpr IsoparametricTriangleP2(IsoparametricTriangleP2 &&) noexcept = delete;
+        // default move constructor
+        constexpr IsoparametricTriangleP2(IsoparametricTriangleP2 &&) noexcept = default;
 
         // delete copy constructor
         constexpr IsoparametricTriangleP2(const IsoparametricTriangleP2 &) = delete;
@@ -64,6 +75,16 @@ namespace mito::fem {
             return _connectivity;
         }
 
+        // get the element parmetrization
+        constexpr auto parametrization() const noexcept
+        {
+            // delegate to the underlying element
+            return _element.parametrization();
+        }
+
+        // get the mesh cell
+        constexpr auto cell() const noexcept -> mesh_cell_type { return _element.cell(); }
+
         // get the shape function associated with local node {a}
         template <int a>
         requires(a >= 0 && a < n_nodes)
@@ -79,9 +100,13 @@ namespace mito::fem {
             // assemble the jacobian as a function of parametric coordinates
             auto jacobian_function = functions::function(
                 [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<2> {
-                    auto x3 = 0.5 * (_x0 + _x1);
-                    auto x4 = 0.5 * (_x1 + _x2);
-                    auto x5 = 0.5 * (_x2 + _x0);
+                    // store the coordinates of the vertices of the triangle in physical space
+                    auto x0 = _element.parametrization()({ 0.0, 0.0 });
+                    auto x1 = _element.parametrization()({ 1.0, 0.0 });
+                    auto x2 = _element.parametrization()({ 0.0, 1.0 });
+                    auto x3 = 0.5 * (x0 + x1);
+                    auto x4 = 0.5 * (x1 + x2);
+                    auto x5 = 0.5 * (x2 + x0);
 
                     // get the shape functions derivatives
                     constexpr auto dphi_0 = shape_functions.dshape<0>();
@@ -93,8 +118,8 @@ namespace mito::fem {
 
                     // compute the jacobian of the isoparametric mapping
                     return (
-                        tensor::dyadic(_x0, dphi_0(xi)) + tensor::dyadic(_x1, dphi_1(xi))
-                        + tensor::dyadic(_x2, dphi_2(xi)) + tensor::dyadic(x3, dphi_3(xi))
+                        tensor::dyadic(x0, dphi_0(xi)) + tensor::dyadic(x1, dphi_1(xi))
+                        + tensor::dyadic(x2, dphi_2(xi)) + tensor::dyadic(x3, dphi_3(xi))
                         + tensor::dyadic(x4, dphi_4(xi)) + tensor::dyadic(x5, dphi_5(xi)));
                 });
 
@@ -123,7 +148,9 @@ namespace mito::fem {
         }
 
       private:
-        // the discretization nodes of the simplex
+        // the parametrized element (geometric information)
+        const element_type _element;
+        // the finite element connectivity
         const connectivity_type _connectivity;
     };
 

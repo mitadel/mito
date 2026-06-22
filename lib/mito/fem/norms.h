@@ -11,9 +11,6 @@ namespace mito::fem {
 
     // compute L2 norm on a given function space of the difference between two localizable fields
     template <class quadratureRuleT, class functionSpaceT, class F1, class F2>
-    requires(
-        localizable_field_c<F1, typename functionSpaceT::element_type>
-        && localizable_field_c<F2, typename functionSpaceT::element_type>)
     constexpr auto compute_l2_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
@@ -40,9 +37,6 @@ namespace mito::fem {
 
     // compute H1 norm on a given function space of the difference between two localizable fields
     template <class quadratureRuleT, class functionSpaceT, class F1, class F2>
-    requires(
-        localizable_field_c<F1, typename functionSpaceT::element_type>
-        && localizable_field_c<F2, typename functionSpaceT::element_type>)
     constexpr auto compute_h1_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {

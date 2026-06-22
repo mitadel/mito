@@ -7,13 +7,16 @@
 #pragma once
 
 
+// forward declarations
+#include "forward.h"
+
+// published types and factories
+#include "api.h"
+
 // classes implementation
 #include "ShapeTriangleP2.h"
 #include "IsoparametricTriangleP2.h"
 #include "DiscretizerCG.h"
-
-// published types and factories
-#include "api.h"
 
 
 // end of file

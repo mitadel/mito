@@ -12,51 +12,64 @@ namespace mito::fem {
     // Class {FunctionSpace} represents a collection of finite elements of order {p} defined on a
     // manifold and subjected to a set of constraints.
     // TOFIX: add concept for element type
-    template <class elementT, constraints::constraint_c constraintsT>
+    template <class finiteElementT, class manifoldT, constraints::constraint_c constraintsT>
     class FunctionSpace {
 
       public:
-        // the function space type
-        using function_space_type = FunctionSpace<elementT, constraintsT>;
+        // my template parameter, the finite element type
+        using element_type = finiteElementT;
+        using finite_element_type = finiteElementT;
+        // the manifold type
+        using manifold_type = manifoldT;
         // the constraints type
         using constraints_type = constraintsT;
-        // my template parameter, the finite element type
-        using element_type = elementT;
-        // typedef for a collection of finite elements
-        using elements_type = utilities::segmented_vector_t<element_type>;
-        // the degree of the finite element
-        static constexpr int degree = element_type::degree;
+        // the function space type
+        using function_space_type =
+            FunctionSpace<finite_element_type, manifold_type, constraints_type>;
+
+        // my element view type
+        using finite_elements_view_type = function_space_elements_view_t<function_space_type>;
+
         // the dimension of the physical space
-        static constexpr int dim = element_type::dim;
+        static constexpr int dim = finite_element_type::dim;
+        // the mesh cell type
+        using mesh_cell_type = typename finite_element_type::mesh_cell_type;
         // assemble the mesh node type
-        using mesh_node_type = geometry::node_t<dim>;
+        using mesh_node_type = typename manifold_type::mesh_type::node_type;
+
         // the discretization node type
-        using discretization_node_type = typename element_type::discretization_node_type;
+        using discretization_node_type = typename finite_element_type::discretization_node_type;
         // the constrained nodes type
         using constrained_nodes_type = std::set<discretization_node_type>;
         // the type of a map between the mesh nodes and discretization nodes
         using map_type = std::unordered_map<
             mesh_node_type, discretization_node_type, utilities::hash_function<mesh_node_type>>;
+
+        // id type of a mesh cell
+        using cell_id_type = utilities::index_t<mesh_cell_type>;
+        // a collection of discretization discretization nodes
+        using connectivity_type = typename finite_element_type::connectivity_type;
+        // connectivity table type
+        using connectivity_table_type = std::unordered_map<cell_id_type, connectivity_type>;
+
         // a finite element field type
         template <class fieldValueT>
-        using fem_field_type = fem_field_t<fieldValueT, function_space_type>;
+        using fem_field_type = fem_field_t<fieldValueT>;
 
       public:
         // the constructor
-        template <
-            manifolds::manifold_c manifoldT,
-            discretization_t discretizationT = discretization_t::CG>
-        // require compatibility between the manifold cell and the finite element cell
-        requires(std::is_same_v<
-                    typename manifoldT::mesh_type::cell_type, typename element_type::cell_type>)
-        constexpr FunctionSpace(const manifoldT & manifold, const constraints_type & constraints) :
-            _elements(manifold.nElements()),
+        template <discretization_t discretizationT = discretization_t::CG>
+        constexpr FunctionSpace(
+            const manifold_type & manifold, const constraints_type & constraints) :
+            _manifold(manifold),
             _constraints(constraints),
+            _connectivity_table(),
             _node_map()
         {
+            // TODO: merge the discretization type with the finite element type
             // discretize the manifold subject to the constraints
-            discretize<element_type, discretizationT>(
-                manifold, constraints, _elements, _node_map, _constrained_nodes);
+            discretize<finite_element_type, discretizationT>(
+                manifold, constraints, _connectivity_table, _node_map, _constrained_nodes);
         }
 
         // destructor
@@ -75,15 +88,29 @@ namespace mito::fem {
         constexpr FunctionSpace & operator=(FunctionSpace &&) noexcept = delete;
 
       public:
+        // accessor to the underlying manifold
+        constexpr auto manifold() const noexcept -> const manifold_type & { return _manifold; }
+
+        // return an iterable view of the finite elements
+        constexpr auto elements() const noexcept { return finite_elements_view_type{ *this }; }
+
+      private:
+        //  return the finite element associated to a mesh cell
+        constexpr auto element(const mesh_cell_type & cell) const
+        {
+            // assemble and return the finite element from the manifold element and the localization
+            // of the connectivity table to this cell
+            return finite_element<finite_element_type>(
+                _manifold.element(cell), _connectivity_table.at(cell.simplex().id()));
+        }
+
+      public:
         // TOFIX: not sure this should be constexpr
         // accessor for the constraints
         constexpr auto constraints() const noexcept -> const constraints_type &
         {
             return _constraints;
         }
-
-        // get the finite elements
-        auto elements() const noexcept -> const elements_type & { return _elements; }
 
         // get the constrained nodes
         constexpr auto constrained_nodes() const noexcept -> const constrained_nodes_type &
@@ -106,13 +133,11 @@ namespace mito::fem {
             get_discretization_nodes(*this, nodes);
 
             // build a nodal field on the discretization nodes collected from the function space
-            return fem_field_t<fieldValueT, function_space_type>(
-                discrete::nodal_field_t<fieldValueT>(nodes, name));
+            return fem_field_type<fieldValueT>(discrete::nodal_field_t<fieldValueT>(nodes, name));
         }
 
       private:
-        // a collection of finite elements
-        elements_type _elements;
+        const manifold_type & _manifold;
 
         // TOFIX: this should be a collection of constraints. Also, constraints may involve
         // different degrees of freedom (e.g. periodic boundary conditions to impose relations
@@ -127,12 +152,18 @@ namespace mito::fem {
         // the constrained nodes
         constrained_nodes_type _constrained_nodes;
 
+        // the connectivity table of the finite elements
+        connectivity_table_type _connectivity_table;
+
         // QUESTION: the reason why we need this map is to write the solution in the vtk writer file
         // (we need to know how the solution maps to the mesh nodes). I am not sure this is a good
         // reason to build and store this map, though. Also, if we plan to keep this map, we should
         // come up with a better name
         // a map between the mesh nodes and discretization nodes
         map_type _node_map;
+
+        // frienship with the manifold elements view
+        friend finite_elements_view_type;
     };
 
 }    // namespace mito

@@ -17,7 +17,7 @@ namespace mito::fem {
 
     // TODO: implement higher-dimensional fields (e.g. vector fields, tensor fields, ...)
 
-    template <class fieldValueT, class functionSpaceT>
+    template <class fieldValueT>
     class FemField {
 
       private:
@@ -27,8 +27,6 @@ namespace mito::fem {
         using nodal_field_type = discrete::nodal_field_t<field_value_type>;
         // the node type
         using node_type = typename nodal_field_type::input_type;
-        // the element type
-        using element_type = typename functionSpaceT::element_type;
 
       public:
         // constructor from temporary nodal field
@@ -63,18 +61,19 @@ namespace mito::fem {
         auto nodal_values() const -> const nodal_field_type & { return _nodal_field; }
 
         // localize the field on {element}
-        auto localize(const element_type & element) const -> auto
+        // TODO: concept {finite_element_c}
+        template <class elementT>
+        auto localize(const elementT & element) const -> auto
         {
+            // get the connectivity table of the element
+            auto connectivity = element.connectivity();
+
             // helper lambda to assemble the field localization on {element}
-            constexpr auto _assemble = []<int... a>(
-                                           const element_type & element,
-                                           const nodal_field_type & field,
-                                           tensor::integer_sequence<a...>) {
+            auto _assemble = [&]<int... a>(tensor::integer_sequence<a...>) {
                 // assemble the field localization from the shape functions
-                return ((element.template shape<a>() * field(element.connectivity()[a])) + ...);
+                return ((element.template shape<a>() * _nodal_field(connectivity[a])) + ...);
             };
-            return _assemble(
-                element, _nodal_field, tensor::make_integer_sequence<element_type::n_nodes>{});
+            return _assemble(tensor::make_integer_sequence<elementT::traits::n_nodes>{});
         }
 
         // iterators on the nodal field

@@ -7,6 +7,13 @@
 #pragma once
 
 
+namespace mito::fem {
+
+    template <geometry::geometric_simplex_c cellT, int DEGREE>
+    struct finite_element_family;
+
+}
+
 #include "seg1/public.h"
 #include "tri1/public.h"
 #include "tri2/public.h"

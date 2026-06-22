@@ -73,7 +73,8 @@ namespace mito::io::vtk {
                 const auto & cell = element.cell();
 
                 // create vtk cell
-                auto cellVtk = vtkCellPointer<typename element_type::cell_type::simplex_type>();
+                auto cellVtk =
+                    vtkCellPointer<typename element_type::mesh_cell_type::simplex_type>();
 
                 // local index for the points of the cell
                 auto indexLocalPointVtk = 0;

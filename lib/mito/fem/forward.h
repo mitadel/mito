@@ -10,17 +10,25 @@
 namespace mito::fem {
 
     // class function space
-    template <class elementT, constraints::constraint_c constraintsT>
+    template <class elementT, class manifoldT, constraints::constraint_c constraintsT>
     class FunctionSpace;
 
     // concept of a function space
     template <class F>
     concept function_space_c = requires(F c) {
         // require that F only binds to {FunctionSpace} specializations
-        []<class elementT, constraints::constraint_c constraintsT>(
-            const FunctionSpace<elementT, constraintsT> &) {
+        []<class elementT, class manifoldT, constraints::constraint_c constraintsT>(
+            const FunctionSpace<elementT, manifoldT, constraintsT> &) {
         }(c);
     };
+
+    // class function space elements view
+    template <class functionSpaceT>
+    class FunctionSpaceElementsView;
+
+    // class function space elements view
+    template <class functionSpaceT>
+    class FunctionSpaceElementsView;
 
     template <class lhsBlockT, class rhsBlockT>
     concept compatible_assembly_blocks_c =
@@ -40,20 +48,14 @@ namespace mito::fem {
     class DomainField;
 
     // class finite element field
-    template <class fieldValueT, class functionSpaceT>
+    template <class fieldValueT>
     class FemField;
-
-    // concept of a localizable field
-    template <class F, class E>
-    concept localizable_field_c = requires(const F & f, const E & e) {
-        { localize(f, e) };
-    };
 
     // concept of a fem field
     template <class F>
     concept fem_field_c = requires(F c) {
         // require that F only binds to {FemField} specializations
-        []<class fieldValueT, class functionSpaceT>(const FemField<fieldValueT, functionSpaceT> &) {
+        []<class fieldValueT>(const FemField<fieldValueT> &) {
         }(c);
     };
 }

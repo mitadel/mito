@@ -14,7 +14,7 @@ using cell_t = mito::geometry::triangle_t<2>;
 // second degree finite elements
 constexpr int degree = 2;
 // assemble the finite element type
-using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
+using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
 // the reference simplex
 using reference_simplex_t = mito::geometry::reference_triangle_t;

@@ -34,7 +34,9 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        auto compute(const element_type & element) const -> elementary_block_type
+        template <class elementType>
+        requires(std::is_same_v<typename elementType::traits, element_type>)
+        auto compute(const elementType & element) const -> elementary_block_type
         {
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;
@@ -49,7 +51,7 @@ namespace mito::fem::blocks {
 
                 // the quadrature weight at this point scaled with the area of the canonical simplex
                 constexpr auto w =
-                    element_type::canonical_element_type::area * quadrature_rule.weight(q);
+                    elementType::canonical_element_type::area * quadrature_rule.weight(q);
 
                 // precompute the common factor
                 auto factor = w * tensor::determinant(element.jacobian()(xi));

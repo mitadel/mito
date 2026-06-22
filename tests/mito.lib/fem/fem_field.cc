@@ -15,7 +15,7 @@ using cell_t = mito::geometry::triangle_t<2>;
 // first degree finite elements
 constexpr int degree = 1;
 // assemble the finite element type
-using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
+using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 // the x scalar field in 2D
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the y scalar field in 2D
@@ -59,8 +59,10 @@ TEST(Fem, FemField)
 
     // loop on all the elements of the functions space
     for (const auto & element : function_space.elements()) {
+        // get the mesh cell of the element
+        auto cell = element.cell();
         // loop on all the nodes of the element
-        for (const auto & node : element.cell().nodes()) {
+        for (const auto & node : cell.nodes()) {
             // compute the coordinates of the node
             auto coords = coord_system.coordinates(node->point());
             // set the field value at {node}

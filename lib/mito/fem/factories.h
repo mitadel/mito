@@ -17,11 +17,12 @@ namespace mito::fem {
     template <
         class elementT, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     // require compatibility between the manifold cell and the finite element cell
-    requires(std::is_same_v<typename manifoldT::mesh_type::cell_type, typename elementT::cell_type>)
+    requires(
+        std::is_same_v<typename manifoldT::mesh_type::cell_type, typename elementT::mesh_cell_type>)
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints)
     {
         // build a function space on the manifold and return it
-        return function_space_t<elementT, constraintsT>(manifold, constraints);
+        return function_space_t<elementT, manifoldT, constraintsT>(manifold, constraints);
     }
 
     // weakform factory

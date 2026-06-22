@@ -40,8 +40,8 @@ namespace mito::manifolds {
         // default move constructor
         constexpr ParametrizedElement(ParametrizedElement &&) noexcept = default;
 
-        // delete copy constructor
-        constexpr ParametrizedElement(const ParametrizedElement &) = delete;
+        // default copy constructor
+        constexpr ParametrizedElement(const ParametrizedElement &) = default;
 
         // delete assignment operator
         constexpr ParametrizedElement & operator=(const ParametrizedElement &) = delete;
