@@ -23,6 +23,9 @@ namespace mito::fem {
     // function space factory
     template <
         class elementT, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    // require compatibility between the manifold cell and the finite element cell
+    requires(
+        std::is_same_v<typename manifoldT::mesh_type::cell_type, typename elementT::mesh_cell_type>)
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints);
 
     // function space elements view alias
