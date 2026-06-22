@@ -17,7 +17,7 @@ constexpr int degree = 2;
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
 // the reference simplex
-using reference_simplex_t = mito::geometry::reference_triangle_t;
+using reference_simplex_t = cell_t::reference_simplex_type;
 // degree of exactness for the quadrature rule
 constexpr int doe = 2;
 // Gauss quadrature on triangles with degree of exactness 2

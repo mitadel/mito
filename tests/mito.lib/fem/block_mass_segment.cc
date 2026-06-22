@@ -16,7 +16,7 @@ using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::segment_t<1>;
 // the reference simplex
-using reference_simplex_t = mito::geometry::reference_segment_t;
+using reference_simplex_t = cell_t::reference_simplex_type;
 // Gauss quadrature on segments with degree of exactness 2
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
