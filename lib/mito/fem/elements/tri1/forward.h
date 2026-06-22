@@ -10,7 +10,7 @@
 namespace mito::fem {
 
     // forward declaration of the class {IsoparametricTriangleP1}
-    template <class parametrizedElementT>
+    template <manifolds::parametrized_element_c parametrizedElementT>
     class IsoparametricTriangleP1;
 
 }

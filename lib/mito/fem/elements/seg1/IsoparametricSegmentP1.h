@@ -14,7 +14,7 @@
 
 namespace mito::fem {
 
-    template <class parametrizedElementT>
+    template <manifolds::parametrized_element_c parametrizedElementT>
     class IsoparametricSegmentP1 : public utilities::Invalidatable {
 
       public:

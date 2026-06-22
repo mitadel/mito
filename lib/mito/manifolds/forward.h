@@ -35,6 +35,15 @@ namespace mito::manifolds {
             const Manifold<cellT, coordsT, volumeFormT> &) {
         }(c);
     };
+
+    // concept of a parametrized element
+    template <class F>
+    concept parametrized_element_c = requires(F c) {
+        // require that F only binds to {ParametrizedElement} specializations with 1D cells
+        []<class cellT, class parametrizationT, class metricVolumeFormT>(
+            const ParametrizedElement<cellT, parametrizationT, metricVolumeFormT> &) {
+        }(c);
+    };
 }
 
 
