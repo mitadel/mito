@@ -35,7 +35,7 @@ namespace mito::fem::blocks {
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary matrix
-            elementary_block_type elementary_matrix;
+            elementary_block_type elementary_matrix{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
