@@ -102,7 +102,7 @@ TEST(Fem, IsoparametricTriangle)
     auto node_2 = mito::geometry::node(coord_system, { 0.0, 1.0 });
 
     // make a geometric simplex
-    auto triangle = mito::geometry::triangle<2>({ node_0, node_1, node_2 });
+    auto triangle = mito::geometry::triangle(node_0, node_1, node_2);
 
     // make a manifold element from the triangle
     auto element = mito::manifolds::parametrized_element(

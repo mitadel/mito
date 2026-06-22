@@ -23,7 +23,7 @@ TEST(Barycenter, Tetrahedron3D)
     auto node_3 = mito::geometry::node(coord_system, { 0.0, 0.0, 1.0 });
 
     // build a tetrahedron embedded in 3D
-    auto tetrahedron = mito::geometry::tetrahedron<3>({ node_0, node_1, node_2, node_3 });
+    auto tetrahedron = mito::geometry::tetrahedron(node_0, node_1, node_2, node_3);
 
     // compute the barycenter position
     auto barycenter = mito::geometry::barycenter(tetrahedron, coord_system);

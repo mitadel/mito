@@ -30,7 +30,7 @@ TEST(Geometry, Triangle3D)
     auto node_2 = mito::geometry::node(coord_system, x_2);
 
     // build triangle with a positive volume (reference triangle)
-    auto triangle = mito::geometry::triangle<3>({ node_0, node_1, node_2 });
+    auto triangle = mito::geometry::triangle(node_0, node_1, node_2);
 
     // the normal vector to the submanifold
     constexpr auto cross = mito::tensor::cross(x_1 - x_0, x_2 - x_0);

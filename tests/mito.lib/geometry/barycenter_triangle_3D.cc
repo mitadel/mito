@@ -22,7 +22,7 @@ TEST(Barycenter, Triangle3D)
     auto node_2 = mito::geometry::node(coord_system, { 0.5, 0.5, 0.0 });
 
     // build a triangle embedded in 3D
-    auto triangle = mito::geometry::triangle<3>({ node_0, node_1, node_2 });
+    auto triangle = mito::geometry::triangle(node_0, node_1, node_2);
 
     // compute the barycenter position
     auto barycenter = mito::geometry::barycenter(triangle, coord_system);

@@ -38,7 +38,7 @@ TEST(Fem, BlockGradGradSegment)
     auto node_1 = mito::geometry::node(coord_system, { 1.0 });
 
     // make a geometric simplex
-    auto segment = mito::geometry::segment<1>({ node_0, node_1 });
+    auto segment = mito::geometry::segment(node_0, node_1);
 
     // make a manifold element from the segment
     auto element = mito::manifolds::parametrized_element(

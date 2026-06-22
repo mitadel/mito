@@ -29,127 +29,127 @@ TEST(Geometry, Tetrahedron3D)
     auto node_4 = mito::geometry::node(coord_system, { 0.0, 0.0, 1.0 });
 
     // build tetrahedron with a positive volume (reference tetrahedron)
-    auto tetrahedron = mito::geometry::tetrahedron<3>({ node_1, node_2, node_3, node_4 });
+    auto tetrahedron = mito::geometry::tetrahedron(node_1, node_2, node_3, node_4);
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_1, node_2, node_3, node_4 });
+    tetrahedron = mito::geometry::tetrahedron(node_1, node_2, node_3, node_4);
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_1, node_3, node_4, node_2 });
+    tetrahedron = mito::geometry::tetrahedron(node_1, node_3, node_4, node_2);
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_1, node_4, node_2, node_3 });
+    tetrahedron = mito::geometry::tetrahedron(node_1, node_4, node_2, node_3);
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_2, node_1, node_4, node_3 });
+    tetrahedron = mito::geometry::tetrahedron(node_2, node_1, node_4, node_3);
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_2, node_3, node_1, node_4 });
+    tetrahedron = mito::geometry::tetrahedron( node_2, node_3, node_1, node_4 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_2, node_4, node_3, node_1 });
+    tetrahedron = mito::geometry::tetrahedron( node_2, node_4, node_3, node_1 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_3, node_1, node_2, node_4 });
+    tetrahedron = mito::geometry::tetrahedron( node_3, node_1, node_2, node_4 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_3, node_2, node_4, node_1 });
+    tetrahedron = mito::geometry::tetrahedron( node_3, node_2, node_4, node_1 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_3, node_4, node_1, node_2 });
+    tetrahedron = mito::geometry::tetrahedron( node_3, node_4, node_1, node_2 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_4, node_1, node_3, node_2 });
+    tetrahedron = mito::geometry::tetrahedron( node_4, node_1, node_3, node_2 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_4, node_2, node_1, node_3 });
+    tetrahedron = mito::geometry::tetrahedron( node_4, node_2, node_1, node_3 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an even permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_4, node_3, node_2, node_1 });
+    tetrahedron = mito::geometry::tetrahedron( node_4, node_3, node_2, node_1 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), 1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_1, node_2, node_4, node_3 });
+    tetrahedron = mito::geometry::tetrahedron( node_1, node_2, node_4, node_3 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_1, node_3, node_2, node_4 });
+    tetrahedron = mito::geometry::tetrahedron( node_1, node_3, node_2, node_4 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_1, node_4, node_3, node_2 });
+    tetrahedron = mito::geometry::tetrahedron( node_1, node_4, node_3, node_2 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_2, node_1, node_3, node_4 });
+    tetrahedron = mito::geometry::tetrahedron( node_2, node_1, node_3, node_4 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_2, node_3, node_4, node_1 });
+    tetrahedron = mito::geometry::tetrahedron( node_2, node_3, node_4, node_1 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_2, node_4, node_1, node_3 });
+    tetrahedron = mito::geometry::tetrahedron( node_2, node_4, node_1, node_3 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_3, node_1, node_4, node_2 });
+    tetrahedron = mito::geometry::tetrahedron( node_3, node_1, node_4, node_2 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_3, node_2, node_1, node_4 });
+    tetrahedron = mito::geometry::tetrahedron( node_3, node_2, node_1, node_4 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_3, node_4, node_2, node_1 });
+    tetrahedron = mito::geometry::tetrahedron( node_3, node_4, node_2, node_1 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_4, node_1, node_2, node_3 });
+    tetrahedron = mito::geometry::tetrahedron( node_4, node_1, node_2, node_3 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_4, node_2, node_3, node_1 });
+    tetrahedron = mito::geometry::tetrahedron( node_4, node_2, node_3, node_1 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 
     // create a tetrahedron from an odd permutation of the vertices with respect to the reference
-    tetrahedron = mito::geometry::tetrahedron<3>({ node_4, node_3, node_1, node_2 });
+    tetrahedron = mito::geometry::tetrahedron( node_4, node_3, node_1, node_2 );
     // check that the volume of tetrahedron is correct
     EXPECT_DOUBLE_EQ(mito::geometry::volume(tetrahedron, coord_system, w), -1.0 / 6.0);
 }

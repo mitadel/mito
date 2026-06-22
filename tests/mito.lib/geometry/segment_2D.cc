@@ -24,7 +24,7 @@ TEST(Geometry, Segment2D)
     auto node_1 = mito::geometry::node(coord_system, { 0.5, 0.5 });
 
     // build segment from the nodes
-    auto segment = mito::geometry::segment<2>({ node_0, node_1 });
+    auto segment = mito::geometry::segment(node_0, node_1);
 
     // the normal vector to the segment
     constexpr auto v = mito::tensor::vector_t<2>{ 0.5, -0.5 };
