@@ -27,6 +27,10 @@ namespace mito::fem::blocks {
     requires(std::is_same_v<
              typename functionT::input_type, typename quadratureRuleT::quadrature_point_type>)
     class L2NormBlock;
+
+    // concept of {T} being a finite element of type {elementT}
+    template <class T, class finiteElementT>
+    concept element_of_type_c = std::same_as<typename T::traits, finiteElementT>;
 }
 
 
