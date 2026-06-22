@@ -85,18 +85,6 @@ namespace mito::geometry {
 
       public:
         // constructor with an existing oriented simplex and a collection of nodes
-        constexpr GeometricSimplex(const simplex_type & simplex, const nodes_type & nodes) :
-            Invalidatable(),
-            _nodes(nodes),
-            _simplex(simplex)
-        {
-            // check that the vertices in {nodes} match the vertices of the {simplex} within a
-            // positive permutation
-            assert(_sanity_check());
-        }
-
-        // QUESTION: do we need this method?
-        // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const nodes_type & nodes) :
             Invalidatable(),
             _nodes(nodes),
