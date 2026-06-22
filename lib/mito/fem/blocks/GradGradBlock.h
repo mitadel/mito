@@ -9,12 +9,12 @@
 
 namespace mito::fem::blocks {
 
-    template <class elementT, class quadratureRuleT>
+    template <class finiteElementT, class quadratureRuleT>
     class GradGradBlock {
 
       public:
         // my template parameters
-        using element_type = elementT;
+        using element_type = finiteElementT;
         using elementary_block_type = tensor::matrix_t<element_type::n_nodes>;
         using quadrature_rule_type = quadratureRuleT;
 
@@ -24,9 +24,9 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        template <class elementType>
-        requires(std::is_same_v<typename elementType::traits, element_type>)
-        auto compute(const elementType & element) const -> elementary_block_type
+        template <class elementT>
+        requires element_of_type_c<elementT, element_type>
+        auto compute(const elementT & element) const -> elementary_block_type
         {
             // the number of nodes per element
             constexpr int n_nodes = element_type::n_nodes;
@@ -42,9 +42,12 @@ namespace mito::fem::blocks {
                 // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
+                // the measure of the canonical simplex
+                constexpr auto measure =
+                    element_type::mesh_cell_type::reference_simplex_type::measure;
+
                 // the quadrature weight at this point scaled with the area of the canonical simplex
-                constexpr auto w =
-                    elementType::canonical_element_type::measure * quadrature_rule.weight(q);
+                constexpr auto w = measure * quadrature_rule.weight(q);
 
                 // precompute the common factor
                 auto factor = w * tensor::determinant(element.jacobian()(xi));
