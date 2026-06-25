@@ -51,13 +51,13 @@ namespace mito::manifolds {
 
       public:
         // return the underlying cell
-        constexpr auto cell() const -> cell_type { return _cell; }
+        constexpr auto cell() const -> const cell_type & { return _cell; }
 
         // return the parametrization of this element in physical space
-        constexpr auto parametrization() const -> parametrization_type { return _parametrization; }
+        constexpr auto parametrization() const -> const parametrization_type & { return _parametrization; }
 
         // return the metric volume form of this element
-        constexpr auto metric_volume_form() const -> metric_volume_form_type
+        constexpr auto metric_volume_form() const -> const metric_volume_form_type &
         {
             return _metric_volume_form;
         }
