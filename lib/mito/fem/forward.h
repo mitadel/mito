@@ -26,10 +26,6 @@ namespace mito::fem {
     template <class functionSpaceT>
     class FunctionSpaceElementsView;
 
-    // class function space elements view
-    template <class functionSpaceT>
-    class FunctionSpaceElementsView;
-
     template <class lhsBlockT, class rhsBlockT>
     concept compatible_assembly_blocks_c =
         std::is_same_v<typename lhsBlockT::element_type, typename rhsBlockT::element_type>;
