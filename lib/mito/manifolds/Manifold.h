@@ -76,28 +76,6 @@ namespace mito::manifolds {
         // return an iterable view of the manifold elements
         constexpr auto elements() const noexcept { return manifold_elements_view_type{ *this }; }
 
-        constexpr auto print() const -> void
-        {
-            // make a channel
-            journal::info_t channel("mito.manifold");
-
-            // print the element set of the manifold
-            channel << "Element set: " << journal::endl;
-
-            for (const auto & e : _mesh.cells()) {
-                // print the elemental composition
-                channel << "Composition: " << journal::endl;
-                channel << e;
-                // and the coordinates of the vertices
-                channel << "Vertices: " << journal::endl;
-                auto nodes = e.nodes();
-                for (const auto & v : nodes) {
-                    channel << coordinates(v) << journal::endl;
-                }
-                channel << journal::endl;
-            }
-        }
-
       public:
         // return the manifold element associated to a cell
         constexpr auto element(const cell_type & cell) const
