@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/io.h>
-#include <mito/manifolds.h>
+#include <mito/mesh.h>
 
 
 // cartesian coordinates in 3D
@@ -14,7 +14,7 @@ using cartesian_coordinates_t = mito::geometry::coordinates_t<3, mito::geometry:
 using spherical_coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
 
 
-TEST(Manifolds, Ball)
+TEST(Mesh, HalfBall)
 {
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<cartesian_coordinates_t>();
@@ -24,22 +24,30 @@ TEST(Manifolds, Ball)
     auto mesh =
         mito::io::summit::reader<mito::geometry::tetrahedron_t<3>>(fileStream, coord_system);
 
-    // create a manifold on {mesh}
-    auto manifold_cartesian = mito::manifolds::manifold(mesh, coord_system);
+    // the metric space
+    using cartesian_metric_space_t =
+        mito::geometry::euclidean_metric_space<cartesian_coordinates_t>;
 
-    // compute the area of the manifold
-    auto volume_cartesian = manifold_cartesian.volume();
+    // loop over the mesh cells
+    auto volume_cartesian = 0.0;
+    for (const auto & cell : mesh.cells()) {
+        volume_cartesian += mito::geometry::volume(cell, coord_system, cartesian_metric_space_t::w);
+    }
 
     // perform change of coordinates from cartesian to spherical
     auto spherical_coord_system =
         mito::geometry::coordinate_system<spherical_coordinates_t>(coord_system);
 
-    // create a manifold on {mesh}
-    auto manifold_spherical = mito::manifolds::manifold(mesh, spherical_coord_system);
+    // the metric space
+    using spherical_metric_space_t =
+        mito::geometry::euclidean_metric_space<spherical_coordinates_t>;
 
-    // compute the area of the manifold
-    auto volume_spherical = manifold_spherical.volume();
-
+    // loop over the mesh cells
+    auto volume_spherical = 0.0;
+    for (const auto & cell : mesh.cells()) {
+        volume_spherical +=
+            mito::geometry::volume(cell, spherical_coord_system, spherical_metric_space_t::w);
+    }
     // expect the same result in cartesian and spherical coordinates
     EXPECT_DOUBLE_EQ(volume_cartesian, volume_spherical);
 

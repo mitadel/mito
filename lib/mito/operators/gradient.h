@@ -15,7 +15,7 @@ namespace mito::operators {
         const auto & metric_field)
     {
         auto g_inv = functions::inverse(metric_field);
-        auto df = fields::gradient(f);
+        auto df = gradient(f);
         return g_inv * df;
     }
 
@@ -26,7 +26,7 @@ namespace mito::operators {
         const auto & jacobian_field)
     {
         auto g_inv = functions::inverse(metric_field);
-        auto df = fields::gradient(f);
+        auto df = gradient(f);
         return jacobian_field * (g_inv * df);
     }
 

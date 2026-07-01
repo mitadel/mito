@@ -53,32 +53,34 @@ namespace mito::geometry {
 
     // segment factory
     template <int D>
-    constexpr auto segment(typename geometric_simplex_t<1, D>::nodes_type && nodes)
+    constexpr auto segment(const node_t<D> & node_0, const node_t<D> & node_1)
         -> geometric_simplex_t<1, D>
     requires(D >= 1)
     {
         // all done
-        return geometric_simplex_t<1, D>(std::move(nodes));
+        return geometric_simplex_t<1, D>({ node_0, node_1 });
     }
 
     // triangle factory
     template <int D>
-    constexpr auto triangle(typename geometric_simplex_t<2, D>::nodes_type && nodes)
+    constexpr auto triangle(
+        const node_t<D> & node_0, const node_t<D> & node_1, const node_t<D> & node_2)
         -> geometric_simplex_t<2, D>
     requires(D >= 2)
     {
         // all done
-        return geometric_simplex_t<2, D>(std::move(nodes));
+        return geometric_simplex_t<2, D>({ node_0, node_1, node_2 });
     }
 
     // tetrahedron factory
     template <int D>
-    constexpr auto tetrahedron(typename geometric_simplex_t<3, D>::nodes_type && nodes)
-        -> geometric_simplex_t<3, D>
+    constexpr auto tetrahedron(
+        const node_t<D> & node_0, const node_t<D> & node_1, const node_t<D> & node_2,
+        const node_t<D> & node_3) -> geometric_simplex_t<3, D>
     requires(D >= 3)
     {
         // all done
-        return geometric_simplex_t<3, D>(std::move(nodes));
+        return geometric_simplex_t<3, D>({ node_0, node_1, node_2, node_3 });
     }
 }
 

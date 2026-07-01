@@ -13,8 +13,17 @@
 // get the forward declarations
 #include "forward.h"
 
+// published type factories; this is the file you are looking for...
+#include "api.h"
+
+// differential calculus on fields
+#include "differential.h"
+
 // metric-aware gradient operator
 #include "gradient.h"
+
+// factories implementation
+#include "factories.h"
 
 
 // end of file

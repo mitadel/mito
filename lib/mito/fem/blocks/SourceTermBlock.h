@@ -11,12 +11,12 @@ namespace mito::fem::blocks {
 
     // TOFIX: the source does not need to be necessarily a scalar field, it can be some other field
     // see if we can use {field_c} instead of {scalar_field_c}
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
-    class SourceTermBlock : public AssemblyBlock<elementT, tensor::vector_t<elementT::n_nodes>> {
+    template <class finiteElementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    class SourceTermBlock {
 
       public:
         // my template parameters
-        using element_type = elementT;
+        using element_type = finiteElementT;
         using elementary_block_type = tensor::vector_t<element_type::n_nodes>;
         using quadrature_rule_type = quadratureRuleT;
 
@@ -33,7 +33,9 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        auto compute(const element_type & element) const -> elementary_block_type override
+        template <class elementT>
+        requires(element_of_type_c<elementT, element_type>)
+        auto compute(const elementT & element) const -> elementary_block_type
         {
             // the number of nodes per element
             constexpr int n_nodes = element_type::n_nodes;
@@ -41,20 +43,23 @@ namespace mito::fem::blocks {
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;
 
-            // the elementary rhs
-            elementary_block_type elementary_rhs{};
+            // the elementary vector
+            elementary_block_type elementary_vector{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
-                // the barycentric coordinates of the quadrature point
+                // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
                 // the coordinates of the quadrature point
                 auto coord = element.parametrization()(xi);
 
+                // the measure of the canonical simplex
+                constexpr auto measure =
+                    element_type::mesh_cell_type::reference_simplex_type::measure;
+
                 // the quadrature weight at this point scaled with the area of the canonical simplex
-                constexpr auto w =
-                    element_type::canonical_element_type::area * quadrature_rule.weight(q);
+                constexpr auto w = measure * quadrature_rule.weight(q);
 
                 // precompute the common factor
                 auto factor = w * tensor::determinant(element.jacobian()(xi));
@@ -63,13 +68,13 @@ namespace mito::fem::blocks {
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
                     // evaluate the a-th shape function at {xi}
                     auto phi_a = element.template shape<a>()(xi);
-                    // populate the elementary contribution to the rhs
-                    elementary_rhs[{ a }] += factor * _source_field(coord) * phi_a;
+                    // populate the elementary contribution to the vector
+                    elementary_vector[{ a }] += factor * _source_field(coord) * phi_a;
                 });
             });
 
             // all done
-            return elementary_rhs;
+            return elementary_vector;
         }
 
       private:

@@ -9,22 +9,38 @@
 
 namespace mito::manifolds {
 
-    // manifold alias
-    template <class cellT, geometry::coordinates_c coordsT, class metricFieldT>
-    using manifold_t = Manifold<cellT, coordsT, metricFieldT>;
-
-    // factory of manifolds from a mesh and a coordinate system
+    // atlas alias
     template <class cellT, geometry::coordinates_c coordsT>
-    constexpr auto manifold(
-        const mesh::mesh_t<cellT> & mesh,
-        const geometry::coordinate_system_t<coordsT> & coordinate_system);
+    using atlas_t = Atlas<cellT, coordsT>;
 
-    // factory of manifolds with explicit metric field
-    template <class cellT, geometry::coordinates_c coordsT, class metricFieldT>
-    constexpr auto manifold(
+    // factory of atlases from a coordinate system
+    template <class cellT, geometry::coordinates_c coordsT>
+    constexpr auto atlas(const geometry::coordinate_system_t<coordsT> &);
+
+    // manifold element alias
+    template <class cellT, class parametrizationT, class metricVolumeFormT>
+    using parametrized_element_t = ParametrizedElement<cellT, parametrizationT, metricVolumeFormT>;
+
+    // factory of parametrized elements from a cell, a parametrization, and a metric volume form
+    template <class cellT, class parametrizationT, class metricVolumeFormT>
+    constexpr auto parametrized_element(
+        const cellT & cell, const parametrizationT & parametrization,
+        const metricVolumeFormT & metric_volume_form);
+
+    // manifold elements view alias
+    template <class manifoldT>
+    using manifold_elements_view_t = ManifoldElementsView<manifoldT>;
+
+    // manifold alias
+    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
+    using manifold_t = Manifold<cellT, coordsT, volumeFormT>;
+
+    // factory submanifold from a mesh, a coordinate system and set of normal fields
+    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
+    constexpr auto submanifold(
         const mesh::mesh_t<cellT> & mesh,
         const geometry::coordinate_system_t<coordsT> & coordinate_system,
-        const metricFieldT & metric_field);
+        const mito::fields::vector_field_c auto & normal_field);
 }
 
 

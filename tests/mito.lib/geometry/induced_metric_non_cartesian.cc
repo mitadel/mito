@@ -25,7 +25,7 @@ TEST(Geometry, InducedMetricFromPolar)
     constexpr auto e_theta = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<1, 2>);
     auto parametrization = 2.0 * xi_0 * e_r + xi_0 * e_theta;
 
-    using ambient_metric_t = mito::geometry::metric<polar_2d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<polar_2d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     // at ξ = 0.5: r = 1, g_induced = [4 + 4·0.25] = [5], volume element = sqrt(5)
@@ -54,7 +54,7 @@ TEST(Geometry, InducedMetricFromSpherical)
     constexpr auto e_phi = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<2, 3>);
     auto parametrization = 1.0 * e_r + xi_0 * e_theta + 10.0 * xi_0 * e_phi;
 
-    using ambient_metric_t = mito::geometry::metric<spherical_3d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<spherical_3d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     // at ξ = π/6: g = 1 + 100 sin²(π/6) = 1 + 100·(1/4) = 1 + 25 = 26

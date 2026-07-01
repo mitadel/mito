@@ -21,7 +21,7 @@ namespace mito::fem {
         // linear shape functions on the reference triangle in parametric coordinates
         static constexpr auto xi_0 = reference_element_type::xi<0>;
         static constexpr auto xi_1 = reference_element_type::xi<1>;
-        static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
+        static constexpr auto xi_2 = reference_element_type::xi<2>;
 
         // linear shape functions on the triangle
         static constexpr auto phi_0 = xi_0;
@@ -33,7 +33,7 @@ namespace mito::fem {
 
         // the gradients of the shape functions
         static constexpr auto dphi = std::make_tuple(
-            fields::gradient(phi_0), fields::gradient(phi_1), fields::gradient(phi_2));
+            operators::gradient(phi_0), operators::gradient(phi_1), operators::gradient(phi_2));
 
       public:
         // get the a-th shape function as a function of parametric coordinates

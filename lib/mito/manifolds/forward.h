@@ -9,6 +9,19 @@
 
 namespace mito::manifolds {
 
+    // class atlas
+    template <class cellT, geometry::coordinates_c coordsT>
+    requires(cellT::dim == coordsT::dim)
+    class Atlas;
+
+    // class parametrized element
+    template <class cellT, class parametrizationT, class metricVolumeFormT>
+    class ParametrizedElement;
+
+    // class manifold elements view
+    template <class manifoldT>
+    class ManifoldElementsView;
+
     // class manifold
     template <class cellT, geometry::coordinates_c coordsT, class metricFieldT>
     requires(cellT::dim == coordsT::dim)
@@ -20,6 +33,15 @@ namespace mito::manifolds {
         // require that F only binds to {Manifold} specializations
         []<class cellT, geometry::coordinates_c coordsT, class metricFieldT>(
             const Manifold<cellT, coordsT, metricFieldT> &) {
+        }(c);
+    };
+
+    // concept of a parametrized element
+    template <class F>
+    concept parametrized_element_c = requires(F c) {
+        // require that F only binds to {ParametrizedElement} specializations with 1D cells
+        []<class cellT, class parametrizationT, class metricVolumeFormT>(
+            const ParametrizedElement<cellT, parametrizationT, metricVolumeFormT> &) {
         }(c);
     };
 }

@@ -7,7 +7,8 @@
 #pragma once
 
 
-// publish the operators interface
+// publish the interface
+// the api is in "operators/api.h"
 #include "operators/public.h"
 
 

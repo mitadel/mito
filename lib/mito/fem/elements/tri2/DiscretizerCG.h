@@ -11,26 +11,26 @@ namespace mito::fem {
 
     // discretizer specialization for {IsoparametricTriangleP2} with continuous Galerkin
     template <>
-    struct Discretizer<IsoparametricTriangleP2, discretization_t::CG> {
+    struct Discretizer<finite_element_family<geometry::triangle_t<2>, 2>, discretization_t::CG> {
         template <
-            typename manifoldT, typename constraintsT, typename elements_type, typename map_type,
-            typename constrained_nodes_type>
+            typename manifoldT, typename constraintsT, typename connectivity_table_type,
+            typename map_type, typename constrained_nodes_type>
         static void apply(
-            const manifoldT & manifold, const constraintsT & constraints, elements_type & elements,
-            map_type & node_map, constrained_nodes_type & constrained_nodes)
+            const manifoldT & manifold, const constraintsT & constraints,
+            connectivity_table_type & connectivity, map_type & node_map,
+            constrained_nodes_type & constrained_nodes)
         {
-            // the dimension of the physical space
-            constexpr int dim = IsoparametricTriangleP2::dim;
+            // the finite element type
+            using finite_element_type = finite_element_family<geometry::triangle_t<2>, 2>;
 
             // assemble the mesh node type
-            using mesh_node_type = geometry::node_t<dim>;
+            using mesh_node_type = typename manifoldT::mesh_type::node_type;
 
             // the discretization node type
-            using discretization_node_type =
-                typename IsoparametricTriangleP2::discretization_node_type;
+            using discretization_node_type = typename finite_element_type::discretization_node_type;
 
             // the connectivity type
-            using connectivity_type = typename IsoparametricTriangleP2::connectivity_type;
+            using connectivity_type = typename finite_element_type::connectivity_type;
 
             // id type of mesh nodes
             using mesh_node_id_t = utilities::index_t<mesh_node_type>;
@@ -42,11 +42,11 @@ namespace mito::fem {
             // create a map to store the mid nodes
             auto mid_nodes_map = mid_nodes_map_type();
 
-            // get the coordinate system of the manifold
-            const auto & coord_system = manifold.coordinate_system();
+            // loop on the elements of the manifold
+            for (const auto & element : manifold.elements()) {
 
-            // loop on the cells of the mesh
-            for (const auto & cell : manifold.elements()) {
+                // access the underlying cell of the element
+                const auto & cell = element.cell();
 
                 // get the nodes of the cell
                 const auto & nodes = cell.nodes();
@@ -77,8 +77,8 @@ namespace mito::fem {
                                   .first->second;
 
                 // create a finite element for each cell and add it to the pile
-                elements.emplace(
-                    cell, coord_system,
+                connectivity.emplace(
+                    cell.simplex().id(),
                     connectivity_type{ node_0, node_1, node_2, node_3, node_4, node_5 });
             }
 

@@ -27,7 +27,7 @@ namespace mito::io::vtk {
 
       private:
         // the element type
-        using element_type = typename grid_type::element_type;
+        using element_type = typename grid_type::finite_element_type::mesh_cell_type::simplex_type;
         // the coordinate system type
         using coord_system_type = coordSystemT;
         // the dimension of the physical space
@@ -73,7 +73,7 @@ namespace mito::io::vtk {
                 const auto & cell = element.cell();
 
                 // create vtk cell
-                auto cellVtk = vtkCellPointer<typename element_type::cell_type::simplex_type>();
+                auto cellVtk = vtkCellPointer<element_type>();
 
                 // local index for the points of the cell
                 auto indexLocalPointVtk = 0;

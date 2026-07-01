@@ -11,6 +11,7 @@
 #include <cassert>
 #include <queue>
 #include <vector>
+#include <tuple>
 #include <utility>
 #include <memory>
 #include <type_traits>
@@ -18,6 +19,7 @@
 #include <string>
 #include <typeinfo>
 #include <cxxabi.h>
+#include <unordered_map>
 
 // support
 #include "../journal.h"

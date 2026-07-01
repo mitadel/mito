@@ -21,7 +21,7 @@ namespace mito::fem {
         // get the parametric coordinates from the reference element
         static constexpr auto xi_0 = reference_element_type::xi<0>;
         static constexpr auto xi_1 = reference_element_type::xi<1>;
-        static constexpr auto xi_2 = 1.0 - xi_0 - xi_1;
+        static constexpr auto xi_2 = reference_element_type::xi<2>;
 
         // quadratic shape functions on the triangle
         static constexpr auto phi_3 = 4.0 * xi_0 * xi_1;
@@ -36,8 +36,8 @@ namespace mito::fem {
 
         // the gradients of the shape functions
         static constexpr auto dphi = std::make_tuple(
-            fields::gradient(phi_0), fields::gradient(phi_1), fields::gradient(phi_2),
-            fields::gradient(phi_3), fields::gradient(phi_4), fields::gradient(phi_5));
+            operators::gradient(phi_0), operators::gradient(phi_1), operators::gradient(phi_2),
+            operators::gradient(phi_3), operators::gradient(phi_4), operators::gradient(phi_5));
 
       public:
         // get the a-th shape function as a function of parametric coordinates

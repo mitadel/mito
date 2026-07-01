@@ -17,6 +17,9 @@
 #include "api.h"
 
 // classes implementation
+#include "Atlas.h"
+#include "ParametrizedElement.h"
+#include "ManifoldElementsView.h"
 #include "Manifold.h"
 
 // factories implementation

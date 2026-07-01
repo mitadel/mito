@@ -21,7 +21,7 @@ TEST(Barycenter, Segment1D)
     auto node_1 = mito::geometry::node(coord_system, { 1.0 });
 
     // build a segment embedded in 1D
-    auto segment = mito::geometry::segment<1>({ node_0, node_1 });
+    auto segment = mito::geometry::segment(node_0, node_1);
 
     // compute the barycenter position
     auto barycenter = mito::geometry::barycenter(segment, coord_system);

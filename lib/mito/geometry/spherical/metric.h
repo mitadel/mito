@@ -9,9 +9,9 @@
 
 namespace mito::geometry {
 
-    // specialization for the spherical metric in 3D
+    // specialization for the Euclidean metric in spherical coordinates
     template <>
-    struct metric<spherical_coordinates_t> {
+    struct euclidean_metric<spherical_coordinates_t> {
         static constexpr auto field()
         {
             // the function extracting the x_0 component of a 3D vector

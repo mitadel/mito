@@ -14,7 +14,7 @@ namespace mito::quadrature {
     class Table {
 
       public:
-        // the type of quadrature points' barycentric coordinates
+        // the type of quadrature points' parametric coordinates
         using quadrature_point_type = typename elementT::parametric_coordinates_type;
         // the type of quadrature weights
         using quadrature_weight_type = double;

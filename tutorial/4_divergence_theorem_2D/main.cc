@@ -9,10 +9,13 @@
 // strip namespace
 using namespace mito;
 using namespace mito::fields;
+using namespace mito::operators;
 using mito::quadrature::GAUSS;
 
 // the type of coordinates
 using coordinates_t = geometry::cartesian::coordinates_t<2>;
+// the euclidean metric space type
+using metric_space_t = geometry::euclidean_metric_space<coordinates_t>;
 
 // the function extracting the {x_0} component of a 2D vector
 constexpr auto x_0 = geometry::cartesian::x_0<2>;
@@ -77,7 +80,7 @@ main()
     mesh.insert({ node_4, node_0, node_3 });
 
     // create the body manifold
-    auto bodyManifold = manifolds::manifold(mesh, coord_system);
+    auto bodyManifold = manifolds::manifold(mesh, coord_system, metric_space_t::w);
     // create the body integrator
     auto bodyIntegrator = quadrature::integrator<GAUSS, 2>(bodyManifold);
 

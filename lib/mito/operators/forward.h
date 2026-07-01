@@ -9,7 +9,7 @@
 
 namespace mito::operators {
 
-    // metric-aware gradient (forward declarations are not needed for overloaded functions)
+    // (forward declarations are not needed for overloaded function templates)
 
 }
 

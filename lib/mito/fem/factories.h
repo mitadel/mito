@@ -17,18 +17,19 @@ namespace mito::fem {
     template <
         class elementT, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
     // require compatibility between the manifold cell and the finite element cell
-    requires(std::is_same_v<typename manifoldT::mesh_type::cell_type, typename elementT::cell_type>)
+    requires(
+        std::is_same_v<typename manifoldT::mesh_type::cell_type, typename elementT::mesh_cell_type>)
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints)
     {
         // build a function space on the manifold and return it
-        return function_space_t<elementT, constraintsT>(manifold, constraints);
+        return function_space_t<elementT, manifoldT, constraintsT>(manifold, constraints);
     }
 
     // weakform factory
-    template <class finiteElementT>
-    constexpr auto weakform()
+    template <class lhsBlockT, class rhsBlockT>
+    constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block)
     {
-        return weakform_t<finiteElementT>();
+        return weakform_t<lhsBlockT, rhsBlockT>(lhs_block, rhs_block);
     }
 
     // discrete system factory
@@ -37,7 +38,8 @@ namespace mito::fem {
         const std::string & label, const functionSpaceT & function_space,
         const weakformT & weakform)
     {
-        return discrete_system_t<functionSpaceT, linearSystemT>(label, function_space, weakform);
+        return discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
+            label, function_space, weakform);
     }
 }
 

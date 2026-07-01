@@ -27,7 +27,7 @@ TEST(Geometry, InducedMetricTriangle2D)
     auto parametrization = (xi_1 - xi_0) * e_0 + (1 - xi_0) * e_1;
 
     // obtain the induced metric tensor field g = J^T * g_ambient * J
-    using ambient_metric_t = mito::geometry::metric<coordinates_2d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_2d_t>;
     auto g_field =
         mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
@@ -62,7 +62,7 @@ TEST(Geometry, InducedMetricTriangle3D)
     constexpr auto e_2 = mito::functions::constant<parametric_2d_t>(mito::tensor::e<2, 3>);
     auto parametrization = (xi_0 + xi_1) * e_0 + xi_1 * e_1 + (xi_0 + xi_1) * e_2;
 
-    using ambient_metric_t = mito::geometry::metric<coordinates_3d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_3d_t>;
     auto g_field =
         mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 

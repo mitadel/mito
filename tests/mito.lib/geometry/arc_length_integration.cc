@@ -30,8 +30,14 @@ TEST(Geometry, ArcLengthCircularArc)
         R * mito::functions::cos(t) * e_x + R * mito::functions::sin(t) * e_y;
 
     // pullback of the Euclidean 2D metric: g_pullback = J^T * I * J = R^2
-    using ambient_metric_t = mito::geometry::metric<coordinates_2d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_2d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
+
+    // the metric volume form on the parameter domain, built from the induced metric:
+    // w = sqrt(det(g_induced)) * dx^0
+    using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_1d_t>;
+    constexpr auto dx0 = metric_space_t::dx<0>;
+    auto w = mito::functions::sqrt(mito::functions::determinant(g_field)) * dx0;
 
     // 1D mesh in parameter space [0, theta]
     auto coord_system = mito::geometry::coordinate_system<coordinates_1d_t>();
@@ -41,8 +47,8 @@ TEST(Geometry, ArcLengthCircularArc)
     mesh.insert({ node_0, node_1 });
     auto refined_mesh = mito::mesh::tetra(mesh, coord_system, 10);
 
-    // manifold with the pullback metric
-    auto manifold = mito::manifolds::manifold(refined_mesh, coord_system, g_field);
+    // manifold with the metric volume form induced by the pullback metric
+    auto manifold = mito::manifolds::manifold(refined_mesh, coord_system, w);
 
     // integrate f = 1 to obtain the arc length
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);

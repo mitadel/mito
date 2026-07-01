@@ -9,9 +9,9 @@
 
 namespace mito::geometry {
 
-    // specialization for the polar metric in 2D
+    // specialization for the Euclidean metric in polar coordinates
     template <>
-    struct metric<polar_coordinates_t> {
+    struct euclidean_metric<polar_coordinates_t> {
         static constexpr auto field()
         {
             // the function extracting the x_0 component of a 2D vector

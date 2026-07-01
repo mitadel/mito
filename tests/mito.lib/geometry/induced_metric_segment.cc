@@ -23,7 +23,7 @@ TEST(Geometry, InducedMetricSegment1D)
     constexpr auto e_0 = mito::geometry::basis<coordinates_1d_t>::template e<0>();
     auto parametrization = 3.0 * xi_0 * e_0;
 
-    using ambient_metric_t = mito::geometry::metric<coordinates_1d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_1d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     auto xi = mito::geometry::cartesian::coordinates<1>({ 0.5 });
@@ -47,7 +47,7 @@ TEST(Geometry, InducedMetricSegment2D)
     constexpr auto e_1 = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<1, 2>);
     auto parametrization = 3.0 * xi_0 * e_0 + 4.0 * xi_0 * e_1;
 
-    using ambient_metric_t = mito::geometry::metric<coordinates_2d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_2d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     auto xi = mito::geometry::cartesian::coordinates<1>({ 0.5 });
@@ -73,7 +73,7 @@ TEST(Geometry, InducedMetricSegment2D_CircularArc)
     auto parametrization =
         3.0 * mito::functions::cos(t) * e_x + 3.0 * mito::functions::sin(t) * e_y;
 
-    using ambient_metric_t = mito::geometry::metric<coordinates_2d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_2d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     // evaluate at two different points to confirm the field is position-independent
@@ -99,7 +99,7 @@ TEST(Geometry, InducedMetricSegment3D)
     constexpr auto e_2 = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<2, 3>);
     auto parametrization = xi_0 * e_0 + xi_0 * e_1 + xi_0 * e_2;
 
-    using ambient_metric_t = mito::geometry::metric<coordinates_3d_t>;
+    using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_3d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     auto xi = mito::geometry::cartesian::coordinates<1>({ 0.25 });

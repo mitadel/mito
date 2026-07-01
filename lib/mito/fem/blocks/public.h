@@ -17,7 +17,6 @@
 #include "api.h"
 
 // classes implementation
-#include "AssemblyBlock.h"
 #include "GradGradBlock.h"
 #include "MassBlock.h"
 #include "SourceTermBlock.h"
