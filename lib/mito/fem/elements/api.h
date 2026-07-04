@@ -9,9 +9,20 @@
 
 namespace mito::fem {
 
-    // type alias for convenient access to the isoparametric simplex type
-    template <int degree, geometry::geometric_simplex_c geometricSimplexT>
-    using isoparametric_simplex_t = typename isoparametric_simplex<degree, geometricSimplexT>::type;
+    // factory of finite element from a parametrized element
+    template <class finiteElementTraits, class parametrizedElementT>
+    requires compatible_element_type_c<parametrizedElementT, finiteElementTraits>
+    constexpr auto finite_element(
+        const parametrizedElementT & element,
+        const typename finiteElementTraits::connectivity_type & connectivity)
+    {
+        // get the type of the finite element from the traits
+        using finite_element_type =
+            typename finiteElementTraits::template type<parametrizedElementT>;
+
+        // assemble the finite element from the parametrized element and the connectivity
+        return finite_element_type(element, connectivity);
+    }
 
 }
 

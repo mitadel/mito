@@ -8,16 +8,18 @@
 
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// the metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // simplicial cells in 2D
 using cell_t = mito::geometry::triangle_t<2>;
 // second degree finite elements
 constexpr int degree = 2;
 // assemble the finite element type
-using finite_element_t = mito::fem::isoparametric_simplex_t<degree, cell_t>;
+using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
 // the reference simplex
-using reference_simplex_t = mito::geometry::reference_triangle_t;
+using reference_simplex_t = cell_t::reference_simplex_type;
 // degree of exactness for the quadrature rule
 constexpr int doe = 2;
 // Gauss quadrature on triangles with degree of exactness 2
@@ -57,7 +59,7 @@ main()
     // auto mesh = mito::mesh::tetra(original_mesh, coord_system, subdivisions);
 
     // create the body manifold
-    auto manifold = mito::manifolds::manifold(mesh, coord_system);
+    auto manifold = mito::manifolds::manifold(mesh, coord_system, metric_space_t::w);
 
     // get the boundary mesh
     auto boundary_mesh = mito::mesh::boundary(mesh);
@@ -84,9 +86,7 @@ main()
         mito::fem::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
 
     // create the weak form and populate it with the blocks
-    auto weakform = mito::fem::weakform<finite_element_t>();
-    weakform.add_block(fem_lhs_block);
-    weakform.add_block(fem_rhs_block);
+    auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
 
     // the discrete system
     auto discrete_system =

@@ -28,7 +28,7 @@ TEST(Quadrature, Segment3D)
     // create nodes
     auto node_0 = mito::geometry::node(coord_system, x_0);
     auto node_1 = mito::geometry::node(coord_system, x_1);
-    auto segment0 = mito::geometry::segment<3>({ node_0, node_1 });
+    auto segment0 = mito::geometry::segment(node_0, node_1);
 
     // construct an orthogonal set {v_1}, {v_2}, {v_3} such that {v_1} is parallel to the segment
     constexpr auto v_1 = (x_1 - x_0) / mito::tensor::norm(x_1 - x_0);

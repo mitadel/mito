@@ -9,6 +9,8 @@
 
 // cartesian coordinates in 1D
 using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
+// the euclidean metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // strip namespace
 using mito::tensor::vector_t;
@@ -34,7 +36,7 @@ TEST(Quadrature, Segment)
     auto tetra_mesh = mito::mesh::tetra(mesh, coord_system, 12);
 
     // an integrator with degree of exactness 2 on segment (0, 1)
-    auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system);
+    auto manifold = mito::manifolds::manifold(tetra_mesh, coord_system, metric_space_t::w);
     auto integrator = mito::quadrature::integrator<mito::quadrature::GAUSS, 2>(manifold);
 
     // a scalar function
@@ -42,7 +44,9 @@ TEST(Quadrature, Segment)
 
     // integrate exp(-x) on (0, 1)
     auto integral = integrator.integrate(f_exp);
-    EXPECT_NEAR(integral, (std::exp(1) - 1) / std::exp(1), 1.e-13);
+
+    // check result
+    EXPECT_NEAR(integral, (std::exp(1.0) - 1.0) / std::exp(1.0), 1.e-13);
 }
 
 // end of file

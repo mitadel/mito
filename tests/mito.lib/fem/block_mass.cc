@@ -9,14 +9,14 @@
 
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-// the type of coordinate system
-using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
+// the metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the type of discretization node
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
 // the reference simplex
-using reference_simplex_t = mito::geometry::reference_triangle_t;
+using reference_simplex_t = cell_t::reference_simplex_type;
 // Gauss quadrature on triangles with degree of exactness 4
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 4>;
@@ -28,7 +28,10 @@ constexpr auto quadrature_rule = quadrature_rule_t();
 TEST(Fem, IsoparametricTriangle)
 {
     // the coordinate system
-    auto coord_system = coord_system_t();
+    auto coord_system = mito::geometry::coordinate_system_t<coordinates_t>();
+
+    // an atlas under the coordinate system
+    auto atlas = mito::manifolds::atlas<cell_t>(coord_system);
 
     // build nodes
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
@@ -36,24 +39,29 @@ TEST(Fem, IsoparametricTriangle)
     auto node_2 = mito::geometry::node(coord_system, { 0.0, 1.0 });
 
     // make a geometric simplex
-    auto geometric_simplex = mito::geometry::triangle<2>({ node_0, node_1, node_2 });
+    auto triangle = mito::geometry::triangle(node_0, node_1, node_2);
+
+    // make a manifold element from the triangle
+    auto element = mito::manifolds::parametrized_element(
+        triangle, atlas.parametrization(triangle), metric_space_t::w);
 
     {
-        // first order isoparametric triangle
-        using element_p1_t = mito::fem::isoparametric_simplex_t<1, cell_t>;
-
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
         auto discretization_node_1 = discretization_node_t();
         auto discretization_node_2 = discretization_node_t();
 
+        // the degree of the finite element
+        constexpr int degree = 1;
+        // assemble the finite element type
+        using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
+
         // a finite element
-        auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system,
-            { discretization_node_0, discretization_node_1, discretization_node_2 });
+        auto element_p1 = mito::fem::finite_element<finite_element_t>(
+            element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
         // a mass matrix block
-        auto mass_block = mito::fem::blocks::mass_block<element_p1_t, quadrature_rule_t>();
+        auto mass_block = mito::fem::blocks::mass_block<finite_element_t, quadrature_rule_t>();
 
         // the analytical elementary mass matrix
         auto analytical_block =
@@ -70,9 +78,6 @@ TEST(Fem, IsoparametricTriangle)
     }
 
     {
-        // second order isoparametric triangle
-        using element_p2_t = mito::fem::isoparametric_simplex_t<2, cell_t>;
-
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
         auto discretization_node_1 = discretization_node_t();
@@ -81,14 +86,18 @@ TEST(Fem, IsoparametricTriangle)
         auto discretization_node_4 = discretization_node_t();
         auto discretization_node_5 = discretization_node_t();
 
+        // the degree of the finite element
+        constexpr int degree = 2;
+        // assemble the finite element type
+        using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
+
         // a finite element
-        auto element_p2 = element_p2_t(
-            geometric_simplex, coord_system,
-            { discretization_node_0, discretization_node_1, discretization_node_2,
-              discretization_node_3, discretization_node_4, discretization_node_5 });
+        auto element_p2 = mito::fem::finite_element<finite_element_t>(
+            element, { discretization_node_0, discretization_node_1, discretization_node_2,
+                       discretization_node_3, discretization_node_4, discretization_node_5 });
 
         // a mass matrix block
-        auto mass_block = mito::fem::blocks::mass_block<element_p2_t, quadrature_rule_t>();
+        auto mass_block = mito::fem::blocks::mass_block<finite_element_t, quadrature_rule_t>();
 
         // the analytical elementary mass matrix
         auto analytical_block = mito::tensor::matrix_t<6>{

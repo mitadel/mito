@@ -10,36 +10,45 @@
 namespace mito::fem {
 
     // finite element field alias
-    template <class fieldValueT, class functionSpaceT>
-    using fem_field_t = FemField<fieldValueT, functionSpaceT>;
+    template <class fieldValueT>
+    using fem_field_t = FemField<fieldValueT>;
 
     // the possible discretization types: continuous Galerking (CG) vs. discontinuous Galerkin (DG)
     enum class discretization_t { CG, DG };
 
     // function space alias
-    template <class elementT, constraints::constraint_c constraintsT>
-    using function_space_t = FunctionSpace<elementT, constraintsT>;
+    template <class elementT, class manifoldT, constraints::constraint_c constraintsT>
+    using function_space_t = FunctionSpace<elementT, manifoldT, constraintsT>;
 
     // function space factory
-    template <manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    template <
+        class elementT, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    // require compatibility between the manifold cell and the finite element cell
+    requires(
+        std::is_same_v<typename manifoldT::mesh_type::cell_type, typename elementT::mesh_cell_type>)
     constexpr auto function_space(const manifoldT & manifold, const constraintsT & constraints);
 
+    // function space elements view alias
+    template <class functionSpaceT>
+    using function_space_elements_view_t = FunctionSpaceElementsView<functionSpaceT>;
+
     // weakform alias
-    template <class finiteElementT>
-    using weakform_t = Weakform<finiteElementT>;
+    template <class lhsBlockT, class rhsBlockT>
+    using weakform_t = Weakform<lhsBlockT, rhsBlockT>;
 
     // weakform factory
-    template <class finiteElementT>
-    constexpr auto weakform();
+    template <class lhsBlockT, class rhsBlockT>
+    constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block);
 
     // discrete system alias
-    template <class functionSpaceT, class linearSystemT>
-    using discrete_system_t = DiscreteSystem<functionSpaceT, linearSystemT>;
+    template <class functionSpaceT, class weakformT, class linearSystemT>
+    using discrete_system_t = DiscreteSystem<functionSpaceT, weakformT, linearSystemT>;
 
     // discrete system factory
-    template <class linearSystemT, class functionSpaceT>
+    template <class linearSystemT, class functionSpaceT, class weakformT>
     constexpr auto discrete_system(
-        const functionSpaceT & function_space, const std::string & label);
+        const functionSpaceT & function_space, const weakformT & weakform,
+        const std::string & label);
 }
 
 

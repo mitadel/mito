@@ -5,7 +5,7 @@
 
 #include <gtest/gtest.h>
 #include <mito/io.h>
-#include <mito/manifolds.h>
+#include <mito/mesh.h>
 
 
 // cartesian coordinates in 2D
@@ -25,18 +25,21 @@ area(std::string mesh_file_name) -> mito::tensor::scalar_t
     auto filestream = std::ifstream(mesh_file_name);
     auto mesh = mito::io::summit::reader<mito::geometry::triangle_t<2>>(filestream, coord_system);
 
-    // create a manifold on {mesh}
-    auto manifold = mito::manifolds::manifold(mesh, coord_system);
+    // the metric space
+    using metric_space_t = mito::geometry::euclidean_metric_space<coordT>;
 
-    // compute the area of the manifold
-    auto area = manifold.volume();
+    // loop over the mesh cells
+    auto area = 0.0;
+    for (const auto & cell : mesh.cells()) {
+        area += mito::geometry::volume(cell, coord_system, metric_space_t::w);
+    }
 
     // all done
     return area;
 }
 
 
-TEST(Manifolds, Disk)
+TEST(Mesh, Disk)
 {
     // compute the area of the disk parametrized in polar coordinates
     auto area_polar = area<polar_coordinates_t>("disk_polar.summit");

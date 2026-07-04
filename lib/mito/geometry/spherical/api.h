@@ -9,12 +9,11 @@
 
 namespace mito::geometry::spherical {
 
-    // the type of cartesian coordinates in {D} dimensions
-    template <int D>
-    using coordinates_t = geometry::coordinates_t<D, geometry::SPHERICAL>;
+    // spherical coordinates
+    using coordinates_t = spherical_coordinates_t;
 
-    // the metric tensor field
-    constexpr auto metric = geometry::metric<spherical_coordinates_t>::field();
+    // the Euclidean metric tensor field
+    constexpr auto euclidean_metric = geometry::euclidean_metric<spherical_coordinates_t>::field();
 
     // factory for spherical coordinates
     constexpr auto coordinates = &geometry::coordinates<spherical_coordinates_t>;

@@ -20,17 +20,18 @@ namespace mito::fem {
       private:
         // linear shape functions on the reference segment in parametric coordinates
         static constexpr auto xi_0 = reference_element_type::xi<0>;
+        static constexpr auto xi_1 = reference_element_type::xi<1>;
 
         // linear shape functions on the segment
-        static constexpr auto phi_0 = 1.0 - xi_0;
-        static constexpr auto phi_1 = xi_0;
+        static constexpr auto phi_0 = xi_0;
+        static constexpr auto phi_1 = xi_1;
 
         // the shape functions
         static constexpr auto phi = std::make_tuple(phi_0, phi_1);
 
         // the gradients of the shape functions
         static constexpr auto dphi =
-            std::make_tuple(fields::gradient(phi_0), fields::gradient(phi_1));
+            std::make_tuple(operators::gradient(phi_0), operators::gradient(phi_1));
 
       public:
         // get the a-th shape function as a function of parametric coordinates

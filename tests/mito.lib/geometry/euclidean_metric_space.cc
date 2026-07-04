@@ -14,7 +14,7 @@ using mito::geometry::CARTESIAN;
 using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
 
 // the metric space type
-using metric_space_t = mito::geometry::metric_space<coordinates_t>;
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 
 TEST(Manifolds, EuclideanMetricSpace)

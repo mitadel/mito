@@ -21,7 +21,7 @@ TEST(Director, Segment)
     auto vertex_1 = mito::geometry::node(coord_system, { 1.0, 0.0, 0.0 });
 
     // build a segment embedded in 3D
-    auto segment = mito::geometry::segment<3>({ vertex_0, vertex_1 });
+    auto segment = mito::geometry::segment(vertex_0, vertex_1);
 
     // compute the cell directors
     // get the directors of the segment
@@ -43,7 +43,7 @@ TEST(Director, Triangle)
     auto vertex_2 = mito::geometry::node(coord_system, { 0.0, 1.0, 0.0 });
 
     // build a triangle embedded in 3D
-    auto triangle = mito::geometry::triangle<3>({ vertex_0, vertex_1, vertex_2 });
+    auto triangle = mito::geometry::triangle(vertex_0, vertex_1, vertex_2);
 
     // compute the cell directors
     // get the directors of the triangle
@@ -67,7 +67,7 @@ TEST(Director, Tetrahedron)
     auto vertex_3 = mito::geometry::node(coord_system, { 0.0, 0.0, 1.0 });
 
     // build a tetrahedron embedded in 3D
-    auto tetrahedron = mito::geometry::tetrahedron<3>({ vertex_0, vertex_1, vertex_2, vertex_3 });
+    auto tetrahedron = mito::geometry::tetrahedron(vertex_0, vertex_1, vertex_2, vertex_3);
 
     // compute the cell directors
     // get the directors of the tetrahedron

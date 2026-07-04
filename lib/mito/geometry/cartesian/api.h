@@ -11,11 +11,12 @@ namespace mito::geometry::cartesian {
 
     // the type of cartesian coordinates in {D} dimensions
     template <int D>
-    using coordinates_t = geometry::coordinates_t<D, geometry::CARTESIAN>;
+    using coordinates_t = cartesian_coordinates_t<D>;
 
-    // the metric tensor field
+    // the Euclidean metric tensor field
     template <int D>
-    constexpr auto metric = geometry::metric<cartesian_coordinates_t<D>>::field();
+    constexpr auto euclidean_metric =
+        geometry::euclidean_metric<cartesian_coordinates_t<D>>::field();
 
     // factory for cartesian coordinates
     template <int D>

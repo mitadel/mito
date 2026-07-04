@@ -57,7 +57,7 @@ namespace mito::geometry {
         // the reference simplex type
         using reference_simplex_type = reference_simplex_t<order>;
 
-        // type of a point in barycentric coordinates
+        // type of a point in parametric coordinates
         using parametric_coordinates_type = reference_simplex_type::parametric_coordinates_type;
 
       private:
@@ -84,18 +84,6 @@ namespace mito::geometry {
         }
 
       public:
-        // constructor with an existing oriented simplex and a collection of nodes
-        constexpr GeometricSimplex(const simplex_type & simplex, const nodes_type & nodes) :
-            Invalidatable(),
-            _nodes(nodes),
-            _simplex(simplex)
-        {
-            // check that the vertices in {nodes} match the vertices of the {simplex} within a
-            // positive permutation
-            assert(_sanity_check());
-        }
-
-        // QUESTION: do we need this method?
         // constructor with an existing oriented simplex and a collection of nodes
         constexpr GeometricSimplex(const nodes_type & nodes) :
             Invalidatable(),
@@ -134,33 +122,17 @@ namespace mito::geometry {
         // return the composition of this simplex in terms of its vertices
         constexpr auto nodes() const -> const nodes_type & { return _nodes; }
 
-        // get the parametrization of the geometric simplex in physical space
-        template <coordinate_system_c coordinateSystemT>
-        constexpr auto parametrization(const coordinateSystemT & coordinate_system) const -> auto
+        // the I-th parametric coordinate
+        template <int I>
+        constexpr auto xi() const -> auto
         {
-            // helper to assemble the parametrization on this simplex
-            constexpr auto _assemble = []<int... a>(
-                                           const auto & nodes, const auto & coordinate_system,
-                                           tensor::integer_sequence<a...>) {
-                // get the origin of the coordinate system
-                constexpr auto origin = coordinate_system.origin();
-
-                // assemble the parametrization as x0 * xi<0> + ...
-                // where {xi<a>} are the barycentric coordinates on the reference simplex and the
-                // {xa} are the position vectors of the nodes
-                return (
-                    ((reference_simplex_type::template xi<a>
-                      * (coordinate_system.coordinates(nodes[a]->point()) - origin)))
-                    + ...);
-            };
-            return _assemble(
-                _nodes, coordinate_system, tensor::make_integer_sequence<n_vertices>{});
+            return reference_simplex_type::template xi<I>;
         }
 
       private:
         // the simplex nodes
         nodes_type _nodes;
-        // the shared pointer to the footprint
+        // the underlying oriented simplex footprint
         simplex_type _simplex;
     };
 
