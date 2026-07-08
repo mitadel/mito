@@ -9,8 +9,6 @@
 
 namespace mito::operators {
 
-    // (forward declarations are not needed for overloaded function templates)
-
 }
 
 
