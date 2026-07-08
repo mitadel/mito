@@ -23,7 +23,7 @@ namespace mito::manifolds {
     class ManifoldElementsView;
 
     // class manifold
-    template <class cellT, geometry::coordinates_c coordsT, class metricFieldT>
+    template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     requires(cellT::dim == coordsT::dim)
     class Manifold;
 
@@ -31,8 +31,8 @@ namespace mito::manifolds {
     template <class F>
     concept manifold_c = requires(F c) {
         // require that F only binds to {Manifold} specializations
-        []<class cellT, geometry::coordinates_c coordsT, class metricFieldT>(
-            const Manifold<cellT, coordsT, metricFieldT> &) {
+        []<class cellT, geometry::coordinates_c coordsT, class volumeFormT>(
+            const Manifold<cellT, coordsT, volumeFormT> &) {
         }(c);
     };
 
