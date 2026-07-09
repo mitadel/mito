@@ -173,6 +173,10 @@ namespace mito::io::summit {
         // QUESTION: Not sure that we need this...
         assert(N_cell_types == 1);
 
+        // read number of formulations (unused but it is in the file format)
+        int N_formulations = 0;
+        fileStream >> N_formulations;
+
         // read the nodes
         readVertices(fileStream, coordinate_system, N_vertices, nodes);
 
