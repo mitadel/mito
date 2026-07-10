@@ -19,9 +19,6 @@
 // differential calculus on fields
 #include "differential.h"
 
-// metric-aware gradient operator
-#include "gradient.h"
-
 // factories implementation
 #include "factories.h"
 
