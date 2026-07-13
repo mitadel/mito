@@ -5,8 +5,6 @@
 
 #include <gtest/gtest.h>
 #include <mito/geometry.h>
-#include <mito/fields.h>
-#include <cmath>
 
 
 using coordinates_1d_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
