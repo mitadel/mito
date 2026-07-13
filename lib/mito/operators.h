@@ -8,6 +8,7 @@
 
 
 // publish the interface
+// the api is in "operators/api.h"
 #include "operators/public.h"
 
 

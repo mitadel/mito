@@ -16,11 +16,11 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// factories implementation
-#include "factories.h"
-
 // differential calculus on fields
 #include "differential.h"
+
+// factories implementation
+#include "factories.h"
 
 
 // end of file

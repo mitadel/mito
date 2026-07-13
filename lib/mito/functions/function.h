@@ -585,9 +585,8 @@ namespace mito::functions {
     };
 
 
-    // function transposing a function of a second order tensor
-    template <function_c F>
-    requires(tensor::matrix_c<typename F::output_type>)
+    // function transposing a tensor-valued function
+    template <tensor_valued_function_c F>
     class Transpose : public function_transpose<F>::type {
 
       public:
