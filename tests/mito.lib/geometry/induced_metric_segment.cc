@@ -28,10 +28,10 @@ TEST(Geometry, InducedMetricSegment1D)
 
     // evaluate the metric at xi (1D pullback collapses to scalar: g = J^2 = 9)
     auto g_val = g_field(xi);
-    EXPECT_DOUBLE_EQ(9.0, mito::tensor::trace(g_val));
+    EXPECT_DOUBLE_EQ(9.0, g_val);
 
     // check volume element equals sqrt(det(g)): segment length = 3
-    EXPECT_DOUBLE_EQ(3.0, std::sqrt(mito::tensor::determinant(g_val)));
+    EXPECT_DOUBLE_EQ(3.0, std::sqrt(g_val));
 }
 
 
