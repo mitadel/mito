@@ -10,7 +10,7 @@
 namespace mito::quadrature {
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, geometry::reference_triangle_t, 1>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_triangle_t, 0>() -> auto
     {
         constexpr int Q = 1;
         using table_type = Table<geometry::reference_triangle_t, Q>;
@@ -18,6 +18,13 @@ namespace mito::quadrature {
 
         return table_type({ /*{point}, weight*/
                             point_weight_pair_type({ 1.0 / 3.0, 1.0 / 3.0 }, 1.0) });
+    }
+
+    template <>
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_triangle_t, 1>() -> auto
+    {
+        // return the formula with one quadrature point
+        return QuadratureTable<GAUSS, geometry::reference_triangle_t, 0>();
     }
 
     template <>

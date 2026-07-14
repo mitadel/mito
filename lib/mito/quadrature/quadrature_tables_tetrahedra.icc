@@ -10,7 +10,7 @@
 namespace mito::quadrature {
 
     template <>
-    constexpr auto QuadratureTable<GAUSS, geometry::reference_tetrahedron_t, 1>() -> auto
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_tetrahedron_t, 0>() -> auto
     {
         constexpr int Q = 1;
         using table_type = Table<geometry::reference_tetrahedron_t, Q>;
@@ -19,6 +19,13 @@ namespace mito::quadrature {
         /*Hammer rule*/
         return table_type({ /*{point}, weight*/
                             point_weight_pair_type({ 1.0 / 4.0, 1.0 / 4.0, 1.0 / 4.0 }, 1.0) });
+    }
+
+    template <>
+    constexpr auto QuadratureTable<GAUSS, geometry::reference_tetrahedron_t, 1>() -> auto
+    {
+        // return the formula with one quadrature point
+        return QuadratureTable<GAUSS, geometry::reference_tetrahedron_t, 0>();
     }
 
     template <>
