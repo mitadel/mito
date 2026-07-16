@@ -13,16 +13,14 @@ namespace mito::fem {
     // extend the design to the case that there are multiple finite element discretizations that
     // end up on the same linear system.
 
-    template <function_space_c functionSpaceT, class linearSystemT>
+    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
     class DiscreteSystem {
 
       private:
         // the function space type
         using function_space_type = functionSpaceT;
-        // the element type
-        using element_type = typename function_space_type::element_type;
         // the weakform type
-        using weakform_type = weakform_t<element_type>;
+        using weakform_type = weakformT;
         // the linear system type
         using linear_system_type = linearSystemT;
         // the label type
@@ -37,9 +35,11 @@ namespace mito::fem {
         // the solution field type
         using solution_field_type = tensor::scalar_t;
         // the fem field type
-        using fem_field_type = fem_field_t<solution_field_type, function_space_type>;
+        using fem_field_type = fem_field_t<solution_field_type>;
+        // the element type
+        using finite_element_type = typename function_space_type::finite_element_type;
         // the number of nodes per element
-        static constexpr int n_element_nodes = element_type::n_nodes;
+        static constexpr int n_element_nodes = finite_element_type::n_nodes;
 
       public:
         // constructor

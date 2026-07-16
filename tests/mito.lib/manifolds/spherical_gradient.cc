@@ -11,7 +11,7 @@
 using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
 
 // the metric space type
-using metric_space_t = mito::geometry::metric_space<coordinates_t>;
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // pi sixth
 constexpr auto pi_sixth = std::numbers::pi / 6.0;

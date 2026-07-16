@@ -9,12 +9,12 @@
 
 namespace mito::fem::blocks {
 
-    template <class elementT, class quadratureRuleT>
-    class GradGradBlock : public AssemblyBlock<elementT, tensor::matrix_t<elementT::n_nodes>> {
+    template <class finiteElementT, class quadratureRuleT>
+    class GradGradBlock {
 
       public:
         // my template parameters
-        using element_type = elementT;
+        using element_type = finiteElementT;
         using elementary_block_type = tensor::matrix_t<element_type::n_nodes>;
         using quadrature_rule_type = quadratureRuleT;
 
@@ -24,7 +24,9 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        auto compute(const element_type & element) const -> elementary_block_type override
+        template <class elementT>
+        requires element_of_type_c<elementT, element_type>
+        auto compute(const elementT & element) const -> elementary_block_type
         {
             // the number of nodes per element
             constexpr int n_nodes = element_type::n_nodes;
@@ -33,16 +35,19 @@ namespace mito::fem::blocks {
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary matrix
-            elementary_block_type elementary_matrix;
+            elementary_block_type elementary_matrix{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
                 // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
+                // the measure of the canonical simplex
+                constexpr auto measure =
+                    element_type::mesh_cell_type::reference_simplex_type::measure;
+
                 // the quadrature weight at this point scaled with the area of the canonical simplex
-                constexpr auto w =
-                    element_type::canonical_element_type::area * quadrature_rule.weight(q);
+                constexpr auto w = measure * quadrature_rule.weight(q);
 
                 // precompute the common factor using the element's volume element
                 auto factor = w * element.volume_element()(xi);

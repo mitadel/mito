@@ -14,6 +14,8 @@
 
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// the euclidean metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // the function extracting the {x_0} components of a 2D vector
 constexpr auto x_0 = mito::geometry::cartesian::x_0<2>;
@@ -46,7 +48,7 @@ TEST(Quadrature, LoadMeshTrianglesMPI)
     auto mesh_partition = mito::mesh::metis::partition(mesh, n_tasks, task_id);
 
     // build the manifold on the partitioned mesh
-    auto manifold = mito::manifolds::manifold(mesh_partition, coord_system);
+    auto manifold = mito::manifolds::manifold(mesh_partition, coord_system, metric_space_t::w);
 
     // instantiate a scalar field
     auto f = mito::functions::cos(x_0 * x_1);

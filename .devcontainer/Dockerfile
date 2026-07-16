@@ -35,6 +35,7 @@ RUN apt install -y bash-completion
 RUN apt install -y make
 RUN apt install -y vim
 RUN apt install -y sudo
+RUN apt install -y clang-format-19
 
 # install mito dependencies
 RUN apt install -y libgtest-dev
@@ -49,6 +50,11 @@ RUN apt install -y python3-pytest
 
 # install pyre dependencies
 RUN apt install -y pybind11-dev
+
+# install gcc-14 and g++-14
+RUN apt install -y gcc-14 g++-14
+RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
+RUN update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
 
 # install pyre
 WORKDIR ${homedir}

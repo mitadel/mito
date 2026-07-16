@@ -74,7 +74,10 @@ namespace mito::io {
             // populate the file heading
             // TOFIX: number of materials is always 1 for now
             outfile << D << std::endl;
-            outfile << std::size(_points) << " " << _mesh.nCells() << " " << 1 << std::endl;
+            // TOFIX: number of formulations is always 1 for now
+            constexpr int n_formulations = 1;
+            outfile << std::size(_points) << " " << _mesh.nCells() << " " << 1 << " "
+                    << n_formulations << std::endl;
 
             // a sorted vector with points (the vector subscript is the point index minus one)
             std::vector<point_type> points_vector(std::size(_points));
@@ -85,7 +88,10 @@ namespace mito::io {
             // write the points to file in an order determined by their index
             for (const auto & point : points_vector) {
                 const auto & coord = _coord_system.coordinates(point);
-                outfile << std::setprecision(15) << coord << std::endl;
+                outfile << std::setprecision(15);
+                for (int d = 0; d < D; ++d)
+                    outfile << coord[d] << " ";
+                outfile << std::endl;
             }
 
             // write the cells to file

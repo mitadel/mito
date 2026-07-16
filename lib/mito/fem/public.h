@@ -25,14 +25,15 @@
 // utilities implementation
 #include "utilities.h"
 
+// finite elements implementation
+#include "elements.h"
+
 // classes implementation
+#include "FunctionSpaceElementsView.h"
 #include "FunctionSpace.h"
 #include "FemField.h"
 #include "DiscreteSystem.h"
 #include "Weakform.h"
-
-// finite elements implementation
-#include "elements.h"
 
 // factories implementation
 #include "factories.h"

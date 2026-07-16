@@ -17,8 +17,8 @@ mito_benchmark_driver(benchmarks/mito.lib/tensor/wedge.cc)
 # integration
 mito_benchmark_driver(benchmarks/mito.lib/integration/integration.cc)
 
-# fields
-mito_benchmark_driver(benchmarks/mito.lib/fields/laplacian.cc)
+# operators
+mito_benchmark_driver(benchmarks/mito.lib/operators/laplacian.cc)
 
 if(WITH_PETSC)
     # poisson boundary value problem

@@ -9,9 +9,15 @@
 
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// the euclidean metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // simplicial cells in 2D
 using cell_t = mito::geometry::triangle_t<2>;
+// first degree finite elements
+constexpr int degree = 1;
+// assemble the finite element type
+using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 // the x scalar field in 2D
 constexpr auto x = mito::functions::component<coordinates_t, 0>;
 // the y scalar field in 2D
@@ -28,12 +34,7 @@ TEST(Fem, FemField)
     auto mesh = mito::io::summit::reader<cell_t>(fileStream, coord_system);
 
     // create the body manifold
-    auto manifold = mito::manifolds::manifold(mesh, coord_system);
-
-    // first degree finite elements
-    constexpr int degree = 1;
-    // assemble the finite element type
-    using finite_element_t = mito::fem::isoparametric_simplex_t<degree, decltype(manifold)>;
+    auto manifold = mito::manifolds::manifold(mesh, coord_system, metric_space_t::w);
 
     // TOFIX: it should not be mandatory to set constraints to create a function space, let's remove
     // this bit once we implement constraints properly
@@ -60,8 +61,10 @@ TEST(Fem, FemField)
 
     // loop on all the elements of the functions space
     for (const auto & element : function_space.elements()) {
+        // get the mesh cell of the element
+        auto cell = element.cell();
         // loop on all the nodes of the element
-        for (const auto & node : element.cell().nodes()) {
+        for (const auto & node : cell.nodes()) {
             // compute the coordinates of the node
             auto coords = coord_system.coordinates(node->point());
             // set the field value at {node}

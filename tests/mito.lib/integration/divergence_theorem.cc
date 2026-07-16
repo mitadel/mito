@@ -13,6 +13,8 @@ using mito::quadrature::GAUSS;
 using mito::tensor::_;
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+// the euclidean metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // the function extracting the {x_0} component of a 2D vector
 constexpr auto x0 = mito::geometry::cartesian::x_0<2>;
@@ -32,7 +34,7 @@ TEST(DivergenceTheorem, Mesh2D)
     constexpr auto f = x0 * x1 * e0 + x0 * x0 * e1;
 
     // build a scalar field with divergence of field
-    constexpr auto div = mito::fields::divergence(f);
+    constexpr auto div = mito::operators::divergence(f);
 
     /**
      * Mesh with four cells:
@@ -71,7 +73,7 @@ TEST(DivergenceTheorem, Mesh2D)
     mesh.insert({ node_4, node_0, node_3 });
 
     // create the body manifold
-    auto bodyManifold = mito::manifolds::manifold(mesh, coord_system);
+    auto bodyManifold = mito::manifolds::manifold(mesh, coord_system, metric_space_t::w);
     // create the body integrator
     auto bodyIntegrator =
         mito::quadrature::integrator<GAUSS, 2 /* degree of exactness */>(bodyManifold);

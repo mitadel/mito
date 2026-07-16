@@ -8,64 +8,56 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangleP2} represents a 2-simplex equipped with quadratic shape
-// functions defined in the parametric space. This unified implementation works for:
-//   - Triangles in any coordinate system (Cartesian, polar, spherical, etc.)
-//   - Triangles in any embedding (2D in 2D, 2D in 3D, etc.)
+// Class {IsoparametricTriangleP2} represents a second order simplex (triangle) living in 2D
+// cartesian space, equipped with quadratic shape functions defined in the parametric space.
 
 
 namespace mito::fem {
 
-    template <geometry::coordinates_c coordsT, class VolumeFormT>
-    class IsoparametricTriangleP2 : public IsoparametricTriangle<coordsT, VolumeFormT> {
-
-      private:
-        using base_type = IsoparametricTriangle<coordsT, VolumeFormT>;
-        using metric_space_type = typename base_type::metric_space_type;
+    template <manifolds::parametrized_element_c parametrizedElementT>
+    class IsoparametricTriangleP2 : public utilities::Invalidatable {
 
       public:
-        static constexpr int D = base_type::D;    // ambient dimension
-        static constexpr int N =
-            base_type::N;                // dimension of the parametric space (=2 for triangle)
-        static constexpr int dim = D;    // expected by FunctionSpace
+        // the underlying type of parametrized element
+        using parametrized_element_type = parametrizedElementT;
+        // the underlying mesh cell type
+        using mesh_cell_type = typename parametrized_element_type::cell_type;
 
         // the degree of the finite element
         static constexpr int degree = 2;
+        // the traits of this element
+        using traits = finite_element_family<mesh_cell_type, degree>;
+        // the connectivity type of the element
+        using connectivity_type = traits::connectivity_type;
+
         // the type of shape functions
         using shape_functions_type = ShapeTriangleP2;
         // the canonical element type
         using canonical_element_type = typename shape_functions_type::reference_element_type;
-        // type of a point in parametric coordinates
+        // the parametric coordinates type
         using parametric_coordinates_type =
             typename canonical_element_type::parametric_coordinates_type;
-        // the quadratic shape functions
+        // the linear shape functions
         static constexpr auto shape_functions = shape_functions_type();
         // the number of discretization nodes
         static constexpr int n_nodes = shape_functions_type::N;
-        // a collection of discretization nodes
-        using connectivity_type = std::array<typename base_type::discretization_node_type, n_nodes>;
-
-        // import types from base
-        using typename base_type::cell_type;
-        using typename base_type::coordinate_system_type;
-        using typename base_type::coordinates_type;
-        using typename base_type::vector_type;
-        using typename base_type::volume_form_type;
 
       public:
         // the default constructor
         inline IsoparametricTriangleP2(
-            const cell_type & geometric_simplex, const coordinate_system_type & coord_system,
-            const connectivity_type & connectivity, const volume_form_type & volume_form) :
-            base_type(geometric_simplex, coord_system, volume_form),
+            const parametrized_element_type & element, const connectivity_type & connectivity) :
+            _element(element),
             _connectivity(connectivity)
-        {}
+        {
+            // check consistency between the number of nodes and the number of shape functions
+            static_assert(n_nodes == traits::n_nodes);
+        }
 
         // destructor
-        ~IsoparametricTriangleP2() = default;
+        inline ~IsoparametricTriangleP2() = default;
 
-        // delete move constructor
-        constexpr IsoparametricTriangleP2(IsoparametricTriangleP2 &&) noexcept = delete;
+        // default move constructor
+        constexpr IsoparametricTriangleP2(IsoparametricTriangleP2 &&) noexcept = default;
 
         // delete copy constructor
         constexpr IsoparametricTriangleP2(const IsoparametricTriangleP2 &) = delete;
@@ -83,6 +75,16 @@ namespace mito::fem {
             return _connectivity;
         }
 
+        // get the element parmetrization
+        constexpr auto parametrization() const noexcept
+        {
+            // delegate to the underlying element
+            return _element.parametrization();
+        }
+
+        // get the mesh cell
+        constexpr auto cell() const noexcept -> mesh_cell_type { return _element.cell(); }
+
         // get the shape function associated with local node {a}
         template <int a>
         requires(a >= 0 && a < n_nodes)
@@ -92,16 +94,19 @@ namespace mito::fem {
             return shape_functions.shape<a>();
         }
 
-        // get the jacobian of the isoparametric mapping from barycentric to actual coordinates
-        // returns a D×2 matrix (columns are the two tangent/director vectors)
+        // get the jacobian of the isoparametric mapping from parametric to actual coordinates
         constexpr auto jacobian() const
         {
-            // assemble the jacobian as a function of barycentric coordinates
+            // assemble the jacobian as a function of parametric coordinates
             auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<D, 2> {
-                    auto x3 = 0.5 * (this->_x0 + this->_x1);
-                    auto x4 = 0.5 * (this->_x1 + this->_x2);
-                    auto x5 = 0.5 * (this->_x2 + this->_x0);
+                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<2> {
+                    // store the coordinates of the vertices of the triangle in physical space
+                    auto x0 = _element.parametrization()({ 0.0, 0.0 });
+                    auto x1 = _element.parametrization()({ 1.0, 0.0 });
+                    auto x2 = _element.parametrization()({ 0.0, 1.0 });
+                    auto x3 = 0.5 * (x0 + x1);
+                    auto x4 = 0.5 * (x1 + x2);
+                    auto x5 = 0.5 * (x2 + x0);
 
                     // get the shape functions derivatives
                     constexpr auto dphi_0 = shape_functions.dshape<0>();
@@ -111,11 +116,10 @@ namespace mito::fem {
                     constexpr auto dphi_4 = shape_functions.dshape<4>();
                     constexpr auto dphi_5 = shape_functions.dshape<5>();
 
-                    // compute the gradient of the isoparametric mapping
+                    // compute the jacobian of the isoparametric mapping
                     return (
-                        tensor::dyadic(this->_x0, dphi_0(xi))
-                        + tensor::dyadic(this->_x1, dphi_1(xi))
-                        + tensor::dyadic(this->_x2, dphi_2(xi)) + tensor::dyadic(x3, dphi_3(xi))
+                        tensor::dyadic(x0, dphi_0(xi)) + tensor::dyadic(x1, dphi_1(xi))
+                        + tensor::dyadic(x2, dphi_2(xi)) + tensor::dyadic(x3, dphi_3(xi))
                         + tensor::dyadic(x4, dphi_4(xi)) + tensor::dyadic(x5, dphi_5(xi)));
                 });
 
@@ -123,59 +127,30 @@ namespace mito::fem {
             return jacobian_function;
         }
 
-        // volume element: contract the volume form with the two tangent vectors
-        // we don't include the 1/N! factorial here because it's already included
-        // in the canonical_element_type::area used by the assembly blocks
-        constexpr auto volume_element() const
-        {
-            return functions::function([&](const parametric_coordinates_type & xi) {
-                // physical point
-                auto x = this->parametrization()(xi);
-
-                // get the two tangent vectors from the Jacobian
-                auto J = jacobian()(xi);
-
-                // extract tangent vectors from the D×2 matrix
-                auto tangent_0 = pyre::tensor::col<0>(J);
-                auto tangent_1 = pyre::tensor::col<1>(J);
-
-                // contract the volume form with both tangent vectors
-                return this->_volume_form(x)(tangent_0, tangent_1);
-            });
-        }
-
-        // get the gradient of the a-th shape function as a function of barycentric coordinates
-        // returns a contravariant vector (raised index)
+        // get the gradient of the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
-            // assemble the gradient as a function of barycentric coordinates
-            auto gradient_function =
-                functions::function([&](const parametric_coordinates_type & xi) -> vector_type {
-                    // physical point
-                    auto x = this->parametrization()(xi);
-
-                    // jacobian matrix (D×2 for surfaces)
+            // assemble the gradient as a function of parametric coordinates
+            auto gradient_function = functions::function(
+                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
+                    // the jacobian of the mapping from the reference element to the physical
+                    // element evaluated at {xi}
                     auto J = jacobian()(xi);
-
-                    // metric tensors at the physical point
-                    auto g = base_type::g(x);
-                    auto g_inv = base_type::g_inv(x);
-
-                    // parametric derivative (2D vector for N=2)
-                    constexpr auto dphi_dxi = shape_functions.dshape<a>();
-                    auto dphi_dxi_val = dphi_dxi(xi);
-
-                    // compute gradient (handles both square and embedded cases)
-                    return fem::compute_gradient<D, N>(J, g, g_inv, dphi_dxi_val);
+                    // the derivative of the coordinates with respect to the parametric coordinates
+                    auto J_inv = tensor::inverse(J);
+                    // return the spatial gradients of the shape functions evaluated at {xi}
+                    return shape_functions.dshape<a>()(xi) * J_inv;
                 });
             // and return it
             return gradient_function;
         }
 
       private:
-        // the discretization nodes of the simplex
+        // the parametrized element (geometric information)
+        const parametrized_element_type _element;
+        // the finite element connectivity
         const connectivity_type _connectivity;
     };
 

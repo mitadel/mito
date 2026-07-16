@@ -14,6 +14,6 @@
 
 // support
 #include "../journal.h"
-
+#include "../utilities.h"
 
 // end of file

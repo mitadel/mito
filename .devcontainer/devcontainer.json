@@ -7,10 +7,18 @@
     "mounts": [
         "source=${localWorkspaceFolder},target=/home/user/mito,type=bind"
     ],
-    "extensions": [
-        "ms-vscode.cpptools-extension-pack",
-        "eamodio.gitlens",
-        "med-h.git-graph-revamped",
-    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "mhutchie.git-graph",
+                "eamodio.gitlens",
+                "streetsidesoftware.code-spell-checker",
+                "wayou.vscode-todo-highlight",
+                "ms-vscode.cpptools-extension-pack",
+                "ms-vscode.cmake-tools"
+            ]
+        }
+    },
     "remoteUser": "user"
 }

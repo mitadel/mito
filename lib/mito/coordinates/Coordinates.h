@@ -38,6 +38,8 @@ namespace mito::geometry {
         using coordinates_type = Coordinates<D, coordT>;
         // publish the dimension of the physical space
         static constexpr int dim = D;
+        // publish the size of the underlying array
+        static constexpr int size = array_t::size;
 
       public:
         // default constructor
@@ -84,18 +86,6 @@ namespace mito::geometry {
         // components accessor
         constexpr auto operator[](int i) const -> tensor::scalar_t { return _array[i]; }
 
-        auto print() const -> void
-        {
-            // make a channel
-            journal::info_t channel("mito.coordinates");
-
-            // print the coordinates of the point
-            channel << _array;
-
-            // all done
-            return;
-        }
-
       private:
         // the array of coordinates
         array_t _array;
@@ -114,7 +104,9 @@ namespace mito::geometry {
         };
 
         // print the coordinates
+        os << "( ";
         _print(os, coord, std::make_index_sequence<D>{});
+        os << " )";
 
         // all done
         return os;

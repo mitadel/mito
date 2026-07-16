@@ -77,15 +77,13 @@ namespace mito::functions {
     };
 
     // the type of the transpose of a function...
-    template <function_c F>
-    // with matrix values...
-    requires(tensor::matrix_c<typename F::output_type>)
+    template <tensor_valued_function_c F>
     struct function_transpose {
         // ... is the function that takes {input_type} in input and returns the type of the
         // transposed of the output matrix type
         using type = Function<
             typename F::input_type,
-            typename tensor::traits::transpose<typename F::output_type>::type>;
+            decltype(tensor::transpose(std::declval<typename F::output_type>()))>;
     };
 
     // the type of function for a function of class {F}

@@ -9,14 +9,14 @@
 
 // the type of coordinates
 using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
-// the type of coordinate system
-using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
+// the metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the type of discretization node
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::segment_t<1>;
 // the reference simplex
-using reference_simplex_t = mito::geometry::reference_segment_t;
+using reference_simplex_t = cell_t::reference_simplex_type;
 // Gauss quadrature on segments with degree of exactness 2
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
@@ -78,8 +78,8 @@ test_gradient_consistency(const auto & element)
                 return ((element.template gradient<a>()(xi)) + ...);
             })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
 
-        // check the sum of the shape functions gradients
-        EXPECT_NEAR(0.0, sum, 3.0e-16);
+        // check that the sum of the shape functions gradients is the zero vector
+        EXPECT_NEAR(0.0, mito::tensor::norm(sum), 3.0e-16);
     });
 
     // all done
@@ -90,34 +90,35 @@ test_gradient_consistency(const auto & element)
 TEST(Fem, IsoparametricSegment)
 {
     // the coordinate system
-    auto coord_system = coord_system_t();
+    auto coord_system = mito::geometry::coordinate_system_t<coordinates_t>();
+
+    // an atlas under the coordinate system
+    auto atlas = mito::manifolds::atlas<cell_t>(coord_system);
 
     // build nodes
     auto node_0 = mito::geometry::node(coord_system, { 0.0 });
     auto node_1 = mito::geometry::node(coord_system, { 1.0 });
 
     // make a geometric simplex
-    auto geometric_simplex = mito::geometry::segment<1>({ node_0, node_1 });
+    auto segment = mito::geometry::segment(node_0, node_1);
 
-    // create a mesh with a single segment
-    auto mesh = mito::mesh::mesh<cell_t>();
-    mesh.insert({ node_0, node_1 });
-
-    // create the manifold
-    auto manifold = mito::manifolds::manifold(mesh, coord_system);
+    // make a manifold element from the segment
+    auto element = mito::manifolds::parametrized_element(
+        segment, atlas.parametrization(segment), metric_space_t::w);
 
     {
-        // first order isoparametric segment
-        using element_p1_t = mito::fem::isoparametric_simplex_t<1, decltype(manifold)>;
-
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
         auto discretization_node_1 = discretization_node_t();
 
-        // a finite element
-        auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 },
-            manifold.volume_form());
+        // the degree of the finite element
+        constexpr int degree = 1;
+        // assemble the finite element type
+        using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
+
+        // first order isoparametric finite element
+        auto element_p1 = mito::fem::finite_element<finite_element_t>(
+            element, { discretization_node_0, discretization_node_1 });
 
         // check that first order shape functions are a partition of unity
         test_partition_of_unity(element_p1);
