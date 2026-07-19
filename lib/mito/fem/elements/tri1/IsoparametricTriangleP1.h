@@ -8,8 +8,8 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricTriangleP1} represents a second order simplex (triangle) living in 2D
-// cartesian space, equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricTriangleP1} represents a 2-simplex (triangle) embedded in a D-dimensional
+// physical space, equipped with linear shape functions defined in the parametric space.
 
 
 namespace mito::fem {
@@ -22,6 +22,14 @@ namespace mito::fem {
         using parametrized_element_type = parametrizedElementT;
         // the underlying mesh cell type
         using mesh_cell_type = typename parametrized_element_type::cell_type;
+        // the metric volume form type
+        using metric_volume_form_type = typename parametrized_element_type::metric_volume_form_type;
+        // the coordinates type of the physical space
+        using coordinates_type = typename metric_volume_form_type::input_type;
+        // the dimension of the physical space
+        static constexpr int dim = coordinates_type::dim;
+        // the (euclidean) metric of the physical space in {coordinates_type} coordinates
+        using ambient_metric_type = geometry::euclidean_metric<coordinates_type>;
 
         // the degree of the finite element
         static constexpr int degree = 1;
@@ -99,7 +107,7 @@ namespace mito::fem {
         {
             // assemble the jacobian as a function of parametric coordinates
             auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<2> {
+                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<dim, 2> {
                     // get the shape functions derivatives
                     constexpr auto dphi_0 = shape_functions.dshape<0>();
                     constexpr auto dphi_1 = shape_functions.dshape<1>();
@@ -120,25 +128,36 @@ namespace mito::fem {
             return jacobian_function;
         }
 
+        // get the volume element of the isoparametric mapping, i.e. the metric volume form
+        // contracted with the tangent vectors of the element
+        constexpr auto volume_element() const
+        {
+            // assemble the volume element as a function of parametric coordinates
+            auto volume_element_function = functions::function(
+                [&](const parametric_coordinates_type & xi) -> tensor::scalar_t {
+                    // the metric volume form at the physical location of {xi}
+                    auto w = _element.metric_volume_form()(_element.parametrization())(xi);
+                    // the tangent vectors to the element at {xi}
+                    auto J = jacobian()(xi);
+                    // contract the metric volume form with the tangent vectors
+                    return w(tensor::column<0>(J), tensor::column<1>(J));
+                });
+            // and return it
+            return volume_element_function;
+        }
+
         // get the gradient of the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
-            // assemble the gradient as a function of parametric coordinates
-            auto gradient_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<2> {
-                    // the jacobian of the mapping from the reference element to the physical
-                    // element evaluated at {xi}
-                    auto J = jacobian()(xi);
-                    // the derivative of the coordinates with respect to the parametric coordinates
-                    auto J_inv = tensor::inverse(J);
-                    // return the spatial gradients of the shape functions evaluated at {xi}
-                    return shape_functions.dshape<a>()(xi) * J_inv;
-                });
-
-            // and return it
-            return gradient_function;
+            // the pullback of the ambient metric along the element parametrization
+            auto g =
+                geometry::pullback_metric<ambient_metric_type>::field(_element.parametrization());
+            // the intrinsic gradient of the a-th shape function on the parametric space
+            auto dphi = operators::gradient(shape_functions.shape<a>(), g);
+            // push the gradient forward to the physical space with the jacobian
+            return jacobian() * dphi;
         }
 
       private:
