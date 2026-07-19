@@ -48,15 +48,6 @@ namespace mito::tensor {
         });
     }
 
-    // wrap a vector as a D×1 column matrix
-    // useful e.g. for representing tangent vectors as Jacobian matrices for 1D elements
-    template <int D>
-    constexpr auto as_column_matrix(const vector_t<D> & vec) -> matrix_t<D, 1>
-    {
-        return []<std::size_t... Is>(const auto & v, std::index_sequence<Is...>) {
-            return matrix_t<D, 1>{ v[Is]... };
-        }(vec, std::make_index_sequence<D>{});
-    }
 }
 
 
