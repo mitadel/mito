@@ -1,22 +1,22 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 #include <gtest/gtest.h>
 #include <mito.h>
 
 
-// the type of coordinates (2D physical space for embedded segments)
+// the type of coordinates (2D physical space)
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-// the type of coordinate system
-using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
+// the metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the type of discretization node
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell (segment embedded in 2D)
 using cell_t = mito::geometry::segment_t<2>;
 // the reference simplex
-using reference_simplex_t = mito::geometry::reference_segment_t;
+using reference_simplex_t = cell_t::reference_simplex_type;
 // Gauss quadrature on segments with degree of exactness 2
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
@@ -28,7 +28,10 @@ constexpr auto quadrature_rule = quadrature_rule_t();
 TEST(Fem, BlockMassEmbeddedSegment)
 {
     // the coordinate system
-    auto coord_system = coord_system_t();
+    auto coord_system = mito::geometry::coordinate_system_t<coordinates_t>();
+
+    // an atlas under the coordinate system
+    auto atlas = mito::manifolds::atlas<cell_t>(coord_system);
 
     // build nodes (unit-length diagonal segment embedded in 2D)
     constexpr auto inv_sqrt2 = 1.0 / std::sqrt(2.0);
@@ -36,34 +39,44 @@ TEST(Fem, BlockMassEmbeddedSegment)
     auto node_1 = mito::geometry::node(coord_system, { inv_sqrt2, inv_sqrt2 });
 
     // make a geometric simplex
-    auto geometric_simplex = mito::geometry::segment<2>({ node_0, node_1 });
+    auto segment = mito::geometry::segment(node_0, node_1);
 
-    // create a mesh with the single segment
-    auto mesh = mito::mesh::mesh<cell_t>();
-    mesh.insert({ node_0, node_1 });
-
-    // create a submanifold (1D embedded in 2D requires normal field)
+    // the normal field to the segment (perpendicular to the segment direction)
     // diagonal direction is (inv_sqrt2, inv_sqrt2), so normal is (inv_sqrt2, -inv_sqrt2)
     // (rotated 90° clockwise to get positive orientation with w(normal, tangent) > 0)
     auto normal_field = mito::functions::constant<coordinates_t>(
         mito::tensor::vector_t<2>{ inv_sqrt2, -inv_sqrt2 });
-    auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
+
+    // strip the namespace from the placeholder for forms contractions
+    using mito::tensor::_;
+
+    // the ambient metric volume form
+    constexpr auto w = metric_space_t::w;
+
+    // the restriction of the metric volume form to the segment
+    auto wS = mito::functions::function(
+        [w, normal_field](const coordinates_t & x) { return w(x)(normal_field(x), _); });
+
+    // make a manifold element from the segment
+    auto element =
+        mito::manifolds::parametrized_element(segment, atlas.parametrization(segment), wS);
 
     {
-        // first order isoparametric embedded segment
-        using element_p1_t = mito::fem::isoparametric_simplex_t<1, decltype(manifold)>;
-
         // build the discretization nodes
         auto discretization_node_0 = discretization_node_t();
         auto discretization_node_1 = discretization_node_t();
 
-        // a finite element
-        auto element_p1 = element_p1_t(
-            geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 },
-            manifold.volume_form());
+        // the degree of the finite element
+        constexpr int degree = 1;
+        // assemble the finite element type
+        using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
+
+        // a finite element on the embedded segment
+        auto element_p1 = mito::fem::finite_element<finite_element_t>(
+            element, { discretization_node_0, discretization_node_1 });
 
         // a mass matrix block
-        auto mass_block = mito::fem::blocks::mass_block<element_p1_t, quadrature_rule_t>();
+        auto mass_block = mito::fem::blocks::mass_block<finite_element_t, quadrature_rule_t>();
 
         // the analytical elementary mass matrix (same as 1D for unit-length segment)
         auto analytical_block = 1.0 / 6.0 * mito::tensor::matrix_t<2>{ 2.0, 1.0, 1.0, 2.0 };

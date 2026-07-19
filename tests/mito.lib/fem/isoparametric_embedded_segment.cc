@@ -1,22 +1,22 @@
 // -*- c++ -*-
 //
-// Copyright (c) 2020-2024, the MiTo Authors, all rights reserved
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
 #include <gtest/gtest.h>
 #include <mito.h>
 
 
-// the type of coordinates (2D physical space for embedded segments)
+// the type of coordinates (2D physical space)
 using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-// the type of coordinate system
-using coord_system_t = mito::geometry::coordinate_system_t<coordinates_t>;
+// the metric space type
+using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the type of discretization node
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell (segment embedded in 2D)
 using cell_t = mito::geometry::segment_t<2>;
 // the reference simplex
-using reference_simplex_t = mito::geometry::reference_segment_t;
+using reference_simplex_t = cell_t::reference_simplex_type;
 // Gauss quadrature on segments with degree of exactness 2
 using quadrature_rule_t =
     mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
@@ -78,9 +78,8 @@ test_gradient_consistency(const auto & element)
                 return ((element.template gradient<a>()(xi)) + ...);
             })(element, xi, mito::tensor::make_integer_sequence<n_nodes>{});
 
-        // check the sum of the shape functions gradients
-        EXPECT_NEAR(0.0, sum[0], 3.0e-16);
-        EXPECT_NEAR(0.0, sum[1], 3.0e-16);
+        // check that the sum of the shape functions gradients is the zero vector
+        EXPECT_NEAR(0.0, mito::tensor::norm(sum), 3.0e-16);
     });
 
     // all done
@@ -101,7 +100,7 @@ test_arc_length(const auto & element, double expected_length)
     double arc_length = 0.0;
     mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
         constexpr auto xi = quadrature_rule.point(q);
-        constexpr auto w = element_t::canonical_element_type::area * quadrature_rule.weight(q);
+        constexpr auto w = element_t::canonical_element_type::measure * quadrature_rule.weight(q);
         arc_length += w * element.volume_element()(xi);
     });
 
@@ -115,63 +114,76 @@ test_arc_length(const auto & element, double expected_length)
 TEST(Fem, IsoparametricEmbeddedSegment)
 {
     // the coordinate system
-    auto coord_system = coord_system_t();
+    auto coord_system = mito::geometry::coordinate_system_t<coordinates_t>();
+
+    // an atlas under the coordinate system
+    auto atlas = mito::manifolds::atlas<cell_t>(coord_system);
 
     // build nodes for a diagonal segment from (0,0) to (3,4) - length 5
     auto node_0 = mito::geometry::node(coord_system, { 0.0, 0.0 });
     auto node_1 = mito::geometry::node(coord_system, { 3.0, 4.0 });
 
     // make a geometric simplex
-    auto geometric_simplex = mito::geometry::segment<2>({ node_0, node_1 });
+    auto segment = mito::geometry::segment(node_0, node_1);
 
-    // create a mesh with a single segment
-    auto mesh = mito::mesh::mesh<cell_t>();
-    mesh.insert({ node_0, node_1 });
-
-    // create normal field for the submanifold (perpendicular to segment direction)
+    // the normal field to the segment (perpendicular to the segment direction)
     // segment direction is (3,4)/5 = (0.6, 0.8), so normal is (0.8, -0.6)
     // (rotated 90° clockwise to get positive orientation with w(normal, tangent) > 0)
     auto normal_field =
         mito::functions::constant<coordinates_t>(mito::tensor::vector_t<2>{ 0.8, -0.6 });
 
-    // create the submanifold
-    auto manifold = mito::manifolds::submanifold(mesh, coord_system, normal_field);
+    // strip the namespace from the placeholder for forms contractions
+    using mito::tensor::_;
 
-    // first order isoparametric embedded segment
-    using element_p1_t = mito::fem::isoparametric_simplex_t<1, decltype(manifold)>;
+    // the ambient metric volume form
+    constexpr auto w = metric_space_t::w;
 
-    // build the discretization nodes
-    auto discretization_node_0 = discretization_node_t();
-    auto discretization_node_1 = discretization_node_t();
+    // the restriction of the metric volume form to the segment
+    auto wS = mito::functions::function(
+        [w, normal_field](const coordinates_t & x) { return w(x)(normal_field(x), _); });
 
-    // a finite element
-    auto element_p1 = element_p1_t(
-        geometric_simplex, coord_system, { discretization_node_0, discretization_node_1 },
-        manifold.volume_form());
+    // make a manifold element from the segment
+    auto element =
+        mito::manifolds::parametrized_element(segment, atlas.parametrization(segment), wS);
 
-    // check that first order shape functions are a partition of unity
-    test_partition_of_unity(element_p1);
-
-    // check that the gradients of first order shape functions sum to 0.0
-    test_gradient_consistency(element_p1);
-
-    // check that the arc length is sqrt(3^2 + 4^2) = 5
-    test_arc_length(element_p1, 5.0);
-
-    // check the gradient values at the midpoint for the (0,0) to (3,4) segment
     {
-        auto xi = mito::geometry::reference_segment_t::parametric_coordinates_type{ 0.5 };
-        auto grad_0 = element_p1.gradient<0>()(xi);
-        auto grad_1 = element_p1.gradient<1>()(xi);
+        // build the discretization nodes
+        auto discretization_node_0 = discretization_node_t();
+        auto discretization_node_1 = discretization_node_t();
 
-        // for linear shape functions, the gradients should be constant and opposite
-        // the gradient should be in the direction of the segment: (3/5, 4/5) / 5 = (3/25, 4/25)
-        // phi_0 decreases from 1 to 0, so grad_0 = (-3/25, -4/25)
-        // phi_1 increases from 0 to 1, so grad_1 = (3/25, 4/25)
-        EXPECT_NEAR(-3.0 / 25.0, grad_0[0], 1.0e-15);
-        EXPECT_NEAR(-4.0 / 25.0, grad_0[1], 1.0e-15);
-        EXPECT_NEAR(3.0 / 25.0, grad_1[0], 1.0e-15);
-        EXPECT_NEAR(4.0 / 25.0, grad_1[1], 1.0e-15);
+        // the degree of the finite element
+        constexpr int degree = 1;
+        // assemble the finite element type
+        using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
+
+        // first order isoparametric finite element on the embedded segment
+        auto element_p1 = mito::fem::finite_element<finite_element_t>(
+            element, { discretization_node_0, discretization_node_1 });
+
+        // check that first order shape functions are a partition of unity
+        test_partition_of_unity(element_p1);
+
+        // check that the gradients of first order shape functions sum to 0.0
+        test_gradient_consistency(element_p1);
+
+        // check that the arc length is sqrt(3^2 + 4^2) = 5
+        test_arc_length(element_p1, 5.0);
+
+        // check the gradient values at the midpoint for the (0,0) to (3,4) segment
+        {
+            auto xi = reference_simplex_t::parametric_coordinates_type{ 0.5 };
+            auto grad_0 = element_p1.gradient<0>()(xi);
+            auto grad_1 = element_p1.gradient<1>()(xi);
+
+            // for linear shape functions, the gradients should be constant and opposite
+            // the gradient should be in the direction of the segment: (3/5, 4/5) / 5 = (3/25, 4/25)
+            // phi_0 decreases from 1 to 0, so grad_0 = (-3/25, -4/25)
+            // phi_1 increases from 0 to 1, so grad_1 = (3/25, 4/25)
+            EXPECT_NEAR(-3.0 / 25.0, grad_0[0], 1.0e-15);
+            EXPECT_NEAR(-4.0 / 25.0, grad_0[1], 1.0e-15);
+            EXPECT_NEAR(3.0 / 25.0, grad_1[0], 1.0e-15);
+            EXPECT_NEAR(4.0 / 25.0, grad_1[1], 1.0e-15);
+        }
     }
 
     // all done
