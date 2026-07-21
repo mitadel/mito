@@ -47,7 +47,6 @@ namespace mito::tensor {
             return matrix * vector * v;
         });
     }
-
 }
 
 
