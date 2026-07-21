@@ -49,7 +49,7 @@ namespace mito::fem::blocks {
                 // the quadrature weight at this point scaled with the area of the canonical simplex
                 constexpr auto w = measure * quadrature_rule.weight(q);
 
-                // precompute the common factor using the element's volume element
+                // precompute the common factor
                 auto factor = w * element.volume_element()(xi);
 
                 // loop on the nodes of the element
