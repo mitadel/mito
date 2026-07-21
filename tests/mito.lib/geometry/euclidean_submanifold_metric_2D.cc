@@ -24,17 +24,17 @@ using mito::tensor::_;
 auto
 length(
     const auto & w, const mito::geometry::coordinate_system_t<coordinates_t> & coordinate_system,
-    const mito::geometry::node_t<2> & v0,
-    const mito::geometry::node_t<2> & v1) -> mito::tensor::scalar_t
+    const mito::geometry::node_t<2> & v0, const mito::geometry::node_t<2> & v1)
+    -> mito::tensor::scalar_t
 {
     // get vertex coordinates
     auto x0 = coordinate_system.coordinates(v0->point());
     auto x1 = coordinate_system.coordinates(v1->point());
 
-    // build director vectors
+    // build director vector
     auto director0 = x1 - x0;
 
-    // compute volume of triangle
+    // compute signed length of segment
     auto length = w(director0);
 
     // all done
