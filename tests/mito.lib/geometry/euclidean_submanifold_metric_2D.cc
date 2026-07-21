@@ -55,7 +55,7 @@ TEST(Tensor, EuclideanSubmanifoldMetric2D)
     constexpr auto x_0 = mito::geometry::cartesian::coordinates({ 0.0, 0.0 });
     constexpr auto x_1 = mito::geometry::cartesian::coordinates({ 3.0, 4.0 });
 
-    // the normal vector to the submanifold
+    // assemble the normal vector to the submanifold from tangent
     constexpr auto tangent_vector = x_1 - x_0;
     constexpr auto normal_vector =
         mito::tensor::vector_t<2>{ tangent_vector[1], -tangent_vector[0] }
