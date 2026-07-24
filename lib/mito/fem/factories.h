@@ -31,13 +31,22 @@ namespace mito::fem {
         return weakform_t<finiteElementT>();
     }
 
-    // discrete system factory
-    template <class linearSystemT, class functionSpaceT, class weakformT>
+    // discrete system factory (variadic: takes Contribution objects)
+    template <class linearSystemT, function_space_c... functionSpaceTs>
+    constexpr auto discrete_system(
+        const std::string & label, Contribution<functionSpaceTs>... contributions)
+    {
+        return discrete_system_t<linearSystemT, functionSpaceTs...>(label, contributions...);
+    }
+
+    // discrete system factory (single space: convenience overload)
+    template <class linearSystemT, function_space_c functionSpaceT>
     constexpr auto discrete_system(
         const std::string & label, const functionSpaceT & function_space,
-        const weakformT & weakform)
+        const weakform_t<typename functionSpaceT::element_type> & weakform)
     {
-        return discrete_system_t<functionSpaceT, linearSystemT>(label, function_space, weakform);
+        return discrete_system_t<linearSystemT, functionSpaceT>(
+            label, Contribution<functionSpaceT>{ function_space, weakform, 1.0 });
     }
 }
 

@@ -26,8 +26,12 @@ namespace mito::fem {
     template <class finiteElementT>
     class Weakform;
 
+    // struct contribution (aggregates a function space, weakform, and coefficient)
+    template <function_space_c spaceT>
+    struct Contribution;
+
     // class discrete system
-    template <function_space_c functionSpaceT, class linearSystemT>
+    template <class linearSystemT, function_space_c... functionSpaceTs>
     class DiscreteSystem;
 
     // class domain field
