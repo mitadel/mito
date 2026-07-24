@@ -245,6 +245,39 @@ namespace mito::fem {
             }(std::index_sequence_for<functionSpaceTs...>{});
         }
 
+        // scatter a local N×N elementary matrix into the global linear system
+        template <int N>
+        auto scatter_local_matrix(
+            const std::array<node_type, N> & local_nodes,
+            const tensor::matrix_t<N> & elementary_matrix, double coefficient) -> void
+        {
+            assert(_n_equations == _linear_system.n_equations());
+
+            tensor::constexpr_for_1<N>([&]<int r>() {
+                const auto & node_a = local_nodes[r];
+                int eq_a = _equation_map.at(node_a);
+                assert(eq_a < _n_equations);
+                if (eq_a == -1) {
+                    return;
+                }
+                tensor::constexpr_for_1<N>([&]<int c>() {
+                    const auto & node_b = local_nodes[c];
+                    int eq_b = _equation_map.at(node_b);
+                    assert(eq_b < _n_equations);
+                    if (eq_b != -1) {
+                        _linear_system.add_matrix_value(
+                            eq_a, eq_b, coefficient * elementary_matrix[{ r, c }]);
+                    } else {
+                        auto it = _prescribed_values.find(node_b);
+                        if (it != _prescribed_values.end()) {
+                            _linear_system.add_rhs_value(
+                                eq_a, -coefficient * elementary_matrix[{ r, c }] * it->second);
+                        }
+                    }
+                });
+            });
+        }
+
         // read the solution nodal field
         constexpr void read_solution()
         {
