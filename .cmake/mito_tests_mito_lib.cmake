@@ -90,6 +90,9 @@ endif()
 if(WITH_PETSC)
     mito_test_driver(tests/mito.lib/matrix_solvers/petsc_initialize_finalize.cc)
     mito_test_driver(tests/mito.lib/matrix_solvers/petsc_ksp.cc)
+    mito_test_driver(tests/mito.lib/fem/dg_chapter5_verification.cc)
+    target_include_directories(tests.mito.lib.fem.dg_chapter5_verification PRIVATE
+        ${CMAKE_SOURCE_DIR}/apps/dg_chapter5_verification)
     mito_test_driver(tests/mito.lib/fem/single_space_interface_chapter5.cc)
 endif()
 
