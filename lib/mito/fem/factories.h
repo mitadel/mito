@@ -24,6 +24,20 @@ namespace mito::fem {
         return function_space_t<elementT, constraintsT>(manifold, constraints);
     }
 
+    // function space factory with a pre-populated node map (for coupled problems with shared DOFs)
+    template <
+        class elementT, manifolds::manifold_c manifoldT, constraints::constraint_c constraintsT>
+    // require compatibility between the manifold cell and the finite element cell
+    requires(std::is_same_v<typename manifoldT::mesh_type::cell_type, typename elementT::cell_type>)
+    constexpr auto function_space(
+        const manifoldT & manifold, const constraintsT & constraints,
+        const typename function_space_t<elementT, constraintsT>::map_type & shared_map)
+    {
+        // build a function space on the manifold, pre-seeding its node map so that mesh nodes
+        // already present in {shared_map} reuse their existing discretization nodes
+        return function_space_t<elementT, constraintsT>(manifold, constraints, shared_map);
+    }
+
     // weakform factory
     template <class finiteElementT>
     constexpr auto weakform()

@@ -59,6 +59,27 @@ namespace mito::fem {
                 manifold, constraints, _elements, _node_map, _constrained_nodes);
         }
 
+        // Constructor with a pre-populated node map (for coupled problems with shared DOFs).
+        // The discretizer will reuse the existing {discretization_node_t} objects for shared mesh
+        // nodes
+        template <
+            manifolds::manifold_c manifoldT,
+            discretization_t discretizationT = discretization_t::CG>
+        // require compatibility between the manifold cell and the finite element cell
+        requires(std::is_same_v<
+                    typename manifoldT::mesh_type::cell_type, typename element_type::cell_type>)
+        constexpr FunctionSpace(
+            const manifoldT & manifold, const constraints_type & constraints,
+            const map_type & shared_node_map) :
+            _elements(manifold.nElements()),
+            _constraints(constraints),
+            _node_map(shared_node_map)
+        {
+            // discretize the manifold subject to the constraints
+            discretize<element_type, discretizationT>(
+                manifold, constraints, _elements, _node_map, _constrained_nodes);
+        }
+
         // destructor
         constexpr ~FunctionSpace() = default;
 
