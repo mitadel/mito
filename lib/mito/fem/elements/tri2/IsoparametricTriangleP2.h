@@ -136,8 +136,8 @@ namespace mito::fem {
                 auto J = jacobian()(xi);
 
                 // extract tangent vectors from the D×2 matrix
-                auto tangent_0 = pyre::tensor::col<0>(J);
-                auto tangent_1 = pyre::tensor::col<1>(J);
+                auto tangent_0 = pyre::tensor::column<0>(J);
+                auto tangent_1 = pyre::tensor::column<1>(J);
 
                 // contract the volume form with both tangent vectors
                 return this->_volume_form(x)(tangent_0, tangent_1);
