@@ -28,11 +28,16 @@
 // classes implementation
 #include "FunctionSpace.h"
 #include "FemField.h"
-#include "DiscreteSystem.h"
 #include "Weakform.h"
 
 // finite elements implementation
 #include "elements.h"
+
+// interface assembly implementation
+#include "InterfaceWeakform.h"
+#include "hybrid_interface_pairing.h"
+#include "DiscreteSystem.h"
+#include "interface_assembly.h"
 
 // factories implementation
 #include "factories.h"

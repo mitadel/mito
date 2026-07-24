@@ -26,6 +26,10 @@ namespace mito::fem {
     template <class finiteElementT>
     class Weakform;
 
+    // interface coupling weakform (sums interface coupling blocks across a hybrid interface)
+    template <class bulkElementT, class interfaceElementT, int n_dof>
+    class InterfaceWeakform;
+
     // struct contribution (aggregates a function space, weakform, and coefficient)
     template <function_space_c spaceT>
     struct Contribution;
