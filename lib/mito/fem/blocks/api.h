@@ -44,6 +44,11 @@ namespace mito::fem::blocks {
     // L2 norm block factory
     template <class elementT, class quadratureRuleT, functions::function_c functionT>
     constexpr auto l2_norm_block(const functionT & f);
+
+    // interface coupling block
+    template <class bulkElementT, class interfaceElementT, class blockT>
+    using interface_coupling_block_t =
+        InterfaceCouplingBlock<bulkElementT, interfaceElementT, blockT>;
 }
 
 

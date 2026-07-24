@@ -31,6 +31,16 @@ namespace mito::fem::blocks {
     requires(std::is_same_v<
              typename functionT::input_type, typename quadratureRuleT::quadrature_point_type>)
     class L2NormBlock;
+
+    // interface coupling between two bulk elements across a 1D interface element
+    template <class bulkElementT, class interfaceElementT, class blockT>
+    class InterfaceCouplingBlock;
+
+    template <class bulkElementT, class interfaceElementT>
+    class InterfaceJumpJumpMassBlock;
+
+    template <class bulkElementT, class interfaceElementT>
+    class InterfaceAverageAverageGradBlock;
 }
 
 
