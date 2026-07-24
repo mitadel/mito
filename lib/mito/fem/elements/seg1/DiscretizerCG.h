@@ -54,14 +54,32 @@ namespace mito::fem {
                     cell, coord_system, connectivity_type{ node_0, node_1 }, volume_form);
             }
 
-            // populate the constrained nodes
-            // In 1D, constraints.domain() is a set of nodes, not a mesh with cells, so we loop on
-            // the nodes directly
-            for (const auto & node : constraints.domain()) {
-                // get the discretization node associated with the mesh node from the map
-                auto it = node_map.find(node);
-                // add the node to the constrained nodes
-                constrained_nodes.insert(it->second);
+            // In pure 1D, constraints.domain() is a set of nodes, not a mesh with cells, so we loop
+            // on the nodes directly
+            // However, for segments embedded in higher dimensions, constraints.domain() is a mesh
+            // with cells, so we loop on the boundary mesh cells
+            if constexpr (
+                std::is_same_v<
+                    typename constraintsT::domain_type,
+                    std::set<typename constraintsT::node_type>>) {
+                // populate the constrained nodes
+                for (const auto & node : constraints.domain()) {
+                    // get the discretization node associated with the mesh node from the map
+                    auto it = node_map.find(node);
+                    // add the node to the constrained nodes
+                    constrained_nodes.insert(it->second);
+                }
+            } else {
+                // populate the constrained nodes from the boundary mesh cells
+                for (const auto & cell : constraints.domain().cells()) {
+                    for (const auto & node : cell.nodes()) {
+                        // get the discretization node associated with the mesh node from the
+                        // map
+                        auto it = node_map.find(node);
+                        // add the node to the constrained nodes
+                        constrained_nodes.insert(it->second);
+                    }
+                }
             }
 
             // all done
