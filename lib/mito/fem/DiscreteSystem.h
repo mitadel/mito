@@ -39,6 +39,8 @@ namespace mito::fem {
         // QUESTION: is std::map the best choice for {equation_map_type}?
         // the equation map type (map associating an equation number to each node degree of freedom)
         using equation_map_type = std::map<node_type, int>;
+        // the prescribed values type (map associating a prescribed value to each constrained node)
+        using prescribed_values_type = std::map<node_type, double>;
         // TOFIX: what if the solution is not a scalar field? Generalize to different types of
         // solutions
         // the solution field type
@@ -166,6 +168,18 @@ namespace mito::fem {
             return _equation_map;
         }
 
+        // prescribed Dirichlet values
+        constexpr auto prescribed_values() const noexcept -> const prescribed_values_type &
+        {
+            return _prescribed_values;
+        }
+
+        // set the prescribed value for a constrained (Dirichlet) node
+        constexpr void set_prescribed_value(const node_type & node, double value)
+        {
+            _prescribed_values[node] = value;
+        }
+
         // assemble the discrete system
         constexpr auto assemble() -> void
         {
@@ -209,6 +223,14 @@ namespace mito::fem {
                                     // assemble the value in the stiffness matrix
                                     _linear_system.add_matrix_value(
                                         eq_a, eq_b, coeff * elementary_matrix[{ a, b }]);
+                                } else {
+                                    // constrained node: subtract the lift contribution from the RHS
+                                    auto it = _prescribed_values.find(node_b);
+                                    if (it != _prescribed_values.end()) {
+                                        _linear_system.add_rhs_value(
+                                            eq_a,
+                                            -coeff * elementary_matrix[{ a, b }] * it->second);
+                                    }
                                 }
                             });
                         }
@@ -238,6 +260,12 @@ namespace mito::fem {
                 if (eq != -1) {
                     // note the solution on the solution field
                     _solution_field(node) = u[eq];
+                } else {
+                    // populate constrained nodes with their prescribed values
+                    auto it = _prescribed_values.find(node);
+                    if (it != _prescribed_values.end()) {
+                        _solution_field(node) = it->second;
+                    }
                 }
             }
 
@@ -266,6 +294,9 @@ namespace mito::fem {
 
         // the equation map
         equation_map_type _equation_map;
+
+        // prescribed values for constrained (Dirichlet) nodes
+        prescribed_values_type _prescribed_values;
 
         // the solution finite element field
         fem_field_type _solution_field;
