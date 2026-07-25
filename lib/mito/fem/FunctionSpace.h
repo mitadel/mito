@@ -38,8 +38,11 @@ namespace mito::fem {
 
         // the discretization node type
         using discretization_node_type = typename finite_element_type::discretization_node_type;
+        // the type of the values prescribed by the constraints
+        using constraint_value_type = typename constraints_type::value_type;
         // the constrained values type (map from constrained node to prescribed value)
-        using constrained_values_type = std::map<discretization_node_type, tensor::scalar_t>;
+        using constrained_values_type =
+            std::map<discretization_node_type, constraint_value_type>;
         // the type of a map between the mesh nodes and discretization nodes
         using map_type = std::unordered_map<
             mesh_node_type, discretization_node_type, utilities::hash_function<mesh_node_type>>;
