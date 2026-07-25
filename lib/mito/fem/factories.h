@@ -50,14 +50,22 @@ namespace mito::fem {
         return weakform_t<lhsBlockT, rhsBlockT>(lhs_block, rhs_block);
     }
 
-    // discrete system factory
-    template <class linearSystemT, class functionSpaceT, class weakformT>
+    // discrete system factory (one contribution per function space)
+    template <class linearSystemT, contribution_c... contributionTs>
+    constexpr auto discrete_system(
+        const std::string & label, const contributionTs &... contributions)
+    {
+        return discrete_system_t<linearSystemT, contributionTs...>(label, contributions...);
+    }
+
+    // discrete system factory (single function space)
+    template <class linearSystemT, function_space_c functionSpaceT, class weakformT>
     constexpr auto discrete_system(
         const std::string & label, const functionSpaceT & function_space,
         const weakformT & weakform)
     {
-        return discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
-            label, function_space, weakform);
+        return discrete_system_t<linearSystemT, Contribution<functionSpaceT, weakformT>>(
+            label, Contribution<functionSpaceT, weakformT>{ function_space, weakform });
     }
 }
 
