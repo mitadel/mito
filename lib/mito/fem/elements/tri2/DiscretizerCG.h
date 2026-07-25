@@ -14,11 +14,11 @@ namespace mito::fem {
     struct Discretizer<finite_element_family<geometry::triangle_t<D>, 2>, discretization_t::CG> {
         template <
             typename manifoldT, typename constraintsT, typename connectivity_table_type,
-            typename map_type, typename constrained_nodes_type>
+            typename map_type, typename constrained_values_type>
         static void apply(
             const manifoldT & manifold, const constraintsT & constraints,
             connectivity_table_type & connectivity, map_type & node_map,
-            constrained_nodes_type & constrained_nodes)
+            constrained_values_type & constrained_values)
         {
             // the finite element type
             using finite_element_type = finite_element_family<geometry::triangle_t<D>, 2>;
@@ -82,13 +82,19 @@ namespace mito::fem {
                     connectivity_type{ node_0, node_1, node_2, node_3, node_4, node_5 });
             }
 
-            // populate the constrained nodes
+            // get the coordinate system and the constraint function
+            const auto & coord_system = manifold.coordinate_system();
+            const auto & function = constraints.function();
+
+            // populate the constrained nodes with the values of the constraint function
             for (const auto & cell : constraints.domain().cells()) {
                 for (const auto & node : cell.nodes()) {
                     // get the discretization node associated with the mesh node from the map
                     auto it = node_map.find(node);
-                    // add the node to the constrained nodes
-                    constrained_nodes.insert(it->second);
+                    // add the node to the constrained nodes with the value of the constraint
+                    // function at the node coordinates
+                    constrained_values.insert(
+                        { it->second, function(coord_system.coordinates(node->point())) });
                 }
                 auto node_0 = node_map.at(cell.nodes()[0]);
                 auto node_1 = node_map.at(cell.nodes()[1]);
@@ -96,8 +102,13 @@ namespace mito::fem {
                                          std::array{ node_0.id(), node_1.id() } :
                                          std::array{ node_1.id(), node_0.id() };
                 auto node = mid_nodes_map.at(ordered_nodes);
-                // add the node to the constrained nodes
-                constrained_nodes.insert(node);
+                // the coordinates of the two vertices of the boundary cell
+                auto coord_0 = coord_system.coordinates(cell.nodes()[0]->point());
+                auto coord_1 = coord_system.coordinates(cell.nodes()[1]->point());
+                // add the mid node to the constrained nodes with the value of the constraint
+                // function at the midpoint of the boundary cell
+                constrained_values.insert(
+                    { node, function(coord_0 + 0.5 * (coord_1 - coord_0)) });
             }
 
             // all done

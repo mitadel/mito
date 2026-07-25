@@ -96,40 +96,24 @@ namespace mito::fem {
             get_discretization_nodes(_function_space, nodes);
             channel << "Number of nodes: " << std::size(nodes) << journal::endl;
 
-            // get the constrained nodes in the function space
-            const auto & constrained_nodes = _function_space.constrained_nodes();
-            channel << "Number of constrained nodes: " << std::size(constrained_nodes)
+            // get the constrained nodes and their prescribed values in the function space
+            const auto & constrained_values = _function_space.constrained_values();
+            channel << "Number of constrained nodes: " << std::size(constrained_values)
                     << journal::endl;
+            channel << "Number of interior nodes: "
+                    << std::size(nodes) - std::size(constrained_values) << journal::endl;
 
-            // get all the interior nodes as the difference between all the nodes and the boundary
-            // nodes
-            std::set<node_type> interior_nodes;
-            std::set_difference(
-                nodes.begin(), nodes.end(), constrained_nodes.begin(), constrained_nodes.end(),
-                std::inserter(interior_nodes, interior_nodes.begin()));
-            channel << "Number of interior nodes: " << std::size(interior_nodes) << journal::endl;
-
-            // populate the equation map (from node to equation, one equations per node)
+            // populate the equation map (from node to equation, one equation per node)
             int equation = 0;
 
-            // loop on all the boundary nodes of the mesh
-            for (const auto & node : constrained_nodes) {
-                // check if the node is already in the equation map
-                if (_equation_map.find(node) == _equation_map.end()) {
-                    // add the node to the equation map with a -1 indicating that the node is on the
-                    // boundary
+            // loop on all the nodes
+            for (const auto & node : nodes) {
+                if (constrained_values.contains(node)) {
+                    // mark the constrained node with a -1
                     _equation_map[node] = -1;
-                }
-            }
-
-            // loop on all the interior nodes of the mesh
-            for (const auto & node : interior_nodes) {
-                // check if the node is already in the equation map
-                if (_equation_map.find(node) == _equation_map.end()) {
-                    // add the node to the equation map
-                    _equation_map[node] = equation;
-                    // increment the equation number
-                    equation++;
+                } else {
+                    // add the node to the equation map and increment the equation number
+                    _equation_map[node] = equation++;
                 }
             }
 
@@ -146,6 +130,9 @@ namespace mito::fem {
         {
             // check that the number of equations matches that of the linear system
             assert(_n_equations == _linear_system.n_equations());
+
+            // get the constrained nodes and their prescribed values
+            const auto & constrained_values = _function_space.constrained_values();
 
             // QUESTION: can we flip the element and block loops? What is the expected layout in
             // memory?
@@ -178,6 +165,12 @@ namespace mito::fem {
                                 // assemble the value in the stiffness matrix
                                 _linear_system.add_matrix_value(
                                     eq_a, eq_b, elementary_matrix[{ a, b }]);
+                            } else {
+                                // {node_b} is constrained: subtract the lift contribution of its
+                                // prescribed value from the right-hand side
+                                _linear_system.add_rhs_value(
+                                    eq_a,
+                                    -elementary_matrix[{ a, b }] * constrained_values.at(node_b));
                             }
                         });
                     }
@@ -195,15 +188,17 @@ namespace mito::fem {
             auto u = std::vector<double>(_n_equations);
             _linear_system.get_solution(u);
 
-            // TODO: ask the function space to populate the constrained nodes appropriately
+            // get the constrained nodes and their prescribed values
+            const auto & constrained_values = _function_space.constrained_values();
 
-            // get the node map from the function space
-            auto node_map = _function_space.node_map();
             // fill information in finite element field
             for (auto & [node, eq] : _equation_map) {
                 if (eq != -1) {
                     // note the solution on the solution field
                     _solution_field(node) = u[eq];
+                } else {
+                    // populate the constrained node with its prescribed value
+                    _solution_field(node) = constrained_values.at(node);
                 }
             }
 

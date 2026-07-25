@@ -38,8 +38,8 @@ namespace mito::fem {
 
         // the discretization node type
         using discretization_node_type = typename finite_element_type::discretization_node_type;
-        // the constrained nodes type
-        using constrained_nodes_type = std::set<discretization_node_type>;
+        // the constrained values type (map from constrained node to prescribed value)
+        using constrained_values_type = std::map<discretization_node_type, tensor::scalar_t>;
         // the type of a map between the mesh nodes and discretization nodes
         using map_type = std::unordered_map<
             mesh_node_type, discretization_node_type, utilities::hash_function<mesh_node_type>>;
@@ -68,7 +68,7 @@ namespace mito::fem {
             // TODO: merge the discretization type with the finite element type
             // discretize the manifold subject to the constraints
             discretize<finite_element_type, discretizationT>(
-                manifold, constraints, _connectivity_table, _node_map, _constrained_nodes);
+                manifold, constraints, _connectivity_table, _node_map, _constrained_values);
         }
 
         // destructor
@@ -113,10 +113,10 @@ namespace mito::fem {
             return _constraints;
         }
 
-        // get the constrained nodes
-        constexpr auto constrained_nodes() const noexcept -> const constrained_nodes_type &
+        // get the constrained nodes and their prescribed values
+        constexpr auto constrained_values() const noexcept -> const constrained_values_type &
         {
-            return _constrained_nodes;
+            return _constrained_values;
         }
 
         // accessor for the node map
@@ -156,8 +156,8 @@ namespace mito::fem {
         // the constraints
         const constraints_type & _constraints;
 
-        // the constrained nodes
-        constrained_nodes_type _constrained_nodes;
+        // the constrained nodes and their prescribed values
+        constrained_values_type _constrained_values;
 
         // the connectivity table of the finite elements
         connectivity_table_type _connectivity_table;
