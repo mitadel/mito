@@ -74,6 +74,23 @@ namespace mito::fem {
                 manifold, constraints, _connectivity_table, _node_map, _constrained_values);
         }
 
+        // the constructor with a pre-populated node map (for coupled problems that share
+        // discretization nodes with another function space)
+        template <discretization_t discretizationT = discretization_t::CG>
+        constexpr FunctionSpace(
+            const manifold_type & manifold, const constraints_type & constraints,
+            const map_type & shared_node_map) :
+            _manifold(manifold),
+            _constraints(constraints),
+            _connectivity_table(),
+            _node_map(shared_node_map)
+        {
+            // discretize the manifold subject to the constraints; mesh nodes already present in
+            // the node map reuse their discretization nodes
+            discretize<finite_element_type, discretizationT>(
+                manifold, constraints, _connectivity_table, _node_map, _constrained_values);
+        }
+
         // destructor
         constexpr ~FunctionSpace() = default;
 
