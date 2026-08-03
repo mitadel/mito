@@ -9,9 +9,6 @@
 
 namespace mito::fem::blocks {
 
-    // TODO: add a benchmark that there is no overhead in defining the block wrt summing the
-    // resulting matrix entries
-
     template <class firstBlockT, class... blockTs>
     requires(
         same_finite_element_blocks_c<firstBlockT, blockTs...>
