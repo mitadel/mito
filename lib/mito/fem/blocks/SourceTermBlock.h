@@ -15,10 +15,12 @@ namespace mito::fem::blocks {
     class SourceTermBlock {
 
       public:
-        // my template parameters
+        // my finite element type
         using element_type = finiteElementT;
-        using elementary_shape = tensor::vector_t<element_type::n_nodes>;
+        // my quadrature rule
         using quadrature_rule_type = quadratureRuleT;
+        // my elementary shape
+        using elementary_shape = tensor::vector_t<element_type::n_nodes>;
 
         // the type of the source term function
         using source_field_type = sourceFieldT;

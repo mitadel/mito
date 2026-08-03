@@ -19,8 +19,9 @@ namespace mito::fem::blocks {
     class BlockSum {
 
       public:
-        // my template parameters
+        // my finite element type
         using element_type = typename firstBlockT::element_type;
+        // my elementary shape
         using elementary_shape = typename firstBlockT::elementary_shape;
 
       public:

@@ -13,10 +13,12 @@ namespace mito::fem::blocks {
     class MassBlock {
 
       public:
-        // my template parameters
+        // my finite element type
         using element_type = finiteElementT;
-        using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
+        // my quadrature rule
         using quadrature_rule_type = quadratureRuleT;
+        // my elementary shape
+        using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
 
       public:
         // instantiate the quadrature rule
