@@ -25,14 +25,24 @@ namespace mito::fem::blocks {
         using elementary_shape = typename firstBlockT::elementary_shape;
 
       public:
+        // the constructor
+        constexpr BlockSum(firstBlockT first_block, blockTs... blocks) :
+            _blocks(std::move(first_block), std::move(blocks)...)
+        {}
+
         // compute the elementary contribution of this block
         template <class elementT>
         requires element_of_type_c<elementT, element_type>
         auto compute(const elementT & element) const -> elementary_shape
         {
             // return the sum of all the blocks
-            return (firstBlockT{}.compute(element) + ... + blockTs{}.compute(element));
+            return std::apply(
+                [&](const auto &... blocks) { return (blocks.compute(element) + ...); }, _blocks);
         }
+
+      private:
+        // the blocks to sum
+        std::tuple<firstBlockT, blockTs...> _blocks;
     };
 
 }    // namespace mito

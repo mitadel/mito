@@ -22,7 +22,7 @@ namespace mito::fem::blocks {
 
       public:
         // constructor
-        constexpr BlockProduct(scalar_type factor) : _factor(factor) {}
+        constexpr BlockProduct(scalar_type factor, blockT block) : _factor(factor), _block(block) {}
 
         // compute the elementary contribution of this block
         template <class elementT>
@@ -30,12 +30,14 @@ namespace mito::fem::blocks {
         auto compute(const elementT & element) const -> elementary_shape
         {
             // return the product of the blocks with the scalar
-            return _factor * blockT{}.compute(element);
+            return _factor * _block.compute(element);
         }
 
       private:
         // the scalar factor
         scalar_type _factor;
+        // the block to multiply
+        blockT _block;
     };
 
 }    // namespace mito

@@ -11,9 +11,9 @@ namespace mito::fem::blocks {
 
     // the sum of block
     template <class... blockTs>
-    constexpr auto sum(blockTs...)
+    constexpr auto sum(blockTs... blocks)
     {
-        return BlockSum<blockTs...>{};
+        return BlockSum<blockTs...>(blocks...);
     }
 
     template <class leftBlockT, class rightBlockT>
@@ -23,9 +23,9 @@ namespace mito::fem::blocks {
     }
 
     template <tensor::scalar_c scalarT, class blockT>
-    constexpr auto operator*(scalarT scalar, blockT)
+    constexpr auto operator*(scalarT scalar, blockT block)
     {
-        return BlockProduct<scalarT, blockT>(scalar);
+        return BlockProduct<scalarT, blockT>(scalar, block);
     }
 
 }
