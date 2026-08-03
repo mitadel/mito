@@ -36,7 +36,7 @@ namespace mito::fem {
     }
 
     // compute H1 norm on a given function space of the difference between two localizable fields
-    template <int doe1, int doe2 = doe1 - 2, class functionSpaceT, class F1, class F2>
+    template <int doe1, int doe2 = (doe1 >= 2 ? doe1 - 2 : 0), class functionSpaceT, class F1, class F2>
     constexpr auto compute_h1_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
