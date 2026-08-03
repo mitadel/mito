@@ -22,6 +22,7 @@
 #include "SourceTermBlock.h"
 #include "L2NormBlock.h"
 #include "BlockSum.h"
+#include "BlockProduct.h"
 
 // factories implementation
 #include "factories.h"

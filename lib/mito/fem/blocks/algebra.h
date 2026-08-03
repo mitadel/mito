@@ -21,6 +21,13 @@ namespace mito::fem::blocks {
     {
         return sum(left_block, right_block);
     }
+
+    template <tensor::scalar_c scalarT, class blockT>
+    constexpr auto operator*(scalarT scalar, blockT)
+    {
+        return BlockProduct<scalarT, blockT>(scalar);
+    }
+
 }
 
 
