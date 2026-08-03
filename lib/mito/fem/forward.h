@@ -36,8 +36,7 @@ namespace mito::fem {
     template <class firstBlockT, class... blockTs>
     concept same_elementary_shape_blocks_c =
         // require the same elementary shape
-        (std::same_as<
-             typename firstBlockT::elementary_block_type, typename blockTs::elementary_block_type>
+        (std::same_as<typename firstBlockT::elementary_shape, typename blockTs::elementary_shape>
          && ...);
 
     // weakform alias

@@ -19,9 +19,9 @@ namespace mito::fem {
         // the type of the right hand side assembly block
         using rhs_block_type = rhsBlockT;
         // the elementary matrix type
-        using elementary_matrix_type = typename lhs_block_type::elementary_block_type;
+        using elementary_matrix_type = typename lhs_block_type::elementary_shape;
         // the elementary vector type
-        using elementary_vector_type = typename rhs_block_type::elementary_block_type;
+        using elementary_vector_type = typename rhs_block_type::elementary_shape;
 
       public:
         // constructor

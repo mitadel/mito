@@ -21,13 +21,13 @@ namespace mito::fem::blocks {
       public:
         // my template parameters
         using element_type = typename firstBlockT::element_type;
-        using elementary_block_type = typename firstBlockT::elementary_block_type;
+        using elementary_shape = typename firstBlockT::elementary_shape;
 
       public:
         // compute the elementary contribution of this block
         template <class elementT>
         requires element_of_type_c<elementT, element_type>
-        auto compute(const elementT & element) const -> elementary_block_type
+        auto compute(const elementT & element) const -> elementary_shape
         {
             // return the sum of all the blocks
             return (firstBlockT{}.compute(element) + ... + blockTs{}.compute(element));

@@ -17,7 +17,7 @@ namespace mito::fem::blocks {
       public:
         // my template parameters
         using element_type = finiteElementT;
-        using elementary_block_type = tensor::vector_t<element_type::n_nodes>;
+        using elementary_shape = tensor::vector_t<element_type::n_nodes>;
         using quadrature_rule_type = quadratureRuleT;
 
         // the type of the source term function
@@ -35,7 +35,7 @@ namespace mito::fem::blocks {
         // compute the elementary contribution of this block
         template <class elementT>
         requires(element_of_type_c<elementT, element_type>)
-        auto compute(const elementT & element) const -> elementary_block_type
+        auto compute(const elementT & element) const -> elementary_shape
         {
             // the number of nodes per element
             constexpr int n_nodes = element_type::n_nodes;
@@ -44,7 +44,7 @@ namespace mito::fem::blocks {
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary vector
-            elementary_block_type elementary_vector{};
+            elementary_shape elementary_vector{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
