@@ -53,7 +53,7 @@ TEST(Fem, IsoparametricTriangle)
             element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
         // a grad-grad matrix block
-        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
+        constexpr auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
 
         // the analytical elementary stiffness matrix
         auto analytical_block = 1.0 / 2.0 * mito::tensor::matrix_t<3>{ 2.0, -1.0, -1.0, -1.0, 1.0,
@@ -89,7 +89,7 @@ TEST(Fem, IsoparametricTriangle)
                        discretization_node_3, discretization_node_4, discretization_node_5 });
 
         // a grad-grad matrix block
-        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
+        constexpr auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<6>{

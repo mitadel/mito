@@ -66,7 +66,7 @@ main()
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
     // a grad-grad matrix block
-    auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
+    constexpr auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)

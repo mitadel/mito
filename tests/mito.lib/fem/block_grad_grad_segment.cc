@@ -50,7 +50,7 @@ TEST(Fem, BlockGradGradSegment)
             element, { discretization_node_0, discretization_node_1 });
 
         // a grad-grad matrix block
-        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
+        constexpr auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<2>{ 1.0, -1.0, -1.0, 1.0 };
