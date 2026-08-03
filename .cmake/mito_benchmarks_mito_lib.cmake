@@ -25,4 +25,7 @@ if(WITH_PETSC)
     mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
 endif()
 
+# blocks composition
+mito_benchmark_driver(benchmarks/mito.lib/blocks/composition.cc)
+
 # end of file
