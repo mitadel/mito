@@ -13,14 +13,9 @@ namespace mito::fem::blocks {
     // resulting matrix entries
 
     template <class firstBlockT, class... blockTs>
-    // TOFIX: rename all this as 'compatible blocks'
     requires(
-        // require the same underlying element type
-        (std::same_as<typename firstBlockT::element_type, typename blockTs::element_type> && ...) &&
-        // require the same type of elementary block (e.g. producing matrix/vector of same sizes)
-        (std::same_as<
-             typename firstBlockT::elementary_block_type, typename blockTs::elementary_block_type>
-         && ...))
+        same_finite_element_blocks_c<firstBlockT, blockTs...>
+        && same_elementary_shape_blocks_c<firstBlockT, blockTs...>)
     class BlockSum {
 
       public:

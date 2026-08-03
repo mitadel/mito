@@ -10,7 +10,7 @@
 namespace mito::fem {
 
     template <class lhsBlockT, class rhsBlockT>
-    requires compatible_assembly_blocks_c<lhsBlockT, rhsBlockT>
+    requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform {
 
       private:

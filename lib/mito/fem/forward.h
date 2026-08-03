@@ -26,13 +26,23 @@ namespace mito::fem {
     template <class functionSpaceT>
     class FunctionSpaceElementsView;
 
-    template <class lhsBlockT, class rhsBlockT>
-    concept compatible_assembly_blocks_c =
-        std::is_same_v<typename lhsBlockT::element_type, typename rhsBlockT::element_type>;
+    // concept of blocks with the same finite element type
+    template <class firstBlockT, class... blockTs>
+    concept same_finite_element_blocks_c =
+        // require the same underlying element type
+        (std::same_as<typename firstBlockT::element_type, typename blockTs::element_type> && ...);
+
+    // concept of blocks with the same elementary shape
+    template <class firstBlockT, class... blockTs>
+    concept same_elementary_shape_blocks_c =
+        // require the same elementary shape
+        (std::same_as<
+             typename firstBlockT::elementary_block_type, typename blockTs::elementary_block_type>
+         && ...);
 
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>
-    requires compatible_assembly_blocks_c<lhsBlockT, rhsBlockT>
+    requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform;
 
     // class discrete system
