@@ -9,36 +9,60 @@
 
 namespace mito::fem::blocks {
 
-    // matrix block factory
-    template <class elementT, class quadratureRuleT>
+    // grad-grad matrix block factory
+    template <class elementT>
     constexpr auto grad_grad_block()
     {
+        // degree of exactness for the quadrature rule
+        // (required to integrate exactly grad-grad product of element shape functions)
+        constexpr int doe = 2 * (elementT::degree - 1);
+
+        // assemble the GAUSS quadrature rule for the block
+        using quadrature_rule_type = quadrature::quadrature_rule_t<
+            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
+
         // all done
-        return grad_grad_block_t<elementT, quadratureRuleT>();
+        return grad_grad_block_t<elementT, quadrature_rule_type>();
     }
 
-    // mass block factory
-    template <class elementT, class quadratureRuleT>
+    // mass matrix block factory
+    template <class elementT>
     constexpr auto mass_block()
     {
+        // degree of exactness for the quadrature rule
+        // (required to integrate exactly product of element shape functions)
+        constexpr int doe = 2 * elementT::degree;
+
+        // select an appropriate quadrature rule for the block
+        using quadrature_rule_type = quadrature::quadrature_rule_t<
+            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
+
         // all done
-        return mass_block_t<elementT, quadratureRuleT>();
+        return mass_block_t<elementT, quadrature_rule_type>();
     }
 
     // source term block factory
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    template <class elementT, int doe, fields::scalar_field_c sourceFieldT>
     constexpr auto source_term_block(const sourceFieldT & f)
     {
+        // select an appropriate quadrature rule for the block
+        using quadrature_rule_type = quadrature::quadrature_rule_t<
+            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
+
         // all done
-        return source_term_block_t<elementT, quadratureRuleT, sourceFieldT>(f);
+        return source_term_block_t<elementT, quadrature_rule_type, sourceFieldT>(f);
     }
 
     // L2 norm block factory
-    template <class elementT, class quadratureRuleT, functions::function_c functionT>
+    template <class elementT, int doe, functions::function_c functionT>
     constexpr auto l2_norm_block(const functionT & f)
     {
+        // select an appropriate quadrature rule for the block
+        using quadrature_rule_type = quadrature::quadrature_rule_t<
+            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
+
         // all done
-        return l2_norm_block_t<elementT, quadratureRuleT, functionT>(f);
+        return l2_norm_block_t<elementT, quadrature_rule_type, functionT>(f);
     }
 
 }

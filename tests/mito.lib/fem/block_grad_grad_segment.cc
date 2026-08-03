@@ -15,14 +15,6 @@ using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::segment_t<1>;
-// the reference simplex
-using reference_simplex_t = cell_t::reference_simplex_type;
-// Gauss quadrature on segments with degree of exactness 2
-using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
-
-// instantiate the quadrature rule
-constexpr auto quadrature_rule = quadrature_rule_t();
 
 
 TEST(Fem, BlockGradGradSegment)
@@ -58,8 +50,7 @@ TEST(Fem, BlockGradGradSegment)
             element, { discretization_node_0, discretization_node_1 });
 
         // a grad-grad matrix block
-        auto grad_grad_block =
-            mito::fem::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
+        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<2>{ 1.0, -1.0, -1.0, 1.0 };

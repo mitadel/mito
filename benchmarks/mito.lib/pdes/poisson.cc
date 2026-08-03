@@ -18,14 +18,6 @@ constexpr int degree = 2;
 // assemble the finite element type
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
-// the reference simplex
-using reference_simplex_t = cell_t::reference_simplex_type;
-// degree of exactness for the quadrature rule
-constexpr int doe = 2;
-// Gauss quadrature on triangles with degree of exactness 2
-using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, doe>;
-
 // typedef for a linear system of equations
 using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
 // typedef for a matrix solver
@@ -74,7 +66,7 @@ main()
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
     // a grad-grad matrix block
-    auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
+    auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
@@ -82,8 +74,7 @@ main()
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // a source term block
-    auto fem_rhs_block =
-        mito::fem::blocks::source_term_block<finite_element_t, quadrature_rule_t>(f);
+    auto fem_rhs_block = mito::fem::blocks::source_term_block<finite_element_t, 2>(f);
 
     // create the weak form and populate it with the blocks
     auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
@@ -112,12 +103,12 @@ main()
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
 
     // compute the L2 error
-    auto error_L2 = mito::fem::compute_l2_norm<quadrature_rule_t>(function_space, solution, u_ex);
+    auto error_L2 = mito::fem::compute_l2_norm<2>(function_space, solution, u_ex);
     // report
     channel << "L2 error: " << error_L2 << journal::endl;
 
     // compute the H1 error
-    auto error_H1 = mito::fem::compute_h1_norm<quadrature_rule_t>(function_space, solution, u_ex);
+    auto error_H1 = mito::fem::compute_h1_norm<2, 2>(function_space, solution, u_ex);
     // report
     channel << "H1 error: " << error_H1 << journal::endl;
 
