@@ -9,6 +9,14 @@
 
 namespace mito::fem::blocks {
 
+    // advection block
+    template <class elementT, class quadratureRuleT, fields::vector_field_c velocityFieldT>
+    using advection_block_t = AdvectionBlock<elementT, quadratureRuleT, velocityFieldT>;
+
+    // advection block factory
+    template <class elementT, class quadratureRuleT, fields::vector_field_c velocityFieldT>
+    constexpr auto advection_block(const velocityFieldT & velocity);
+
     // grad grad block
     template <class elementT, class quadratureRuleT>
     using grad_grad_block_t = GradGradBlock<elementT, quadratureRuleT>;

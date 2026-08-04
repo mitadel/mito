@@ -9,6 +9,22 @@
 
 namespace mito::fem::blocks {
 
+    // advection matrix block factory
+    template <class elementT, fields::vector_field_c velocityFieldT>
+    constexpr auto advection_block(const velocityFieldT & velocity)
+    {
+        // degree of exactness for the quadrature rule
+        // (required to integrate exactly advection product of element shape functions)
+        constexpr int doe = 2 * elementT::degree - 1;
+
+        // assemble the GAUSS quadrature rule for the block
+        using quadrature_rule_type = quadrature::quadrature_rule_t<
+            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
+
+        // all done
+        return advection_block_t<elementT, quadrature_rule_type, velocityFieldT>(velocity);
+    }
+
     // grad-grad matrix block factory
     template <class elementT>
     constexpr auto grad_grad_block()
