@@ -14,7 +14,7 @@ namespace mito::fem::blocks {
     using advection_block_t = AdvectionBlock<elementT, quadratureRuleT, velocityFieldT>;
 
     // advection block factory
-    template <class elementT, class quadratureRuleT, fields::vector_field_c velocityFieldT>
+    template <class elementT, fields::vector_field_c velocityFieldT>
     constexpr auto advection_block(const velocityFieldT & velocity);
 
     // grad grad block
@@ -38,7 +38,7 @@ namespace mito::fem::blocks {
     using source_term_block_t = SourceTermBlock<elementT, quadratureRuleT, sourceFieldT>;
 
     // source term block factory
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    template <class elementT, int doe, fields::scalar_field_c sourceFieldT>
     constexpr auto source_term_block(const sourceFieldT & f);
 
     // L2 norm block
@@ -46,7 +46,7 @@ namespace mito::fem::blocks {
     using l2_norm_block_t = L2NormBlock<elementT, quadratureRuleT, functionT>;
 
     // L2 norm block factory
-    template <class elementT, class quadratureRuleT, functions::function_c functionT>
+    template <class elementT, int doe, functions::function_c functionT>
     constexpr auto l2_norm_block(const functionT & f);
 }
 
