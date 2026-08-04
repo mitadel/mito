@@ -93,11 +93,14 @@ main(int argc, char ** argv)
     // a mass matrix block
     constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
 
+    // the diffusivity field
+    auto diffusivity = mito::functions::identity<coordinates_t, 2>();
+
     // a grad-grad matric block
-    constexpr auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
+    auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
-    constexpr auto sum_block = 2.0 * mass_block + (-1.0) * grad_grad_block;
+    auto sum_block = 2.0 * mass_block + (-1.0) * grad_grad_block;
 
     // run the benchmark for the block composition
     benchmark::RegisterBenchmark("blocks/composition", [&](benchmark::State & state) {

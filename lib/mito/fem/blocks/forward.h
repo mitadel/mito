@@ -14,7 +14,7 @@ namespace mito::fem::blocks {
     class AdvectionBlock;
 
     // grad grad block
-    template <class elementT, class quadratureRuleT>
+    template <class elementT, class quadratureRuleT, fields::tensor_field_c diffusivityFieldT>
     class GradGradBlock;
 
     // mass block

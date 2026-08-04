@@ -72,11 +72,14 @@ main()
     constexpr auto beta_x = 1.0;
     constexpr auto beta_y = 1.0;
 
+    // the diffusivity field
+    auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
+
     // the advection field
     auto velocity = beta_x * e_x + beta_y * e_y;
 
     // a matrix block
-    auto fem_lhs_block = k * mito::fem::blocks::grad_grad_block<finite_element_t>()
+    auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity)
                        + mito::fem::blocks::advection_block<finite_element_t>(velocity)
                        + c * mito::fem::blocks::mass_block<finite_element_t>();
 

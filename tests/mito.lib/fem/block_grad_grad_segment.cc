@@ -49,8 +49,11 @@ TEST(Fem, BlockGradGradSegment)
         auto element_p1 = mito::fem::finite_element<finite_element_t>(
             element, { discretization_node_0, discretization_node_1 });
 
+        // the diffusivity field
+        auto diffusivity = mito::functions::identity<coordinates_t, 1>();
+
         // a grad-grad matrix block
-        constexpr auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
+        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<2>{ 1.0, -1.0, -1.0, 1.0 };

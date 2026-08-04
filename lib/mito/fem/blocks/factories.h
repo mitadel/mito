@@ -26,8 +26,8 @@ namespace mito::fem::blocks {
     }
 
     // grad-grad matrix block factory
-    template <class elementT>
-    constexpr auto grad_grad_block()
+    template <class elementT, fields::tensor_field_c diffusivityFieldT>
+    constexpr auto grad_grad_block(const diffusivityFieldT & diffusivity)
     {
         // degree of exactness for the quadrature rule
         // (required to integrate exactly grad-grad product of element shape functions)
@@ -38,7 +38,7 @@ namespace mito::fem::blocks {
             quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
 
         // all done
-        return grad_grad_block_t<elementT, quadrature_rule_type>();
+        return grad_grad_block_t<elementT, quadrature_rule_type, diffusivityFieldT>(diffusivity);
     }
 
     // mass matrix block factory

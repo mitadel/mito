@@ -9,7 +9,7 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT>
+    template <class finiteElementT, class quadratureRuleT, fields::tensor_field_c diffusivityFieldT>
     class GradGradBlock {
 
       public:
@@ -20,9 +20,16 @@ namespace mito::fem::blocks {
         // my elementary shape
         using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
 
+        // the type of the diffusivity field
+        using diffusivity_field_type = diffusivityFieldT;
+
       public:
         // instantiate the quadrature rule
         static constexpr auto quadrature_rule = quadrature_rule_type();
+
+      public:
+        // constructor
+        GradGradBlock(const diffusivity_field_type & diffusivity) : _diffusivity(diffusivity) {}
 
       public:
         // compute the elementary contribution of this block
@@ -44,6 +51,12 @@ namespace mito::fem::blocks {
                 // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
+                // the coordinates of the quadrature point
+                auto x = element.parametrization()(xi);
+
+                // evaluate the diffusivity field at the quadrature point
+                auto diffusivity = _diffusivity(x);
+
                 // the measure of the canonical simplex
                 constexpr auto measure =
                     element_type::mesh_cell_type::reference_simplex_type::measure;
@@ -64,7 +77,7 @@ namespace mito::fem::blocks {
                         // {xi}
                         auto dphi_b = element.template gradient<b>()(xi);
                         // populate the elementary contribution to the matrix
-                        elementary_matrix[{ a, b }] += factor * dphi_a * dphi_b;
+                        elementary_matrix[{ a, b }] += factor * dphi_a * (diffusivity * dphi_b);
                     });
                 });
             });
@@ -72,6 +85,10 @@ namespace mito::fem::blocks {
             // all done
             return elementary_matrix;
         }
+
+      private:
+        // the diffusivity field
+        const diffusivity_field_type & _diffusivity;
     };
 
 }    // namespace mito

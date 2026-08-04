@@ -18,12 +18,12 @@ namespace mito::fem::blocks {
     constexpr auto advection_block(const velocityFieldT & velocity);
 
     // grad grad block
-    template <class elementT, class quadratureRuleT>
-    using grad_grad_block_t = GradGradBlock<elementT, quadratureRuleT>;
+    template <class elementT, class quadratureRuleT, fields::tensor_field_c diffusivityFieldT>
+    using grad_grad_block_t = GradGradBlock<elementT, quadratureRuleT, diffusivityFieldT>;
 
     // grad grad block factory
-    template <class elementT>
-    constexpr auto grad_grad_block();
+    template <class elementT, fields::tensor_field_c diffusivityFieldT>
+    constexpr auto grad_grad_block(const diffusivityFieldT & diffusivity);
 
     // mass block
     template <class elementT, class quadratureRuleT>

@@ -65,8 +65,12 @@ main()
     // the function space (linear elements on the manifold)
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
+    // the diffusivity field
+    constexpr auto k = 1.0;
+    constexpr auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
+
     // a grad-grad matrix block
-    constexpr auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>();
+    auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
