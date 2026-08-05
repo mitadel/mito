@@ -79,9 +79,9 @@ main()
     auto velocity = beta_x * e_x + beta_y * e_y;
 
     // a matrix block
-    auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity)
-                       + mito::fem::blocks::value_gradient_block<finite_element_t>(velocity)
-                       + c * mito::fem::blocks::value_value_block<finite_element_t>();
+    auto fem_lhs_block = mito::fem::blocks::diffusion_block<finite_element_t>(diffusivity)
+                       + mito::fem::blocks::advection_block<finite_element_t>(velocity)
+                       + c * mito::fem::blocks::reaction_block<finite_element_t>();
 
     // the right hand side
     auto f = (2.0 * k * std::numbers::pi * std::numbers::pi + c)

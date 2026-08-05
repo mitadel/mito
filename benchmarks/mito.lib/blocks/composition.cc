@@ -97,7 +97,7 @@ main(int argc, char ** argv)
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
     // a grad grad matric block
-    auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+    auto diffusion_block = mito::fem::blocks::diffusion_block<finite_element_t>(diffusivity);
 
     // add them up
     auto sum_block = 2.0 * mass_block + (-1.0) * diffusion_block;
