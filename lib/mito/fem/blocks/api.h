@@ -9,37 +9,37 @@
 
 namespace mito::fem::blocks {
 
-    // advection block
-    template <class elementT, class quadratureRuleT, fields::vector_field_c velocityFieldT>
-    using advection_block_t = AdvectionBlock<elementT, quadratureRuleT, velocityFieldT>;
+    // value grad matrix block
+    template <class elementT, class quadratureRuleT, fields::vector_field_c coefficientFieldT>
+    using value_gradient_block_t = ValueGradientBlock<elementT, quadratureRuleT, coefficientFieldT>;
 
-    // advection block factory
-    template <class elementT, fields::vector_field_c velocityFieldT>
-    constexpr auto advection_block(const velocityFieldT & velocity);
+    // value grad matrix block factory
+    template <class elementT, fields::vector_field_c coefficientFieldT>
+    constexpr auto value_gradient_block(const coefficientFieldT & coefficient);
 
-    // grad grad block
-    template <class elementT, class quadratureRuleT, fields::tensor_field_c diffusivityFieldT>
-    using grad_grad_block_t = GradGradBlock<elementT, quadratureRuleT, diffusivityFieldT>;
+    // grad grad matrix block
+    template <class elementT, class quadratureRuleT, fields::tensor_field_c coefficientFieldT>
+    using grad_grad_block_t = GradientGradientBlock<elementT, quadratureRuleT, coefficientFieldT>;
 
-    // grad grad block factory
-    template <class elementT, fields::tensor_field_c diffusivityFieldT>
-    constexpr auto grad_grad_block(const diffusivityFieldT & diffusivity);
+    // grad grad matrix block factory
+    template <class elementT, fields::tensor_field_c coefficientFieldT>
+    constexpr auto grad_grad_block(const coefficientFieldT & coefficient);
 
-    // mass block
+    // value value matrix block
     template <class elementT, class quadratureRuleT>
-    using mass_block_t = MassBlock<elementT, quadratureRuleT>;
+    using value_value_block_t = ValueValueBlock<elementT, quadratureRuleT>;
 
-    // mass block factory
+    // value value matrix block factory
     template <class elementT>
-    constexpr auto mass_block();
+    constexpr auto value_value_block();
 
-    // source term block
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
-    using source_term_block_t = SourceTermBlock<elementT, quadratureRuleT, sourceFieldT>;
+    // value vector block
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
+    using value_block_t = ValueBlock<elementT, quadratureRuleT, coefficientFieldT>;
 
-    // source term block factory
-    template <class elementT, int doe, fields::scalar_field_c sourceFieldT>
-    constexpr auto source_term_block(const sourceFieldT & f);
+    // value vector block factory
+    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
+    constexpr auto value_block(const coefficientFieldT & coefficient);
 
     // L2 norm block
     template <class elementT, class quadratureRuleT, functions::function_c functionT>

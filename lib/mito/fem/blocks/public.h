@@ -17,10 +17,10 @@
 #include "api.h"
 
 // classes implementation
-#include "AdvectionBlock.h"
-#include "GradGradBlock.h"
-#include "MassBlock.h"
-#include "SourceTermBlock.h"
+#include "ValueGradientBlock.h"
+#include "GradientGradientBlock.h"
+#include "ValueValueBlock.h"
+#include "ValueBlock.h"
 #include "L2NormBlock.h"
 #include "BlockSum.h"
 #include "BlockProduct.h"

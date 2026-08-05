@@ -55,15 +55,15 @@ TEST(Fem, IsoparametricTriangle)
         // the diffusivity field
         auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-        // a grad-grad matrix block
-        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+        // a grad grad matrix block
+        auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = 1.0 / 2.0 * mito::tensor::matrix_t<3>{ 2.0, -1.0, -1.0, -1.0, 1.0,
                                                                        0.0, -1.0, 0.0,  1.0 };
 
         // compute the elementary contribution of the block
-        auto computed_block = grad_grad_block.compute(element_p1);
+        auto computed_block = diffusion_block.compute(element_p1);
 
         // compute the error
         auto error = mito::tensor::norm(computed_block - analytical_block);
@@ -94,8 +94,8 @@ TEST(Fem, IsoparametricTriangle)
         // the diffusivity field
         auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-        // a grad-grad matrix block
-        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+        // a grad grad matrix block
+        auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<6>{
@@ -108,7 +108,7 @@ TEST(Fem, IsoparametricTriangle)
         };
 
         // compute the elementary contribution of the block
-        auto computed_block = grad_grad_block.compute(element_p2);
+        auto computed_block = diffusion_block.compute(element_p2);
 
         // compute the error
         auto error = mito::tensor::norm(computed_block - analytical_block);

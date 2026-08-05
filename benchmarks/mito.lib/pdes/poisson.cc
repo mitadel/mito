@@ -69,7 +69,7 @@ main()
     constexpr auto k = 1.0;
     constexpr auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
 
-    // a grad-grad matrix block
+    // a grad grad matrix block
     auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // the right hand side
@@ -78,7 +78,7 @@ main()
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // a source term block
-    auto fem_rhs_block = mito::fem::blocks::source_term_block<finite_element_t, 2>(f);
+    auto fem_rhs_block = mito::fem::blocks::value_block<finite_element_t, 2>(f);
 
     // create the weak form and populate it with the blocks
     auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);

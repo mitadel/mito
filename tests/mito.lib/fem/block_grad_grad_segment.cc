@@ -52,14 +52,14 @@ TEST(Fem, BlockGradGradSegment)
         // the diffusivity field
         auto diffusivity = mito::functions::identity<coordinates_t, 1>();
 
-        // a grad-grad matrix block
-        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+        // a grad grad matrix block
+        auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<2>{ 1.0, -1.0, -1.0, 1.0 };
 
         // compute the elementary contribution of the block
-        auto computed_block = grad_grad_block.compute(element_p1);
+        auto computed_block = diffusion_block.compute(element_p1);
 
         // compute the error
         auto error = mito::tensor::norm(computed_block - analytical_block);

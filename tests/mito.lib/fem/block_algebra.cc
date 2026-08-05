@@ -52,16 +52,16 @@ TEST(Fem, BlockSum)
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-    // a grad-grad matric block
-    auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+    // a grad grad matric block
+    auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
-    auto sum_block = mass_block + grad_grad_block;
+    auto sum_block = mass_block + diffusion_block;
 
     // the analytical elementary mass matrix
     auto analytical_block = 1.0 / 24.0 * mito::tensor::matrix_t<3>{ 26.0, -11.0, -11.0, -11.0, 14.0,
@@ -115,7 +115,7 @@ TEST(Fem, BlockProduct)
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
     // add them up
     constexpr auto product_block = 2.0 * mass_block;
@@ -172,16 +172,16 @@ TEST(Fem, BlockProductSum)
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-    // a grad-grad matric block
-    auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+    // a grad grad matric block
+    auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
-    auto sum_block = 2.0 * mass_block + (-1.0) * grad_grad_block;
+    auto sum_block = 2.0 * mass_block + (-1.0) * diffusion_block;
 
     // the analytical elementary mass matrix
     auto analytical_block =
@@ -236,16 +236,16 @@ TEST(Fem, BlockProductTwoSums)
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-    // a grad-grad matric block
-    auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+    // a grad grad matric block
+    auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
-    auto sum_block = mass_block + mass_block + (-1.0) * grad_grad_block;
+    auto sum_block = mass_block + mass_block + (-1.0) * diffusion_block;
 
     // the analytical elementary mass matrix
     auto analytical_block =

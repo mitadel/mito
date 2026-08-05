@@ -9,8 +9,8 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT>
-    class MassBlock {
+    template <class finiteElementT, class quadratureRuleT, fields::vector_field_c velocityFieldT>
+    class ValueGradientBlock {
 
       public:
         // my finite element type
@@ -20,14 +20,21 @@ namespace mito::fem::blocks {
         // my elementary shape
         using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
 
+        // the type of the velocity field
+        using velocity_field_type = velocityFieldT;
+
       public:
         // instantiate the quadrature rule
         static constexpr auto quadrature_rule = quadrature_rule_type();
 
       public:
+        // constructor
+        ValueGradientBlock(const velocity_field_type & velocity) : _velocity(velocity) {}
+
+      public:
         // compute the elementary contribution of this block
         template <class elementT>
-        requires(element_of_type_c<elementT, element_type>)
+        requires element_of_type_c<elementT, element_type>
         auto compute(const elementT & element) const -> elementary_shape
         {
             // the number of nodes per element
@@ -44,6 +51,12 @@ namespace mito::fem::blocks {
                 // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
+                // the coordinates of the quadrature point
+                auto x = element.parametrization()(xi);
+
+                // evaluate the coefficient at the quadrature point
+                auto velocity = _velocity(x);
+
                 // the measure of the canonical simplex
                 constexpr auto measure =
                     element_type::mesh_cell_type::reference_simplex_type::measure;
@@ -56,15 +69,15 @@ namespace mito::fem::blocks {
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                    // evaluate the spatial gradient of the element's a-th shape function at {xi}
+                    // evaluate the element's a-th shape function at {xi}
                     auto phi_a = element.template shape<a>()(xi);
                     // loop on the nodes of the element
                     tensor::constexpr_for_1<n_nodes>([&]<int b>() {
                         // evaluate the spatial gradient of the element's b-th shape function at
                         // {xi}
-                        auto phi_b = element.template shape<b>()(xi);
+                        auto dphi_b = element.template gradient<b>()(xi);
                         // populate the elementary contribution to the matrix
-                        elementary_matrix[{ a, b }] += factor * phi_a * phi_b;
+                        elementary_matrix[{ a, b }] += factor * phi_a * velocity * dphi_b;
                     });
                 });
             });
@@ -72,6 +85,10 @@ namespace mito::fem::blocks {
             // all done
             return elementary_matrix;
         }
+
+      private:
+        // the velocity field
+        const velocity_field_type & _velocity;
     };
 
 }    // namespace mito

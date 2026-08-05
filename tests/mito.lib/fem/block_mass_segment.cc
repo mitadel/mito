@@ -51,7 +51,7 @@ TEST(Fem, BlockMassSegment)
             element, { discretization_node_0, discretization_node_1 });
 
         // a mass matrix block
-        constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+        constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
         // the analytical elementary mass matrix
         auto analytical_block = 1.0 / 6.0 * mito::tensor::matrix_t<2>{ 2.0, 1.0, 1.0, 2.0 };

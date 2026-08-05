@@ -53,7 +53,7 @@ TEST(Fem, IsoparametricTriangle)
             element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
         // a mass matrix block
-        constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+        constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
         // the analytical elementary mass matrix
         auto analytical_block =
@@ -89,7 +89,7 @@ TEST(Fem, IsoparametricTriangle)
                        discretization_node_3, discretization_node_4, discretization_node_5 });
 
         // a mass matrix block
-        constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+        constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
         // the analytical elementary mass matrix
         auto analytical_block = mito::tensor::matrix_t<6>{

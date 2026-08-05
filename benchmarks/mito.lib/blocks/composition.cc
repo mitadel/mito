@@ -91,16 +91,16 @@ main(int argc, char ** argv)
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::mass_block<finite_element_t>();
+    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-    // a grad-grad matric block
-    auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+    // a grad grad matric block
+    auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
-    auto sum_block = 2.0 * mass_block + (-1.0) * grad_grad_block;
+    auto sum_block = 2.0 * mass_block + (-1.0) * diffusion_block;
 
     // run the benchmark for the block composition
     benchmark::RegisterBenchmark("blocks/composition", [&](benchmark::State & state) {
@@ -118,7 +118,7 @@ main(int argc, char ** argv)
     benchmark::RegisterBenchmark("blocks/no_composition", [&](benchmark::State & state) {
         for (auto _ : state) {
             // collect the block elementary contributions over the function space elements
-            auto result = block_no_composition(mass_block, grad_grad_block, function_space);
+            auto result = block_no_composition(mass_block, diffusion_block, function_space);
             // do not optimize the result away
             benchmark::DoNotOptimize(result);
             // // show the result

@@ -80,8 +80,8 @@ main()
 
     // a matrix block
     auto fem_lhs_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity)
-                       + mito::fem::blocks::advection_block<finite_element_t>(velocity)
-                       + c * mito::fem::blocks::mass_block<finite_element_t>();
+                       + mito::fem::blocks::value_gradient_block<finite_element_t>(velocity)
+                       + c * mito::fem::blocks::value_value_block<finite_element_t>();
 
     // the right hand side
     auto f = (2.0 * k * std::numbers::pi * std::numbers::pi + c)
@@ -93,7 +93,7 @@ main()
                  * mito::functions::cos(std::numbers::pi * y);
 
     // a source term block
-    auto fem_rhs_block = mito::fem::blocks::source_term_block<finite_element_t, 4>(f);
+    auto fem_rhs_block = mito::fem::blocks::value_block<finite_element_t, 4>(f);
 
     // create the weak form and populate it with the blocks
     auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
