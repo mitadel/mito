@@ -13,6 +13,9 @@
 // get the forward declarations
 #include "forward.h"
 
+// the blocks factories
+#include "blocks.h"
+
 // published types factories; this is the file you are looking for...
 #include "api.h"
 

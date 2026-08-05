@@ -9,65 +9,52 @@
 
 namespace mito::fem::blocks {
 
-    // value gradient matrix block factory
+    // advection matrix block factory
     template <class elementT, fields::vector_field_c coefficientFieldT>
-    constexpr auto value_gradient_block(const coefficientFieldT & coefficient)
+    constexpr auto advection_block(const coefficientFieldT & coefficient)
     {
-        // degree of exactness for the quadrature rule
-        // (required to integrate exactly the integrand with a constant coefficient)
-        constexpr int doe = 2 * elementT::degree - 1;
-
-        // assemble the GAUSS quadrature rule for the block
-        using quadrature_rule_type = quadrature::quadrature_rule_t<
-            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
-
         // all done
-        return value_gradient_block_t<elementT, quadrature_rule_type, coefficientFieldT>(
-            coefficient);
+        return value_gradient_block<elementT, coefficientFieldT>(coefficient);
     }
 
-    // grad grad matrix block factory
+    // diffusion matrix block factory
     template <class elementT, fields::tensor_field_c coefficientFieldT>
-    constexpr auto grad_grad_block(const coefficientFieldT & coefficient)
+    constexpr auto diffusion_block(const coefficientFieldT & coefficient)
     {
-        // degree of exactness for the quadrature rule
-        // (required to integrate exactly the integrand with a constant coefficient)
-        constexpr int doe = 2 * (elementT::degree - 1);
-
-        // assemble the GAUSS quadrature rule for the block
-        using quadrature_rule_type = quadrature::quadrature_rule_t<
-            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
-
         // all done
-        return grad_grad_block_t<elementT, quadrature_rule_type, coefficientFieldT>(coefficient);
+        return grad_grad_block<elementT, coefficientFieldT>(coefficient);
     }
 
-    // value value matrix block factory
+    // stiffness matrix block factory
+    template <class elementT, fields::tensor_field_c coefficientFieldT>
+    constexpr auto stiffness_block(const coefficientFieldT & coefficient)
+    {
+        // all done
+        return grad_grad_block<elementT, coefficientFieldT>(coefficient);
+    }
+
+    // reaction matrix block factory
     template <class elementT>
-    constexpr auto value_value_block()
+    constexpr auto reaction_block()
     {
-        // degree of exactness for the quadrature rule
-        // (required to integrate exactly product of element shape functions)
-        constexpr int doe = 2 * elementT::degree;
-
-        // select an appropriate quadrature rule for the block
-        using quadrature_rule_type = quadrature::quadrature_rule_t<
-            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
-
         // all done
-        return value_value_block_t<elementT, quadrature_rule_type>();
+        return value_value_block<elementT>();
     }
 
-    // value vector block factory
-    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
-    constexpr auto value_block(const coefficientFieldT & coefficient)
+    // mass matrix block factory
+    template <class elementT>
+    constexpr auto mass_block()
     {
-        // select an appropriate quadrature rule for the block
-        using quadrature_rule_type = quadrature::quadrature_rule_t<
-            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
-
         // all done
-        return value_block_t<elementT, quadrature_rule_type, coefficientFieldT>(coefficient);
+        return value_value_block<elementT>();
+    }
+
+    // source term vector block factory
+    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
+    constexpr auto source_term_block(const coefficientFieldT & coefficient)
+    {
+        // all done
+        return value_block<elementT, coefficientFieldT>(coefficient);
     }
 
     // L2 norm block factory
