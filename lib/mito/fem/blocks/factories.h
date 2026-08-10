@@ -14,7 +14,7 @@ namespace mito::fem::blocks {
     constexpr auto advection_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_gradient_block<elementT, coefficientFieldT>(coefficient);
+        return value_gradient_block<elementT>(coefficient);
     }
 
     // diffusion matrix block factory
@@ -22,7 +22,7 @@ namespace mito::fem::blocks {
     constexpr auto diffusion_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return grad_grad_block<elementT, coefficientFieldT>(coefficient);
+        return grad_grad_block<elementT>(coefficient);
     }
 
     // stiffness matrix block factory
@@ -30,7 +30,7 @@ namespace mito::fem::blocks {
     constexpr auto stiffness_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return grad_grad_block<elementT, coefficientFieldT>(coefficient);
+        return grad_grad_block<elementT>(coefficient);
     }
 
     // reaction matrix block factory
@@ -38,7 +38,7 @@ namespace mito::fem::blocks {
     constexpr auto reaction_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_value_block<elementT, coefficientFieldT>(coefficient);
+        return value_value_block<elementT>(coefficient);
     }
 
     // mass matrix block factory
@@ -46,7 +46,7 @@ namespace mito::fem::blocks {
     constexpr auto mass_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_value_block<elementT, coefficientFieldT>(coefficient);
+        return value_value_block<elementT>(coefficient);
     }
 
     // source term vector block factory
@@ -54,7 +54,7 @@ namespace mito::fem::blocks {
     constexpr auto source_term_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_block<elementT, coefficientFieldT>(coefficient);
+        return value_block<elementT>(coefficient);
     }
 
     // L2 norm block factory
