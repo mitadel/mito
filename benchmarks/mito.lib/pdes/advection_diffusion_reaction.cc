@@ -68,7 +68,7 @@ main()
 
     // the pde coefficients
     constexpr auto k = 1.0;
-    constexpr auto c = 0.0;
+    constexpr auto c = 1.0;
     constexpr auto beta_x = 1.0;
     constexpr auto beta_y = 1.0;
 
