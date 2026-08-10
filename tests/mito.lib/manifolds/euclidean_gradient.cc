@@ -25,8 +25,8 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto dx1 = metric_space_t::dx<1>;
 
     // the function extracting the components of a 2D vector
-    constexpr auto x_0 = mito::geometry::cartesian::x_0<2>;
-    constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
+    constexpr auto x_0 = mito::geometry::cartesian::x<2>;
+    constexpr auto x_1 = mito::geometry::cartesian::y<2>;
 
     // a scalar field
     constexpr auto f = x_0 * x_1;

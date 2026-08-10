@@ -35,11 +35,11 @@ TEST(Laplacian, VectorFields)
     // the cosine function
     constexpr auto cos = mito::functions::cos;
 
-    // the function extracting the x_0 component of a 2D vector
-    constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
+    // the {x} function in 2D
+    constexpr auto x0 = mito::geometry::cartesian::x<2>;
 
-    // the function extracting the x_1 component of a 2D vector
-    constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
+    // the {y} function in 2D
+    constexpr auto x1 = mito::geometry::cartesian::y<2>;
 
     // a vector field
     constexpr auto g = sin(x0 * x1) * e_0 + cos(x0 * x1) * e_1;

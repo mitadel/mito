@@ -16,9 +16,9 @@ using cell_t = mito::geometry::triangle_t<2>;
 
 
 // the function extracting the x component of a 2D vector
-constexpr auto x = mito::functions::component<coordinates_t, 0>;
+constexpr auto x = mito::geometry::cartesian::x<2>;
 // the function extracting the y component of a 2D vector
-constexpr auto y = mito::functions::component<coordinates_t, 1>;
+constexpr auto y = mito::geometry::cartesian::y<2>;
 
 
 TEST(Constraints, Dirichlet)

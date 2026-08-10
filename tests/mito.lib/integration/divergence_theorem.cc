@@ -16,14 +16,14 @@ using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 // the euclidean metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
-// the function extracting the {x_0} component of a 2D vector
-constexpr auto x0 = mito::geometry::cartesian::x_0<2>;
-// the function extracting the {x_1} component of a 2D vector
-constexpr auto x1 = mito::geometry::cartesian::x_1<2>;
+// the {x} function in 2D
+constexpr auto x0 = mito::geometry::cartesian::x<2>;
+// the {y} function in 2D
+constexpr auto x1 = mito::geometry::cartesian::y<2>;
 // the function returning the constant e0 unit vector in 2D
-constexpr auto e0 = mito::geometry::cartesian::e_0<2>;
+constexpr auto e0 = mito::geometry::cartesian::e_x<2>;
 // the function returning the constant e1 unit vector in 2D
-constexpr auto e1 = mito::geometry::cartesian::e_1<2>;
+constexpr auto e1 = mito::geometry::cartesian::e_y<2>;
 
 TEST(DivergenceTheorem, Mesh2D)
 {

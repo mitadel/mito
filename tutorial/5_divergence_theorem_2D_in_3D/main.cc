@@ -15,17 +15,19 @@ using mito::quadrature::GAUSS;
 // the type of coordinates
 using coordinates_t = geometry::cartesian::coordinates_t<3>;
 
-// the function extracting the {x_0} component of a 3D vector
-constexpr auto x_0 = geometry::cartesian::x_0<3>;
-// the function extracting the {x_1} component of a 3D vector
-constexpr auto x_1 = geometry::cartesian::x_1<3>;
+// the {x} function in 3D cartesian coordinates
+constexpr auto x_0 = geometry::cartesian::x<3>;
+// the {y} function in 3D cartesian coordinates
+constexpr auto x_1 = geometry::cartesian::y<3>;
+// the {z} function in 3D cartesian coordinates
+constexpr auto x_2 = geometry::cartesian::z<3>;
 
 // the {e_0} unit vector in 3D
-constexpr auto e_0 = geometry::cartesian::e_0<3>;
+constexpr auto e_0 = geometry::cartesian::e_x<3>;
 // the {e_1} unit vector in 3D
-constexpr auto e_1 = geometry::cartesian::e_1<3>;
+constexpr auto e_1 = geometry::cartesian::e_y<3>;
 // the {e_2} unit vector in 3D
-constexpr auto e_2 = geometry::cartesian::e_2<3>;
+constexpr auto e_2 = geometry::cartesian::e_z<3>;
 
 
 int

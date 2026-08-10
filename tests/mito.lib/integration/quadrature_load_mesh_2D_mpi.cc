@@ -17,10 +17,10 @@ using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 // the euclidean metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
-// the function extracting the {x_0} components of a 2D vector
-constexpr auto x_0 = mito::geometry::cartesian::x_0<2>;
-// the function extracting the {x_1} components of a 2D vector
-constexpr auto x_1 = mito::geometry::cartesian::x_1<2>;
+// the {x} function in 2D
+constexpr auto x_0 = mito::geometry::cartesian::x<2>;
+// the {y} function in 2D
+constexpr auto x_1 = mito::geometry::cartesian::y<2>;
 
 
 TEST(Quadrature, LoadMeshTrianglesMPI)

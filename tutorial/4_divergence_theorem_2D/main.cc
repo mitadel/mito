@@ -17,15 +17,15 @@ using coordinates_t = geometry::cartesian::coordinates_t<2>;
 // the euclidean metric space type
 using metric_space_t = geometry::euclidean_metric_space<coordinates_t>;
 
-// the function extracting the {x_0} component of a 2D vector
-constexpr auto x_0 = geometry::cartesian::x_0<2>;
-// the function extracting the {x_1} component of a 2D vector
-constexpr auto x_1 = geometry::cartesian::x_1<2>;
+// the {x} function in 2D cartesian coordinates
+constexpr auto x_0 = geometry::cartesian::x<2>;
+// the {y} function in 2D cartesian coordinates
+constexpr auto x_1 = geometry::cartesian::y<2>;
 
 // the {e_0} unit vector in 2D
-constexpr auto e_0 = geometry::cartesian::e_0<2>;
+constexpr auto e_0 = geometry::cartesian::e_x<2>;
 // the {e_1} unit vector in 2D
-constexpr auto e_1 = geometry::cartesian::e_1<2>;
+constexpr auto e_1 = geometry::cartesian::e_y<2>;
 
 
 int

@@ -17,8 +17,8 @@ using mito::tensor::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
 
-// the function extracting the {x_0} component of a 1D vector
-constexpr auto x_0 = mito::geometry::cartesian::x_0<1>;
+// the {x} function in 1D
+constexpr auto x_0 = mito::geometry::cartesian::x<1>;
 
 
 TEST(Quadrature, Segment)

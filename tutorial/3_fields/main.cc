@@ -32,11 +32,11 @@ main()
     // function cos
     auto cos = functions::cos;
 
-    // x_0 in cartesian coordinates
-    auto x_0 = geometry::cartesian::x_0<2>;
+    // the {x} function in 2D cartesian coordinates
+    auto x_0 = geometry::cartesian::x<2>;
 
-    // x_1 in cartesian coordinates
-    auto x_1 = geometry::cartesian::x_1<2>;
+    // the {y} function in 2D cartesian coordinates
+    auto x_1 = geometry::cartesian::y<2>;
 
     // a vector field
     auto f = sin(x_0 * x_1) * e_0<2> + cos(x_0 * x_1) * e_1<2>;

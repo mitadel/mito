@@ -19,9 +19,9 @@ constexpr int degree = 1;
 // assemble the finite element type
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 // the x scalar field in 2D
-constexpr auto x = mito::functions::component<coordinates_t, 0>;
+constexpr auto x = mito::geometry::cartesian::x<2>;
 // the y scalar field in 2D
-constexpr auto y = mito::functions::component<coordinates_t, 1>;
+constexpr auto y = mito::geometry::cartesian::y<2>;
 
 
 TEST(Fem, FemField)

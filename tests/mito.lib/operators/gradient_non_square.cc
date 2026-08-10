@@ -37,14 +37,14 @@ TEST(Gradient, NonSquare)
     // the cosine function
     constexpr auto cos = mito::functions::cos;
 
-    // the function extracting the x_0 component of {coordinates_t}
-    constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
+    // the {x} function in 3D
+    constexpr auto x0 = mito::geometry::cartesian::x<3>;
 
-    // the function extracting the x_1 component of {coordinates_t}
-    constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
+    // the {y} function in 3D
+    constexpr auto x1 = mito::geometry::cartesian::y<3>;
 
-    // the function extracting the x_1 component of {coordinates_t}
-    constexpr auto x2 = mito::functions::component<coordinates_t, 2>;
+    // the {z} function in 3D
+    constexpr auto x2 = mito::geometry::cartesian::z<3>;
 
     // a vector field
     constexpr auto f = (sin(x0 * x1) + x2) * e_0 + (cos(x0 * x1) - x2) * e_1;
