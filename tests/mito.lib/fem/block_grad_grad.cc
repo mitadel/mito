@@ -52,18 +52,18 @@ TEST(Fem, IsoparametricTriangle)
         auto element_p1 = mito::fem::finite_element<finite_element_t>(
             element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
-        // the diffusivity field
-        auto diffusivity = mito::functions::identity<coordinates_t, 2>();
+        // the coefficient field
+        auto coefficient = mito::functions::identity<coordinates_t, 2>();
 
         // a grad grad matrix block
-        auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(coefficient);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = 1.0 / 2.0 * mito::tensor::matrix_t<3>{ 2.0, -1.0, -1.0, -1.0, 1.0,
                                                                        0.0, -1.0, 0.0,  1.0 };
 
         // compute the elementary contribution of the block
-        auto computed_block = diffusion_block.compute(element_p1);
+        auto computed_block = grad_grad_block.compute(element_p1);
 
         // compute the error
         auto error = mito::tensor::norm(computed_block - analytical_block);
