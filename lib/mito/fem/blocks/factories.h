@@ -66,9 +66,7 @@ namespace mito::fem::blocks {
     }
 
     // L2 norm block factory
-    template <
-        class elementT, int doe = elementT::degree * elementT::degree,
-        functions::function_c functionT>
+    template <class elementT, int doe = 2 * elementT::degree, functions::function_c functionT>
     constexpr auto l2_norm(const functionT & f)
     {
         // select an appropriate quadrature rule for the block
