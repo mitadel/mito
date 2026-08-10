@@ -78,7 +78,7 @@ main()
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // a source term block
-    auto fem_rhs_block = mito::fem::blocks::value_block<finite_element_t, 2>(f);
+    auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 2>(f);
 
     // create the weak form and populate it with the blocks
     auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
