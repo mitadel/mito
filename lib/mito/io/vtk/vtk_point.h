@@ -44,7 +44,7 @@ namespace mito::io::vtk {
         const geometry::coordinates_t<3, geometry::SPHERICAL> & coord,
         vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
-        // cartesian coordinates in 2D
+        // cartesian coordinates in 3D
         using cartesian_coord_t = mito::geometry::cartesian<3>::coordinates_t;
 
         // transform {coord} into cartesian coordinates
