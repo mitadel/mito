@@ -64,14 +64,14 @@ namespace mito::fem::blocks {
                 constexpr auto w = measure * quadrature_rule.weight(q);
 
                 // precompute the common factor
-                auto factor = w * tensor::determinant(element.jacobian()(xi));
+                auto factor = w * _coefficient(coord) * tensor::determinant(element.jacobian()(xi));
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
                     // evaluate the a-th shape function at {xi}
                     auto phi_a = element.template shape<a>()(xi);
                     // populate the elementary contribution to the vector
-                    elementary_vector[{ a }] += factor * _coefficient(coord) * phi_a;
+                    elementary_vector[{ a }] += factor * phi_a;
                 });
             });
 
