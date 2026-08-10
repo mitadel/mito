@@ -90,7 +90,7 @@ namespace mito::fem::blocks {
 
       private:
         // the coefficient field
-        const coefficient_field_type & _coefficient;
+        coefficient_field_type _coefficient;
     };
 
 }    // namespace mito
