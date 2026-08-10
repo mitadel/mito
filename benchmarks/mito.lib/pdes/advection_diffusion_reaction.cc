@@ -7,7 +7,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
@@ -23,11 +23,12 @@ using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
 // typedef for a matrix solver
 using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
 
-// the x scalar field in 2D
-constexpr auto x = mito::functions::component<coordinates_t, 0>;
-// the y scalar field in 2D
-constexpr auto y = mito::functions::component<coordinates_t, 1>;
-
+// the x and y scalar fields in 2D
+constexpr auto x = mito::geometry::cartesian::x_0<2>;
+constexpr auto y = mito::geometry::cartesian::x_1<2>;
+// the unit vectors in 2D
+constexpr auto e_x = mito::geometry::cartesian::e_0<2>;
+constexpr auto e_y = mito::geometry::cartesian::e_1<2>;
 
 int
 main()
@@ -36,7 +37,7 @@ main()
     mito::petsc::initialize();
 
     // make a channel
-    journal::info_t channel("tests.poisson_square");
+    journal::info_t channel("benchmark.advection_diffusion_reaction");
 
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
@@ -65,20 +66,37 @@ main()
     // the function space (linear elements on the manifold)
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
-    // the diffusivity field
+    // the pde coefficients
     constexpr auto k = 1.0;
-    constexpr auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
+    constexpr auto c = 1.0;
+    constexpr auto beta_x = 1.0;
+    constexpr auto beta_y = 1.0;
 
-    // a grad grad matrix block
-    auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity);
+    // the diffusivity field
+    auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
+
+    // the advection field
+    auto velocity = beta_x * e_x + beta_y * e_y;
+
+    // the reaction rate field
+    auto reaction_rate = mito::functions::one<coordinates_t>;
+
+    // a matrix block
+    auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity)
+                       + mito::fem::blocks::advection<finite_element_t>(velocity)
+                       + c * mito::fem::blocks::reaction<finite_element_t>(reaction_rate);
 
     // the right hand side
-    auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
-           * mito::functions::sin(std::numbers::pi * y);
-    // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
+    auto f = (2.0 * k * std::numbers::pi * std::numbers::pi + c)
+               * mito::functions::sin(std::numbers::pi * x)
+               * mito::functions::sin(std::numbers::pi * y)
+           + beta_x * std::numbers::pi * mito::functions::cos(std::numbers::pi * x)
+                 * mito::functions::sin(std::numbers::pi * y)
+           + beta_y * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
+                 * mito::functions::cos(std::numbers::pi * y);
 
     // a source term block
-    auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 2>(f);
+    auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 4>(f);
 
     // create the weak form and populate it with the blocks
     auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
@@ -91,7 +109,7 @@ main()
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
 
     // set options for the backend {petsc} matrix solver
-    solver.set_options("-ksp_type preonly -pc_type cholesky");
+    solver.set_options("-ksp_type preonly -pc_type lu");
 
     // solve the system
     solver.solve();
@@ -122,7 +140,8 @@ main()
     // the exact solution mesh field on the mesh (for visualization)
     auto exact_solution = mito::discrete::mesh_field(mesh, coord_system, u_ex, "exact solution");
     // write mesh to vtk file
-    auto writer = mito::io::vtk::field_writer("poisson_square_data", mesh, coord_system);
+    auto writer =
+        mito::io::vtk::field_writer("advection_diffusion_reaction_data", mesh, coord_system);
     // sign {forcing} up with the writer
     writer.record(forcing);
     // sign {exact_solution} up with the writer
@@ -131,8 +150,8 @@ main()
     writer.write();
 
     // write mesh to vtk file
-    auto writer_solution =
-        mito::io::vtk::field_writer("poisson_square_solution", function_space, coord_system);
+    auto writer_solution = mito::io::vtk::field_writer(
+        "advection_diffusion_reaction_solution", function_space, coord_system);
     // sign {solution} up with the writer
     writer_solution.record(solution.nodal_values(), "numerical solution");
     // write output file

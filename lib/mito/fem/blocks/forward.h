@@ -9,17 +9,21 @@
 
 namespace mito::fem::blocks {
 
+    // value grad block
+    template <class elementT, class quadratureRuleT, fields::vector_field_c coefficientFieldT>
+    class ValueGradientBlock;
+
     // grad grad block
-    template <class elementT, class quadratureRuleT>
-    class GradGradBlock;
+    template <class elementT, class quadratureRuleT, fields::tensor_field_c coefficientFieldT>
+    class GradientGradientBlock;
 
-    // mass block
-    template <class elementT, class quadratureRuleT>
-    class MassBlock;
+    // value value block
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
+    class ValueValueBlock;
 
-    // source term block
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
-    class SourceTermBlock;
+    // value rhs block
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
+    class ValueBlock;
 
     // L2 norm block for a function defined at quadrature points in parametric coordinates
     template <class elementT, class quadratureRuleT, functions::function_c functionT>

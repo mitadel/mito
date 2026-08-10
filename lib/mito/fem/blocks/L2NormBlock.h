@@ -18,7 +18,7 @@ namespace mito::fem::blocks {
       public:
         // my template parameters
         using element_type = finiteElementT;
-        using elementary_block_type = tensor::scalar_t;
+        using elementary_shape = tensor::scalar_t;
         using quadrature_rule_type = quadratureRuleT;
 
         // the type of the function to compute the L2 norm of
@@ -36,13 +36,13 @@ namespace mito::fem::blocks {
         // compute the elementary contribution of this block
         template <class elementT>
         requires element_of_type_c<elementT, element_type>
-        auto compute(const elementT & element) const -> elementary_block_type
+        auto compute(const elementT & element) const -> elementary_shape
         {
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary contribution to the L2 norm
-            elementary_block_type norm{};
+            elementary_shape norm{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {

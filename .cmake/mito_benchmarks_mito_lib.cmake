@@ -23,6 +23,11 @@ mito_benchmark_driver(benchmarks/mito.lib/operators/laplacian.cc)
 if(WITH_PETSC)
     # poisson boundary value problem
     mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
+    # advection-diffusion-reaction boundary value problem
+    mito_benchmark_driver(benchmarks/mito.lib/pdes/advection_diffusion_reaction.cc)
 endif()
+
+# blocks composition
+mito_benchmark_driver(benchmarks/mito.lib/blocks/composition.cc)
 
 # end of file
