@@ -10,7 +10,7 @@
 
 
 // cartesian coordinates in 3D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 
 TEST(Discretization, NodalFieldSphere)

@@ -10,7 +10,7 @@
 TEST(CoordinateTransformation, CartesianPolar)
 {
     // cartesian coordinates in 2D
-    using cartesian_coord_t = mito::geometry::cartesian::coordinates_t<2>;
+    using cartesian_coord_t = mito::geometry::cartesian<2>::coordinates_t;
 
     // polar coordinates in 2D
     using polar_coord_t = mito::geometry::polar::coordinates_t;
@@ -59,7 +59,7 @@ TEST(CoordinateTransformation, CartesianPolar)
 TEST(CoordinateTransformation, CartesianSpherical)
 {
     // cartesian coordinates in 3D
-    using cartesian_coord_t = mito::geometry::cartesian::coordinates_t<3>;
+    using cartesian_coord_t = mito::geometry::cartesian<3>::coordinates_t;
 
     // spherical coordinates in 3D
     using spherical_coord_t = mito::geometry::spherical::coordinates_t;

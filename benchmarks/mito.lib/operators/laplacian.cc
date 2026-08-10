@@ -11,7 +11,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 
 auto
@@ -41,10 +41,10 @@ laplacian_baseline(const coordinates_t & x)
 auto
 laplacian_mito(const coordinates_t & x)
 {
-    // the {x0} function in 2D
-    constexpr auto x0 = mito::geometry::cartesian::x<2>;
-    // the {x1} function in 2D
-    constexpr auto x1 = mito::geometry::cartesian::y<2>;
+    // the {x} function in 2D
+    constexpr auto x0 = mito::geometry::cartesian<2>::x;
+    // the {y} function in 2D
+    constexpr auto x1 = mito::geometry::cartesian<2>::y;
 
     // a scalar field
     constexpr auto f = mito::functions::pow<4>(x0 * x1);

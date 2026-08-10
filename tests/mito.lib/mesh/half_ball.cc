@@ -9,7 +9,7 @@
 
 
 // cartesian coordinates in 3D
-using cartesian_coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
+using cartesian_coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 // spherical coordinates
 using spherical_coordinates_t = mito::geometry::spherical::coordinates_t;
 

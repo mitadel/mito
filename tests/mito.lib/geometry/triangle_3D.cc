@@ -8,7 +8,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
@@ -20,9 +20,9 @@ TEST(Geometry, Triangle3D)
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // build nodes
-    constexpr auto x_0 = mito::geometry::cartesian::coordinates({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::cartesian::coordinates({ 1.0, 0.0, 1.0 });
-    constexpr auto x_2 = mito::geometry::cartesian::coordinates({ 1.0, 1.0, 1.0 });
+    constexpr auto x_0 = mito::geometry::cartesian<3>::coordinates({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::cartesian<3>::coordinates({ 1.0, 0.0, 1.0 });
+    constexpr auto x_2 = mito::geometry::cartesian<3>::coordinates({ 1.0, 1.0, 1.0 });
 
     // build nodes of a triangle (counterclockwise order)
     auto node_0 = mito::geometry::node(coord_system, x_0);

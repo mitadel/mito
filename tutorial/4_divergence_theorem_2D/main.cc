@@ -13,19 +13,19 @@ using namespace mito::operators;
 using mito::quadrature::GAUSS;
 
 // the type of coordinates
-using coordinates_t = geometry::cartesian::coordinates_t<2>;
+using coordinates_t = geometry::cartesian<2>::coordinates_t;
 // the euclidean metric space type
 using metric_space_t = geometry::euclidean_metric_space<coordinates_t>;
 
 // the {x} function in 2D cartesian coordinates
-constexpr auto x_0 = geometry::cartesian::x<2>;
+constexpr auto x_0 = geometry::cartesian<2>::x;
 // the {y} function in 2D cartesian coordinates
-constexpr auto x_1 = geometry::cartesian::y<2>;
+constexpr auto x_1 = geometry::cartesian<2>::y;
 
 // the {e_0} unit vector in 2D
-constexpr auto e_0 = geometry::cartesian::e_x<2>;
+constexpr auto e_0 = geometry::cartesian<2>::e_x;
 // the {e_1} unit vector in 2D
-constexpr auto e_1 = geometry::cartesian::e_y<2>;
+constexpr auto e_1 = geometry::cartesian<2>::e_y;
 
 
 int

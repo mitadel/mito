@@ -7,9 +7,9 @@
 #include <mito/geometry.h>
 
 
-using coordinates_1d_t = mito::geometry::cartesian::coordinates_t<1>;
-using coordinates_2d_t = mito::geometry::cartesian::coordinates_t<2>;
-using coordinates_3d_t = mito::geometry::cartesian::coordinates_t<3>;
+using coordinates_1d_t = mito::geometry::cartesian<1>::coordinates_t;
+using coordinates_2d_t = mito::geometry::cartesian<2>::coordinates_t;
+using coordinates_3d_t = mito::geometry::cartesian<3>::coordinates_t;
 
 
 TEST(Geometry, InducedMetricSegment1D)
@@ -24,7 +24,7 @@ TEST(Geometry, InducedMetricSegment1D)
     using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_1d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
-    auto xi = mito::geometry::cartesian::coordinates<1>({ 0.5 });
+    auto xi = mito::geometry::cartesian<1>::coordinates({ 0.5 });
 
     // evaluate the metric at xi (1D pullback collapses to scalar: g = J^2 = 9)
     auto g_val = g_field(xi);
@@ -48,7 +48,7 @@ TEST(Geometry, InducedMetricSegment2D)
     using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_2d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
-    auto xi = mito::geometry::cartesian::coordinates<1>({ 0.5 });
+    auto xi = mito::geometry::cartesian<1>::coordinates({ 0.5 });
 
     // evaluate the metric tensor at xi
     auto g_val = g_field(xi);
@@ -75,12 +75,12 @@ TEST(Geometry, InducedMetricSegment2D_CircularArc)
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     // evaluate at two different points to confirm the field is position-independent
-    auto xi_1 = mito::geometry::cartesian::coordinates<1>({ M_PI / 6.0 });
+    auto xi_1 = mito::geometry::cartesian<1>::coordinates({ M_PI / 6.0 });
     auto g_val_1 = g_field(xi_1);
     EXPECT_DOUBLE_EQ(9.0, mito::tensor::trace(g_val_1));
     EXPECT_DOUBLE_EQ(3.0, std::sqrt(mito::tensor::determinant(g_val_1)));
 
-    auto xi_2 = mito::geometry::cartesian::coordinates<1>({ M_PI / 3.0 });
+    auto xi_2 = mito::geometry::cartesian<1>::coordinates({ M_PI / 3.0 });
     auto g_val_2 = g_field(xi_2);
     EXPECT_DOUBLE_EQ(9.0, mito::tensor::trace(g_val_2));
     EXPECT_DOUBLE_EQ(3.0, std::sqrt(mito::tensor::determinant(g_val_2)));
@@ -100,7 +100,7 @@ TEST(Geometry, InducedMetricSegment3D)
     using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_3d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
-    auto xi = mito::geometry::cartesian::coordinates<1>({ 0.25 });
+    auto xi = mito::geometry::cartesian<1>::coordinates({ 0.25 });
 
     // evaluate the metric tensor at xi
     auto g_val = g_field(xi);

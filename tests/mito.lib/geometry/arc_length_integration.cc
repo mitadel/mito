@@ -11,8 +11,8 @@
 #include <numbers>
 
 
-using coordinates_1d_t = mito::geometry::cartesian::coordinates_t<1>;
-using coordinates_2d_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_1d_t = mito::geometry::cartesian<1>::coordinates_t;
+using coordinates_2d_t = mito::geometry::cartesian<2>::coordinates_t;
 
 TEST(Geometry, ArcLengthCircularArc)
 {

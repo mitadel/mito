@@ -9,7 +9,7 @@
 
 
 // cartesian coordinates in 2D
-using cartesian_coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using cartesian_coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 // polar coordinates
 using polar_coordinates_t = mito::geometry::polar::coordinates_t;

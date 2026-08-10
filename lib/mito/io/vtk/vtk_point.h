@@ -45,7 +45,7 @@ namespace mito::io::vtk {
         vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // cartesian coordinates in 2D
-        using cartesian_coord_t = mito::geometry::cartesian::coordinates_t<3>;
+        using cartesian_coord_t = mito::geometry::cartesian<3>::coordinates_t;
 
         // transform {coord} into cartesian coordinates
         auto cartesian_coord = transform_coordinates<cartesian_coord_t>(coord);
@@ -60,8 +60,7 @@ namespace mito::io::vtk {
         vtkSmartPointer<vtkPoints> & pointsVtk) -> void
     {
         // cartesian coordinates in 2D
-        using cartesian_coord_t = mito::geometry::cartesian::coordinates_t<2>;
-        ;
+        using cartesian_coord_t = mito::geometry::cartesian<2>::coordinates_t;
 
         // transform {coord} into cartesian coordinates
         auto cartesian_coord = transform_coordinates<cartesian_coord_t>(coord);

@@ -8,7 +8,7 @@
 
 
 // alias for a set of cartesian coordinates in 2D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
@@ -25,8 +25,8 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto dx1 = metric_space_t::dx<1>;
 
     // the function extracting the components of a 2D vector
-    constexpr auto x_0 = mito::geometry::cartesian::x<2>;
-    constexpr auto x_1 = mito::geometry::cartesian::y<2>;
+    constexpr auto x_0 = mito::geometry::cartesian<2>::x;
+    constexpr auto x_1 = mito::geometry::cartesian<2>::y;
 
     // a scalar field
     constexpr auto f = x_0 * x_1;
@@ -38,7 +38,7 @@ TEST(Manifolds, CartesianGradient)
     constexpr auto df1 = mito::functions::derivative<1>(f);
 
     // a point in space
-    constexpr auto x = mito::geometry::cartesian::coordinates({ 1.0, 1.0 });
+    constexpr auto x = mito::geometry::cartesian<2>::coordinates({ 1.0, 1.0 });
 
     // the gradient form
     constexpr auto gradient_form = df0 * dx0 + df1 * dx1;

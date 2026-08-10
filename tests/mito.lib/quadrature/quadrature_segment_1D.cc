@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 1D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<1>;
+using coordinates_t = mito::geometry::cartesian<1>::coordinates_t;
 // the euclidean metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
@@ -18,7 +18,7 @@ using mito::real;
 using mito::quadrature::GAUSS;
 
 // the {x} function in 1D
-constexpr auto x_0 = mito::geometry::cartesian::x<1>;
+constexpr auto x_0 = mito::geometry::cartesian<1>::x;
 
 
 TEST(Quadrature, Segment)

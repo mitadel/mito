@@ -8,7 +8,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 
 // the basis for vectors in 2D
@@ -36,10 +36,10 @@ TEST(Laplacian, VectorFields)
     constexpr auto cos = mito::functions::cos;
 
     // the {x} function in 2D
-    constexpr auto x0 = mito::geometry::cartesian::x<2>;
+    constexpr auto x0 = mito::geometry::cartesian<2>::x;
 
     // the {y} function in 2D
-    constexpr auto x1 = mito::geometry::cartesian::y<2>;
+    constexpr auto x1 = mito::geometry::cartesian<2>::y;
 
     // a vector field
     constexpr auto g = sin(x0 * x1) * e_0 + cos(x0 * x1) * e_1;

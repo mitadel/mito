@@ -12,7 +12,7 @@ using mito::tensor::_;
 using mito::quadrature::GAUSS;
 
 // alias for a set of cartesian coordinates in 3D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 // the euclidean metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 

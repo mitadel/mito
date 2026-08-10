@@ -7,14 +7,14 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
 // the {x} function in 2D
-constexpr auto x_0 = mito::geometry::cartesian::x<2>;
+constexpr auto x_0 = mito::geometry::cartesian<2>::x;
 // the {y} function in 2D
-constexpr auto x_1 = mito::geometry::cartesian::y<2>;
+constexpr auto x_1 = mito::geometry::cartesian<2>::y;
 
 
 int

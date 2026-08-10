@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 
 TEST(Barycenter, Triangle2D)
@@ -28,7 +28,7 @@ TEST(Barycenter, Triangle2D)
     auto barycenter = mito::geometry::barycenter(triangle, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::geometry::cartesian::coordinates({ 0.5, 1.0 / 6.0 }));
+    EXPECT_TRUE(barycenter == mito::geometry::cartesian<2>::coordinates({ 0.5, 1.0 / 6.0 }));
 
     // all done
     return;

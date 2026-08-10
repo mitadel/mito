@@ -8,7 +8,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 
 // the basis for vectors in 2D
@@ -38,13 +38,13 @@ TEST(Gradient, NonSquare)
     constexpr auto cos = mito::functions::cos;
 
     // the {x} function in 3D
-    constexpr auto x0 = mito::geometry::cartesian::x<3>;
+    constexpr auto x0 = mito::geometry::cartesian<3>::x;
 
     // the {y} function in 3D
-    constexpr auto x1 = mito::geometry::cartesian::y<3>;
+    constexpr auto x1 = mito::geometry::cartesian<3>::y;
 
     // the {z} function in 3D
-    constexpr auto x2 = mito::geometry::cartesian::z<3>;
+    constexpr auto x2 = mito::geometry::cartesian<3>::z;
 
     // a vector field
     constexpr auto f = (sin(x0 * x1) + x2) * e_0 + (cos(x0 * x1) - x2) * e_1;

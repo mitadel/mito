@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 3D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 // the basis for vectors
 static constexpr auto e_x = mito::tensor::e_0<3>;
@@ -54,9 +54,9 @@ TEST(Tensor, EuclideanSubmanifoldMetric3D)
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // pick three sets of coordinates
-    constexpr auto x_0 = mito::geometry::cartesian::coordinates({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::cartesian::coordinates({ 1.0, 0.0, 1.0 });
-    constexpr auto x_2 = mito::geometry::cartesian::coordinates({ 1.0, 1.0, 1.0 });
+    constexpr auto x_0 = mito::geometry::cartesian<3>::coordinates({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::cartesian<3>::coordinates({ 1.0, 0.0, 1.0 });
+    constexpr auto x_2 = mito::geometry::cartesian<3>::coordinates({ 1.0, 1.0, 1.0 });
 
     // the normal vector to the submanifold
     constexpr auto cross = mito::tensor::cross(x_1 - x_0, x_2 - x_0);

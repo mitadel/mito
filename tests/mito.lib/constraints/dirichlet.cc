@@ -10,15 +10,15 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
 
 
 // the function extracting the x component of a 2D vector
-constexpr auto x = mito::geometry::cartesian::x<2>;
+constexpr auto x = mito::geometry::cartesian<2>::x;
 // the function extracting the y component of a 2D vector
-constexpr auto y = mito::geometry::cartesian::y<2>;
+constexpr auto y = mito::geometry::cartesian<2>::y;
 
 
 TEST(Constraints, Dirichlet)

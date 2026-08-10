@@ -10,13 +10,13 @@
 TEST(Metric, Cartesian)
 {
     // a point in space
-    constexpr auto point = mito::geometry::cartesian::coordinates<2>({ 2.0, 1.0 });
+    constexpr auto point = mito::geometry::cartesian<2>::coordinates({ 2.0, 1.0 });
 
     // the Euclidean metric in cartesian coordinates
-    constexpr auto euclidean_metric = mito::geometry::cartesian::euclidean_metric<2>;
+    constexpr auto euclidean_metric = mito::geometry::cartesian<2>::euclidean_metric;
 
     // check that the metric is compatible with the type of coordinates
-    using coordinates_type = mito::geometry::cartesian::coordinates_t<2>;
+    using coordinates_type = mito::geometry::cartesian<2>::coordinates_t;
     static_assert(
         mito::geometry::compatible_metric_c<decltype(euclidean_metric), coordinates_type>);
 

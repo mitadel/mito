@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 1D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<1>;
+using coordinates_t = mito::geometry::cartesian<1>::coordinates_t;
 
 // the basis for vector fields
 static constexpr auto e_x = mito::tensor::e_0<1>;

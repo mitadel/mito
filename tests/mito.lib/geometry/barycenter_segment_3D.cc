@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 3D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 
 TEST(Barycenter, Segment3D)
@@ -27,7 +27,7 @@ TEST(Barycenter, Segment3D)
     auto barycenter = mito::geometry::barycenter(segment, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::geometry::cartesian::coordinates({ 0.5, 0.0, 0.5 }));
+    EXPECT_TRUE(barycenter == mito::geometry::cartesian<3>::coordinates({ 0.5, 0.0, 0.5 }));
 
     // all done
     return;

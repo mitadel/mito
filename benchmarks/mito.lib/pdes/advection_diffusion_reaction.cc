@@ -7,7 +7,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
@@ -24,11 +24,11 @@ using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
 using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
 
 // the x and y scalar fields in 2D
-constexpr auto x = mito::geometry::cartesian::x_0<2>;
-constexpr auto y = mito::geometry::cartesian::x_1<2>;
+constexpr auto x = mito::geometry::cartesian<2>::x;
+constexpr auto y = mito::geometry::cartesian<2>::y;
 // the unit vectors in 2D
-constexpr auto e_x = mito::geometry::cartesian::e_0<2>;
-constexpr auto e_y = mito::geometry::cartesian::e_1<2>;
+constexpr auto e_x = mito::geometry::cartesian<2>::e_x;
+constexpr auto e_y = mito::geometry::cartesian<2>::e_y;
 
 int
 main()

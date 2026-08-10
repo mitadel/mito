@@ -13,21 +13,21 @@ using namespace mito::operators;
 using mito::quadrature::GAUSS;
 
 // the type of coordinates
-using coordinates_t = geometry::cartesian::coordinates_t<3>;
+using coordinates_t = geometry::cartesian<3>::coordinates_t;
 
 // the {x} function in 3D cartesian coordinates
-constexpr auto x_0 = geometry::cartesian::x<3>;
+constexpr auto x_0 = geometry::cartesian<3>::x;
 // the {y} function in 3D cartesian coordinates
-constexpr auto x_1 = geometry::cartesian::y<3>;
+constexpr auto x_1 = geometry::cartesian<3>::y;
 // the {z} function in 3D cartesian coordinates
-constexpr auto x_2 = geometry::cartesian::z<3>;
+constexpr auto x_2 = geometry::cartesian<3>::z;
 
 // the {e_0} unit vector in 3D
-constexpr auto e_0 = geometry::cartesian::e_x<3>;
+constexpr auto e_0 = geometry::cartesian<3>::e_x;
 // the {e_1} unit vector in 3D
-constexpr auto e_1 = geometry::cartesian::e_y<3>;
+constexpr auto e_1 = geometry::cartesian<3>::e_y;
 // the {e_2} unit vector in 3D
-constexpr auto e_2 = geometry::cartesian::e_z<3>;
+constexpr auto e_2 = geometry::cartesian<3>::e_z;
 
 
 int

@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 
 TEST(CoordinateSystem, Cartesian)
@@ -26,9 +26,9 @@ TEST(CoordinateSystem, Cartesian)
     coord_system.place(point1, { 1.0, 0.0 });
 
     EXPECT_EQ(
-        mito::geometry::cartesian::coordinates({ 0.0, 1.0 }), coord_system.coordinates(point0));
+        mito::geometry::cartesian<2>::coordinates({ 0.0, 1.0 }), coord_system.coordinates(point0));
     EXPECT_EQ(
-        mito::geometry::cartesian::coordinates({ 1.0, 0.0 }), coord_system.coordinates(point1));
+        mito::geometry::cartesian<2>::coordinates({ 1.0, 0.0 }), coord_system.coordinates(point1));
 }
 
 
