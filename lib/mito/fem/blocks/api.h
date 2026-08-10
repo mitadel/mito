@@ -11,27 +11,27 @@ namespace mito::fem::blocks {
 
     // advection matrix block factory
     template <class elementT, int doe, fields::vector_field_c coefficientFieldT>
-    constexpr auto advection_block(const coefficientFieldT & coefficient);
+    constexpr auto advection(const coefficientFieldT & coefficient);
 
     // diffusion matrix block factory
     template <class elementT, int doe, fields::tensor_field_c coefficientFieldT>
-    constexpr auto diffusion_block(const coefficientFieldT & coefficient);
+    constexpr auto diffusion(const coefficientFieldT & coefficient);
 
     // stiffness matrix block factory
     template <class elementT, int doe, fields::tensor_field_c coefficientFieldT>
-    constexpr auto stiffness_block(const coefficientFieldT & coefficient);
+    constexpr auto stiffness(const coefficientFieldT & coefficient);
 
     // reaction matrix block factory
     template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
-    constexpr auto reaction_block(const coefficientFieldT & coefficient);
+    constexpr auto reaction(const coefficientFieldT & coefficient);
 
     // mass matrix block factory
     template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
-    constexpr auto mass_block(const coefficientFieldT & coefficient);
+    constexpr auto mass(const coefficientFieldT & coefficient);
 
     // source term vector block factory
     template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
-    constexpr auto source_term_block(const coefficientFieldT & coefficient);
+    constexpr auto source(const coefficientFieldT & coefficient);
 
     // L2 norm block
     template <class elementT, class quadratureRuleT, functions::function_c functionT>
@@ -39,7 +39,7 @@ namespace mito::fem::blocks {
 
     // L2 norm block factory
     template <class elementT, int doe, functions::function_c functionT>
-    constexpr auto l2_norm_block(const functionT & f);
+    constexpr auto l2_norm(const functionT & f);
 }
 
 

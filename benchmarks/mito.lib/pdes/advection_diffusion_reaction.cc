@@ -82,9 +82,9 @@ main()
     auto reaction_rate = mito::functions::one<coordinates_t>;
 
     // a matrix block
-    auto fem_lhs_block = mito::fem::blocks::diffusion_block<finite_element_t>(diffusivity)
-                       + mito::fem::blocks::advection_block<finite_element_t>(velocity)
-                       + c * mito::fem::blocks::reaction_block<finite_element_t>(reaction_rate);
+    auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity)
+                       + mito::fem::blocks::advection<finite_element_t>(velocity)
+                       + c * mito::fem::blocks::reaction<finite_element_t>(reaction_rate);
 
     // the right hand side
     auto f = (2.0 * k * std::numbers::pi * std::numbers::pi + c)

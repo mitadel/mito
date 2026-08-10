@@ -13,7 +13,7 @@ namespace mito::fem::blocks {
     template <
         class elementT, int doe = 2 * elementT::degree - 1,
         fields::vector_field_c coefficientFieldT>
-    constexpr auto advection_block(const coefficientFieldT & coefficient)
+    constexpr auto advection(const coefficientFieldT & coefficient)
     {
         // all done
         return value_gradient_block<elementT, doe>(coefficient);
@@ -23,7 +23,7 @@ namespace mito::fem::blocks {
     template <
         class elementT, int doe = 2 * (elementT::degree - 1),
         fields::tensor_field_c coefficientFieldT>
-    constexpr auto diffusion_block(const coefficientFieldT & coefficient)
+    constexpr auto diffusion(const coefficientFieldT & coefficient)
     {
         // all done
         return grad_grad_block<elementT, doe>(coefficient);
@@ -33,7 +33,7 @@ namespace mito::fem::blocks {
     template <
         class elementT, int doe = 2 * (elementT::degree - 1),
         fields::tensor_field_c coefficientFieldT>
-    constexpr auto stiffness_block(const coefficientFieldT & coefficient)
+    constexpr auto stiffness(const coefficientFieldT & coefficient)
     {
         // all done
         return grad_grad_block<elementT, doe>(coefficient);
@@ -42,7 +42,7 @@ namespace mito::fem::blocks {
     // reaction matrix block factory
     template <
         class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c coefficientFieldT>
-    constexpr auto reaction_block(const coefficientFieldT & coefficient)
+    constexpr auto reaction(const coefficientFieldT & coefficient)
     {
         // all done
         return value_value_block<elementT, doe>(coefficient);
@@ -51,7 +51,7 @@ namespace mito::fem::blocks {
     // mass matrix block factory
     template <
         class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c coefficientFieldT>
-    constexpr auto mass_block(const coefficientFieldT & coefficient)
+    constexpr auto mass(const coefficientFieldT & coefficient)
     {
         // all done
         return value_value_block<elementT, doe>(coefficient);
@@ -59,7 +59,7 @@ namespace mito::fem::blocks {
 
     // source term vector block factory
     template <class elementT, int doe = elementT::degree, fields::scalar_field_c coefficientFieldT>
-    constexpr auto source_term_block(const coefficientFieldT & coefficient)
+    constexpr auto source(const coefficientFieldT & coefficient)
     {
         // all done
         return value_block<elementT, doe>(coefficient);
@@ -69,7 +69,7 @@ namespace mito::fem::blocks {
     template <
         class elementT, int doe = elementT::degree * elementT::degree,
         functions::function_c functionT>
-    constexpr auto l2_norm_block(const functionT & f)
+    constexpr auto l2_norm(const functionT & f)
     {
         // select an appropriate quadrature rule for the block
         using quadrature_rule_type = quadrature::quadrature_rule_t<

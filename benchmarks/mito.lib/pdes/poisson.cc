@@ -70,7 +70,7 @@ main()
     constexpr auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
 
     // a grad grad matrix block
-    auto fem_lhs_block = mito::fem::blocks::diffusion_block<finite_element_t>(diffusivity);
+    auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity);
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
