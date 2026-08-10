@@ -10,55 +10,65 @@
 namespace mito::fem::blocks {
 
     // advection matrix block factory
-    template <class elementT, fields::vector_field_c coefficientFieldT>
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1,
+        fields::vector_field_c coefficientFieldT>
     constexpr auto advection_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_gradient_block<elementT>(coefficient);
+        return value_gradient_block<elementT, doe>(coefficient);
     }
 
     // diffusion matrix block factory
-    template <class elementT, fields::tensor_field_c coefficientFieldT>
+    template <
+        class elementT, int doe = 2 * (elementT::degree - 1),
+        fields::tensor_field_c coefficientFieldT>
     constexpr auto diffusion_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return grad_grad_block<elementT>(coefficient);
+        return grad_grad_block<elementT, doe>(coefficient);
     }
 
     // stiffness matrix block factory
-    template <class elementT, fields::tensor_field_c coefficientFieldT>
+    template <
+        class elementT, int doe = 2 * (elementT::degree - 1),
+        fields::tensor_field_c coefficientFieldT>
     constexpr auto stiffness_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return grad_grad_block<elementT>(coefficient);
+        return grad_grad_block<elementT, doe>(coefficient);
     }
 
     // reaction matrix block factory
-    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    template <
+        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c coefficientFieldT>
     constexpr auto reaction_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_value_block<elementT>(coefficient);
+        return value_value_block<elementT, doe>(coefficient);
     }
 
     // mass matrix block factory
-    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    template <
+        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c coefficientFieldT>
     constexpr auto mass_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_value_block<elementT>(coefficient);
+        return value_value_block<elementT, doe>(coefficient);
     }
 
     // source term vector block factory
-    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
+    template <class elementT, int doe = elementT::degree, fields::scalar_field_c coefficientFieldT>
     constexpr auto source_term_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_block<elementT>(coefficient);
+        return value_block<elementT, doe>(coefficient);
     }
 
     // L2 norm block factory
-    template <class elementT, int doe, functions::function_c functionT>
+    template <
+        class elementT, int doe = elementT::degree * elementT::degree,
+        functions::function_c functionT>
     constexpr auto l2_norm_block(const functionT & f)
     {
         // select an appropriate quadrature rule for the block

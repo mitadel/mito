@@ -56,7 +56,9 @@ TEST(Fem, IsoparametricTriangle)
         auto coefficient = mito::functions::identity<coordinates_t, 2>();
 
         // a grad grad matrix block
-        auto grad_grad_block = mito::fem::blocks::grad_grad_block<finite_element_t>(coefficient);
+        constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
+        auto grad_grad_block =
+            mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(coefficient);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = 1.0 / 2.0 * mito::tensor::matrix_t<3>{ 2.0, -1.0, -1.0, -1.0, 1.0,
@@ -95,7 +97,9 @@ TEST(Fem, IsoparametricTriangle)
         auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
         // a grad grad matrix block
-        auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
+        constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
+        auto diffusion_block =
+            mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<6>{

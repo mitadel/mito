@@ -10,23 +10,23 @@
 namespace mito::fem::blocks {
 
     // advection matrix block factory
-    template <class elementT, fields::vector_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::vector_field_c coefficientFieldT>
     constexpr auto advection_block(const coefficientFieldT & coefficient);
 
     // diffusion matrix block factory
-    template <class elementT, fields::tensor_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::tensor_field_c coefficientFieldT>
     constexpr auto diffusion_block(const coefficientFieldT & coefficient);
 
     // stiffness matrix block factory
-    template <class elementT, fields::tensor_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::tensor_field_c coefficientFieldT>
     constexpr auto stiffness_block(const coefficientFieldT & coefficient);
 
     // reaction matrix block factory
-    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
     constexpr auto reaction_block(const coefficientFieldT & coefficient);
 
     // mass matrix block factory
-    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
     constexpr auto mass_block(const coefficientFieldT & coefficient);
 
     // source term vector block factory

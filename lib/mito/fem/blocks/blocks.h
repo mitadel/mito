@@ -14,13 +14,9 @@ namespace mito::fem::blocks {
     using value_gradient_block_t = ValueGradientBlock<elementT, quadratureRuleT, coefficientFieldT>;
 
     // value gradient matrix block factory
-    template <class elementT, fields::vector_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::vector_field_c coefficientFieldT>
     constexpr auto value_gradient_block(const coefficientFieldT & coefficient)
     {
-        // degree of exactness for the quadrature rule
-        // (required to integrate exactly the integrand with a constant coefficient)
-        constexpr int doe = 2 * elementT::degree - 1;
-
         // assemble the GAUSS quadrature rule for the block
         using quadrature_rule_type = quadrature::quadrature_rule_t<
             quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
@@ -35,13 +31,9 @@ namespace mito::fem::blocks {
     using grad_grad_block_t = GradientGradientBlock<elementT, quadratureRuleT, coefficientFieldT>;
 
     // grad grad matrix block factory
-    template <class elementT, fields::tensor_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::tensor_field_c coefficientFieldT>
     constexpr auto grad_grad_block(const coefficientFieldT & coefficient)
     {
-        // degree of exactness for the quadrature rule
-        // (required to integrate exactly the integrand with a constant coefficient)
-        constexpr int doe = 2 * (elementT::degree - 1);
-
         // assemble the GAUSS quadrature rule for the block
         using quadrature_rule_type = quadrature::quadrature_rule_t<
             quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
@@ -55,13 +47,9 @@ namespace mito::fem::blocks {
     using value_value_block_t = ValueValueBlock<elementT, quadratureRuleT, coefficientFieldT>;
 
     // value value matrix block factory
-    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
     constexpr auto value_value_block(const coefficientFieldT & coefficient)
     {
-        // degree of exactness for the quadrature rule
-        // (required to integrate exactly product of element shape functions)
-        constexpr int doe = 2 * elementT::degree;
-
         // select an appropriate quadrature rule for the block
         using quadrature_rule_type = quadrature::quadrature_rule_t<
             quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;

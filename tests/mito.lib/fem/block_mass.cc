@@ -56,7 +56,8 @@ TEST(Fem, IsoparametricTriangle)
         auto density = mito::functions::one<coordinates_t>;
 
         // a mass matrix block
-        auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>(density);
+        constexpr int doe_mass = 2 * finite_element_t::degree;
+        auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
 
         // the analytical elementary mass matrix
         auto analytical_block =
@@ -95,7 +96,8 @@ TEST(Fem, IsoparametricTriangle)
         auto density = mito::functions::one<coordinates_t>;
 
         // a mass matrix block
-        auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>(density);
+        constexpr int doe_mass = 2 * finite_element_t::degree;
+        auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
 
         // the analytical elementary mass matrix
         auto analytical_block = mito::tensor::matrix_t<6>{
