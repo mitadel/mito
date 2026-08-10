@@ -33,13 +33,6 @@ namespace mito::fem::blocks {
     template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
     constexpr auto source(const coefficientFieldT & coefficient);
 
-    // L2 norm block
-    template <class elementT, class quadratureRuleT, functions::function_c functionT>
-    using l2_norm_block_t = L2NormBlock<elementT, quadratureRuleT, functionT>;
-
-    // L2 norm block factory
-    template <class elementT, int doe, functions::function_c functionT>
-    constexpr auto l2_norm(const functionT & f);
 }
 
 

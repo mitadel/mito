@@ -74,6 +74,22 @@ namespace mito::fem::blocks {
         return value_block_t<elementT, quadrature_rule_type, coefficientFieldT>(coefficient);
     }
 
+    // L2 norm block
+    template <class elementT, class quadratureRuleT, functions::function_c functionT>
+    using l2_norm_block_t = L2NormBlock<elementT, quadratureRuleT, functionT>;
+
+    // L2 norm block factory
+    template <class elementT, int doe = 2 * elementT::degree, functions::function_c functionT>
+    constexpr auto l2_norm(const functionT & f)
+    {
+        // select an appropriate quadrature rule for the block
+        using quadrature_rule_type = quadrature::quadrature_rule_t<
+            quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
+
+        // all done
+        return l2_norm_block_t<elementT, quadrature_rule_type, functionT>(f);
+    }
+
 }
 
 
