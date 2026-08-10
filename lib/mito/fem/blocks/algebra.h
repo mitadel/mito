@@ -13,7 +13,7 @@ namespace mito::fem::blocks {
     template <class... blockTs>
     constexpr auto sum(blockTs... blocks)
     {
-        return BlockSum<blockTs...>(blocks...);
+        return BlockSum<blockTs...>(std::move(blocks)...);
     }
 
     template <class leftBlockT, class rightBlockT>
