@@ -10,28 +10,35 @@
 namespace mito::fem::blocks {
 
     // advection matrix block factory
-    template <class elementT, int doe, fields::vector_field_c coefficientFieldT>
-    constexpr auto advection(const coefficientFieldT & coefficient);
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1, fields::vector_field_c velocityFieldT>
+    constexpr auto advection(const velocityFieldT & velocity);
 
     // diffusion matrix block factory
-    template <class elementT, int doe, fields::tensor_field_c coefficientFieldT>
-    constexpr auto diffusion(const coefficientFieldT & coefficient);
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1,
+        fields::tensor_field_c diffusivityFieldT>
+    constexpr auto diffusion(const diffusivityFieldT & diffusivity);
 
     // stiffness matrix block factory
-    template <class elementT, int doe, fields::tensor_field_c coefficientFieldT>
-    constexpr auto stiffness(const coefficientFieldT & coefficient);
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1,
+        fields ::tensor_field_c elasticModulusFieldT>
+    constexpr auto stiffness(const elasticModulusFieldT & elastic_modulus);
 
     // reaction matrix block factory
-    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
-    constexpr auto reaction(const coefficientFieldT & coefficient);
+    template <
+        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c reactionRateFieldT>
+    constexpr auto reaction(const reactionRateFieldT & reaction_rate);
 
     // mass matrix block factory
-    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
-    constexpr auto mass(const coefficientFieldT & coefficient);
+    template <
+        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c massDensityFieldT>
+    constexpr auto mass(const massDensityFieldT & mass_density);
 
     // source term vector block factory
-    template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
-    constexpr auto source(const coefficientFieldT & coefficient);
+    template <class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c sourceFieldT>
+    constexpr auto source(const sourceFieldT & source);
 
 }
 

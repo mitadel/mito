@@ -10,59 +10,51 @@
 namespace mito::fem::blocks {
 
     // advection matrix block factory
-    template <
-        class elementT, int doe = 2 * elementT::degree - 1,
-        fields::vector_field_c coefficientFieldT>
-    constexpr auto advection(const coefficientFieldT & coefficient)
+    template <class elementT, int doe, fields::vector_field_c velocityFieldT>
+    constexpr auto advection(const velocityFieldT & velocity)
     {
-        // all done
-        return value_gradient_block<elementT, doe>(coefficient);
+        // return an advection matrix block
+        return value_gradient_block<elementT, doe>(velocity);
     }
 
     // diffusion matrix block factory
-    template <
-        class elementT, int doe = 2 * (elementT::degree - 1),
-        fields::tensor_field_c coefficientFieldT>
-    constexpr auto diffusion(const coefficientFieldT & coefficient)
+    template <class elementT, int doe, fields::tensor_field_c diffusivityFieldT>
+    constexpr auto diffusion(const diffusivityFieldT & diffusivity)
     {
-        // all done
-        return grad_grad_block<elementT, doe>(coefficient);
+        // return a diffusion matrix block
+        return grad_grad_block<elementT, doe>(diffusivity);
     }
 
     // stiffness matrix block factory
-    template <
-        class elementT, int doe = 2 * (elementT::degree - 1),
-        fields::tensor_field_c coefficientFieldT>
-    constexpr auto stiffness(const coefficientFieldT & coefficient)
+    template <class elementT, int doe, fields::tensor_field_c elasticModulusFieldT>
+    constexpr auto stiffness(const elasticModulusFieldT & elastic_modulus)
     {
-        // all done
-        return grad_grad_block<elementT, doe>(coefficient);
+        // return a stiffness matrix block
+        return grad_grad_block<elementT, doe>(elastic_modulus);
     }
 
     // reaction matrix block factory
-    template <
-        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c coefficientFieldT>
-    constexpr auto reaction(const coefficientFieldT & coefficient)
+    template <class elementT, int doe, fields::scalar_field_c reactionRateFieldT>
+    constexpr auto reaction(const reactionRateFieldT & reaction_rate)
     {
-        // all done
-        return value_value_block<elementT, doe>(coefficient);
+        // return a reaction matrix block
+        return value_value_block<elementT, doe>(reaction_rate);
     }
 
     // mass matrix block factory
-    template <
-        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c coefficientFieldT>
-    constexpr auto mass(const coefficientFieldT & coefficient)
+    template <class elementT, int doe, fields::scalar_field_c massDensityFieldT>
+    constexpr auto mass(const massDensityFieldT & mass_density)
     {
-        // all done
-        return value_value_block<elementT, doe>(coefficient);
+        // return a mass matrix block
+        return value_value_block<elementT, doe>(mass_density);
     }
 
     // source term vector block factory
-    template <class elementT, int doe = elementT::degree, fields::scalar_field_c coefficientFieldT>
-    constexpr auto source(const coefficientFieldT & coefficient)
+    template <class elementT, int doe, fields::scalar_field_c sourceFieldT>
+    constexpr auto source(const sourceFieldT & source)
     {
-        // all done
-        return value_block<elementT, doe>(coefficient);
+        // return a source term vector block
+        return value_block<elementT, doe>(source);
     }
 
 }
