@@ -9,7 +9,7 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT, fields::vector_field_c velocityFieldT>
+    template <class finiteElementT, class quadratureRuleT, fields::vector_field_c coefficientFieldT>
     class ValueGradientBlock {
 
       public:
@@ -20,8 +20,8 @@ namespace mito::fem::blocks {
         // my elementary shape
         using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
 
-        // the type of the velocity field
-        using velocity_field_type = velocityFieldT;
+        // the type of the coefficient field
+        using coefficient_field_type = coefficientFieldT;
 
       public:
         // instantiate the quadrature rule
@@ -29,7 +29,8 @@ namespace mito::fem::blocks {
 
       public:
         // constructor
-        ValueGradientBlock(const velocity_field_type & velocity) : _velocity(velocity) {}
+        ValueGradientBlock(const coefficient_field_type & coefficient) : _coefficient(coefficient)
+        {}
 
       public:
         // compute the elementary contribution of this block
@@ -55,7 +56,7 @@ namespace mito::fem::blocks {
                 auto x = element.parametrization()(xi);
 
                 // evaluate the coefficient at the quadrature point
-                auto velocity = _velocity(x);
+                auto coefficient = _coefficient(x);
 
                 // the measure of the canonical simplex
                 constexpr auto measure =
@@ -77,7 +78,7 @@ namespace mito::fem::blocks {
                         // {xi}
                         auto dphi_b = element.template gradient<b>()(xi);
                         // populate the elementary contribution to the matrix
-                        elementary_matrix[{ a, b }] += factor * phi_a * velocity * dphi_b;
+                        elementary_matrix[{ a, b }] += factor * phi_a * coefficient * dphi_b;
                     });
                 });
             });
@@ -87,8 +88,8 @@ namespace mito::fem::blocks {
         }
 
       private:
-        // the velocity field
-        const velocity_field_type & _velocity;
+        // the coefficient field
+        const coefficient_field_type & _coefficient;
     };
 
 }    // namespace mito

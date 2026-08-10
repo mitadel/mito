@@ -9,7 +9,7 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT, fields::tensor_field_c diffusivityFieldT>
+    template <class finiteElementT, class quadratureRuleT, fields::tensor_field_c coefficientFieldT>
     class GradientGradientBlock {
 
       public:
@@ -20,8 +20,8 @@ namespace mito::fem::blocks {
         // my elementary shape
         using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
 
-        // the type of the diffusivity field
-        using diffusivity_field_type = diffusivityFieldT;
+        // the type of the coefficient field
+        using coefficient_field_type = coefficientFieldT;
 
       public:
         // instantiate the quadrature rule
@@ -29,7 +29,9 @@ namespace mito::fem::blocks {
 
       public:
         // constructor
-        GradientGradientBlock(const diffusivity_field_type & diffusivity) : _diffusivity(diffusivity) {}
+        GradientGradientBlock(const coefficient_field_type & coefficient) :
+            _coefficient(coefficient)
+        {}
 
       public:
         // compute the elementary contribution of this block
@@ -54,8 +56,8 @@ namespace mito::fem::blocks {
                 // the coordinates of the quadrature point
                 auto x = element.parametrization()(xi);
 
-                // evaluate the diffusivity field at the quadrature point
-                auto diffusivity = _diffusivity(x);
+                // evaluate the coefficient field at the quadrature point
+                auto coefficient = _coefficient(x);
 
                 // the measure of the canonical simplex
                 constexpr auto measure =
@@ -77,7 +79,7 @@ namespace mito::fem::blocks {
                         // {xi}
                         auto dphi_b = element.template gradient<b>()(xi);
                         // populate the elementary contribution to the matrix
-                        elementary_matrix[{ a, b }] += factor * dphi_a * (diffusivity * dphi_b);
+                        elementary_matrix[{ a, b }] += factor * dphi_a * (coefficient * dphi_b);
                     });
                 });
             });
@@ -87,8 +89,8 @@ namespace mito::fem::blocks {
         }
 
       private:
-        // the diffusivity field
-        const diffusivity_field_type & _diffusivity;
+        // the coefficient field
+        const coefficient_field_type & _coefficient;
     };
 
 }    // namespace mito

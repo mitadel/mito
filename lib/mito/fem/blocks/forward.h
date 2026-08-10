@@ -10,11 +10,11 @@
 namespace mito::fem::blocks {
 
     // value grad block
-    template <class elementT, class quadratureRuleT, fields::vector_field_c velocityFieldT>
+    template <class elementT, class quadratureRuleT, fields::vector_field_c coefficientFieldT>
     class ValueGradientBlock;
 
     // grad grad block
-    template <class elementT, class quadratureRuleT, fields::tensor_field_c diffusivityFieldT>
+    template <class elementT, class quadratureRuleT, fields::tensor_field_c coefficientFieldT>
     class GradientGradientBlock;
 
     // value value block
@@ -22,7 +22,7 @@ namespace mito::fem::blocks {
     class ValueValueBlock;
 
     // value rhs block
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
     class ValueBlock;
 
     // L2 norm block for a function defined at quadrature points in parametric coordinates

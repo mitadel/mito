@@ -11,7 +11,7 @@ namespace mito::fem::blocks {
 
     // TOFIX: the source does not need to be necessarily a scalar field, it can be some other field
     // see if we can use {field_c} instead of {scalar_field_c}
-    template <class finiteElementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
+    template <class finiteElementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
     class ValueBlock {
 
       public:
@@ -22,8 +22,8 @@ namespace mito::fem::blocks {
         // my elementary shape
         using elementary_shape = tensor::vector_t<element_type::n_nodes>;
 
-        // the type of the source term function
-        using source_field_type = sourceFieldT;
+        // the type of the coefficient field
+        using coefficient_field_type = coefficientFieldT;
 
       public:
         // instantiate the quadrature rule
@@ -31,7 +31,7 @@ namespace mito::fem::blocks {
 
       public:
         // constructor
-        ValueBlock(const source_field_type & source_field) : _source_field(source_field) {}
+        ValueBlock(const coefficient_field_type & coefficient) : _coefficient(coefficient) {}
 
       public:
         // compute the elementary contribution of this block
@@ -71,7 +71,7 @@ namespace mito::fem::blocks {
                     // evaluate the a-th shape function at {xi}
                     auto phi_a = element.template shape<a>()(xi);
                     // populate the elementary contribution to the vector
-                    elementary_vector[{ a }] += factor * _source_field(coord) * phi_a;
+                    elementary_vector[{ a }] += factor * _coefficient(coord) * phi_a;
                 });
             });
 
@@ -80,8 +80,8 @@ namespace mito::fem::blocks {
         }
 
       private:
-        // the source term field
-        const source_field_type & _source_field;
+        // the coefficient field
+        const coefficient_field_type & _coefficient;
     };
 
 }    // namespace mito
