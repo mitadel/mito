@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 // the euclidean metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 

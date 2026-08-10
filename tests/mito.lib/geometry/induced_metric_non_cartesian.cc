@@ -9,7 +9,8 @@
 #include <cmath>
 
 
-using coordinates_1d_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
+using coordinates_1d_t = mito::geometry::cartesian::coordinates_t<1>;
+;
 using polar_2d_t = mito::geometry::polar_coordinates_t;
 using spherical_3d_t = mito::geometry::spherical_coordinates_t;
 

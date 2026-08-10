@@ -10,7 +10,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 
 // the basis for vectors
 static constexpr auto e_x = mito::tensor::e_0<2>;

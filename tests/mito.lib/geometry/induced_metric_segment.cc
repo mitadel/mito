@@ -7,9 +7,9 @@
 #include <mito/geometry.h>
 
 
-using coordinates_1d_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
-using coordinates_2d_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-using coordinates_3d_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+using coordinates_1d_t = mito::geometry::cartesian::coordinates_t<1>;
+using coordinates_2d_t = mito::geometry::cartesian::coordinates_t<2>;
+using coordinates_3d_t = mito::geometry::cartesian::coordinates_t<3>;
 
 
 TEST(Geometry, InducedMetricSegment1D)

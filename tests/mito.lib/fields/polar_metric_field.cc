@@ -11,7 +11,7 @@
 using mito::geometry::POLAR;
 
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
+using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
 
 // the function extracting the x_0 (i.e. the radial) component of 2D vector
 static constexpr auto r = mito::functions::component<coordinates_t, 0>;

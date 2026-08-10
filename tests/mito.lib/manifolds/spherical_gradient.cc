@@ -8,7 +8,7 @@
 
 
 // alias for a set of spherical coordinates in 3D
-using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
+using coordinates_t = mito::geometry::spherical::coordinates_t;
 
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;

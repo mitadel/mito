@@ -7,11 +7,8 @@
 #include <mito/geometry.h>
 
 
-// use cartesian coordinates
-using mito::geometry::CARTESIAN;
-
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;

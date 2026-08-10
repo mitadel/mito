@@ -9,7 +9,7 @@
 
 
 // spherical coordinates in 3D
-using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
+using coordinates_t = mito::geometry::spherical::coordinates_t;
 
 
 TEST(VtkWriter, CloudSphericalCoordinates)

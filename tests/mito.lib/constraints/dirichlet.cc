@@ -10,7 +10,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
 

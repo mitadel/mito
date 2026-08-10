@@ -7,11 +7,8 @@
 #include <mito/geometry.h>
 
 
-// use spherical coordinates
-using mito::geometry::SPHERICAL;
-
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<3, SPHERICAL>;
+using coordinates_t = mito::geometry::spherical::coordinates_t;
 
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;

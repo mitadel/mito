@@ -8,7 +8,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
 
 
 // the basis for vectors in 2D

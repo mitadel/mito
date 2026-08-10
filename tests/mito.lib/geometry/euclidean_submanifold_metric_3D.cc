@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 3D
-using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
 
 // the basis for vectors
 static constexpr auto e_x = mito::tensor::e_0<3>;

@@ -9,7 +9,7 @@
 
 
 // polar coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
+using coordinates_t = mito::geometry::polar::coordinates_t;
 
 
 TEST(VtkWriter, MeshPolarCoordinates)

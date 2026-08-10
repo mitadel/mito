@@ -9,9 +9,9 @@
 
 
 // cartesian coordinates in 3D
-using cartesian_coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+using cartesian_coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
 // spherical coordinates
-using spherical_coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::SPHERICAL>;
+using spherical_coordinates_t = mito::geometry::spherical::coordinates_t;
 
 
 TEST(Mesh, HalfBall)

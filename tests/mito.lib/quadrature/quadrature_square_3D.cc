@@ -8,13 +8,12 @@
 
 
 // strip the namespace
-using mito::geometry::CARTESIAN;
 using mito::tensor::vector_t;
 using mito::real;
 using mito::quadrature::GAUSS;
 
 // cartesian coordinates in 3D
-using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<3>;
 
 
 TEST(Quadrature, Square)

@@ -9,7 +9,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian::coordinates_t<2>;
 
 
 TEST(SummitReader, Mesh2D)
