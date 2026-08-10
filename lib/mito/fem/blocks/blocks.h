@@ -51,12 +51,12 @@ namespace mito::fem::blocks {
     }
 
     // value value matrix block
-    template <class elementT, class quadratureRuleT>
-    using value_value_block_t = ValueValueBlock<elementT, quadratureRuleT>;
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
+    using value_value_block_t = ValueValueBlock<elementT, quadratureRuleT, coefficientFieldT>;
 
     // value value matrix block factory
-    template <class elementT>
-    constexpr auto value_value_block()
+    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    constexpr auto value_value_block(const coefficientFieldT & coefficient)
     {
         // degree of exactness for the quadrature rule
         // (required to integrate exactly product of element shape functions)
@@ -67,7 +67,7 @@ namespace mito::fem::blocks {
             quadrature::GAUSS, typename elementT::mesh_cell_type::reference_simplex_type, doe>;
 
         // all done
-        return value_value_block_t<elementT, quadrature_rule_type>();
+        return value_value_block_t<elementT, quadrature_rule_type, coefficientFieldT>(coefficient);
     }
 
     // value vector block

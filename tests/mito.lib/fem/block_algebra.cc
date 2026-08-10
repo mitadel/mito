@@ -51,8 +51,11 @@ TEST(Fem, BlockSum)
     auto element_p1 = mito::fem::finite_element<finite_element_t>(
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
+    // the density field
+    auto density = mito::functions::one<coordinates_t>;
+
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
+    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
@@ -114,11 +117,14 @@ TEST(Fem, BlockProduct)
     auto element_p1 = mito::fem::finite_element<finite_element_t>(
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
+    // the density field
+    auto density = mito::functions::one<coordinates_t>;
+
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
+    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>(density);
 
     // add them up
-    constexpr auto product_block = 2.0 * mass_block;
+    auto product_block = 2.0 * mass_block;
 
     // the analytical elementary mass matrix
     auto analytical_block =
@@ -171,8 +177,11 @@ TEST(Fem, BlockProductSum)
     auto element_p1 = mito::fem::finite_element<finite_element_t>(
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
+    // the density field
+    auto density = mito::functions::one<coordinates_t>;
+
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
+    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
@@ -235,8 +244,11 @@ TEST(Fem, BlockProductTwoSums)
     auto element_p1 = mito::fem::finite_element<finite_element_t>(
         element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
+    // the density field
+    auto density = mito::functions::one<coordinates_t>;
+
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
+    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();

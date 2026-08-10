@@ -18,7 +18,7 @@ namespace mito::fem::blocks {
     class GradientGradientBlock;
 
     // value value block
-    template <class elementT, class quadratureRuleT>
+    template <class elementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
     class ValueValueBlock;
 
     // value rhs block

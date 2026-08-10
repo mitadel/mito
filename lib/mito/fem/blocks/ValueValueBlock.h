@@ -9,7 +9,7 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT>
+    template <class finiteElementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
     class ValueValueBlock {
 
       public:
@@ -20,9 +20,16 @@ namespace mito::fem::blocks {
         // my elementary shape
         using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
 
+        // the type of the coefficient field
+        using coefficient_field_type = coefficientFieldT;
+
       public:
         // instantiate the quadrature rule
         static constexpr auto quadrature_rule = quadrature_rule_type();
+
+      public:
+        // constructor
+        ValueValueBlock(const coefficient_field_type & coefficient) : _coefficient(coefficient) {}
 
       public:
         // compute the elementary contribution of this block
@@ -44,6 +51,12 @@ namespace mito::fem::blocks {
                 // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
 
+                // the coordinates of the quadrature point
+                auto x = element.parametrization()(xi);
+
+                // evaluate the coefficient at the quadrature point
+                auto coefficient = _coefficient(x);
+
                 // the measure of the canonical simplex
                 constexpr auto measure =
                     element_type::mesh_cell_type::reference_simplex_type::measure;
@@ -52,7 +65,7 @@ namespace mito::fem::blocks {
                 constexpr auto w = measure * quadrature_rule.weight(q);
 
                 // precompute the common factor
-                auto factor = w * tensor::determinant(element.jacobian()(xi));
+                auto factor = coefficient * w * tensor::determinant(element.jacobian()(xi));
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
@@ -72,6 +85,10 @@ namespace mito::fem::blocks {
             // all done
             return elementary_matrix;
         }
+
+      private:
+        // the coefficient field
+        coefficient_field_type _coefficient;
     };
 
 }    // namespace mito

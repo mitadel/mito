@@ -34,19 +34,19 @@ namespace mito::fem::blocks {
     }
 
     // reaction matrix block factory
-    template <class elementT>
-    constexpr auto reaction_block()
+    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    constexpr auto reaction_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_value_block<elementT>();
+        return value_value_block<elementT, coefficientFieldT>(coefficient);
     }
 
     // mass matrix block factory
-    template <class elementT>
-    constexpr auto mass_block()
+    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    constexpr auto mass_block(const coefficientFieldT & coefficient)
     {
         // all done
-        return value_value_block<elementT>();
+        return value_value_block<elementT, coefficientFieldT>(coefficient);
     }
 
     // source term vector block factory

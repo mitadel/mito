@@ -90,8 +90,11 @@ main(int argc, char ** argv)
     // the function space (linear elements on the manifold)
     auto function_space = mito::fem::function_space<finite_element_t>(manifold, constraints);
 
+    // the density field
+    auto density = mito::functions::one<coordinates_t>;
+
     // a mass matrix block
-    constexpr auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>();
+    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t>(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();

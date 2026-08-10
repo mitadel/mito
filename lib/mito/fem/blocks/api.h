@@ -22,12 +22,12 @@ namespace mito::fem::blocks {
     constexpr auto stiffness_block(const coefficientFieldT & coefficient);
 
     // reaction matrix block factory
-    template <class elementT>
-    constexpr auto reaction_block();
+    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    constexpr auto reaction_block(const coefficientFieldT & coefficient);
 
     // mass matrix block factory
-    template <class elementT>
-    constexpr auto mass_block();
+    template <class elementT, fields::scalar_field_c coefficientFieldT>
+    constexpr auto mass_block(const coefficientFieldT & coefficient);
 
     // source term vector block factory
     template <class elementT, int doe, fields::scalar_field_c coefficientFieldT>
