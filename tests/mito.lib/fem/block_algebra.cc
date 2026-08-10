@@ -60,7 +60,7 @@ TEST(Fem, BlockSum)
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-    // a grad grad matric block
+    // a grad grad matrix block
     auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
@@ -186,7 +186,7 @@ TEST(Fem, BlockProductSum)
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-    // a grad grad matric block
+    // a grad grad matrix block
     auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
@@ -253,7 +253,7 @@ TEST(Fem, BlockProductTwoSums)
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
-    // a grad grad matric block
+    // a grad grad matrix block
     auto diffusion_block = mito::fem::blocks::grad_grad_block<finite_element_t>(diffusivity);
 
     // add them up
