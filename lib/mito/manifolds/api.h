@@ -27,6 +27,14 @@ namespace mito::manifolds {
         const cellT & cell, const parametrizationT & parametrization,
         const metricVolumeFormT & metric_volume_form);
 
+    // cell integrator alias
+    template <class quadratureRuleT, class parametrizedElementT>
+    using cell_integrator_t = CellIntegrator<quadratureRuleT, parametrizedElementT>;
+
+    // cell integrator factory
+    template <class quadratureRuleT, class parametrizedElementT>
+    constexpr auto cell_integrator(const parametrizedElementT & parametrized_element);
+
     // manifold elements view alias
     template <class manifoldT>
     using manifold_elements_view_t = ManifoldElementsView<manifoldT>;

@@ -28,6 +28,13 @@ namespace mito::manifolds {
             cell, parametrization, metric_volume_form);
     }
 
+    // cell integrator factory
+    template <class quadratureRuleT, class parametrizedElementT>
+    constexpr auto cell_integrator(const parametrizedElementT & parametrized_element)
+    {
+        return cell_integrator_t<quadratureRuleT, parametrizedElementT>(parametrized_element);
+    }
+
     // factory manifold
     template <class cellT, geometry::coordinates_c coordsT, class volumeFormT>
     constexpr auto manifold(

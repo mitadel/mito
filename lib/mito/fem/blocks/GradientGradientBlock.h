@@ -24,10 +24,6 @@ namespace mito::fem::blocks {
         using coefficient_field_type = coefficientFieldT;
 
       public:
-        // instantiate the quadrature rule
-        static constexpr auto quadrature_rule = quadrature_rule_type();
-
-      public:
         // constructor
         GradientGradientBlock(const coefficient_field_type & coefficient) :
             _coefficient(coefficient)
@@ -39,53 +35,40 @@ namespace mito::fem::blocks {
         requires element_of_type_c<elementT, element_type>
         auto compute(const elementT & element) const -> elementary_shape
         {
-            // the number of nodes per element
-            constexpr int n_nodes = element_type::n_nodes;
-
-            // the number of quadrature points per element
-            constexpr int n_quads = quadrature_rule_type::npoints;
+            // the parametric coordinates type
+            using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
 
             // the elementary matrix
-            elementary_shape elementary_matrix{};
+            return manifolds::cell_integrator<quadrature_rule_type>(element.element())
+                .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
+                    // the elementary contribution at quadrature point {xi}
+                    elementary_shape elementary_matrix{};
 
-            // loop on the quadrature points
-            tensor::constexpr_for_1<n_quads>([&]<int q>() {
-                // the parametric coordinates of the quadrature point
-                constexpr auto xi = quadrature_rule.point(q);
+                    // the number of nodes per element
+                    constexpr int n_nodes = element_type::n_nodes;
 
-                // the coordinates of the quadrature point
-                auto x = element.parametrization()(xi);
+                    // the coordinates of the quadrature point
+                    auto x = element.parametrization()(xi);
 
-                // evaluate the coefficient field at the quadrature point
-                auto coefficient = _coefficient(x);
+                    // evaluate the coefficient at the quadrature point
+                    auto coefficient = _coefficient(x);
 
-                // the measure of the canonical simplex
-                constexpr auto measure =
-                    element_type::mesh_cell_type::reference_simplex_type::measure;
-
-                // the quadrature weight at this point scaled with the area of the canonical simplex
-                constexpr auto w = measure * quadrature_rule.weight(q);
-
-                // precompute the common factor
-                auto factor = w * element.volume_element()(xi);
-
-                // loop on the nodes of the element
-                tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                    // evaluate the spatial gradient of the element's a-th shape function at {xi}
-                    auto dphi_a = element.template gradient<a>()(xi);
                     // loop on the nodes of the element
-                    tensor::constexpr_for_1<n_nodes>([&]<int b>() {
-                        // evaluate the spatial gradient of the element's b-th shape function at
-                        // {xi}
-                        auto dphi_b = element.template gradient<b>()(xi);
-                        // populate the elementary contribution to the matrix
-                        elementary_matrix[{ a, b }] += factor * dphi_a * (coefficient * dphi_b);
+                    tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                        // evaluate the spatial gradient of the a-th shape function at {xi}
+                        auto dphi_a = element.template gradient<a>()(xi);
+                        // loop on the nodes of the element
+                        tensor::constexpr_for_1<n_nodes>([&]<int b>() {
+                            // evaluate the spatial gradient of the b-th shape function at {xi}
+                            auto dphi_b = element.template gradient<b>()(xi);
+                            // populate the elementary contribution to the matrix
+                            elementary_matrix[{ a, b }] = dphi_a * (coefficient * dphi_b);
+                        });
                     });
-                });
-            });
 
-            // all done
-            return elementary_matrix;
+                    // all done
+                    return elementary_matrix;
+                }));
         }
 
       private:

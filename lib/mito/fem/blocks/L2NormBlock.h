@@ -16,17 +16,15 @@ namespace mito::fem::blocks {
     class L2NormBlock {
 
       public:
-        // my template parameters
+        // my finite element type
         using element_type = finiteElementT;
-        using elementary_shape = tensor::scalar_t;
+        // my quadrature rule
         using quadrature_rule_type = quadratureRuleT;
+        // my elementary shape
+        using elementary_shape = tensor::scalar_t;
 
         // the type of the function to compute the L2 norm of
         using function_type = functionT;
-
-      public:
-        // instantiate the quadrature rule
-        static constexpr auto quadrature_rule = quadrature_rule_type();
 
       public:
         // constructor
@@ -38,33 +36,24 @@ namespace mito::fem::blocks {
         requires element_of_type_c<elementT, element_type>
         auto compute(const elementT & element) const -> elementary_shape
         {
-            // the number of quadrature points per element
-            constexpr int n_quads = quadrature_rule_type::npoints;
+            // the parametric coordinates type
+            using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
 
-            // the elementary contribution to the L2 norm
-            elementary_shape norm{};
+            // the elementary matrix
+            return manifolds::cell_integrator<quadrature_rule_type>(element.element())
+                .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
+                    // the elementary contribution at quadrature point {xi}
+                    elementary_shape norm{};
 
-            // loop on the quadrature points
-            tensor::constexpr_for_1<n_quads>([&]<int q>() {
-                // the parametric coordinates of the quadrature point
-                constexpr auto xi = quadrature_rule.point(q);
+                    // evaluate the function at the quadrature point
+                    auto fx = _function(xi);
 
-                // the measure of the canonical simplex
-                constexpr auto measure =
-                    element_type::mesh_cell_type::reference_simplex_type::measure;
+                    // assemble the elementary contribution
+                    norm = fx * fx;
 
-                // the quadrature weight at this point scaled with the area of the canonical simplex
-                constexpr auto w = measure * quadrature_rule.weight(q);
-
-                // precompute the common factor
-                auto factor = w * element.volume_element()(xi);
-
-                // populate the elementary contribution to the matrix
-                norm += factor * _function(xi) * _function(xi);
-            });
-
-            // all done
-            return norm;
+                    // all done
+                    return norm;
+                }));
         }
 
       private:

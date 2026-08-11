@@ -83,6 +83,13 @@ namespace mito::fem {
             return _connectivity;
         }
 
+        // get the parmetrized element
+        constexpr auto element() const noexcept
+        {
+            // all done
+            return _element;
+        }
+
         // get the element parmetrization
         constexpr auto parametrization() const noexcept
         {
@@ -102,6 +109,8 @@ namespace mito::fem {
             return shape_functions.shape<a>();
         }
 
+        // TOFIX: this can be now moved to the manifolds::ParametrizedElement class
+        // (this function was necessary for efficiency issues)
         // get the jacobian of the isoparametric mapping from parametric to actual coordinates
         constexpr auto jacobian() const
         {
@@ -124,6 +133,7 @@ namespace mito::fem {
             return jacobian_function;
         }
 
+        // TOFIX: this can be now removed
         // get the volume element of the isoparametric mapping, i.e. the metric volume form
         // contracted with the tangent vector of the element
         constexpr auto volume_element() const

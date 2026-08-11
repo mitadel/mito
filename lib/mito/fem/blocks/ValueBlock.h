@@ -26,10 +26,6 @@ namespace mito::fem::blocks {
         using coefficient_field_type = coefficientFieldT;
 
       public:
-        // instantiate the quadrature rule
-        static constexpr auto quadrature_rule = quadrature_rule_type();
-
-      public:
         // constructor
         ValueBlock(const coefficient_field_type & coefficient) : _coefficient(coefficient) {}
 
@@ -39,44 +35,35 @@ namespace mito::fem::blocks {
         requires(element_of_type_c<elementT, element_type>)
         auto compute(const elementT & element) const -> elementary_shape
         {
-            // the number of nodes per element
-            constexpr int n_nodes = element_type::n_nodes;
-
-            // the number of quadrature points per element
-            constexpr int n_quads = quadrature_rule_type::npoints;
+            // the parametric coordinates type
+            using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
 
             // the elementary vector
-            elementary_shape elementary_vector{};
+            return manifolds::cell_integrator<quadrature_rule_type>(element.element())
+                .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
+                    // the elementary contribution at quadrature point {xi}
+                    elementary_shape elementary_vector{};
 
-            // loop on the quadrature points
-            tensor::constexpr_for_1<n_quads>([&]<int q>() {
-                // the parametric coordinates of the quadrature point
-                constexpr auto xi = quadrature_rule.point(q);
+                    // the number of nodes per element
+                    constexpr int n_nodes = element_type::n_nodes;
 
-                // the coordinates of the quadrature point
-                auto coord = element.parametrization()(xi);
+                    // the coordinates of the quadrature point
+                    auto x = element.parametrization()(xi);
 
-                // the measure of the canonical simplex
-                constexpr auto measure =
-                    element_type::mesh_cell_type::reference_simplex_type::measure;
+                    // evaluate the coefficient at the quadrature point
+                    auto coefficient = _coefficient(x);
 
-                // the quadrature weight at this point scaled with the area of the canonical simplex
-                constexpr auto w = measure * quadrature_rule.weight(q);
+                    // loop on the nodes of the element
+                    tensor::constexpr_for_1<n_nodes>([&]<int a>() {
+                        // evaluate the element's a-th shape function at {xi}
+                        const auto phi_a = element.template shape<a>()(xi);
+                        // populate the elementary contribution to the vector
+                        elementary_vector[{ a }] = coefficient * phi_a;
+                    });
 
-                // precompute the common factor
-                auto factor = w * _coefficient(coord) * element.volume_element()(xi);
-
-                // loop on the nodes of the element
-                tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                    // evaluate the a-th shape function at {xi}
-                    auto phi_a = element.template shape<a>()(xi);
-                    // populate the elementary contribution to the vector
-                    elementary_vector[{ a }] += factor * phi_a;
-                });
-            });
-
-            // all done
-            return elementary_vector;
+                    // all done
+                    return elementary_vector;
+                }));
         }
 
       private:

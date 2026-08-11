@@ -19,6 +19,7 @@
 // classes implementation
 #include "Atlas.h"
 #include "ParametrizedElement.h"
+#include "CellIntegrator.h"
 #include "ManifoldElementsView.h"
 #include "Manifold.h"
 

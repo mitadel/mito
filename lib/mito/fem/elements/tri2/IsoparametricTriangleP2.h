@@ -90,6 +90,13 @@ namespace mito::fem {
             return _element.parametrization();
         }
 
+        // get the parmetrized element
+        constexpr auto element() const noexcept
+        {
+            // all done
+            return _element;
+        }
+
         // get the mesh cell
         constexpr auto cell() const noexcept -> mesh_cell_type { return _element.cell(); }
 

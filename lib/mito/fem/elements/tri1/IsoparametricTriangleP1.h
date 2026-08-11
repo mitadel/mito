@@ -83,6 +83,13 @@ namespace mito::fem {
             return _connectivity;
         }
 
+        // get the parmetrized element
+        constexpr auto element() const noexcept
+        {
+            // all done
+            return _element;
+        }
+
         // get the element parmetrization
         constexpr auto parametrization() const noexcept
         {

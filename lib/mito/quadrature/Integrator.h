@@ -17,17 +17,14 @@ namespace mito::quadrature {
       public:
         // publish my template parameters
         using manifold_type = manifoldT;
+        // the cell type of the manifold
         using cell_type = typename manifold_type::cell_type;
+        // the parametric coordinates type
+        using parametric_coordinates_type = typename cell_type::parametric_coordinates_type;
+        // the reference cell type
         using reference_cell_type = typename manifold_type::cell_type::reference_simplex_type;
-        using coordinates_type = typename manifold_type::coordinates_type;
-
-      private:
-        // quadrature_type, cell_type, and r identify a specific quadrature rule
+        // assemble to quadrature rule based on quadrature_type, cell_type, and r
         using quadrature_rule_type = quadrature_rule_t<quadratureT, reference_cell_type, r>;
-        // the quadrature rule
-        static constexpr auto _quadratureRule = quadrature_rule_type();
-        // the number of quadrature points
-        static constexpr int Q = quadrature_rule_type::npoints;
 
       public:
         // the constructor
@@ -42,23 +39,10 @@ namespace mito::quadrature {
             for (const auto & cell : _manifold.elements()) {
                 // get cell parametrization under the manifold's coordinate system
                 const auto phi = cell.parametrization();
-                // compute the derivative of the cell parametrization
-                const auto J = functions::derivative(phi);
-                // get the manifold's metric volume form
-                const auto w = cell.metric_volume_form();
-                // loop on quadrature points
-                for (auto q = 0; q < Q; ++q) {
-                    // get the quadrature point coordinates in physical space
-                    const auto x_q = _quadratureRule.point(q);
-                    // get the quadrature weight and scale it by the reference simplex area
-                    const auto w_q =
-                        _quadratureRule.weight(q) * cell_type::reference_simplex_type::measure;
-                    // construct the metric volume element at {x} by contracting the metric volume
-                    // form with the tangent vectors at {x}
-                    const auto dV = w(phi(x_q))(tensor::columns(J(x_q)));
-                    // assemble the elementary contribution
-                    result += f(phi(x_q)) * w_q * dV;
-                }
+                // assemble the elementary contribution
+                result += manifolds::cell_integrator<quadrature_rule_type>(cell).integrate(
+                    mito::functions::function(
+                        [&](const parametric_coordinates_type & xi) { return f(phi(xi)); }));
             }
 
             // all done

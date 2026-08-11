@@ -18,6 +18,10 @@ namespace mito::manifolds {
     template <class cellT, class parametrizationT, class metricVolumeFormT>
     class ParametrizedElement;
 
+    // cell integrator
+    template <class quadratureRuleT, class parametrizedElementT>
+    class CellIntegrator;
+
     // class manifold elements view
     template <class manifoldT>
     class ManifoldElementsView;
