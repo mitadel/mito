@@ -15,14 +15,6 @@ using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell (triangle embedded in 3D)
 using cell_t = mito::geometry::triangle_t<3>;
-// the reference simplex
-using reference_simplex_t = cell_t::reference_simplex_type;
-// Gauss quadrature on triangles with degree of exactness 2
-using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
-
-// instantiate the quadrature rule
-constexpr auto quadrature_rule = quadrature_rule_t();
 
 
 TEST(Fem, BlockMassEmbeddedTriangle)
@@ -77,7 +69,9 @@ TEST(Fem, BlockMassEmbeddedTriangle)
             element, { discretization_node_0, discretization_node_1, discretization_node_2 });
 
         // a mass matrix block
-        auto mass_block = mito::fem::blocks::mass_block<finite_element_t, quadrature_rule_t>();
+        auto density = mito::functions::one<coordinates_t>;
+        constexpr int doe_mass = 2 * finite_element_t::degree;
+        auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
 
         // the analytical elementary mass matrix (the mass matrix is invariant under rigid
         // rotations, so it is the same as for the unit right triangle in 2D)
