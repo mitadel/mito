@@ -9,24 +9,35 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT>
-    class MassBlock {
+    // TOFIX: the source does not need to be necessarily a scalar field, it can be some other field
+    // see if we can use {field_c} instead of {scalar_field_c}
+    template <class finiteElementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
+    class ValueBlock {
 
       public:
-        // my template parameters
+        // my finite element type
         using element_type = finiteElementT;
-        using elementary_block_type = tensor::matrix_t<element_type::n_nodes>;
+        // my quadrature rule
         using quadrature_rule_type = quadratureRuleT;
+        // my elementary shape
+        using elementary_shape = tensor::vector_t<element_type::n_nodes>;
+
+        // the type of the coefficient field
+        using coefficient_field_type = coefficientFieldT;
 
       public:
         // instantiate the quadrature rule
         static constexpr auto quadrature_rule = quadrature_rule_type();
 
       public:
+        // constructor
+        ValueBlock(const coefficient_field_type & coefficient) : _coefficient(coefficient) {}
+
+      public:
         // compute the elementary contribution of this block
         template <class elementT>
         requires(element_of_type_c<elementT, element_type>)
-        auto compute(const elementT & element) const -> elementary_block_type
+        auto compute(const elementT & element) const -> elementary_shape
         {
             // the number of nodes per element
             constexpr int n_nodes = element_type::n_nodes;
@@ -34,13 +45,16 @@ namespace mito::fem::blocks {
             // the number of quadrature points per element
             constexpr int n_quads = quadrature_rule_type::npoints;
 
-            // the elementary matrix
-            elementary_block_type elementary_matrix{};
+            // the elementary vector
+            elementary_shape elementary_vector{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
                 // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
+
+                // the coordinates of the quadrature point
+                auto coord = element.parametrization()(xi);
 
                 // the measure of the canonical simplex
                 constexpr auto measure =
@@ -50,26 +64,24 @@ namespace mito::fem::blocks {
                 constexpr auto w = measure * quadrature_rule.weight(q);
 
                 // precompute the common factor
-                auto factor = w * element.volume_element()(xi);
+                auto factor = w * _coefficient(coord) * element.volume_element()(xi);
 
                 // loop on the nodes of the element
                 tensor::constexpr_for_1<n_nodes>([&]<int a>() {
-                    // evaluate the spatial gradient of the element's a-th shape function at {xi}
+                    // evaluate the a-th shape function at {xi}
                     auto phi_a = element.template shape<a>()(xi);
-                    // loop on the nodes of the element
-                    tensor::constexpr_for_1<n_nodes>([&]<int b>() {
-                        // evaluate the spatial gradient of the element's b-th shape function at
-                        // {xi}
-                        auto phi_b = element.template shape<b>()(xi);
-                        // populate the elementary contribution to the matrix
-                        elementary_matrix[{ a, b }] += factor * phi_a * phi_b;
-                    });
+                    // populate the elementary contribution to the vector
+                    elementary_vector[{ a }] += factor * phi_a;
                 });
             });
 
             // all done
-            return elementary_matrix;
+            return elementary_vector;
         }
+
+      private:
+        // the coefficient field
+        coefficient_field_type _coefficient;
     };
 
 }    // namespace mito

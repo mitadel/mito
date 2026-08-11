@@ -9,37 +9,37 @@
 
 namespace mito::fem::blocks {
 
-    // grad grad block
-    template <class elementT, class quadratureRuleT>
-    using grad_grad_block_t = GradGradBlock<elementT, quadratureRuleT>;
+    // advection matrix block factory
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1, fields::vector_field_c velocityFieldT>
+    constexpr auto advection(const velocityFieldT & velocity);
 
-    // grad grad block factory
-    template <class elementT, class quadratureRuleT>
-    constexpr auto grad_grad_block();
+    // diffusion matrix block factory
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1,
+        fields::tensor_field_c diffusivityFieldT>
+    constexpr auto diffusion(const diffusivityFieldT & diffusivity);
 
-    // mass block
-    template <class elementT, class quadratureRuleT>
-    using mass_block_t = MassBlock<elementT, quadratureRuleT>;
+    // stiffness matrix block factory
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1,
+        fields ::tensor_field_c elasticModulusFieldT>
+    constexpr auto stiffness(const elasticModulusFieldT & elastic_modulus);
 
-    // mass block factory
-    template <class elementT, class quadratureRuleT>
-    constexpr auto mass_block();
+    // reaction matrix block factory
+    template <
+        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c reactionRateFieldT>
+    constexpr auto reaction(const reactionRateFieldT & reaction_rate);
 
-    // source term block
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
-    using source_term_block_t = SourceTermBlock<elementT, quadratureRuleT, sourceFieldT>;
+    // mass matrix block factory
+    template <
+        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c massDensityFieldT>
+    constexpr auto mass(const massDensityFieldT & mass_density);
 
-    // source term block factory
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
-    constexpr auto source_term_block(const sourceFieldT & f);
+    // source term vector block factory
+    template <class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c sourceFieldT>
+    constexpr auto source(const sourceFieldT & source);
 
-    // L2 norm block
-    template <class elementT, class quadratureRuleT, functions::function_c functionT>
-    using l2_norm_block_t = L2NormBlock<elementT, quadratureRuleT, functionT>;
-
-    // L2 norm block factory
-    template <class elementT, class quadratureRuleT, functions::function_c functionT>
-    constexpr auto l2_norm_block(const functionT & f);
 }
 
 

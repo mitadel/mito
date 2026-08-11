@@ -15,14 +15,6 @@ using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::segment_t<1>;
-// the reference simplex
-using reference_simplex_t = cell_t::reference_simplex_type;
-// Gauss quadrature on segments with degree of exactness 2
-using quadrature_rule_t =
-    mito::quadrature::quadrature_rule_t<mito::quadrature::GAUSS, reference_simplex_t, 2>;
-
-// instantiate the quadrature rule
-constexpr auto quadrature_rule = quadrature_rule_t();
 
 
 TEST(Fem, BlockGradGradSegment)
@@ -57,15 +49,19 @@ TEST(Fem, BlockGradGradSegment)
         auto element_p1 = mito::fem::finite_element<finite_element_t>(
             element, { discretization_node_0, discretization_node_1 });
 
-        // a grad-grad matrix block
-        auto grad_grad_block =
-            mito::fem::blocks::grad_grad_block<finite_element_t, quadrature_rule_t>();
+        // the diffusivity field
+        auto diffusivity = mito::functions::identity<coordinates_t, 1>();
+
+        // a grad grad matrix block
+        constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
+        auto diffusion_block =
+            mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<2>{ 1.0, -1.0, -1.0, 1.0 };
 
         // compute the elementary contribution of the block
-        auto computed_block = grad_grad_block.compute(element_p1);
+        auto computed_block = diffusion_block.compute(element_p1);
 
         // compute the error
         auto error = mito::tensor::norm(computed_block - analytical_block);

@@ -9,36 +9,52 @@
 
 namespace mito::fem::blocks {
 
-    // matrix block factory
-    template <class elementT, class quadratureRuleT>
-    constexpr auto grad_grad_block()
+    // advection matrix block factory
+    template <class elementT, int doe, fields::vector_field_c velocityFieldT>
+    constexpr auto advection(const velocityFieldT & velocity)
     {
-        // all done
-        return grad_grad_block_t<elementT, quadratureRuleT>();
+        // return an advection matrix block
+        return value_gradient_block<elementT, doe>(velocity);
     }
 
-    // mass block factory
-    template <class elementT, class quadratureRuleT>
-    constexpr auto mass_block()
+    // diffusion matrix block factory
+    template <class elementT, int doe, fields::tensor_field_c diffusivityFieldT>
+    constexpr auto diffusion(const diffusivityFieldT & diffusivity)
     {
-        // all done
-        return mass_block_t<elementT, quadratureRuleT>();
+        // return a diffusion matrix block
+        return grad_grad_block<elementT, doe>(diffusivity);
     }
 
-    // source term block factory
-    template <class elementT, class quadratureRuleT, fields::scalar_field_c sourceFieldT>
-    constexpr auto source_term_block(const sourceFieldT & f)
+    // stiffness matrix block factory
+    template <class elementT, int doe, fields::tensor_field_c elasticModulusFieldT>
+    constexpr auto stiffness(const elasticModulusFieldT & elastic_modulus)
     {
-        // all done
-        return source_term_block_t<elementT, quadratureRuleT, sourceFieldT>(f);
+        // return a stiffness matrix block
+        return grad_grad_block<elementT, doe>(elastic_modulus);
     }
 
-    // L2 norm block factory
-    template <class elementT, class quadratureRuleT, functions::function_c functionT>
-    constexpr auto l2_norm_block(const functionT & f)
+    // reaction matrix block factory
+    template <class elementT, int doe, fields::scalar_field_c reactionRateFieldT>
+    constexpr auto reaction(const reactionRateFieldT & reaction_rate)
     {
-        // all done
-        return l2_norm_block_t<elementT, quadratureRuleT, functionT>(f);
+        // return a reaction matrix block
+        return value_value_block<elementT, doe>(reaction_rate);
+    }
+
+    // mass matrix block factory
+    template <class elementT, int doe, fields::scalar_field_c massDensityFieldT>
+    constexpr auto mass(const massDensityFieldT & mass_density)
+    {
+        // return a mass matrix block
+        return value_value_block<elementT, doe>(mass_density);
+    }
+
+    // source term vector block factory
+    template <class elementT, int doe, fields::scalar_field_c sourceFieldT>
+    constexpr auto source(const sourceFieldT & source)
+    {
+        // return a source term vector block
+        return value_block<elementT, doe>(source);
     }
 
 }

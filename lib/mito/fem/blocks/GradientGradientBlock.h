@@ -9,24 +9,35 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT>
-    class GradGradBlock {
+    template <class finiteElementT, class quadratureRuleT, fields::tensor_field_c coefficientFieldT>
+    class GradientGradientBlock {
 
       public:
-        // my template parameters
+        // my finite element type
         using element_type = finiteElementT;
-        using elementary_block_type = tensor::matrix_t<element_type::n_nodes>;
+        // my quadrature rule
         using quadrature_rule_type = quadratureRuleT;
+        // my elementary shape
+        using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
+
+        // the type of the coefficient field
+        using coefficient_field_type = coefficientFieldT;
 
       public:
         // instantiate the quadrature rule
         static constexpr auto quadrature_rule = quadrature_rule_type();
 
       public:
+        // constructor
+        GradientGradientBlock(const coefficient_field_type & coefficient) :
+            _coefficient(coefficient)
+        {}
+
+      public:
         // compute the elementary contribution of this block
         template <class elementT>
         requires element_of_type_c<elementT, element_type>
-        auto compute(const elementT & element) const -> elementary_block_type
+        auto compute(const elementT & element) const -> elementary_shape
         {
             // the number of nodes per element
             constexpr int n_nodes = element_type::n_nodes;
@@ -35,12 +46,18 @@ namespace mito::fem::blocks {
             constexpr int n_quads = quadrature_rule_type::npoints;
 
             // the elementary matrix
-            elementary_block_type elementary_matrix{};
+            elementary_shape elementary_matrix{};
 
             // loop on the quadrature points
             tensor::constexpr_for_1<n_quads>([&]<int q>() {
                 // the parametric coordinates of the quadrature point
                 constexpr auto xi = quadrature_rule.point(q);
+
+                // the coordinates of the quadrature point
+                auto x = element.parametrization()(xi);
+
+                // evaluate the coefficient field at the quadrature point
+                auto coefficient = _coefficient(x);
 
                 // the measure of the canonical simplex
                 constexpr auto measure =
@@ -62,7 +79,7 @@ namespace mito::fem::blocks {
                         // {xi}
                         auto dphi_b = element.template gradient<b>()(xi);
                         // populate the elementary contribution to the matrix
-                        elementary_matrix[{ a, b }] += factor * dphi_a * dphi_b;
+                        elementary_matrix[{ a, b }] += factor * dphi_a * (coefficient * dphi_b);
                     });
                 });
             });
@@ -70,6 +87,10 @@ namespace mito::fem::blocks {
             // all done
             return elementary_matrix;
         }
+
+      private:
+        // the coefficient field
+        coefficient_field_type _coefficient;
     };
 
 }    // namespace mito
