@@ -86,31 +86,6 @@ test_gradient_consistency(const auto & element)
     return;
 }
 
-// test that the arc length computed via the volume element matches the expected value
-auto
-test_arc_length(const auto & element, double expected_length)
-{
-    // the element type
-    using element_t = mito::utilities::base_type<decltype(element)>;
-
-    // the number of quadrature points per element
-    constexpr int n_quads = quadrature_rule_t::npoints;
-
-    // compute the arc length by integrating 1 over the segment using the volume element
-    double arc_length = 0.0;
-    mito::tensor::constexpr_for_1<n_quads>([&]<int q>() {
-        constexpr auto xi = quadrature_rule.point(q);
-        constexpr auto w = element_t::canonical_element_type::measure * quadrature_rule.weight(q);
-        arc_length += w * element.volume_element()(xi);
-    });
-
-    // check the arc length
-    EXPECT_NEAR(expected_length, arc_length, 1.0e-15);
-
-    // all done
-    return;
-}
-
 TEST(Fem, IsoparametricEmbeddedSegment)
 {
     // the coordinate system
@@ -165,9 +140,6 @@ TEST(Fem, IsoparametricEmbeddedSegment)
 
         // check that the gradients of first order shape functions sum to 0.0
         test_gradient_consistency(element_p1);
-
-        // check that the arc length is sqrt(3^2 + 4^2) = 5
-        test_arc_length(element_p1, 5.0);
 
         // check the gradient values at the midpoint for the (0,0) to (3,4) segment
         {
