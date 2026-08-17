@@ -135,24 +135,6 @@ namespace mito::fem {
             return jacobian_function;
         }
 
-        // get the volume element of the isoparametric mapping, i.e. the metric volume form
-        // contracted with the tangent vectors of the element
-        constexpr auto volume_element() const
-        {
-            // assemble the volume element as a function of parametric coordinates
-            auto volume_element_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::scalar_t {
-                    // the metric volume form at the physical location of {xi}
-                    auto w = _element.metric_volume_form()(_element.parametrization())(xi);
-                    // the tangent vectors to the element at {xi}
-                    auto J = jacobian()(xi);
-                    // contract the metric volume form with the tangent vectors
-                    return w(tensor::column<0>(J), tensor::column<1>(J));
-                });
-            // and return it
-            return volume_element_function;
-        }
-
         // get the gradient of the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < n_nodes)
