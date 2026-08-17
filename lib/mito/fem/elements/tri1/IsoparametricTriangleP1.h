@@ -109,32 +109,6 @@ namespace mito::fem {
             return shape_functions.shape<a>();
         }
 
-        // get the jacobian of the isoparametric mapping from parametric to actual coordinates
-        constexpr auto jacobian() const
-        {
-            // assemble the jacobian as a function of parametric coordinates
-            auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<dim, 2> {
-                    // get the shape functions derivatives
-                    constexpr auto dphi_0 = shape_functions.dshape<0>();
-                    constexpr auto dphi_1 = shape_functions.dshape<1>();
-                    constexpr auto dphi_2 = shape_functions.dshape<2>();
-
-                    // store the coordinates of the vertices of the triangle in physical space
-                    auto x0 = _element.parametrization()({ 0.0, 0.0 });
-                    auto x1 = _element.parametrization()({ 1.0, 0.0 });
-                    auto x2 = _element.parametrization()({ 0.0, 1.0 });
-
-                    // compute the jacobian of the isoparametric mapping
-                    return (
-                        tensor::dyadic(x0, dphi_0(xi)) + tensor::dyadic(x1, dphi_1(xi))
-                        + tensor::dyadic(x2, dphi_2(xi)));
-                });
-
-            // and return it
-            return jacobian_function;
-        }
-
         // get the gradient of the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < n_nodes)
@@ -146,7 +120,7 @@ namespace mito::fem {
             // the intrinsic gradient of the a-th shape function on the parametric space
             auto dphi = operators::gradient(shape_functions.shape<a>(), g);
             // push the gradient forward to the physical space with the jacobian
-            return jacobian() * dphi;
+            return _element.jacobian() * dphi;
         }
 
       private:

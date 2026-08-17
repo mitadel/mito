@@ -59,6 +59,9 @@ namespace mito::manifolds {
             return _parametrization;
         }
 
+        // return the jacobian (gradient in parametric space) of the parametrization of this element
+        constexpr auto jacobian() const { return operators::gradient(_parametrization); }
+
         // return the metric volume form of this element
         constexpr auto metric_volume_form() const -> const metric_volume_form_type &
         {
