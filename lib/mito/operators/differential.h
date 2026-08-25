@@ -66,19 +66,11 @@ namespace mito::operators {
 
     // function to compute the contravariant gradient of a scalar field with respect to a metric
     template <fields::scalar_field_c F, class G>
-    requires(
-        (fields::tensor_field_c<G> or fields::scalar_field_c<G>)
-        and fields::compatible_fields_c<F, G>)
+    requires(fields::tensor_or_scalar_field_c<G> and fields::compatible_fields_c<F, G>)
     constexpr auto gradient(const F & field, const G & metric_field)
     {
-        // if the metric collapses to a scalar
-        if constexpr (fields::scalar_field_c<G>) {
-            // divide by the metric directly
-            return gradient(field) / metric_field;
-        } else {
-            // multiply with the inverse of the metric
-            return functions::inverse(metric_field) * gradient(field);
-        }
+        // multiply with the inverse of the metric
+        return functions::inverse(metric_field) * gradient(field);
     }
 
     // function to compute the divergence of a vector field
