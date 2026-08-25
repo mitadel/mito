@@ -92,21 +92,45 @@ namespace mito::functions {
     }
 
     // f transposed
-    constexpr auto transpose(const function_c auto & f)
+    template <function_c F>
+    constexpr auto transpose(const F & f)
     {
-        return Transpose(f);
+        // if the function is scalar valued
+        if constexpr (tensor::scalar_c<typename F::output_type>) {
+            // return f
+            return f;
+        } else {
+            // return the transpose
+            return Transpose(f);
+        }
     }
 
     // determinant of f
-    constexpr auto determinant(const function_c auto & f)
+    template <function_c F>
+    constexpr auto determinant(const F & f)
     {
-        return Determinant(f);
+        // if the function is scalar valued
+        if constexpr (tensor::scalar_c<typename F::output_type>) {
+            // return f
+            return f;
+        } else {
+            // return the determinant
+            return Determinant(f);
+        }
     }
 
     // f inverse
-    constexpr auto inverse(const function_c auto & f)
+    template <function_c F>
+    constexpr auto inverse(const F & f)
     {
-        return Inverse(f);
+        // if the function is scalar valued
+        if constexpr (tensor::scalar_c<typename F::output_type>) {
+            // return 1 / f
+            return Reciprocal(f);
+        } else {
+            // return the inverse
+            return Inverse(f);
+        }
     }
 
     // dyadic product of vector-valued functions f and g
