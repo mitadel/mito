@@ -28,6 +28,12 @@ namespace mito::fields {
     // a tensor field  is a field returning a matrix
     concept tensor_field_c = field_c<FIELD> and tensor::matrix_c<typename FIELD::output_type>;
 
+    // concept of a field {FIELD} being a tensor field
+    template <class FIELD>
+    // a tensor or scalar field is a field whose output satisfies {tensor_or_scalar_c}
+    concept tensor_or_scalar_field_c =
+        field_c<FIELD> and tensor::tensor_or_scalar_c<typename FIELD::output_type>;
+
     // concept of a field {FIELD} being a symmetric tensor field
     template <class FIELD>
     // a symmetric tensor field  is a field returning a symmetric matrix
