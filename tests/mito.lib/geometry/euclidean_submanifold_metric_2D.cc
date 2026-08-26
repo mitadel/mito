@@ -10,7 +10,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 // the basis for vectors
 static constexpr auto e_x = mito::tensor::e_0<2>;
@@ -52,8 +52,8 @@ TEST(Tensor, EuclideanSubmanifoldMetric2D)
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // pick two sets of coordinates
-    constexpr auto x_0 = mito::geometry::cartesian::coordinates({ 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::cartesian::coordinates({ 3.0, 4.0 });
+    constexpr auto x_0 = mito::geometry::cartesian<2>::coordinates({ 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::cartesian<2>::coordinates({ 3.0, 4.0 });
 
     // assemble the normal vector to the submanifold from tangent
     constexpr auto tangent_vector = x_1 - x_0;
@@ -170,8 +170,8 @@ TEST(Tensor, EuclideanSubmanifoldMetric2DEdgeCases)
     // run all test cases
     for (const auto & tc : test_cases) {
         SCOPED_TRACE(tc.description);
-        auto x0 = mito::geometry::cartesian::coordinates({ tc.x0, tc.y0 });
-        auto x1 = mito::geometry::cartesian::coordinates({ tc.x1, tc.y1 });
+        auto x0 = mito::geometry::cartesian<2>::coordinates({ tc.x0, tc.y0 });
+        auto x1 = mito::geometry::cartesian<2>::coordinates({ tc.x1, tc.y1 });
         test_segment(coord_system, w, x0, x1, tc.expected_length);
     }
 }

@@ -8,10 +8,9 @@
 
 
 // strip the namespace
-using mito::geometry::CARTESIAN;
 using mito::quadrature::GAUSS;
 // cartesian coordinates in 3D
-using coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 
 TEST(Quadrature, Segment3D)
@@ -23,8 +22,8 @@ TEST(Quadrature, Segment3D)
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
     // a segment
-    constexpr auto x_0 = mito::geometry::cartesian::coordinates({ 0.0, 0.0, 0.0 });
-    constexpr auto x_1 = mito::geometry::cartesian::coordinates({ 1.0, 1.0, 1.0 });
+    constexpr auto x_0 = mito::geometry::cartesian<3>::coordinates({ 0.0, 0.0, 0.0 });
+    constexpr auto x_1 = mito::geometry::cartesian<3>::coordinates({ 1.0, 1.0, 1.0 });
     // create nodes
     auto node_0 = mito::geometry::node(coord_system, x_0);
     auto node_1 = mito::geometry::node(coord_system, x_1);

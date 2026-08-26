@@ -8,7 +8,7 @@
 
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 // the euclidean metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 
@@ -19,9 +19,9 @@ constexpr int degree = 1;
 // assemble the finite element type
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 // the x scalar field in 2D
-constexpr auto x = mito::functions::component<coordinates_t, 0>;
+constexpr auto x = mito::geometry::cartesian<2>::x;
 // the y scalar field in 2D
-constexpr auto y = mito::functions::component<coordinates_t, 1>;
+constexpr auto y = mito::geometry::cartesian<2>::y;
 
 
 TEST(Fem, FemField)

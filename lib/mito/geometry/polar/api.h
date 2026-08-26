@@ -7,28 +7,32 @@
 #pragma once
 
 
-namespace mito::geometry::polar {
+namespace mito::geometry {
 
-    // polar coordinates
-    using coordinates_t = polar_coordinates_t;
+    struct polar {
 
-    // the Euclidean metric tensor field
-    constexpr auto euclidean_metric = geometry::euclidean_metric<polar_coordinates_t>::field();
+        // polar coordinates
+        using coordinates_t = polar_coordinates_t;
 
-    // factory for polar coordinates
-    constexpr auto coordinates = &geometry::coordinates<polar_coordinates_t>;
+        // the Euclidean metric tensor field
+        static constexpr auto euclidean_metric =
+            geometry::euclidean_metric<polar_coordinates_t>::field();
 
-    // the function extracting the {r} coordinate from a polar coordinate set
-    constexpr auto r = functions::component<polar_coordinates_t, 0>;
+        // factory for polar coordinates
+        static constexpr auto coordinates = &geometry::coordinates<polar_coordinates_t>;
 
-    // the function extracting the {theta} coordinate from a polar coordinate set
-    constexpr auto theta = functions::component<polar_coordinates_t, 1>;
+        // the function extracting the {r} coordinate from a polar coordinate set
+        static constexpr auto r = functions::component<polar_coordinates_t, 0>;
 
-    // the basis for vector fields (e_r)
-    constexpr auto e_r = basis<polar_coordinates_t>::template e<0>();
+        // the function extracting the {theta} coordinate from a polar coordinate set
+        static constexpr auto theta = functions::component<polar_coordinates_t, 1>;
 
-    // the basis for vector fields (e_theta)
-    constexpr auto e_theta = basis<polar_coordinates_t>::template e<1>();
+        // the basis for vector fields (e_r)
+        static constexpr auto e_r = basis<polar_coordinates_t>::template e<0>();
+
+        // the basis for vector fields (e_theta)
+        static constexpr auto e_theta = basis<polar_coordinates_t>::template e<1>();
+    };
 
 }
 

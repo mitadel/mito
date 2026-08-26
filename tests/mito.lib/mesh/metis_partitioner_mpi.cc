@@ -10,7 +10,7 @@
 #include <mito/io.h>
 
 // cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 using mesh_t = mito::mesh::mesh_t<mito::geometry::triangle_t<2>>;
 
 

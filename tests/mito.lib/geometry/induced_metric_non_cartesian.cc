@@ -9,9 +9,9 @@
 #include <cmath>
 
 
-using coordinates_1d_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
-using polar_2d_t = mito::geometry::polar_coordinates_t;
-using spherical_3d_t = mito::geometry::spherical_coordinates_t;
+using coordinates_1d_t = mito::geometry::cartesian<1>::coordinates_t;
+using polar_2d_t = mito::geometry::polar::coordinates_t;
+using spherical_3d_t = mito::geometry::spherical::coordinates_t;
 
 
 TEST(Geometry, InducedMetricFromPolar)
@@ -29,13 +29,13 @@ TEST(Geometry, InducedMetricFromPolar)
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     // at ξ = 0.5: r = 1, g_induced = [4 + 4·0.25] = [5], volume element = sqrt(5)
-    auto xi_1 = mito::geometry::cartesian::coordinates<1>({ 0.5 });
+    auto xi_1 = mito::geometry::cartesian<1>::coordinates({ 0.5 });
     auto g_val_1 = g_field(xi_1);
     EXPECT_DOUBLE_EQ(5.0, mito::tensor::trace(g_val_1));
     EXPECT_DOUBLE_EQ(std::sqrt(5.0), std::sqrt(mito::tensor::determinant(g_val_1)));
 
     // at ξ = 1.0: r = 2, g_induced = [4 + 4·1] = [8], volume element = 2·sqrt(2)
-    auto xi_2 = mito::geometry::cartesian::coordinates<1>({ 1.0 });
+    auto xi_2 = mito::geometry::cartesian<1>::coordinates({ 1.0 });
     auto g_val_2 = g_field(xi_2);
     EXPECT_DOUBLE_EQ(8.0, mito::tensor::trace(g_val_2));
     EXPECT_DOUBLE_EQ(2.0 * std::sqrt(2.0), std::sqrt(mito::tensor::determinant(g_val_2)));
@@ -58,13 +58,13 @@ TEST(Geometry, InducedMetricFromSpherical)
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     // at ξ = π/6: g = 1 + 100 sin²(π/6) = 1 + 100·(1/4) = 1 + 25 = 26
-    auto xi_1 = mito::geometry::cartesian::coordinates<1>({ M_PI / 6.0 });
+    auto xi_1 = mito::geometry::cartesian<1>::coordinates({ M_PI / 6.0 });
     auto g_val_1 = g_field(xi_1);
     EXPECT_DOUBLE_EQ(26.0, mito::tensor::trace(g_val_1));
     EXPECT_DOUBLE_EQ(std::sqrt(26.0), std::sqrt(mito::tensor::determinant(g_val_1)));
 
     // at ξ = π/2: g = 1 + 100 sin²(π/2) = 1 + 100 = 101
-    auto xi_2 = mito::geometry::cartesian::coordinates<1>({ M_PI / 2.0 });
+    auto xi_2 = mito::geometry::cartesian<1>::coordinates({ M_PI / 2.0 });
     auto g_val_2 = g_field(xi_2);
     EXPECT_DOUBLE_EQ(101.0, mito::tensor::trace(g_val_2));
     EXPECT_DOUBLE_EQ(std::sqrt(101.0), std::sqrt(mito::tensor::determinant(g_val_2)));

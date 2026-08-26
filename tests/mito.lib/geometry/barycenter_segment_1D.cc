@@ -7,8 +7,8 @@
 #include <mito/geometry.h>
 
 
-// cartesian coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
+// cartesian coordinates in 1D
+using coordinates_t = mito::geometry::cartesian<1>::coordinates_t;
 
 
 TEST(Barycenter, Segment1D)
@@ -27,7 +27,7 @@ TEST(Barycenter, Segment1D)
     auto barycenter = mito::geometry::barycenter(segment, coord_system);
 
     // check that the barycenter position is correct
-    EXPECT_TRUE(barycenter == mito::geometry::cartesian::coordinates({ 0.5 }));
+    EXPECT_TRUE(barycenter == mito::geometry::cartesian<1>::coordinates({ 0.5 }));
 
     // all done
     return;

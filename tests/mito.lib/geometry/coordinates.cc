@@ -10,8 +10,8 @@
 TEST(Coordinates, Cartesian)
 {
     // create two sets of coordinates
-    constexpr auto coord_A = mito::geometry::cartesian::coordinates({ 0.0, 2.0 });
-    constexpr auto coord_B = mito::geometry::cartesian::coordinates({ 2.0, 0.0 });
+    constexpr auto coord_A = mito::geometry::cartesian<2>::coordinates({ 0.0, 2.0 });
+    constexpr auto coord_B = mito::geometry::cartesian<2>::coordinates({ 2.0, 0.0 });
 
     // sanity check
     static_assert(coord_A + (coord_B - coord_A) == coord_B);

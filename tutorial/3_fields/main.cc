@@ -14,7 +14,7 @@ using namespace mito::operators;
 using namespace mito::tensor;
 
 // the type of coordinates
-using coordinates_t = geometry::cartesian::coordinates_t<2>;
+using coordinates_t = geometry::cartesian<2>::coordinates_t;
 
 
 int
@@ -32,17 +32,17 @@ main()
     // function cos
     auto cos = functions::cos;
 
-    // x_0 in cartesian coordinates
-    auto x_0 = geometry::cartesian::x_0<2>;
+    // the {x} function in 2D cartesian coordinates
+    auto x_0 = geometry::cartesian<2>::x;
 
-    // x_1 in cartesian coordinates
-    auto x_1 = geometry::cartesian::x_1<2>;
+    // the {y} function in 2D cartesian coordinates
+    auto x_1 = geometry::cartesian<2>::y;
 
     // a vector field
     auto f = sin(x_0 * x_1) * e_0<2> + cos(x_0 * x_1) * e_1<2>;
 
     // a point in space
-    auto x = geometry::cartesian::coordinates({ 1.0, -0.5 });
+    auto x = geometry::cartesian<2>::coordinates({ 1.0, -0.5 });
 
     // the divergence of the gradient transposed of {f}
     auto div_grad_T = divergence(transpose(gradient(f)));

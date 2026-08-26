@@ -7,9 +7,9 @@
 #include <mito/geometry.h>
 
 
-using coordinates_2d_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-using coordinates_3d_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
-using parametric_2d_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_2d_t = mito::geometry::cartesian<2>::coordinates_t;
+using coordinates_3d_t = mito::geometry::cartesian<3>::coordinates_t;
+using parametric_2d_t = mito::geometry::cartesian<2>::coordinates_t;
 
 
 TEST(Geometry, InducedMetricTriangle2D)
@@ -29,7 +29,7 @@ TEST(Geometry, InducedMetricTriangle2D)
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
     // evaluation point
-    auto xi = mito::geometry::cartesian::coordinates<2>({ 1.0 / 3.0, 1.0 / 3.0 });
+    auto xi = mito::geometry::cartesian<2>::coordinates({ 1.0 / 3.0, 1.0 / 3.0 });
 
     // evaluate the metric tensor at xi
     auto g_val = g_field(xi);
@@ -62,7 +62,7 @@ TEST(Geometry, InducedMetricTriangle3D)
     using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_3d_t>;
     auto g_field = mito::geometry::pullback_metric<ambient_metric_t>::field(parametrization);
 
-    auto xi = mito::geometry::cartesian::coordinates<2>({ 0.25, 0.25 });
+    auto xi = mito::geometry::cartesian<2>::coordinates({ 0.25, 0.25 });
 
     // evaluate the metric tensor at xi
     auto g_val = g_field(xi);

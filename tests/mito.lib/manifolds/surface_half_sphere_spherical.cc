@@ -8,14 +8,10 @@
 #include <mito/io.h>
 
 
-// strip the namespace
-using mito::geometry::CARTESIAN;
-using mito::geometry::SPHERICAL;
-
 // spherical coordinates in 3D
-using spherical_coordinates_t = mito::geometry::coordinates_t<3, SPHERICAL>;
+using spherical_coordinates_t = mito::geometry::spherical::coordinates_t;
 // cartesian coordinates in 3D
-using cartesian_coordinates_t = mito::geometry::coordinates_t<3, CARTESIAN>;
+using cartesian_coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 // the basis for vector fields
 static constexpr auto e_r =

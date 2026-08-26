@@ -11,9 +11,8 @@
 #include <numbers>
 
 
-using coordinates_1d_t = mito::geometry::coordinates_t<1, mito::geometry::CARTESIAN>;
-using coordinates_2d_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
-
+using coordinates_1d_t = mito::geometry::cartesian<1>::coordinates_t;
+using coordinates_2d_t = mito::geometry::cartesian<2>::coordinates_t;
 
 TEST(Geometry, ArcLengthCircularArc)
 {
@@ -26,8 +25,7 @@ TEST(Geometry, ArcLengthCircularArc)
     auto t = mito::functions::component<coordinates_1d_t, 0>;
     constexpr auto e_x = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<0, 2>);
     constexpr auto e_y = mito::functions::constant<coordinates_1d_t>(mito::tensor::e<1, 2>);
-    auto parametrization =
-        R * mito::functions::cos(t) * e_x + R * mito::functions::sin(t) * e_y;
+    auto parametrization = R * mito::functions::cos(t) * e_x + R * mito::functions::sin(t) * e_y;
 
     // pullback of the Euclidean 2D metric: g_pullback = J^T * I * J = R^2
     using ambient_metric_t = mito::geometry::euclidean_metric<coordinates_2d_t>;

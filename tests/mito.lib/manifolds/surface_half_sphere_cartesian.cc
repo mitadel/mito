@@ -9,7 +9,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian<3>::coordinates_t;
 
 
 TEST(Manifolds, HalfSphereCartesian)

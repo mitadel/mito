@@ -9,9 +9,10 @@
 
 
 // cartesian coordinates in 2D
-using cartesian_coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using cartesian_coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
+
 // polar coordinates
-using polar_coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
+using polar_coordinates_t = mito::geometry::polar::coordinates_t;
 
 
 template <mito::geometry::coordinates_c coordT>

@@ -8,7 +8,7 @@
 
 
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 
 // the basis for vectors in 2D
@@ -25,10 +25,10 @@ TEST(Laplacian, ScalarFields)
     constexpr auto sin = mito::functions::sin;
     // the cosine function
     constexpr auto cos = mito::functions::cos;
-    // the function extracting the x_0 component of a 2D vector
-    constexpr auto x0 = mito::functions::component<coordinates_t, 0>;
-    // the function extracting the x_1 component of a 2D vector
-    constexpr auto x1 = mito::functions::component<coordinates_t, 1>;
+    // the {x} function in 2D
+    constexpr auto x0 = mito::geometry::cartesian<2>::x;
+    // the {y} function in 2D
+    constexpr auto x1 = mito::geometry::cartesian<2>::y;
 
     // a scalar field
     constexpr auto f = sin(x0 * x1);

@@ -7,11 +7,8 @@
 #include <mito/geometry.h>
 
 
-// use polar coordinates
-using mito::geometry::POLAR;
-
 // the type of coordinates
-using coordinates_t = mito::geometry::coordinates_t<2, POLAR>;
+using coordinates_t = mito::geometry::polar::coordinates_t;
 
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;

@@ -22,7 +22,7 @@ PYBIND11_MODULE(mito, m)
     m.doc() = "pybind11 mito plugin";    // optional module docstring
 
     // the mito cartesian coordinates interface
-    using coordinates_3D_t = mito::geometry::coordinates_t<3, mito::geometry::CARTESIAN>;
+    using coordinates_3D_t = mito::geometry::cartesian<3>::coordinates_t;
     mito::py::class_<coordinates_3D_t>(m, "Coordinates3D")
         // the default constructor
         .def(
@@ -47,7 +47,7 @@ PYBIND11_MODULE(mito, m)
 
 
     // the mito vector interface
-    using coordinates_2D_t = mito::geometry::coordinates_t<2, mito::geometry::CARTESIAN>;
+    using coordinates_2D_t = mito::geometry::cartesian<2>::coordinates_t;
     mito::py::class_<coordinates_2D_t>(m, "Coordinates2D")
         // the default constructor
         .def(

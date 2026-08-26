@@ -8,7 +8,7 @@
 
 
 // alias for a set of polar coordinates in 2D
-using coordinates_t = mito::geometry::coordinates_t<2, mito::geometry::POLAR>;
+using coordinates_t = mito::geometry::polar::coordinates_t;
 
 // the metric space type
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
