@@ -13,8 +13,8 @@ namespace mito::geometry {
     constexpr auto transform_coordinates(const coordT1 & coordinates) -> coordT2;
 
     template <>
-    constexpr auto transform_coordinates<coordinates_t<2, POLAR>, coordinates_t<2, CARTESIAN>>(
-        const coordinates_t<2, CARTESIAN> & coordinates) -> coordinates_t<2, POLAR>
+    constexpr auto transform_coordinates<polar::coordinates_t, cartesian<2>::coordinates_t>(
+        const cartesian<2>::coordinates_t & coordinates) -> polar::coordinates_t
     {
         auto x = coordinates[0];
         auto y = coordinates[1];
@@ -24,8 +24,8 @@ namespace mito::geometry {
     }
 
     template <>
-    constexpr auto transform_coordinates<coordinates_t<2, CARTESIAN>, coordinates_t<2, POLAR>>(
-        const coordinates_t<2, POLAR> & coordinates) -> coordinates_t<2, CARTESIAN>
+    constexpr auto transform_coordinates<cartesian<2>::coordinates_t, polar::coordinates_t>(
+        const polar::coordinates_t & coordinates) -> cartesian<2>::coordinates_t
     {
         auto r = coordinates[0];
         auto theta = coordinates[1];
@@ -35,8 +35,8 @@ namespace mito::geometry {
     }
 
     template <>
-    constexpr auto transform_coordinates<coordinates_t<3, SPHERICAL>, coordinates_t<3, CARTESIAN>>(
-        const coordinates_t<3, CARTESIAN> & coordinates) -> coordinates_t<3, SPHERICAL>
+    constexpr auto transform_coordinates<spherical::coordinates_t, cartesian<3>::coordinates_t>(
+        const cartesian<3>::coordinates_t & coordinates) -> spherical::coordinates_t
     {
         auto x = coordinates[0];
         auto y = coordinates[1];
@@ -50,8 +50,8 @@ namespace mito::geometry {
     }
 
     template <>
-    constexpr auto transform_coordinates<coordinates_t<3, CARTESIAN>, coordinates_t<3, SPHERICAL>>(
-        const coordinates_t<3, SPHERICAL> & coordinates) -> coordinates_t<3, CARTESIAN>
+    constexpr auto transform_coordinates<cartesian<3>::coordinates_t, spherical::coordinates_t>(
+        const spherical::coordinates_t & coordinates) -> cartesian<3>::coordinates_t
     {
         auto r = coordinates[0];
         auto theta = coordinates[1];

@@ -23,12 +23,14 @@
 
 // algebra
 #include "algebra_coordinates.h"
-#include "coordinate_transformation.h"
 
 // coordinate specialization
 #include "cartesian.h"
 #include "polar.h"
 #include "spherical.h"
+
+// coordinate transformation
+#include "coordinate_transformation.h"
 
 // classes implementation
 #include "CoordinateSystem.h"
