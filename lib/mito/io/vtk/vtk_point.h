@@ -14,8 +14,8 @@ namespace mito::io::vtk {
 
     template <>
     auto insert_vtk_point(
-        const geometry::coordinates_t<3, geometry::CARTESIAN> & coord,
-        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::cartesian<3>::coordinates_t & coord, vtkSmartPointer<vtkPoints> & pointsVtk)
+        -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], coord[2]);
@@ -23,8 +23,8 @@ namespace mito::io::vtk {
 
     template <>
     auto insert_vtk_point(
-        const geometry::coordinates_t<2, geometry::CARTESIAN> & coord,
-        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::cartesian<2>::coordinates_t & coord, vtkSmartPointer<vtkPoints> & pointsVtk)
+        -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], coord[1], 0.);
@@ -32,8 +32,8 @@ namespace mito::io::vtk {
 
     template <>
     auto insert_vtk_point(
-        const geometry::coordinates_t<1, geometry::CARTESIAN> & coord,
-        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::cartesian<1>::coordinates_t & coord, vtkSmartPointer<vtkPoints> & pointsVtk)
+        -> void
     {
         // add the point as new vtk point
         pointsVtk->InsertNextPoint(coord[0], 0., 0.);
@@ -41,8 +41,8 @@ namespace mito::io::vtk {
 
     template <>
     auto insert_vtk_point(
-        const geometry::coordinates_t<3, geometry::SPHERICAL> & coord,
-        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::spherical::coordinates_t & coord, vtkSmartPointer<vtkPoints> & pointsVtk)
+        -> void
     {
         // cartesian coordinates in 3D
         using cartesian_coord_t = mito::geometry::cartesian<3>::coordinates_t;
@@ -56,8 +56,8 @@ namespace mito::io::vtk {
 
     template <>
     auto insert_vtk_point(
-        const geometry::coordinates_t<2, geometry::POLAR> & coord,
-        vtkSmartPointer<vtkPoints> & pointsVtk) -> void
+        const geometry::polar::coordinates_t & coord, vtkSmartPointer<vtkPoints> & pointsVtk)
+        -> void
     {
         // cartesian coordinates in 2D
         using cartesian_coord_t = mito::geometry::cartesian<2>::coordinates_t;
