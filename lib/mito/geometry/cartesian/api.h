@@ -9,7 +9,7 @@
 
 namespace mito::geometry {
 
-    // cartesian geometry in 1D
+    // cartesian geometry in dimension {D}
     template <int D>
     struct cartesian;
 
