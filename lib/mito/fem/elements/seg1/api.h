@@ -10,11 +10,11 @@
 namespace mito::fem {
 
     // specialization of {finite_element_family} for first order segments
-    template <>
-    struct finite_element_family<geometry::segment_t<1>, 1> {
+    template <int D>
+    struct finite_element_family<geometry::segment_t<D>, 1> {
 
         // the dimension of the physical space
-        static constexpr int dim = 1;
+        static constexpr int dim = D;
         // the underlying mesh cell type
         using mesh_cell_type = geometry::segment_t<dim>;
         // the degree of the finite element

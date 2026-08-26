@@ -9,11 +9,12 @@
 
 namespace mito::fem {
 
-    template <>
-    struct finite_element_family<geometry::triangle_t<2>, 1> {
+    // specialization of {finite_element_family} for first order triangles
+    template <int D>
+    struct finite_element_family<geometry::triangle_t<D>, 1> {
 
         // the dimension of the physical space
-        static constexpr int dim = 2;
+        static constexpr int dim = D;
         // the underlying mesh cell type
         using mesh_cell_type = geometry::triangle_t<dim>;
         // the degree of the finite element

@@ -9,9 +9,9 @@
 
 namespace mito::fem {
 
-    // discretizer specialization for a segment in 1D with order 1 continuous Galerkin
-    template <>
-    struct Discretizer<finite_element_family<geometry::segment_t<1>, 1>, discretization_t::CG> {
+    // discretizer specialization for a segment in D dimensions with order 1 continuous Galerkin
+    template <int D>
+    struct Discretizer<finite_element_family<geometry::segment_t<D>, 1>, discretization_t::CG> {
         template <
             typename manifoldT, typename constraintsT, typename connectivity_table_type,
             typename map_type, typename constrained_nodes_type>
@@ -21,7 +21,7 @@ namespace mito::fem {
             constrained_nodes_type & constrained_nodes)
         {
             // the finite element type
-            using finite_element_type = finite_element_family<geometry::segment_t<1>, 1>;
+            using finite_element_type = finite_element_family<geometry::segment_t<D>, 1>;
 
             // the discretization node type
             using discretization_node_type = typename finite_element_type::discretization_node_type;

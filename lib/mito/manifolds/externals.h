@@ -12,6 +12,7 @@
 // support
 #include "../journal.h"
 #include "../fields.h"
+#include "../operators.h"
 #include "../mesh.h"
 #include "../geometry.h"
 

@@ -64,6 +64,15 @@ namespace mito::operators {
         return _grad(field, std::make_index_sequence<D>{});
     }
 
+    // function to compute the contravariant gradient of a scalar field with respect to a metric
+    template <fields::scalar_field_c F, class G>
+    requires(fields::tensor_or_scalar_field_c<G> and fields::compatible_fields_c<F, G>)
+    constexpr auto gradient(const F & field, const G & metric_field)
+    {
+        // multiply with the inverse of the metric
+        return functions::inverse(metric_field) * gradient(field);
+    }
+
     // function to compute the divergence of a vector field
     template <fields::vector_field_c F>
     constexpr auto divergence(const F & field)

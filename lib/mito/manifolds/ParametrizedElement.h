@@ -54,7 +54,13 @@ namespace mito::manifolds {
         constexpr auto cell() const -> const cell_type & { return _cell; }
 
         // return the parametrization of this element in physical space
-        constexpr auto parametrization() const -> const parametrization_type & { return _parametrization; }
+        constexpr auto parametrization() const -> const parametrization_type &
+        {
+            return _parametrization;
+        }
+
+        // return the jacobian (gradient in parametric space) of the parametrization of this element
+        constexpr auto jacobian() const { return operators::gradient(_parametrization); }
 
         // return the metric volume form of this element
         constexpr auto metric_volume_form() const -> const metric_volume_form_type &

@@ -8,8 +8,8 @@
 
 
 // DESIGN NOTES
-// Class {IsoparametricSegmentP1} represents a first order simplex (segment) living in 1D cartesian
-// space, equipped with linear shape functions defined in the parametric space.
+// Class {IsoparametricSegmentP1} represents a 1-simplex (segment) embedded in a D-dimensional
+// physical space, equipped with linear shape functions defined in the parametric space.
 
 
 namespace mito::fem {
@@ -22,6 +22,14 @@ namespace mito::fem {
         using parametrized_element_type = parametrizedElementT;
         // the underlying mesh cell type
         using mesh_cell_type = typename parametrized_element_type::cell_type;
+        // the metric volume form type
+        using metric_volume_form_type = typename parametrized_element_type::metric_volume_form_type;
+        // the coordinates type of the physical space
+        using coordinates_type = typename metric_volume_form_type::input_type;
+        // the dimension of the physical space
+        static constexpr int dim = coordinates_type::dim;
+        // the (euclidean) metric of the physical space in {coordinates_type} coordinates
+        using ambient_metric_type = geometry::euclidean_metric<coordinates_type>;
 
         // the degree of the finite element
         static constexpr int degree = 1;
@@ -75,6 +83,13 @@ namespace mito::fem {
             return _connectivity;
         }
 
+        // get the parmetrized element
+        constexpr auto element() const noexcept
+        {
+            // all done
+            return _element;
+        }
+
         // get the element parmetrization
         constexpr auto parametrization() const noexcept
         {
@@ -94,48 +109,19 @@ namespace mito::fem {
             return shape_functions.shape<a>();
         }
 
-        // get the jacobian of the isoparametric mapping from parametric to actual coordinates
-        constexpr auto jacobian() const
-        {
-            // assemble the jacobian as a function of parametric coordinates
-            auto jacobian_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::matrix_t<1> {
-                    // get the shape functions derivatives
-                    constexpr auto dphi_0 = shape_functions.dshape<0>();
-                    constexpr auto dphi_1 = shape_functions.dshape<1>();
-
-                    // store the coordinates of the vertices of the triangle in physical space
-                    auto x0 = _element.parametrization()({ 0.0 });
-                    auto x1 = _element.parametrization()({ 1.0 });
-
-                    // compute the jacobian of the isoparametric mapping: dx/dxi
-                    auto dx_dxi = x0 * dphi_0(xi) + x1 * dphi_1(xi);
-                    // wrap the result in a 1x1 matrix
-                    return tensor::matrix_t<1>{ dx_dxi };
-                });
-
-            // and return it
-            return jacobian_function;
-        }
 
         // get the gradient of the a-th shape function as a function of parametric coordinates
         template <int a>
         requires(a >= 0 && a < n_nodes)
         constexpr auto gradient() const
         {
-            // assemble the gradient as a function of parametric coordinates
-            auto gradient_function = functions::function(
-                [&](const parametric_coordinates_type & xi) -> tensor::vector_t<1> {
-                    // the jacobian of the mapping from the reference element to the physical
-                    // element evaluated at {xi}
-                    auto J = jacobian()(xi);
-                    // the derivative of the coordinates with respect to the parametric coordinates
-                    auto J_inv = tensor::inverse(J);
-                    // return the spatial gradients of the shape functions evaluated at {xi}
-                    return shape_functions.dshape<a>()(xi) * J_inv;
-                });
-            // and return it
-            return gradient_function;
+            // the pullback of the ambient metric along the element parametrization
+            auto g =
+                geometry::pullback_metric<ambient_metric_type>::field(_element.parametrization());
+            // the intrinsic gradient of the a-th shape function on the parametric space
+            auto dphi = operators::gradient(shape_functions.shape<a>(), g);
+            // push the gradient forward to the physical space with the jacobian
+            return _element.jacobian() * dphi;
         }
 
       private:
