@@ -44,8 +44,21 @@ namespace mito::fem {
     requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform;
 
+    // a contribution to a discrete system: a weakform to be assembled on a function space
+    template <function_space_c functionSpaceT, class weakformT>
+    struct Contribution;
+
+    // concept of a contribution
+    template <class C>
+    concept contribution_c = requires(C c) {
+        // require that C only binds to {Contribution} specializations
+        []<function_space_c functionSpaceT, class weakformT>(
+            const Contribution<functionSpaceT, weakformT> &) {
+        }(c);
+    };
+
     // class discrete system
-    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
+    template <class linearSystemT, contribution_c... contributionTs>
     class DiscreteSystem;
 
     // class domain field

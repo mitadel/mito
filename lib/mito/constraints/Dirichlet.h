@@ -18,6 +18,8 @@ namespace mito::constraints {
       public:
         using domain_type = meshT;
         using function_type = fieldT;
+        // the type of the values prescribed by the constraint
+        using value_type = typename function_type::output_type;
         using node_type = typename domain_type::node_type;
         using nodes_type = std::set<node_type>;
 
