@@ -22,26 +22,20 @@ find_dependency(pyre)
 # mpi dependency
 if(@WITH_MPI@)
   find_dependency(MPI)
-  add_definitions(-DWITH_MPI)
 endif(@WITH_MPI@)
 
 # metis dependency
 if(@WITH_METIS@)
   find_dependency(METIS)
-  add_definitions(-DWITH_METIS)
 endif(@WITH_METIS@)
 
 # vtk dependency
 if(@WITH_VTK@)
   find_dependency(VTK)
-  add_definitions(-DWITH_VTK)
-  if(@WITH_PARALLEL_VTK@)
-    add_definitions(-DWITH_PARALLEL_VTK)
-  endif(@WITH_PARALLEL_VTK@)
 endif(@WITH_VTK@)
 
 # petsc dependency
 if(@WITH_PETSC@)
-  # add compiler definitions
-  add_definitions(-DWITH_PETSC)
+  find_dependency(PkgConfig REQUIRED)
+  pkg_search_module(PETSC PETSc>3.5.0 IMPORTED_TARGET REQUIRED)
 endif(@WITH_PETSC@)

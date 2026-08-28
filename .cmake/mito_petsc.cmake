@@ -20,13 +20,11 @@ if(WITH_PETSC)
     # report
     message(STATUS "Enable PETSc ${PETSC_VERSION} support")
     # add compiler definitions
-    add_definitions(-DWITH_PETSC)
+    target_compile_definitions(mito PUBLIC WITH_PETSC)
     # report
     message(STATUS "Add definition WITH_PETSC")
-    # include PETSc headers
-    target_include_directories(mito SYSTEM PUBLIC ${PETSC_INCLUDE_DIRS})
     # link against PETSc library
-    target_link_libraries(mito PUBLIC ${PETSC_LDFLAGS})
+    target_link_libraries(mito PUBLIC PkgConfig::PETSC)
 endif()
 
 
