@@ -9,8 +9,7 @@
 
 namespace mito::fem {
 
-    // a contribution to a discrete system: a weakform to be assembled on a function space,
-    // scaled by a constant coefficient
+    // a contribution to a discrete system: a weakform to be assembled on a function space
     template <function_space_c functionSpaceT, class weakformT>
     struct Contribution {
         // my template parameters
@@ -21,8 +20,6 @@ namespace mito::fem {
         const function_space_type & space;
         // the weakform
         const weakform_type & weakform;
-        // the scaling coefficient
-        tensor::scalar_t coefficient = 1.0;
     };
 
     template <class linearSystemT, contribution_c... contributionTs>
@@ -194,8 +191,6 @@ namespace mito::fem {
                     typename std::remove_cvref_t<decltype(contribution)>::function_space_type;
                 // the number of nodes per element
                 constexpr int n_element_nodes = function_space_type::finite_element_type::n_nodes;
-                // the scaling coefficient of this contribution
-                const auto coefficient = contribution.coefficient;
 
                 // QUESTION: can we flip the element and block loops? What is the expected layout
                 // in memory?
@@ -217,8 +212,7 @@ namespace mito::fem {
                         // non boundary nodes
                         if (eq_a != -1) {
                             // assemble the value in the right hand side
-                            _linear_system.add_rhs_value(
-                                eq_a, coefficient * elementary_vector[{ a }]);
+                            _linear_system.add_rhs_value(eq_a, elementary_vector[{ a }]);
                             // loop on the b-th discretization node of the element
                             tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
                                 // get the b-th discretization node of the element
@@ -230,12 +224,12 @@ namespace mito::fem {
                                 if (eq_b != -1) {
                                     // assemble the value in the stiffness matrix
                                     _linear_system.add_matrix_value(
-                                        eq_a, eq_b, coefficient * elementary_matrix[{ a, b }]);
+                                        eq_a, eq_b, elementary_matrix[{ a, b }]);
                                 } else {
                                     // {node_b} is constrained: subtract the lift contribution of
                                     // its prescribed value from the right-hand side
                                     _linear_system.add_rhs_value(
-                                        eq_a, -coefficient * elementary_matrix[{ a, b }]
+                                        eq_a, -elementary_matrix[{ a, b }]
                                                   * _constrained_values.at(node_b));
                                 }
                             });

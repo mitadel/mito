@@ -44,8 +44,7 @@ namespace mito::fem {
     requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform;
 
-    // a contribution to a discrete system: a weakform to be assembled on a function space,
-    // scaled by a constant coefficient
+    // a contribution to a discrete system: a weakform to be assembled on a function space
     template <function_space_c functionSpaceT, class weakformT>
     struct Contribution;
 
