@@ -43,8 +43,7 @@ namespace mito::fem {
         // require that all function spaces share the same discretization node type
         static_assert(
             (std::is_same_v<
-                 node_type,
-                 typename contributionTs::function_space_type::discretization_node_type>
+                 node_type, typename contributionTs::function_space_type::discretization_node_type>
              && ...),
             "all function spaces must share the same discretization node type");
 
@@ -53,8 +52,7 @@ namespace mito::fem {
         // the equation map type (map associating an equation number to each node degree of freedom)
         using equation_map_type = std::map<node_type, int>;
         // the constrained values type (map from constrained node to prescribed value)
-        using constrained_values_type =
-            typename first_function_space_type::constrained_values_type;
+        using constrained_values_type = typename first_function_space_type::constrained_values_type;
         // require that all function spaces prescribe values of the same type
         static_assert(
             (std::is_same_v<
@@ -142,16 +140,24 @@ namespace mito::fem {
             // merge the constrained nodes and their prescribed values of all the function spaces
             std::apply(
                 [&](const auto &... contribution) {
-                    (_constrained_values.insert(
-                         contribution.space.constrained_values().begin(),
-                         contribution.space.constrained_values().end()),
-                     ...);
+                    (
+                        [&] {
+                            for (const auto & [node, value] :
+                                 contribution.space.constrained_values()) {
+                                auto [it, inserted] = _constrained_values.insert({ node, value });
+                                // a node shared by multiple contributions must agree on its
+                                // prescribed value
+                                assert(inserted || it->second == value);
+                            }
+                        }(),
+                        ...);
                 },
                 _contributions);
             channel << "Number of constrained nodes: " << std::size(_constrained_values)
                     << journal::endl;
-            channel << "Number of interior nodes: "
-                    << std::size(nodes) - std::size(_constrained_values) << journal::endl;
+            channel
+                << "Number of interior nodes: " << std::size(nodes) - std::size(_constrained_values)
+                << journal::endl;
 
             // populate the equation map (from node to equation, one equation per node)
             int equation = 0;
@@ -187,8 +193,7 @@ namespace mito::fem {
                 using function_space_type =
                     typename std::remove_cvref_t<decltype(contribution)>::function_space_type;
                 // the number of nodes per element
-                constexpr int n_element_nodes =
-                    function_space_type::finite_element_type::n_nodes;
+                constexpr int n_element_nodes = function_space_type::finite_element_type::n_nodes;
                 // the scaling coefficient of this contribution
                 const auto coefficient = contribution.coefficient;
 
