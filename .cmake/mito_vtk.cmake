@@ -20,11 +20,11 @@ if(WITH_VTK)
             # report
             message(STATUS "Enable VTK support")
             # add compiler definitions
-            add_definitions(-DWITH_VTK)
+            target_compile_definitions(mito PUBLIC WITH_VTK)
             # report
             message(STATUS "Added definition WITH_VTK")
             # add compiler definitions
-            add_definitions(-DWITH_PARALLEL_VTK)
+            target_compile_definitions(mito PUBLIC WITH_PARALLEL_VTK)
             # record that VTK is available in its parallel flavor
             set(WITH_PARALLEL_VTK TRUE)
             # report
@@ -42,7 +42,7 @@ if(WITH_VTK)
         # report
         message(STATUS "Enable VTK support")
         # add compiler definitions
-        add_definitions(-DWITH_VTK)
+        target_compile_definitions(mito PUBLIC WITH_VTK)
         # report
         message(STATUS "Add definition WITH_VTK")
         # include VTK headers

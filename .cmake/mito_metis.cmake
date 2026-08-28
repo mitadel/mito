@@ -14,7 +14,7 @@ if(WITH_METIS)
     # report
     message(STATUS "Enable Metis support")
     # add compiler definitions
-    add_definitions(-DWITH_METIS)
+    target_compile_definitions(mito PUBLIC WITH_METIS)
     # include METIS headers
     target_include_directories(mito SYSTEM PUBLIC ${METIS_INCLUDE_DIRS})
     # link against METIS libraries

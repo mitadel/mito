@@ -14,9 +14,7 @@ if(WITH_MPI)
     # report
     message(STATUS "Enable MPI support")
     # add compiler definitions
-    add_definitions(-DWITH_MPI)
-    # include MPI headers
-    target_include_directories(mito SYSTEM PUBLIC ${MPI_INCLUDE_PATH})
+    target_compile_definitions(mito PUBLIC WITH_MPI)
     # link against MPI libraries
     target_link_libraries(mito PUBLIC MPI::MPI_CXX)
 endif()
