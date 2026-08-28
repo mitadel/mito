@@ -138,6 +138,7 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     }
 
     // the interface mesh on the layer line y = 0
+    assert(parameters.y_segments % 2 == 0);
     const auto interface_row = parameters.y_segments / 2;
     auto interface_mesh = mito::mesh::mesh<segment_t>();
     for (int i = 0; i < parameters.x_segments; ++i) {
