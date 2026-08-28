@@ -57,12 +57,13 @@ namespace mito::fem {
             // In 1D, constraints.domain() is a set of nodes, not a mesh with cells, so we loop on
             // the nodes directly
             for (const auto & node : constraints.domain()) {
-                // get the discretization node associated with the mesh node from the map
-                auto it = node_map.find(node);
+                // get the discretization node associated with the mesh node from the map (throws an
+                // error if the constraint domain has a node outside the manifold discretization)
+                const auto & discretization_node = node_map.at(node);
                 // add the node to the constrained nodes with the value of the constraint function
                 // at the node coordinates
                 constrained_values.insert(
-                    { it->second, function(coord_system.coordinates(node->point())) });
+                    { discretization_node, function(coord_system.coordinates(node->point())) });
             }
 
             // all done

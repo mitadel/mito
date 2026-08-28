@@ -60,11 +60,13 @@ namespace mito::fem {
             for (const auto & cell : constraints.domain().cells()) {
                 for (const auto & node : cell.nodes()) {
                     // get the discretization node associated with the mesh node from the map
-                    auto it = node_map.find(node);
+                    // (throws an error if the constraint domain has a node outside the manifold
+                    // discretization)
+                    const auto & discretization_node = node_map.at(node);
                     // add the node to the constrained nodes with the value of the constraint
                     // function at the node coordinates
                     constrained_values.insert(
-                        { it->second, function(coord_system.coordinates(node->point())) });
+                        { discretization_node, function(coord_system.coordinates(node->point())) });
                 }
             }
 
