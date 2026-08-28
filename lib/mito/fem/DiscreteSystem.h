@@ -141,7 +141,8 @@ namespace mito::fem {
                         [&] {
                             for (const auto & [node, value] :
                                  contribution.space.constrained_values()) {
-                                auto [it, inserted] = _constrained_values.insert({ node, value });
+                                [[maybe_unused]] auto [it, inserted] =
+                                    _constrained_values.insert({ node, value });
                                 // a node shared by multiple contributions must agree on its
                                 // prescribed value
                                 assert(inserted || it->second == value);
