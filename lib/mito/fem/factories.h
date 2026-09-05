@@ -41,6 +41,16 @@ namespace mito::fem {
         return discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
             label, function_space, weakform);
     }
+
+    // discrete transient system factory
+    template <class linearSystemT, class functionSpaceT, class weakformT>
+    constexpr auto discrete_transient_system(
+        const std::string & label, const functionSpaceT & function_space,
+        const weakformT & weakform)
+    {
+        return discrete_transient_system_t<functionSpaceT, weakformT, linearSystemT>(
+            label, function_space, weakform);
+    }
 }
 
 

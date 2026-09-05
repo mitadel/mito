@@ -1,43 +1,49 @@
 {
-    "configurations": [
-        {
-            "name": "Mac",
-            "includePath": [
-                "${workspaceFolder}/lib",
-                "${workspaceFolder}/lib/mito",
-                "/opt/local/include/gcc/c++",
-                "/usr/local/gtest/include",
-                "/usr/local/pyre/include"
-            ],
-            "defines": [],
-            "compilerPath": "/opt/local/bin/gcc",
-            "macFrameworkPath": [
-                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
-            ],
-            "cStandard": "c17",
-            "cppStandard": "c++20",
-            "intelliSenseMode": "macos-gcc-x64",
-            "browse": {
-                "path": [
-                    "${workspaceFolder}"
-                ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            }
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/lib",
-                "/usr/local/gtest/include",
-                "/usr/local/pyre/include"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c17",
-            "cppStandard": "c++20",
-            "intelliSenseMode": "linux-gcc-x64"
-        }
-    ],
-    "version": 4
+  "configurations": [
+    {
+      "name": "Mac",
+      "includePath": [
+        "${workspaceFolder}/lib",
+        "${workspaceFolder}/lib/mito",
+        "/opt/local/include/gcc/c++",
+        "/usr/local/gtest/include",
+        "/usr/local/pyre/include"
+      ],
+      "forcedInclude": [
+        "${workspaceFolder}/.vscode/ide_preinclude.h"
+      ],
+      "defines": [],
+      "compilerPath": "/opt/local/bin/gcc",
+      "macFrameworkPath": [
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+      ],
+      "cStandard": "c17",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "macos-gcc-x64",
+      "browse": {
+        "path": [
+          "${workspaceFolder}"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": ""
+      }
+    },
+    {
+      "name": "Linux",
+      "includePath": [
+        "${workspaceFolder}/lib",
+        "/usr/local/gtest/include",
+        "/usr/local/pyre/include"
+      ],
+      "forcedInclude": [
+        "${workspaceFolder}/.vscode/ide_preinclude.h"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "c17",
+      "cppStandard": "c++20",
+      "intelliSenseMode": "linux-gcc-x64"
+    }
+  ],
+  "version": 4
 }

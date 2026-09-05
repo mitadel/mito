@@ -48,6 +48,10 @@ namespace mito::fem {
     template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
     class DiscreteSystem;
 
+    // class discrete transient system
+    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
+    class DiscreteTransientSystem;
+
     // class domain field
     template <fields::field_c F>
     class DomainField;

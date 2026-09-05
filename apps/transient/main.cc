@@ -106,7 +106,7 @@ main()
         mito::fem::discrete_system<linear_system_t>("mysystem", function_space, weakform);
 
     // instantiate a linear solver for the discrete system
-    auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
+    auto solver = mito::solvers::transient::explicit_euler<matrix_solver_t>(discrete_system);
 
     // set options for the backend {petsc} matrix solver
     solver.set_options("-ksp_type preonly -pc_type lu");
@@ -119,6 +119,9 @@ main()
 
     // get the solution field
     const auto & solution = discrete_system.solution();
+
+    auto residual = fem_lhs_block * solution + fem_rhs_block;
+    channel << "residual = " << residual << journal::endl;
 
     // the exact solution field
     auto u_ex =
