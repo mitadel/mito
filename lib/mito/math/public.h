@@ -13,5 +13,10 @@
 // combinatorics utilities
 #include "combinatorics.h"
 
+// petsc backend
+#ifdef WITH_PETSC
+#include "backend/petsc.h"
+#endif    // WITH_PETSC
+
 
 // end of file

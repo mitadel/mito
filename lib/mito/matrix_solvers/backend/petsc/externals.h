@@ -14,26 +14,27 @@
 
 // support
 #include "../../../journal.h"
+#include "../../../math/backend/petsc/externals.h"
 
 // petsc support
 #include <petscksp.h>
 
 
-namespace mito::petsc {
+// namespace mito::petsc {
 
-    // initialize petsc
-    inline auto initialize() -> void
-    {
-        PetscCallVoid(PetscInitializeNoArguments());
-    }
+//     // initialize petsc
+//     inline auto initialize() -> void
+//     {
+//         PetscCallVoid(PetscInitializeNoArguments());
+//     }
 
-    // finalize petsc
-    inline auto finalize() -> void
-    {
-        PetscCallVoid(PetscFinalize());
-    }
+//     // finalize petsc
+//     inline auto finalize() -> void
+//     {
+//         PetscCallVoid(PetscFinalize());
+//     }
 
-}
+// }
 
 
 // end of file

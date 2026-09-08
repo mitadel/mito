@@ -129,6 +129,8 @@ mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
 # math
 mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
+mito_test_driver(tests/mito.lib/math/petsc_matrix.cc)
+mito_test_driver(tests/mito.lib/math/petsc_vector.cc)
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)

@@ -17,6 +17,7 @@
 #include <mito/io/vtk/forward.h>
 #include <mito/manifolds/forward.h>
 #include <mito/materials/forward.h>
+#include <mito/math/backend/petsc/forward.h>
 #include <mito/matrix_solvers/backend/petsc/forward.h>
 #include <mito/mesh/forward.h>
 #include <mito/operators/forward.h>
