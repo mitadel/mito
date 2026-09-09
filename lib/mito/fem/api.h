@@ -32,6 +32,31 @@ namespace mito::fem {
     template <class functionSpaceT>
     using function_space_elements_view_t = FunctionSpaceElementsView<functionSpaceT>;
 
+    // stiffness mixin alias
+    template <class blockT>
+    using stiffness_mixin_t = StiffnessMixin<blockT>;
+
+    // stiffness mixin factory
+    template <class blockT>
+    constexpr auto stiffness_mixin(const blockT & block);
+
+    // load mixin alias
+    template <class blockT>
+    using load_mixin_t = LoadMixin<blockT>;
+
+    // load mixin factory
+    template <class blockT>
+    constexpr auto load_mixin(const blockT & block);
+
+    // transient weakform alias
+    template <class... blockTs>
+    using transient_weakform_t = TransientWeakform<blockTs...>;
+
+    // transient weakform factory
+    template <class... mixinTs>
+    constexpr auto transient_weakform(const mixinTs &... mixins)
+    requires same_finite_element_blocks_c<mixinTs...>;
+
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>
     using weakform_t = Weakform<lhsBlockT, rhsBlockT>;
@@ -49,6 +74,11 @@ namespace mito::fem {
     constexpr auto discrete_system(
         const functionSpaceT & function_space, const weakformT & weakform,
         const std::string & label);
+
+    // discrete transient system alias
+    template <class functionSpaceT, class weakformT, class linearSystemT>
+    using discrete_transient_system_t =
+        DiscreteTransientSystem<functionSpaceT, weakformT, linearSystemT>;
 
     // discrete transient system factory
     template <class linearSystemT, class functionSpaceT, class weakformT>

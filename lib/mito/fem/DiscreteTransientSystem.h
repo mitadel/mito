@@ -142,7 +142,7 @@ namespace mito::fem {
         constexpr auto linear_system() noexcept -> linear_system_type & { return _linear_system; }
 
         // assemble the discrete system
-        constexpr auto assemble() -> void
+        constexpr auto assemble_stiffness() -> void
         {
             // check that the number of equations matches that of the linear system
             assert(_n_equations == _linear_system.n_equations());
@@ -153,7 +153,7 @@ namespace mito::fem {
             // loop on all the cells of the mesh
             for (const auto & element : _function_space.elements()) {
                 // get the elementary contributions to matrix and right-hand side from the weakform
-                auto [elementary_matrix, elementary_vector] = _weakform.compute_blocks(element);
+                auto elementary_matrix = _weakform.compute_stiffness(element);
 
                 // assemble the elementary blocks into the linear system of equations
                 tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
@@ -164,8 +164,6 @@ namespace mito::fem {
                     assert(eq_a < _n_equations);
                     // non boundary nodes
                     if (eq_a != -1) {
-                        // assemble the value in the right hand side
-                        _linear_system.add_rhs_value(eq_a, elementary_vector[{ a }]);
                         // loop on the b-th discretization node of the element
                         tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
                             // get the b-th discretization node of the element
@@ -180,6 +178,36 @@ namespace mito::fem {
                                     eq_a, eq_b, elementary_matrix[{ a, b }]);
                             }
                         });
+                    }
+                });
+            }
+        }
+
+        // assemble the discrete system
+        constexpr auto assemble_load() -> void
+        {
+            // check that the number of equations matches that of the linear system
+            assert(_n_equations == _linear_system.n_equations());
+
+            // QUESTION: can we flip the element and block loops? What is the expected layout in
+            // memory?
+            //
+            // loop on all the cells of the mesh
+            for (const auto & element : _function_space.elements()) {
+                // get the elementary contributions to matrix and right-hand side from the weakform
+                auto elementary_vector = _weakform.compute_load(element);
+
+                // assemble the elementary blocks into the linear system of equations
+                tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
+                    // get the a-th discretization node of the element
+                    const auto & node_a = element.connectivity()[a];
+                    // get the equation number of {node_a}
+                    int eq_a = _equation_map.at(node_a);
+                    assert(eq_a < _n_equations);
+                    // non boundary nodes
+                    if (eq_a != -1) {
+                        // assemble the value in the right hand side
+                        _linear_system.add_rhs_value(eq_a, elementary_vector[{ a }]);
                     }
                 });
             }

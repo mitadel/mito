@@ -28,16 +28,39 @@ namespace mito::fem {
 
     // concept of blocks with the same finite element type
     template <class firstBlockT, class... blockTs>
-    concept same_finite_element_blocks_c =
+    concept all_same_elementary_shape_c =
+        // require the same underlying element type
+        (std::same_as<typename firstBlockT::elementary_shape, typename blockTs::elementary_shape>
+         && ...);
+
+    template <class... Types>
+    concept same_elementary_shape_blocks_c = []<class First, class... Rest>() {
+        return all_same_elementary_shape_c<First, Rest...>;
+    }.template operator()<Types...>();
+
+    // concept of blocks with the same finite element type
+    template <class firstBlockT, class... blockTs>
+    concept all_same_finite_element_blocks_c =
         // require the same underlying element type
         (std::same_as<typename firstBlockT::element_type, typename blockTs::element_type> && ...);
 
-    // concept of blocks with the same elementary shape
-    template <class firstBlockT, class... blockTs>
-    concept same_elementary_shape_blocks_c =
-        // require the same elementary shape
-        (std::same_as<typename firstBlockT::elementary_shape, typename blockTs::elementary_shape>
-         && ...);
+    template <class... Types>
+    concept same_finite_element_blocks_c = []<class First, class... Rest>() {
+        return all_same_finite_element_blocks_c<First, Rest...>;
+    }.template operator()<Types...>();
+
+    // class stiffness mixin
+    template <class blockT>
+    class StiffnessMixin;
+
+    // class load mixin
+    template <class blockT>
+    class LoadMixin;
+
+    // transient weakform alias
+    template <class... mixinTs>
+    requires same_finite_element_blocks_c<mixinTs...>
+    class TransientWeakform;
 
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>

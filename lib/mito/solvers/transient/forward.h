@@ -9,7 +9,7 @@
 
 namespace mito::solvers::transient {
 
-    template <class discreteSystemT, class matrixSolverT, class linearSystemT>
+    template <class discreteSystemT, class matrixSolverT>
     class ExplicitEuler;
 
 }

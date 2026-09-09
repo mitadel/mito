@@ -31,6 +31,7 @@
 #include "FemField.h"
 #include "DiscreteSystem.h"
 #include "DiscreteTransientSystem.h"
+#include "TransientWeakform.h"
 #include "Weakform.h"
 
 // factories implementation

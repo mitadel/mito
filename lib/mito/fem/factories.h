@@ -25,6 +25,28 @@ namespace mito::fem {
         return function_space_t<elementT, manifoldT, constraintsT>(manifold, constraints);
     }
 
+    // stiffness mixin factory
+    template <class blockT>
+    constexpr auto stiffness_mixin(const blockT & block)
+    {
+        return stiffness_mixin_t<blockT>(block);
+    }
+
+    // load mixin factory
+    template <class blockT>
+    constexpr auto load_mixin(const blockT & block)
+    {
+        return load_mixin_t<blockT>(block);
+    }
+
+    // transient weakform factory
+    template <class... mixinTs>
+    constexpr auto transient_weakform(const mixinTs &... mixins)
+    requires same_finite_element_blocks_c<mixinTs...>
+    {
+        return transient_weakform_t<mixinTs...>(mixins...);
+    }
+
     // weakform factory
     template <class lhsBlockT, class rhsBlockT>
     constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block)

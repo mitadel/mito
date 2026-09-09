@@ -9,7 +9,7 @@
 
 namespace mito::solvers::transient {
 
-    template <class discreteSystemT, class matrixSolverT, class linearSystemT>
+    template <class discreteSystemT, class matrixSolverT>
     // TODO: require that the {matrixSolverT} is compatible with the linear system in
     // {discreteSystemT}
     class ExplicitEuler {
@@ -19,8 +19,6 @@ namespace mito::solvers::transient {
         using discrete_system_type = discreteSystemT;
         // the matrix solver type
         using matrix_solver_type = matrixSolverT;
-        // the linear system type
-        using linear_system_type = linearSystemT;
         // the options type
         using options_type = std::string;
 
@@ -47,7 +45,8 @@ namespace mito::solvers::transient {
         auto solve() -> void
         {
             // assemble the discrete system
-            _discrete_system.assemble();
+            _discrete_system.assemble_stiffness();
+            _discrete_system.assemble_load();
 
             // solve the linear system
             _matrix_solver.solve();
@@ -67,7 +66,6 @@ namespace mito::solvers::transient {
         discrete_system_type & _discrete_system;
         // the underlying matrix solver implementation
         matrix_solver_type _matrix_solver;
-        linear_system_type _linear_system;
     };
 
 
