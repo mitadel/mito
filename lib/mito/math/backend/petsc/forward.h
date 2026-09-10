@@ -16,6 +16,10 @@ namespace mito::math_backend::petsc {
 
     // struct for backend
     struct PETScBackend {
+        // the index type
+        using index_type = PetscInt;
+        // the scalar type
+        using scalar_type = PetscScalar;
         // the matrix type
         using matrix_type = Matrix;
         // the vector type
