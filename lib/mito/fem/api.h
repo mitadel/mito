@@ -48,6 +48,14 @@ namespace mito::fem {
     template <class blockT>
     constexpr auto load_mixin(const blockT & block);
 
+    // inertia mixin alias
+    template <class blockT>
+    using inertia_mixin_t = InertiaMixin<blockT>;
+
+    // inertia mixin factory
+    template <class blockT>
+    constexpr auto inertia_mixin(const blockT & block);
+
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>
     using weakform_t = Weakform<lhsBlockT, rhsBlockT>;

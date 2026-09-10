@@ -45,6 +45,24 @@ namespace mito::fem {
         blockT block;
     };
 
+    template <class blockT>
+    struct InertiaMixin {
+        // the elementary shape type
+        using elementary_shape = typename blockT::elementary_shape;
+        // the element type
+        using element_type = typename blockT::element_type;
+
+        // compute the elementary contributions to inertia matrix
+        template <class elementT>
+        auto compute_inertia(const elementT & e) const -> typename blockT::elementary_shape
+        {
+            return block.compute(e);
+        }
+
+        // the inertia assembly block
+        blockT block;
+    };
+
 
     template <class... mixinTs>
     requires same_finite_element_blocks_c<mixinTs...>

@@ -81,11 +81,15 @@ main()
     // the reaction rate field
     auto reaction_rate = mito::functions::one<coordinates_t>;
 
+    // the density field
+    auto density = mito::functions::one<coordinates_t>;
+
     // a matrix block
     auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity)
                        + mito::fem::blocks::advection<finite_element_t>(velocity)
                        + c * mito::fem::blocks::reaction<finite_element_t>(reaction_rate);
 
+    // a stiffness mixin
     auto stiffness_mixin = mito::fem::stiffness_mixin(
         mito::fem::blocks::diffusion<finite_element_t>(diffusivity)
         + mito::fem::blocks::advection<finite_element_t>(velocity)
@@ -103,10 +107,20 @@ main()
     // a source term block
     auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 4>(f);
 
+    // a load mixin
     auto load_mixin = mito::fem::load_mixin(fem_rhs_block);
 
+    // an inertia matrix block
+    auto inertia_block = mito::fem::blocks::mass<finite_element_t>(density);
+
+    // an inertia mixin
+    auto inertia_mixin = mito::fem::inertia_mixin(inertia_block);
+
     // create the semi discrete weak form and populate it with the mixins
-    auto weakform = mito::fem::semi_discrete_weakform(stiffness_mixin, load_mixin);
+    auto weakform = mito::fem::semi_discrete_weakform(stiffness_mixin, load_mixin, inertia_mixin);
+
+    // auto weakform = mito::fem::semi_discrete_weakform(
+    //     mito::fem::stiffness_mixin(fem_lhs_block), mito::fem::load_mixin(fem_rhs_block));
 
     // the semi discrete system
     auto discrete_system =

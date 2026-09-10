@@ -39,6 +39,13 @@ namespace mito::fem {
         return load_mixin_t<blockT>(block);
     }
 
+    // inertia mixin factory
+    template <class blockT>
+    constexpr auto inertia_mixin(const blockT & block)
+    {
+        return inertia_mixin_t<blockT>(block);
+    }
+
     // semi discrete weakform factory
     template <class... mixinTs>
     constexpr auto semi_discrete_weakform(const mixinTs &... mixins)

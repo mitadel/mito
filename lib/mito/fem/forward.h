@@ -57,6 +57,10 @@ namespace mito::fem {
     template <class blockT>
     class LoadMixin;
 
+    // class inertia mixin
+    template <class blockT>
+    class InertiaMixin;
+
     // class weakform
     template <class lhsBlockT, class rhsBlockT>
     requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
