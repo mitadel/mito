@@ -30,9 +30,9 @@
 #include "FunctionSpace.h"
 #include "FemField.h"
 #include "DiscreteSystem.h"
-#include "DiscreteTransientSystem.h"
-#include "TransientWeakform.h"
+#include "SemiDiscreteSystem.h"
 #include "Weakform.h"
+#include "SemiDiscreteWeakform.h"
 
 // factories implementation
 #include "factories.h"

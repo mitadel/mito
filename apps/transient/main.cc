@@ -86,7 +86,10 @@ main()
                        + mito::fem::blocks::advection<finite_element_t>(velocity)
                        + c * mito::fem::blocks::reaction<finite_element_t>(reaction_rate);
 
-    auto stiffness_mixin = mito::fem::stiffness_mixin(fem_lhs_block);
+    auto stiffness_mixin = mito::fem::stiffness_mixin(
+        mito::fem::blocks::diffusion<finite_element_t>(diffusivity)
+        + mito::fem::blocks::advection<finite_element_t>(velocity)
+        + c * mito::fem::blocks::reaction<finite_element_t>(reaction_rate));
 
     // the right hand side
     auto f = (2.0 * k * std::numbers::pi * std::numbers::pi + c)
@@ -102,12 +105,12 @@ main()
 
     auto load_mixin = mito::fem::load_mixin(fem_rhs_block);
 
-    // create the weak form and populate it with the blocks
-    auto weakform = mito::fem::transient_weakform(stiffness_mixin, load_mixin);
+    // create the semi discrete weak form and populate it with the mixins
+    auto weakform = mito::fem::semi_discrete_weakform(stiffness_mixin, load_mixin);
 
-    // the discrete system
+    // the semi discrete system
     auto discrete_system =
-        mito::fem::discrete_transient_system<linear_system_t>("mysystem", function_space, weakform);
+        mito::fem::semi_discrete_system<linear_system_t>("mysystem", function_space, weakform);
 
     // instantiate a linear solver for the discrete system
     auto solver = mito::solvers::transient::explicit_euler<matrix_solver_t>(discrete_system);

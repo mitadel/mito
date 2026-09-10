@@ -39,12 +39,12 @@ namespace mito::fem {
         return load_mixin_t<blockT>(block);
     }
 
-    // transient weakform factory
+    // semi discrete weakform factory
     template <class... mixinTs>
-    constexpr auto transient_weakform(const mixinTs &... mixins)
+    constexpr auto semi_discrete_weakform(const mixinTs &... mixins)
     requires same_finite_element_blocks_c<mixinTs...>
     {
-        return transient_weakform_t<mixinTs...>(mixins...);
+        return semi_discrete_weakform_t<mixinTs...>(mixins...);
     }
 
     // weakform factory
@@ -64,13 +64,13 @@ namespace mito::fem {
             label, function_space, weakform);
     }
 
-    // discrete transient system factory
+    // semi discrete system factory
     template <class linearSystemT, class functionSpaceT, class weakformT>
-    constexpr auto discrete_transient_system(
+    constexpr auto semi_discrete_system(
         const std::string & label, const functionSpaceT & function_space,
         const weakformT & weakform)
     {
-        return discrete_transient_system_t<functionSpaceT, weakformT, linearSystemT>(
+        return semi_discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
             label, function_space, weakform);
     }
 }

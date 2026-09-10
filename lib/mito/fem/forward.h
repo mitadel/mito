@@ -57,23 +57,23 @@ namespace mito::fem {
     template <class blockT>
     class LoadMixin;
 
-    // transient weakform alias
-    template <class... mixinTs>
-    requires same_finite_element_blocks_c<mixinTs...>
-    class TransientWeakform;
-
-    // weakform alias
+    // class weakform
     template <class lhsBlockT, class rhsBlockT>
     requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform;
+
+    // class semi discrete weakform
+    template <class... mixinTs>
+    requires same_finite_element_blocks_c<mixinTs...>
+    class SemiDiscreteWeakform;
 
     // class discrete system
     template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
     class DiscreteSystem;
 
-    // class discrete transient system
+    // class semi discrete system
     template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
-    class DiscreteTransientSystem;
+    class SemiDiscreteSystem;
 
     // class domain field
     template <fields::field_c F>

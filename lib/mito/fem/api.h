@@ -48,15 +48,6 @@ namespace mito::fem {
     template <class blockT>
     constexpr auto load_mixin(const blockT & block);
 
-    // transient weakform alias
-    template <class... blockTs>
-    using transient_weakform_t = TransientWeakform<blockTs...>;
-
-    // transient weakform factory
-    template <class... mixinTs>
-    constexpr auto transient_weakform(const mixinTs &... mixins)
-    requires same_finite_element_blocks_c<mixinTs...>;
-
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>
     using weakform_t = Weakform<lhsBlockT, rhsBlockT>;
@@ -64,6 +55,15 @@ namespace mito::fem {
     // weakform factory
     template <class lhsBlockT, class rhsBlockT>
     constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block);
+
+    // semi discrete weakform alias
+    template <class... blockTs>
+    using semi_discrete_weakform_t = SemiDiscreteWeakform<blockTs...>;
+
+    // semi discrete weakform factory
+    template <class... mixinTs>
+    constexpr auto semi_discrete_weakform(const mixinTs &... mixins)
+    requires same_finite_element_blocks_c<mixinTs...>;
 
     // discrete system alias
     template <class functionSpaceT, class weakformT, class linearSystemT>
@@ -75,14 +75,14 @@ namespace mito::fem {
         const functionSpaceT & function_space, const weakformT & weakform,
         const std::string & label);
 
-    // discrete transient system alias
+    // semi discrete system alias
     template <class functionSpaceT, class weakformT, class linearSystemT>
-    using discrete_transient_system_t =
-        DiscreteTransientSystem<functionSpaceT, weakformT, linearSystemT>;
+    using semi_discrete_system_t =
+        SemiDiscreteSystem<functionSpaceT, weakformT, linearSystemT>;
 
-    // discrete transient system factory
+    // semi discrete system factory
     template <class linearSystemT, class functionSpaceT, class weakformT>
-    constexpr auto discrete_transient_system(
+    constexpr auto semi_discrete_system(
         const functionSpaceT & function_space, const weakformT & weakform,
         const std::string & label);
 }
