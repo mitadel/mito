@@ -22,6 +22,8 @@ using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
 // typedef for a matrix solver
 using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
+// typedef for math backend
+using math_backend_t = mito::math_backend::petsc::PETScBackend;
 
 // the x and y scalar fields in 2D
 constexpr auto x = mito::geometry::cartesian<2>::x;
@@ -127,7 +129,8 @@ main()
         mito::fem::semi_discrete_system<linear_system_t>("mysystem", function_space, weakform);
 
     // instantiate a linear solver for the discrete system
-    auto solver = mito::solvers::transient::explicit_euler<matrix_solver_t>(discrete_system);
+    auto solver =
+        mito::solvers::transient::explicit_euler<matrix_solver_t, math_backend_t>(discrete_system);
 
     // set options for the backend {petsc} matrix solver
     solver.set_options("-ksp_type preonly -pc_type lu");

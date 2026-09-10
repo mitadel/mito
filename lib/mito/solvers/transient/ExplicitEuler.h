@@ -9,7 +9,7 @@
 
 namespace mito::solvers::transient {
 
-    template <class discreteSystemT, class matrixSolverT>
+    template <class discreteSystemT, class matrixSolverT, class mathBackendT>
     // TODO: require that the {matrixSolverT} is compatible with the linear system in
     // {discreteSystemT}
     class ExplicitEuler {

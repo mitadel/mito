@@ -14,6 +14,14 @@ namespace mito::math_backend::petsc {
     // class for PETSc vector
     class Vector;
 
+    // struct for backend
+    struct PETScBackend {
+        // the matrix type
+        using matrix_type = Matrix;
+        // the vector type
+        using vector_type = Vector;
+    };
+
 }
 
 

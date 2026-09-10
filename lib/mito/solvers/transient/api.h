@@ -10,11 +10,11 @@
 namespace mito::solvers::transient {
 
     // explicit Euler solver alias
-    template <class discreteSystemT, class matrixSolverT>
-    using explicit_euler_t = ExplicitEuler<discreteSystemT, matrixSolverT>;
+    template <class discreteSystemT, class matrixSolverT, class mathBackendT>
+    using explicit_euler_t = ExplicitEuler<discreteSystemT, matrixSolverT, mathBackendT>;
 
     // explicit Euler solver factory
-    template <class discreteSystemT, class matrixSolverT>
+    template <class discreteSystemT, class matrixSolverT, class mathBackendT>
     constexpr auto explicit_euler(discreteSystemT & discrete_system);
 }
 
