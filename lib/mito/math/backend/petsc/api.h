@@ -9,6 +9,9 @@
 
 namespace mito::math_backend::petsc {
 
+    // petsc environment
+    using environment_t = Environment;
+
     // petsc matrix
     using matrix_t = Matrix;
 
@@ -17,7 +20,6 @@ namespace mito::math_backend::petsc {
 
     // petsc backend
     using backend_t = Backend;
-
 
 }
 

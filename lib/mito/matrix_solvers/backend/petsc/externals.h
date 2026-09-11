@@ -14,7 +14,7 @@
 
 // support
 #include "../../../journal.h"
-#include "../../../math/backend/petsc/externals.h"
+// #include "../../../math/backend/petsc/externals.h"
 
 // petsc support
 #include <petscksp.h>

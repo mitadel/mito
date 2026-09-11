@@ -17,6 +17,7 @@
 #include "api.h"
 
 // classes
+#include "Environment.h"
 #include "Matrix.h"
 #include "Vector.h"
 

@@ -9,6 +9,12 @@
 
 namespace mito::math_backend::petsc {
 
+    // petsc environment
+    auto environment() -> environment_t
+    {
+        return environment_t();
+    }
+
     // petsc matrix
     auto matrix(const std::string & name)
     {

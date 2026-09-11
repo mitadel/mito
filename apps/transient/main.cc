@@ -36,7 +36,7 @@ int
 main()
 {
     // initialize PETSc
-    mito::petsc::initialize();
+    auto petsc_environment = mito::math_backend::petsc::environment();
 
     // make a channel
     journal::info_t channel("benchmark.advection_diffusion_reaction");
@@ -181,9 +181,6 @@ main()
     // write output file
     writer_solution.write();
 #endif
-
-    // finalize PETSc
-    mito::petsc::finalize();
 }
 
 // end of file

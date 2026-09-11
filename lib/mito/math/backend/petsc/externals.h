@@ -21,6 +21,7 @@
 
 namespace mito::petsc {
 
+
     // initialize petsc
     inline auto initialize() -> void
     {

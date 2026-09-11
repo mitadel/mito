@@ -10,6 +10,8 @@
 
 namespace mito::math_backend::petsc {
 
+    // class for PETSc environment
+    class Environment;
     // class for PETSc matrix
     class Matrix;
     // class for PETSc vector
