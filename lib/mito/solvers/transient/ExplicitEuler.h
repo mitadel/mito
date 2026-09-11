@@ -9,7 +9,9 @@
 
 namespace mito::solvers::transient {
 
-    template <class discreteSystemT, class matrixSolverT, class mathBackendT>
+    template <
+        class discreteSystemT, class matrixSolverT,
+        mito::math_backend::valid_backend_c mathBackendT>
     // TODO: require that the {matrixSolverT} is compatible with the linear system in
     // {discreteSystemT}
     class ExplicitEuler {
@@ -36,9 +38,9 @@ namespace mito::solvers::transient {
         // the default constructor
         constexpr ExplicitEuler(discrete_system_type & discrete_system) :
             _discrete_system(discrete_system),
-            // _lumped_mass_vector("lumped_mass_vector"),
-            // _stiffness_matrix("stiffness_matrix"),
-            // _load_vector("load_vector"),
+            _lumped_mass_vector("lumped_mass_vector", _discrete_system.n_equations()),
+            _stiffness_matrix("stiffness_matrix", _discrete_system.n_equations()),
+            _load_vector("load_vector", _discrete_system.n_equations()),
             _matrix_solver(_discrete_system.linear_system())
         {
             // create the matrix solver
@@ -59,8 +61,8 @@ namespace mito::solvers::transient {
         {
             // assemble the discrete system
             // _discrete_system.assemble_lumped_mass(_lumped_mass_vector);
-            // _discrete_system.assemble_stiffness(_stiffness_matrix);
-            // _discrete_system.assemble_load(_load_vector);
+            _discrete_system.template assemble_stiffness<mathBackendT>(_stiffness_matrix);
+            _discrete_system.template assemble_load<mathBackendT>(_load_vector);
             _discrete_system.assemble_stiffness();
             _discrete_system.assemble_load();
 
@@ -82,12 +84,12 @@ namespace mito::solvers::transient {
         discrete_system_type & _discrete_system;
         // the underlying matrix solver implementation
         matrix_solver_type _matrix_solver;
-        // // the lumped mass vector
-        // vector_type _lumped_mass_vector;
-        // // the stiffness matrix
-        // matrix_type _stiffness_matrix;
-        // // the load vector
-        // vector_type _load_vector;
+        // the lumped mass vector
+        vector_type _lumped_mass_vector;
+        // the stiffness matrix
+        matrix_type _stiffness_matrix;
+        // the load vector
+        vector_type _load_vector;
     };
 
 

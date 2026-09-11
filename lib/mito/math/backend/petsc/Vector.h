@@ -10,12 +10,13 @@
 namespace mito::math_backend::petsc {
 
     class Vector {
-
-      private:
+      public:
         // the index type
         using index_type = PetscInt;
         // the scalar type
         using scalar_type = PetscScalar;
+
+      private:
         // the vector type
         using vector_type = Vec;
         // the label type

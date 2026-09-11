@@ -9,9 +9,10 @@
 
 namespace mito::solvers::transient {
 
-    template <class discreteSystemT, class matrixSolverT, class mathBackendT>
+    template <
+        class discreteSystemT, class matrixSolverT,
+        mito::math_backend::valid_backend_c mathBackendT>
     class ExplicitEuler;
-
 }
 
 

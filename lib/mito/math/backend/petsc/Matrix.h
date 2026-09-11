@@ -10,11 +10,13 @@
 namespace mito::math_backend::petsc {
 
     class Matrix {
-      private:
+      public:
         // the index type
         using index_type = PetscInt;
         // the scalar type
         using scalar_type = PetscScalar;
+
+      private:
         // the matrix type
         using matrix_type = Mat;
         // the label type

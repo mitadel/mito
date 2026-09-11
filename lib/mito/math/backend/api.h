@@ -7,9 +7,4 @@
 #pragma once
 
 
-// support
-#include "../../journal.h"
-#include "../../math.h"
-
-
 // end of file

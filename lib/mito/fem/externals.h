@@ -13,6 +13,7 @@
 // support
 #include "../journal.h"
 #include "../manifolds.h"
+#include "../math.h"
 #include "../constraints.h"
 #include "../discrete.h"
 #include "../utilities.h"
