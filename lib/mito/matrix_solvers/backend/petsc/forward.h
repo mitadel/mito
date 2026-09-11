@@ -12,6 +12,9 @@ namespace mito::matrix_solvers::petsc {
     // class for PETSc linear system
     class PETScLinearSystem;
 
+    // class for Krylov solver
+    class KrylovSolver;
+
     // class for PETSc Krylov solver
     class PETScKrylovSolver;
 

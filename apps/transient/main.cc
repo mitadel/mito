@@ -23,7 +23,7 @@ using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
 // typedef for a matrix solver
 using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
 // typedef for math backend
-using math_backend_t = mito::math_backend::petsc::PETScBackend;
+using math_backend_t = mito::math_backend::petsc::backend_t;
 
 // the x and y scalar fields in 2D
 constexpr auto x = mito::geometry::cartesian<2>::x;

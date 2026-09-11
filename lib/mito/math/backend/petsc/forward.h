@@ -5,6 +5,7 @@
 
 // code guard
 #pragma once
+#include <petscsystypes.h>
 
 
 namespace mito::math_backend::petsc {
@@ -15,7 +16,7 @@ namespace mito::math_backend::petsc {
     class Vector;
 
     // struct for backend
-    struct PETScBackend {
+    struct Backend {
         // the index type
         using index_type = PetscInt;
         // the scalar type

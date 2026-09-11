@@ -15,10 +15,16 @@ namespace mito::matrix_solvers::petsc {
         return linear_system_t(name);
     }
 
-    // petsc Krylov solver
+    // Krylov solver
     auto ksp(linear_system_t & linear_system)
     {
         return ksp_t(linear_system);
+    }
+
+    // petsc Krylov solver
+    auto petsc_ksp(linear_system_t & linear_system)
+    {
+        return petsc_ksp_t(linear_system);
     }
 }
 

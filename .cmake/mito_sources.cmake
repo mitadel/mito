@@ -13,6 +13,7 @@ set(MITO_SOURCES ${MITO_SOURCES}
 lib/mito/math/backend/petsc/Matrix.cc
 lib/mito/math/backend/petsc/Vector.cc
 lib/mito/matrix_solvers/backend/petsc/PETScLinearSystem.cc
+lib/mito/matrix_solvers/backend/petsc/KrylovSolver.cc
 lib/mito/matrix_solvers/backend/petsc/PETScKrylovSolver.cc
 )
 endif()

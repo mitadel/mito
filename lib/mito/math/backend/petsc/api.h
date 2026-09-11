@@ -15,6 +15,9 @@ namespace mito::math_backend::petsc {
     // petsc vector
     using vector_t = Vector;
 
+    // petsc backend
+    using backend_t = Backend;
+
 
 }
 

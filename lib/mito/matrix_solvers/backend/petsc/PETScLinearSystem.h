@@ -13,6 +13,7 @@ namespace mito::matrix_solvers::petsc {
 
         // friend declarations
         friend class PETScKrylovSolver;
+        friend class KrylovSolver;
 
       private:
         // the index type

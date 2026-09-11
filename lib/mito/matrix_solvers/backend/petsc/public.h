@@ -18,6 +18,7 @@
 
 // classes
 #include "PETScLinearSystem.h"
+#include "KrylovSolver.h"
 #include "PETScKrylovSolver.h"
 
 // factories implementation
