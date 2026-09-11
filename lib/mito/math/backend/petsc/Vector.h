@@ -23,18 +23,12 @@ namespace mito::math_backend::petsc {
 
       public:
         // constructor
-        Vector(const label_type &);
+        Vector(const label_type &, index_type);
 
         // destructor
         ~Vector();
 
       public:
-        // create the vector
-        auto create(index_type) -> void;
-
-        // destroy the vector
-        auto destroy() -> void;
-
         // get the label of the linear system
         auto label() const -> label_type;
 

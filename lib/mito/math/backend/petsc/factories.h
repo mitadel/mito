@@ -16,15 +16,15 @@ namespace mito::math_backend::petsc {
     }
 
     // petsc matrix
-    auto matrix(const std::string & name)
+    auto matrix(const std::string & name, index_type size)
     {
-        return matrix_t(name);
+        return matrix_t(name, size);
     }
 
     // petsc vector
-    auto vector(const std::string & name)
+    auto vector(const std::string & name, index_type size)
     {
-        return vector_t(name);
+        return vector_t(name, size);
     }
 
 }

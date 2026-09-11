@@ -10,39 +10,23 @@
 
 
 // constructor
-mito::math_backend::petsc::Vector::Vector(const label_type & label) : _label(label), _n_equations(0)
-{}
-
-// destructor
-mito::math_backend::petsc::Vector::~Vector() {}
-
-// allocate memory for the vector
-auto
-mito::math_backend::petsc::Vector::create(index_type size) -> void
+mito::math_backend::petsc::Vector::Vector(const label_type & label, index_type size) :
+    _label(label),
+    _n_equations(size)
 {
-    // take note of the number of equations
-    _n_equations = size;
-
     // create the vector
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_vector));
     PetscCallVoid(VecSetSizes(_vector, PETSC_DECIDE, size));
 
     // set the default options (do not allow the user to control the options for vector)
     PetscCallVoid(VecSetFromOptions(_vector));
-
-    // all done
-    return;
 }
 
-// free memory for the vector
-auto
-mito::math_backend::petsc::Vector::destroy() -> void
+// destructor
+mito::math_backend::petsc::Vector::~Vector()
 {
     // destroy the vector
     PetscCallVoid(VecDestroy(&_vector));
-
-    // all done
-    return;
 }
 
 // get the label of the vector

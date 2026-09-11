@@ -10,39 +10,23 @@
 
 
 // constructor
-mito::math_backend::petsc::Matrix::Matrix(const label_type & label) : _label(label), _n_equations(0)
-{}
-
-// destructor
-mito::math_backend::petsc::Matrix::~Matrix() {}
-
-// allocate memory for the matrix
-auto
-mito::math_backend::petsc::Matrix::create(index_type size) -> void
+mito::math_backend::petsc::Matrix::Matrix(const label_type & label, index_type size) :
+    _label(label),
+    _n_equations(size)
 {
-    // take note of the number of equations
-    _n_equations = size;
-
     // create the matrix
     PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
     PetscCallVoid(MatSetSizes(_matrix, PETSC_DECIDE, PETSC_DECIDE, size, size));
 
     // set the default options (do not allow the user to control the options for matrix)
     PetscCallVoid(MatSetFromOptions(_matrix));
-
-    // all done
-    return;
 }
 
-// free memory for the matrix
-auto
-mito::math_backend::petsc::Matrix::destroy() -> void
+// destructor
+mito::math_backend::petsc::Matrix::~Matrix()
 {
     // destroy the matrix
     PetscCallVoid(MatDestroy(&_matrix));
-
-    // all done
-    return;
 }
 
 // get the label of the matrix

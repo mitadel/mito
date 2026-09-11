@@ -22,18 +22,12 @@ namespace mito::math_backend::petsc {
 
       public:
         // constructor
-        Matrix(const label_type &);
+        Matrix(const label_type &, index_type);
 
         // destructor
         ~Matrix();
 
       public:
-        // create the matrix
-        auto create(index_type) -> void;
-
-        // destroy the matrix
-        auto destroy() -> void;
-
         // get the label of the matrix
         auto label() const -> label_type;
 
