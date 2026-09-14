@@ -21,7 +21,7 @@ using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 // typedef for a linear system of equations
 using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
 // typedef for a matrix solver
-using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
+using matrix_solver_t = mito::matrix_solvers::petsc::petsc_ksp_t;
 
 // the x scalar field in 2D
 constexpr auto x = mito::geometry::cartesian<2>::x;

@@ -50,7 +50,7 @@ namespace mito::math_backend {
         && vector_like_c<
             typename backendT::vector_type, typename backendT::index_type,
             typename backendT::scalar_type>;
-};
+}
 
 
 // end of file

@@ -19,7 +19,7 @@ TEST(Solvers, PETScKSPSolver)
     linear_system.create(N);
 
     // instantiate a PETSc Krylov solver for the linear system
-    auto solver = mito::matrix_solvers::petsc::ksp(linear_system);
+    auto solver = mito::matrix_solvers::petsc::petsc_ksp(linear_system);
     // create the Krylov solver and allocate the memory
     solver.create();
     // set options for the petsc Krylov solver
