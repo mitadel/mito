@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::integrators {
+namespace mito::time_steppers {
 
     // explicit Euler solver alias
     template <class discreteSystemT, class matrixSolverT, class mathBackendT>

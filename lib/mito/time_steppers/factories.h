@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::integrators {
+namespace mito::time_steppers {
 
 
     // explicit Euler factory
