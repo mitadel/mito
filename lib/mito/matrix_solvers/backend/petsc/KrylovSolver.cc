@@ -10,42 +10,6 @@
 #include "KrylovSolver.h"
 
 
-// constructor
-mito::matrix_solvers::petsc::KrylovSolver::KrylovSolver(linear_system_type & linear_system) :
-    _linear_system(linear_system),
-    _options_prefix(linear_system.label() + "_")
-{}
-
-// destructor
-mito::matrix_solvers::petsc::KrylovSolver::~KrylovSolver() {}
-
-// create the Krylov solver
-auto
-mito::matrix_solvers::petsc::KrylovSolver::create() -> void
-{
-    // create the Krylov solver
-    PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
-    PetscCallVoid(KSPSetOperators(_ksp, _linear_system._matrix, _linear_system._matrix));
-    PetscCallVoid(KSPSetOptionsPrefix(_ksp, _options_prefix.c_str()));
-
-    // all done
-    return;
-}
-
-// destroy the Krylov solver
-auto
-mito::matrix_solvers::petsc::KrylovSolver::destroy() -> void
-{
-    // free the memory of the linear system
-    _linear_system.destroy();
-
-    // destroy the Krylov solver
-    PetscCallVoid(KSPDestroy(&_ksp));
-
-    // all done
-    return;
-}
-
 namespace {
     // helper function to prepend the prefix {prefix} to each of the space-separated
     // options leading with '-'
@@ -84,6 +48,34 @@ namespace {
     }
 }
 
+// constructor
+mito::matrix_solvers::petsc::KrylovSolver::KrylovSolver(
+    typename math_backend_type::matrix_type & matrix, const options_type & options) :
+    _matrix(matrix),
+    _options_prefix("petsc_ksp_")
+{
+    // create the Krylov solver
+    PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
+    PetscCallVoid(KSPSetOperators(_ksp, _matrix.matrix(), _matrix.matrix()));
+    PetscCallVoid(KSPSetOptionsPrefix(_ksp, _options_prefix.c_str()));
+
+    // prepend the prefix {_options_prefix} to each of the space-separated options in input
+    auto prefixed_options = prepend_options_prefix(options, _options_prefix);
+
+    // record the options with PETSc
+    PetscCallVoid(PetscOptionsInsertString(PETSC_NULLPTR, prefixed_options.c_str()));
+
+    // configure the Krylov solver with the options
+    PetscCallVoid(KSPSetFromOptions(_ksp));
+}
+
+// destructor
+mito::matrix_solvers::petsc::KrylovSolver::~KrylovSolver()
+{
+    // destroy the Krylov solver
+    PetscCallVoid(KSPDestroy(&_ksp));
+}
+
 // set petsc options
 auto
 mito::matrix_solvers::petsc::KrylovSolver::set_options(const options_type & options) -> void
@@ -104,32 +96,29 @@ mito::matrix_solvers::petsc::KrylovSolver::set_options(const options_type & opti
     return;
 }
 
-// solve the linear system
-auto
-mito::matrix_solvers::petsc::KrylovSolver::solve() -> void
-{
-    // assemble the linear system
-    _linear_system.assemble();
+// // solve the linear system
+// auto
+// mito::matrix_solvers::petsc::KrylovSolver::solve() -> void
+// {
+//     // solve the linear system
+//     PetscCallVoid(KSPSolve(_ksp, _linear_system._rhs, _linear_system._solution));
 
-    // solve the linear system
-    PetscCallVoid(KSPSolve(_ksp, _linear_system._rhs, _linear_system._solution));
+//     // all done
+//     return;
+// }
 
-    // all done
-    return;
-}
+// // print the linear system of equations of the petsc solver
+// auto
+// mito::matrix_solvers::petsc::KrylovSolver::print() const -> void
+// {
+//     // create a reporting channel
+//     journal::info_t channel("mito.solvers.petsc.KrylovSolver");
 
-// print the linear system of equations of the petsc solver
-auto
-mito::matrix_solvers::petsc::KrylovSolver::print() const -> void
-{
-    // create a reporting channel
-    journal::info_t channel("mito.solvers.petsc.KrylovSolver");
+//     // print the linear system
+//     _linear_system.print();
 
-    // print the linear system
-    _linear_system.print();
-
-    // all done
-    return;
-}
+//     // all done
+//     return;
+// }
 
 // end of file

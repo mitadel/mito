@@ -139,4 +139,11 @@ mito::math_backend::petsc::Matrix::print() const -> void
     return;
 }
 
+// access matrix
+auto
+mito::math_backend::petsc::Matrix::matrix() -> matrix_type &
+{
+    return _matrix;
+}
+
 // end of file

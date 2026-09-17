@@ -90,6 +90,13 @@ main()
     // instantiate a linear solver for the discrete system
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
 
+
+    
+    // auto material = mito::mechanics::linear_elastic ( E, nu ); // contains constitutive model: how to go from deformation gradient to measure of a strain to a measure of a stress
+    // auto system = mito::mechanics::system ( material, function_space );
+    // auto time_stepper = mito::time_stepper::explicit_newmark ( system );
+    // time_stepper.step ( dt ); // generates ( A + 1/Dt * mu ) * u = f
+
     // set options for the backend {petsc} matrix solver
     solver.set_options("-ksp_type preonly -pc_type cholesky");
 

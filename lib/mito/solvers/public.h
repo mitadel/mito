@@ -16,9 +16,6 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// transient implementation
-#include "transient.h"
-
 // classes implementation
 #include "LinearSolver.h"
 

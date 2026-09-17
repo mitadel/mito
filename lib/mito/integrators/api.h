@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::solvers::transient {
+namespace mito::integrators {
 
     // explicit Euler solver alias
     template <class discreteSystemT, class matrixSolverT, class mathBackendT>

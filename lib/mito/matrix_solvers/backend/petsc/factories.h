@@ -16,9 +16,9 @@ namespace mito::matrix_solvers::petsc {
     }
 
     // Krylov solver
-    auto ksp(linear_system_t & linear_system)
+    auto ksp(mito::math_backend::petsc::matrix_t & matrix, const std::string & options = "")
     {
-        return ksp_t(linear_system);
+        return ksp_t(matrix, options);
     }
 
     // petsc Krylov solver

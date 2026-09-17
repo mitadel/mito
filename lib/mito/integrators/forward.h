@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::solvers::transient {
+namespace mito::integrators {
 
     template <
         class discreteSystemT, class matrixSolverT,

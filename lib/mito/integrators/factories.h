@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::solvers::transient {
+namespace mito::integrators {
 
 
     // explicit Euler factory

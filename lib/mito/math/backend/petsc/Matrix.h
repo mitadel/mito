@@ -57,6 +57,9 @@ namespace mito::math_backend::petsc {
         // print the matrix
         auto print() const -> void;
 
+        // access matrix
+        auto matrix() -> matrix_type &;
+
       private:
         // a flag to recall if this instance has initialized PETSc
         bool _initialized_petsc;

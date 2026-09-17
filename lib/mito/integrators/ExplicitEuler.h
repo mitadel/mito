@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::solvers::transient {
+namespace mito::integrators {
 
     template <
         class discreteSystemT, class matrixSolverT,
@@ -36,45 +36,33 @@ namespace mito::solvers::transient {
 
       public:
         // the default constructor
-        constexpr ExplicitEuler(discrete_system_type & discrete_system) :
+        ExplicitEuler(discrete_system_type & discrete_system) :
             _discrete_system(discrete_system),
             _lumped_mass_vector("lumped_mass_vector", _discrete_system.n_equations()),
             _stiffness_matrix("stiffness_matrix", _discrete_system.n_equations()),
             _load_vector("load_vector", _discrete_system.n_equations()),
-            _matrix_solver(_discrete_system.linear_system())
+            _state_vector("state_vector", _discrete_system.n_equations()),
         {
-            // create the matrix solver
-            _matrix_solver.create();
-        }
-
-        // destroy the matrix solver
-        auto destroy() -> void { return _matrix_solver.destroy(); }
-
-        // set matrix solver options
-        auto set_options(const options_type & options) -> void
-        {
-            return _matrix_solver.set_options(options);
-        }
-
-        // solve the matrix system
-        auto solve() -> void
-        {
-            // assemble the discrete system
-            // _discrete_system.assemble_lumped_mass(_lumped_mass_vector);
+            _discrete_system.template assemble_lumped_mass<mathBackendT>(_lumped_mass_vector);
             _discrete_system.template assemble_stiffness<mathBackendT>(_stiffness_matrix);
             _discrete_system.template assemble_load<mathBackendT>(_load_vector);
-            _discrete_system.assemble_stiffness();
-            _discrete_system.assemble_load();
+        }
 
-            // solve the linear system
-            _matrix_solver.solve();
+        // initialise the solver
+        auto initialiseSolver() -> void { ; }
 
-            // have the discrete system read the solution
-            _discrete_system.read_solution();
+        // initialise the time step
+        auto initialiseTimeStep(scalar_type time, scalar_type dt) -> void { return; }
+
+        auto integrateTimeStep(scalar_type time, scalar_type dt) -> void
+        {
+            // assemble the stiffness matrix and load vector
+            VecPointwiseDivide();
 
             // all done
             return;
         }
+
 
         // print the matrix system
         auto print() const -> void { return _matrix_solver.print(); }
@@ -82,14 +70,14 @@ namespace mito::solvers::transient {
       private:
         // the discrete system
         discrete_system_type & _discrete_system;
-        // the underlying matrix solver implementation
-        matrix_solver_type _matrix_solver;
         // the lumped mass vector
         vector_type _lumped_mass_vector;
         // the stiffness matrix
         matrix_type _stiffness_matrix;
         // the load vector
         vector_type _load_vector;
+        // the state vector
+        vector_type _state_vector;
     };
 
 

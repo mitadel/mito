@@ -16,7 +16,7 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
-// classes implementation
+// explicit euler implementation
 #include "ExplicitEuler.h"
 
 // factories implementation

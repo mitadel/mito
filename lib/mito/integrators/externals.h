@@ -8,8 +8,7 @@
 
 
 // support
-#include "../../journal.h"
-#include "../../math.h"
+#include "../journal.h"
 
 
 // end of file
