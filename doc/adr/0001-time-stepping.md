@@ -47,22 +47,20 @@ Let us thus consider _where_ these operators are stored:
 
 Let us therefore work out the two variations: 
 - Variation A, where we store semi-discrete operators in the time-stepper class.
-
-
-We can define two variations - one where the matrices are stored in the time stepper; the other where they are stored in the discrete model. 
+- Variation B, where we store semi-discrete operators in the discrete class.
 
 ### Variation A - stored in time stepper
 Our time stepper, in this case, looks like
 ```
-template<typename discreteModelT>
+template<typename semiDiscreteModelT>
 class ImplicitEuler
 {
   public:
     auto assemble_semi_discrete_operators () -> void
     {
-      _discrete_model.compute_stiffness_matrix ( _stiffness_matrix );
-      _discrete_model.compute_capacitance_matrix ( _capacitance_matrix );
-      _discrete_model.compute_load_vector ( _load_vector );
+      _semi_discrete_model.compute_stiffness_matrix ( _stiffness_matrix );
+      _semi_discrete_model.compute_capacitance_matrix ( _capacitance_matrix );
+      _semi_discrete_model.compute_load_vector ( _load_vector );
     }
 
     auto assemble_effective_system_operators ( scalar_type dt, vector_type u_previous ) -> void
@@ -72,7 +70,7 @@ class ImplicitEuler
     }
 
   private:
-    discreteModelT _discrete_model;
+    semiDiscreteModelT _semi_discrete_model;
 
     matrix_type _effective_stiffness_matrix;
     vector_type _effective_load_vector;
@@ -83,18 +81,18 @@ class ImplicitEuler
 }
 ```
 
-In turn, we would the discrete model to look a little something like
+In turn, we would want the semi-discrete model to look a little something like
 ```
 template<typename physicalModelT, typename discretizationT>
-class DiscreteModel
+class SemiDiscreteModel
 {
   public:
-    auto compute_stiffness_matrix ( matrix_type& _stiffness_matrix ) -> void
+    auto compute_stiffness_matrix ( matrix_type& stiffness_matrix ) -> void
     {
       for element in _discretization:
       {
         auto elementary_matrix = _physical_model.compute_stiffness_term ( element );
-        emplace_elementary_matrix ( elementary_matrix, _discretization );
+        emplace_elementary_matrix ( elementary_matrix, stiffness_matrix, _discretization );
       }
     }
 
@@ -114,7 +112,7 @@ class SomePhysicsModel
     template<typename elementT>
     auto compute_stiffness_term ( const elementT& element ) -> elementT::elementary_matrix
     {
-      return GradGradBlock ( material.diffusivity ) + GradValueBlock ( material.velocity );
+      return GradGradBlock ( material.diffusivity ).compute ( element ) + GradValueBlock ( material.velocity ).compute ( element );
     }
 
   private:
@@ -127,30 +125,152 @@ and similar for `compute_capacitance_term` and so on. Note that we completely om
 ### Variation B - stored in discrete model
 Our time stepper, in this case, looks like
 ```
-template<typename discreteModelT>
+template<typename semiDiscreteModelT>
 class ImplicitEuler
 {
   public:
     auto assemble_semi_discrete_operators () -> void
     {
-      _discrete_model.compute_stiffness_matrix ();
-      _discrete_model.compute_capacitance_matrix ();
-      _discrete_model.compute_load_vector ();
+      _semi_discrete_model.compute_stiffness_matrix ();
+      _semi_discrete_model.compute_capacitance_matrix ();
+      _semi_discrete_model.compute_load_vector ();
     }
 
     auto assemble_effective_system_operators ( scalar_type dt, vector_type u_previous ) -> void
     {
-      _effective_stiffness_matrix = _discrete_model.stiffness_matrix () * dt + _discrete_model.mass_matrix ();
-      _effective_load_vector      = __discrete_model.load_vector () * dt + _discrete_model.mass_matrix () * u_previous;
+      _effective_stiffness_matrix = _discrete_model.stiffness_matrix () * dt + _discrete_model.capacitance_matrix ();
+      _effective_load_vector      = __discrete_model.load_vector () * dt + _discrete_model.capacitance_matrix () * u_previous;
     }
 
   private:
-    discreteModelT _discrete_model;
+    semiDiscreteModelT _semi_discrete_model;
 
     matrix_type _effective_stiffness_matrix;
     vector_type _effective_load_vector;
 }
 ```
+In turn, we would the semi-discrete model to look a little something like
+```
+template<typename physicalModelT, typename discretizationT>
+class SemiDiscreteModel
+{
+  public:
+    auto compute_stiffness_matrix () -> void
+    {
+      for element in _discretization:
+      {
+        auto elementary_matrix = _physical_model.compute_stiffness_term ( element );
+        emplace_elementary_matrix ( elementary_matrix, _stiffness_matrix, _discretization );
+      }
+    }
+
+    auto stiffness_matrix () -> matrix_type&
+    {
+      return _stiffness_matrix;
+    }
+
+  private:
+    physicalModelT _physical_model;
+    discretizationT _discretization;
+    matrix_type _stiffness_matrix;
+}
+```
+and similar for `capacitance_matrix` and so on. The physical model would have the same interface as in variation A. 
+
+### Comparison
+At first glance, variation B may seem preferable as it feels 'natural' to store the semi-discrete matrices in the semi-discrete model class. However, upon closer inspection, the following issue arises. ImplicitEuler requires the presence of a stiffness matrix, capacitance matrix and a load vector. This is inherent to it being a first order time integration scheme. Other time integration schemes may require the storage of an inertial matrix or the damping matrix. Moreover, in case of an explicit time integration scheme, we very likely want to store the _lumped_ mass matrix (which would not be of `matrix_type`, but of `vector_type`). Thus, which matrices need to be stored at all depend on something 'upstream' of the SemiDiscreteModel; therefore, it makes more sense to store them there (i.e., the time stepper). Thus, variation A is preferred.
+
+The second thing that requires attention is the ostensible lack of a (SemiDiscrete)WeakForm, as its existence did not appear needed in either variation. Indeed, it appears that the PhysicalSystem essentially represents the Weakform itself. Consider the original `benchmarks/mito.lib/pdes/poisson.cc` example. There we created the weakform through the following snippet:
+```
+constexpr auto k = 1.0;
+constexpr auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
+
+auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity);
+
+auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
+        * mito::functions::sin(std::numbers::pi * y);
+
+auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 2>(f);
+
+auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
+```
+Note that `mito::fem::blocks::diffussion` is just an alias for a `grad_grad_block`.
+
+
+### Variation C - brute-forcing the weakform into the SemiDiscreteModel 
+The interface of ImplicitEuler and the way it interacts with SemiDiscreteModel should not change. However, we can modify the contents of the `SemiDiscreteModel`.
+
+```
+template<typename physicalModelT, typename discretizationT>
+class SemiDiscreteModel
+{
+  public:
+    SemiDiscreteModel ( physicalModelT physical_model, discretizationT discretization )
+    {
+      _semiDiscreteWeakform 
+      ( 
+        StiffnessTerm ( GradGradBlock ( material.diffusivity ) + GradValueBlock ( material.velocity ) ),
+        InertiaTerm ( ScalarScalarBlock ( material.rho ) ),
+        LoadTerm ( ScalarBlock ( material.f ) )
+      )
+    }
+
+    auto compute_stiffness_matrix ( matrix_type& stiffness_matrix ) -> void
+    {
+      for element in _discretization:
+      {
+        auto elementary_matrix = _physical_model.compute_stiffness_term ( element );
+        emplace_elementary_matrix ( elementary_matrix, stiffness_matrix, _discretization );
+      }
+    }
+
+  private:
+    physicalModelT _physical_model;
+    discretizationT _discretization;
+    semiDiscreteWeakformT _semiDiscreteWeakform;
+}
+```
+where we use mixins to create our SemiDiscreteWeakform.
+```
+template<typename elementT>
+class StiffnessTerm
+{
+  ;
+}
+
+template<typename Terms...>
+class SemiDiscreteWeakform : public Terms...
+{
+  ;
+}
+```
+But no actually, this does not work: the knowledge of when to use GradGradBlock is stored in physical model. So we need to look at whether we need to rewrite that class:
+
+### Variation D - brute-forcing the weakform into the physical model
+```
+class SomePhysicsModel
+{
+  public:
+
+    template<typename materialT>
+    SomePhysicsModel ( materialT material ) : _material ( material ) {;};
+
+    template<typename elementT>
+    auto compute_stiffness_term ( const elementT& element ) -> elementT::elementary_matrix
+    {
+      return GradGradBlock ( material.diffusivity ) + GradValueBlock ( material.velocity );
+    }
+
+  private:
+    materialT _material;
+    semiDiscreteWeakformT _semiDiscreteWeakform;
+
+}
+```
+However, this also does not work - SemiDiscreteWeakform _requires_ knowledge of the element-type to be able to construct the blocks - hence why `compute_stiffness_term` does work because we pass it only as a method argument. But if we actually want to store SemiDiscreteWeakform inside SomePhysicalModel, then we need to give the full SomePhysicsModel-class access to the element-type we're using. As mentioned at the beginning, this is unnegotiable. 
+
+
+
 
 
 ## Scope limits
