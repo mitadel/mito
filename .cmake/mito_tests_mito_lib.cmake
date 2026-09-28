@@ -104,6 +104,7 @@ if(WITH_PETSC)
     mito_test_driver(tests/mito.lib/matrix_solvers/petsc_initialize_finalize.cc)
     mito_test_driver(tests/mito.lib/matrix_solvers/petsc_ksp.cc)
     mito_test_driver(tests/mito.lib/fem/hybrid_dimensional_diffusion_continuous.cc)
+    mito_test_driver(tests/mito.lib/fem/interface_degenerate_to_continuous.cc)
 endif()
 
 # tensor
