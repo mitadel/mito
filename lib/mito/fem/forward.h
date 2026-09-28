@@ -61,6 +61,18 @@ namespace mito::fem {
     template <class linearSystemT, contribution_c... contributionTs>
     class DiscreteSystem;
 
+    // a term of a coupled weakform: a block assembled over the elements of a source
+    template <class sourceT, class blockT>
+    struct Term;
+
+    // one weak form written as a sum of terms, each on its own domain
+    template <class... termTs>
+    class CoupledWeakform;
+
+    // class coupled discrete system
+    template <class linearSystemT, class coupledWeakformT>
+    class CoupledDiscreteSystem;
+
     // class domain field
     template <fields::field_c F>
     class DomainField;

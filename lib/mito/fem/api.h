@@ -54,6 +54,31 @@ namespace mito::fem {
     constexpr auto discrete_system(
         const std::string & label, const functionSpaceT & function_space,
         const weakformT & weakform);
+
+    // weakform term alias
+    template <class sourceT, class blockT>
+    using term_t = Term<sourceT, blockT>;
+
+    // weakform term factory
+    template <class sourceT, class blockT>
+    constexpr auto term(const sourceT & source, const blockT & block);
+
+    // coupled weakform alias
+    template <class... termTs>
+    using coupled_weakform_t = CoupledWeakform<termTs...>;
+
+    // coupled weakform factory
+    template <class... termTs>
+    constexpr auto coupled_weakform(const termTs &... terms);
+
+    // coupled discrete system alias
+    template <class linearSystemT, class coupledWeakformT>
+    using coupled_discrete_system_t = CoupledDiscreteSystem<linearSystemT, coupledWeakformT>;
+
+    // coupled discrete system factory
+    template <class linearSystemT, class coupledWeakformT>
+    constexpr auto coupled_discrete_system(
+        const std::string & label, const coupledWeakformT & weakform);
 }
 
 

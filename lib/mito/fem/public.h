@@ -31,6 +31,8 @@
 #include "FemField.h"
 #include "DiscreteSystem.h"
 #include "Weakform.h"
+#include "CoupledWeakform.h"
+#include "CoupledDiscreteSystem.h"
 
 // factories implementation
 #include "factories.h"
