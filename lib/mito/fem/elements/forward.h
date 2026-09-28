@@ -24,6 +24,18 @@ namespace mito::fem {
     template <class parametrizedElementT, class finiteElementT>
     concept compatible_element_type_c = std::same_as<
         typename finiteElementT::mesh_cell_type, typename parametrizedElementT::cell_type>;
+
+    // the traits of an interface element
+    template <class baseTraitsT>
+    struct InterfaceElementTraits;
+
+    // a butterfly element coupling the bulk degrees of freedom on either side of an interface
+    template <class baseElementT>
+    class InterfaceElement;
+
+    // a collection of interface elements
+    template <class interfaceElementT>
+    class InterfaceElements;
 }
 
 
