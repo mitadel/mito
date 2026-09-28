@@ -57,6 +57,25 @@ namespace mito::fem::blocks {
         return value_block<elementT, doe>(source);
     }
 
+    // jump-jump matrix block factory (the transverse conductance of a collapsed layer)
+    template <class elementT, int doe, fields::scalar_field_c conductanceFieldT>
+    constexpr auto jump_jump(const conductanceFieldT & conductance)
+    {
+        // a value value block, computed on the jump of the element's shape functions
+        auto block = value_value_block<elementT, doe>(conductance);
+        return InterfaceBlock<decltype(block), trace_operator_t::jump>(block);
+    }
+
+    // average-average gradient matrix block factory (the tangential conductance of a collapsed
+    // layer)
+    template <class elementT, int doe, fields::tensor_field_c conductivityFieldT>
+    constexpr auto average_average_gradient(const conductivityFieldT & conductivity)
+    {
+        // a grad grad block, computed on the average of the element's shape functions
+        auto block = grad_grad_block<elementT, doe>(conductivity);
+        return InterfaceBlock<decltype(block), trace_operator_t::average>(block);
+    }
+
 }
 
 
