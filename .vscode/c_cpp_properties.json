@@ -33,7 +33,8 @@
       "includePath": [
         "${workspaceFolder}/lib",
         "/usr/local/gtest/include",
-        "/usr/local/pyre/include"
+        "/usr/local/pyre/include",
+        "/usr/lib/petscdir/petsc3.24/x86_64-linux-gnu-real/include"
       ],
       "forcedInclude": [
         "${workspaceFolder}/.vscode/ide_preinclude.h"
