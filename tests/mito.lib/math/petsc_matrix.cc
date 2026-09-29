@@ -14,10 +14,7 @@ TEST(Math, PETScMatrix)
     int N = 3;
 
     // instantiate a PETSc matrix of size {N}x{N}
-    auto matrix = mito::math_backend::petsc::matrix("mymatrix");
-
-    // create the matrix and allocate the memory
-    matrix.create(N);
+    auto matrix = mito::math_backend::petsc::matrix("mymatrix", N);
 
     // set vector entries
     for (int i = 0; i < N; i++) {
@@ -47,9 +44,6 @@ TEST(Math, PETScMatrix)
     EXPECT_DOUBLE_EQ(matrix.get_value(2, 1), 7.0);
     EXPECT_DOUBLE_EQ(matrix.get_value(2, 2), 9.0);
 
-    // destroy the matrix and free the memory
-    matrix.destroy();
-
     // all done
     return;
 }
@@ -59,13 +53,10 @@ int
 main(int argc, char ** argv)
 {
     // initialize PETSc
-    mito::petsc::initialize();
-
+    auto environment = mito::math_backend::petsc::environment();
+    
     ::testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();
-
-    // finalize PETSc
-    mito::petsc::finalize();
 
     // all done
     return result;
