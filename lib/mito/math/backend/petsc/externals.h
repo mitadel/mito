@@ -22,17 +22,17 @@
 namespace mito::petsc {
 
 
-    // initialize petsc
-    inline auto initialize() -> void
-    {
-        PetscCallVoid(PetscInitializeNoArguments());
-    }
+    // // initialize petsc
+    // inline auto initialize() -> void
+    // {
+    //     PetscCallVoid(PetscInitializeNoArguments());
+    // }
 
-    // finalize petsc
-    inline auto finalize() -> void
-    {
-        PetscCallVoid(PetscFinalize());
-    }
+    // // finalize petsc
+    // inline auto finalize() -> void
+    // {
+    //     PetscCallVoid(PetscFinalize());
+    // }
 
 }
 
