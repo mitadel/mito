@@ -7,15 +7,8 @@
 #pragma once
 
 
-// external packages
-#include "externals.h"
-
-// combinatorics utilities
-#include "combinatorics.h"
-
-// backend
-#include "backend.h"
-
+// publish the interface
+#include "backend/public.h"
 
 
 // end of file

@@ -1,0 +1,41 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_math_backend_petsc_Vector_icc)
+#error This header file contains implementation details of class mito::math_backend::petsc::Vector
+#else
+
+
+// get the vector at entry {row}
+template <class vectorT>
+auto
+mito::math_backend::petsc::Vector::get_vector(vectorT & vector) const -> void
+{
+    // get a pointer to the beginning of {_vector}
+    const scalar_type * u;
+    PetscCallVoid(VecGetArrayRead(_vector, &u));
+
+    // get the size of the vector
+    PetscInt size;
+    PetscCallVoid(VecGetSize(_vector, &size));
+
+    // check that the size of {_vector} matches the size of {vector}
+    assert(size == (int) std::size(vector));
+
+    // copy {_vector} into {vector}
+    std::copy(u, u + size, std::begin(vector));
+
+    // restore the array after reading
+    PetscCallVoid(VecRestoreArrayRead(_vector, &u));
+
+    // all done
+    return;
+}
+
+
+#endif    // mito_math_backend_petsc_Vector_icc
+
+// end of file
