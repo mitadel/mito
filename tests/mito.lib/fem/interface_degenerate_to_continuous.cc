@@ -193,8 +193,8 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
                 * mito::fem::blocks::average_average_gradient<interface_traits_t, doe>(identity)));
 
     // the discrete system
-    auto discrete_system = mito::fem::coupled_discrete_system<linear_system_t>(
-        "interface_degenerate_to_continuous", weakform);
+    auto discrete_system =
+        mito::fem::discrete_system<linear_system_t>("interface_degenerate_to_continuous", weakform);
 
     // solve
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);

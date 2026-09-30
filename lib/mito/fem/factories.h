@@ -43,31 +43,6 @@ namespace mito::fem {
             manifold, constraints, shared_node_map);
     }
 
-    // weakform factory
-    template <class lhsBlockT, class rhsBlockT>
-    constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block)
-    {
-        return weakform_t<lhsBlockT, rhsBlockT>(lhs_block, rhs_block);
-    }
-
-    // discrete system factory (one contribution per function space)
-    template <class linearSystemT, contribution_c... contributionTs>
-    constexpr auto discrete_system(
-        const std::string & label, const contributionTs &... contributions)
-    {
-        return discrete_system_t<linearSystemT, contributionTs...>(label, contributions...);
-    }
-
-    // discrete system factory (single function space)
-    template <class linearSystemT, function_space_c functionSpaceT, class weakformT>
-    constexpr auto discrete_system(
-        const std::string & label, const functionSpaceT & function_space,
-        const weakformT & weakform)
-    {
-        return discrete_system_t<linearSystemT, Contribution<functionSpaceT, weakformT>>(
-            label, Contribution<functionSpaceT, weakformT>{ function_space, weakform });
-    }
-
     // weakform term factory
     template <class sourceT, class blockT>
     constexpr auto term(const sourceT & source, const blockT & block)
@@ -82,12 +57,11 @@ namespace mito::fem {
         return coupled_weakform_t<termTs...>(terms...);
     }
 
-    // coupled discrete system factory
+    // discrete system factory
     template <class linearSystemT, class coupledWeakformT>
-    constexpr auto coupled_discrete_system(
-        const std::string & label, const coupledWeakformT & weakform)
+    constexpr auto discrete_system(const std::string & label, const coupledWeakformT & weakform)
     {
-        return coupled_discrete_system_t<linearSystemT, coupledWeakformT>(label, weakform);
+        return discrete_system_t<linearSystemT, coupledWeakformT>(label, weakform);
     }
 }
 

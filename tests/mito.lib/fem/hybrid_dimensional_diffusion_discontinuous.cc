@@ -212,7 +212,7 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
 
     // the discrete system: the degrees of freedom of both function spaces are numbered together,
     // and the interface terms reference them without owning any of their own
-    auto discrete_system = mito::fem::coupled_discrete_system<linear_system_t>(
+    auto discrete_system = mito::fem::discrete_system<linear_system_t>(
         "hybrid_dimensional_diffusion_discontinuous", weakform);
 
     // solve

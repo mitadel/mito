@@ -180,7 +180,7 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     auto bulk_lhs =
         parameters.kappa_se * mito::fem::blocks::diffusion<bulk_element_t, doe>(identity);
     auto bulk_rhs = mito::fem::blocks::source<bulk_element_t, doe>(zero);
-    auto bulk_weakform = mito::fem::weakform(bulk_lhs, bulk_rhs);
+
 
     // the interface weakform: tangential diffusion along the crack, scaled by the collapsed
     // layer's conductance -w * kappa_m, with no source
@@ -188,12 +188,17 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     auto interface_lhs = (-parameters.layer_thickness * kappa_m)
                        * mito::fem::blocks::diffusion<interface_element_t, doe>(identity);
     auto interface_rhs = mito::fem::blocks::source<interface_element_t, doe>(zero);
-    auto interface_weakform = mito::fem::weakform(interface_lhs, interface_rhs);
+
+
+    // one coupled weakform: bulk diffusion, plus the tangential diffusion along the crack
+    auto weakform = mito::fem::coupled_weakform(
+        mito::fem::term(bulk_space, bulk_lhs), mito::fem::term(bulk_space, bulk_rhs),
+        mito::fem::term(interface_space, interface_lhs),
+        mito::fem::term(interface_space, interface_rhs));
 
     // the discrete system
-    auto discrete_system = mito::fem::discrete_system<linear_system_t>(
-        "hybrid_dimensional_diffusion", mito::fem::Contribution{ bulk_space, bulk_weakform },
-        mito::fem::Contribution{ interface_space, interface_weakform });
+    auto discrete_system =
+        mito::fem::discrete_system<linear_system_t>("hybrid_dimensional_diffusion", weakform);
 
     // solve
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
