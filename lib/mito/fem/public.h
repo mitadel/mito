@@ -29,8 +29,8 @@
 #include "FunctionSpaceElementsView.h"
 #include "FunctionSpace.h"
 #include "FemField.h"
+#include "CoupledWeakform.h"
 #include "DiscreteSystem.h"
-#include "Weakform.h"
 
 // factories implementation
 #include "factories.h"

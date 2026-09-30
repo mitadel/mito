@@ -9,48 +9,59 @@
 
 namespace mito::fem {
 
-    // TOFIX: for now the discrete system is one per function space. We should figure out a way to
-    // extend the design to the case that there are multiple finite element discretizations that
-    // end up on the same linear system.
+    // TOFIX: this duplicates the equation map and the scatter logic of {DiscreteSystem}; the two
+    // should become one class once the coupled weakform has settled
 
-    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
+    // Class {DiscreteSystem} assembles a {CoupledWeakform} into one linear system: the
+    // degrees of freedom of all the function spaces among its terms are numbered together
+    template <class linearSystemT, class coupledWeakformT>
     class DiscreteSystem {
 
       private:
-        // the function space type
-        using function_space_type = functionSpaceT;
-        // the weakform type
-        using weakform_type = weakformT;
         // the linear system type
         using linear_system_type = linearSystemT;
+        // the coupled weakform type
+        using coupled_weakform_type = coupledWeakformT;
         // the label type
         using label_type = std::string;
+        // the terms of the weakform
+        using terms_type = typename coupled_weakform_type::terms_type;
+        // the source of the first term
+        using first_source_type = typename std::tuple_element<0, terms_type>::type::source_type;
+
+      public:
         // the type of node
-        using node_type = typename function_space_type::discretization_node_type;
-        // QUESTION: is std::map the best choice for {equation_map_type}?
+        using node_type = typename first_source_type::discretization_node_type;
+        // require that all the sources share the same discretization node type
+        // TODO: write a nice concept for this
+        static_assert(
+            []<class... termTs>(const std::tuple<termTs...> *) {
+                return (
+                    std::is_same_v<
+                        node_type, typename termTs::source_type::discretization_node_type>
+                    && ...);
+            }(static_cast<terms_type *>(nullptr)),
+            "all the term sources must share the same discretization node type");
+
+      private:
         // the equation map type (map associating an equation number to each node degree of freedom)
         using equation_map_type = std::map<node_type, int>;
         // TOFIX: what if the solution is not a scalar field? Generalize to different types of
         // solutions
         // the solution field type
         using solution_field_type = tensor::scalar_t;
+        // the constrained values type (map from constrained node to prescribed value)
+        using constrained_values_type = std::map<node_type, solution_field_type>;
         // the fem field type
         using fem_field_type = fem_field_t<solution_field_type>;
-        // the element type
-        using finite_element_type = typename function_space_type::finite_element_type;
-        // the number of nodes per element
-        static constexpr int n_element_nodes = finite_element_type::n_nodes;
 
       public:
         // constructor
-        constexpr DiscreteSystem(
-            const label_type & label, const function_space_type & function_space,
-            const weakform_type & weakform) :
-            _function_space(function_space),
+        constexpr DiscreteSystem(const label_type & label, const coupled_weakform_type & weakform) :
             _weakform(weakform),
             _equation_map(),
-            _solution_field(
-                function_space.template fem_field<solution_field_type>(label + ".solution")),
+            _constrained_values(),
+            _solution_field(_assemble_solution_field(label, weakform)),
             _linear_system(label)
         {
             // make a channel
@@ -85,56 +96,156 @@ namespace mito::fem {
         constexpr DiscreteSystem & operator=(DiscreteSystem &&) noexcept = delete;
 
       private:
+        // collect the discretization nodes of the source of {term}, if it owns any
+        template <class termT, class nodesT>
+        static auto _collect_nodes(const termT & term, nodesT & nodes) -> void
+        {
+            if constexpr (function_space_c<typename termT::source_type>) {
+                get_discretization_nodes(term.source, nodes);
+            }
+        }
+
+        // build a solution field on the union of the discretization nodes of all function spaces
+        static auto _assemble_solution_field(
+            const label_type & label, const coupled_weakform_type & weakform) -> fem_field_type
+        {
+            // collect the discretization nodes of all the function spaces
+            std::unordered_set<node_type, utilities::hash_function<node_type>> nodes;
+            std::apply(
+                [&](const auto &... term) { (_collect_nodes(term, nodes), ...); },
+                weakform.terms());
+
+            // build a nodal field on the collected discretization nodes
+            return fem_field_type(
+                discrete::nodal_field_t<solution_field_type>(nodes, label + ".solution"));
+        }
+
+        // merge the constrained values of the source of {term}, if it prescribes any
+        template <class termT>
+        auto _collect_constrained_values(const termT & term) -> void
+        {
+            if constexpr (function_space_c<typename termT::source_type>) {
+                for (const auto & [node, value] : term.source.constrained_values()) {
+                    [[maybe_unused]] auto [it, inserted] =
+                        _constrained_values.insert({ node, value });
+                    // a node constrained by more than one function space must agree on its
+                    // prescribed value
+                    assert(inserted || it->second == value);
+                }
+            }
+        }
+
         // build the equation map and return the number of equations
         auto _build_equation_map() -> int
         {
             // make a channel
             journal::info_t channel("discretization.discrete_system");
 
-            // get all the nodes in the function space
+            // collect the nodes of all the function spaces
             std::set<node_type> nodes;
-            get_discretization_nodes(_function_space, nodes);
+            std::apply(
+                [&](const auto &... term) { (_collect_nodes(term, nodes), ...); },
+                _weakform.terms());
             channel << "Number of nodes: " << std::size(nodes) << journal::endl;
 
-            // get the constrained nodes in the function space
-            const auto & constrained_nodes = _function_space.constrained_nodes();
-            channel << "Number of constrained nodes: " << std::size(constrained_nodes)
+            // merge the constrained nodes and their prescribed values
+            std::apply(
+                [&](const auto &... term) { (_collect_constrained_values(term), ...); },
+                _weakform.terms());
+            channel << "Number of constrained nodes: " << std::size(_constrained_values)
                     << journal::endl;
 
-            // get all the interior nodes as the difference between all the nodes and the boundary
-            // nodes
-            std::set<node_type> interior_nodes;
-            std::set_difference(
-                nodes.begin(), nodes.end(), constrained_nodes.begin(), constrained_nodes.end(),
-                std::inserter(interior_nodes, interior_nodes.begin()));
-            channel << "Number of interior nodes: " << std::size(interior_nodes) << journal::endl;
-
-            // populate the equation map (from node to equation, one equations per node)
+            // populate the equation map (from node to equation, one equation per node)
             int equation = 0;
 
-            // loop on all the boundary nodes of the mesh
-            for (const auto & node : constrained_nodes) {
-                // check if the node is already in the equation map
-                if (_equation_map.find(node) == _equation_map.end()) {
-                    // add the node to the equation map with a -1 indicating that the node is on the
-                    // boundary
+            // loop on all the nodes
+            for (const auto & node : nodes) {
+                if (_constrained_values.contains(node)) {
+                    // mark the constrained node with a -1
                     _equation_map[node] = -1;
-                }
-            }
-
-            // loop on all the interior nodes of the mesh
-            for (const auto & node : interior_nodes) {
-                // check if the node is already in the equation map
-                if (_equation_map.find(node) == _equation_map.end()) {
-                    // add the node to the equation map
-                    _equation_map[node] = equation;
-                    // increment the equation number
-                    equation++;
+                } else {
+                    // add the node to the equation map and increment the equation number
+                    _equation_map[node] = equation++;
                 }
             }
 
             // return the number of equations
             return equation;
+        }
+
+        // scatter an elementary matrix into the linear system
+        template <class connectivityT, class matrixT>
+        auto _scatter_matrix(const connectivityT & connectivity, const matrixT & elementary_matrix)
+            -> void
+        {
+            // the number of degrees of freedom of the element
+            constexpr int N = std::tuple_size_v<std::remove_cvref_t<connectivityT>>;
+
+            // loop on the a-th degree of freedom
+            tensor::constexpr_for_1<N>([&]<int a>() {
+                // get its equation number
+                int eq_a = _equation_map.at(connectivity[a]);
+                assert(eq_a < _n_equations);
+                // constrained degrees of freedom carry no equation
+                if (eq_a == -1) {
+                    return;
+                }
+                // loop on the b-th degree of freedom
+                tensor::constexpr_for_1<N>([&]<int b>() {
+                    // get its equation number
+                    int eq_b = _equation_map.at(connectivity[b]);
+                    assert(eq_b < _n_equations);
+                    if (eq_b != -1) {
+                        // assemble the value in the stiffness matrix
+                        _linear_system.add_matrix_value(eq_a, eq_b, elementary_matrix[{ a, b }]);
+                    } else {
+                        // the b-th degree of freedom is constrained: subtract the lift
+                        // contribution of its prescribed value from the right-hand side
+                        _linear_system.add_rhs_value(
+                            eq_a,
+                            -elementary_matrix[{ a, b }] * _constrained_values.at(connectivity[b]));
+                    }
+                });
+            });
+        }
+
+        // scatter an elementary vector into the linear system
+        template <class connectivityT, class vectorT>
+        auto _scatter_vector(const connectivityT & connectivity, const vectorT & elementary_vector)
+            -> void
+        {
+            // the number of degrees of freedom of the element
+            constexpr int N = std::tuple_size_v<std::remove_cvref_t<connectivityT>>;
+
+            // loop on the a-th degree of freedom
+            tensor::constexpr_for_1<N>([&]<int a>() {
+                // get its equation number
+                int eq_a = _equation_map.at(connectivity[a]);
+                assert(eq_a < _n_equations);
+                // non constrained degrees of freedom
+                if (eq_a != -1) {
+                    // assemble the value in the right hand side
+                    _linear_system.add_rhs_value(eq_a, elementary_vector[{ a }]);
+                }
+            });
+        }
+
+        // assemble one term of the weakform over its own elements
+        template <class termT>
+        auto _assemble_term(const termT & term) -> void
+        {
+            // the shape of the elementary contribution of this term
+            using elementary_shape = typename termT::block_type::elementary_shape;
+
+            // loop on the elements this term is assembled over
+            for (const auto & element : term.source.elements()) {
+                // matrix terms contribute to the left hand side, vector terms to the right
+                if constexpr (tensor::matrix_c<elementary_shape>) {
+                    _scatter_matrix(element.connectivity(), term.block.compute(element));
+                } else {
+                    _scatter_vector(element.connectivity(), term.block.compute(element));
+                }
+            }
         }
 
       public:
@@ -147,42 +258,9 @@ namespace mito::fem {
             // check that the number of equations matches that of the linear system
             assert(_n_equations == _linear_system.n_equations());
 
-            // QUESTION: can we flip the element and block loops? What is the expected layout in
-            // memory?
-            //
-            // loop on all the cells of the mesh
-            for (const auto & element : _function_space.elements()) {
-                // get the elementary contributions to matrix and right-hand side from the weakform
-                auto [elementary_matrix, elementary_vector] = _weakform.compute_blocks(element);
-
-                // assemble the elementary blocks into the linear system of equations
-                tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
-                    // get the a-th discretization node of the element
-                    const auto & node_a = element.connectivity()[a];
-                    // get the equation number of {node_a}
-                    int eq_a = _equation_map.at(node_a);
-                    assert(eq_a < _n_equations);
-                    // non boundary nodes
-                    if (eq_a != -1) {
-                        // assemble the value in the right hand side
-                        _linear_system.add_rhs_value(eq_a, elementary_vector[{ a }]);
-                        // loop on the b-th discretization node of the element
-                        tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
-                            // get the b-th discretization node of the element
-                            const auto & node_b = element.connectivity()[b];
-                            // get the equation number of {node_b}
-                            int eq_b = _equation_map.at(node_b);
-                            assert(eq_b < _n_equations);
-                            // non boundary nodes
-                            if (eq_b != -1) {
-                                // assemble the value in the stiffness matrix
-                                _linear_system.add_matrix_value(
-                                    eq_a, eq_b, elementary_matrix[{ a, b }]);
-                            }
-                        });
-                    }
-                });
-            }
+            // assemble all the terms of the weakform
+            std::apply(
+                [&](const auto &... term) { (_assemble_term(term), ...); }, _weakform.terms());
         }
 
         // read the solution nodal field
@@ -195,15 +273,14 @@ namespace mito::fem {
             auto u = std::vector<double>(_n_equations);
             _linear_system.get_solution(u);
 
-            // TODO: ask the function space to populate the constrained nodes appropriately
-
-            // get the node map from the function space
-            auto node_map = _function_space.node_map();
             // fill information in finite element field
             for (auto & [node, eq] : _equation_map) {
                 if (eq != -1) {
                     // note the solution on the solution field
                     _solution_field(node) = u[eq];
+                } else {
+                    // populate the constrained node with its prescribed value
+                    _solution_field(node) = _constrained_values.at(node);
                 }
             }
 
@@ -221,14 +298,14 @@ namespace mito::fem {
         constexpr auto n_equations() const noexcept -> int { return _n_equations; }
 
       private:
-        // a const reference to the function space
-        const function_space_type & _function_space;
-
-        // the weakform
-        const weakform_type & _weakform;
+        // the coupled weakform assembled by this system
+        coupled_weakform_type _weakform;
 
         // the equation map
         equation_map_type _equation_map;
+
+        // the constrained nodes and their prescribed values, merged from all function spaces
+        constrained_values_type _constrained_values;
 
         // the solution finite element field
         fem_field_type _solution_field;

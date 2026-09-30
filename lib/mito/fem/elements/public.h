@@ -22,6 +22,9 @@
 // library of finite elements
 #include "elements_library.h"
 
+// interface elements
+#include "InterfaceElement.h"
+
 // factories implementation
 #include "factories.h"
 
