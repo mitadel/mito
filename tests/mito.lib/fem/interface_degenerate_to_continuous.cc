@@ -179,8 +179,8 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     const auto jump_jump_coefficient = kappa_m / parameters.layer_thickness;
     const auto average_average_coefficient = -parameters.layer_thickness * kappa_m;
 
-    // one coupled weakform: bulk diffusion, plus the two crack terms on the degenerate interface
-    auto weakform = mito::fem::coupled_weakform(
+    // one weakform: bulk diffusion, plus the two crack terms on the degenerate interface
+    auto weakform = mito::fem::weakform(
         mito::fem::term(
             bulk_space,
             parameters.kappa_se * mito::fem::blocks::diffusion<bulk_element_t, doe>(identity)),
@@ -193,8 +193,8 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
                 * mito::fem::blocks::average_average_gradient<interface_traits_t, doe>(identity)));
 
     // the discrete system
-    auto discrete_system = mito::fem::coupled_discrete_system<linear_system_t>(
-        "interface_degenerate_to_continuous", weakform);
+    auto discrete_system =
+        mito::fem::discrete_system<linear_system_t>("interface_degenerate_to_continuous", weakform);
 
     // solve
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);

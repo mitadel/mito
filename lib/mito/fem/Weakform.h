@@ -9,64 +9,39 @@
 
 namespace mito::fem {
 
-    template <class lhsBlockT, class rhsBlockT>
-    requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
+    // a term of a weakform: a block to be assembled over the elements of {source}
+    template <class sourceT, class blockT>
+    struct Term {
+        // my template parameters
+        using source_type = sourceT;
+        using block_type = blockT;
+
+        // the elements this term is assembled over
+        const source_type & source;
+        // the block computed on each of them
+        block_type block;
+    };
+
+    // Class {Weakform} is one weak form as a sum of terms, each on its own domain:
+    // a(u, v) = sum_k a_k(u, v). Terms on different function spaces are what couples them
+    template <class... termTs>
     class Weakform {
 
-      private:
-        // the type of the left hand side assembly block
-        using lhs_block_type = lhsBlockT;
-        // the type of the right hand side assembly block
-        using rhs_block_type = rhsBlockT;
-        // the elementary matrix type
-        using elementary_matrix_type = typename lhs_block_type::elementary_shape;
-        // the elementary vector type
-        using elementary_vector_type = typename rhs_block_type::elementary_shape;
+      public:
+        // the type of the collection of terms
+        using terms_type = std::tuple<termTs...>;
 
       public:
-        // constructor
-        constexpr Weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block) :
-            _lhs_block(lhs_block),
-            _rhs_block(rhs_block)
-        {}
-
-        // destructor
-        constexpr ~Weakform() = default;
-
-        // delete move constructor
-        constexpr Weakform(Weakform &&) noexcept = delete;
-
-        // delete copy constructor
-        constexpr Weakform(const Weakform &) = delete;
-
-        // delete assignment operator
-        constexpr Weakform & operator=(const Weakform &) = delete;
-
-        // delete move assignment operator
-        constexpr Weakform & operator=(Weakform &&) noexcept = delete;
+        // the constructor
+        constexpr Weakform(const termTs &... terms) : _terms(terms...) {}
 
       public:
-        // compute the elementary contributions to matrix and right-hand side from the weakform
-        template <class elementType>
-        constexpr auto compute_blocks(const elementType & element) const
-            -> std::pair<elementary_matrix_type, elementary_vector_type>
-        {
-            // the elementary matrix
-            auto elementary_matrix = _lhs_block.compute(element);
-
-            // the elementary vector
-            auto elementary_vector = _rhs_block.compute(element);
-
-            // return the elementary matrix and vector
-            return { elementary_matrix, elementary_vector };
-        }
+        // accessor for the terms of the weakform
+        constexpr auto terms() const noexcept -> const terms_type & { return _terms; }
 
       private:
-        // the left hand side assembly block
-        lhs_block_type _lhs_block;
-
-        // the right hand side assembly block
-        rhs_block_type _rhs_block;
+        // the terms of the weakform
+        terms_type _terms;
     };
 
 }    // namespace mito

@@ -39,39 +39,17 @@ namespace mito::fem {
         (std::same_as<typename firstBlockT::elementary_shape, typename blockTs::elementary_shape>
          && ...);
 
-    // weakform alias
-    template <class lhsBlockT, class rhsBlockT>
-    requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
-    class Weakform;
-
-    // a contribution to a discrete system: a weakform to be assembled on a function space
-    template <function_space_c functionSpaceT, class weakformT>
-    struct Contribution;
-
-    // concept of a contribution
-    template <class C>
-    concept contribution_c = requires(C c) {
-        // require that C only binds to {Contribution} specializations
-        []<function_space_c functionSpaceT, class weakformT>(
-            const Contribution<functionSpaceT, weakformT> &) {
-        }(c);
-    };
-
-    // class discrete system
-    template <class linearSystemT, contribution_c... contributionTs>
-    class DiscreteSystem;
-
-    // a term of a coupled weakform: a block assembled over the elements of a source
+    // a term of a weakform: a block assembled over the elements of a source
     template <class sourceT, class blockT>
     struct Term;
 
     // one weak form written as a sum of terms, each on its own domain
     template <class... termTs>
-    class CoupledWeakform;
+    class Weakform;
 
-    // class coupled discrete system
-    template <class linearSystemT, class coupledWeakformT>
-    class CoupledDiscreteSystem;
+    // class discrete system
+    template <class linearSystemT, class weakformT>
+    class DiscreteSystem;
 
     // class domain field
     template <fields::field_c F>

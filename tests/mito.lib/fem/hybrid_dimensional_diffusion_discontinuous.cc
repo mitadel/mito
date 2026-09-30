@@ -193,9 +193,9 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     const auto jump_jump_coefficient = kappa_m / parameters.layer_thickness;
     const auto average_average_coefficient = -parameters.layer_thickness * kappa_m;
 
-    // one coupled weakform: bulk diffusion on either half, plus the two crack terms. There is no
+    // one weakform: bulk diffusion on either half, plus the two crack terms. There is no
     // forcing, so no right hand side term: the load comes from the Dirichlet lift alone
-    auto weakform = mito::fem::coupled_weakform(
+    auto weakform = mito::fem::weakform(
         mito::fem::term(
             top_space,
             parameters.kappa_se * mito::fem::blocks::diffusion<bulk_element_t, doe>(identity)),
@@ -212,7 +212,7 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
 
     // the discrete system: the degrees of freedom of both function spaces are numbered together,
     // and the interface terms reference them without owning any of their own
-    auto discrete_system = mito::fem::coupled_discrete_system<linear_system_t>(
+    auto discrete_system = mito::fem::discrete_system<linear_system_t>(
         "hybrid_dimensional_diffusion_discontinuous", weakform);
 
     // solve

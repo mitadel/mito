@@ -32,29 +32,6 @@ namespace mito::fem {
     template <class functionSpaceT>
     using function_space_elements_view_t = FunctionSpaceElementsView<functionSpaceT>;
 
-    // weakform alias
-    template <class lhsBlockT, class rhsBlockT>
-    using weakform_t = Weakform<lhsBlockT, rhsBlockT>;
-
-    // weakform factory
-    template <class lhsBlockT, class rhsBlockT>
-    constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block);
-
-    // discrete system alias
-    template <class linearSystemT, contribution_c... contributionTs>
-    using discrete_system_t = DiscreteSystem<linearSystemT, contributionTs...>;
-
-    // discrete system factory (one contribution per function space)
-    template <class linearSystemT, contribution_c... contributionTs>
-    constexpr auto discrete_system(
-        const std::string & label, const contributionTs &... contributions);
-
-    // discrete system factory (single function space)
-    template <class linearSystemT, function_space_c functionSpaceT, class weakformT>
-    constexpr auto discrete_system(
-        const std::string & label, const functionSpaceT & function_space,
-        const weakformT & weakform);
-
     // weakform term alias
     template <class sourceT, class blockT>
     using term_t = Term<sourceT, blockT>;
@@ -63,22 +40,21 @@ namespace mito::fem {
     template <class sourceT, class blockT>
     constexpr auto term(const sourceT & source, const blockT & block);
 
-    // coupled weakform alias
+    // weakform alias
     template <class... termTs>
-    using coupled_weakform_t = CoupledWeakform<termTs...>;
+    using weakform_t = Weakform<termTs...>;
 
-    // coupled weakform factory
+    // weakform factory
     template <class... termTs>
-    constexpr auto coupled_weakform(const termTs &... terms);
+    constexpr auto weakform(const termTs &... terms);
 
-    // coupled discrete system alias
-    template <class linearSystemT, class coupledWeakformT>
-    using coupled_discrete_system_t = CoupledDiscreteSystem<linearSystemT, coupledWeakformT>;
+    // discrete system alias
+    template <class linearSystemT, class weakformT>
+    using discrete_system_t = DiscreteSystem<linearSystemT, weakformT>;
 
-    // coupled discrete system factory
-    template <class linearSystemT, class coupledWeakformT>
-    constexpr auto coupled_discrete_system(
-        const std::string & label, const coupledWeakformT & weakform);
+    // discrete system factory
+    template <class linearSystemT, class weakformT>
+    constexpr auto discrete_system(const std::string & label, const weakformT & weakform);
 }
 
 
