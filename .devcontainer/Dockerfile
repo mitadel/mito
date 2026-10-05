@@ -50,6 +50,7 @@ RUN apt install -y python3-pytest
 
 # install pyre dependencies
 RUN apt install -y pybind11-dev
+RUN apt install -y python3-numpy
 
 # install gcc-14 and g++-14
 RUN apt install -y gcc-14 g++-14
