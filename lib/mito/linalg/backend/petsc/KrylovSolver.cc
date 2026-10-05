@@ -14,14 +14,6 @@
 mito::linalg::backend::petsc::KrylovSolver::KrylovSolver(linear_system_type & linear_system) :
     _linear_system(linear_system),
     _options_prefix(linear_system.label() + "_")
-{}
-
-// destructor
-mito::linalg::backend::petsc::KrylovSolver::~KrylovSolver() {}
-
-// create the Krylov solver
-auto
-mito::linalg::backend::petsc::KrylovSolver::create() -> void
 {
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
@@ -32,20 +24,15 @@ mito::linalg::backend::petsc::KrylovSolver::create() -> void
     return;
 }
 
-// destroy the Krylov solver
-auto
-mito::linalg::backend::petsc::KrylovSolver::destroy() -> void
+// destructor
+mito::linalg::backend::petsc::KrylovSolver::~KrylovSolver()
 {
-    // free the memory of the linear system
-    _linear_system.destroy();
-
     // destroy the Krylov solver
     PetscCallVoid(KSPDestroy(&_ksp));
 
     // all done
     return;
 }
-
 namespace {
     // helper function to prepend the prefix {prefix} to each of the space-separated
     // options leading with '-'

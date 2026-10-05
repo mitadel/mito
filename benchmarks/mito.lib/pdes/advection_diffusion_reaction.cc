@@ -33,8 +33,8 @@ constexpr auto e_y = mito::geometry::cartesian<2>::e_y;
 int
 main()
 {
-    // initialize PETSc
-    mito::petsc::initialize();
+    // create petsc environment
+    auto environment = mito::linalg::backend::petsc::environment();
 
     // make a channel
     journal::info_t channel("benchmark.advection_diffusion_reaction");
@@ -114,9 +114,6 @@ main()
     // solve the system
     solver.solve();
 
-    // free the solver
-    solver.destroy();
-
     // get the solution field
     const auto & solution = discrete_system.solution();
 
@@ -157,9 +154,6 @@ main()
     // write output file
     writer_solution.write();
 #endif
-
-    // finalize PETSc
-    mito::petsc::finalize();
 }
 
 // end of file

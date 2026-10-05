@@ -28,12 +28,6 @@ namespace mito::linalg::backend::petsc {
         ~KrylovSolver();
 
       public:
-        // create the Krylov solver
-        auto create() -> void;
-
-        // destroy the Krylov solver
-        auto destroy() -> void;
-
         // set petsc options
         auto set_options(const options_type &) -> void;
 

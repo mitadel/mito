@@ -10,17 +10,10 @@
 
 
 // constructor
-mito::linalg::backend::petsc::LinearSystem::LinearSystem(const label_type & label) :
+mito::linalg::backend::petsc::LinearSystem::LinearSystem(
+    const label_type & label, index_type size) :
     _label(label),
-    _n_equations(0)
-{}
-
-// destructor
-mito::linalg::backend::petsc::LinearSystem::~LinearSystem() {}
-
-// allocate memory for the matrix, right-hand side, and solution
-auto
-mito::linalg::backend::petsc::LinearSystem::create(index_type size) -> void
+    _n_equations(size)
 {
     // take note of the number of equations
     _n_equations = size;
@@ -40,22 +33,15 @@ mito::linalg::backend::petsc::LinearSystem::create(index_type size) -> void
     PetscCallVoid(MatSetFromOptions(_matrix));
     PetscCallVoid(VecSetFromOptions(_rhs));
     PetscCallVoid(VecSetFromOptions(_solution));
-
-    // all done
-    return;
 }
 
-// free memory for the matrix, right-hand side, and solution
-auto
-mito::linalg::backend::petsc::LinearSystem::destroy() -> void
+// destructor
+mito::linalg::backend::petsc::LinearSystem::~LinearSystem()
 {
     // destroy the matrix, right-hand side, solution
     PetscCallVoid(MatDestroy(&_matrix));
     PetscCallVoid(VecDestroy(&_solution));
     PetscCallVoid(VecDestroy(&_rhs));
-
-    // all done
-    return;
 }
 
 // get the label of the linear system
@@ -120,8 +106,8 @@ mito::linalg::backend::petsc::LinearSystem::insert_rhs_value(
 
 // add {value} to right-hand side entry at {row}
 auto
-mito::linalg::backend::petsc::LinearSystem::add_rhs_value(
-    index_type row, const scalar_type & value) -> void
+mito::linalg::backend::petsc::LinearSystem::add_rhs_value(index_type row, const scalar_type & value)
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_rhs, row, value, ADD_VALUES));

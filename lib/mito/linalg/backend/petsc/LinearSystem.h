@@ -28,18 +28,12 @@ namespace mito::linalg::backend::petsc {
 
       public:
         // constructor
-        LinearSystem(const label_type &);
+        LinearSystem(const label_type &, index_type);
 
         // destructor
         ~LinearSystem();
 
       public:
-        // create the matrix, right-hand side, and solution
-        auto create(index_type) -> void;
-
-        // destroy the matrix, right-hand side, and solution
-        auto destroy() -> void;
-
         // get the label of the linear system
         auto label() const -> label_type;
 
