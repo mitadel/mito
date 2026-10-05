@@ -9,12 +9,12 @@
 
 namespace mito::linalg::backend::petsc {
 
-    class PETScKrylovSolver {
+    class KrylovSolver {
       private:
         // the index type
         using index_type = PetscInt;
         // the linear system type
-        using linear_system_type = PETScLinearSystem;
+        using linear_system_type = LinearSystem;
         // the solver type
         using solver_type = KSP;
         // the options type
@@ -22,10 +22,10 @@ namespace mito::linalg::backend::petsc {
 
       public:
         // constructor
-        PETScKrylovSolver(linear_system_type &);
+        KrylovSolver(linear_system_type &);
 
         // destructor
-        ~PETScKrylovSolver();
+        ~KrylovSolver();
 
       public:
         // create the Krylov solver

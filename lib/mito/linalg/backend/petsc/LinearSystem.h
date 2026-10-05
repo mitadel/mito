@@ -9,10 +9,10 @@
 
 namespace mito::linalg::backend::petsc {
 
-    class PETScLinearSystem {
+    class LinearSystem {
 
         // friend declarations
-        friend class PETScKrylovSolver;
+        friend class KrylovSolver;
 
       private:
         // the index type
@@ -28,10 +28,10 @@ namespace mito::linalg::backend::petsc {
 
       public:
         // constructor
-        PETScLinearSystem(const label_type &);
+        LinearSystem(const label_type &);
 
         // destructor
-        ~PETScLinearSystem();
+        ~LinearSystem();
 
       public:
         // create the matrix, right-hand side, and solution
@@ -87,9 +87,9 @@ namespace mito::linalg::backend::petsc {
 
 
 // get the template definitions
-#define mito_linalg_backend_petsc_PETScLinearSystem_icc
-#include "PETScLinearSystem.icc"
-#undef mito_linalg_backend_petsc_PETScLinearSystem_icc
+#define mito_linalg_backend_petsc_LinearSystem_icc
+#include "LinearSystem.icc"
+#undef mito_linalg_backend_petsc_LinearSystem_icc
 
 
 // end of file

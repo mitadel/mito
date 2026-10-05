@@ -12,8 +12,8 @@ if (WITH_PETSC)
 set(MITO_SOURCES ${MITO_SOURCES}
 lib/mito/linalg/backend/petsc/Matrix.cc
 lib/mito/linalg/backend/petsc/Vector.cc
-lib/mito/linalg/backend/petsc/PETScLinearSystem.cc
-lib/mito/linalg/backend/petsc/PETScKrylovSolver.cc
+lib/mito/linalg/backend/petsc/LinearSystem.cc
+lib/mito/linalg/backend/petsc/KrylovSolver.cc
 )
 endif()
 

@@ -6,21 +6,21 @@
 
 #include "forward.h"
 #include "externals.h"
-#include "PETScLinearSystem.h"
+#include "LinearSystem.h"
 
 
 // constructor
-mito::linalg::backend::petsc::PETScLinearSystem::PETScLinearSystem(const label_type & label) :
+mito::linalg::backend::petsc::LinearSystem::LinearSystem(const label_type & label) :
     _label(label),
     _n_equations(0)
 {}
 
 // destructor
-mito::linalg::backend::petsc::PETScLinearSystem::~PETScLinearSystem() {}
+mito::linalg::backend::petsc::LinearSystem::~LinearSystem() {}
 
 // allocate memory for the matrix, right-hand side, and solution
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::create(index_type size) -> void
+mito::linalg::backend::petsc::LinearSystem::create(index_type size) -> void
 {
     // take note of the number of equations
     _n_equations = size;
@@ -47,7 +47,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::create(index_type size) -> void
 
 // free memory for the matrix, right-hand side, and solution
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::destroy() -> void
+mito::linalg::backend::petsc::LinearSystem::destroy() -> void
 {
     // destroy the matrix, right-hand side, solution
     PetscCallVoid(MatDestroy(&_matrix));
@@ -60,7 +60,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::destroy() -> void
 
 // get the label of the linear system
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::label() const -> label_type
+mito::linalg::backend::petsc::LinearSystem::label() const -> label_type
 {
     // easy enough
     return _label;
@@ -68,7 +68,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::label() const -> label_type
 
 // assemble the linear system
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::assemble() -> void
+mito::linalg::backend::petsc::LinearSystem::assemble() -> void
 {
     // assemble matrix
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FINAL_ASSEMBLY));
@@ -84,7 +84,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::assemble() -> void
 
 // set the matrix entry at ({row}, {col}) to {value}
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::insert_matrix_value(
+mito::linalg::backend::petsc::LinearSystem::insert_matrix_value(
     index_type row, index_type col, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -96,7 +96,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::insert_matrix_value(
 
 // add {value} to matrix entry at ({row}, {col})
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::add_matrix_value(
+mito::linalg::backend::petsc::LinearSystem::add_matrix_value(
     index_type row, index_type col, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -108,7 +108,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::add_matrix_value(
 
 // set the right-hand side entry at {row} to {value}
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::insert_rhs_value(
+mito::linalg::backend::petsc::LinearSystem::insert_rhs_value(
     index_type row, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -120,7 +120,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::insert_rhs_value(
 
 // add {value} to right-hand side entry at {row}
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::add_rhs_value(
+mito::linalg::backend::petsc::LinearSystem::add_rhs_value(
     index_type row, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -131,7 +131,7 @@ mito::linalg::backend::petsc::PETScLinearSystem::add_rhs_value(
 }
 
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::n_equations() const -> int
+mito::linalg::backend::petsc::LinearSystem::n_equations() const -> int
 {
     return _n_equations;
 }
@@ -139,10 +139,10 @@ mito::linalg::backend::petsc::PETScLinearSystem::n_equations() const -> int
 
 // print the linear system of equations of the petsc solver
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::print() const -> void
+mito::linalg::backend::petsc::LinearSystem::print() const -> void
 {
     // create a reporting channel
-    journal::info_t channel("mito.solvers.petsc.PETScLinearSystem");
+    journal::info_t channel("mito.solvers.petsc.LinearSystem");
 
     // print the matrix
     channel << "Matrix:" << journal::endl;

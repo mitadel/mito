@@ -9,23 +9,23 @@
 
 namespace mito::linalg::backend::petsc {
 
-    // petsc environment
+    // environment
     using environment_t = Environment;
 
-    // petsc matrix
+    // matrix
     using matrix_t = Matrix;
 
-    // petsc vector
+    // vector
     using vector_t = Vector;
 
-    // petsc backend
+    // backend
     using backend_t = Backend;
 
-    // petsc linear system
-    using linear_system_t = PETScLinearSystem;
+    // linear system
+    using linear_system_t = LinearSystem;
 
-    // petsc Krlov solver
-    using ksp_t = PETScKrylovSolver;
+    // Krlov solver
+    using ksp_t = KrylovSolver;
 }
 
 

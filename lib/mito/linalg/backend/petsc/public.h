@@ -19,8 +19,8 @@
 // classes
 #include "Environment.h"
 #include "Matrix.h"
-#include "PETScKrylovSolver.h"
-#include "PETScLinearSystem.h"
+#include "KrylovSolver.h"
+#include "LinearSystem.h"
 #include "Vector.h"
 
 // factories implementation

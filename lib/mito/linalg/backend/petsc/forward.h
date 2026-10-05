@@ -10,13 +10,13 @@
 
 namespace mito::linalg::backend::petsc {
 
-    // class for PETSc environment
+    // class for environment
     class Environment;
 
-    // class for PETSc matrix
+    // class for matrix
     class Matrix;
 
-    // class for PETSc vector
+    // class for vector
     class Vector;
 
     // class for index type
@@ -25,11 +25,11 @@ namespace mito::linalg::backend::petsc {
     // class for scalar type
     using scalar_type = PetscScalar;
 
-    // class for PETSc linear system
-    class PETScLinearSystem;
+    // class for linear system
+    class LinearSystem;
 
-    // class for PETSc Krylov solver
-    class PETScKrylovSolver;
+    // class for Krylov solver
+    class KrylovSolver;
 
     // struct for backend
     struct Backend {

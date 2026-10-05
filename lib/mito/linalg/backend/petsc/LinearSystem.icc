@@ -4,15 +4,15 @@
 //
 
 
-#if !defined(mito_linalg_backend_petsc_PETScLinearSystem_icc)
-#error This header file contains implementation details of class mito::linalg::backend::petsc::PETScLinearSystem
+#if !defined(mito_linalg_backend_petsc_LinearSystem_icc)
+#error This header file contains implementation details of class mito::linalg::backend::petsc::LinearSystem
 #else
 
 
 // get the solution at entry {row}
 template <class solutionT>
 auto
-mito::linalg::backend::petsc::PETScLinearSystem::get_solution(solutionT & solution) const -> void
+mito::linalg::backend::petsc::LinearSystem::get_solution(solutionT & solution) const -> void
 {
     // get a pointer to the beginning of {_solution}
     const scalar_type * u;
@@ -36,6 +36,6 @@ mito::linalg::backend::petsc::PETScLinearSystem::get_solution(solutionT & soluti
 }
 
 
-#endif    // mito_linalg_backend_petsc_PETScLinearSystem_icc
+#endif    // mito_linalg_backend_petsc_LinearSystem_icc
 
 // end of file
