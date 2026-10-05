@@ -8,7 +8,7 @@
 
 
 // publish the interface
-#include "math/public.h"
+#include "linalg/public.h"
 
 
 // end of file

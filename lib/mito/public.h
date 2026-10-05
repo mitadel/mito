@@ -21,7 +21,7 @@
 #include "manifolds.h"
 #include "materials.h"
 #include "operators.h"
-#include "math.h"
+#include "linalg.h"
 #include "mesh.h"
 #include "quadrature.h"
 #include "simulation.h"

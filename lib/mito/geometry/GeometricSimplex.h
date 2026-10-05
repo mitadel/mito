@@ -67,7 +67,7 @@ namespace mito::geometry {
             // of nodes in {_nodes}
             auto _check_vertices = [this]<int... J>(tensor::integer_sequence<J...>) -> bool {
                 return (
-                    math::permutation_sign(_simplex->vertices(), { _nodes[J]->vertex()... }) == +1);
+                    utilities::permutation_sign(_simplex->vertices(), { _nodes[J]->vertex()... }) == +1);
             };
 
             return _check_vertices(tensor::make_integer_sequence<N + 1>{});

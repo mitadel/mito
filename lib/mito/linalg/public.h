@@ -10,9 +10,6 @@
 // external packages
 #include "externals.h"
 
-// combinatorics utilities
-#include "combinatorics.h"
-
 // backend
 #include "backend.h"
 

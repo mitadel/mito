@@ -127,8 +127,9 @@ mito_test_driver(tests/mito.lib/manifolds/spherical_gradient.cc)
 mito_test_driver(tests/mito.lib/materials/gent.cc)
 mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
-# math
-mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
+# linalg
+mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
+mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)
@@ -190,6 +191,7 @@ mito_test_driver(tests/mito.lib/utilities/segmented_vector_subscript.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_print.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 mito_test_driver(tests/mito.lib/utilities/named_class.cc)
+mito_test_driver(tests/mito.lib/utilities/permutation_sign.cc)
 
 # quadrature
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)
