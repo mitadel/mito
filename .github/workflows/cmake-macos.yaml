@@ -86,7 +86,7 @@ jobs:
           mkdir build
           cd build
           echo " -- configuring the build"
-          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DBENCHMARK_ENABLE_GTEST_TESTS=OFF   -DBUILD_TESTING=OFF ${{github.workspace}}/google-benchmark
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_CXX_COMPILER=${cxx} -DBENCHMARK_ENABLE_GTEST_TESTS=OFF ${{github.workspace}}/google-benchmark
           echo " -- building google-benchmark"
           make -j 2 install
           echo " -- clean up"
