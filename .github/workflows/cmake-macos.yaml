@@ -38,8 +38,6 @@ jobs:
         run: |
           echo " -- install our dependencies"
           brew install make cmake metis open-mpi
-          # install {google-benchmark} from source to make sure it is built with the same compiler
-          brew install --build-from-source --cc=gcc-14 --verbose google-benchmark --cmake-args="-DHAVE_THREAD_SAFETY_ATTRIBUTES=OFF"
 
       - name: python ${{matrix.python}} setup
         uses: actions/setup-python@v4
@@ -71,6 +69,31 @@ jobs:
           rm -r build
         env:
           prefix: ${{runner.temp}}/gtest_install
+          target: Release
+          cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
+          cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
+        working-directory: ${{runner.temp}}
+
+      - name: checkout google-benchmark
+        uses: actions/checkout@v4
+        with:
+          repository: google/benchmark
+          path: google-benchmark
+
+      - name: install google-benchmark
+        run: |
+          echo " -- switching to the build directory"
+          mkdir build
+          cd build
+          echo " -- configuring the build"
+          cmake -DCMAKE_INSTALL_PREFIX=${prefix} -DCMAKE_BUILD_TYPE=${target} -DCMAKE_C_COMPILER=${cc} -DCMAKE_CXX_COMPILER=${cxx} -DBENCHMARK_ENABLE_GTEST_TESTS=OFF   -DBUILD_TESTING=OFF ${{github.workspace}}/google-benchmark
+          echo " -- building google-benchmark"
+          make -j 2 install
+          echo " -- clean up"
+          cd ${{runner.temp}}
+          rm -r build
+        env:
+          prefix: ${{runner.temp}}/google-benchmark_install
           target: Release
           cc: ${{matrix.cc}}-${{matrix.suiteVersion}}
           cxx: ${{matrix.cxx}}-${{matrix.suiteVersion}}
