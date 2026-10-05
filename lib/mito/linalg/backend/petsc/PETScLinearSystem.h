@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::matrix_solvers::petsc {
+namespace mito::math_backend::petsc {
 
     class PETScLinearSystem {
 
@@ -87,9 +87,9 @@ namespace mito::matrix_solvers::petsc {
 
 
 // get the template definitions
-#define mito_solvers_backend_petsc_PETScLinearSystem_icc
+#define mito_linalg_backend_petsc_PETScLinearSystem_icc
 #include "PETScLinearSystem.icc"
-#undef mito_solvers_backend_petsc_PETScLinearSystem_icc
+#undef mito_linalg_backend_petsc_PETScLinearSystem_icc
 
 
 // end of file

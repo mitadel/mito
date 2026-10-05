@@ -12,14 +12,24 @@ namespace mito::math_backend::petsc {
 
     // class for PETSc environment
     class Environment;
+
     // class for PETSc matrix
     class Matrix;
+
     // class for PETSc vector
     class Vector;
+
     // class for index type
     using index_type = PetscInt;
+
     // class for scalar type
     using scalar_type = PetscScalar;
+
+    // class for PETSc linear system
+    class PETScLinearSystem;
+
+    // class for PETSc Krylov solver
+    class PETScKrylovSolver;
 
     // struct for backend
     struct Backend {

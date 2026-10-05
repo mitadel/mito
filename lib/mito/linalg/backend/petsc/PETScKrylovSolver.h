@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::matrix_solvers::petsc {
+namespace mito::math_backend::petsc {
 
     class PETScKrylovSolver {
       private:

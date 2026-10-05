@@ -21,6 +21,11 @@ namespace mito::math_backend::petsc {
     // petsc backend
     using backend_t = Backend;
 
+    // petsc linear system
+    using linear_system_t = PETScLinearSystem;
+
+    // petsc Krlov solver
+    using ksp_t = PETScKrylovSolver;
 }
 
 

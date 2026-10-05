@@ -27,6 +27,17 @@ namespace mito::math_backend::petsc {
         return vector_t(name, size);
     }
 
+    // petsc linear system
+    auto linear_system(const std::string & name)
+    {
+        return linear_system_t(name);
+    }
+
+    // petsc Krylov solver
+    auto ksp(linear_system_t & linear_system)
+    {
+        return ksp_t(linear_system);
+    }
 }
 
 

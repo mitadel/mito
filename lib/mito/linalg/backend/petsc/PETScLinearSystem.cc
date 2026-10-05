@@ -10,17 +10,17 @@
 
 
 // constructor
-mito::matrix_solvers::petsc::PETScLinearSystem::PETScLinearSystem(const label_type & label) :
+mito::math_backend::petsc::PETScLinearSystem::PETScLinearSystem(const label_type & label) :
     _label(label),
     _n_equations(0)
 {}
 
 // destructor
-mito::matrix_solvers::petsc::PETScLinearSystem::~PETScLinearSystem() {}
+mito::math_backend::petsc::PETScLinearSystem::~PETScLinearSystem() {}
 
 // allocate memory for the matrix, right-hand side, and solution
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::create(index_type size) -> void
+mito::math_backend::petsc::PETScLinearSystem::create(index_type size) -> void
 {
     // take note of the number of equations
     _n_equations = size;
@@ -47,7 +47,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::create(index_type size) -> void
 
 // free memory for the matrix, right-hand side, and solution
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::destroy() -> void
+mito::math_backend::petsc::PETScLinearSystem::destroy() -> void
 {
     // destroy the matrix, right-hand side, solution
     PetscCallVoid(MatDestroy(&_matrix));
@@ -60,7 +60,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::destroy() -> void
 
 // get the label of the linear system
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::label() const -> label_type
+mito::math_backend::petsc::PETScLinearSystem::label() const -> label_type
 {
     // easy enough
     return _label;
@@ -68,7 +68,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::label() const -> label_type
 
 // assemble the linear system
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::assemble() -> void
+mito::math_backend::petsc::PETScLinearSystem::assemble() -> void
 {
     // assemble matrix
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FINAL_ASSEMBLY));
@@ -84,7 +84,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::assemble() -> void
 
 // set the matrix entry at ({row}, {col}) to {value}
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::insert_matrix_value(
+mito::math_backend::petsc::PETScLinearSystem::insert_matrix_value(
     index_type row, index_type col, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -96,7 +96,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::insert_matrix_value(
 
 // add {value} to matrix entry at ({row}, {col})
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::add_matrix_value(
+mito::math_backend::petsc::PETScLinearSystem::add_matrix_value(
     index_type row, index_type col, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -108,7 +108,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::add_matrix_value(
 
 // set the right-hand side entry at {row} to {value}
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::insert_rhs_value(
+mito::math_backend::petsc::PETScLinearSystem::insert_rhs_value(
     index_type row, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -120,7 +120,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::insert_rhs_value(
 
 // add {value} to right-hand side entry at {row}
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::add_rhs_value(
+mito::math_backend::petsc::PETScLinearSystem::add_rhs_value(
     index_type row, const scalar_type & value) -> void
 {
     // delegate to PETSc
@@ -131,7 +131,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::add_rhs_value(
 }
 
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::n_equations() const -> int
+mito::math_backend::petsc::PETScLinearSystem::n_equations() const -> int
 {
     return _n_equations;
 }
@@ -139,7 +139,7 @@ mito::matrix_solvers::petsc::PETScLinearSystem::n_equations() const -> int
 
 // print the linear system of equations of the petsc solver
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::print() const -> void
+mito::math_backend::petsc::PETScLinearSystem::print() const -> void
 {
     // create a reporting channel
     journal::info_t channel("mito.solvers.petsc.PETScLinearSystem");
