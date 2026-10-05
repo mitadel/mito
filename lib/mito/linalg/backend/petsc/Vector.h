@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::math_backend::petsc {
+namespace mito::linalg::backend::petsc {
 
     class Vector {
       public:
@@ -67,9 +67,9 @@ namespace mito::math_backend::petsc {
 
 
 // get the template definitions
-#define mito_math_backend_petsc_Vector_icc
+#define mito_linalg_backend_petsc_Vector_icc
 #include "Vector.icc"
-#undef mito_math_backend_petsc_Vector_icc
+#undef mito_linalg_backend_petsc_Vector_icc
 
 
 // end of file

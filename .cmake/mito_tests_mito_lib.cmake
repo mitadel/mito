@@ -97,12 +97,6 @@ if(WITH_VTK)
     endif()
 endif()
 
-# solvers
-if(WITH_PETSC)
-    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_initialize_finalize.cc)
-    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_ksp.cc)
-endif()
-
 # tensor
 mito_test_driver(tests/mito.lib/tensor/one_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/contractions.cc)
@@ -128,8 +122,12 @@ mito_test_driver(tests/mito.lib/materials/gent.cc)
 mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
 # linalg
-mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
-mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
+if(WITH_PETSC)
+    mito_test_driver(tests/mito.lib/linalg/petsc_initialize_finalize.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_ksp.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
+endif()
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)

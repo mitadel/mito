@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::math_backend::petsc {
+namespace mito::linalg::backend::petsc {
 
     // petsc environment
     auto environment() -> environment_t

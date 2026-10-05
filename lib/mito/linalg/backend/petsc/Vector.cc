@@ -10,7 +10,7 @@
 
 
 // constructor
-mito::math_backend::petsc::Vector::Vector(const label_type & label, index_type size) :
+mito::linalg::backend::petsc::Vector::Vector(const label_type & label, index_type size) :
     _label(label),
     _n_equations(size)
 {
@@ -23,7 +23,7 @@ mito::math_backend::petsc::Vector::Vector(const label_type & label, index_type s
 }
 
 // destructor
-mito::math_backend::petsc::Vector::~Vector()
+mito::linalg::backend::petsc::Vector::~Vector()
 {
     // destroy the vector
     PetscCallVoid(VecDestroy(&_vector));
@@ -31,7 +31,7 @@ mito::math_backend::petsc::Vector::~Vector()
 
 // get the label of the vector
 auto
-mito::math_backend::petsc::Vector::label() const -> label_type
+mito::linalg::backend::petsc::Vector::label() const -> label_type
 {
     // easy enough
     return _label;
@@ -39,7 +39,8 @@ mito::math_backend::petsc::Vector::label() const -> label_type
 
 // set the vector entry at {row} to {value}
 auto
-mito::math_backend::petsc::Vector::insert_value(index_type row, const scalar_type & value) -> void
+mito::linalg::backend::petsc::Vector::insert_value(index_type row, const scalar_type & value)
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_vector, row, value, INSERT_VALUES));
@@ -50,7 +51,7 @@ mito::math_backend::petsc::Vector::insert_value(index_type row, const scalar_typ
 
 // assemble the vector
 auto
-mito::math_backend::petsc::Vector::assemble() -> void
+mito::linalg::backend::petsc::Vector::assemble() -> void
 {
     // assemble vector
     PetscCallVoid(VecAssemblyBegin(_vector));
@@ -65,7 +66,7 @@ mito::math_backend::petsc::Vector::assemble() -> void
 
 // add {value} to vector entry at {row}
 auto
-mito::math_backend::petsc::Vector::add_value(index_type row, const scalar_type & value) -> void
+mito::linalg::backend::petsc::Vector::add_value(index_type row, const scalar_type & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_vector, row, value, ADD_VALUES));
@@ -76,7 +77,7 @@ mito::math_backend::petsc::Vector::add_value(index_type row, const scalar_type &
 
 // get the number of entries in the vector
 auto
-mito::math_backend::petsc::Vector::n_equations() const -> int
+mito::linalg::backend::petsc::Vector::n_equations() const -> int
 {
     return _n_equations;
 }
@@ -84,7 +85,7 @@ mito::math_backend::petsc::Vector::n_equations() const -> int
 
 // print the linear system of equations of the petsc solver
 auto
-mito::math_backend::petsc::Vector::print() const -> void
+mito::linalg::backend::petsc::Vector::print() const -> void
 {
     // create a reporting channel
     journal::info_t channel("mito.solvers.petsc.Vector");

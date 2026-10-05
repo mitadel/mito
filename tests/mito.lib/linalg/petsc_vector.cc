@@ -14,7 +14,7 @@ TEST(Math, PETScVector)
     int N = 10;
 
     // instantiate a PETSc vector of size {N}
-    auto vector = mito::math_backend::petsc::vector("myvector", N);
+    auto vector = mito::linalg::backend::petsc::vector("myvector", N);
 
     // set vector entries
     for (int i = 0; i < N; i++) {
@@ -56,7 +56,7 @@ int
 main(int argc, char ** argv)
 {
     // initialize PETSc
-    auto environment = mito::math_backend::petsc::environment();
+    auto environment = mito::linalg::backend::petsc::environment();
 
     ::testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();

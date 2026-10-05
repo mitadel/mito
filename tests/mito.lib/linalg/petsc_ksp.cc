@@ -14,12 +14,12 @@ TEST(Solvers, PETScKSPSolver)
     int N = 10;
 
     // instantiate a PETSc linear system of size {N}
-    auto linear_system = mito::math_backend::petsc::linear_system("mysystem");
+    auto linear_system = mito::linalg::backend::petsc::linear_system("mysystem");
     // create the linear system and allocate the memory
     linear_system.create(N);
 
     // instantiate a PETSc Krylov solver for the linear system
-    auto solver = mito::math_backend::petsc::ksp(linear_system);
+    auto solver = mito::linalg::backend::petsc::ksp(linear_system);
     // create the Krylov solver and allocate the memory
     solver.create();
     // set options for the petsc Krylov solver

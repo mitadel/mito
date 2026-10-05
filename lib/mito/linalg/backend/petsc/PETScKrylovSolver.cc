@@ -11,18 +11,18 @@
 
 
 // constructor
-mito::math_backend::petsc::PETScKrylovSolver::PETScKrylovSolver(
+mito::linalg::backend::petsc::PETScKrylovSolver::PETScKrylovSolver(
     linear_system_type & linear_system) :
     _linear_system(linear_system),
     _options_prefix(linear_system.label() + "_")
 {}
 
 // destructor
-mito::math_backend::petsc::PETScKrylovSolver::~PETScKrylovSolver() {}
+mito::linalg::backend::petsc::PETScKrylovSolver::~PETScKrylovSolver() {}
 
 // create the Krylov solver
 auto
-mito::math_backend::petsc::PETScKrylovSolver::create() -> void
+mito::linalg::backend::petsc::PETScKrylovSolver::create() -> void
 {
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
@@ -35,7 +35,7 @@ mito::math_backend::petsc::PETScKrylovSolver::create() -> void
 
 // destroy the Krylov solver
 auto
-mito::math_backend::petsc::PETScKrylovSolver::destroy() -> void
+mito::linalg::backend::petsc::PETScKrylovSolver::destroy() -> void
 {
     // free the memory of the linear system
     _linear_system.destroy();
@@ -87,7 +87,7 @@ namespace {
 
 // set petsc options
 auto
-mito::math_backend::petsc::PETScKrylovSolver::set_options(const options_type & options) -> void
+mito::linalg::backend::petsc::PETScKrylovSolver::set_options(const options_type & options) -> void
 {
     // prepend the prefix {_options_prefix} to each of the space-separated options in input
     auto prefixed_options = prepend_options_prefix(options, _options_prefix);
@@ -107,7 +107,7 @@ mito::math_backend::petsc::PETScKrylovSolver::set_options(const options_type & o
 
 // solve the linear system
 auto
-mito::math_backend::petsc::PETScKrylovSolver::solve() -> void
+mito::linalg::backend::petsc::PETScKrylovSolver::solve() -> void
 {
     // assemble the linear system
     _linear_system.assemble();
@@ -121,7 +121,7 @@ mito::math_backend::petsc::PETScKrylovSolver::solve() -> void
 
 // print the linear system of equations of the petsc solver
 auto
-mito::math_backend::petsc::PETScKrylovSolver::print() const -> void
+mito::linalg::backend::petsc::PETScKrylovSolver::print() const -> void
 {
     // create a reporting channel
     journal::info_t channel("mito.solvers.petsc.PETScKrylovSolver");
