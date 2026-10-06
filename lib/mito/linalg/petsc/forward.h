@@ -13,17 +13,11 @@ namespace mito::linalg::petsc {
     // class for environment
     class Environment;
 
-    // class for matrix
-    class Matrix;
-
     // class for vector
     class Vector;
 
-    // class for index type
-    using index_type = PetscInt;
-
-    // class for scalar type
-    using scalar_type = PetscScalar;
+    // class for matrix
+    class Matrix;
 
     // class for linear system
     class LinearSystem;
@@ -37,12 +31,11 @@ namespace mito::linalg::petsc {
         using index_type = PetscInt;
         // the scalar type
         using scalar_type = PetscScalar;
-        // the matrix type
-        using matrix_type = Matrix;
         // the vector type
         using vector_type = Vector;
+        // the matrix type
+        using matrix_type = Matrix;
     };
-
 }
 
 
