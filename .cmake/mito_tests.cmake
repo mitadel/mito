@@ -75,9 +75,9 @@ function(mito_test_driver testfile)
     add_test(NAME ${testname} COMMAND ${target} ${ARGN} WORKING_DIRECTORY ${test_workdir})
 
     # register the runtime environment requirements
-    # set_property(TEST ${testname} PROPERTY ENVIRONMENT
-    #     LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
-    # )
+    set_property(TEST ${testname} PROPERTY ENVIRONMENT
+        LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
+    )
 
     # all done
 endfunction(mito_test_driver)
@@ -99,9 +99,9 @@ function(mito_test_driver_mpi testfile slots)
         WORKING_DIRECTORY ${test_workdir})
 
     # register the runtime environment requirements
-    # set_property(TEST ${testname} PROPERTY ENVIRONMENT
-    #     LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
-    # )
+    set_property(TEST ${testname} PROPERTY ENVIRONMENT
+        LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
+    )
 
   # all done
 endfunction()
