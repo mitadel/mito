@@ -13,7 +13,7 @@
 #include <cassert>
 
 // support
-#include "../../../journal.h"
+#include "../../journal.h"
 
 // petsc support
 #include <petscksp.h>

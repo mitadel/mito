@@ -10,9 +10,10 @@
 // external packages
 #include "externals.h"
 
-// backend
-#include "backend.h"
-
+// backend implementation
+#if WITH_PETSC
+#include "petsc/public.h"
+#endif    // WITH_PETSC
 
 
 // end of file
