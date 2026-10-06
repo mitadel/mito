@@ -19,9 +19,9 @@ constexpr int degree = 2;
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
 // typedef for a linear system of equations
-using linear_system_t = mito::linalg::backend::petsc::linear_system_t;
+using linear_system_t = mito::linalg::petsc::linear_system_t;
 // typedef for a matrix solver
-using matrix_solver_t = mito::linalg::backend::petsc::ksp_t;
+using matrix_solver_t = mito::linalg::petsc::ksp_t;
 
 // the x scalar field in 2D
 constexpr auto x = mito::geometry::cartesian<2>::x;
@@ -33,7 +33,7 @@ int
 main()
 {
     // create petsc environment
-    auto environment = mito::linalg::backend::petsc::environment();
+    auto environment = mito::linalg::petsc::environment();
     
     // make a channel
     journal::info_t channel("tests.poisson_square");

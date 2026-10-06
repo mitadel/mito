@@ -8,7 +8,7 @@
 #include <petscsystypes.h>
 
 
-namespace mito::linalg::backend::petsc {
+namespace mito::linalg::petsc {
 
     // class for environment
     class Environment;

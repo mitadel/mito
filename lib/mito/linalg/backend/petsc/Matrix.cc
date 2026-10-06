@@ -10,7 +10,7 @@
 
 
 // constructor
-mito::linalg::backend::petsc::Matrix::Matrix(const label_type & label, index_type size) :
+mito::linalg::petsc::Matrix::Matrix(const label_type & label, index_type size) :
     _label(label),
     _n_equations(size)
 {
@@ -23,7 +23,7 @@ mito::linalg::backend::petsc::Matrix::Matrix(const label_type & label, index_typ
 }
 
 // destructor
-mito::linalg::backend::petsc::Matrix::~Matrix()
+mito::linalg::petsc::Matrix::~Matrix()
 {
     // destroy the matrix
     PetscCallVoid(MatDestroy(&_matrix));
@@ -31,7 +31,7 @@ mito::linalg::backend::petsc::Matrix::~Matrix()
 
 // get the label of the matrix
 auto
-mito::linalg::backend::petsc::Matrix::label() const -> label_type
+mito::linalg::petsc::Matrix::label() const -> label_type
 {
     // easy enough
     return _label;
@@ -39,7 +39,7 @@ mito::linalg::backend::petsc::Matrix::label() const -> label_type
 
 // assemble the matrix
 auto
-mito::linalg::backend::petsc::Matrix::assemble() -> void
+mito::linalg::petsc::Matrix::assemble() -> void
 {
     // assemble matrix
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FINAL_ASSEMBLY));
@@ -54,7 +54,7 @@ mito::linalg::backend::petsc::Matrix::assemble() -> void
 
 // flush assemble the matrix
 auto
-mito::linalg::backend::petsc::Matrix::assembleFlush() -> void
+mito::linalg::petsc::Matrix::assembleFlush() -> void
 {
     // assemble matrix
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FLUSH_ASSEMBLY));
@@ -69,8 +69,8 @@ mito::linalg::backend::petsc::Matrix::assembleFlush() -> void
 
 // set the matrix entry at ({row}, {col}) to {value}
 auto
-mito::linalg::backend::petsc::Matrix::insert_value(
-    index_type row, index_type col, const scalar_type & value) -> void
+mito::linalg::petsc::Matrix::insert_value(index_type row, index_type col, const scalar_type & value)
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, INSERT_VALUES));
@@ -81,8 +81,8 @@ mito::linalg::backend::petsc::Matrix::insert_value(
 
 // add {value} to matrix entry at ({row}, {col})
 auto
-mito::linalg::backend::petsc::Matrix::add_value(
-    index_type row, index_type col, const scalar_type & value) -> void
+mito::linalg::petsc::Matrix::add_value(index_type row, index_type col, const scalar_type & value)
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, ADD_VALUES));
@@ -93,8 +93,8 @@ mito::linalg::backend::petsc::Matrix::add_value(
 
 // get the value of the matrix entry at ({row}, {col})
 auto
-mito::linalg::backend::petsc::Matrix::get_value(
-    index_type row, index_type col, scalar_type & value) const -> void
+mito::linalg::petsc::Matrix::get_value(index_type row, index_type col, scalar_type & value) const
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatGetValue(_matrix, row, col, &value));
@@ -105,7 +105,7 @@ mito::linalg::backend::petsc::Matrix::get_value(
 
 // return the value of the matrix entry at ({row}, {col})
 auto
-mito::linalg::backend::petsc::Matrix::get_value(index_type row, index_type col) const -> scalar_type
+mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> scalar_type
 {
     // the value to return
     scalar_type value;
@@ -118,7 +118,7 @@ mito::linalg::backend::petsc::Matrix::get_value(index_type row, index_type col) 
 }
 
 auto
-mito::linalg::backend::petsc::Matrix::n_equations() const -> int
+mito::linalg::petsc::Matrix::n_equations() const -> int
 {
     return _n_equations;
 }
@@ -126,7 +126,7 @@ mito::linalg::backend::petsc::Matrix::n_equations() const -> int
 
 // print the matrix
 auto
-mito::linalg::backend::petsc::Matrix::print() const -> void
+mito::linalg::petsc::Matrix::print() const -> void
 {
     // create a reporting channel
     journal::info_t channel("mito.solvers.petsc.Matrix");
@@ -141,7 +141,7 @@ mito::linalg::backend::petsc::Matrix::print() const -> void
 
 // access matrix
 auto
-mito::linalg::backend::petsc::Matrix::matrix() -> matrix_type &
+mito::linalg::petsc::Matrix::matrix() -> matrix_type &
 {
     return _matrix;
 }

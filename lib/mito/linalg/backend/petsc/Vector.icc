@@ -5,14 +5,14 @@
 
 
 #if !defined(mito_linalg_backend_petsc_Vector_icc)
-#error This header file contains implementation details of class mito::linalg::backend::petsc::Vector
+#error This header file contains implementation details of class mito::linalg::petsc::Vector
 #else
 
 
 // get the vector at entry {row}
 template <class vectorT>
 auto
-mito::linalg::backend::petsc::Vector::get_vector(vectorT & vector) const -> void
+mito::linalg::petsc::Vector::get_vector(vectorT & vector) const -> void
 {
     // get a pointer to the beginning of {_vector}
     const scalar_type * u;

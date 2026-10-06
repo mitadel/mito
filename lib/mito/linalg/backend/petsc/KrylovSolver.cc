@@ -11,7 +11,7 @@
 
 
 // constructor
-mito::linalg::backend::petsc::KrylovSolver::KrylovSolver(linear_system_type & linear_system) :
+mito::linalg::petsc::KrylovSolver::KrylovSolver(linear_system_type & linear_system) :
     _linear_system(linear_system),
     _options_prefix(linear_system.label() + "_")
 {
@@ -25,7 +25,7 @@ mito::linalg::backend::petsc::KrylovSolver::KrylovSolver(linear_system_type & li
 }
 
 // destructor
-mito::linalg::backend::petsc::KrylovSolver::~KrylovSolver()
+mito::linalg::petsc::KrylovSolver::~KrylovSolver()
 {
     // destroy the Krylov solver
     PetscCallVoid(KSPDestroy(&_ksp));
@@ -73,7 +73,7 @@ namespace {
 
 // set petsc options
 auto
-mito::linalg::backend::petsc::KrylovSolver::set_options(const options_type & options) -> void
+mito::linalg::petsc::KrylovSolver::set_options(const options_type & options) -> void
 {
     // prepend the prefix {_options_prefix} to each of the space-separated options in input
     auto prefixed_options = prepend_options_prefix(options, _options_prefix);
@@ -93,7 +93,7 @@ mito::linalg::backend::petsc::KrylovSolver::set_options(const options_type & opt
 
 // solve the linear system
 auto
-mito::linalg::backend::petsc::KrylovSolver::solve() -> void
+mito::linalg::petsc::KrylovSolver::solve() -> void
 {
     // assemble the linear system
     _linear_system.assemble();
@@ -107,7 +107,7 @@ mito::linalg::backend::petsc::KrylovSolver::solve() -> void
 
 // print the linear system of equations of the petsc solver
 auto
-mito::linalg::backend::petsc::KrylovSolver::print() const -> void
+mito::linalg::petsc::KrylovSolver::print() const -> void
 {
     // create a reporting channel
     journal::info_t channel("mito.solvers.petsc.KrylovSolver");

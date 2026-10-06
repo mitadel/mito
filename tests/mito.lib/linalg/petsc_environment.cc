@@ -11,7 +11,7 @@
 TEST(Solvers, PETScEnvironment)
 {
     // create petsc environment
-    auto environment = mito::linalg::backend::petsc::environment();
+    auto environment = mito::linalg::petsc::environment();
 }
 
 

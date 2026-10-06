@@ -14,7 +14,7 @@ TEST(Math, PETScMatrix)
     int N = 3;
 
     // instantiate a PETSc matrix of size {N}x{N}
-    auto matrix = mito::linalg::backend::petsc::matrix("mymatrix", N);
+    auto matrix = mito::linalg::petsc::matrix("mymatrix", N);
 
     // set vector entries
     for (int i = 0; i < N; i++) {
@@ -53,7 +53,7 @@ int
 main(int argc, char ** argv)
 {
     // initialize PETSc
-    auto environment = mito::linalg::backend::petsc::environment();
+    auto environment = mito::linalg::petsc::environment();
 
     ::testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();
