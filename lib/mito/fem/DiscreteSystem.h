@@ -49,21 +49,16 @@ namespace mito::fem {
             _function_space(function_space),
             _weakform(weakform),
             _equation_map(),
+            _n_equations(_build_equation_map()),
             _solution_field(
                 function_space.template fem_field<solution_field_type>(label + ".solution")),
-            _linear_system(label)
+            _linear_system(label, _n_equations)
         {
             // make a channel
             journal::info_t channel("discretization.discrete_system");
 
-            // build the equations map and get the number of equations
-            _n_equations = _build_equation_map();
-
             // print the number of equations
             channel << "Number of equations: " << _n_equations << journal::endl;
-
-            // create the linear system and allocate the memory
-            _linear_system.create(_n_equations);
 
             // all done
             return;
@@ -233,11 +228,11 @@ namespace mito::fem {
         // the solution finite element field
         fem_field_type _solution_field;
 
-        // the linear system of equations
-        linear_system_type _linear_system;
-
         // the number of equations in the linear system
         int _n_equations = 0;
+
+        // the linear system of equations
+        linear_system_type _linear_system;
     };
 
 }    // namespace mito
