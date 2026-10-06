@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::math_backend {
+namespace mito::linalg {
 
     // concept of {T} having the properties of a matrix-like object
     template <class matrixT, class indexT, class scalarT>
