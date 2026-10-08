@@ -13,7 +13,7 @@
 // constructor
 mito::linalg::petsc::Vector::Vector(const label_type & label, index_t size) :
     _label(label),
-    _n_equations(size)
+    _size(size)
 {
     // create the vector
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_vector));
@@ -77,9 +77,9 @@ mito::linalg::petsc::Vector::add_value(index_t row, const scalar_t & value) -> v
 
 // get the number of entries in the vector
 auto
-mito::linalg::petsc::Vector::n_equations() const -> int
+mito::linalg::petsc::Vector::size() const -> int
 {
-    return _n_equations;
+    return _size;
 }
 
 

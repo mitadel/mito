@@ -36,8 +36,8 @@ namespace mito::linalg::petsc {
         // add a value to a vector entry
         auto add_value(index_t, const scalar_t &) -> void;
 
-        // accessor to the number of equations
-        auto n_equations() const -> int;
+        // accessor to the number of entries
+        auto size() const -> int;
 
         // get the vector
         template <class vectorT>
@@ -53,8 +53,8 @@ namespace mito::linalg::petsc {
         label_type _label;
         // the vector
         vector_type _vector;
-        // the number of equations
-        int _n_equations;
+        // the number of entries
+        int _size;
     };
 
 }    // namespace mito

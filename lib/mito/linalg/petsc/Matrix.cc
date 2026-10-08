@@ -13,7 +13,7 @@
 // constructor
 mito::linalg::petsc::Matrix::Matrix(const label_type & label, index_t size) :
     _label(label),
-    _n_equations(size)
+    _size(size)
 {
     // create the matrix
     PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
@@ -70,8 +70,7 @@ mito::linalg::petsc::Matrix::assembleFlush() -> void
 
 // set the matrix entry at ({row}, {col}) to {value}
 auto
-mito::linalg::petsc::Matrix::insert_value(index_t row, index_t col, const scalar_t & value)
-    -> void
+mito::linalg::petsc::Matrix::insert_value(index_t row, index_t col, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, INSERT_VALUES));
@@ -82,8 +81,7 @@ mito::linalg::petsc::Matrix::insert_value(index_t row, index_t col, const scalar
 
 // add {value} to matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::add_value(index_t row, index_t col, const scalar_t & value)
-    -> void
+mito::linalg::petsc::Matrix::add_value(index_t row, index_t col, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, ADD_VALUES));
@@ -94,8 +92,7 @@ mito::linalg::petsc::Matrix::add_value(index_t row, index_t col, const scalar_t 
 
 // get the value of the matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::get_value(index_t row, index_t col, scalar_t & value) const
-    -> void
+mito::linalg::petsc::Matrix::get_value(index_t row, index_t col, scalar_t & value) const -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatGetValue(_matrix, row, col, &value));
@@ -118,10 +115,11 @@ mito::linalg::petsc::Matrix::get_value(index_t row, index_t col) const -> scalar
     return value;
 }
 
+// get the number of rows/columns of the matrix
 auto
-mito::linalg::petsc::Matrix::n_equations() const -> int
+mito::linalg::petsc::Matrix::size() const -> int
 {
-    return _n_equations;
+    return _size;
 }
 
 
