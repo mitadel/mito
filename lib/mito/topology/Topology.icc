@@ -140,7 +140,7 @@ mito::topology::Topology::segment(const vertex_simplex_composition_t<1> & vertic
 
     // assert that accessing the vertices of the segment returns a positive permutation of the
     // vertex composition used to instantiate it
-    assert(mito::math::permutation_sign(segment->vertices(), vertices) == +1);
+    assert(mito::utilities::permutation_sign(segment->vertices(), vertices) == +1);
 
     // all done
     return segment;
@@ -156,7 +156,7 @@ mito::topology::Topology::triangle(const vertex_simplex_composition_t<2> & verti
 
     // assert that accessing the vertices of the triangle returns a positive permutation of the
     // vertex composition used to instantiate it
-    assert(mito::math::permutation_sign(triangle->vertices(), vertices) == +1);
+    assert(mito::utilities::permutation_sign(triangle->vertices(), vertices) == +1);
 
     // all done
     return triangle;
@@ -174,7 +174,7 @@ mito::topology::Topology::tetrahedron(const vertex_simplex_composition_t<3> & ve
 
     // assert that accessing the vertices of the tetrahedron returns a positive permutation of the
     // vertex composition used to instantiate it
-    assert(mito::math::permutation_sign(tetrahedron->vertices(), vertices) == +1);
+    assert(mito::utilities::permutation_sign(tetrahedron->vertices(), vertices) == +1);
 
     // all done
     return tetrahedron;
