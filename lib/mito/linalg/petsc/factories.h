@@ -16,19 +16,19 @@ namespace mito::linalg::petsc {
     }
 
     // matrix
-    auto matrix(const std::string & name, index_type size)
+    auto matrix(const std::string & name, index_t size)
     {
         return matrix_t(name, size);
     }
 
     // vector
-    auto vector(const std::string & name, index_type size)
+    auto vector(const std::string & name, index_t size)
     {
         return vector_t(name, size);
     }
 
     // linear system
-    auto linear_system(const std::string & name, index_type size)
+    auto linear_system(const std::string & name, index_t size)
     {
         return linear_system_t(name, size);
     }

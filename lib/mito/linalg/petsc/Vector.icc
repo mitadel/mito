@@ -15,7 +15,7 @@ auto
 mito::linalg::petsc::Vector::get_vector(vectorT & vector) const -> void
 {
     // get a pointer to the beginning of {_vector}
-    const scalar_type * u;
+    const scalar_t * u;
     PetscCallVoid(VecGetArrayRead(_vector, &u));
 
     // get the size of the vector

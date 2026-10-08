@@ -6,11 +6,12 @@
 
 #include "forward.h"
 #include "externals.h"
+#include "api.h"
 #include "Vector.h"
 
 
 // constructor
-mito::linalg::petsc::Vector::Vector(const label_type & label, index_type size) :
+mito::linalg::petsc::Vector::Vector(const label_type & label, index_t size) :
     _label(label),
     _n_equations(size)
 {
@@ -39,7 +40,7 @@ mito::linalg::petsc::Vector::label() const -> label_type
 
 // set the vector entry at {row} to {value}
 auto
-mito::linalg::petsc::Vector::insert_value(index_type row, const scalar_type & value) -> void
+mito::linalg::petsc::Vector::insert_value(index_t row, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_vector, row, value, INSERT_VALUES));
@@ -65,7 +66,7 @@ mito::linalg::petsc::Vector::assemble() -> void
 
 // add {value} to vector entry at {row}
 auto
-mito::linalg::petsc::Vector::add_value(index_type row, const scalar_type & value) -> void
+mito::linalg::petsc::Vector::add_value(index_t row, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_vector, row, value, ADD_VALUES));

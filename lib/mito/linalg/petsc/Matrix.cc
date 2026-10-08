@@ -6,11 +6,12 @@
 
 #include "forward.h"
 #include "externals.h"
+#include "api.h"
 #include "Matrix.h"
 
 
 // constructor
-mito::linalg::petsc::Matrix::Matrix(const label_type & label, index_type size) :
+mito::linalg::petsc::Matrix::Matrix(const label_type & label, index_t size) :
     _label(label),
     _n_equations(size)
 {
@@ -69,7 +70,7 @@ mito::linalg::petsc::Matrix::assembleFlush() -> void
 
 // set the matrix entry at ({row}, {col}) to {value}
 auto
-mito::linalg::petsc::Matrix::insert_value(index_type row, index_type col, const scalar_type & value)
+mito::linalg::petsc::Matrix::insert_value(index_t row, index_t col, const scalar_t & value)
     -> void
 {
     // delegate to PETSc
@@ -81,7 +82,7 @@ mito::linalg::petsc::Matrix::insert_value(index_type row, index_type col, const 
 
 // add {value} to matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::add_value(index_type row, index_type col, const scalar_type & value)
+mito::linalg::petsc::Matrix::add_value(index_t row, index_t col, const scalar_t & value)
     -> void
 {
     // delegate to PETSc
@@ -93,7 +94,7 @@ mito::linalg::petsc::Matrix::add_value(index_type row, index_type col, const sca
 
 // get the value of the matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::get_value(index_type row, index_type col, scalar_type & value) const
+mito::linalg::petsc::Matrix::get_value(index_t row, index_t col, scalar_t & value) const
     -> void
 {
     // delegate to PETSc
@@ -105,10 +106,10 @@ mito::linalg::petsc::Matrix::get_value(index_type row, index_type col, scalar_ty
 
 // return the value of the matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> scalar_type
+mito::linalg::petsc::Matrix::get_value(index_t row, index_t col) const -> scalar_t
 {
     // the value to return
-    scalar_type value;
+    scalar_t value;
 
     // delegate to PETSc
     get_value(row, col, value);

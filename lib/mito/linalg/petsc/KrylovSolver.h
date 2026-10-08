@@ -11,8 +11,6 @@ namespace mito::linalg::petsc {
 
     class KrylovSolver {
       private:
-        // the index type
-        using index_type = PetscInt;
         // the linear system type
         using linear_system_type = LinearSystem;
         // the solver type

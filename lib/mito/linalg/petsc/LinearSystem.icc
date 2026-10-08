@@ -15,7 +15,7 @@ auto
 mito::linalg::petsc::LinearSystem::get_solution(solutionT & solution) const -> void
 {
     // get a pointer to the beginning of {_solution}
-    const scalar_type * u;
+    const scalar_t * u;
     PetscCallVoid(VecGetArrayRead(_solution, &u));
 
     // get the size of the vector

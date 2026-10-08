@@ -10,12 +10,6 @@
 namespace mito::linalg::petsc {
 
     class Matrix {
-      public:
-        // the index type
-        using index_type = PetscInt;
-        // the scalar type
-        using scalar_type = PetscScalar;
-
       private:
         // the matrix type
         using matrix_type = Mat;
@@ -24,7 +18,7 @@ namespace mito::linalg::petsc {
 
       public:
         // constructor
-        Matrix(const label_type &, index_type);
+        Matrix(const label_type &, index_t);
 
         // destructor
         ~Matrix();
@@ -40,16 +34,16 @@ namespace mito::linalg::petsc {
         auto assembleFlush() -> void;
 
         // set the value of a matrix entry
-        auto insert_value(index_type, index_type, const scalar_type &) -> void;
+        auto insert_value(index_t, index_t, const scalar_t &) -> void;
 
         // add a value to a matrix entry
-        auto add_value(index_type, index_type, const scalar_type &) -> void;
+        auto add_value(index_t, index_t, const scalar_t &) -> void;
 
         // get the value of a matrix entry
-        auto get_value(index_type, index_type, scalar_type &) const -> void;
+        auto get_value(index_t, index_t, scalar_t &) const -> void;
 
         // return the value of a matrix entry
-        auto get_value(index_type, index_type) const -> scalar_type;
+        auto get_value(index_t, index_t) const -> scalar_t;
 
         // accessor to the number of equations
         auto n_equations() const -> int;

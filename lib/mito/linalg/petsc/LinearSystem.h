@@ -15,10 +15,6 @@ namespace mito::linalg::petsc {
         friend class KrylovSolver;
 
       private:
-        // the index type
-        using index_type = PetscInt;
-        // the scalar type
-        using scalar_type = PetscScalar;
         // the vector type
         using vector_type = Vec;
         // the matrix type
@@ -28,7 +24,7 @@ namespace mito::linalg::petsc {
 
       public:
         // constructor
-        LinearSystem(const label_type &, index_type);
+        LinearSystem(const label_type &, index_t);
 
         // destructor
         ~LinearSystem();
@@ -41,16 +37,16 @@ namespace mito::linalg::petsc {
         auto assemble() -> void;
 
         // set the value of a matrix entry
-        auto insert_matrix_value(index_type, index_type, const scalar_type &) -> void;
+        auto insert_matrix_value(index_t, index_t, const scalar_t &) -> void;
 
         // add a value to a matrix entry
-        auto add_matrix_value(index_type, index_type, const scalar_type &) -> void;
+        auto add_matrix_value(index_t, index_t, const scalar_t &) -> void;
 
         // set the value of a right-hand side entry
-        auto insert_rhs_value(index_type, const scalar_type &) -> void;
+        auto insert_rhs_value(index_t, const scalar_t &) -> void;
 
         // add a value to a right-hand side entry
-        auto add_rhs_value(index_type, const scalar_type &) -> void;
+        auto add_rhs_value(index_t, const scalar_t &) -> void;
 
         // accessor to the number of equations
         auto n_equations() const -> int;

@@ -10,12 +10,6 @@
 namespace mito::linalg::petsc {
 
     class Vector {
-      public:
-        // the index type
-        using index_type = PetscInt;
-        // the scalar type
-        using scalar_type = PetscScalar;
-
       private:
         // the vector type
         using vector_type = Vec;
@@ -24,7 +18,7 @@ namespace mito::linalg::petsc {
 
       public:
         // constructor
-        Vector(const label_type &, index_type);
+        Vector(const label_type &, index_t);
 
         // destructor
         ~Vector();
@@ -37,10 +31,10 @@ namespace mito::linalg::petsc {
         auto assemble() -> void;
 
         // set the value of a vector entry
-        auto insert_value(index_type, const scalar_type &) -> void;
+        auto insert_value(index_t, const scalar_t &) -> void;
 
         // add a value to a vector entry
-        auto add_value(index_type, const scalar_type &) -> void;
+        auto add_value(index_t, const scalar_t &) -> void;
 
         // accessor to the number of equations
         auto n_equations() const -> int;

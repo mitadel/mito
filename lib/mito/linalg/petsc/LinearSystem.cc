@@ -6,11 +6,12 @@
 
 #include "forward.h"
 #include "externals.h"
+#include "api.h"
 #include "LinearSystem.h"
 
 
 // constructor
-mito::linalg::petsc::LinearSystem::LinearSystem(const label_type & label, index_type size) :
+mito::linalg::petsc::LinearSystem::LinearSystem(const label_type & label, index_t size) :
     _label(label),
     _n_equations(size)
 {
@@ -70,7 +71,7 @@ mito::linalg::petsc::LinearSystem::assemble() -> void
 // set the matrix entry at ({row}, {col}) to {value}
 auto
 mito::linalg::petsc::LinearSystem::insert_matrix_value(
-    index_type row, index_type col, const scalar_type & value) -> void
+    index_t row, index_t col, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, INSERT_VALUES));
@@ -82,7 +83,7 @@ mito::linalg::petsc::LinearSystem::insert_matrix_value(
 // add {value} to matrix entry at ({row}, {col})
 auto
 mito::linalg::petsc::LinearSystem::add_matrix_value(
-    index_type row, index_type col, const scalar_type & value) -> void
+    index_t row, index_t col, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, ADD_VALUES));
@@ -93,7 +94,7 @@ mito::linalg::petsc::LinearSystem::add_matrix_value(
 
 // set the right-hand side entry at {row} to {value}
 auto
-mito::linalg::petsc::LinearSystem::insert_rhs_value(index_type row, const scalar_type & value)
+mito::linalg::petsc::LinearSystem::insert_rhs_value(index_t row, const scalar_t & value)
     -> void
 {
     // delegate to PETSc
@@ -105,7 +106,7 @@ mito::linalg::petsc::LinearSystem::insert_rhs_value(index_type row, const scalar
 
 // add {value} to right-hand side entry at {row}
 auto
-mito::linalg::petsc::LinearSystem::add_rhs_value(index_type row, const scalar_type & value) -> void
+mito::linalg::petsc::LinearSystem::add_rhs_value(index_t row, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_rhs, row, value, ADD_VALUES));
