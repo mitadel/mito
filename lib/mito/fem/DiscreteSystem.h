@@ -49,9 +49,9 @@ namespace mito::fem {
             _function_space(function_space),
             _weakform(weakform),
             _equation_map(),
-            _n_equations(_build_equation_map()),
             _solution_field(
                 function_space.template fem_field<solution_field_type>(label + ".solution")),
+            _n_equations(_build_equation_map()),
             _linear_system(label, _n_equations)
         {
             // make a channel
