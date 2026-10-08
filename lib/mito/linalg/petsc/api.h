@@ -15,8 +15,8 @@ namespace mito::linalg::petsc {
     // backend
     using backend_t = Backend;
 
-    // int
-    using int_t = backend_t::int_type;
+    // index
+    using index_t = backend_t::index_type;
 
     // scalar
     using scalar_t = backend_t::scalar_type;
