@@ -50,11 +50,11 @@ namespace mito::fem::blocks {
     }
 
     // source term vector block factory
-    template <class elementT, int doe, fields::scalar_field_c sourceFieldT>
+    template <fields::scalar_field_c sourceFieldT>
     constexpr auto source(const sourceFieldT & source)
     {
         // return a source term vector block
-        return value_block<elementT, doe>(source);
+        return value_block(source);
     }
 
 }

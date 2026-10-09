@@ -30,7 +30,7 @@ namespace mito::fem::blocks {
     constexpr auto mass(const massDensityFieldT & mass_density);
 
     // source term vector block factory
-    template <class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c sourceFieldT>
+    template <fields::scalar_field_c sourceFieldT>
     constexpr auto source(const sourceFieldT & source);
 
 }
