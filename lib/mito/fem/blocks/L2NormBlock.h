@@ -9,19 +9,12 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT, functions::function_c functionT>
-    // require that {functionT} is a function in parametric coordinates
-    requires(std::is_same_v<
-             typename functionT::input_type, typename quadratureRuleT::quadrature_point_type>)
+    template <functions::function_c functionT>
     class L2NormBlock {
 
       public:
-        // my finite element type
-        using element_type = finiteElementT;
-        // my quadrature rule
-        using quadrature_rule_type = quadratureRuleT;
-        // my elementary shape
-        using elementary_shape = tensor::scalar_t;
+        // the type of the elementary shape matrix
+        using elementary_shape_t = tensor::scalar_t;
 
         // the type of the function to compute the L2 norm of
         using function_type = functionT;
@@ -32,12 +25,15 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        template <class elementT>
-        requires element_of_type_c<elementT, element_type>
-        auto compute(const elementT & element) const -> elementary_shape
+        template <class elementT, int doe = elementT::degree>
+        requires function_in_parametric_coordinates_c<elementT, element_type>
+        auto compute(const elementT & element) const -> elementary_shape_t
         {
             // the parametric coordinates type
             using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
+            
+            // the quadrature rule type
+            using quadrature_rule_type = gauss_rule_t<elementT, doe>;
 
             // the elementary matrix
             return manifolds::cell_integrator<quadrature_rule_type>(element.element())
