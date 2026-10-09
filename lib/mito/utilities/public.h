@@ -16,6 +16,9 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
+// combinatorics utilities
+#include "combinatorics.h"
+
 // classes implementation
 #include "Singleton.h"
 #include "Shareable.h"

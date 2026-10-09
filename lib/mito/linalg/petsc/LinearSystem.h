@@ -7,18 +7,14 @@
 #pragma once
 
 
-namespace mito::matrix_solvers::petsc {
+namespace mito::linalg::petsc {
 
-    class PETScLinearSystem {
+    class LinearSystem {
 
         // friend declarations
-        friend class PETScKrylovSolver;
+        friend class KrylovSolver;
 
       private:
-        // the index type
-        using index_type = PetscInt;
-        // the scalar type
-        using scalar_type = PetscScalar;
         // the vector type
         using vector_type = Vec;
         // the matrix type
@@ -28,18 +24,24 @@ namespace mito::matrix_solvers::petsc {
 
       public:
         // constructor
-        PETScLinearSystem(const label_type &);
+        LinearSystem(const label_type &, index_t);
+
+        // copy constructor
+        LinearSystem(const LinearSystem &) = delete;
+
+        // move constructor
+        LinearSystem(LinearSystem &&) = delete;
+
+        // copy assignment operator
+        LinearSystem & operator=(const LinearSystem &) = delete;
+
+        // move assignment operator
+        LinearSystem & operator=(LinearSystem &&) = delete;
 
         // destructor
-        ~PETScLinearSystem();
+        ~LinearSystem();
 
       public:
-        // create the matrix, right-hand side, and solution
-        auto create(index_type) -> void;
-
-        // destroy the matrix, right-hand side, and solution
-        auto destroy() -> void;
-
         // get the label of the linear system
         auto label() const -> label_type;
 
@@ -47,19 +49,19 @@ namespace mito::matrix_solvers::petsc {
         auto assemble() -> void;
 
         // set the value of a matrix entry
-        auto insert_matrix_value(index_type, index_type, const scalar_type &) -> void;
+        auto insert_matrix_value(index_t, index_t, const scalar_t &) -> void;
 
         // add a value to a matrix entry
-        auto add_matrix_value(index_type, index_type, const scalar_type &) -> void;
+        auto add_matrix_value(index_t, index_t, const scalar_t &) -> void;
 
         // set the value of a right-hand side entry
-        auto insert_rhs_value(index_type, const scalar_type &) -> void;
+        auto insert_rhs_value(index_t, const scalar_t &) -> void;
 
         // add a value to a right-hand side entry
-        auto add_rhs_value(index_type, const scalar_type &) -> void;
+        auto add_rhs_value(index_t, const scalar_t &) -> void;
 
         // accessor to the number of equations
-        auto n_equations() const -> int;
+        auto n_equations() const -> index_t;
 
         // get the solution vector
         template <class solutionT>
@@ -69,8 +71,6 @@ namespace mito::matrix_solvers::petsc {
         auto print() const -> void;
 
       private:
-        // a flag to recall if this instance has initialized PETSc
-        bool _initialized_petsc;
         // the label for the linear system (this is used to prefix PETSc options)
         label_type _label;
         // the matrix
@@ -80,16 +80,16 @@ namespace mito::matrix_solvers::petsc {
         // the solution vector
         vector_type _solution;
         // the number of equations
-        int _n_equations;
+        index_t _n_equations;
     };
 
 }    // namespace mito
 
 
 // get the template definitions
-#define mito_solvers_backend_petsc_PETScLinearSystem_icc
-#include "PETScLinearSystem.icc"
-#undef mito_solvers_backend_petsc_PETScLinearSystem_icc
+#define mito_linalg_backend_petsc_LinearSystem_icc
+#include "LinearSystem.icc"
+#undef mito_linalg_backend_petsc_LinearSystem_icc
 
 
 // end of file

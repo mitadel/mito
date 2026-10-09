@@ -4,18 +4,18 @@
 //
 
 
-#if !defined(mito_solvers_backend_petsc_PETScLinearSystem_icc)
-#error This header file contains implementation details of class mito::matrix_solvers::petsc::PETScLinearSystem
+#if !defined(mito_linalg_backend_petsc_LinearSystem_icc)
+#error This header file contains implementation details of class mito::linalg::petsc::LinearSystem
 #else
 
 
 // get the solution at entry {row}
 template <class solutionT>
 auto
-mito::matrix_solvers::petsc::PETScLinearSystem::get_solution(solutionT & solution) const -> void
+mito::linalg::petsc::LinearSystem::get_solution(solutionT & solution) const -> void
 {
     // get a pointer to the beginning of {_solution}
-    const scalar_type * u;
+    const scalar_t * u;
     PetscCallVoid(VecGetArrayRead(_solution, &u));
 
     // get the size of the vector
@@ -36,6 +36,6 @@ mito::matrix_solvers::petsc::PETScLinearSystem::get_solution(solutionT & solutio
 }
 
 
-#endif    // mito_solvers_backend_petsc_PETScLinearSystem_icc
+#endif    // mito_linalg_backend_petsc_LinearSystem_icc
 
 // end of file

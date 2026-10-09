@@ -19,9 +19,9 @@ constexpr int degree = 2;
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
 // typedef for a linear system of equations
-using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
+using linear_system_t = mito::linalg::petsc::linear_system_t;
 // typedef for a matrix solver
-using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
+using matrix_solver_t = mito::linalg::petsc::ksp_t;
 
 // the x scalar field in 2D
 constexpr auto x = mito::geometry::cartesian<2>::x;
@@ -32,9 +32,9 @@ constexpr auto y = mito::geometry::cartesian<2>::y;
 int
 main()
 {
-    // initialize PETSc
-    mito::petsc::initialize();
-
+    // create petsc environment
+    auto environment = mito::linalg::petsc::environment();
+    
     // make a channel
     journal::info_t channel("tests.poisson_square");
 
@@ -96,9 +96,6 @@ main()
     // solve the system
     solver.solve();
 
-    // free the solver
-    solver.destroy();
-
     // get the solution field
     const auto & solution = discrete_system.solution();
 
@@ -138,9 +135,6 @@ main()
     // write output file
     writer_solution.write();
 #endif
-
-    // finalize PETSc
-    mito::petsc::finalize();
 }
 
 // end of file

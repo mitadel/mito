@@ -7,14 +7,12 @@
 #pragma once
 
 
-namespace mito::matrix_solvers::petsc {
+namespace mito::linalg::petsc {
 
-    class PETScKrylovSolver {
+    class KrylovSolver {
       private:
-        // the index type
-        using index_type = PetscInt;
         // the linear system type
-        using linear_system_type = PETScLinearSystem;
+        using linear_system_type = LinearSystem;
         // the solver type
         using solver_type = KSP;
         // the options type
@@ -22,18 +20,24 @@ namespace mito::matrix_solvers::petsc {
 
       public:
         // constructor
-        PETScKrylovSolver(linear_system_type &);
+        KrylovSolver(linear_system_type &);
+
+        // copy constructor
+        KrylovSolver(const KrylovSolver &) = delete;
+
+        // move constructor
+        KrylovSolver(KrylovSolver &&) = delete;
+
+        // copy assignment operator
+        KrylovSolver & operator=(const KrylovSolver &) = delete;
+
+        // move assignment operator
+        KrylovSolver & operator=(KrylovSolver &&) = delete;
 
         // destructor
-        ~PETScKrylovSolver();
+        ~KrylovSolver();
 
       public:
-        // create the Krylov solver
-        auto create() -> void;
-
-        // destroy the Krylov solver
-        auto destroy() -> void;
-
         // set petsc options
         auto set_options(const options_type &) -> void;
 

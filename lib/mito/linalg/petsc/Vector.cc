@@ -1,0 +1,98 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
+//
+
+
+#include "forward.h"
+#include "externals.h"
+#include "api.h"
+#include "Vector.h"
+
+
+// constructor
+mito::linalg::petsc::Vector::Vector(const label_type & label, index_t size) :
+    _label(label),
+    _size(size)
+{
+    // create the vector
+    PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_vector));
+    PetscCallVoid(VecSetSizes(_vector, PETSC_DECIDE, size));
+
+    // set the default options (do not allow the user to control the options for vector)
+    PetscCallVoid(VecSetFromOptions(_vector));
+}
+
+// destructor
+mito::linalg::petsc::Vector::~Vector()
+{
+    // destroy the vector
+    PetscCallVoid(VecDestroy(&_vector));
+}
+
+// get the label of the vector
+auto
+mito::linalg::petsc::Vector::label() const -> label_type
+{
+    // easy enough
+    return _label;
+}
+
+// set the vector entry at {row} to {value}
+auto
+mito::linalg::petsc::Vector::insert_value(index_t row, const scalar_t & value) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecSetValue(_vector, row, value, INSERT_VALUES));
+
+    // all done
+    return;
+}
+
+// assemble the vector
+auto
+mito::linalg::petsc::Vector::assemble() -> void
+{
+    // assemble vector
+    PetscCallVoid(VecAssemblyBegin(_vector));
+    PetscCallVoid(VecAssemblyEnd(_vector));
+
+    // all done
+    return;
+}
+
+// add {value} to vector entry at {row}
+auto
+mito::linalg::petsc::Vector::add_value(index_t row, const scalar_t & value) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecSetValue(_vector, row, value, ADD_VALUES));
+
+    // all done
+    return;
+}
+
+// get the number of entries in the vector
+auto
+mito::linalg::petsc::Vector::size() const -> index_t
+{
+    return _size;
+}
+
+
+// print the linear system of equations of the petsc solver
+auto
+mito::linalg::petsc::Vector::print() const -> void
+{
+    // create a reporting channel
+    journal::info_t channel("mito.solvers.petsc.Vector");
+
+    // print the vector
+    channel << "Vector:" << journal::endl;
+    PetscCallVoid(VecView(_vector, PETSC_VIEWER_STDOUT_WORLD));
+
+    // all done
+    return;
+}
+
+// end of file

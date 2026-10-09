@@ -229,7 +229,7 @@ namespace mito::topology {
         {
             // compute the sign of the permutation between the indices of {composition} with respect
             // to the reference composition {reference}
-            return mito::math::permutation_sign(
+            return mito::utilities::permutation_sign(
                 std::array<simplex_id_t, N + 1>{ composition[J]->footprint().id()... },
                 std::array<simplex_id_t, N + 1>{ reference[J]->footprint().id()... });
         }

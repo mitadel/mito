@@ -97,12 +97,6 @@ if(WITH_VTK)
     endif()
 endif()
 
-# solvers
-if(WITH_PETSC)
-    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_initialize_finalize.cc)
-    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_ksp.cc)
-endif()
-
 # tensor
 mito_test_driver(tests/mito.lib/tensor/one_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/contractions.cc)
@@ -127,8 +121,13 @@ mito_test_driver(tests/mito.lib/manifolds/spherical_gradient.cc)
 mito_test_driver(tests/mito.lib/materials/gent.cc)
 mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
-# math
-mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
+# linalg
+if(WITH_PETSC)
+    mito_test_driver(tests/mito.lib/linalg/petsc_environment.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_ksp.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
+endif()
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)
@@ -190,6 +189,7 @@ mito_test_driver(tests/mito.lib/utilities/segmented_vector_subscript.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_print.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 mito_test_driver(tests/mito.lib/utilities/named_class.cc)
+mito_test_driver(tests/mito.lib/utilities/permutation_sign.cc)
 
 # quadrature
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)

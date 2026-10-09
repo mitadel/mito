@@ -10,8 +10,10 @@
 // external packages
 #include "externals.h"
 
-// combinatorics utilities
-#include "combinatorics.h"
+// backend implementation
+#if WITH_PETSC
+#include "petsc/public.h"
+#endif    // WITH_PETSC
 
 
 // end of file
