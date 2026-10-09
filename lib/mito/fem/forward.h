@@ -26,13 +26,6 @@ namespace mito::fem {
     template <class functionSpaceT>
     class FunctionSpaceElementsView;
 
-    // concept of blocks with the same elementary shape
-    template <class firstBlockT, class... blockTs>
-    concept same_elementary_shape_blocks_c =
-        // require the same elementary shape
-        (std::same_as<typename firstBlockT::elementary_shape, typename blockTs::elementary_shape>
-         && ...);
-
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>
     class Weakform;
