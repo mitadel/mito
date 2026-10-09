@@ -27,7 +27,8 @@ block_composition(const auto & sum_block, const auto & function_space)
 {
     // a matrix to collect the elementary contributions of the block
     auto elementary_block_sum =
-        typename mito::utilities::base_type<decltype(sum_block)>::elementary_shape{};
+        typename mito::utilities::base_type<decltype(sum_block)>::template elementary_shape_t<
+            typename mito::utilities::base_type<decltype(function_space)>::finite_element_type>{};
 
     // loop over the elements of the function space and collect the block elementary contributions
     for (auto element : function_space.elements()) {
@@ -43,7 +44,8 @@ block_no_composition(const auto & block_1, const auto & block_2, const auto & fu
 {
     // a matrix to collect the elementary contributions of the block
     auto elementary_block_sum =
-        typename mito::utilities::base_type<decltype(block_1)>::elementary_shape{};
+        typename mito::utilities::base_type<decltype(block_1)>::template elementary_shape_t<
+            typename mito::utilities::base_type<decltype(function_space)>::finite_element_type>{};
 
     // loop over the elements of the function space and collect the block elementary contributions
     for (auto element : function_space.elements()) {
@@ -94,16 +96,13 @@ main(int argc, char ** argv)
     auto density = mito::functions::one<coordinates_t>;
 
     // a mass matrix block
-    constexpr int doe_mass = 2 * finite_element_t::degree;
     auto mass_block = mito::fem::blocks::value_value_block(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
     // a grad grad matrix block
-    constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
-    auto diffusion_block =
-        mito::fem::blocks::grad_grad_block(diffusivity);
+    auto diffusion_block = mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = 2.0 * mass_block + (-1.0) * diffusion_block;
