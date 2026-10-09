@@ -64,7 +64,7 @@ namespace mito::linalg::petsc {
         auto print() const -> void;
 
         // access matrix
-        auto matrix() -> matrix_type &;
+        auto matrix() const -> const matrix_type &;
 
       private:
         // the label for the matrix (this is used to prefix PETSc options)
