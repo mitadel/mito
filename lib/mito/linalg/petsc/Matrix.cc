@@ -13,7 +13,8 @@
 // constructor
 mito::linalg::petsc::Matrix::Matrix(const label_type & label, index_t size) :
     _label(label),
-    _size(size)
+    _size(size),
+    _matrix(nullptr)
 {
     // create the matrix
     PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
@@ -52,7 +53,7 @@ mito::linalg::petsc::Matrix::assemble() -> void
 
 // flush assemble the matrix
 auto
-mito::linalg::petsc::Matrix::assembleFlush() -> void
+mito::linalg::petsc::Matrix::assemble_flush() -> void
 {
     // assemble matrix
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FLUSH_ASSEMBLY));

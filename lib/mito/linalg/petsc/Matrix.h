@@ -43,7 +43,7 @@ namespace mito::linalg::petsc {
         auto assemble() -> void;
 
         // assemble the matrix
-        auto assembleFlush() -> void;
+        auto assemble_flush() -> void;
 
         // set the value of a matrix entry
         auto insert_value(index_t, index_t, const scalar_t &) -> void;
