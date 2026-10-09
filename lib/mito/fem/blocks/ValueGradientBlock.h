@@ -34,8 +34,8 @@ namespace mito::fem::blocks {
             using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
 
             // the quadrature rule type
-            using quadrature_rule_type = mito::quadrature::quadrature_rule_t<parametric_coordinates_type, doe>;
-            
+            using quadrature_rule_type = gauss_rule_t<elementT, doe>;
+
             // the elementary shape matrix type
             using elementary_shape_type = elementary_shape_t<elementT>;
 
