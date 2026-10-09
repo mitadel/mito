@@ -10,18 +10,13 @@
 namespace mito::fem::blocks {
 
     template <class firstBlockT, class... blockTs>
-    requires(
-        same_finite_element_blocks_c<firstBlockT, blockTs...>
-        && same_elementary_shape_blocks_c<firstBlockT, blockTs...>)
     class BlockSum {
 
       public:
-        // my finite element type
-        using element_type = typename firstBlockT::element_type;
-        // my elementary shape
-        using elementary_shape = typename firstBlockT::elementary_shape;
+        // the elementary shape type
+        template <class elementT>
+        using elementary_shape_t = typename firstBlockT::template elementary_shape_t<elementT>;
 
-      public:
         // the constructor
         constexpr BlockSum(firstBlockT first_block, blockTs... blocks) :
             _blocks(std::move(first_block), std::move(blocks)...)
@@ -29,8 +24,9 @@ namespace mito::fem::blocks {
 
         // compute the elementary contribution of this block
         template <class elementT>
-        requires element_of_type_c<elementT, element_type>
-        auto compute(const elementT & element) const -> elementary_shape
+        requires same_elementary_shape_c<elementT, firstBlockT, blockTs...>
+        auto compute(const elementT & element) const
+            -> firstBlockT::template elementary_shape_t<elementT>
         {
             // return the sum of all the blocks
             return std::apply(

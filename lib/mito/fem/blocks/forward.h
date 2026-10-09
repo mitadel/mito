@@ -47,6 +47,15 @@ namespace mito::fem::blocks {
     template <class functionT, class elementT, int doe>
     concept function_in_parametric_coordinates_c =
         std::same_as<typename functionT::input_type, gauss_point_t<elementT, doe>>;
+
+    // concept of all {blockTs} having the same elementary shape as {firstBlockT} for elements of
+    // type {elementT}
+    template <class elementT, class firstBlockT, class... blockTs>
+    concept same_elementary_shape_c =
+        (std::same_as<
+             typename firstBlockT::template elementary_shape_t<elementT>,
+             typename blockTs::template elementary_shape_t<elementT>>
+         && ...);
 }
 
 
