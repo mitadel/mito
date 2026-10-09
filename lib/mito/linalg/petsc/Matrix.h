@@ -58,7 +58,7 @@ namespace mito::linalg::petsc {
         auto get_value(index_t, index_t) const -> scalar_t;
 
         // accessor to number of rows/columns
-        auto size() const -> int;
+        auto size() const -> index_t;
 
         // print the matrix
         auto print() const -> void;
@@ -72,7 +72,7 @@ namespace mito::linalg::petsc {
         // the matrix
         matrix_type _matrix;
         // the number of rows/columns
-        int _size;
+        index_t _size;
     };
 
 }    // namespace mito

@@ -61,7 +61,7 @@ namespace mito::linalg::petsc {
         auto add_rhs_value(index_t, const scalar_t &) -> void;
 
         // accessor to the number of equations
-        auto n_equations() const -> int;
+        auto n_equations() const -> index_t;
 
         // get the solution vector
         template <class solutionT>
@@ -80,7 +80,7 @@ namespace mito::linalg::petsc {
         // the solution vector
         vector_type _solution;
         // the number of equations
-        int _n_equations;
+        index_t _n_equations;
     };
 
 }    // namespace mito
