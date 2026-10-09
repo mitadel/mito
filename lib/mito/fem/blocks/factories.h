@@ -10,11 +10,11 @@
 namespace mito::fem::blocks {
 
     // advection matrix block factory
-    template <class elementT, int doe, fields::vector_field_c velocityFieldT>
+    template <fields::vector_field_c velocityFieldT>
     constexpr auto advection(const velocityFieldT & velocity)
     {
         // return an advection matrix block
-        return value_gradient_block<elementT, doe>(velocity);
+        return value_gradient_block(velocity);
     }
 
     // diffusion matrix block factory
