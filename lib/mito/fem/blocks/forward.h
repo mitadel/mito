@@ -10,7 +10,7 @@
 namespace mito::fem::blocks {
 
     // value grad block
-    template <class elementT, class quadratureRuleT, fields::vector_field_c coefficientFieldT>
+    template <fields::vector_field_c coefficientFieldT>
     class ValueGradientBlock;
 
     // grad grad block
