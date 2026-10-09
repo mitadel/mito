@@ -26,12 +26,12 @@ namespace mito::fem::blocks {
       public:
         // compute the elementary contribution of this block
         template <class elementT, int doe = elementT::degree>
-        requires function_in_parametric_coordinates_c<elementT, element_type>
+        requires function_in_parametric_coordinates_c<functionT, elementT, doe>
         auto compute(const elementT & element) const -> elementary_shape_t
         {
             // the parametric coordinates type
             using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
-            
+
             // the quadrature rule type
             using quadrature_rule_type = gauss_rule_t<elementT, doe>;
 
@@ -39,7 +39,7 @@ namespace mito::fem::blocks {
             return manifolds::cell_integrator<quadrature_rule_type>(element.element())
                 .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
                     // the elementary contribution at quadrature point {xi}
-                    elementary_shape norm{};
+                    elementary_shape_t norm{};
 
                     // evaluate the function at the quadrature point
                     auto fx = _function(xi);

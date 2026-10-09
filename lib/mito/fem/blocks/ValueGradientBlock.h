@@ -46,7 +46,7 @@ namespace mito::fem::blocks {
                     elementary_shape_type elementary_matrix{};
 
                     // the number of nodes per element
-                    constexpr int n_nodes = element_type::n_nodes;
+                    constexpr int n_nodes = elementT::n_nodes;
 
                     // the coordinates of the quadrature point
                     auto x = element.parametrization()(xi);

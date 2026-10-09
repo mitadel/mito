@@ -44,10 +44,10 @@ namespace mito::fem::blocks {
             return manifolds::cell_integrator<quadrature_rule_type>(element.element())
                 .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
                     // the elementary contribution at quadrature point {xi}
-                    elementary_shape elementary_matrix{};
+                    elementary_shape_type elementary_matrix{};
 
                     // the number of nodes per element
-                    constexpr int n_nodes = element_type::n_nodes;
+                    constexpr int n_nodes = elementT::n_nodes;
 
                     // the coordinates of the quadrature point
                     auto x = element.parametrization()(xi);

@@ -35,15 +35,17 @@ namespace mito::fem::blocks {
             using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
             // the quadrature rule type
             using quadrature_rule_type = gauss_rule_t<elementT, doe>;
+            // the elementary shape matrix type
+            using elementary_shape_type = elementary_shape_t<elementT>;
 
             // the elementary vector
             return manifolds::cell_integrator<quadrature_rule_type>(element.element())
                 .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
                     // the elementary contribution at quadrature point {xi}
-                    elementary_shape elementary_vector{};
+                    elementary_shape_type elementary_vector{};
 
                     // the number of nodes per element
-                    constexpr int n_nodes = element_type::n_nodes;
+                    constexpr int n_nodes = elementT::n_nodes;
 
                     // the coordinates of the quadrature point
                     auto x = element.parametrization()(xi);
