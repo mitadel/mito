@@ -13,12 +13,12 @@ namespace mito::fem::blocks {
     class BlockProduct {
 
       public:
-        // my finite element type
-        using element_type = typename blockT::element_type;
-        // my elementary shape
-        using elementary_shape = typename blockT::elementary_shape;
         // the scalar type
         using scalar_type = scalar;
+
+        // the elementary shape type
+        template <class elementT>
+        using elementary_shape_t = typename blockT::template elementary_shape_t<elementT>;  
 
       public:
         // constructor
@@ -26,8 +26,8 @@ namespace mito::fem::blocks {
 
         // compute the elementary contribution of this block
         template <class elementT>
-        requires element_of_type_c<elementT, element_type>
-        auto compute(const elementT & element) const -> elementary_shape
+        auto compute(const elementT & element) const
+            -> blockT::template elementary_shape_t<elementT>
         {
             // return the product of the blocks with the scalar
             return _factor * _block.compute(element);
