@@ -74,7 +74,7 @@ mito::linalg::petsc::Vector::add_value(index_t row, const scalar_t & value) -> v
 
 // get the number of entries in the vector
 auto
-mito::linalg::petsc::Vector::size() const -> int
+mito::linalg::petsc::Vector::size() const -> index_t
 {
     return _size;
 }

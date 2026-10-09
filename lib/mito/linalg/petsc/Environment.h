@@ -13,7 +13,7 @@ namespace mito::linalg::petsc {
 
       public:
         // the default constructor
-        constexpr Environment() { PetscCallVoid(PetscInitializeNoArguments()); }
+        Environment() { PetscCallVoid(PetscInitializeNoArguments()); }
 
         // the destructor
         ~Environment() { PetscCallVoid(PetscFinalize()); }

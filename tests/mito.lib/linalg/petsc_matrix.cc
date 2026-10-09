@@ -25,7 +25,7 @@ TEST(Math, PETScMatrix)
     }
 
     // flush assemble the matrix
-    matrix.assembleFlush();
+    matrix.assemble_flush();
 
     // set one entry to a specific value
     matrix.insert_value(0, 2, 5.0);
