@@ -70,8 +70,7 @@ TEST(Fem, BlockMassEmbeddedTriangle)
 
         // a mass matrix block
         auto density = mito::functions::one<coordinates_t>;
-        constexpr int doe_mass = 2 * finite_element_t::degree;
-        auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
+        auto mass_block = mito::fem::blocks::value_value_block(density);
 
         // the analytical elementary mass matrix (the mass matrix is invariant under rigid
         // rotations, so it is the same as for the unit right triangle in 2D)

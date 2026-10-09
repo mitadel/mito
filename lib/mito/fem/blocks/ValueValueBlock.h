@@ -9,16 +9,13 @@
 
 namespace mito::fem::blocks {
 
-    template <class finiteElementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
+    template <fields::scalar_field_c coefficientFieldT>
     class ValueValueBlock {
 
       public:
-        // my finite element type
-        using element_type = finiteElementT;
-        // my quadrature rule
-        using quadrature_rule_type = quadratureRuleT;
-        // my elementary shape
-        using elementary_shape = tensor::matrix_t<element_type::n_nodes>;
+        // the type of the elementary shape matrix for an element of type {elementT}
+        template <class elementT>
+        using elementary_shape_t = tensor::matrix_t<elementT::n_nodes>;
 
         // the type of the coefficient field
         using coefficient_field_type = coefficientFieldT;
@@ -29,18 +26,23 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        template <class elementT>
-        requires(element_of_type_c<elementT, element_type>)
-        auto compute(const elementT & element) const -> elementary_shape
+        template <class elementT, int doe = 2 * elementT::degree>
+        auto compute(const elementT & element) const -> elementary_shape_t<elementT>
         {
             // the parametric coordinates type
             using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
+
+            // the quadrature rule type
+            using quadrature_rule_type = gauss_rule_t<elementT, doe>;
+
+            // the elementary shape matrix type
+            using elementary_shape_type = elementary_shape_t<elementT>;
 
             // the elementary matrix
             return manifolds::cell_integrator<quadrature_rule_type>(element.element())
                 .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
                     // the elementary contribution at quadrature point {xi}
-                    elementary_shape elementary_matrix{};
+                    elementary_shape_type elementary_matrix{};
 
                     // the number of nodes per element
                     constexpr int n_nodes = element_type::n_nodes;
