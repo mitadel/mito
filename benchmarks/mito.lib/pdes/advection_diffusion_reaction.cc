@@ -82,9 +82,9 @@ main()
     auto reaction_rate = mito::functions::one<coordinates_t>;
 
     // a matrix block
-    auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity)
-                       + mito::fem::blocks::advection<finite_element_t>(velocity)
-                       + c * mito::fem::blocks::reaction<finite_element_t>(reaction_rate);
+    auto fem_lhs_block = mito::fem::blocks::diffusion(diffusivity)
+                       + mito::fem::blocks::advection(velocity)
+                       + c * mito::fem::blocks::reaction(reaction_rate);
 
     // the right hand side
     auto f = (2.0 * k * std::numbers::pi * std::numbers::pi + c)
@@ -96,7 +96,7 @@ main()
                  * mito::functions::cos(std::numbers::pi * y);
 
     // a source term block
-    auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 4>(f);
+    auto fem_rhs_block = mito::fem::blocks::source(f);
 
     // create the weak form and populate it with the blocks
     auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
@@ -122,12 +122,12 @@ main()
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
 
     // compute the L2 error
-    auto error_L2 = mito::fem::compute_l2_norm<2>(function_space, solution, u_ex);
+    auto error_L2 = mito::fem::compute_l2_norm(function_space, solution, u_ex);
     // report
     channel << "L2 error: " << error_L2 << journal::endl;
 
     // compute the H1 error
-    auto error_H1 = mito::fem::compute_h1_norm<2, 2>(function_space, solution, u_ex);
+    auto error_H1 = mito::fem::compute_h1_norm(function_space, solution, u_ex);
     // report
     channel << "H1 error: " << error_H1 << journal::endl;
 
