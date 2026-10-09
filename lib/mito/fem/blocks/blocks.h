@@ -35,7 +35,7 @@ namespace mito::fem::blocks {
 
     // value value matrix block
     template <fields::scalar_field_c coefficientFieldT>
-    using value_value_block_t = ValueValueBlock<elementT, quadratureRuleT, coefficientFieldT>;
+    using value_value_block_t = ValueValueBlock<coefficientFieldT>;
 
     // value value matrix block factory
     template <fields::scalar_field_c coefficientFieldT>
@@ -47,7 +47,7 @@ namespace mito::fem::blocks {
 
     // value vector block
     template <fields::scalar_field_c coefficientFieldT>
-    using value_block_t = ValueBlock<elementT, quadratureRuleT, coefficientFieldT>;
+    using value_block_t = ValueBlock<coefficientFieldT>;
 
     // value vector block factory
     template <fields::scalar_field_c coefficientFieldT>
@@ -59,7 +59,7 @@ namespace mito::fem::blocks {
 
     // L2 norm block
     template <functions::function_c functionT>
-    using l2_norm_block_t = L2NormBlock<elementT, quadratureRuleT, functionT>;
+    using l2_norm_block_t = L2NormBlock<functionT>;
 
     // L2 norm block factory
     template <functions::function_c functionT>

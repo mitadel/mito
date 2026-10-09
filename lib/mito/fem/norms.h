@@ -14,9 +14,6 @@ namespace mito::fem {
     constexpr auto compute_l2_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
-        // get the element type
-        using finite_element_type = typename functionSpaceT::finite_element_type;
-
         // initialize the norm
         auto norm = tensor::scalar_t{ 0.0 };
 
@@ -39,9 +36,6 @@ namespace mito::fem {
     constexpr auto compute_h1_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
-        // get the element type
-        using finite_element_type = typename functionSpaceT::finite_element_type;
-
         // initialize the norm
         auto norm = tensor::scalar_t{ 0.0 };
 
