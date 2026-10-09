@@ -26,6 +26,18 @@ namespace mito::linalg::petsc {
         // constructor
         LinearSystem(const label_type &, index_t);
 
+        // copy constructor
+        LinearSystem(const LinearSystem &) = delete;
+
+        // move constructor
+        LinearSystem(LinearSystem &&) = delete;
+
+        // copy assignment operator
+        LinearSystem & operator=(const LinearSystem &) = delete;
+
+        // move assignment operator
+        LinearSystem & operator=(LinearSystem &&) = delete;
+
         // destructor
         ~LinearSystem();
 

@@ -20,6 +20,18 @@ namespace mito::linalg::petsc {
         // constructor
         Vector(const label_type &, index_t);
 
+        // copy constructor
+        Vector(const Vector &) = delete;
+
+        // move constructor
+        Vector(Vector &&) = delete;
+
+        // copy assignment operator
+        Vector & operator=(const Vector &) = delete;
+
+        // move assignment operator
+        Vector & operator=(Vector &&) = delete;
+
         // destructor
         ~Vector();
 

@@ -22,6 +22,18 @@ namespace mito::linalg::petsc {
         // constructor
         KrylovSolver(linear_system_type &);
 
+        // copy constructor
+        KrylovSolver(const KrylovSolver &) = delete;
+
+        // move constructor
+        KrylovSolver(KrylovSolver &&) = delete;
+
+        // copy assignment operator
+        KrylovSolver & operator=(const KrylovSolver &) = delete;
+
+        // move assignment operator
+        KrylovSolver & operator=(KrylovSolver &&) = delete;
+
         // destructor
         ~KrylovSolver();
 
