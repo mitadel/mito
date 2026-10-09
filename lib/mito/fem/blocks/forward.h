@@ -26,10 +26,7 @@ namespace mito::fem::blocks {
     class ValueBlock;
 
     // L2 norm block for a function defined at quadrature points in parametric coordinates
-    template <class elementT, class quadratureRuleT, functions::function_c functionT>
-    // require that {functionT} is a function in parametric coordinates
-    requires(std::is_same_v<
-             typename functionT::input_type, typename quadratureRuleT::quadrature_point_type>)
+    template <functions::function_c functionT>
     class L2NormBlock;
 
     // concept of {T} being a finite element of type {elementT}
