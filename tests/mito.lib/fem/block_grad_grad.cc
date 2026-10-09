@@ -56,7 +56,6 @@ TEST(Fem, IsoparametricTriangle)
         auto coefficient = mito::functions::identity<coordinates_t, 2>();
 
         // a grad grad matrix block
-        constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
         auto grad_grad_block =
             mito::fem::blocks::grad_grad_block(coefficient);
 
@@ -97,7 +96,6 @@ TEST(Fem, IsoparametricTriangle)
         auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
         // a grad grad matrix block
-        constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
         auto diffusion_block =
             mito::fem::blocks::grad_grad_block(diffusivity);
 

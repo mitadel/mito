@@ -69,7 +69,6 @@ TEST(Fem, BlockGradGradEmbeddedSegment)
 
         // a grad-grad matrix block
         auto coefficient = mito::functions::identity<coordinates_t, 2>();
-        constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
         auto grad_grad_block =
             mito::fem::blocks::grad_grad_block(coefficient);
 
