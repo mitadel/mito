@@ -55,8 +55,6 @@ namespace mito::linalg::petsc {
         auto matrix() -> matrix_type &;
 
       private:
-        // a flag to recall if this instance has initialized PETSc
-        bool _initialized_petsc;
         // the label for the matrix (this is used to prefix PETSc options)
         label_type _label;
         // the matrix

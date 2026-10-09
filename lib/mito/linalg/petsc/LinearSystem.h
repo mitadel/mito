@@ -59,8 +59,6 @@ namespace mito::linalg::petsc {
         auto print() const -> void;
 
       private:
-        // a flag to recall if this instance has initialized PETSc
-        bool _initialized_petsc;
         // the label for the linear system (this is used to prefix PETSc options)
         label_type _label;
         // the matrix
