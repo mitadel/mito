@@ -95,7 +95,7 @@ main(int argc, char ** argv)
 
     // a mass matrix block
     constexpr int doe_mass = 2 * finite_element_t::degree;
-    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
+    auto mass_block = mito::fem::blocks::value_value_block(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
@@ -103,7 +103,7 @@ main(int argc, char ** argv)
     // a grad grad matrix block
     constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
     auto diffusion_block =
-        mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+        mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = 2.0 * mass_block + (-1.0) * diffusion_block;
