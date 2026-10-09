@@ -53,7 +53,6 @@ TEST(Fem, BlockGradGradSegment)
         auto diffusivity = mito::functions::identity<coordinates_t, 1>();
 
         // a grad grad matrix block
-        constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
         auto diffusion_block =
             mito::fem::blocks::grad_grad_block(diffusivity);
 
