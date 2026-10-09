@@ -46,9 +46,6 @@ mito::linalg::petsc::Matrix::assemble() -> void
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FINAL_ASSEMBLY));
     PetscCallVoid(MatAssemblyEnd(_matrix, MAT_FINAL_ASSEMBLY));
 
-    // // show the matrix
-    // PetscCallVoid(MatView(_matrix, PETSC_VIEWER_STDOUT_WORLD));
-
     // all done
     return;
 }

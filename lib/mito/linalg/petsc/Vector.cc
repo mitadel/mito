@@ -57,9 +57,6 @@ mito::linalg::petsc::Vector::assemble() -> void
     PetscCallVoid(VecAssemblyBegin(_vector));
     PetscCallVoid(VecAssemblyEnd(_vector));
 
-    // // show the vector
-    // PetscCallVoid(VecView(_vector, PETSC_VIEWER_STDOUT_WORLD));
-
     // all done
     return;
 }

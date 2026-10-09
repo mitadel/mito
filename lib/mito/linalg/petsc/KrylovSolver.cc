@@ -85,9 +85,6 @@ mito::linalg::petsc::KrylovSolver::set_options(const options_type & options) -> 
     // configure the Krylov solver with the options
     PetscCallVoid(KSPSetFromOptions(_ksp));
 
-    // // show all options that have been set
-    // PetscOptionsView(PETSC_NULLPTR, PETSC_VIEWER_STDOUT_WORLD);
-
     // all done
     return;
 }

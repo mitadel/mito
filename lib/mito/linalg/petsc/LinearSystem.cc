@@ -60,10 +60,6 @@ mito::linalg::petsc::LinearSystem::assemble() -> void
     PetscCallVoid(MatAssemblyBegin(_matrix, MAT_FINAL_ASSEMBLY));
     PetscCallVoid(MatAssemblyEnd(_matrix, MAT_FINAL_ASSEMBLY));
 
-    // // show the matrix and the right-hand-side
-    // PetscCallVoid(MatView(_matrix, PETSC_VIEWER_STDOUT_WORLD));
-    // PetscCallVoid(VecView(_rhs, PETSC_VIEWER_STDOUT_WORLD));
-
     // all done
     return;
 }
