@@ -72,7 +72,7 @@ TEST(Fem, BlockGradGradEmbeddedTriangle)
         auto coefficient = mito::functions::identity<coordinates_t, 3>();
         constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
         auto grad_grad_block =
-            mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(coefficient);
+            mito::fem::blocks::grad_grad_block(coefficient);
 
         // the analytical elementary stiffness matrix (the stiffness matrix is invariant under
         // rigid rotations, so it is the same as for the unit right triangle in 2D)

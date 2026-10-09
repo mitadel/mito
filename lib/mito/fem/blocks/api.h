@@ -15,15 +15,11 @@ namespace mito::fem::blocks {
     constexpr auto advection(const velocityFieldT & velocity);
 
     // diffusion matrix block factory
-    template <
-        class elementT, int doe = 2 * elementT::degree - 1,
-        fields::tensor_field_c diffusivityFieldT>
+    template <fields::tensor_field_c diffusivityFieldT>
     constexpr auto diffusion(const diffusivityFieldT & diffusivity);
 
     // stiffness matrix block factory
-    template <
-        class elementT, int doe = 2 * elementT::degree - 1,
-        fields ::tensor_field_c elasticModulusFieldT>
+    template <fields ::tensor_field_c elasticModulusFieldT>
     constexpr auto stiffness(const elasticModulusFieldT & elastic_modulus);
 
     // reaction matrix block factory

@@ -71,7 +71,7 @@ TEST(Fem, BlockGradGradEmbeddedSegment)
         auto coefficient = mito::functions::identity<coordinates_t, 2>();
         constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
         auto grad_grad_block =
-            mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(coefficient);
+            mito::fem::blocks::grad_grad_block(coefficient);
 
         // the analytical elementary stiffness matrix (same as 1D for unit-length segment)
         auto analytical_block = mito::tensor::matrix_t<2>{ 1.0, -1.0, -1.0, 1.0 };
