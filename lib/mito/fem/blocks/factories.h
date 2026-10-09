@@ -18,19 +18,19 @@ namespace mito::fem::blocks {
     }
 
     // diffusion matrix block factory
-    template <class elementT, int doe, fields::tensor_field_c diffusivityFieldT>
+    template <fields::tensor_field_c diffusivityFieldT>
     constexpr auto diffusion(const diffusivityFieldT & diffusivity)
     {
         // return a diffusion matrix block
-        return grad_grad_block<elementT, doe>(diffusivity);
+        return grad_grad_block(diffusivity);
     }
 
     // stiffness matrix block factory
-    template <class elementT, int doe, fields::tensor_field_c elasticModulusFieldT>
+    template <fields::tensor_field_c elasticModulusFieldT>
     constexpr auto stiffness(const elasticModulusFieldT & elastic_modulus)
     {
         // return a stiffness matrix block
-        return grad_grad_block<elementT, doe>(elastic_modulus);
+        return grad_grad_block(elastic_modulus);
     }
 
     // reaction matrix block factory

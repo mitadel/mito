@@ -64,7 +64,7 @@ TEST(Fem, BlockSum)
     // a grad grad matrix block
     constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
     auto diffusion_block =
-        mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+        mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = mass_block + diffusion_block;
@@ -194,7 +194,7 @@ TEST(Fem, BlockProductSum)
     // a grad grad matrix block
     constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
     auto diffusion_block =
-        mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+        mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = 2.0 * mass_block + (-1.0) * diffusion_block;
@@ -264,7 +264,7 @@ TEST(Fem, BlockProductTwoSums)
     // a grad grad matrix block
     constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
     auto diffusion_block =
-        mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+        mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = mass_block + mass_block + (-1.0) * diffusion_block;

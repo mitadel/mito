@@ -55,7 +55,7 @@ TEST(Fem, BlockGradGradSegment)
         // a grad grad matrix block
         constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
         auto diffusion_block =
-            mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+            mito::fem::blocks::grad_grad_block(diffusivity);
 
         // the analytical elementary stiffness matrix
         auto analytical_block = mito::tensor::matrix_t<2>{ 1.0, -1.0, -1.0, 1.0 };

@@ -14,7 +14,7 @@ namespace mito::fem::blocks {
     class ValueGradientBlock;
 
     // grad grad block
-    template <class elementT, class quadratureRuleT, fields::tensor_field_c coefficientFieldT>
+    template <fields::tensor_field_c coefficientFieldT>
     class GradientGradientBlock;
 
     // value value block
