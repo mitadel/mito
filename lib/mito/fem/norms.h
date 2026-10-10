@@ -19,14 +19,12 @@ namespace mito::fem {
 
         // loop on all the elements of the function space
         for (const auto & element : function_space.elements()) {
-            // element type
-            using element_t = mito::utilities::base_type<decltype(element)>;
             // localize {u1} on this element
             auto u1_local = localize(u1, element);
             // localize {u2} on this element
             auto u2_local = localize(u2, element);
             // compute the elementary contribution to the norm
-            norm += blocks::l2_norm(u1_local - u2_local).template compute<element_t, doe>(element);
+            norm += blocks::l2_norm(u1_local - u2_local).template compute<doe>(element);
         }
 
         // take the square root of the accumulated norm
@@ -44,8 +42,6 @@ namespace mito::fem {
 
         // loop on all the elements of the function space
         for (const auto & element : function_space.elements()) {
-            // element type
-            using element_t = mito::utilities::base_type<decltype(element)>;
             // localize {u1} on this element
             auto u1_local = localize(u1, element);
             // localize {u2} on this element
@@ -55,9 +51,9 @@ namespace mito::fem {
             // localize the gradient of the exact solution on this element
             auto u2_local_gradient = operators::gradient(u2_local);
             // compute the elementary contributions to the H1 norm
-            norm += blocks::l2_norm(u1_local - u2_local).template compute<element_t, doe1>(element)
+            norm += blocks::l2_norm(u1_local - u2_local).template compute<doe1>(element)
                   + blocks::l2_norm(u1_local_gradient - u2_local_gradient)
-                        .template compute<element_t, doe2>(element);
+                        .template compute<doe2>(element);
         }
 
         // take the square root of the accumulated norm
