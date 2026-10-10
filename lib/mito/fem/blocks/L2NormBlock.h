@@ -25,7 +25,7 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        template <class elementT, int doe = elementT::degree>
+        template <int doe, class elementT>
         requires function_in_parametric_coordinates_c<functionT, elementT, doe>
         auto compute(const elementT & element) const -> elementary_shape_t
         {
@@ -50,6 +50,13 @@ namespace mito::fem::blocks {
                     // all done
                     return norm;
                 }));
+        }
+
+        // compute the elementary contribution of this block
+        template <class elementT>
+        auto compute(const elementT & element) const -> elementary_shape_t
+        {
+            return compute<elementT::degree>(element);
         }
 
       private:

@@ -27,7 +27,7 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        template <class elementT, int doe = 2 * elementT::degree - 1>
+        template <int doe, class elementT>
         auto compute(const elementT & element) const -> elementary_shape_t<elementT>
         {
             // the parametric coordinates type
@@ -70,6 +70,12 @@ namespace mito::fem::blocks {
                     // all done
                     return elementary_matrix;
                 }));
+        }
+
+        template <class elementT>
+        auto compute(const elementT & element) const -> elementary_shape_t<elementT>
+        {
+            return compute<2 * elementT::degree - 1>(element);
         }
 
       private:
