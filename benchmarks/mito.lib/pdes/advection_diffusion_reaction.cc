@@ -122,12 +122,12 @@ main()
         mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
 
     // compute the L2 error
-    auto error_L2 = mito::fem::compute_l2_norm(function_space, solution, u_ex);
+    auto error_L2 = mito::fem::compute_l2_norm<2>(function_space, solution, u_ex);
     // report
     channel << "L2 error: " << error_L2 << journal::endl;
 
     // compute the H1 error
-    auto error_H1 = mito::fem::compute_h1_norm(function_space, solution, u_ex);
+    auto error_H1 = mito::fem::compute_h1_norm<2, 2>(function_space, solution, u_ex);
     // report
     channel << "H1 error: " << error_H1 << journal::endl;
 

@@ -10,7 +10,7 @@
 namespace mito::fem {
 
     // compute L2 norm on a given function space of the difference between two localizable fields
-    template <class functionSpaceT, class F1, class F2>
+    template <int doe, class functionSpaceT, class F1, class F2>
     constexpr auto compute_l2_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
@@ -19,12 +19,14 @@ namespace mito::fem {
 
         // loop on all the elements of the function space
         for (const auto & element : function_space.elements()) {
+            // element type
+            using element_t = mito::utilities::base_type<decltype(element)>;
             // localize {u1} on this element
             auto u1_local = localize(u1, element);
             // localize {u2} on this element
             auto u2_local = localize(u2, element);
             // compute the elementary contribution to the norm
-            norm += blocks::l2_norm(u1_local - u2_local).compute(element);
+            norm += blocks::l2_norm(u1_local - u2_local).template compute<element_t, doe>(element);
         }
 
         // take the square root of the accumulated norm
@@ -32,7 +34,8 @@ namespace mito::fem {
     }
 
     // compute H1 norm on a given function space of the difference between two localizable fields
-    template <class functionSpaceT, class F1, class F2>
+    template <
+        int doe1, int doe2 = (doe1 >= 2 ? doe1 - 2 : 0), class functionSpaceT, class F1, class F2>
     constexpr auto compute_h1_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
@@ -41,6 +44,8 @@ namespace mito::fem {
 
         // loop on all the elements of the function space
         for (const auto & element : function_space.elements()) {
+            // element type
+            using element_t = mito::utilities::base_type<decltype(element)>;
             // localize {u1} on this element
             auto u1_local = localize(u1, element);
             // localize {u2} on this element
@@ -50,10 +55,9 @@ namespace mito::fem {
             // localize the gradient of the exact solution on this element
             auto u2_local_gradient = operators::gradient(u2_local);
             // compute the elementary contributions to the H1 norm
-            norm +=
-                blocks::l2_norm(u1_local - u2_local).compute(element)
-                + blocks::l2_norm(u1_local_gradient - u2_local_gradient)
-                      .compute(element);
+            norm += blocks::l2_norm(u1_local - u2_local).template compute<element_t, doe1>(element)
+                  + blocks::l2_norm(u1_local_gradient - u2_local_gradient)
+                        .template compute<element_t, doe2>(element);
         }
 
         // take the square root of the accumulated norm
