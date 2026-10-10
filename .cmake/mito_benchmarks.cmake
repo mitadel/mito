@@ -24,11 +24,6 @@ function(mito_benchmark_driver benchmarkfile)
     # specify the directory for the target compilation products
     mito_target_directory(${target} benchmarks)
 
-    # register the runtime environment requirements
-    set_property(TEST ${testname} PROPERTY ENVIRONMENT
-        LD_LIBRARY_PATH=${CMAKE_INSTALL_PREFIX}/lib
-    )
-
     # all done
 endfunction()
 
