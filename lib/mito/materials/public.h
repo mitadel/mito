@@ -16,6 +16,9 @@
 // published types factories; this is the file you are looking for...
 #include "api.h"
 
+// thermal implementation
+#include "thermal.h"
+
 // classes implementation
 #include "LinearElastic.h"
 #include "Gent.h"

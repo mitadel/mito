@@ -23,6 +23,7 @@
 #include "operators.h"
 #include "linalg.h"
 #include "mesh.h"
+#include "models.h"
 #include "quadrature.h"
 #include "simulation.h"
 #include "topology.h"
