@@ -160,6 +160,9 @@ if(WITH_METIS)
     endif()
 endif()
 
+# models
+mito_test_driver(tests/mito.lib/models/thermal_heat_diffusion_constant_isotropic.cc)
+
 # operators
 mito_test_driver(tests/mito.lib/operators/calculus_identities.cc)
 mito_test_driver(tests/mito.lib/operators/calculus_scalar_field.cc)

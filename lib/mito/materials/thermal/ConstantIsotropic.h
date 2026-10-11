@@ -8,19 +8,13 @@
 
 
 // a linear elastic material model
+template <int D>
 class mito::materials::thermal::ConstantIsotropic {
   public:
-    // the dimension of the physical space
-    static constexpr int D = 3;
+    // the type of coordinates
+    using coordinates_t = geometry::cartesian<D>::coordinates_t;
     // the type for a scalar
     using scalar_type = tensor::scalar_t;
-    // the type for the deformation gradient
-    using deformation_gradient_type = tensor::matrix_t<D>;
-    // the type for the stress
-    using stress_type = tensor::symmetric_matrix_t<D>;
-    // the type for the tangents
-    // TOFIX: it would be cool to include the symmetries of the tangent tensor here
-    using tangents_type = tensor::fourth_order_tensor_t<D>;
 
   public:
     // constructor
@@ -34,13 +28,13 @@ class mito::materials::thermal::ConstantIsotropic {
 
   public:
     // returns the thermal conductivity
-    constexpr auto conductivity() const -> scalar_type { return _kappa; }
+    constexpr auto conductivity() const { return _kappa * functions::identity<coordinates_t, D>(); }
 
     // returns the volumetric heat capacity
-    constexpr auto heat_capacity() const -> scalar_type { return _rho * _cp; }
+    constexpr auto heat_capacity() const { return _rho * _cp * functions::one<coordinates_t>; }
 
     // returns the heat source
-    constexpr auto heat_source() const -> scalar_type { return _sigma; }
+    constexpr auto heat_source() const { return _sigma; }
 
   private:
     // thermal conductivity

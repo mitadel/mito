@@ -22,19 +22,19 @@ namespace mito::models {
         template <std::same_as<archetype_type::Stiffness> Tag>
         auto getBlock() const
         {
-            return grad_grad_block(material.conductivity());
+            return fem::blocks::grad_grad_block(material.conductivity());
         }
 
         template <std::same_as<archetype_type::Capacitance> Tag>
         auto getBlock() const
         {
-            return value_value_block(material.heat_capacity());
+            return fem::blocks::value_value_block(material.heat_capacity());
         }
 
         template <std::same_as<archetype_type::Load> Tag>
         auto getBlock() const
         {
-            return value_block(material.heat_source());
+            return fem::blocks::value_block(material.heat_source());
         }
 
       private:

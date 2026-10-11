@@ -10,9 +10,12 @@
 namespace mito::materials::thermal {
 
     // constant isotropic material factory
-    constexpr auto constant_isotropic(real rho, real E, real nu, real sigma) -> constant_isotropic_t
+    template <int D>
+    constexpr auto constant_isotropic(
+        tensor::scalar_t kappa, tensor::scalar_t rho, tensor::scalar_t cp, tensor::scalar_t sigma)
+        -> constant_isotropic_t<D>
     {
-        return constant_isotropic_t(rho, E, nu, sigma);
+        return constant_isotropic_t(kappa, rho, cp, sigma);
     }
 }
 

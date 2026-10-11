@@ -10,6 +10,8 @@
 // externals
 
 // support
+#include "../../functions.h"
+#include "../../geometry.h"
 #include "../../journal.h"
 #include "../../tensor.h"
 

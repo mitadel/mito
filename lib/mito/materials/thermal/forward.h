@@ -11,10 +11,12 @@ namespace mito::materials::thermal {
 
 
     // constant isotropic material
+    template <int D>
     class ConstantIsotropic;
 
     // constant isotropic material alias
-    using constant_isotropic_t = ConstantIsotropic;
+    template <int D>
+    using constant_isotropic_t = ConstantIsotropic<D>;
 }
 
 
