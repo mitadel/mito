@@ -19,14 +19,13 @@ mito::linalg::petsc::Vector::get_vector(vectorT & vector) const -> void
     PetscCallVoid(VecGetArrayRead(_vector, &u));
 
     // get the size of the vector
-    PetscInt size;
-    PetscCallVoid(VecGetSize(_vector, &size));
+    PetscInt vector_size = size();
 
     // check that the size of {_vector} matches the size of {vector}
-    assert(size == (int) std::size(vector));
+    assert(vector_size == (int) std::size(vector));
 
     // copy {_vector} into {vector}
-    std::copy(u, u + size, std::begin(vector));
+    std::copy(u, u + vector_size, std::begin(vector));
 
     // restore the array after reading
     PetscCallVoid(VecRestoreArrayRead(_vector, &u));

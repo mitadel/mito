@@ -11,8 +11,7 @@
 // constructor
 mito::linalg::petsc::Matrix::Matrix(const label_type & label, index_t size) :
     _label(label),
-    _matrix(nullptr),
-    _size(size)
+    _matrix(nullptr)
 {
     // create the matrix
     PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
@@ -110,11 +109,28 @@ mito::linalg::petsc::Matrix::get_value(index_t row, index_t col) const -> scalar
 
 // get the number of rows/columns of the matrix
 auto
-mito::linalg::petsc::Matrix::size() const -> index_t
+mito::linalg::petsc::Matrix::size(index_t & matrix_size) const -> void
 {
-    return _size;
+    // delegate to PETSc
+    PetscCallVoid(MatGetSize(_matrix, &matrix_size, nullptr));
+
+    // all done
+    return;
 }
 
+// return the number of rows/columns of the matrix
+auto
+mito::linalg::petsc::Matrix::size() const -> index_t
+{
+    // the value to return
+    index_t matrix_size;
+
+    // delegate to PETSc
+    size ( matrix_size );
+
+    // all done
+    return matrix_size;
+}
 
 // print the matrix
 auto

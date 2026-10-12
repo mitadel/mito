@@ -9,9 +9,7 @@
 
 
 // constructor
-mito::linalg::petsc::Vector::Vector(const label_type & label, index_t size) :
-    _label(label),
-    _size(size)
+mito::linalg::petsc::Vector::Vector(const label_type & label, index_t size) : _label(label)
 {
     // create the vector
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_vector));
@@ -72,13 +70,27 @@ mito::linalg::petsc::Vector::add_value(index_t row, const scalar_t & value) -> v
 
 // get the number of entries in the vector
 auto
-mito::linalg::petsc::Vector::size() const -> index_t
+mito::linalg::petsc::Vector::size(index_t & vector_size) const -> void
 {
-    return _size;
+    // delegate to PETSc
+    PetscCallVoid(VecGetSize(_vector, &vector_size));
 }
 
+// return the number of entries in the vector
+auto
+mito::linalg::petsc::Vector::size() const -> index_t
+{
+    // the value to return
+    index_t vector_size;
 
-// print the linear system of equations of the petsc solver
+    // delegate to PETSc
+    size(vector_size);
+
+    // all done
+    return vector_size;
+}
+
+// print the vector
 auto
 mito::linalg::petsc::Vector::print() const -> void
 {

@@ -48,7 +48,10 @@ namespace mito::linalg::petsc {
         // add a value to a vector entry
         auto add_value(index_t, const scalar_t &) -> void;
 
-        // accessor to the number of entries
+        // get the size of the vector
+        auto size(index_t &) const -> void;
+
+        // return the size of the vector
         auto size() const -> index_t;
 
         // get the vector
@@ -63,8 +66,6 @@ namespace mito::linalg::petsc {
         label_type _label;
         // the vector
         vector_type _vector;
-        // the number of entries
-        index_t _size;
     };
 
 }    // namespace mito
