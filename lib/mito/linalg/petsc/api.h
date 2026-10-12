@@ -12,26 +12,26 @@ namespace mito::linalg::petsc {
     // environment
     using environment_t = Environment;
 
-    // backend
-    using backend_t = Backend;
-
     // index
-    using index_t = backend_t::index_type;
+    using index_t = PetscInt;
 
     // scalar
-    using scalar_t = backend_t::scalar_type;
+    using scalar_t = PetscScalar;
 
     // vector
-    using vector_t = backend_t::vector_type;
+    using vector_t = Vector;
 
     // matrix
-    using matrix_t = backend_t::matrix_type;
+    using matrix_t = Matrix;
 
     // linear system
     using linear_system_t = LinearSystem;
 
     // Krlov solver
     using ksp_t = KrylovSolver;
+
+    // backend
+    using backend_t = Backend;
 }
 
 

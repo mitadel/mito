@@ -9,6 +9,9 @@
 
 namespace mito::linalg::petsc {
 
+    // the backend structure
+    struct Backend;
+
     // class for environment
     class Environment;
 
@@ -24,17 +27,6 @@ namespace mito::linalg::petsc {
     // class for Krylov solver
     class KrylovSolver;
 
-    // struct for backend
-    struct Backend {
-        // the index type
-        using index_type = PetscInt;
-        // the scalar type
-        using scalar_type = PetscScalar;
-        // the vector type
-        using vector_type = Vector;
-        // the matrix type
-        using matrix_type = Matrix;
-    };
 }
 
 

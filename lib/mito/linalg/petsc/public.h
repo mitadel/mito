@@ -23,6 +23,9 @@
 #include "LinearSystem.h"
 #include "Vector.h"
 
+// backend type definitions
+#include "backend.h"
+
 // factories implementation
 #include "factories.h"
 
