@@ -4,7 +4,7 @@
 //
 
 // code guard
-// #pragma once
+#pragma once
 
 
 namespace mito::linalg::petsc {

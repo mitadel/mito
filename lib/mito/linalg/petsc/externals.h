@@ -17,5 +17,10 @@
 #include "../../journal.h"
 #include "../../utilities.h"
 
+// generic linalg declarations
+#include "../externals.h"
+#include "../concepts.h"
+#include "../forward.h"
+#include "../api.h"
 
 // end of file

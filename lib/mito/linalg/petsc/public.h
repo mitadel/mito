@@ -19,12 +19,16 @@
 // classes
 #include "Environment.h"
 #include "Matrix.h"
-#include "KrylovSolver.h"
 #include "Vector.h"
-#include "LinearSystem.h"
 
 // backend type definitions
 #include "backend.h"
+
+// linear system
+#include "../LinearSystem.h"
+
+// Krylov solver
+#include "KrylovSolver.h"
 
 // factories implementation
 #include "factories.h"

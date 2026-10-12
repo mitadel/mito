@@ -12,9 +12,13 @@ TEST(Solvers, PETScKSPSolver)
 {
     // the size of the linear system
     int N = 10;
+    // linear algebra backend
+    using backend_t = mito::linalg::petsc::backend_t;
+    // typedef for a linear system of equations
+    using linear_system_t = mito::linalg::linear_system_t<backend_t>;
 
     // instantiate a PETSc linear system of size {N}
-    auto linear_system = mito::linalg::petsc::linear_system("mysystem", N);
+    auto linear_system = linear_system_t("mysystem", N);
 
     // instantiate a PETSc Krylov solver for the linear system
     auto solver = mito::linalg::petsc::ksp(linear_system);

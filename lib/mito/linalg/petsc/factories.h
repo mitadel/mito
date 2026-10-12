@@ -27,14 +27,8 @@ namespace mito::linalg::petsc {
         return vector_t(name, size);
     }
 
-    // linear system
-    inline auto linear_system(const std::string & name, index_t size)
-    {
-        return linear_system_t(name, size);
-    }
-
     // Krylov solver
-    inline auto ksp(linear_system_t & linear_system)
+    inline auto ksp(linear_system_t<backend_t> & linear_system)
     {
         return ksp_t(linear_system);
     }

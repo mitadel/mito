@@ -13,14 +13,13 @@ namespace mito::linalg {
     template <class matrixT, class indexT, class scalarT>
     concept matrix_like_c =
         requires(matrixT m, const matrixT & cm, indexT i, indexT j, scalarT s, scalarT & s_ref) {
-            { cm.label() } -> std::convertible_to<std::string>;
             { m.assemble() } -> std::same_as<void>;
-            { m.assembleFlush() } -> std::same_as<void>;
+            { m.assemble_flush() } -> std::same_as<void>;
             { m.insert_value(i, j, s) } -> std::same_as<void>;
             { m.add_value(i, j, s) } -> std::same_as<void>;
             { cm.get_value(i, j, s_ref) } -> std::same_as<void>;
             { cm.get_value(i, j) } -> std::same_as<scalarT>;
-            { cm.n_equations() } -> std::convertible_to<int>;
+            { cm.size() } -> std::convertible_to<int>;
             { cm.print() } -> std::same_as<void>;
         };
 
@@ -28,11 +27,10 @@ namespace mito::linalg {
     template <class vectorT, class indexT, class scalarT>
     concept vector_like_c =
         requires(vectorT v, const vectorT & cv, indexT i, scalarT s, scalarT & s_ref) {
-            { cv.label() } -> std::convertible_to<std::string>;
             { v.assemble() } -> std::same_as<void>;
             { v.insert_value(i, s) } -> std::same_as<void>;
             { v.add_value(i, s) } -> std::same_as<void>;
-            { cv.n_equations() } -> std::convertible_to<int>;
+            { cv.size() } -> std::convertible_to<int>;
             { cv.print() } -> std::same_as<void>;
         };
 

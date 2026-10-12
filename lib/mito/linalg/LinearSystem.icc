@@ -1,0 +1,165 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_linalg_backend_LinearSystem_icc)
+#error This header file contains implementation details of class mito::linalg::LinearSystem
+#else
+
+
+// constructor
+template <mito::linalg::valid_backend_c backendT>
+mito::linalg::LinearSystem<backendT>::LinearSystem(index_type size) :
+    _matrix(size),
+    _rhs(size),
+    _solution(size)
+{
+    ;
+}
+
+// assemble the linear system
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::assemble() -> void
+{
+    // assemble matrix
+    _matrix.assemble();
+
+    // all done
+    return;
+}
+
+// assemble the linear system
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::assemble_flush() -> void
+{
+    // assemble matrix
+    _matrix.assemble_flush();
+
+    // all done
+    return;
+}
+
+// set the matrix entry at ({row}, {col}) to {value}
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::insert_matrix_value(
+    index_type row, index_type col, const scalar_type & value) -> void
+{
+    // insert the value into the matrix
+    _matrix.insert_value(row, col, value);
+
+    // all done
+    return;
+}
+
+// add {value} to matrix entry at ({row}, {col})
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::add_matrix_value(
+    index_type row, index_type col, const scalar_type & value) -> void
+{
+    // add the value to the matrix
+    _matrix.add_value(row, col, value);
+
+    // all done
+    return;
+}
+
+// set the right-hand side entry at {row} to {value}
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::insert_rhs_value(index_type row, const scalar_type & value)
+    -> void
+{
+    // insert the value into the right-hand side
+    _rhs.insert_value(row, value);
+
+    // all done
+    return;
+}
+
+// add {value} to right-hand side entry at {row}
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::add_rhs_value(index_type row, const scalar_type & value)
+    -> void
+{
+    // add the value to the right-hand side
+    _rhs.add_value(row, value);
+
+    // all done
+    return;
+}
+
+// return the number of equations in the linear system
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::n_equations() const -> index_type
+{
+    // all done
+    return _matrix.size();
+}
+
+// read the solution
+template <mito::linalg::valid_backend_c backendT>
+template <class solutionT>
+auto
+mito::linalg::LinearSystem<backendT>::read_solution(solutionT & solution) const -> void
+{
+    // get the solution vector
+    _solution.get_vector(solution);
+
+    // all done
+    return;
+}
+
+// print the linear system of equations of the solver
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::print() const -> void
+{
+    // create a reporting channel
+    journal::info_t channel("mito.solvers.LinearSystem");
+
+    // print the matrix
+    _matrix.print();
+
+    // print the right-hand side
+    _rhs.print();
+
+    // all done
+    return;
+}
+
+// get the matrix
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::get_matrix() const -> matrix_type const &
+{
+    return _matrix;
+}
+
+// get the right-hand side vector
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::get_rhs() const -> vector_type const &
+{
+    return _rhs;
+}
+
+// get the solution vector
+template <mito::linalg::valid_backend_c backendT>
+auto
+mito::linalg::LinearSystem<backendT>::get_solution() const -> vector_type const &
+{
+    return _solution;
+}
+
+
+#endif    // mito_linalg_backend_LinearSystem_icc
+
+// end of file

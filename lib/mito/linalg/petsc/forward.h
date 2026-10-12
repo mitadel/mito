@@ -21,9 +21,6 @@ namespace mito::linalg::petsc {
     // class for matrix
     class Matrix;
 
-    // class for linear system
-    class LinearSystem;
-
     // class for Krylov solver
     class KrylovSolver;
 
