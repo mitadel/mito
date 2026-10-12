@@ -4,11 +4,8 @@
 //
 
 
-#include "forward.h"
-#include "externals.h"
-#include "api.h"
-#include "LinearSystem.h"
-#include "KrylovSolver.h"
+// support
+#include "public.h"
 
 
 // constructor

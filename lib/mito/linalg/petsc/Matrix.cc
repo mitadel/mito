@@ -4,10 +4,8 @@
 //
 
 
-#include "forward.h"
-#include "externals.h"
-#include "api.h"
-#include "Matrix.h"
+// support
+#include "public.h"
 
 
 // constructor
