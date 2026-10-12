@@ -5,7 +5,6 @@
 
 // code guard
 #pragma once
-#include <petscsystypes.h>
 
 
 namespace mito::linalg::petsc {

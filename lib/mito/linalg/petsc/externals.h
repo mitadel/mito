@@ -12,6 +12,7 @@
 #include <vector>
 #include <cassert>
 #include <petscksp.h>
+#include <petscsystypes.h>
 
 // support
 #include "../../journal.h"
