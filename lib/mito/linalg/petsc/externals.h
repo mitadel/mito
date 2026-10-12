@@ -11,12 +11,10 @@
 #include <string>
 #include <vector>
 #include <cassert>
+#include <petscksp.h>
 
 // support
 #include "../../journal.h"
-
-// petsc support
-#include <petscksp.h>
 
 
 // end of file
