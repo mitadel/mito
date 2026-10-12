@@ -34,7 +34,7 @@ class mito::materials::thermal::ConstantIsotropic {
     constexpr auto heat_capacity() const { return _rho * _cp * functions::one<coordinates_t>; }
 
     // returns the heat source
-    constexpr auto heat_source() const { return _sigma; }
+    constexpr auto heat_source() const { return _sigma * functions::one<coordinates_t>; }
 
   private:
     // thermal conductivity
