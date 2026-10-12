@@ -60,7 +60,10 @@ namespace mito::linalg::petsc {
         // add a value to a right-hand side entry
         auto add_rhs_value(index_t, const scalar_t &) -> void;
 
-        // accessor to the number of equations
+        // get the number of equations in the linear system
+        auto n_equations(index_t &) const -> void;
+
+        // return the number of equations in the linear system
         auto n_equations() const -> index_t;
 
         // get the solution vector
@@ -79,8 +82,6 @@ namespace mito::linalg::petsc {
         vector_type _rhs;
         // the solution vector
         vector_type _solution;
-        // the number of equations
-        index_t _n_equations;
     };
 
 }    // namespace mito

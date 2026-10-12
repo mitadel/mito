@@ -10,12 +10,8 @@
 
 // constructor
 mito::linalg::petsc::LinearSystem::LinearSystem(const label_type & label, index_t size) :
-    _label(label),
-    _n_equations(size)
+    _label(label)
 {
-    // take note of the number of equations
-    _n_equations = size;
-
     // create the vectors
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_solution));
     PetscCallVoid(VecSetSizes(_solution, PETSC_DECIDE, size));
@@ -108,10 +104,29 @@ mito::linalg::petsc::LinearSystem::add_rhs_value(index_t row, const scalar_t & v
     return;
 }
 
+// get the number of equations in the linear system
 auto
-mito::linalg::petsc::LinearSystem::n_equations() const -> int
+mito::linalg::petsc::LinearSystem::n_equations(index_t & size) const -> void
 {
-    return _n_equations;
+    // delegate to PETSc
+    PetscCallVoid(MatGetSize(_matrix, &size, nullptr));
+
+    // all done
+    return;
+}
+
+// return the number of equations in the linear system
+auto
+mito::linalg::petsc::LinearSystem::n_equations() const -> index_t
+{
+    // the number of equations
+    index_t size;
+
+    // delegate to PETSc
+    n_equations(size);
+
+    // all done
+    return size;
 }
 
 
