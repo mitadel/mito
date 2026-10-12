@@ -10,6 +10,9 @@
 // external packages
 #include "externals.h"
 
+// get the concept declarations
+#include "concepts.h"
+
 // backend implementation
 #if WITH_PETSC
 #include "petsc/public.h"

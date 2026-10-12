@@ -12,7 +12,7 @@ namespace mito::linalg {
     // concept of {T} having the properties of a matrix-like object
     template <class matrixT, class indexT, class scalarT>
     concept matrix_like_c =
-        requires(matrixT m, const matrixT& cm, indexT i, indexT j, scalarT s, scalarT & s_ref) {
+        requires(matrixT m, const matrixT & cm, indexT i, indexT j, scalarT s, scalarT & s_ref) {
             { cm.label() } -> std::convertible_to<std::string>;
             { m.assemble() } -> std::same_as<void>;
             { m.assembleFlush() } -> std::same_as<void>;
@@ -27,7 +27,7 @@ namespace mito::linalg {
     // concept of {T} having the properties of a vector-like object
     template <class vectorT, class indexT, class scalarT>
     concept vector_like_c =
-        requires(vectorT v, const vectorT& cv, indexT i, scalarT s, scalarT & s_ref) {
+        requires(vectorT v, const vectorT & cv, indexT i, scalarT s, scalarT & s_ref) {
             { cv.label() } -> std::convertible_to<std::string>;
             { v.assemble() } -> std::same_as<void>;
             { v.insert_value(i, s) } -> std::same_as<void>;
