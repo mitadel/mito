@@ -16,9 +16,9 @@ namespace mito::linalg::petsc {
 
       private:
         // the vector type
-        using vector_type = Vec;
+        using vector_type = Vector;
         // the matrix type
-        using matrix_type = Mat;
+        using matrix_type = Matrix;
 
       public:
         // constructor
@@ -37,11 +37,14 @@ namespace mito::linalg::petsc {
         LinearSystem & operator=(LinearSystem &&) = delete;
 
         // destructor
-        ~LinearSystem();
+        ~LinearSystem() = default;
 
       public:
         // assemble the linear system
         auto assemble() -> void;
+
+        // assemble the linear system
+        auto assemble_flush() -> void;
 
         // set the value of a matrix entry
         auto insert_matrix_value(index_t, index_t, const scalar_t &) -> void;
@@ -55,18 +58,25 @@ namespace mito::linalg::petsc {
         // add a value to a right-hand side entry
         auto add_rhs_value(index_t, const scalar_t &) -> void;
 
-        // get the number of equations in the linear system
-        auto n_equations(index_t &) const -> void;
-
         // return the number of equations in the linear system
         auto n_equations() const -> index_t;
 
-        // get the solution vector
+        // read the solution vector
         template <class solutionT>
-        auto get_solution(solutionT & solution) const -> void;
+        auto read_solution(solutionT & solution) const -> void;
 
         // print the linear system
+
         auto print() const -> void;
+        // get the matrix
+        auto get_matrix() const -> matrix_type const &;
+
+        // get the right-hand side vector
+        auto get_rhs() const -> vector_type const &;
+
+        // get the solution vector
+        auto get_solution() const -> vector_type const &;
+
 
       private:
         // the matrix

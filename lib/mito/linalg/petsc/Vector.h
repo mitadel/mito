@@ -56,6 +56,9 @@ namespace mito::linalg::petsc {
         // print the vector
         auto print() const -> void;
 
+        // get petsc vector
+        auto get() const -> vector_type const &;
+
       private:
         // the vector
         vector_type _vector;

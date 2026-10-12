@@ -12,24 +12,10 @@
 // get the solution at entry {row}
 template <class solutionT>
 auto
-mito::linalg::petsc::LinearSystem::get_solution(solutionT & solution) const -> void
+mito::linalg::petsc::LinearSystem::read_solution(solutionT & solution) const -> void
 {
-    // get a pointer to the beginning of {_solution}
-    const scalar_t * u;
-    PetscCallVoid(VecGetArrayRead(_solution, &u));
-
-    // get the size of the vector
-    PetscInt size;
-    PetscCallVoid(VecGetSize(_solution, &size));
-
-    // check that the size of {_solution} matches the size of {solution}
-    assert(size == (int) std::size(solution));
-
-    // copy {_solution} into {solution}
-    std::copy(u, u + size, std::begin(solution));
-
-    // restore the array after reading
-    PetscCallVoid(VecRestoreArrayRead(_solution, &u));
+    // get the solution vector
+    _solution.get_vector(solution);
 
     // all done
     return;

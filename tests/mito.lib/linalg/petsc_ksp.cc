@@ -38,7 +38,7 @@ TEST(Solvers, PETScKSPSolver)
 
     // read the solution
     auto x = std::vector<double>(N);
-    linear_system.get_solution(x);
+    linear_system.read_solution(x);
 
     // check the solution
     EXPECT_DOUBLE_EQ(x[0], 5.0);

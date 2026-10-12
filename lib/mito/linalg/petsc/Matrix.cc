@@ -9,8 +9,7 @@
 
 
 // constructor
-mito::linalg::petsc::Matrix::Matrix(index_t size) :
-    _matrix(nullptr)
+mito::linalg::petsc::Matrix::Matrix(index_t size) : _matrix(nullptr)
 {
     // create the matrix
     PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
@@ -117,7 +116,7 @@ mito::linalg::petsc::Matrix::size() const -> index_t
     index_t matrix_size;
 
     // delegate to PETSc
-    size ( matrix_size );
+    size(matrix_size);
 
     // all done
     return matrix_size;
@@ -138,9 +137,9 @@ mito::linalg::petsc::Matrix::print() const -> void
     return;
 }
 
-// access matrix
+// get petsc matrix
 auto
-mito::linalg::petsc::Matrix::matrix() const -> matrix_type const &
+mito::linalg::petsc::Matrix::get() const -> matrix_type const &
 {
     return _matrix;
 }

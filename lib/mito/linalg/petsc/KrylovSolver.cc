@@ -15,7 +15,8 @@ mito::linalg::petsc::KrylovSolver::KrylovSolver(linear_system_type & linear_syst
 {
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
-    PetscCallVoid(KSPSetOperators(_ksp, _linear_system._matrix, _linear_system._matrix));
+    PetscCallVoid(KSPSetOperators(
+        _ksp, _linear_system.get_matrix().get(), _linear_system.get_matrix().get()));
     PetscCallVoid(KSPSetOptionsPrefix(_ksp, _options_prefix.c_str()));
 
     // all done
@@ -94,7 +95,8 @@ mito::linalg::petsc::KrylovSolver::solve() -> void
     _linear_system.assemble();
 
     // solve the linear system
-    PetscCallVoid(KSPSolve(_ksp, _linear_system._rhs, _linear_system._solution));
+    PetscCallVoid(
+        KSPSolve(_ksp, _linear_system.get_rhs().get(), _linear_system.get_solution().get()));
 
     // all done
     return;

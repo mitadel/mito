@@ -97,4 +97,11 @@ mito::linalg::petsc::Vector::print() const -> void
     return;
 }
 
+// get petsc vector
+auto
+mito::linalg::petsc::Vector::get() const -> vector_type const &
+{
+    return _vector;
+}
+
 // end of file

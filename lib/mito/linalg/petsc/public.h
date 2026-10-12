@@ -20,8 +20,8 @@
 #include "Environment.h"
 #include "Matrix.h"
 #include "KrylovSolver.h"
-#include "LinearSystem.h"
 #include "Vector.h"
+#include "LinearSystem.h"
 
 // backend type definitions
 #include "backend.h"

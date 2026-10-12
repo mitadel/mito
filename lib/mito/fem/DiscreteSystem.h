@@ -188,7 +188,7 @@ namespace mito::fem {
 
             // read the solution
             auto u = std::vector<double>(_n_equations);
-            _linear_system.get_solution(u);
+            _linear_system.read_solution(u);
 
             // TODO: ask the function space to populate the constrained nodes appropriately
 
