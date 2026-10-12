@@ -13,12 +13,10 @@ namespace mito::linalg::petsc {
       private:
         // the vector type
         using vector_type = Vec;
-        // the label type
-        using label_type = std::string;
 
       public:
         // constructor
-        Vector(const label_type &, index_t);
+        Vector(index_t);
 
         // copy constructor
         Vector(const Vector &) = delete;
@@ -36,9 +34,6 @@ namespace mito::linalg::petsc {
         ~Vector();
 
       public:
-        // get the label of the linear system
-        auto label() const -> label_type;
-
         // assemble the vector
         auto assemble() -> void;
 
@@ -62,8 +57,6 @@ namespace mito::linalg::petsc {
         auto print() const -> void;
 
       private:
-        // the label for the linear system (this is used to prefix PETSc options)
-        label_type _label;
         // the vector
         vector_type _vector;
     };

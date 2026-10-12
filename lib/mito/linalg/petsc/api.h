@@ -19,10 +19,10 @@ namespace mito::linalg::petsc {
     using scalar_t = PetscScalar;
 
     // vector
-    using vector_t = Vector;
+    using vector_t = utilities::NamedClass<Vector>;
 
     // matrix
-    using matrix_t = Matrix;
+    using matrix_t = utilities::NamedClass<Matrix>;
 
     // linear system
     using linear_system_t = utilities::NamedClass<LinearSystem>;

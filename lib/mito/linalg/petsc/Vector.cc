@@ -9,7 +9,7 @@
 
 
 // constructor
-mito::linalg::petsc::Vector::Vector(const label_type & label, index_t size) : _label(label)
+mito::linalg::petsc::Vector::Vector(index_t size)
 {
     // create the vector
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_vector));
@@ -24,14 +24,6 @@ mito::linalg::petsc::Vector::~Vector()
 {
     // destroy the vector
     PetscCallVoid(VecDestroy(&_vector));
-}
-
-// get the label of the vector
-auto
-mito::linalg::petsc::Vector::label() const -> label_type
-{
-    // easy enough
-    return _label;
 }
 
 // set the vector entry at {row} to {value}

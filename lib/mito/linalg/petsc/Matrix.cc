@@ -9,8 +9,7 @@
 
 
 // constructor
-mito::linalg::petsc::Matrix::Matrix(const label_type & label, index_t size) :
-    _label(label),
+mito::linalg::petsc::Matrix::Matrix(index_t size) :
     _matrix(nullptr)
 {
     // create the matrix
@@ -26,14 +25,6 @@ mito::linalg::petsc::Matrix::~Matrix()
 {
     // destroy the matrix
     PetscCallVoid(MatDestroy(&_matrix));
-}
-
-// get the label of the matrix
-auto
-mito::linalg::petsc::Matrix::label() const -> label_type
-{
-    // easy enough
-    return _label;
 }
 
 // assemble the matrix

@@ -13,12 +13,10 @@ namespace mito::linalg::petsc {
       private:
         // the matrix type
         using matrix_type = Mat;
-        // the label type
-        using label_type = std::string;
 
       public:
         // constructor
-        Matrix(const label_type &, index_t);
+        Matrix(index_t);
 
         // copy constructor
         Matrix(const Matrix &) = delete;
@@ -36,9 +34,6 @@ namespace mito::linalg::petsc {
         ~Matrix();
 
       public:
-        // get the label of the matrix
-        auto label() const -> label_type;
-
         // assemble the matrix
         auto assemble() -> void;
 
@@ -70,8 +65,6 @@ namespace mito::linalg::petsc {
         auto matrix() const -> const matrix_type &;
 
       private:
-        // the label for the matrix (this is used to prefix PETSc options)
-        label_type _label;
         // the matrix
         matrix_type _matrix;
     };
