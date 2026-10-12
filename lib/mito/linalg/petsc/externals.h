@@ -9,7 +9,6 @@
 
 // externals
 #include <string>
-#include <vector>
 #include <cassert>
 #include <petscksp.h>
 #include <petscsystypes.h>

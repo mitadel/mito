@@ -8,7 +8,6 @@
 
 
 // external
-#include <algorithm>
 
 // support
 
