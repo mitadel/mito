@@ -90,8 +90,7 @@ mito::linalg::petsc::LinearSystem::add_matrix_value(
 
 // set the right-hand side entry at {row} to {value}
 auto
-mito::linalg::petsc::LinearSystem::insert_rhs_value(index_t row, const scalar_t & value)
-    -> void
+mito::linalg::petsc::LinearSystem::insert_rhs_value(index_t row, const scalar_t & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_rhs, row, value, INSERT_VALUES));
