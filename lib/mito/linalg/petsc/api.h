@@ -25,7 +25,7 @@ namespace mito::linalg::petsc {
     using matrix_t = Matrix;
 
     // linear system
-    using linear_system_t = LinearSystem;
+    using linear_system_t = utilities::NamedClass<LinearSystem>;
 
     // Krlov solver
     using ksp_t = KrylovSolver;

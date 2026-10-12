@@ -9,8 +9,7 @@
 
 
 // constructor
-mito::linalg::petsc::LinearSystem::LinearSystem(const label_type & label, index_t size) :
-    _label(label)
+mito::linalg::petsc::LinearSystem::LinearSystem(index_t size)
 {
     // create the vectors
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_solution));
@@ -36,14 +35,6 @@ mito::linalg::petsc::LinearSystem::~LinearSystem()
     PetscCallVoid(MatDestroy(&_matrix));
     PetscCallVoid(VecDestroy(&_solution));
     PetscCallVoid(VecDestroy(&_rhs));
-}
-
-// get the label of the linear system
-auto
-mito::linalg::petsc::LinearSystem::label() const -> label_type
-{
-    // easy enough
-    return _label;
 }
 
 // assemble the linear system

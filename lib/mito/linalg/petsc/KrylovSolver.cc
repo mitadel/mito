@@ -11,7 +11,7 @@
 // constructor
 mito::linalg::petsc::KrylovSolver::KrylovSolver(linear_system_type & linear_system) :
     _linear_system(linear_system),
-    _options_prefix(linear_system.label() + "_")
+    _options_prefix(linear_system.name() + "_")
 {
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));

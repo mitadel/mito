@@ -12,7 +12,7 @@ namespace mito::linalg::petsc {
     class KrylovSolver {
       private:
         // the linear system type
-        using linear_system_type = LinearSystem;
+        using linear_system_type = utilities::NamedClass<LinearSystem>;
         // the solver type
         using solver_type = KSP;
         // the options type
