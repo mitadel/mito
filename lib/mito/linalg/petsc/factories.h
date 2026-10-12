@@ -10,31 +10,31 @@
 namespace mito::linalg::petsc {
 
     // environment
-    auto environment() -> environment_t
+    inline auto environment() -> environment_t
     {
         return environment_t();
     }
 
     // matrix
-    auto matrix(const std::string & name, index_t size)
+    inline auto matrix(const std::string & name, index_t size)
     {
         return matrix_t(name, size);
     }
 
     // vector
-    auto vector(const std::string & name, index_t size)
+    inline auto vector(const std::string & name, index_t size)
     {
         return vector_t(name, size);
     }
 
     // linear system
-    auto linear_system(const std::string & name, index_t size)
+    inline auto linear_system(const std::string & name, index_t size)
     {
         return linear_system_t(name, size);
     }
 
     // Krylov solver
-    auto ksp(linear_system_t & linear_system)
+    inline auto ksp(linear_system_t & linear_system)
     {
         return ksp_t(linear_system);
     }
