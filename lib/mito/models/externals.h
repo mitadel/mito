@@ -12,6 +12,7 @@
 
 // support
 #include "../fem/blocks.h"
+#include "../fields/public.h"
 
 
 // end of file

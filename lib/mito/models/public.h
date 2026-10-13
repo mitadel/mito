@@ -13,6 +13,9 @@
 // get the forward declarations
 #include "forward.h"
 
+// get the concepts
+#include "concepts.h"
+
 // archetypes implementation
 #include "archetypes.h"
 

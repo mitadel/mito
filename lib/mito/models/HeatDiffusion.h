@@ -4,7 +4,7 @@
 
 namespace mito::models {
 
-    template <class materialT>
+    template <thermal_material_c materialT>
     class HeatDiffusion {
 
       private:
