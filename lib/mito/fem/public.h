@@ -30,6 +30,7 @@
 #include "FunctionSpace.h"
 #include "FemField.h"
 #include "DiscreteSystem.h"
+#include "Term.h"
 #include "SemiDiscreteWeakform.h"
 #include "Weakform.h"
 

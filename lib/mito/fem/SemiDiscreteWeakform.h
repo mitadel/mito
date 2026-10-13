@@ -18,7 +18,6 @@ namespace mito::fem {
 
         // extend the compute_blocks to this class
         using Terms::compute_block...;
-
     };
 
 }    // namespace mito
