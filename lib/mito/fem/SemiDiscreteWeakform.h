@@ -9,15 +9,15 @@
 
 namespace mito::fem {
 
-    template <class... Terms>
-    class SemiDiscreteWeakform : public Terms... {
+    template <class... termTs>
+    class SemiDiscreteWeakform : public termTs... {
 
       public:
         // extend the getters to this class
-        using Terms::get...;
+        using termTs::get...;
 
         // extend the compute_blocks to this class
-        using Terms::compute_block...;
+        using termTs::compute_block...;
     };
 
 }    // namespace mito
