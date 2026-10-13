@@ -14,11 +14,11 @@ namespace mito::fem {
     struct Discretizer<finite_element_family<geometry::triangle_t<D>, 1>, discretization_t::CG> {
         template <
             typename manifoldT, typename constraintsT, typename connectivity_table_type,
-            typename map_type, typename constrained_nodes_type>
+            typename map_type, typename constrained_values_type>
         static void apply(
             const manifoldT & manifold, const constraintsT & constraints,
             connectivity_table_type & connectivity, map_type & node_map,
-            constrained_nodes_type & constrained_nodes)
+            constrained_values_type & constrained_values)
         {
             // the finite element type
             using finite_element_type = finite_element_family<geometry::triangle_t<D>, 1>;
@@ -52,13 +52,21 @@ namespace mito::fem {
                     cell.simplex().id(), connectivity_type{ node_0, node_1, node_2 });
             }
 
-            // populate the constrained nodes
+            // get the coordinate system and the constraint function
+            const auto & coord_system = manifold.coordinate_system();
+            const auto & function = constraints.function();
+
+            // populate the constrained nodes with the values of the constraint function
             for (const auto & cell : constraints.domain().cells()) {
                 for (const auto & node : cell.nodes()) {
                     // get the discretization node associated with the mesh node from the map
-                    auto it = node_map.find(node);
-                    // add the node to the constrained nodes
-                    constrained_nodes.insert(it->second);
+                    // (throws an error if the constraint domain has a node outside the manifold
+                    // discretization)
+                    const auto & discretization_node = node_map.at(node);
+                    // add the node to the constrained nodes with the value of the constraint
+                    // function at the node coordinates
+                    constrained_values.insert(
+                        { discretization_node, function(coord_system.coordinates(node->point())) });
                 }
             }
 

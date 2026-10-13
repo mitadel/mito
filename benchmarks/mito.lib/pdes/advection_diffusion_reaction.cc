@@ -99,11 +99,12 @@ main()
     auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 4>(f);
 
     // create the weak form and populate it with the blocks
-    auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
+    auto weakform = mito::fem::coupled_weakform(
+        mito::fem::term(function_space, fem_lhs_block),
+        mito::fem::term(function_space, fem_rhs_block));
 
     // the discrete system
-    auto discrete_system =
-        mito::fem::discrete_system<linear_system_t>("mysystem", function_space, weakform);
+    auto discrete_system = mito::fem::discrete_system<linear_system_t>("mysystem", weakform);
 
     // instantiate a linear solver for the discrete system
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);

@@ -40,6 +40,18 @@ namespace mito::fem::blocks {
     template <class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c sourceFieldT>
     constexpr auto source(const sourceFieldT & source);
 
+    // jump-jump matrix block factory (the transverse conductance of a collapsed layer)
+    template <
+        class elementT, int doe = 2 * elementT::degree, fields::scalar_field_c conductanceFieldT>
+    constexpr auto jump_jump(const conductanceFieldT & conductance);
+
+    // average-average gradient matrix block factory (the tangential conductance of a collapsed
+    // layer)
+    template <
+        class elementT, int doe = 2 * elementT::degree - 1,
+        fields::tensor_field_c conductivityFieldT>
+    constexpr auto average_average_gradient(const conductivityFieldT & conductivity);
+
 }
 
 

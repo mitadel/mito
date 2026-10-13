@@ -25,6 +25,10 @@ if(WITH_PETSC)
     mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
     # advection-diffusion-reaction boundary value problem
     mito_benchmark_driver(benchmarks/mito.lib/pdes/advection_diffusion_reaction.cc)
+    # hybrid-dimensional diffusion with a continuous interface potential
+    mito_benchmark_driver(benchmarks/mito.lib/pdes/hybrid_dimensional_diffusion_continuous.cc)
+    # hybrid-dimensional diffusion with a discontinuous interface potential
+    mito_benchmark_driver(benchmarks/mito.lib/pdes/hybrid_dimensional_diffusion_discontinuous.cc)
 endif()
 
 # blocks composition

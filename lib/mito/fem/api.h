@@ -32,23 +32,29 @@ namespace mito::fem {
     template <class functionSpaceT>
     using function_space_elements_view_t = FunctionSpaceElementsView<functionSpaceT>;
 
-    // weakform alias
-    template <class lhsBlockT, class rhsBlockT>
-    using weakform_t = Weakform<lhsBlockT, rhsBlockT>;
+    // weakform term alias
+    template <class sourceT, class blockT>
+    using term_t = Term<sourceT, blockT>;
 
-    // weakform factory
-    template <class lhsBlockT, class rhsBlockT>
-    constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block);
+    // weakform term factory
+    template <class sourceT, class blockT>
+    constexpr auto term(const sourceT & source, const blockT & block);
+
+    // coupled weakform alias
+    template <class... termTs>
+    using coupled_weakform_t = CoupledWeakform<termTs...>;
+
+    // coupled weakform factory
+    template <class... termTs>
+    constexpr auto coupled_weakform(const termTs &... terms);
 
     // discrete system alias
-    template <class functionSpaceT, class weakformT, class linearSystemT>
-    using discrete_system_t = DiscreteSystem<functionSpaceT, weakformT, linearSystemT>;
+    template <class linearSystemT, class coupledWeakformT>
+    using discrete_system_t = DiscreteSystem<linearSystemT, coupledWeakformT>;
 
     // discrete system factory
-    template <class linearSystemT, class functionSpaceT, class weakformT>
-    constexpr auto discrete_system(
-        const functionSpaceT & function_space, const weakformT & weakform,
-        const std::string & label);
+    template <class linearSystemT, class coupledWeakformT>
+    constexpr auto discrete_system(const std::string & label, const coupledWeakformT & weakform);
 }
 
 
