@@ -24,9 +24,6 @@
 // backend type definitions
 #include "backend.h"
 
-// linear system
-#include "../LinearSystem.h"
-
 // Krylov solver
 #include "KrylovSolver.h"
 

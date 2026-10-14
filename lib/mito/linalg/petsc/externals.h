@@ -22,5 +22,6 @@
 #include "../concepts.h"
 #include "../forward.h"
 #include "../api.h"
+#include "../LinearSystem.h"
 
 // end of file
