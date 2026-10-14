@@ -8,7 +8,6 @@
 
 
 // externals
-#include <string>
 #include <cassert>
 #include <petscksp.h>
 #include <petscsystypes.h>
