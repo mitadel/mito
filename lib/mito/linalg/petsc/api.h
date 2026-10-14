@@ -24,7 +24,7 @@ namespace mito::linalg::petsc {
     // matrix
     using matrix_t = utilities::NamedClass<Matrix>;
 
-    // Krlov solver
+    // Krylov solver
     using ksp_t = KrylovSolver;
 
     // backend
