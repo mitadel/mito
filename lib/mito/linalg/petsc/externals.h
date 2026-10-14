@@ -16,11 +16,7 @@
 #include "../../journal.h"
 #include "../../utilities.h"
 
-// generic linalg declarations
-#include "../externals.h"
-#include "../concepts.h"
-#include "../forward.h"
-#include "../api.h"
-#include "../LinearSystem.h"
+// linear system
+#include "../linear_system.h"
 
 // end of file
