@@ -8,11 +8,11 @@
 
 
 // linear system implementation
-#include "linear_system/public.h"
+#include "linear_system.h"
 
-// backend implementation
+// backend implementations
 #if WITH_PETSC
-#include "petsc/public.h"
+#include "petsc.h"
 #endif    // WITH_PETSC
 
 
