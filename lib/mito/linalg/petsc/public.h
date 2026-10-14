@@ -16,15 +16,13 @@
 // published types
 #include "api.h"
 
+// backend type definitions
+#include "backend.h"
+
 // classes
 #include "Environment.h"
 #include "Matrix.h"
 #include "Vector.h"
-
-// backend type definitions
-#include "backend.h"
-
-// Krylov solver
 #include "KrylovSolver.h"
 
 // factories implementation
