@@ -11,12 +11,16 @@ namespace mito::linalg::petsc {
 
     class Vector {
       private:
+        // the index type
+        using index_type = index_t;
+        // the scalar type
+        using scalar_type = scalar_t;
         // the vector type
         using vector_type = Vec;
 
       public:
         // constructor
-        Vector(index_t);
+        Vector(index_type);
 
         // copy constructor
         Vector(const Vector &) = delete;
@@ -38,16 +42,16 @@ namespace mito::linalg::petsc {
         auto assemble() -> void;
 
         // set the value of a vector entry
-        auto insert_value(index_t, const scalar_t &) -> void;
+        auto insert_value(index_type, const scalar_type &) -> void;
 
         // add a value to a vector entry
-        auto add_value(index_t, const scalar_t &) -> void;
+        auto add_value(index_type, const scalar_type &) -> void;
 
         // get the size of the vector
-        auto size(index_t &) const -> void;
+        auto size(index_type &) const -> void;
 
         // return the size of the vector
-        auto size() const -> index_t;
+        auto size() const -> index_type;
 
         // get the vector
         template <class vectorT>

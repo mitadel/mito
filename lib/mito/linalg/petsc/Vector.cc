@@ -9,7 +9,7 @@
 
 
 // constructor
-mito::linalg::petsc::Vector::Vector(index_t size)
+mito::linalg::petsc::Vector::Vector(index_type size)
 {
     // create the vector
     PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_vector));
@@ -28,7 +28,7 @@ mito::linalg::petsc::Vector::~Vector()
 
 // set the vector entry at {row} to {value}
 auto
-mito::linalg::petsc::Vector::insert_value(index_t row, const scalar_t & value) -> void
+mito::linalg::petsc::Vector::insert_value(index_type row, const scalar_type & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_vector, row, value, INSERT_VALUES));
@@ -51,7 +51,7 @@ mito::linalg::petsc::Vector::assemble() -> void
 
 // add {value} to vector entry at {row}
 auto
-mito::linalg::petsc::Vector::add_value(index_t row, const scalar_t & value) -> void
+mito::linalg::petsc::Vector::add_value(index_type row, const scalar_type & value) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_vector, row, value, ADD_VALUES));
@@ -62,7 +62,7 @@ mito::linalg::petsc::Vector::add_value(index_t row, const scalar_t & value) -> v
 
 // get the number of entries in the vector
 auto
-mito::linalg::petsc::Vector::size(index_t & vector_size) const -> void
+mito::linalg::petsc::Vector::size(index_type & vector_size) const -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecGetSize(_vector, &vector_size));
@@ -70,10 +70,10 @@ mito::linalg::petsc::Vector::size(index_t & vector_size) const -> void
 
 // return the number of entries in the vector
 auto
-mito::linalg::petsc::Vector::size() const -> index_t
+mito::linalg::petsc::Vector::size() const -> index_type
 {
     // the value to return
-    index_t vector_size;
+    index_type vector_size;
 
     // delegate to PETSc
     size(vector_size);

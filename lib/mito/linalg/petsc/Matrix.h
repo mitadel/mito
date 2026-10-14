@@ -11,6 +11,10 @@ namespace mito::linalg::petsc {
 
     class Matrix {
       private:
+        // the index type
+        using index_type = index_t;
+        // the scalar type
+        using scalar_type = scalar_t;
         // the matrix type
         using matrix_type = Mat;
 
@@ -41,22 +45,22 @@ namespace mito::linalg::petsc {
         auto assemble_flush() -> void;
 
         // set the value of a matrix entry
-        auto insert_value(index_t, index_t, const scalar_t &) -> void;
+        auto insert_value(index_type, index_type, const scalar_type &) -> void;
 
         // add a value to a matrix entry
-        auto add_value(index_t, index_t, const scalar_t &) -> void;
+        auto add_value(index_type, index_type, const scalar_type &) -> void;
 
         // get the value of a matrix entry
-        auto get_value(index_t, index_t, scalar_t &) const -> void;
+        auto get_value(index_type, index_type, scalar_type &) const -> void;
 
         // return the value of a matrix entry
-        auto get_value(index_t, index_t) const -> scalar_t;
+        auto get_value(index_type, index_type) const -> scalar_type;
 
         // get the number of rows/columns
-        auto size(index_t &) const -> void;
+        auto size(index_type &) const -> void;
 
         // return the number of rows/columns
-        auto size() const -> index_t;
+        auto size() const -> index_type;
 
         // print the matrix
         auto print() const -> void;

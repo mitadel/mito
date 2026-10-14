@@ -9,7 +9,7 @@
 
 
 // constructor
-mito::linalg::petsc::Matrix::Matrix(index_t size) : _matrix(nullptr)
+mito::linalg::petsc::Matrix::Matrix(index_type size) : _matrix(nullptr)
 {
     // create the matrix
     PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
@@ -52,7 +52,8 @@ mito::linalg::petsc::Matrix::assemble_flush() -> void
 
 // set the matrix entry at ({row}, {col}) to {value}
 auto
-mito::linalg::petsc::Matrix::insert_value(index_t row, index_t col, const scalar_t & value) -> void
+mito::linalg::petsc::Matrix::insert_value(index_type row, index_type col, const scalar_type & value)
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, INSERT_VALUES));
@@ -63,7 +64,8 @@ mito::linalg::petsc::Matrix::insert_value(index_t row, index_t col, const scalar
 
 // add {value} to matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::add_value(index_t row, index_t col, const scalar_t & value) -> void
+mito::linalg::petsc::Matrix::add_value(index_type row, index_type col, const scalar_type & value)
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatSetValue(_matrix, row, col, value, ADD_VALUES));
@@ -74,7 +76,8 @@ mito::linalg::petsc::Matrix::add_value(index_t row, index_t col, const scalar_t 
 
 // get the value of the matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::get_value(index_t row, index_t col, scalar_t & value) const -> void
+mito::linalg::petsc::Matrix::get_value(index_type row, index_type col, scalar_type & value) const
+    -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatGetValue(_matrix, row, col, &value));
@@ -85,10 +88,10 @@ mito::linalg::petsc::Matrix::get_value(index_t row, index_t col, scalar_t & valu
 
 // return the value of the matrix entry at ({row}, {col})
 auto
-mito::linalg::petsc::Matrix::get_value(index_t row, index_t col) const -> scalar_t
+mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> scalar_type
 {
     // the value to return
-    scalar_t value;
+    scalar_type value;
 
     // delegate to PETSc
     get_value(row, col, value);
@@ -99,7 +102,7 @@ mito::linalg::petsc::Matrix::get_value(index_t row, index_t col) const -> scalar
 
 // get the number of rows/columns of the matrix
 auto
-mito::linalg::petsc::Matrix::size(index_t & matrix_size) const -> void
+mito::linalg::petsc::Matrix::size(index_type & matrix_size) const -> void
 {
     // delegate to PETSc
     PetscCallVoid(MatGetSize(_matrix, &matrix_size, nullptr));
@@ -110,10 +113,10 @@ mito::linalg::petsc::Matrix::size(index_t & matrix_size) const -> void
 
 // return the number of rows/columns of the matrix
 auto
-mito::linalg::petsc::Matrix::size() const -> index_t
+mito::linalg::petsc::Matrix::size() const -> index_type
 {
     // the value to return
-    index_t matrix_size;
+    index_type matrix_size;
 
     // delegate to PETSc
     size(matrix_size);
