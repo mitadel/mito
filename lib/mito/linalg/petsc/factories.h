@@ -28,7 +28,7 @@ namespace mito::linalg::petsc {
     }
 
     // Krylov solver
-    inline auto ksp(linear_system_t<backend_t> & linear_system)
+    inline auto ksp(linear_system_t & linear_system)
     {
         return ksp_t(linear_system);
     }

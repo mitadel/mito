@@ -18,11 +18,9 @@ constexpr int degree = 2;
 // assemble the finite element type
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
-// linear algebra backend
-using backend_t = mito::linalg::petsc::backend_t;
-// typedef for a linear system of equations
-using linear_system_t = mito::linalg::linear_system_t<backend_t>;
-// typedef for a matrix solver
+// linear system of equations with petsc backend
+using linear_system_t = mito::linalg::petsc::linear_system_t;
+// petsc krylov solver
 using matrix_solver_t = mito::linalg::petsc::ksp_t;
 
 // the x scalar field in 2D
