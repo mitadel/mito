@@ -15,8 +15,8 @@
 // support
 #include "../../journal.h"
 #include "../../utilities.h"
-
-// linear system
+#include "../concepts.h"
 #include "../linear_system.h"
+
 
 // end of file

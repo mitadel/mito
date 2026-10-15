@@ -10,9 +10,6 @@
 // external packages
 #include "externals.h"
 
-// get the concept declarations
-#include "concepts.h"
-
 // get the forward declarations
 #include "forward.h"
 
