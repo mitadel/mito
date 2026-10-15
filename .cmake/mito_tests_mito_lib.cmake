@@ -73,7 +73,8 @@ mito_test_driver(tests/mito.lib/fem/shape_functions_segment_p1.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_segment.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_embedded_segment.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_embedded_triangle.cc)
-mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform_direct_construction.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform_duplicate_tags.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)

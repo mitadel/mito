@@ -10,6 +10,7 @@
 namespace mito::fem {
 
     template <class... termTs>
+    requires distinct_tags_c<termTs...>
     class SemiDiscreteWeakform : public termTs... {
 
       public:

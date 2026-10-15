@@ -20,6 +20,18 @@ namespace mito::utilities {
         }
     };
 
+    // struct to check if all types in a parameter pack are distinct
+    template <typename... Ts>
+    struct all_distinct : std::true_type {};
+
+    template <typename T, typename... Ts>
+    struct all_distinct<T, Ts...> :
+        std::bool_constant<(!std::is_same_v<T, Ts> && ...) && all_distinct<Ts...>::value> {};
+
+    // concept to check if all types in {Ts...} are distinct
+    template <typename... Ts>
+    concept distinct_c = all_distinct<Ts...>::value;
+
     // strip constant/volatile and reference from type
     template <typename T>
     using base_type = typename std::remove_cvref_t<T>;

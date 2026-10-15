@@ -7,24 +7,10 @@
 #include <mito.h>
 
 
-// the type of coordinates
+// cartesian coordinates in 2D
 using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
-// the metric space type
-using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
-// the type of discretization node
-using discretization_node_t = mito::discrete::discretization_node_t;
-// the type of cell
-using cell_t = mito::geometry::triangle_t<2>;
-// the material type
-using material_t = mito::materials::thermal::ConstantIsotropic<2>;
-// the model type
-using model_t = mito::models::HeatDiffusion<material_t>;
-// the term type
-template <typename tagT, typename blockT>
-using term_t = mito::fem::term_t<tagT, blockT>;
 
-
-TEST(Models, SEMI_DISCRETE_WEAKFORM)
+TEST(Models, SEMI_DISCRETE_WEAKFORM_DIRECT_CONSTRUCTION)
 {
     // define the tags for the semi-discrete weakform
     struct Stiffness {};

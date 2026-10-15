@@ -53,6 +53,15 @@ namespace mito::fem {
         []<class fieldValueT>(const FemField<fieldValueT> &) {
         }(c);
     };
+
+    // a pack of terms with pairwise distinct tags
+    template <typename... termTs>
+    concept distinct_tags_c = utilities::distinct_c<typename termTs::tag_type...>;
+
+    // class semi-discrete weakform
+    template <class... termTs>
+    requires distinct_tags_c<termTs...>
+    class SemiDiscreteWeakform;
 }
 
 

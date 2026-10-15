@@ -13,6 +13,9 @@ namespace mito::fem {
     class Term {
 
       public:
+        // the tag associated to this term
+        using tag_type = tagT;
+
         // the type of the block associated to this term
         using block_type = blockT;
 
