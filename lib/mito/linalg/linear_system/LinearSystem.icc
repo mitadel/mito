@@ -123,7 +123,7 @@ auto
 mito::linalg::LinearSystem<backendT>::print() const -> void
 {
     // create a reporting channel
-    journal::info_t channel("mito.solvers.LinearSystem");
+    journal::info_t channel("mito.linalg.LinearSystem");
 
     // print the matrix
     _matrix.print();
