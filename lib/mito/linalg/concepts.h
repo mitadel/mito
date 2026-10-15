@@ -34,6 +34,7 @@ namespace mito::linalg {
             { cv.print() } -> std::same_as<void>;
         };
 
+    // concept of {backendT} being a valid linear algebra backend
     template <class backendT>
     concept valid_backend_c =
         requires {
