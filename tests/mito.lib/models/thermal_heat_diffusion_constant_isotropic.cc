@@ -21,7 +21,7 @@ using material_t = mito::materials::thermal::ConstantIsotropic<2>;
 using model_t = mito::models::HeatDiffusion<material_t>;
 
 
-TEST(Fem, IsoparametricTriangle)
+TEST(Models, ThermalHeatDiffusionConstantIsotropic)
 {
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system_t<coordinates_t>();
@@ -125,14 +125,15 @@ TEST(Fem, IsoparametricTriangle)
 
         // the analytical elementary stiffness matrix
         auto analytical_stiffness_matrix =
-            conductivity * mito::tensor::matrix_t<6>{
-            1.0,        1.0 / 6.0,  1.0 / 6.0,  -2.0 / 3.0, 0.0,        -2.0 / 3.0,
-            1.0 / 6.0,  1.0 / 2.0,  0.0,        -2.0 / 3.0, 0.0,        0.0,
-            1.0 / 6.0,  0.0,        1.0 / 2.0,  0.0,        0.0,        -2.0 / 3.0,
-            -2.0 / 3.0, -2.0 / 3.0, 0.0,        8.0 / 3.0,  -4.0 / 3.0, 0.0,
-            0.0,        0.0,        0.0,        -4.0 / 3.0, 8.0 / 3.0,  -4.0 / 3.0,
-            -2.0 / 3.0, 0.0,        -2.0 / 3.0, 0.0,        -4.0 / 3.0, 8.0 / 3.0
-        };
+            conductivity
+            * mito::tensor::matrix_t<6>{ 1.0,        1.0 / 6.0, 1.0 / 6.0,  -2.0 / 3.0, 0.0,
+                                         -2.0 / 3.0, 1.0 / 6.0, 1.0 / 2.0,  0.0,        -2.0 / 3.0,
+                                         0.0,        0.0,       1.0 / 6.0,  0.0,        1.0 / 2.0,
+                                         0.0,        0.0,       -2.0 / 3.0, -2.0 / 3.0, -2.0 / 3.0,
+                                         0.0,        8.0 / 3.0, -4.0 / 3.0, 0.0,        0.0,
+                                         0.0,        0.0,       -4.0 / 3.0, 8.0 / 3.0,  -4.0 / 3.0,
+                                         -2.0 / 3.0, 0.0,       -2.0 / 3.0, 0.0,        -4.0 / 3.0,
+                                         8.0 / 3.0 };
 
         // the analytical elementary capacitance matrix
         auto analytical_capacitance_matrix =

@@ -49,6 +49,14 @@ namespace mito::fem {
     constexpr auto discrete_system(
         const functionSpaceT & function_space, const weakformT & weakform,
         const std::string & label);
+
+    // term alias
+    template <typename tagT, typename blockT>
+    using term_t = Term<tagT, blockT>;
+
+    // semi discrete weakform alias
+    template <typename modelT>
+    constexpr auto semi_discrete_weakform(const modelT & model);
 }
 
 

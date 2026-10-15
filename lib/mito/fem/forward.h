@@ -26,6 +26,10 @@ namespace mito::fem {
     template <class functionSpaceT>
     class FunctionSpaceElementsView;
 
+    // class term
+    template <typename tagT, typename blockT>
+    class Term;
+
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>
     class Weakform;

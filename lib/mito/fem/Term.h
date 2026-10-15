@@ -16,6 +16,9 @@ namespace mito::fem {
         // the type of the block associated to this term
         using block_type = blockT;
 
+        // constructor
+        constexpr explicit Term(block_type block) : _block(std::move(block)) {}
+
         // the type of the elementary shape associated to this term
         template <typename elementT>
         using elementary_shape_type = typename block_type::template elementary_shape_t<elementT>;

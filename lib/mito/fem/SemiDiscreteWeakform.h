@@ -18,6 +18,9 @@ namespace mito::fem {
 
         // extend the compute_blocks to this class
         using termTs::compute_block...;
+
+        // constructor
+        constexpr explicit SemiDiscreteWeakform(termTs... term) : termTs(std::move(term))... {}
     };
 
 }    // namespace mito

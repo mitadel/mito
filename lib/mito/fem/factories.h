@@ -41,6 +41,39 @@ namespace mito::fem {
         return discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
             label, function_space, weakform);
     }
+
+    // term factory
+    template <typename tagT, typename blockT>
+    constexpr auto term(blockT && block)
+    {
+        return Term<tagT, std::decay_t<blockT>>{ std::forward<blockT>(block) };
+    }
+
+    // semi discrete weakform tuple factory
+    template <typename modelT>
+    constexpr auto semi_discrete_weakform_tuple(const modelT & model)
+    {
+        using archetype_type = typename modelT::archetype_type;
+
+        return std::apply(
+            [&](auto... tag) {
+                return std::make_tuple(
+                    term<decltype(tag)>(model.template getBlock<decltype(tag)>())...);
+            },
+            typename archetype_type::Terms{});
+    }
+
+    // semi discrete weakform factory
+    template <typename modelT>
+    constexpr auto semi_discrete_weakform(const modelT & model)
+    {
+        return std::apply(
+            [](auto &&... terms) {
+                return SemiDiscreteWeakform<std::decay_t<decltype(terms)>...>(
+                    std::forward<decltype(terms)>(terms)...);
+            },
+            semi_discrete_weakform_tuple(model));
+    }
 }
 
 
