@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace mito::math {
+namespace mito::utilities {
 
     // swap-sort an {array} in the same order of a {reference} array and return the number of swaps
     // performed

@@ -12,16 +12,16 @@ TEST(Solvers, PETScKSPSolver)
 {
     // the size of the linear system
     int N = 10;
+    // linear algebra backend
+    using backend_t = mito::linalg::petsc::backend_t;
+    // typedef for a linear system of equations
+    using linear_system_t = mito::linalg::linear_system_t<backend_t>;
 
     // instantiate a PETSc linear system of size {N}
-    auto linear_system = mito::matrix_solvers::petsc::linear_system("mysystem");
-    // create the linear system and allocate the memory
-    linear_system.create(N);
+    auto linear_system = linear_system_t("mysystem", N);
 
     // instantiate a PETSc Krylov solver for the linear system
-    auto solver = mito::matrix_solvers::petsc::ksp(linear_system);
-    // create the Krylov solver and allocate the memory
-    solver.create();
+    auto solver = mito::linalg::petsc::ksp(linear_system);
     // set options for the petsc Krylov solver
     solver.set_options("-ksp_monitor");
 
@@ -42,7 +42,7 @@ TEST(Solvers, PETScKSPSolver)
 
     // read the solution
     auto x = std::vector<double>(N);
-    linear_system.get_solution(x);
+    linear_system.read_solution(x);
 
     // check the solution
     EXPECT_DOUBLE_EQ(x[0], 5.0);
@@ -56,9 +56,6 @@ TEST(Solvers, PETScKSPSolver)
     EXPECT_DOUBLE_EQ(x[8], 9.0);
     EXPECT_DOUBLE_EQ(x[9], 5.0);
 
-    // destroy the solver
-    solver.destroy();
-
     // all done
     return;
 }
@@ -67,14 +64,11 @@ TEST(Solvers, PETScKSPSolver)
 int
 main(int argc, char ** argv)
 {
-    // initialize PETSc
-    mito::petsc::initialize();
+    // create petsc environment
+    auto environment = mito::linalg::petsc::environment();
 
     ::testing::InitGoogleTest(&argc, argv);
     auto result = RUN_ALL_TESTS();
-
-    // finalize PETSc
-    mito::petsc::finalize();
 
     // all done
     return result;

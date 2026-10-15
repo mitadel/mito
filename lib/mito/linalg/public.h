@@ -7,8 +7,12 @@
 #pragma once
 
 
-#ifdef WITH_PETSC
-#include "backend/petsc.h"
+// linear system implementation
+#include "linear_system.h"
+
+// backend implementations
+#if WITH_PETSC
+#include "petsc.h"
 #endif    // WITH_PETSC
 
 

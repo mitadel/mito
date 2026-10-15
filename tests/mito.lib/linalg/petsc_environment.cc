@@ -8,13 +8,10 @@
 #include <mito.h>
 
 
-TEST(Solvers, PETScInitializeFinalize)
+TEST(Solvers, PETScEnvironment)
 {
-    // initialize PETSc
-    mito::petsc::initialize();
-
-    // finalize PETSc
-    mito::petsc::finalize();
+    // create petsc environment
+    auto environment = mito::linalg::petsc::environment();
 }
 
 

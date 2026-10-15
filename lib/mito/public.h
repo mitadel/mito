@@ -21,13 +21,12 @@
 #include "manifolds.h"
 #include "materials.h"
 #include "operators.h"
-#include "math.h"
+#include "linalg.h"
 #include "mesh.h"
 #include "quadrature.h"
 #include "simulation.h"
 #include "topology.h"
 #include "utilities.h"
-#include "matrix_solvers.h"
 #include "solvers.h"
 
 

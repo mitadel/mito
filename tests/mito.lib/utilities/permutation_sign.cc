@@ -4,14 +4,14 @@
 //
 
 #include <gtest/gtest.h>
-#include <mito/math.h>
+#include <mito/utilities.h>
 
 
 // the type for {composition_t}
 template <int N>
 using composition_t = std::array<int, N>;
 // namespace specification
-using mito::math::permutation_sign;
+using mito::utilities::permutation_sign;
 
 
 TEST(Math, PermutationSign)

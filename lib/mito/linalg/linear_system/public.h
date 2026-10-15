@@ -13,12 +13,11 @@
 // get the forward declarations
 #include "forward.h"
 
-// published types
+// published types factories; this is the file you are looking for...
 #include "api.h"
 
-// classes
-#include "PETScLinearSystem.h"
-#include "PETScKrylovSolver.h"
+// classes implementation
+#include "LinearSystem.h"
 
 // factories implementation
 #include "factories.h"

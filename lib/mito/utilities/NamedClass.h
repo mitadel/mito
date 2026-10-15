@@ -52,12 +52,6 @@ namespace mito::utilities {
         // destructor
         constexpr ~NamedClass() = default;
 
-        // copy constructor
-        constexpr NamedClass(const named_class_type &) = delete;
-
-        // move constructor
-        constexpr NamedClass(named_class_type &&) = delete;
-
       public:
         // accessor to name
         constexpr auto name() const -> name_type { return _name; }
