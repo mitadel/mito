@@ -12,7 +12,7 @@ using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
 // concept to check if {termTs...} can form a semi-discrete weakform
 template <typename... termTs>
-concept can_form_weakform = requires { typename mito::fem::SemiDiscreteWeakform<termTs...>; };
+concept can_form_weakform = requires { typename mito::fem::semi_discrete_weakform_t<termTs...>; };
 
 
 TEST(Models, SEMI_DISCRETE_WEAKFORM_DUPLICATE_TAGS)

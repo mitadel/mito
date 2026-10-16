@@ -54,7 +54,16 @@ namespace mito::fem {
     template <typename tagT, typename blockT>
     using term_t = Term<tagT, blockT>;
 
+    // term factory
+    template <typename tagT, typename blockT>
+    constexpr auto term(blockT && block);
+
     // semi discrete weakform alias
+    template <class... termTs>
+    requires distinct_tags_c<termTs...>
+    using semi_discrete_weakform_t = SemiDiscreteWeakform<termTs...>;
+
+    // semi discrete weakform factory
     template <typename modelT>
     constexpr auto semi_discrete_weakform(const modelT & model);
 }

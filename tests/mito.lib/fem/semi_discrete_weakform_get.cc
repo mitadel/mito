@@ -36,7 +36,7 @@ TEST(Models, SEMI_DISCRETE_WEAKFORM_GET)
     auto load_block = mito::fem::blocks::value_block(load);
 
     // the semi-discrete weakform
-    auto weakform = mito::fem::SemiDiscreteWeakform(
+    auto weakform = mito::fem::semi_discrete_weakform_t(
         mito::fem::term<Stiffness>(std::move(grad_grad_block)),
         mito::fem::term<Inertia>(std::move(mass_block)),
         mito::fem::term<Load>(std::move(load_block)));

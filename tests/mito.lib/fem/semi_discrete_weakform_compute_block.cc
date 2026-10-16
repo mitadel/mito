@@ -65,8 +65,8 @@ TEST(Models, SEMI_DISCRETE_WEAKFORM_COMPUTE_BLOCK)
     auto grad_grad_block = mito::fem::blocks::grad_grad_block(coefficient);
 
     // the semi-discrete weakform
-    auto weakform = mito::fem::SemiDiscreteWeakform(
-      mito::fem::term<Stiffness>(std::move(grad_grad_block)));
+    auto weakform =
+        mito::fem::semi_discrete_weakform_t(mito::fem::term<Stiffness>(std::move(grad_grad_block)));
 
     // get the reference grad grad block for comparison
     auto reference_grad_grad = mito::fem::blocks::grad_grad_block(coefficient);
