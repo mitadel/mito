@@ -187,11 +187,12 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     auto identity = mito::functions::identity<coordinates_t, 2>();
     auto one = mito::functions::one<coordinates_t>;
 
-    // the transverse and tangential conductances of the crack; the average-average block already
-    // carries a factor 1/4 internally, so its coefficient is -w * kappa_m without the /4
+    // the transverse and tangential conductances of the crack; both come from the same energy
+    // stored in the layer, so both are positive, and the two halves the average-average block
+    // carries are what make it an average, not a factor to divide out
     const auto kappa_m = conductivity_ratio * parameters.kappa_se;
     const auto jump_jump_coefficient = kappa_m / parameters.layer_thickness;
-    const auto average_average_coefficient = -parameters.layer_thickness * kappa_m;
+    const auto average_average_coefficient = parameters.layer_thickness * kappa_m;
 
     // one weakform: bulk diffusion on either half, plus the two crack terms. There is no
     // forcing, so no right hand side term: the load comes from the Dirichlet lift alone

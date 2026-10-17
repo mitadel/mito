@@ -151,8 +151,9 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     // the bulk manifold
     auto bulk_manifold = mito::manifolds::manifold(mesh, coord_system, metric_space_t::w);
 
-    // the interface manifold (a 1D submanifold embedded in 2D with normal along y)
-    auto normal = mito::functions::constant<coordinates_t>(mito::tensor::vector_t<2>{ 0.0, 1.0 });
+    // the segments run in +x, so positive orientation needs the normal to be the tangent rotated
+    // clockwise (w(normal, tangent) > 0), as in the discontinuous formulation this degenerates from
+    auto normal = mito::functions::constant<coordinates_t>(mito::tensor::vector_t<2>{ 0.0, -1.0 });
     auto interface_manifold = mito::manifolds::submanifold(interface_mesh, coord_system, normal);
 
     // the prescribed potentials on the bottom and top boundaries
@@ -177,7 +178,7 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     // the crack terms, with the coefficients of the discontinuous formulation
     const auto kappa_m = conductivity_ratio * parameters.kappa_se;
     const auto jump_jump_coefficient = kappa_m / parameters.layer_thickness;
-    const auto average_average_coefficient = -parameters.layer_thickness * kappa_m;
+    const auto average_average_coefficient = parameters.layer_thickness * kappa_m;
 
     // one weakform: bulk diffusion, plus the two crack terms on the degenerate interface
     auto weakform = mito::fem::weakform(
