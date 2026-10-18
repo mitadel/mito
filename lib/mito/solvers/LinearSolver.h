@@ -28,12 +28,8 @@ namespace mito::solvers {
             _discrete_system(discrete_system),
             _matrix_solver(_discrete_system.linear_system())
         {
-            // create the matrix solver
-            _matrix_solver.create();
+            ;
         }
-
-        // destroy the matrix solver
-        auto destroy() -> void { return _matrix_solver.destroy(); }
 
         // set matrix solver options
         auto set_options(const options_type & options) -> void

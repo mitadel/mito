@@ -62,19 +62,14 @@ namespace mito::fem {
             _equation_map(),
             _constrained_values(),
             _solution_field(_assemble_solution_field(label, weakform)),
-            _linear_system(label)
+            _n_equations(_build_equation_map()),
+            _linear_system(label, _n_equations)
         {
             // make a channel
             journal::info_t channel("discretization.discrete_system");
 
-            // build the equations map and get the number of equations
-            _n_equations = _build_equation_map();
-
             // print the number of equations
             channel << "Number of equations: " << _n_equations << journal::endl;
-
-            // create the linear system and allocate the memory
-            _linear_system.create(_n_equations);
 
             // all done
             return;
@@ -271,7 +266,7 @@ namespace mito::fem {
 
             // read the solution
             auto u = std::vector<double>(_n_equations);
-            _linear_system.get_solution(u);
+            _linear_system.read_solution(u);
 
             // fill information in finite element field
             for (auto & [node, eq] : _equation_map) {
@@ -310,11 +305,11 @@ namespace mito::fem {
         // the solution finite element field
         fem_field_type _solution_field;
 
-        // the linear system of equations
-        linear_system_type _linear_system;
-
         // the number of equations in the linear system
         int _n_equations = 0;
+
+        // the linear system of equations
+        linear_system_type _linear_system;
     };
 
 }    // namespace mito

@@ -76,6 +76,11 @@ mito_test_driver(tests/mito.lib/fem/isoparametric_segment.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_embedded_segment.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_embedded_triangle.cc)
 
+if(WITH_PETSC)
+    mito_test_driver(tests/mito.lib/fem/hybrid_dimensional_diffusion_continuous.cc)
+    mito_test_driver(tests/mito.lib/fem/interface_degenerate_to_continuous.cc)
+endif()
+
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_3D.cc)
@@ -97,14 +102,6 @@ if(WITH_VTK)
         mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_mesh_field_writer.cc 2)
         mito_test_driver_mpi(tests/mito.lib/io/parallel_vtk_cloud_field_writer.cc 2)
     endif()
-endif()
-
-# solvers
-if(WITH_PETSC)
-    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_initialize_finalize.cc)
-    mito_test_driver(tests/mito.lib/matrix_solvers/petsc_ksp.cc)
-    mito_test_driver(tests/mito.lib/fem/hybrid_dimensional_diffusion_continuous.cc)
-    mito_test_driver(tests/mito.lib/fem/interface_degenerate_to_continuous.cc)
 endif()
 
 # tensor
@@ -131,8 +128,13 @@ mito_test_driver(tests/mito.lib/manifolds/spherical_gradient.cc)
 mito_test_driver(tests/mito.lib/materials/gent.cc)
 mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
-# math
-mito_test_driver(tests/mito.lib/math/permutation_sign.cc)
+# linalg
+if(WITH_PETSC)
+    mito_test_driver(tests/mito.lib/linalg/petsc_environment.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_ksp.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
+endif()
 
 # mesh
 mito_test_driver(tests/mito.lib/mesh/ball.cc)
@@ -194,6 +196,7 @@ mito_test_driver(tests/mito.lib/utilities/segmented_vector_subscript.cc)
 mito_test_driver(tests/mito.lib/utilities/segmented_vector_print.cc)
 mito_test_driver(tests/mito.lib/utilities/shared_pointer.cc)
 mito_test_driver(tests/mito.lib/utilities/named_class.cc)
+mito_test_driver(tests/mito.lib/utilities/permutation_sign.cc)
 
 # quadrature
 mito_test_driver(tests/mito.lib/quadrature/quadrature_parametric_segment.cc)

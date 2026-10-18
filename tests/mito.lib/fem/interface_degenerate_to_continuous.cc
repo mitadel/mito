@@ -28,8 +28,8 @@ using interface_traits_t = mito::fem::InterfaceElementTraits<interface_element_t
 // degree of exactness 2 for the bulk and interface blocks and the L2 error norm
 constexpr int doe = 2;
 
-using linear_system_t = mito::matrix_solvers::petsc::linear_system_t;
-using matrix_solver_t = mito::matrix_solvers::petsc::ksp_t;
+using linear_system_t = mito::linalg::petsc::linear_system_t;
+using matrix_solver_t = mito::linalg::petsc::ksp_t;
 
 
 // the model parameters
@@ -203,7 +203,6 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
     solver.set_options("-ksp_type preonly -pc_type lu");
     solver.solve();
-    solver.destroy();
 
     const auto & solution = discrete_system.solution();
 
@@ -252,8 +251,8 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
 
 TEST(Fem, InterfaceDegenerateToContinuous)
 {
-    // initialize PETSc
-    mito::petsc::initialize();
+    // create petsc environment
+    auto environment = mito::linalg::petsc::environment();
 
     const auto parameters = Parameters{};
 
@@ -281,9 +280,6 @@ TEST(Fem, InterfaceDegenerateToContinuous)
             result.max_profile_error, expectation.max_profile_error,
             0.02 * expectation.max_profile_error);
     }
-
-    // finalize PETSc
-    mito::petsc::finalize();
 }
 
 

@@ -7,8 +7,8 @@
 #pragma once
 
 
-// publish the interface
-#include "math/public.h"
+// linear system implementation
+#include "linear_system/public.h"
 
 
 // end of file

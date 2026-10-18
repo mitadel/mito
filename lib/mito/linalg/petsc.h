@@ -7,11 +7,8 @@
 #pragma once
 
 
-// external packages
-#include "externals.h"
-
-// combinatorics utilities
-#include "combinatorics.h"
+// petsc backend implementation
+#include "petsc/public.h"
 
 
 // end of file

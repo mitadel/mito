@@ -8,7 +8,7 @@
 
 
 // publish the interface
-#include "matrix_solvers/public.h"
+#include "linalg/public.h"
 
 
 // end of file

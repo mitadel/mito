@@ -1,0 +1,107 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
+//
+
+
+// support
+#include "public.h"
+
+
+// constructor
+mito::linalg::petsc::Vector::Vector(index_type size)
+{
+    // create the vector
+    PetscCallVoid(VecCreate(PETSC_COMM_WORLD, &_vector));
+    PetscCallVoid(VecSetSizes(_vector, PETSC_DECIDE, size));
+
+    // set the default options (do not allow the user to control the options for vector)
+    PetscCallVoid(VecSetFromOptions(_vector));
+}
+
+// destructor
+mito::linalg::petsc::Vector::~Vector()
+{
+    // destroy the vector
+    PetscCallVoid(VecDestroy(&_vector));
+}
+
+// set the vector entry at {row} to {value}
+auto
+mito::linalg::petsc::Vector::insert_value(index_type row, const scalar_type & value) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecSetValue(_vector, row, value, INSERT_VALUES));
+
+    // all done
+    return;
+}
+
+// assemble the vector
+auto
+mito::linalg::petsc::Vector::assemble() -> void
+{
+    // assemble vector
+    PetscCallVoid(VecAssemblyBegin(_vector));
+    PetscCallVoid(VecAssemblyEnd(_vector));
+
+    // all done
+    return;
+}
+
+// add {value} to vector entry at {row}
+auto
+mito::linalg::petsc::Vector::add_value(index_type row, const scalar_type & value) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecSetValue(_vector, row, value, ADD_VALUES));
+
+    // all done
+    return;
+}
+
+// get the number of entries in the vector
+auto
+mito::linalg::petsc::Vector::size(index_type & vector_size) const -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecGetSize(_vector, &vector_size));
+}
+
+// return the number of entries in the vector
+auto
+mito::linalg::petsc::Vector::size() const -> index_type
+{
+    // the value to return
+    index_type vector_size;
+
+    // delegate to PETSc
+    size(vector_size);
+
+    // all done
+    return vector_size;
+}
+
+// print the vector
+auto
+mito::linalg::petsc::Vector::print() const -> void
+{
+    // create a reporting channel
+    journal::info_t channel("mito.solvers.petsc.Vector");
+
+    // print the vector
+    channel << "Vector:" << journal::endl;
+    PetscCallVoid(VecView(_vector, PETSC_VIEWER_STDOUT_WORLD));
+
+    // all done
+    return;
+}
+
+// get petsc vector
+auto
+mito::linalg::petsc::Vector::get() const -> vector_type const &
+{
+    return _vector;
+}
+
+// end of file
