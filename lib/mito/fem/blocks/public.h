@@ -27,6 +27,8 @@
 #include "L2NormBlock.h"
 #include "BlockSum.h"
 #include "BlockProduct.h"
+#include "InterfaceTraceElement.h"
+#include "InterfaceBlock.h"
 
 // factories implementation
 #include "factories.h"

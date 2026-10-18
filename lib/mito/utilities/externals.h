@@ -8,6 +8,7 @@
 
 
 // externals
+#include <algorithm>
 #include <cassert>
 #include <queue>
 #include <vector>
