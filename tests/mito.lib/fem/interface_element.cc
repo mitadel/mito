@@ -72,10 +72,11 @@ TEST(Fem, InterfaceElement)
     auto one = mito::functions::one<coordinates_t>;
     auto identity = mito::functions::identity<coordinates_t, 2>();
 
-    // the interface blocks
-    auto jump_jump_block = mito::fem::blocks::jump_jump<interface_traits_t, doe>(one);
-    auto average_average_block =
-        mito::fem::blocks::average_average_gradient<interface_traits_t, doe>(identity);
+    // the interface blocks: ordinary blocks, computed on a trace of the element
+    auto jump_jump_block =
+        mito::fem::blocks::jump(mito::fem::blocks::value_value_block<interface_traits_t, doe>(one));
+    auto average_average_block = mito::fem::blocks::average(
+        mito::fem::blocks::grad_grad_block<interface_traits_t, doe>(identity));
 
     // there is one interface element
     EXPECT_EQ(1, std::size(interface.elements()));

@@ -191,8 +191,8 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
     // stored in the layer, so both are positive, and the two halves the average-average block
     // carries are what make it an average, not a factor to divide out
     const auto kappa_m = conductivity_ratio * parameters.kappa_se;
-    const auto jump_jump_coefficient = kappa_m / parameters.layer_thickness;
-    const auto average_average_coefficient = parameters.layer_thickness * kappa_m;
+    const auto across = kappa_m / parameters.layer_thickness;
+    const auto along = parameters.layer_thickness * kappa_m;
 
     // one weakform: bulk diffusion on either half, plus the two crack terms. There is no
     // forcing, so no right hand side term: the load comes from the Dirichlet lift alone
@@ -204,12 +204,14 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
             bottom_space,
             parameters.kappa_se * mito::fem::blocks::diffusion<bulk_element_t, doe>(identity)),
         mito::fem::term(
-            interface,
-            jump_jump_coefficient * mito::fem::blocks::jump_jump<interface_traits_t, doe>(one)),
+            interface, across
+                           * mito::fem::blocks::jump(
+                               mito::fem::blocks::value_value_block<interface_traits_t, doe>(one))),
         mito::fem::term(
             interface,
-            average_average_coefficient
-                * mito::fem::blocks::average_average_gradient<interface_traits_t, doe>(identity)));
+            along
+                * mito::fem::blocks::average(
+                    mito::fem::blocks::grad_grad_block<interface_traits_t, doe>(identity))));
 
     // the discrete system: the degrees of freedom of both function spaces are numbered together,
     // and the interface terms reference them without owning any of their own

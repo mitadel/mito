@@ -177,8 +177,8 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
 
     // the crack terms, with the coefficients of the discontinuous formulation
     const auto kappa_m = conductivity_ratio * parameters.kappa_se;
-    const auto jump_jump_coefficient = kappa_m / parameters.layer_thickness;
-    const auto average_average_coefficient = parameters.layer_thickness * kappa_m;
+    const auto across = kappa_m / parameters.layer_thickness;
+    const auto along = parameters.layer_thickness * kappa_m;
 
     // one weakform: bulk diffusion, plus the two crack terms on the degenerate interface
     auto weakform = mito::fem::weakform(
@@ -186,12 +186,14 @@ run_case(const Parameters & parameters, scalar_t conductivity_ratio) -> CaseResu
             bulk_space,
             parameters.kappa_se * mito::fem::blocks::diffusion<bulk_element_t, doe>(identity)),
         mito::fem::term(
-            interface,
-            jump_jump_coefficient * mito::fem::blocks::jump_jump<interface_traits_t, doe>(one)),
+            interface, across
+                           * mito::fem::blocks::jump(
+                               mito::fem::blocks::value_value_block<interface_traits_t, doe>(one))),
         mito::fem::term(
             interface,
-            average_average_coefficient
-                * mito::fem::blocks::average_average_gradient<interface_traits_t, doe>(identity)));
+            along
+                * mito::fem::blocks::average(
+                    mito::fem::blocks::grad_grad_block<interface_traits_t, doe>(identity))));
 
     // the discrete system
     auto discrete_system =

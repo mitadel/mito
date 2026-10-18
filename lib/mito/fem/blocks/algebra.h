@@ -28,6 +28,20 @@ namespace mito::fem::blocks {
         return BlockProduct<scalarT, blockT>(scalar, block);
     }
 
+    // {block} computed on the jump of the field across an interface
+    template <class blockT>
+    constexpr auto jump(blockT block)
+    {
+        return InterfaceBlock<blockT, trace_operator_t::jump>(block);
+    }
+
+    // {block} computed on the average of the field across an interface
+    template <class blockT>
+    constexpr auto average(blockT block)
+    {
+        return InterfaceBlock<blockT, trace_operator_t::average>(block);
+    }
+
 }
 
 
