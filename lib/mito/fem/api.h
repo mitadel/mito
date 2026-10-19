@@ -66,6 +66,10 @@ namespace mito::fem {
     // semi discrete weakform factory
     template <typename modelT>
     constexpr auto semi_discrete_weakform(const modelT & model);
+
+    // semi discrete model alias
+    template <function_space_c functionSpaceT, class physicalModelT>
+    using semi_discrete_model_t = SemiDiscreteModel<functionSpaceT, physicalModelT>;
 }
 
 

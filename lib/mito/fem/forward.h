@@ -62,6 +62,10 @@ namespace mito::fem {
     template <class... termTs>
     requires distinct_tags_c<termTs...>
     class SemiDiscreteWeakform;
+
+    // class semi-discrete model
+    template <function_space_c functionSpaceT, class physicalModelT>
+    class SemiDiscreteModel;
 }
 
 

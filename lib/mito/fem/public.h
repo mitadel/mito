@@ -32,6 +32,7 @@
 #include "DiscreteSystem.h"
 #include "Term.h"
 #include "SemiDiscreteWeakform.h"
+#include "SemiDiscreteModel.h"
 #include "Weakform.h"
 
 // factories implementation
