@@ -16,6 +16,7 @@
 #include "../constraints.h"
 #include "../discrete.h"
 #include "../utilities.h"
+#include "../linalg.h"
 
 
 // end of file

@@ -71,8 +71,8 @@ namespace mito::fem {
         constexpr SemiDiscreteModel & operator=(SemiDiscreteModel &&) noexcept = delete;
 
         // assemble the matrix associated to a tag of the archetype
-        template <class tagT, class matrixT>
-        auto assemble_matrix(matrixT & _matrix) const -> void
+        template <class tagT, linalg::valid_backend_c backendT>
+        auto assemble_matrix(typename backendT::matrix_type & _matrix) const -> void
         {
             for (const auto & element : _function_space.elements()) {
                 auto elementary_matrix = _weakform.template compute_block<tagT>(element);
@@ -81,8 +81,8 @@ namespace mito::fem {
         }
 
         // assemble the vector associated to a tag of the archetype
-        template <class tagT, class vectorT>
-        auto assemble_vector(vectorT & _vector) const -> void
+        template <class tagT, linalg::valid_backend_c backendT>
+        auto assemble_vector(typename backendT::vector_type & _vector) const -> void
         {
             for (const auto & element : _function_space.elements()) {
                 auto elementary_vector = _weakform.template compute_block<tagT>(element);
@@ -144,10 +144,10 @@ namespace mito::fem {
         }
 
         // emplace the elementary matrix into the global matrix
-        template <class elementaryMatrixT, class matrixT>
+        template <class elementaryMatrixT, class matrix_type, class finiteElementT>
         auto emplace_elementary_matrix(
-            const elementaryMatrixT & elementary_matrix, matrixT & _matrix,
-            const finite_element_type & element) const -> void
+            const elementaryMatrixT & elementary_matrix, matrix_type & _matrix,
+            const finiteElementT & element) const -> void
         {
             // loop on the a-th discretization node of the element
             tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
@@ -168,7 +168,7 @@ namespace mito::fem {
                         // non boundary nodes
                         if (eq_b != -1) {
                             // assemble the value in the stiffness matrix
-                            _matrix.add_matrix_value(eq_a, eq_b, elementary_matrix[{ a, b }]);
+                            _matrix.add_value(eq_a, eq_b, elementary_matrix[{ a, b }]);
                         }
                     });
                 }
@@ -176,10 +176,10 @@ namespace mito::fem {
         }
 
         // emplace the elementary vector into the global vector
-        template <class elementaryVectorT, class vectorT>
+        template <class elementaryVectorT, class vector_type, class finiteElementT>
         auto emplace_elementary_vector(
-            const elementaryVectorT & elementary_vector, vectorT & _vector,
-            const finite_element_type & element) const -> void
+            const elementaryVectorT & elementary_vector, vector_type & _vector,
+            const finiteElementT & element) const -> void
         {
             // loop on the a-th discretization node of the element
             tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
@@ -191,7 +191,7 @@ namespace mito::fem {
                 // non boundary nodes
                 if (eq_a != -1) {
                     // assemble the value in the right hand side
-                    _vector.add_rhs_value(eq_a, elementary_vector[{ a }]);
+                    _vector.add_value(eq_a, elementary_vector[{ a }]);
                 }
             });
         }

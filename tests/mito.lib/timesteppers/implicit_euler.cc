@@ -76,6 +76,15 @@ TEST(Models, IMPLICIT_EULER)
     // the time stepper
     auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(semi_discrete_model);
 
+    // assemble the stiffness matrix
+    time_stepper.assemble_stiffness_matrix();
+
+    // assemble the capacitance matrix
+    time_stepper.assemble_capacitance_matrix();
+
+    // assemble the load vector
+    time_stepper.assemble_load_vector();
+
     // all done
     return;
 }

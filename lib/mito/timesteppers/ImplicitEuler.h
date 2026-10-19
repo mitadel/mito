@@ -44,23 +44,22 @@ namespace mito::timesteppers {
         // assemble stiffness matrix
         constexpr auto assemble_stiffness_matrix() -> void
         {
-            _stiffness_matrix =
-                _semiDiscreteModel.template assemble_matrix<stiffness_term_type>(_stiffness_matrix);
+            _semiDiscreteModel.template assemble_matrix<stiffness_term_type, linalg_backend_type>(
+                _stiffness_matrix);
         }
 
         // assemble capacitance matrix
         constexpr auto assemble_capacitance_matrix() -> void
         {
-            _capacitance_matrix =
-                _semiDiscreteModel.template assemble_matrix<capacitance_term_type>(
-                    _capacitance_matrix);
+            _semiDiscreteModel.template assemble_matrix<capacitance_term_type, linalg_backend_type>(
+                _capacitance_matrix);
         }
 
         // assemble load vector
         constexpr auto assemble_load_vector() -> void
         {
-            _load_vector =
-                _semiDiscreteModel.template assemble_vector<load_term_type>(_load_vector);
+            _semiDiscreteModel.template assemble_vector<load_term_type, linalg_backend_type>(
+                _load_vector);
         }
 
       private:
