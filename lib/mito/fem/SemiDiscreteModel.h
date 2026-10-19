@@ -16,11 +16,13 @@ namespace mito::fem {
     template <function_space_c functionSpaceT, class physicalModelT>
     class SemiDiscreteModel {
 
+      public:
+        // the archetype type of the physical model
+        using archetype_type = typename physicalModelT::archetype_type;
+
       private:
         // the function space type
         using function_space_type = functionSpaceT;
-        // the archetype type of the physical model
-        using archetype_type = typename physicalModelT::archetype_type;
         // the weakform type
         using weakform_type = decltype(semi_discrete_weakform(std::declval<physicalModelT>()));
         // the type of node
@@ -67,6 +69,26 @@ namespace mito::fem {
 
         // delete move assignment operator
         constexpr SemiDiscreteModel & operator=(SemiDiscreteModel &&) noexcept = delete;
+
+        // assemble the matrix associated to a tag of the archetype
+        template <class tagT, class matrixT>
+        auto assemble_matrix(matrixT & _matrix) const -> void
+        {
+            for (const auto & element : _function_space.elements()) {
+                auto elementary_matrix = _weakform.template compute_block<tagT>(element);
+                emplace_elementary_matrix(elementary_matrix, _matrix, element);
+            }
+        }
+
+        // assemble the vector associated to a tag of the archetype
+        template <class tagT, class vectorT>
+        auto assemble_vector(vectorT & _vector) const -> void
+        {
+            for (const auto & element : _function_space.elements()) {
+                auto elementary_vector = _weakform.template compute_block<tagT>(element);
+                emplace_elementary_vector(elementary_vector, _vector, element);
+            }
+        }
 
       private:
         // build the equation map and return the number of equations
@@ -121,7 +143,63 @@ namespace mito::fem {
             return equation;
         }
 
+        // emplace the elementary matrix into the global matrix
+        template <class elementaryMatrixT, class matrixT>
+        auto emplace_elementary_matrix(
+            const elementaryMatrixT & elementary_matrix, matrixT & _matrix,
+            const finite_element_type & element) const -> void
+        {
+            // loop on the a-th discretization node of the element
+            tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.connectivity()[a];
+                // get the equation number of {node_a}
+                int eq_a = _equation_map.at(node_a);
+                assert(eq_a < _n_equations);
+                // non boundary nodes
+                if (eq_a != -1) {
+                    // loop on the b-th discretization node of the element
+                    tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
+                        // get the b-th discretization node of the element
+                        const auto & node_b = element.connectivity()[b];
+                        // get the equation number of {node_b}
+                        int eq_b = _equation_map.at(node_b);
+                        assert(eq_b < _n_equations);
+                        // non boundary nodes
+                        if (eq_b != -1) {
+                            // assemble the value in the stiffness matrix
+                            _matrix.add_matrix_value(eq_a, eq_b, elementary_matrix[{ a, b }]);
+                        }
+                    });
+                }
+            });
+        }
+
+        // emplace the elementary vector into the global vector
+        template <class elementaryVectorT, class vectorT>
+        auto emplace_elementary_vector(
+            const elementaryVectorT & elementary_vector, vectorT & _vector,
+            const finite_element_type & element) const -> void
+        {
+            // loop on the a-th discretization node of the element
+            tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.connectivity()[a];
+                // get the equation number of {node_a}
+                int eq_a = _equation_map.at(node_a);
+                assert(eq_a < _n_equations);
+                // non boundary nodes
+                if (eq_a != -1) {
+                    // assemble the value in the right hand side
+                    _vector.add_rhs_value(eq_a, elementary_vector[{ a }]);
+                }
+            });
+        }
+
       public:
+        // accessor to the number of equations
+        constexpr auto n_equations() const noexcept -> int { return _n_equations; }
+
       private:
         // a const reference to the function space
         const function_space_type & _function_space;

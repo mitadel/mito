@@ -175,6 +175,9 @@ mito_test_driver(tests/mito.lib/operators/calculus_scalar_field.cc)
 mito_test_driver(tests/mito.lib/operators/calculus_vector_field.cc)
 mito_test_driver(tests/mito.lib/operators/gradient_non_square.cc)
 
+# timesteppers
+mito_test_driver(tests/mito.lib/timesteppers/implicit_euler.cc)
+
 # topology
 mito_test_driver(tests/mito.lib/topology/cell_edges.cc)
 mito_test_driver(tests/mito.lib/topology/erase_element_check_vertices.cc)
