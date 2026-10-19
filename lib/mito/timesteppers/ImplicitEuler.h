@@ -36,7 +36,9 @@ namespace mito::timesteppers {
             _semiDiscreteModel(semiDiscreteModel),
             _stiffness_matrix(semiDiscreteModel.n_equations()),
             _capacitance_matrix(semiDiscreteModel.n_equations()),
-            _load_vector(semiDiscreteModel.n_equations())
+            _load_vector(semiDiscreteModel.n_equations()),
+            _effective_stiffness_matrix(semiDiscreteModel.n_equations()),
+            _effective_load_vector(semiDiscreteModel.n_equations())
         {
             ;
         }
@@ -62,6 +64,15 @@ namespace mito::timesteppers {
                 _load_vector);
         }
 
+        // assemble effective stiffness matrix
+        constexpr auto assemble_effective_stiffness_matrix(const mito::real & dt) -> void {
+            // assemble the effective stiffness matrix
+            // _stiffness_matrix.assemble();
+            // _capacitance_matrix.assemble();
+            // _stiffness_matrix.add_matrix(_capacitance_matrix, 1.0 / dt);
+            // _stiffness_matrix.assemble_flush();
+        };
+
       private:
         // the discrete system
         const semi_discrete_model_type & _semiDiscreteModel;
@@ -71,6 +82,10 @@ namespace mito::timesteppers {
         matrix_type _capacitance_matrix;
         // the load vector
         vector_type _load_vector;
+        // the effective stiffness matrix
+        matrix_type _effective_stiffness_matrix;
+        // the effective load vector
+        vector_type _effective_load_vector;
     };
 
 
