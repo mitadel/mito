@@ -65,9 +65,6 @@ TEST(Models, SEMI_DISCRETE_MODEL)
     // the model
     auto model = model_t(material);
 
-    // the semi-discrete weakform
-    auto weakform = mito::fem::semi_discrete_weakform(model);
-
     // the semi-discrete model
     auto semi_discrete_model = mito::fem::semi_discrete_model(function_space, model);
 

@@ -48,6 +48,8 @@ namespace mito::timesteppers {
         {
             _semiDiscreteModel.template assemble_matrix<stiffness_term_type, linalg_backend_type>(
                 _stiffness_matrix);
+
+            _stiffness_matrix.assemble();
         }
 
         // assemble capacitance matrix
@@ -55,6 +57,8 @@ namespace mito::timesteppers {
         {
             _semiDiscreteModel.template assemble_matrix<capacitance_term_type, linalg_backend_type>(
                 _capacitance_matrix);
+
+            _capacitance_matrix.assemble();
         }
 
         // assemble load vector
@@ -62,6 +66,8 @@ namespace mito::timesteppers {
         {
             _semiDiscreteModel.template assemble_vector<load_term_type, linalg_backend_type>(
                 _load_vector);
+
+            _load_vector.assemble();
         }
 
         // assemble effective stiffness matrix

@@ -36,7 +36,7 @@ TEST(Math, PETScMatrix)
     A.assemble();
     B.assemble();  
 
-    auto C = mito::linalg::petsc::Matrix ("C", A);
+    auto C = mito::linalg::petsc::matrix ("C", A);
     C.add ( 1.0/10.0, B, mito::linalg::petsc::sparsity_pattern::different);  
 
     // check the solution
