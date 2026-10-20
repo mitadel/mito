@@ -23,16 +23,16 @@ namespace mito::linalg::petsc {
         Matrix(index_t);
 
         // copy constructor
-        Matrix(const Matrix &) = delete;
+        Matrix(const Matrix &);
 
         // move constructor
-        Matrix(Matrix &&) = delete;
+        Matrix(Matrix &&) noexcept;
 
         // copy assignment operator
-        Matrix & operator=(const Matrix &) = delete;
+        Matrix & operator=(const Matrix &);
 
         // move assignment operator
-        Matrix & operator=(Matrix &&) = delete;
+        Matrix & operator=(Matrix &&) noexcept;
 
         // destructor
         ~Matrix();

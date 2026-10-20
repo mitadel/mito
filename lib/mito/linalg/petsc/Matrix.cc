@@ -26,6 +26,53 @@ mito::linalg::petsc::Matrix::~Matrix()
     PetscCallVoid(MatDestroy(&_matrix));
 }
 
+// copy constructor
+mito::linalg::petsc::Matrix::Matrix(const Matrix & other) : _matrix(nullptr)
+{
+    // duplicate matrix
+    PetscCallVoid(MatDuplicate(other._matrix, MAT_COPY_VALUES, &_matrix));
+}
+
+// move constructor
+mito::linalg::petsc::Matrix::Matrix(Matrix && other) noexcept : _matrix(other._matrix)
+{
+    // remove matrix
+    other._matrix = nullptr;
+}
+
+// copy assignment operator
+auto
+mito::linalg::petsc::Matrix::operator=(const Matrix & other) -> Matrix &
+{
+    // prevent self-copy
+    if (this == &other) {
+        return *this;
+    }
+
+    // copy and swap
+    Matrix tmp(other);
+    std::swap(_matrix, tmp._matrix);
+
+    // returning deletes {tmp}
+    return *this;
+}
+
+// move assignment operator
+auto
+mito::linalg::petsc::Matrix::operator=(Matrix && other) noexcept -> Matrix &
+{
+    // prevent self-move
+    if (this != &other) {
+        // free the matrix
+        MatDestroy(&_matrix);
+        // swap the matrix
+        _matrix = other._matrix;
+        other._matrix = nullptr;
+    }
+
+    return *this;
+}
+
 // assemble the matrix
 auto
 mito::linalg::petsc::Matrix::assemble() -> void
