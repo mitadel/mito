@@ -147,6 +147,15 @@ mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> 
     return value;
 }
 
+// add scaled matrix using MatAXPY
+auto
+mito::linalg::petsc::Matrix::add(
+    const scalar_type & alpha, const Matrix & X, sparsity_pattern pattern) -> void
+{
+    // delegate to PETsc
+    PetscCallVoid(MatAXPY(_matrix, alpha, X._matrix, static_cast<MatStructure>(pattern)));
+}
+
 // get the number of rows/columns of the matrix
 auto
 mito::linalg::petsc::Matrix::size(index_type & matrix_size) const -> void

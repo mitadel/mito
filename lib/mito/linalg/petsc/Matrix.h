@@ -63,6 +63,11 @@ namespace mito::linalg::petsc {
         // return the value of a matrix entry
         auto get_value(index_type, index_type) const -> scalar_type;
 
+        // add scaled matrix using MatAXPY
+        auto add(
+            const scalar_type & alpha, const Matrix & X,
+            sparsity_pattern pattern = sparsity_pattern::different) -> void;
+
         // get the number of rows/columns
         auto size(index_type &) const -> void;
 
