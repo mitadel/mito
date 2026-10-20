@@ -71,12 +71,15 @@ namespace mito::timesteppers {
         }
 
         // assemble effective stiffness matrix
-        constexpr auto assemble_effective_stiffness_matrix(const mito::real & dt) -> void {
-            // assemble the effective stiffness matrix
-            // _stiffness_matrix.assemble();
-            // _capacitance_matrix.assemble();
-            // _stiffness_matrix.add_matrix(_capacitance_matrix, 1.0 / dt);
-            // _stiffness_matrix.assemble_flush();
+        constexpr auto assemble_effective_stiffness_matrix(const mito::real & dt) -> void
+        {
+            // copy the stiffness matrix
+            _effective_stiffness_matrix.copy_values(
+                _stiffness_matrix, linalg::petsc::sparsity_pattern::same);
+
+            // add the capacitance matrix scaled by 1/dt to the effective stiffness matrix
+            _effective_stiffness_matrix.add(
+                1. / dt, _capacitance_matrix, linalg::petsc::sparsity_pattern::same);
         };
 
       private:

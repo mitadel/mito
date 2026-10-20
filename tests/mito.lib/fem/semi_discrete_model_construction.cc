@@ -27,7 +27,7 @@ constexpr auto x = mito::geometry::cartesian<2>::x;
 // the y scalar field in 2D
 constexpr auto y = mito::geometry::cartesian<2>::y;
 
-TEST(Models, SEMI_DISCRETE_MODEL)
+TEST(Models, SEMI_DISCRETE_MODEL_CONSTRUCTION)
 {
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
