@@ -34,11 +34,11 @@ namespace mito::timesteppers {
         // the default constructor
         constexpr ImplicitEuler(const semi_discrete_model_type & semiDiscreteModel) :
             _semiDiscreteModel(semiDiscreteModel),
-            _stiffness_matrix(semiDiscreteModel.n_equations()),
-            _capacitance_matrix(semiDiscreteModel.n_equations()),
-            _load_vector(semiDiscreteModel.n_equations()),
-            _effective_stiffness_matrix(semiDiscreteModel.n_equations()),
-            _effective_load_vector(semiDiscreteModel.n_equations())
+            _stiffness_matrix("stiffness", semiDiscreteModel.n_equations()),
+            _capacitance_matrix("capacitance", semiDiscreteModel.n_equations()),
+            _load_vector("load", semiDiscreteModel.n_equations()),
+            _effective_stiffness_matrix("effective_stiffness", semiDiscreteModel.n_equations()),
+            _effective_load_vector("effective_load", semiDiscreteModel.n_equations())
         {
             ;
         }
