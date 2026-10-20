@@ -21,6 +21,12 @@ namespace mito::linalg::petsc {
         return matrix_t(name, size);
     }
 
+    // matrix copy
+    inline auto matrix(const std::string & name, const matrix_t & other)
+    {
+        return matrix_t(name, other);
+    }
+
     // vector
     inline auto vector(const std::string & name, index_t size)
     {
