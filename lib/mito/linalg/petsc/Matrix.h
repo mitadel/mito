@@ -9,6 +9,13 @@
 
 namespace mito::linalg::petsc {
 
+    // enum for sparsity pattern
+    enum class sparsity_pattern : std::underlying_type_t<MatStructure> {
+        same = SAME_NONZERO_PATTERN,
+        subset = SUBSET_NONZERO_PATTERN,
+        different = DIFFERENT_NONZERO_PATTERN
+    };
+
     class Matrix {
       private:
         // the index type

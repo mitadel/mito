@@ -9,6 +9,7 @@
 
 // externals
 #include <cassert>
+#include <type_traits>
 #include <petscksp.h>
 #include <petscsystypes.h>
 
