@@ -147,6 +147,17 @@ mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> 
     return value;
 }
 
+// copy values from another matrix
+auto
+mito::linalg::petsc::Matrix::copy_values(const Matrix & X, sparsity_pattern pattern) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(MatCopy(X._matrix, _matrix, static_cast<MatStructure>(pattern)));
+
+    // all done
+    return;
+}
+
 // add scaled matrix using MatAXPY
 auto
 mito::linalg::petsc::Matrix::add(
