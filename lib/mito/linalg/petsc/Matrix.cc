@@ -147,6 +147,17 @@ mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> 
     return value;
 }
 
+// copy structure from another matrix
+auto
+mito::linalg::petsc::Matrix::copy_structure(const Matrix & X, duplicate_policy policy) -> void
+{
+    // release the matrix we currently own
+    PetscCallVoid(MatDestroy(&_matrix));
+
+    // duplicate {other}'s structure without its values
+    PetscCallVoid(MatDuplicate(other._matrix, policy, &_matrix));
+}
+
 // copy values from another matrix
 auto
 mito::linalg::petsc::Matrix::copy_values(const Matrix & X, sparsity_pattern pattern) -> void
