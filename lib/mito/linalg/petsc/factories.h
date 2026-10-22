@@ -16,9 +16,9 @@ namespace mito::linalg::petsc {
     }
 
     // matrix
-    inline auto matrix(const std::string & name, index_t size)
+    inline auto matrix(const std::string & name, index_t size, assembly_format format = assembly_format::csr)
     {
-        return matrix_t(name, size);
+        return matrix_t(name, size, format);
     }
 
     // matrix copy

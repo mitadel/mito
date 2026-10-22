@@ -28,10 +28,6 @@ constexpr auto x = mito::geometry::cartesian<2>::x;
 constexpr auto y = mito::geometry::cartesian<2>::y;
 // the backend type
 using backend_t = mito::linalg::petsc::backend_t;
-// the matrix type
-using matrix_t = typename backend_t::matrix_type;
-// the vector type
-using vector_t = typename backend_t::vector_type;
 
 TEST(Models, SEMI_DISCRETE_MODEL_EFFECTIVE_MATRICES)
 {
@@ -78,9 +74,10 @@ TEST(Models, SEMI_DISCRETE_MODEL_EFFECTIVE_MATRICES)
     auto semi_discrete_model = mito::fem::semi_discrete_model(function_space, model);
 
     // create the system matrices
-    matrix_t stiffness("stiffness", semi_discrete_model.n_equations());
-    matrix_t capacitance("capacitance", semi_discrete_model.n_equations());
-    vector_t load("load", semi_discrete_model.n_equations());
+    auto stiffness = mito::linalg::petsc::matrix("stiffness", semi_discrete_model.n_equations());
+    auto capacitance =
+        mito::linalg::petsc::matrix("capacitance", semi_discrete_model.n_equations());
+    auto load = mito::linalg::petsc::vector("load", semi_discrete_model.n_equations());
 
     // assemble the system matrices
     semi_discrete_model

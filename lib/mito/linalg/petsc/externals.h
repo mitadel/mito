@@ -16,6 +16,7 @@
 // support
 #include "../../journal.h"
 #include "../../utilities.h"
+#include "../api.h"
 #include "../concepts.h"
 #include "../linear_system.h"
 

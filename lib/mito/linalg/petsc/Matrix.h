@@ -33,7 +33,7 @@ namespace mito::linalg::petsc {
 
       public:
         // constructor
-        Matrix(index_t);
+        Matrix(index_t, assembly_format format = assembly_format::csr);
 
         // copy constructor
         Matrix(const Matrix &);
@@ -56,6 +56,9 @@ namespace mito::linalg::petsc {
 
         // assemble the matrix
         auto assemble_flush() -> void;
+
+        // set pattern
+        auto set_pattern(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
 
         // set the value of a matrix entry
         auto insert_value(index_type, index_type, const scalar_type &) -> void;
@@ -95,8 +98,22 @@ namespace mito::linalg::petsc {
         auto get() const -> matrix_type const &;
 
       private:
+        // set the pattern based on the provided row and column indices, for coo assembly
+        auto _set_pattern_coo(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
+
+        // set the pattern based on the provided row and column indices, for csr assembly
+        auto _set_pattern_csr(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
+
+      private:
         // the matrix
         matrix_type _matrix;
+        // the assembly format
+        assembly_format _format;
+        // the number of COO entries (only used for COO assembly)
+        index_type _n_entries;
+        // the index lists (only used for CSR assembly)
+        std::vector<index_type> _rows;
+        std::vector<index_type> _cols;
     };
 
 }    // namespace mito

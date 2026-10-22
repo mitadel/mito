@@ -9,7 +9,10 @@
 
 
 // constructor
-mito::linalg::petsc::Matrix::Matrix(index_type size) : _matrix(nullptr)
+mito::linalg::petsc::Matrix::Matrix(index_type size, assembly_format format) :
+    _matrix(nullptr),
+    _format(format),
+    _n_entries(0)
 {
     // create the matrix
     PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &_matrix));
@@ -97,6 +100,29 @@ mito::linalg::petsc::Matrix::assemble_flush() -> void
     return;
 }
 
+// set the pattern based on the provided row and column indices
+auto
+mito::linalg::petsc::Matrix::set_pattern(std::vector<index_type> rows, std::vector<index_type> cols)
+    -> void
+{
+    // ensure the row and column vectors have the same size
+    assert(std::size(rows) == std::size(cols));
+
+    switch (_format) {
+        case assembly_format::coo:
+            _set_pattern_coo(rows, cols);
+            break;
+
+        case assembly_format::csr:
+            _set_pattern_csr(rows, cols);
+            break;
+
+        default:
+            throw std::runtime_error("Unknown assembly format");
+    }
+    return;
+}
+
 // set the matrix entry at ({row}, {col}) to {value}
 auto
 mito::linalg::petsc::Matrix::insert_value(index_type row, index_type col, const scalar_type & value)
@@ -155,7 +181,7 @@ mito::linalg::petsc::Matrix::copy_structure(const Matrix & X, duplicate_policy p
     PetscCallVoid(MatDestroy(&_matrix));
 
     // duplicate {other}'s structure without its values
-    PetscCallVoid(MatDuplicate(other._matrix, policy, &_matrix));
+    PetscCallVoid(MatDuplicate(X._matrix, static_cast<MatDuplicateOption>(policy), &_matrix));
 }
 
 // copy values from another matrix
@@ -224,5 +250,62 @@ mito::linalg::petsc::Matrix::get() const -> matrix_type const &
 {
     return _matrix;
 }
+
+// set the pattern based on the provided row and column indices, for coo assembly
+auto
+mito::linalg::petsc::Matrix::_set_pattern_coo(
+    std::vector<index_type> rows, std::vector<index_type> cols) -> void
+{
+    // store the number of entries
+    _n_entries = static_cast<PetscCount>(std::size(rows));
+
+    // set the pattern using PETSc
+    PetscCallVoid(MatSetPreallocationCOO(_matrix, _n_entries, rows.data(), cols.data()));
+
+    // all done
+    return;
+}
+
+// set the pattern based on the provided row and column indices, for csr assembly
+auto
+mito::linalg::petsc::Matrix::_set_pattern_csr(
+    std::vector<index_type> rows, std::vector<index_type> cols) -> void
+{
+    // store the number of entries
+    _n_entries = std::size(rows);
+
+    // record the pattern in a preallocator matrix with the same size and distribution
+    Mat prealloc;
+    index_type size;
+    PetscCallVoid(MatGetSize(_matrix, &size, nullptr));
+    PetscCallVoid(MatCreate(PETSC_COMM_WORLD, &prealloc));
+    PetscCallVoid(MatSetSizes(prealloc, PETSC_DECIDE, PETSC_DECIDE, size, size));
+    PetscCallVoid(MatSetType(prealloc, MATPREALLOCATOR));
+    PetscCallVoid(MatSetUp(prealloc));
+
+    // loop over the entries and set the pattern in the preallocator matrix
+    for (index_type k = 0; k < _n_entries; ++k) {
+        // ignore negative indices, as they represent boundary nodes
+        if (rows[k] >= 0 && cols[k] >= 0) {
+            PetscCallVoid(MatSetValue(prealloc, rows[k], cols[k], 0.0, INSERT_VALUES));
+        }
+    }
+
+    // assemble the preallocator matrix
+    PetscCallVoid(MatAssemblyBegin(prealloc, MAT_FINAL_ASSEMBLY));
+    PetscCallVoid(MatAssemblyEnd(prealloc, MAT_FINAL_ASSEMBLY));
+
+    // exact preallocation of the real matrix, with the pattern filled in
+    PetscCallVoid(MatPreallocatorPreallocate(prealloc, PETSC_TRUE, _matrix));
+    PetscCallVoid(MatDestroy(&prealloc));
+
+    // keep the index lists to insert values later
+    _rows = std::move(rows);
+    _cols = std::move(cols);
+
+    // all done
+    return;
+}
+
 
 // end of file
