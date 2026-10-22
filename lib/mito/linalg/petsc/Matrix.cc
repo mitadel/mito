@@ -30,14 +30,26 @@ mito::linalg::petsc::Matrix::~Matrix()
 }
 
 // copy constructor
-mito::linalg::petsc::Matrix::Matrix(const Matrix & other) : _matrix(nullptr)
+mito::linalg::petsc::Matrix::Matrix(const Matrix & other) :
+    _matrix(nullptr),
+    _format(other._format),
+    _n_entries(other._n_entries),
+    _rows(other._rows),
+    _cols(other._cols),
+    _segments(other._segments)
 {
     // duplicate matrix
     PetscCallVoid(MatDuplicate(other._matrix, MAT_COPY_VALUES, &_matrix));
 }
 
 // move constructor
-mito::linalg::petsc::Matrix::Matrix(Matrix && other) noexcept : _matrix(other._matrix)
+mito::linalg::petsc::Matrix::Matrix(Matrix && other) noexcept :
+    _matrix(std::exchange(other._matrix, nullptr)),
+    _format(other._format),
+    _n_entries(other._n_entries),
+    _rows(std::move(other._rows)),
+    _cols(std::move(other._cols)),
+    _segments(std::move(other._segments))
 {
     // remove matrix
     other._matrix = nullptr;
@@ -54,7 +66,7 @@ mito::linalg::petsc::Matrix::operator=(const Matrix & other) -> Matrix &
 
     // copy and swap
     Matrix tmp(other);
-    std::swap(_matrix, tmp._matrix);
+    _swap(tmp);
 
     // returning deletes {tmp}
     return *this;
@@ -68,9 +80,8 @@ mito::linalg::petsc::Matrix::operator=(Matrix && other) noexcept -> Matrix &
     if (this != &other) {
         // free the matrix
         MatDestroy(&_matrix);
-        // swap the matrix
-        _matrix = other._matrix;
-        other._matrix = nullptr;
+        // swap the contents
+        _swap(other);
     }
 
     return *this;
@@ -286,6 +297,30 @@ auto
 mito::linalg::petsc::Matrix::get() const -> matrix_type const &
 {
     return _matrix;
+}
+
+// swap the contents of two matrices
+auto
+mito::linalg::petsc::Matrix::_swap(Matrix & other) noexcept -> void
+{
+    // swap the matrix handles
+    std::swap(_matrix, other._matrix);
+
+    // swap the assembly formats
+    std::swap(_format, other._format);
+
+    // swap the number of entries
+    std::swap(_n_entries, other._n_entries);
+
+    // swap the row and column index lists
+    std::swap(_rows, other._rows);
+    std::swap(_cols, other._cols);
+
+    // swap the block segments
+    std::swap(_segments, other._segments);
+
+    // all done
+    return;
 }
 
 // set the pattern based on the provided row and column indices, for coo assembly
