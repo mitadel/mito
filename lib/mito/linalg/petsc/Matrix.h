@@ -60,6 +60,9 @@ namespace mito::linalg::petsc {
         // set pattern
         auto set_pattern(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
 
+        // set values
+        auto set_values(const std::vector<scalar_type>& values) -> void;
+
         // set the value of a matrix entry
         auto insert_value(index_type, index_type, const scalar_type &) -> void;
 
@@ -103,6 +106,12 @@ namespace mito::linalg::petsc {
 
         // set the pattern based on the provided row and column indices, for csr assembly
         auto _set_pattern_csr(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
+
+        // set the values for coo assembly
+        auto _set_values_coo(std::vector<scalar_type> values) -> void;
+
+        // set the values for csr assembly
+        auto _set_values_csr(std::vector<scalar_type> values) -> void;
 
       private:
         // the matrix

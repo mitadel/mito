@@ -123,6 +123,27 @@ mito::linalg::petsc::Matrix::set_pattern(std::vector<index_type> rows, std::vect
     return;
 }
 
+// set the values based on the provided values vector
+auto
+mito::linalg::petsc::Matrix::set_values(const std::vector<scalar_type> & values) -> void
+{
+    // one value per entry of the index lists
+    assert(index_type(std::size(values)) == _n_entries);
+
+    switch (_format) {
+        case assembly_format::coo:
+            _set_values_coo(values);
+            break;
+
+        case assembly_format::csr:
+            _set_values_csr(values);
+            break;
+
+        default:
+            throw std::runtime_error("Unknown assembly format");
+    }
+    return;
+}
 // set the matrix entry at ({row}, {col}) to {value}
 auto
 mito::linalg::petsc::Matrix::insert_value(index_type row, index_type col, const scalar_type & value)
@@ -302,6 +323,32 @@ mito::linalg::petsc::Matrix::_set_pattern_csr(
     // keep the index lists to insert values later
     _rows = std::move(rows);
     _cols = std::move(cols);
+
+    // all done
+    return;
+}
+
+// set the values for coo assembly
+auto
+mito::linalg::petsc::Matrix::_set_values_coo(std::vector<scalar_type> values) -> void
+{
+    // set the values using PETSc
+    PetscCallVoid(MatSetValuesCOO(_matrix, values.data(), INSERT_VALUES));
+
+    // all done
+    return;
+}
+
+// set the values for csr assembly
+auto
+mito::linalg::petsc::Matrix::_set_values_csr(std::vector<scalar_type> values) -> void
+{
+    // set the values using PETSc
+    for (index_type k = 0; k < _n_entries; ++k) {
+        if (_rows[k] >= 0 && _cols[k] >= 0) {
+            PetscCallVoid(MatSetValue(_matrix, _rows[k], _cols[k], values[k], ADD_VALUES));
+        }
+    }
 
     // all done
     return;
