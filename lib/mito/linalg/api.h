@@ -9,6 +9,9 @@
 
 namespace mito::linalg {
 
+    // block segment
+    using block_segment_t = BlockSegment;
+
     // enumeration for the assembly format
     enum class assembly_format { coo, csr };
 }

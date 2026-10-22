@@ -102,24 +102,40 @@ mito::linalg::petsc::Matrix::assemble_flush() -> void
 
 // set the pattern based on the provided row and column indices
 auto
-mito::linalg::petsc::Matrix::set_pattern(std::vector<index_type> rows, std::vector<index_type> cols)
-    -> void
+mito::linalg::petsc::Matrix::set_pattern(
+    std::vector<index_type> rows, std::vector<index_type> cols,
+    std::vector<block_segment_type> segments) -> void
 {
     // ensure the row and column vectors have the same size
     assert(std::size(rows) == std::size(cols));
 
+    // store the number of entries
+    _n_entries = std::size(rows);
+
+    // store the segments, if there are any; else store everything is a 1x1 block
+    _segments = std::empty(segments) ? std::vector<block_segment_type>{ { 1, _n_entries } } :
+                                       std::move(segments);
+
+    // ensure the number of segments is consistent with the number of entries
+    assert(
+        std::transform_reduce(
+            segments.begin(), segments.end(), std::size_t{ 0 }, std::plus<>{},
+            [](const auto & s) { return s.n_blocks * s.block_size * s.block_size; })
+        == _n_entries);
+
     switch (_format) {
         case assembly_format::coo:
-            _set_pattern_coo(rows, cols);
+            _set_pattern_coo(std::move(rows), std::move(cols));
             break;
 
         case assembly_format::csr:
-            _set_pattern_csr(rows, cols);
+            _set_pattern_csr(std::move(rows), std::move(cols));
             break;
 
         default:
             throw std::runtime_error("Unknown assembly format");
     }
+
     return;
 }
 
@@ -128,7 +144,7 @@ auto
 mito::linalg::petsc::Matrix::set_values(const std::vector<scalar_type> & values) -> void
 {
     // one value per entry of the index lists
-    assert(index_type(std::size(values)) == _n_entries);
+    assert(std::size(values) == _n_entries);
 
     switch (_format) {
         case assembly_format::coo:
@@ -277,9 +293,6 @@ auto
 mito::linalg::petsc::Matrix::_set_pattern_coo(
     std::vector<index_type> rows, std::vector<index_type> cols) -> void
 {
-    // store the number of entries
-    _n_entries = static_cast<PetscCount>(std::size(rows));
-
     // set the pattern using PETSc
     PetscCallVoid(MatSetPreallocationCOO(_matrix, _n_entries, rows.data(), cols.data()));
 
@@ -292,9 +305,6 @@ auto
 mito::linalg::petsc::Matrix::_set_pattern_csr(
     std::vector<index_type> rows, std::vector<index_type> cols) -> void
 {
-    // store the number of entries
-    _n_entries = std::size(rows);
-
     // record the pattern in a preallocator matrix with the same size and distribution
     Mat prealloc;
     index_type size;
@@ -305,7 +315,7 @@ mito::linalg::petsc::Matrix::_set_pattern_csr(
     PetscCallVoid(MatSetUp(prealloc));
 
     // loop over the entries and set the pattern in the preallocator matrix
-    for (index_type k = 0; k < _n_entries; ++k) {
+    for (std::size_t k = 0; k < _n_entries; ++k) {
         // ignore negative indices, as they represent boundary nodes
         if (rows[k] >= 0 && cols[k] >= 0) {
             PetscCallVoid(MatSetValue(prealloc, rows[k], cols[k], 0.0, INSERT_VALUES));
@@ -330,7 +340,7 @@ mito::linalg::petsc::Matrix::_set_pattern_csr(
 
 // set the values for coo assembly
 auto
-mito::linalg::petsc::Matrix::_set_values_coo(std::vector<scalar_type> values) -> void
+mito::linalg::petsc::Matrix::_set_values_coo(const std::vector<scalar_type> & values) -> void
 {
     // set the values using PETSc
     PetscCallVoid(MatSetValuesCOO(_matrix, values.data(), INSERT_VALUES));
@@ -341,12 +351,29 @@ mito::linalg::petsc::Matrix::_set_values_coo(std::vector<scalar_type> values) ->
 
 // set the values for csr assembly
 auto
-mito::linalg::petsc::Matrix::_set_values_csr(std::vector<scalar_type> values) -> void
+mito::linalg::petsc::Matrix::_set_values_csr(const std::vector<scalar_type> & values) -> void
 {
+    // start from zero, keeping the pattern
+    PetscCallVoid(MatZeroEntries(_matrix));
+
     // set the values using PETSc
-    for (index_type k = 0; k < _n_entries; ++k) {
-        if (_rows[k] >= 0 && _cols[k] >= 0) {
-            PetscCallVoid(MatSetValue(_matrix, _rows[k], _cols[k], values[k], ADD_VALUES));
+    std::vector<index_type> block_rows, block_cols;
+    std::size_t offset = 0;
+
+    for (const auto & [block_size, n_blocks] : _segments) {
+        const auto n = static_cast<index_type>(block_size);
+        block_rows.resize(n);
+        block_cols.resize(n);
+
+        for (std::size_t e = 0; e < n_blocks; ++e, offset += block_size * block_size) {
+            for (std::size_t i = 0; i < block_size; ++i) {
+                block_rows[i] = _rows[offset + i * block_size];
+                block_cols[i] = _cols[offset + i];
+            }
+
+            PetscCallVoid(MatSetValues(
+                _matrix, n, block_rows.data(), n, block_cols.data(), values.data() + offset,
+                ADD_VALUES));
         }
     }
 

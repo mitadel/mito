@@ -30,6 +30,8 @@ namespace mito::linalg::petsc {
         using scalar_type = scalar_t;
         // the matrix type
         using matrix_type = Mat;
+        // the block segment type
+        using block_segment_type = block_segment_t;
 
       public:
         // constructor
@@ -58,10 +60,12 @@ namespace mito::linalg::petsc {
         auto assemble_flush() -> void;
 
         // set pattern
-        auto set_pattern(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
+        auto set_pattern(
+            std::vector<index_type> rows, std::vector<index_type> cols,
+            std::vector<block_segment_type> segments = {}) -> void;
 
         // set values
-        auto set_values(const std::vector<scalar_type>& values) -> void;
+        auto set_values(const std::vector<scalar_type> & values) -> void;
 
         // set the value of a matrix entry
         auto insert_value(index_type, index_type, const scalar_type &) -> void;
@@ -108,10 +112,10 @@ namespace mito::linalg::petsc {
         auto _set_pattern_csr(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
 
         // set the values for coo assembly
-        auto _set_values_coo(std::vector<scalar_type> values) -> void;
+        auto _set_values_coo(const std::vector<scalar_type> & values) -> void;
 
         // set the values for csr assembly
-        auto _set_values_csr(std::vector<scalar_type> values) -> void;
+        auto _set_values_csr(const std::vector<scalar_type> & values) -> void;
 
       private:
         // the matrix
@@ -119,10 +123,12 @@ namespace mito::linalg::petsc {
         // the assembly format
         assembly_format _format;
         // the number of COO entries (only used for COO assembly)
-        index_type _n_entries;
+        std::size_t _n_entries;
         // the index lists (only used for CSR assembly)
         std::vector<index_type> _rows;
         std::vector<index_type> _cols;
+        // the block segments (only used for CSR assembly)
+        std::vector<block_segment_type> _segments;
     };
 
 }    // namespace mito
