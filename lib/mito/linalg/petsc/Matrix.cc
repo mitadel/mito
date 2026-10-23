@@ -36,7 +36,8 @@ mito::linalg::petsc::Matrix::Matrix(const Matrix & other) :
     _n_entries(other._n_entries),
     _rows(other._rows),
     _cols(other._cols),
-    _segments(other._segments)
+    _segments(other._segments),
+    _pattern_set(other._pattern_set)
 {
     // duplicate matrix
     PetscCallVoid(MatDuplicate(other._matrix, MAT_COPY_VALUES, &_matrix));
@@ -49,11 +50,9 @@ mito::linalg::petsc::Matrix::Matrix(Matrix && other) noexcept :
     _n_entries(other._n_entries),
     _rows(std::move(other._rows)),
     _cols(std::move(other._cols)),
-    _segments(std::move(other._segments))
-{
-    // remove matrix
-    other._matrix = nullptr;
-}
+    _segments(std::move(other._segments)),
+    _pattern_set(other._pattern_set)
+{}
 
 // copy assignment operator
 auto
@@ -123,7 +122,7 @@ mito::linalg::petsc::Matrix::set_pattern(
         && "row and column index vectors must have the same size");
 
     // ensure the pattern has not been set yet
-    assert(_n_entries == 0 && "set_pattern can only be called once on this matrix");
+    assert(!_pattern_set && "set_pattern can only be called once on this matrix");
 
     // store the number of entries
     _n_entries = std::size(rows);
@@ -135,11 +134,15 @@ mito::linalg::petsc::Matrix::set_pattern(
     // ensure the number of segments is consistent with the number of entries
     assert(
         std::transform_reduce(
-            segments.begin(), segments.end(), std::size_t{ 0 }, std::plus<>{},
+            _segments.begin(), _segments.end(), std::size_t{ 0 }, std::plus<>{},
             [](const auto & s) { return s.n_blocks * s.block_size * s.block_size; })
         == _n_entries);
 
     switch (_format) {
+        case assembly_format::hash:
+            _set_pattern_hash(std::move(rows), std::move(cols));
+            break;
+
         case assembly_format::coo:
             _set_pattern_coo(std::move(rows), std::move(cols));
             break;
@@ -151,6 +154,9 @@ mito::linalg::petsc::Matrix::set_pattern(
         default:
             throw std::runtime_error("Unknown assembly format");
     }
+
+    // set the pattern set flag
+    _pattern_set = true;
 
     return;
 }
@@ -165,9 +171,13 @@ mito::linalg::petsc::Matrix::set_values(const std::vector<scalar_type> & values)
         && "number of values must match number of entries in the matrix");
 
     // ensure that the pattern has been set before setting values
-    assert(_n_entries > 0 && "set_values requires set_pattern on this matrix");
+    assert(_pattern_set > 0 && "set_values requires set_pattern on this matrix");
 
     switch (_format) {
+        case assembly_format::hash:
+            _set_values_csr(values);
+            break;
+
         case assembly_format::coo:
             _set_values_coo(values);
             break;
@@ -181,6 +191,7 @@ mito::linalg::petsc::Matrix::set_values(const std::vector<scalar_type> & values)
     }
     return;
 }
+
 // set the matrix entry at ({row}, {col}) to {value}
 auto
 mito::linalg::petsc::Matrix::insert_value(index_type row, index_type col, const scalar_type & value)
@@ -237,6 +248,13 @@ mito::linalg::petsc::Matrix::copy_structure(const Matrix & X, duplicate_policy p
 {
     // release the matrix we currently own
     PetscCallVoid(MatDestroy(&_matrix));
+
+    // a structure copy needs to re-set the pattern
+    _n_entries = 0;
+    _rows.clear();
+    _cols.clear();
+    _segments.clear();
+    _pattern_set = false;
 
     // duplicate {other}'s structure without its values
     PetscCallVoid(MatDuplicate(X._matrix, static_cast<MatDuplicateOption>(policy), &_matrix));
@@ -329,6 +347,22 @@ mito::linalg::petsc::Matrix::_swap(Matrix & other) noexcept -> void
     // swap the block segments
     std::swap(_segments, other._segments);
 
+    // swap the pattern set flags
+    std::swap(_pattern_set, other._pattern_set);
+
+    // all done
+    return;
+}
+
+// set the pattern based on the provided row and column indices, for no preallocation
+auto
+mito::linalg::petsc::Matrix::_set_pattern_hash(
+    std::vector<index_type> rows, std::vector<index_type> cols) -> void
+{
+    // keep the index lists to insert values later
+    _rows = std::move(rows);
+    _cols = std::move(cols);
+
     // all done
     return;
 }
@@ -339,7 +373,8 @@ mito::linalg::petsc::Matrix::_set_pattern_coo(
     std::vector<index_type> rows, std::vector<index_type> cols) -> void
 {
     // set the pattern using PETSc
-    PetscCallVoid(MatSetPreallocationCOO(_matrix, _n_entries, rows.data(), cols.data()));
+    PetscCallVoid(MatSetPreallocationCOO(
+        _matrix, static_cast<PetscCount>(_n_entries), rows.data(), cols.data()));
 
     // all done
     return;
@@ -407,8 +442,8 @@ mito::linalg::petsc::Matrix::_set_values_csr(const std::vector<scalar_type> & va
 
     for (const auto & [block_size, n_blocks] : _segments) {
         const auto n = static_cast<index_type>(block_size);
-        block_rows.resize(n);
-        block_cols.resize(n);
+        block_rows.resize(block_size);
+        block_cols.resize(block_size);
 
         for (std::size_t e = 0; e < n_blocks; ++e, offset += block_size * block_size) {
             for (std::size_t i = 0; i < block_size; ++i) {

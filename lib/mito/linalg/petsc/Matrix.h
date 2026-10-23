@@ -132,6 +132,8 @@ namespace mito::linalg::petsc {
         std::vector<index_type> _cols;
         // the block segments (only used for CSR assembly)
         std::vector<block_segment_type> _segments;
+        // flag to indicate if the pattern has been set
+        bool _pattern_set = false;
     };
 
 }    // namespace mito

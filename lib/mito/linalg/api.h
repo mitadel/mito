@@ -13,7 +13,7 @@ namespace mito::linalg {
     using block_segment_t = BlockSegment;
 
     // enumeration for the assembly format
-    enum class assembly_format { coo, csr };
+    enum class assembly_format { none, coo, csr };
 }
 
 
