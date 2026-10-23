@@ -118,7 +118,12 @@ mito::linalg::petsc::Matrix::set_pattern(
     std::vector<block_segment_type> segments) -> void
 {
     // ensure the row and column vectors have the same size
-    assert(std::size(rows) == std::size(cols));
+    assert(
+        std::size(rows) == std::size(cols)
+        && "row and column index vectors must have the same size");
+
+    // ensure the pattern has not been set yet
+    assert(_n_entries == 0 && "set_pattern can only be called once on this matrix");
 
     // store the number of entries
     _n_entries = std::size(rows);
@@ -155,7 +160,12 @@ auto
 mito::linalg::petsc::Matrix::set_values(const std::vector<scalar_type> & values) -> void
 {
     // one value per entry of the index lists
-    assert(std::size(values) == _n_entries);
+    assert(
+        std::size(values) == _n_entries
+        && "number of values must match number of entries in the matrix");
+
+    // ensure that the pattern has been set before setting values
+    assert(_n_entries > 0 && "set_values requires set_pattern on this matrix");
 
     switch (_format) {
         case assembly_format::coo:
