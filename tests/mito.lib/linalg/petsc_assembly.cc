@@ -22,9 +22,9 @@ namespace {
 
     // the assembly formats under test
     constexpr std::array<std::pair<const char *, format_t>, 3> formats = { {
-        { "hash", format_t::hash },
         { "coo", format_t::coo },
         { "csr", format_t::csr },
+        { "hash", format_t::hash },
     } };
 
     // an element: its equation numbers (-1 = constrained) and its row-major element matrix
@@ -47,7 +47,7 @@ namespace {
         int rank, size;
         MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
         MPI_Comm_size(PETSC_COMM_WORLD, &size);
-        return { rank, size };I
+        return { rank, size };
     }
 
     // a hand-made system with 5 equations: two 2-node and two 3-node elements,

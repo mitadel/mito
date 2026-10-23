@@ -394,11 +394,25 @@ mito::linalg::petsc::Matrix::_set_pattern_csr(
     PetscCallVoid(MatSetType(prealloc, MATPREALLOCATOR));
     PetscCallVoid(MatSetUp(prealloc));
 
-    // loop over the entries and set the pattern in the preallocator matrix
-    for (std::size_t k = 0; k < _n_entries; ++k) {
-        // ignore negative indices, as they represent boundary nodes
-        if (rows[k] >= 0 && cols[k] >= 0) {
-            PetscCallVoid(MatSetValue(prealloc, rows[k], cols[k], 0.0, INSERT_VALUES));
+    // set the values using PETSc
+    std::vector<index_type> block_rows, block_cols;
+    std::vector<scalar_type> zeros;
+    std::size_t offset = 0;
+
+    for (const auto & [block_size, n_blocks] : _segments) {
+        const auto n = static_cast<index_type>(block_size);
+        block_rows.resize(block_size);
+        block_cols.resize(block_size);
+        zeros.assign(block_size * block_size, 0.0);
+
+        for (std::size_t e = 0; e < n_blocks; ++e, offset += block_size * block_size) {
+            for (std::size_t i = 0; i < block_size; ++i) {
+                block_rows[i] = rows[offset + i * block_size];
+                block_cols[i] = cols[offset + i];
+            }
+
+            PetscCallVoid(MatSetValues(
+                prealloc, n, block_rows.data(), n, block_cols.data(), zeros.data(), ADD_VALUES));
         }
     }
 
