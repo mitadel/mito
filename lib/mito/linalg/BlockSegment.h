@@ -11,9 +11,9 @@ namespace mito::linalg {
 
     // a run of consecutive dense blocks of equal size in a sparse matrix
     struct BlockSegment {
-        // the number of rows/columns in the block segment
+        // the number of rows/columns in a block
         std::size_t block_size;
-        // the starting column index of the block segment
+        // the number of blocks in the block segment
         std::size_t n_blocks;
     };
 

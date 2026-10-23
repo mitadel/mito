@@ -108,6 +108,9 @@ namespace mito::linalg::petsc {
         // swap the contents of two matrices
         auto _swap(Matrix &) noexcept -> void;
 
+        // set the pattern based on the provided row and column indices, for hash assembly
+        auto _set_pattern_hash(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
+
         // set the pattern based on the provided row and column indices, for coo assembly
         auto _set_pattern_coo(std::vector<index_type> rows, std::vector<index_type> cols) -> void;
 

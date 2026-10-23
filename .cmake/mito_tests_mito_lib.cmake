@@ -131,6 +131,7 @@ mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 # linalg
 if(WITH_PETSC)
     mito_test_driver(tests/mito.lib/linalg/petsc_add.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_assembly.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_copy.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_environment.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_ksp.cc)
