@@ -5,186 +5,50 @@
 
 
 #include <gtest/gtest.h>
-#include <mito.h>
-
-#include <array>
-#include <utility>
-#include <vector>
+#include "utilities/petsc_assembly.h"
 
 
-namespace {
-
-    // types
-    using index_t = mito::linalg::petsc::index_t;
-    using scalar_t = mito::linalg::petsc::scalar_t;
-    using format_t = mito::linalg::assembly_format;
-    using segment_t = mito::linalg::block_segment_t;
-
-    // the assembly formats under test
-    constexpr std::array<std::pair<const char *, format_t>, 3> formats = { {
-        { "coo", format_t::coo },
-        { "csr", format_t::csr },
-        { "hash", format_t::hash },
-    } };
-
-    // an element: its equation numbers (-1 = constrained) and its row-major element matrix
-    struct element_t {
-        std::vector<index_t> eqs;
-        std::vector<scalar_t> Ke;
-    };
-
-    // the flat assembly input of one rank
-    struct lists_t {
-        std::vector<index_t> rows;
-        std::vector<index_t> cols;
-        std::vector<scalar_t> vals;
-        std::vector<segment_t> segments;
-    };
-
-    // the rank of this process and the number of ranks
-    auto rank_and_size() -> std::pair<int, int>
-    {
-        int rank, size;
-        MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
-        MPI_Comm_size(PETSC_COMM_WORLD, &size);
-        return { rank, size };
-    }
-
-    // a hand-made system with 5 equations: two 2-node and two 3-node elements,
-    // one constrained node, a non-symmetric element matrix and an explicit zero
-    auto test_elements() -> std::vector<element_t>
-    {
-        return {
-            { { 0, 1 }, { 2, -1, -1, 2 } },
-            { { 1, 2 }, { 3, -2, -1, 4 } },
-            { { 2, 3, -1 }, { 1, 2, 3, 4, 5, 6, 7, 8, 9 } },
-            { { 3, 4, 0 }, { 1, 0, 2, 0, 3, 0, 4, 0, 5 } },
-        };
-    }
-
-    // flatten the elements owned by this rank (round robin) into COO lists and block segments;
-    // the element matrices are scaled by {factor}
-    auto flatten(const std::vector<element_t> & elements, scalar_t factor) -> lists_t
-    {
-        auto [rank, size] = rank_and_size();
-
-        lists_t lists;
-        for (std::size_t k = 0; k < std::size(elements); ++k) {
-            // skip elements owned by other ranks
-            if (static_cast<int>(k % size) != rank) {
-                continue;
-            }
-
-            const auto & [eqs, Ke] = elements[k];
-            const auto n = std::size(eqs);
-            for (std::size_t a = 0; a < n; ++a) {
-                for (std::size_t b = 0; b < n; ++b) {
-                    lists.rows.push_back(eqs[a]);
-                    lists.cols.push_back(eqs[b]);
-                    lists.vals.push_back(factor * Ke[a * n + b]);
-                }
-            }
-
-            // extend the last segment if the block size matches, else start a new one
-            if (!std::empty(lists.segments) && lists.segments.back().block_size == n) {
-                ++lists.segments.back().n_blocks;
-            } else {
-                lists.segments.push_back({ n, 1 });
-            }
-        }
-
-        return lists;
-    }
-
-    // the reference: the same elements assembled entry by entry with {add_value}
-    template <class matrixT>
-    auto fill_reference(matrixT & R, const std::vector<element_t> & elements, scalar_t factor)
-        -> void
-    {
-        auto [rank, size] = rank_and_size();
-
-        for (std::size_t k = 0; k < std::size(elements); ++k) {
-            if (static_cast<int>(k % size) != rank) {
-                continue;
-            }
-
-            const auto & [eqs, Ke] = elements[k];
-            const auto n = std::size(eqs);
-            for (std::size_t a = 0; a < n; ++a) {
-                for (std::size_t b = 0; b < n; ++b) {
-                    if (eqs[a] >= 0 && eqs[b] >= 0) {
-                        R.add_value(eqs[a], eqs[b], factor * Ke[a * n + b]);
-                    }
-                }
-            }
-        }
-
-        R.assemble();
-    }
-
-    // compare all entries in the rows owned by this rank
-    template <class matrixA, class matrixB>
-    auto expect_equal(const matrixA & A, const matrixB & B, index_t N) -> void
-    {
-        index_t rstart, rend;
-        MatGetOwnershipRange(A.get(), &rstart, &rend);
-
-        for (index_t i = rstart; i < rend; ++i) {
-            for (index_t j = 0; j < N; ++j) {
-                EXPECT_NEAR(A.get_value(i, j), B.get_value(i, j), 1e-12)
-                    << "entry (" << i << ", " << j << ")";
-            }
-        }
-    }
-
-    // check one entry, on the rank that owns its row
-    template <class matrixT>
-    auto expect_entry(const matrixT & A, index_t i, index_t j, scalar_t expected) -> void
-    {
-        index_t rstart, rend;
-        MatGetOwnershipRange(A.get(), &rstart, &rend);
-
-        if (rstart <= i && i < rend) {
-            EXPECT_NEAR(A.get_value(i, j), expected, 1e-12) << "entry (" << i << ", " << j << ")";
-        }
-    }
-
-    // run {f} and return the elapsed wall time, as seen by the slowest rank
-    template <class F>
-    auto timed(F && f) -> PetscLogDouble
-    {
-        PetscLogDouble t0, t1;
-        MPI_Barrier(PETSC_COMM_WORLD);
-        PetscTime(&t0);
-        f();
-        MPI_Barrier(PETSC_COMM_WORLD);
-        PetscTime(&t1);
-        return t1 - t0;
-    }
-
-}    // namespace
+using namespace mito::tests::linalg::petsc;
 
 
 // all formats produce the same matrix as entry-by-entry assembly, also on re-assembly
 TEST(Math, PETScAssemblyFormats)
 {
-    const index_t N = 5;
+    // the elements to be assembled, in global order
     const auto elements = test_elements();
 
+    // the elements owned by this rank
+    const auto local = local_elements(elements);
+
+    // the number of equations in the system
+    const index_t N = n_equations(elements);
+
     for (const auto & [name, format] : formats) {
+        // set a trace for this format, so any failure will report the format name
         SCOPED_TRACE(name);
 
-        // pattern
+        // flatten the elements into COO lists and block segments, scaled by 1.0
         auto lists = flatten(elements, 1.0);
+
+        // create a matrix of the given format
         auto A = mito::linalg::petsc::matrix("A", N, format);
+
+        // set the pattern from the flattened lists
         A.set_pattern(lists.rows, lists.cols, lists.segments);
 
-        // first assembly
+        // set the values
         A.set_values(lists.vals);
+
+        // assemble the matrix
         A.assemble();
 
+        // create the reference matrix
         auto R1 = mito::linalg::petsc::matrix("R1", N);
+
+        // fill the reference matrix with the same elements, scaled by 1.0
         fill_reference(R1, elements, 1.0);
+
+        // compare the assembled matrix with the reference
         expect_equal(A, R1, N);
 
         // a few entries checked by hand, independently of the reference
@@ -196,52 +60,23 @@ TEST(Math, PETScAssemblyFormats)
         expect_entry(A, 2, 4, 0.0);     // not in the pattern
 
         // re-assembly with different values must replace, not accumulate
+        // flatten the elements into COO lists and block segments, scaled by 2.0
         auto lists2 = flatten(elements, 2.0);
+
+        // set the values
         A.set_values(lists2.vals);
+
+        // assemble the matrix
         A.assemble();
 
+        // create the reference matrix
         auto R2 = mito::linalg::petsc::matrix("R2", N);
+
+        // fill the reference matrix with the same elements, scaled by 2.0
         fill_reference(R2, elements, 2.0);
+
+        // compare the re-assembled matrix with the reference
         expect_equal(A, R2, N);
-    }
-
-    // all done
-    return;
-}
-
-
-// Keff = K + M / dt through a shared pattern, for each format of K and M
-TEST(Math, PETScEffectiveMatrix)
-{
-    const index_t N = 5;
-    const auto elements = test_elements();
-
-    for (const auto & [name, format] : formats) {
-        SCOPED_TRACE(name);
-
-        // K = elements, M = 2 * elements
-        auto listsK = flatten(elements, 1.0);
-        auto listsM = flatten(elements, 2.0);
-
-        auto K = mito::linalg::petsc::matrix("K", N, format);
-        K.set_pattern(listsK.rows, listsK.cols, listsK.segments);
-        K.set_values(listsK.vals);
-        K.assemble();
-
-        auto M = mito::linalg::petsc::matrix("M", N, format);
-        M.set_pattern(listsM.rows, listsM.cols, listsM.segments);
-        M.set_values(listsM.vals);
-        M.assemble();
-
-        // Keff = K + M / 2 = 2 * elements
-        auto Keff = mito::linalg::petsc::matrix("Keff", N);
-        Keff.copy_structure(K, mito::linalg::petsc::duplicate_policy::share_pattern);
-        Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
-        Keff.add(0.5, M, mito::linalg::petsc::sparsity_pattern::same);
-
-        auto R = mito::linalg::petsc::matrix("R", N);
-        fill_reference(R, elements, 2.0);
-        expect_equal(Keff, R, N);
     }
 
     // all done
@@ -359,7 +194,10 @@ main(int argc, char ** argv)
     // initialize PETSc
     auto environment = mito::linalg::petsc::environment();
 
+    // initialize Google Test
     ::testing::InitGoogleTest(&argc, argv);
+
+    // run all tests
     auto result = RUN_ALL_TESTS();
 
     // all done

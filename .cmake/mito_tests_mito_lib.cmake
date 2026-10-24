@@ -136,6 +136,7 @@ if(WITH_PETSC)
     mito_test_driver(tests/mito.lib/linalg/petsc_environment.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_ksp.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix_add.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
 endif()
 

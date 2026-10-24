@@ -67,7 +67,10 @@ main(int argc, char ** argv)
     // create petsc environment
     auto environment = mito::linalg::petsc::environment();
 
+    // initialize Google Test
     ::testing::InitGoogleTest(&argc, argv);
+
+    // run all tests
     auto result = RUN_ALL_TESTS();
 
     // all done

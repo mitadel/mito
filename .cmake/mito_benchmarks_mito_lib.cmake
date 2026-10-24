@@ -20,6 +20,12 @@ mito_benchmark_driver(benchmarks/mito.lib/integration/integration.cc)
 # operators
 mito_benchmark_driver(benchmarks/mito.lib/operators/laplacian.cc)
 
+# linalg
+if(WITH_PETSC)
+    mito_benchmark_driver(benchmarks/mito.lib/linalg/petsc_assembly.cc)
+endif()
+
+# PDEs
 if(WITH_PETSC)
     # poisson boundary value problem
     mito_benchmark_driver(benchmarks/mito.lib/pdes/poisson.cc)
