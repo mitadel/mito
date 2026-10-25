@@ -24,6 +24,7 @@ mito_benchmark_driver(benchmarks/mito.lib/operators/laplacian.cc)
 if(WITH_PETSC)
     mito_benchmark_driver(benchmarks/mito.lib/linalg/petsc_assembly.cc)
     mito_benchmark_driver(benchmarks/mito.lib/linalg/petsc_sparsity.cc)
+    mito_benchmark_driver(benchmarks/mito.lib/linalg/petsc_effective.cc)
 endif()
 
 # PDEs

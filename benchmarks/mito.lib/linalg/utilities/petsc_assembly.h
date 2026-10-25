@@ -12,8 +12,6 @@
 #include <mito.h>
 
 
-// shared support for the PETSc benchmarks: a structured grid of 4-node quadrilaterals, MPI-safe
-// timing and reporting
 namespace mito::benchmarks::linalg::petsc {
 
     // types
@@ -85,7 +83,7 @@ namespace mito::benchmarks::linalg::petsc {
         return { nx, iterations };
     }
 
-    // run {f} and return the elapsed wall time, as seen by the slowest rank
+    // run {f} and return the elapsed wall time
     template <class F>
     auto timed(F && f) -> double
     {
@@ -142,8 +140,7 @@ namespace mito::benchmarks::linalg::petsc {
         return { nx * rank / size, nx * (rank + 1) / size };
     }
 
-    // the COO lists of this rank's elements, all with element matrix {Ke}; the entries are
-    // ordered element by element, so lists built with different {Ke} have the same entry order
+    // the COO lists of this rank's elements, all with element matrix {Ke};
     inline auto grid_lists(index_t nx, const element_matrix_t & Ke) -> lists_t
     {
         // this rank's band of element rows and its number of elements
@@ -159,6 +156,7 @@ namespace mito::benchmarks::linalg::petsc {
         // flatten the elements
         for (index_t j = j0; j < j1; ++j) {
             for (index_t i = 0; i < nx; ++i) {
+                // the four equation numbers of this element
                 const auto e = element_equations(nx, i, j);
                 for (std::size_t a = 0; a < 4; ++a) {
                     for (std::size_t b = 0; b < 4; ++b) {
@@ -194,8 +192,28 @@ namespace mito::benchmarks::linalg::petsc {
         return;
     }
 
-    // register a benchmark with a fixed number of iterations and manually measured times; the
-    // fixed count makes all ranks make the same collective calls
+    // compute this rank's element values into {vals} as a linear combination of the stiffness and
+    // mass element matrices
+    inline auto compute_values(index_t nx, scalar_t k, scalar_t m, std::vector<scalar_t> & vals)
+        -> void
+    {
+        // this rank's band of element rows and its number of elements
+        auto [j0, j1] = element_rows(nx);
+
+        // the offset into the value array
+        std::size_t offset = 0;
+        for (index_t j = j0; j < j1; ++j) {
+            for (index_t i = 0; i < nx; ++i) {
+                // the 16 entries of this element
+                for (std::size_t ab = 0; ab < 16; ++ab) {
+                    vals[offset + ab] = k * stiffness_element[ab] + m * mass_element[ab];
+                }
+                offset += 16;
+            }
+        }
+    }
+
+    // register a benchmark with a fixed number of iterations and manually measured times
     template <class F>
     auto register_timed(const std::string & name, PetscInt iterations, F && f) -> void
     {

@@ -65,7 +65,6 @@ main(int argc, char ** argv)
                 Keff.copy_structure(K);
 
                 // time the copy of the values from K into Keff, with the declared sparsity pattern
-                // relation
                 state.SetIterationTime(timed([&] { Keff.copy_values(K, declared); }));
             }
         });
