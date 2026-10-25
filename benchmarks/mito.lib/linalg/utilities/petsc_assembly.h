@@ -26,7 +26,7 @@ namespace mito::benchmarks::linalg::petsc {
     using element_matrix_t = std::array<scalar_t, 16>;
 
     // the assembly formats
-    inline constexpr std::array<std::pair<const char *, format_t>, 3> formats = { {
+    inline const std::array<std::pair<std::string, format_t>, 3> formats = { {
         { "coo", format_t::coo },
         { "csr", format_t::csr },
         { "hash", format_t::hash },
