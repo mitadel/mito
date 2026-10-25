@@ -3,7 +3,11 @@
 // Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
 //
 
+// get the benchmark library
+#include <benchmark/benchmark.h>
+// get the mito library
 #include <mito.h>
+
 
 // types
 using index_t = mito::linalg::petsc::index_t;
@@ -18,12 +22,6 @@ constexpr std::array<std::pair<const char *, format_t>, 3> formats = { {
     { "hash", format_t::hash },
 } };
 
-// an element: its equation numbers (-1 = constrained) and its row-major element matrix
-struct element_t {
-    std::vector<index_t> eqs;
-    std::vector<scalar_t> Ke;
-};
-
 // the flat assembly input of one rank
 struct lists_t {
     std::vector<index_t> rows;
@@ -32,8 +30,16 @@ struct lists_t {
     std::vector<segment_t> segments;
 };
 
+// a reporter that reports nothing, used on all ranks but rank 0
+class NullReporter : public benchmark::BenchmarkReporter {
+  public:
+    auto ReportContext(const Context &) -> bool override { return true; }
+    auto ReportRuns(const std::vector<Run> &) -> void override {}
+};
+
+
 // the rank of this process and the number of ranks
-inline auto
+auto
 rank_and_size() -> std::pair<int, int>
 {
     // the rank and size of this process
@@ -47,22 +53,41 @@ rank_and_size() -> std::pair<int, int>
     return { rank, size };
 }
 
+// fill a matrix entry by entry, without preallocation
+auto
+fill(mito::linalg::petsc::matrix_t & A, const lists_t & lists) -> void
+{
+    // fill matrix entry by entry
+    for (std::size_t k = 0; k < std::size(lists.rows); ++k) {
+        // skip constrained entries
+        if (lists.rows[k] >= 0 && lists.cols[k] >= 0) {
+            A.add_value(lists.rows[k], lists.cols[k], lists.vals[k]);
+        }
+    }
+
+    // assemble the matrix
+    A.assemble();
+
+    // all done
+    return;
+}
+
 // run {f} and return the elapsed wall time, as seen by the slowest rank
 template <class F>
-inline auto
-timed(F && f) -> PetscLogDouble
+auto
+timed(F && f) -> double
 {
-    // the elapsed wall time, as seen by the slowest rank
+    // the start and end times
     PetscLogDouble t0, t1;
 
-    // delegate to PETSc and MPI
+    // synchronize, so all ranks start together
     MPI_Barrier(PETSC_COMM_WORLD);
     PetscTime(&t0);
 
     // run the function
     f();
 
-    // delegate to PETSc and MPI
+    // synchronize, so the time includes the slowest rank
     MPI_Barrier(PETSC_COMM_WORLD);
     PetscTime(&t1);
 
@@ -70,25 +95,37 @@ timed(F && f) -> PetscLogDouble
     return t1 - t0;
 }
 
-// relative performance of the formats on a structured grid of 4-node quadrilaterals
-int
-main()
+// count the total memory used by all ranks, in GB
+auto
+total_memory_gb() -> double
 {
-    // initialize PETSc
-    auto environment = mito::linalg::petsc::environment();
+    // the current resident memory of this process, in bytes
+    PetscLogDouble memory;
 
-    // problem size and number of re-assemblies
-    PetscInt nx = 300;
-    PetscInt repeats = 10;
+    // delegate to PETSc
+    PetscMemoryGetCurrentUsage(&memory);
 
-    // set from command line options, if present
-    PetscOptionsGetInt(nullptr, nullptr, "-bench_nx", &nx, nullptr);
-    PetscOptionsGetInt(nullptr, nullptr, "-bench_repeats", &repeats, nullptr);
+    // the sum over all ranks, on every rank
+    double total;
 
-    // nodes (i, j) with i, j in 0..nx; nodes with i == 0 are constrained
-    const index_t N = nx * (nx + 1);
+    // delegate to MPI
+    MPI_Allreduce(&memory, &total, 1, MPI_DOUBLE, MPI_SUM, PETSC_COMM_WORLD);
+
+    // all done
+    return total / 1e9;
+}
+
+// the COO lists and block segments of this rank's elements, on a structured grid of
+// {nx} x {nx} 4-node quadrilaterals; nodes with i == 0 are constrained
+auto
+grid_lists(index_t nx) -> lists_t
+{
+    // the equation number of node (i, j); constrained nodes (i == 0) have equation number -1
     auto eq = [nx](index_t i, index_t j) -> index_t {
-        return i == 0 ? -1 : (i - 1) + j * nx;
+        if (i == 0 || j == 0) {
+            return -1;
+        }
+        return (i - 1) + (j - 1) * nx;
     };
 
     // bilinear Laplacian element matrix (times 6), nodes counterclockwise
@@ -99,9 +136,18 @@ main()
     const index_t j0 = nx * rank / size;
     const index_t j1 = nx * (rank + 1) / size;
 
+    // flatten the elements owned by this rank into COO lists
     lists_t lists;
+
+    // reserve space in the lists
+    const auto n_entries = static_cast<std::size_t>((j1 - j0) * nx) * 16;
+    lists.rows.reserve(n_entries);
+    lists.cols.reserve(n_entries);
+    lists.vals.reserve(n_entries);
+
     for (index_t j = j0; j < j1; ++j) {
         for (index_t i = 0; i < nx; ++i) {
+            // the equation numbers of the four nodes of this element, counterclockwise
             const std::array<index_t, 4> e = { eq(i, j), eq(i + 1, j), eq(i + 1, j + 1),
                                                eq(i, j + 1) };
             for (std::size_t a = 0; a < 4; ++a) {
@@ -113,67 +159,221 @@ main()
             }
         }
     }
+
+    // create the segments; all elements are blocks of size 4 thus there is one segment per rank
     lists.segments = { { 4, static_cast<std::size_t>((j1 - j0) * nx) } };
 
-    PetscPrintf(
-        PETSC_COMM_WORLD, "%" PetscInt_FMT " equations, %d ranks, %" PetscInt_FMT " repeats\n", N,
-        size, repeats);
-    PetscPrintf(
-        PETSC_COMM_WORLD, "%-10s %14s %14s %14s\n", "format", "pattern [s]", "first [s]",
-        "repeat [s]");
+    // all done
+    return lists;
+}
 
-    // the new interface, for each format
+
+int
+main(int argc, char ** argv)
+{
+    // initialize PETSc (and MPI)
+    auto environment = mito::linalg::petsc::environment();
+
+    // initialize the benchmark library
+    benchmark::Initialize(&argc, argv);
+
+    // problem size and number of iterations, settable with -bench_nx and -bench_iterations
+    // (through PETSC_OPTIONS)
+    PetscInt nx = 300;
+    PetscInt iterations = 10;
+    PetscOptionsGetInt(nullptr, nullptr, "-bench_nx", &nx, nullptr);
+    PetscOptionsGetInt(nullptr, nullptr, "-bench_iterations", &iterations, nullptr);
+
+    // the number of equations: nodes (i, j) with i in [1:nx], j in [0:nx]
+    const index_t N = nx * nx;
+
+    // the benchmarks for each format
     for (const auto & [name, format] : formats) {
-        auto A = mito::linalg::petsc::matrix(name, N, format);
+        // a copy of the format, for capturing in the lambdas
+        const auto fmt = format;
 
-        // copy the lists outside the timed region, so the pattern step can take them over
-        auto rows = lists.rows;
-        auto cols = lists.cols;
-        auto segments = lists.segments;
+        // the name of the benchmark, e.g. "assembly/coo/set_pattern"
+        const auto pattern_name = std::string("assembly/") + name + "/set_pattern";
 
-        const auto t_pattern =
-            timed([&] { A.set_pattern(std::move(rows), std::move(cols), std::move(segments)); });
-        const auto t_first = timed([&] {
-            A.set_values(lists.vals);
-            A.assemble();
-        });
-        const auto t_repeat = timed([&] {
-                                  for (PetscInt r = 0; r < repeats; ++r) {
-                                      A.set_values(lists.vals);
-                                      A.assemble();
-                                  }
-                              })
-                            / repeats;
+        // register the benchmark, set the number of iterations, and use manual timing
+        benchmark::RegisterBenchmark(
+            pattern_name.c_str(),
+            [nx, N, fmt](benchmark::State & state) {
+                for (auto _ : state) {
+                    // create the assembly input for this rank, copied from the shared lists
+                    auto lists = grid_lists(nx);
 
-        PetscPrintf(
-            PETSC_COMM_WORLD, "%-10s %14.4f %14.4f %14.4f\n", name, t_pattern, t_first, t_repeat);
-    }
+                    // create a fresh matrix, with no pattern (not timed)
+                    auto A = mito::linalg::petsc::matrix("A", N, fmt);
 
-    // the old approach: entry by entry, without preallocation
-    {
-        auto A = mito::linalg::petsc::matrix("add_value", N);
-        auto fill = [&] {
-            for (std::size_t k = 0; k < std::size(lists.rows); ++k) {
-                if (lists.rows[k] >= 0 && lists.cols[k] >= 0) {
-                    A.add_value(lists.rows[k], lists.cols[k], lists.vals[k]);
+                    // time the pattern step
+                    state.SetIterationTime(timed([&] {
+                        A.set_pattern(
+                            std::move(lists.rows), std::move(lists.cols),
+                            std::move(lists.segments));
+                    }));
                 }
-            }
-            A.assemble();
-        };
+            })
+            ->Iterations(iterations)
+            ->UseManualTime()
+            ->Unit(benchmark::kMillisecond);
 
-        const auto t_first = timed(fill);
-        const auto t_repeat = timed([&] {
-                                  for (PetscInt r = 0; r < repeats; ++r) {
-                                      MatZeroEntries(A.get());
-                                      fill();
-                                  }
-                              })
-                            / repeats;
+        // the name of the benchmark, e.g. "assembly/coo/first_assembly"
+        const auto first_name = std::string("assembly/") + name + "/first_assembly";
 
-        PetscPrintf(
-            PETSC_COMM_WORLD, "%-10s %14s %14.4f %14.4f\n", "add_value", "-", t_first, t_repeat);
+        // register the benchmark, set the number of iterations, and use manual timing
+        benchmark::RegisterBenchmark(
+            first_name.c_str(),
+            [nx, N, fmt](benchmark::State & state) {
+                for (auto _ : state) {
+                    // create the assembly input for this rank, copied from the shared lists
+                    auto lists = grid_lists(nx);
+
+                    // create a fresh matrix, with no pattern (not timed)
+                    auto A = mito::linalg::petsc::matrix("A", N, fmt);
+
+                    // set the pattern once (not timed)
+                    A.set_pattern(
+                        std::move(lists.rows), std::move(lists.cols), std::move(lists.segments));
+
+                    // time the first assembly
+                    state.SetIterationTime(timed([&] {
+                        A.set_values(lists.vals);
+                        A.assemble();
+                    }));
+                }
+            })
+            ->Iterations(iterations)
+            ->UseManualTime()
+            ->Unit(benchmark::kMillisecond);
+
+        // the name of the benchmark, e.g. "assembly/coo/repeat_assembly"
+        const auto repeat_name = std::string("assembly/") + name + "/repeat_assembly";
+
+        // register the benchmark, set the number of iterations, and use manual timing
+        benchmark::RegisterBenchmark(
+            repeat_name.c_str(),
+            [nx, N, fmt](benchmark::State & state) {
+                // create the assembly input for this rank, copied from the shared lists
+                auto lists = grid_lists(nx);
+
+                // memory before the matrix exists
+                const auto m0 = total_memory_gb();
+
+                // create a matrix assembled once (not timed)
+                auto A = mito::linalg::petsc::matrix("A", N, fmt);
+
+                // set the pattern once (not timed)
+                A.set_pattern(
+                    std::move(lists.rows), std::move(lists.cols), std::move(lists.segments));
+
+                // set the values and assemble once (not timed)
+                A.set_values(lists.vals);
+                A.assemble();
+
+                // memory after the matrix is assembled
+                const auto m1 = total_memory_gb();
+
+                for (auto _ : state) {
+                    // time one re-set and re-assembly
+                    state.SetIterationTime(timed([&] {
+                        A.set_values(lists.vals);
+                        A.assemble();
+                    }));
+                }
+
+                // report the memory as extra columns
+                state.counters["set_values_GB"] = m1 - m0;
+            })
+            ->Iterations(iterations)
+            ->UseManualTime()
+            ->Unit(benchmark::kMillisecond);
     }
+
+    // register the benchmark, set the number of iterations, and use manual timing
+    benchmark::RegisterBenchmark(
+        "assembly/add_value/first",
+        [nx, N](benchmark::State & state) {
+            for (auto _ : state) {
+                // create the assembly input for this rank, copied from the shared lists
+                auto lists = grid_lists(nx);
+
+                // create a fresh matrix, with no pattern (not timed)
+                auto A = mito::linalg::petsc::matrix("A", N);
+
+                // time the first assembly
+                state.SetIterationTime(timed([&] { fill(A, lists); }));
+            }
+        })
+        ->Iterations(iterations)
+        ->UseManualTime()
+        ->Unit(benchmark::kMillisecond);
+
+    // register the benchmark, set the number of iterations, and use manual timing
+    benchmark::RegisterBenchmark(
+        "assembly/add_value/repeat",
+        [nx, N](benchmark::State & state) {
+            // create the assembly input for this rank, copied from the shared lists
+            auto lists = grid_lists(nx);
+
+            // memory before the matrix exists
+            const auto m0 = total_memory_gb();
+
+            // create a matrix
+            auto A = mito::linalg::petsc::matrix("A", N);
+
+            // fill A once (not timed)
+            fill(A, lists);
+
+            // memory after the matrix is assembled
+            const auto m1 = total_memory_gb();
+
+            for (auto _ : state) {
+                // time one re-assembly
+                state.SetIterationTime(timed([&] {
+                    MatZeroEntries(A.get());
+                    fill(A, lists);
+                }));
+            }
+
+            // report the memory as extra column
+            state.counters["set_values_GB"] = m1 - m0;
+        })
+        ->Iterations(iterations)
+        ->UseManualTime()
+        ->Unit(benchmark::kMillisecond);
+
+    // register a baseline benchmark that does nothing, to measure the overhead of any imported
+    // libraries and the benchmark library itself
+    benchmark::RegisterBenchmark(
+        "assembly/baseline",
+        [nx](benchmark::State & state) {
+            auto lists = grid_lists(nx);
+            for (auto _ : state) {
+                benchmark::DoNotOptimize(lists);
+                state.SetIterationTime(0.0);
+            }
+        })
+        ->Iterations(iterations)
+        ->UseManualTime()
+        ->Unit(benchmark::kMillisecond);
+
+    // run the benchmarks
+    auto [rank, size] = rank_and_size();
+
+    // only rank 0 reports the benchmark results
+    if (rank == 0) {
+        benchmark::RunSpecifiedBenchmarks();
+    } else {
+        NullReporter null_reporter;
+        benchmark::RunSpecifiedBenchmarks(&null_reporter);
+    }
+
+    // finalize the benchmark library
+    benchmark::Shutdown();
 
     // all done
     return 0;
 }
+
+// end of file
