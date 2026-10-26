@@ -175,6 +175,37 @@ namespace mito::benchmarks::linalg::petsc {
         return lists;
     }
 
+    // the COO lists of a lumped (diagonal) element matrix with {value} on each node
+    inline auto lumped_lists(index_t nx, scalar_t value) -> lists_t
+    {
+        // this rank's band of element rows and its number of elements
+        auto [j0, j1] = element_rows(nx);
+        const auto n_elements = static_cast<std::size_t>((j1 - j0) * nx);
+
+        // reserve the final sizes: 4 entries per element
+        lists_t lists;
+        lists.rows.reserve(4 * n_elements);
+        lists.cols.reserve(4 * n_elements);
+        lists.vals.reserve(4 * n_elements);
+
+        // the diagonal entries of each element
+        for (index_t j = j0; j < j1; ++j) {
+            for (index_t i = 0; i < nx; ++i) {
+                for (const auto eq : element_equations(nx, i, j)) {
+                    lists.rows.push_back(eq);
+                    lists.cols.push_back(eq);
+                    lists.vals.push_back(value);
+                }
+            }
+        }
+
+        // every entry is its own 1 x 1 block
+        lists.segments = { { 1, 4 * n_elements } };
+
+        // all done
+        return lists;
+    }
+    
     // set the pattern of {A} from {lists}, then assemble it with the values of {lists}
     template <class matrixT>
     auto assemble_from(matrixT & A, lists_t lists) -> void

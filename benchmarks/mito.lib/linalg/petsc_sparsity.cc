@@ -11,11 +11,10 @@
 using namespace mito::benchmarks::linalg::petsc;
 
 
-// the cost of MatCopy and MatAXPY for each declared sparsity pattern relation
 int
 main(int argc, char ** argv)
 {
-    // initialize PETSc (and MPI)
+    // initialize PETSc
     auto environment = mito::linalg::petsc::environment();
 
     // initialize the benchmark library
@@ -28,31 +27,36 @@ main(int argc, char ** argv)
     // the stiffness matrix K
     auto K = mito::linalg::petsc::matrix("K", N, format_t::coo);
 
-    // assemble K from the stiffness element, using the grid_lists helper
+    // assemble K from the stiffness element
     assemble_from(K, grid_lists(nx, stiffness_element));
 
     // the consistent mass matrix M: the same pattern as K
     auto M = mito::linalg::petsc::matrix("M", N, format_t::coo);
 
-    // assemble M from the mass element, using the grid_lists helper
+    // assemble M from the mass element
     assemble_from(M, grid_lists(nx, mass_element));
+
+    // the lumped mass matrix L; diagonal matrix
+    auto L = mito::linalg::petsc::matrix("L", N, format_t::coo);
+
+    // assemble L from the lumped mass element
+    assemble_from(L, lumped_lists(nx, 9.0));
 
     // the scaling of the added matrix, e.g. 1 / dt
     const scalar_t alpha = 10.0;
 
     // create a std::array mapping the declared sparsity pattern relations to their names
-    const std::array<std::pair<std::string, mito::linalg::petsc::sparsity_pattern>, 2>
-        copy_cases = { {
-            { "same", mito::linalg::petsc::sparsity_pattern::same },
-            { "different", mito::linalg::petsc::sparsity_pattern::different },
-        } };
+    const std::array<std::pair<std::string, mito::linalg::petsc::sparsity_pattern>, 3>
+        copy_cases = { { { "same", mito::linalg::petsc::sparsity_pattern::same },
+                         { "different", mito::linalg::petsc::sparsity_pattern::different },
+                         { "unknown", mito::linalg::petsc::sparsity_pattern::unknown } } };
 
     // loop over the declared sparsity pattern relations
     for (const auto & [case_name, pattern] : copy_cases) {
         // the declared sparsity pattern relation for this benchmark
         const auto declared = pattern;
 
-        // name of the benchmark, e.g. "copy/same" or "copy/different"
+        // name of the benchmark
         std::string name = std::string("copy/") + case_name;
 
         // register the benchmark, set the number of iterations, and use manual timing
@@ -64,44 +68,53 @@ main(int argc, char ** argv)
                 // copy the structure of K into Keff (not timed)
                 Keff.copy_structure(K);
 
-                // time the copy of the values from K into Keff, with the declared sparsity pattern
+                // time the copy of the values from K into Keff
                 state.SetIterationTime(timed([&] { Keff.copy_values(K, declared); }));
             }
         });
     }
 
-    // the declared sparsity pattern relations for MatAXPY
-    const std::array<std::pair<std::string, mito::linalg::petsc::sparsity_pattern>, 2>
-        axpy_cases = { {
-            // consistent mass: identical patterns
-            { "same", mito::linalg::petsc::sparsity_pattern::same },
-            { "different", mito::linalg::petsc::sparsity_pattern::different },
-        } };
+    // the declared sparsity pattern
+    struct case_t {
+        std::string name;
+        const mito::linalg::petsc::Matrix & matrix;
+        mito::linalg::petsc::sparsity_pattern pattern;
+    };
+
+    const std::array<case_t, 6> axpy_cases = {
+        { { "same", M, mito::linalg::petsc::sparsity_pattern::same },
+          { "different", M, mito::linalg::petsc::sparsity_pattern::different },
+          { "unknown", M, mito::linalg::petsc::sparsity_pattern::unknown },
+          { "subset_lumped", L, mito::linalg::petsc::sparsity_pattern::subset },
+          { "different_lumped", L, mito::linalg::petsc::sparsity_pattern::different },
+          { "unknown_lumped", L, mito::linalg::petsc::sparsity_pattern::unknown } }
+    };
 
     // loop over the declared sparsity pattern relations for MatAXPY
-    for (const auto & [case_name, pattern] : axpy_cases) {
+    for (const auto & [case_name, matrix, pattern] : axpy_cases) {
         // the declared sparsity pattern relation for this benchmark
         const auto declared = pattern;
 
-        // name of the benchmark, e.g. "axpy/same" or "axpy/different"
+        // name of the benchmark
         std::string name = std::string("axpy/") + case_name;
 
         // register the benchmark, set the number of iterations, and use manual timing
-        register_timed(name, iterations, [&K, &M, N, alpha, declared](benchmark::State & state) {
-            for (auto _ : state) {
-                // a fresh copy of K
-                auto Keff = mito::linalg::petsc::matrix("Keff", N);
+        register_timed(
+            name, iterations, [&K, &matrix, N, alpha, declared](benchmark::State & state) {
+                for (auto _ : state) {
+                    // a fresh copy of K
+                    auto Keff = mito::linalg::petsc::matrix("Keff", N);
 
-                // copy the structure of K into Keff (not timed)
-                Keff.copy_structure(K);
+                    // copy the structure of K into Keff (not timed)
+                    Keff.copy_structure(K);
 
-                // copy the values of K into Keff (not timed)
-                Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
+                    // copy the values of K into Keff (not timed)
+                    Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
 
-                // time the addition
-                state.SetIterationTime(timed([&] { Keff.add(alpha, M, declared); }));
-            }
-        });
+                    // time the addition
+                    state.SetIterationTime(timed([&] { Keff.add(alpha, matrix, declared); }));
+                }
+            });
     }
 
     // run the benchmarks; only rank 0 reports

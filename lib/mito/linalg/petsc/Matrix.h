@@ -13,7 +13,8 @@ namespace mito::linalg::petsc {
     enum class sparsity_pattern : std::underlying_type_t<MatStructure> {
         same = SAME_NONZERO_PATTERN,
         subset = SUBSET_NONZERO_PATTERN,
-        different = DIFFERENT_NONZERO_PATTERN
+        different = DIFFERENT_NONZERO_PATTERN,
+        unknown = UNKNOWN_NONZERO_PATTERN
     };
 
     // enum for duplicate policy
@@ -84,13 +85,13 @@ namespace mito::linalg::petsc {
             const Matrix & X, duplicate_policy policy = duplicate_policy::copy_pattern) -> void;
 
         // copy values from another matrix
-        auto copy_values(const Matrix & X, sparsity_pattern pattern = sparsity_pattern::different)
+        auto copy_values(const Matrix & X, sparsity_pattern pattern = sparsity_pattern::unknown)
             -> void;
 
         // add scaled matrix using MatAXPY
         auto add(
             const scalar_type & alpha, const Matrix & X,
-            sparsity_pattern pattern = sparsity_pattern::different) -> void;
+            sparsity_pattern pattern = sparsity_pattern::unknown) -> void;
 
         // get the number of rows/columns
         auto size(index_type &) const -> void;

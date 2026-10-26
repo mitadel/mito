@@ -9,8 +9,6 @@
 
 // the benchmark support
 using namespace mito::benchmarks::linalg::petsc;
-// the PETSc backend
-namespace la = mito::linalg::petsc;
 
 
 // the cost of updating Keff = K + M / dt after a change of dt: with MatCopy and MatAXPY on
@@ -18,8 +16,8 @@ namespace la = mito::linalg::petsc;
 int
 main(int argc, char ** argv)
 {
-    // initialize PETSc (and MPI)
-    auto environment = la::environment();
+    // initialize PETSc
+    auto environment = mito::linalg::petsc::environment();
 
     // initialize the benchmark library
     benchmark::Initialize(&argc, argv);
@@ -31,27 +29,25 @@ main(int argc, char ** argv)
     // the time step
     const scalar_t dt = 0.1;
 
-    // the assembly input of K and M; both are built in the same element order, so entry k of
-    // one belongs to the same matrix position as entry k of the other
+    // the assembly input of K and M
     const auto listsK = grid_lists(nx, stiffness_element);
     const auto listsM = grid_lists(nx, mass_element);
 
-    // route 1: K and M are kept as assembled matrices; Keff shares K's pattern and is updated
-    // with MatCopy and MatAXPY
+    // K and M are kept as assembled matrices and Keff is updated with MatAXPY
     register_timed("keff/axpy", iterations, [&](benchmark::State & state) {
         // the assembled K and M, and Keff with K's pattern (not timed)
-        auto K = la::matrix("K", N, format_t::coo);
+        auto K = mito::linalg::petsc::matrix("K", N, format_t::coo);
         assemble_from(K, listsK);
-        auto M = la::matrix("M", N, format_t::coo);
+        auto M = mito::linalg::petsc::matrix("M", N, format_t::coo);
         assemble_from(M, listsM);
-        auto Keff = la::matrix("Keff", N);
-        Keff.copy_structure(K, la::duplicate_policy::share_pattern);
+        auto Keff = mito::linalg::petsc::matrix("Keff", N);
+        Keff.copy_structure(K, mito::linalg::petsc::duplicate_policy::share_pattern);
 
         for (auto _ : state) {
             // time one update of Keff
             state.SetIterationTime(timed([&] {
-                Keff.copy_values(K, la::sparsity_pattern::same);
-                Keff.add(1.0 / dt, M, la::sparsity_pattern::same);
+                Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
+                Keff.add(1.0 / dt, M, mito::linalg::petsc::sparsity_pattern::same);
             }));
         }
     });
@@ -62,9 +58,8 @@ main(int argc, char ** argv)
         const auto fmt = format;
         register_timed(
             std::string("keff/element/") + name, iterations, [&, fmt](benchmark::State & state) {
-                // Keff with K's pattern, assembled once (not timed; for "hash" this is where the
-                // pattern is built)
-                auto Keff = la::matrix("Keff", N, fmt);
+                // Keff with K's pattern, assembled once (not timed)
+                auto Keff = mito::linalg::petsc::matrix("Keff", N, fmt);
                 Keff.set_pattern(listsK.rows, listsK.cols, listsK.segments);
 
                 // the combined value array
@@ -94,17 +89,17 @@ main(int argc, char ** argv)
     for (const auto & [name, format] : formats) {
         const auto fmt = format;
 
-        // separate: assemble K and M, then Keff = K + M / dt with MatCopy and MatAXPY
+        // assemble K and M, then Keff = K + M / dt with MatAXPY
         register_timed(
             std::string("recompute/separate/") + name, iterations,
             [&, fmt](benchmark::State & state) {
                 // K and M with their patterns, Keff sharing K's pattern (not timed)
-                auto K = la::matrix("K", N, fmt);
+                auto K = mito::linalg::petsc::matrix("K", N, fmt);
                 assemble_from(K, listsK);
-                auto M = la::matrix("M", N, fmt);
+                auto M = mito::linalg::petsc::matrix("M", N, fmt);
                 assemble_from(M, listsM);
-                auto Keff = la::matrix("Keff", N);
-                Keff.copy_structure(K, la::duplicate_policy::share_pattern);
+                auto Keff = mito::linalg::petsc::matrix("Keff", N);
+                Keff.copy_structure(K, mito::linalg::petsc::duplicate_policy::share_pattern);
 
                 // the value arrays of K and M
                 std::vector<scalar_t> valsK(std::size(listsK.vals));
@@ -119,18 +114,18 @@ main(int argc, char ** argv)
                         K.assemble();
                         M.set_values(valsM);
                         M.assemble();
-                        Keff.copy_values(K, la::sparsity_pattern::same);
-                        Keff.add(1.0 / dt, M, la::sparsity_pattern::same);
+                        Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
+                        Keff.add(1.0 / dt, M, mito::linalg::petsc::sparsity_pattern::same);
                     }));
                 }
             });
 
-        // combined: compute Ke + Me / dt per element and assemble Keff directly
+        // compute Ke + Me / dt per element and assemble Keff directly
         register_timed(
             std::string("recompute/combined/") + name, iterations,
             [&, fmt](benchmark::State & state) {
                 // Keff with its pattern (not timed)
-                auto Keff = la::matrix("Keff", N, fmt);
+                auto Keff = mito::linalg::petsc::matrix("Keff", N, fmt);
                 assemble_from(Keff, listsK);
 
                 // the value array of Keff
