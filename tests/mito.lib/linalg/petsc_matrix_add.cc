@@ -59,7 +59,7 @@ TEST(Math, PETScEffectiveMatrix)
         auto Keff = mito::linalg::petsc::matrix("Keff", N);
 
         // copy the structure of K into Keff, sharing the sparsity pattern
-        Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::share_pattern);
+        Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
 
         // copy the values of K into Keff, sharing the sparsity pattern
         Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);

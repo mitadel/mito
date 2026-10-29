@@ -73,6 +73,9 @@ namespace mito::timesteppers {
         // assemble effective stiffness matrix
         constexpr auto assemble_effective_stiffness_matrix(const mito::real & dt) -> void
         {
+            // duplicate the stiffness matrix pattern 
+            _effective_stiffness_matrix.duplicate(_stiffness_matrix);
+
             // copy the stiffness matrix
             _effective_stiffness_matrix.copy_values(
                 _stiffness_matrix, linalg::petsc::sparsity_pattern::same);
