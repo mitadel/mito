@@ -66,7 +66,7 @@ main(int argc, char ** argv)
                 auto Keff = mito::linalg::petsc::matrix("Keff", N);
 
                 // copy the structure of K into Keff (not timed)
-                Keff.copy_structure(K);
+                Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::share_pattern);
 
                 // time the copy of the values from K into Keff
                 state.SetIterationTime(timed([&] { Keff.copy_values(K, declared); }));
@@ -106,7 +106,7 @@ main(int argc, char ** argv)
                     auto Keff = mito::linalg::petsc::matrix("Keff", N);
 
                     // copy the structure of K into Keff (not timed)
-                    Keff.copy_structure(K);
+                    Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::share_pattern);
 
                     // copy the values of K into Keff (not timed)
                     Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);

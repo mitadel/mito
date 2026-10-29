@@ -19,8 +19,7 @@ namespace mito::linalg::petsc {
 
     // enum for duplicate policy
     enum class duplicate_policy : std::underlying_type_t<MatDuplicateOption> {
-        copy_pattern = MAT_DO_NOT_COPY_VALUES,
-        share_pattern = MAT_SHARE_NONZERO_PATTERN
+        copy_pattern = MAT_DO_NOT_COPY_VALUES
     };
 
     class Matrix {
@@ -80,9 +79,9 @@ namespace mito::linalg::petsc {
         // return the value of a matrix entry
         auto get_value(index_type, index_type) const -> scalar_type;
 
-        // copy structure from another matrix
-        auto copy_structure(
-            const Matrix & X, duplicate_policy policy = duplicate_policy::copy_pattern) -> void;
+        // duplicate another matrix's pattern
+        auto duplicate(const Matrix & X, duplicate_policy policy = duplicate_policy::copy_pattern)
+            -> void;
 
         // copy values from another matrix
         auto copy_values(const Matrix & X, sparsity_pattern pattern = sparsity_pattern::unknown)

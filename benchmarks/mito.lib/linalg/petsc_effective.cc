@@ -41,7 +41,7 @@ main(int argc, char ** argv)
         auto M = mito::linalg::petsc::matrix("M", N, format_t::coo);
         assemble_from(M, listsM);
         auto Keff = mito::linalg::petsc::matrix("Keff", N);
-        Keff.copy_structure(K, mito::linalg::petsc::duplicate_policy::share_pattern);
+        Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
 
         for (auto _ : state) {
             // time one update of Keff
@@ -52,8 +52,8 @@ main(int argc, char ** argv)
         }
     });
 
-    // route 2: only the value arrays of K and M are kept; Keff has its own pattern and is
-    // updated by combining the arrays per entry and setting the result, for each format
+    // only keep the values of K and M, and update Keff by combining the value
+    // arrays per entry
     for (const auto & [name, format] : formats) {
         const auto fmt = format;
         register_timed(
@@ -99,7 +99,7 @@ main(int argc, char ** argv)
                 auto M = mito::linalg::petsc::matrix("M", N, fmt);
                 assemble_from(M, listsM);
                 auto Keff = mito::linalg::petsc::matrix("Keff", N);
-                Keff.copy_structure(K, mito::linalg::petsc::duplicate_policy::share_pattern);
+                Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
 
                 // the value arrays of K and M
                 std::vector<scalar_t> valsK(std::size(listsK.vals));

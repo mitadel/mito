@@ -242,21 +242,27 @@ mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> 
     return value;
 }
 
-// copy structure from another matrix
+// duplicate another matrix
 auto
-mito::linalg::petsc::Matrix::copy_structure(const Matrix & X, duplicate_policy policy) -> void
+mito::linalg::petsc::Matrix::duplicate(const Matrix & X, duplicate_policy policy) -> void
 {
+    // check if we are not duplicating ourselves
+    if (this == &X) {
+        return;
+    }
+
     // release the matrix we currently own
     PetscCallVoid(MatDestroy(&_matrix));
 
-    // a structure copy needs to re-set the pattern
-    _n_entries = 0;
-    _rows.clear();
-    _cols.clear();
-    _segments.clear();
-    _pattern_set = false;
+    // reset the matrix properties; note that this means that one has to first call set_pattern and
+    // then set_values on the new matrix, if one wants to use those methods
+    _n_entries = X._n_entries;
+    _rows = X._rows;
+    _cols = X._cols;
+    _segments = X._segments;
+    _pattern_set = true;
 
-    // duplicate {other}'s structure without its values
+    // duplicate {X}'s structure without its values
     PetscCallVoid(MatDuplicate(X._matrix, static_cast<MatDuplicateOption>(policy), &_matrix));
 }
 
