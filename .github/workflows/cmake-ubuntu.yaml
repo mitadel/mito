@@ -27,7 +27,7 @@ jobs:
         target: [Debug, Release]
         python: ["3.12"]
         suite: [gcc]
-        suiteVersion: ["14"]
+        suiteVersion: ["15"]
         include:
           - suite: gcc
             cc: gcc
