@@ -8,10 +8,6 @@
 #error This header file contains implementation details of class mito::simulation::CommunicationManager
 #else
 
-#include <cmath>
-#include <stdexcept>
-#include <type_traits>
-
 
 mito::simulation::CommunicationManager::CommunicationManager(const Context & context) :
     _task_id(context.task_id()),
