@@ -19,6 +19,30 @@ mito::linalg::petsc::KrylovSolver::KrylovSolver(std::string name) : _options_pre
     return;
 }
 
+// move constructor
+mito::linalg::petsc::KrylovSolver::KrylovSolver(KrylovSolver && other) noexcept :
+    _options_prefix(std::move(other._options_prefix)),
+    _ksp(std::exchange(other._ksp, nullptr))
+{}
+
+// move assignment operator
+mito::linalg::petsc::KrylovSolver &
+mito::linalg::petsc::KrylovSolver::operator=(KrylovSolver && other) noexcept
+{
+    // check for self-assignment
+    if (this != &other) {
+        // destroy the current Krylov solver
+        KSPDestroy(&_ksp);
+
+        // move the Krylov solver and the options prefix from {other} to {this}
+        _ksp = std::exchange(other._ksp, nullptr);
+        _options_prefix = std::move(other._options_prefix);
+    }
+
+    // all done
+    return *this;
+}
+
 // destructor
 mito::linalg::petsc::KrylovSolver::~KrylovSolver()
 {

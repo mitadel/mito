@@ -20,17 +20,19 @@ namespace mito::linalg::petsc {
         // constructor
         KrylovSolver(std::string name = "krylov");
 
-        // copy constructor
+        // copy constructor is deleted because PETSc cannot duplicate a Krylov solver; copying the
+        // handle would lead to double destruction of the same Krylov solver
         KrylovSolver(const KrylovSolver &) = delete;
 
         // move constructor
-        KrylovSolver(KrylovSolver &&) = delete;
+        KrylovSolver(KrylovSolver &&) noexcept;
 
-        // copy assignment operator
+        // copy assignment operator is deleted because PETSc cannot duplicate a Krylov solver;
+        // copying the handle would lead to double destruction of the same Krylov solver
         KrylovSolver & operator=(const KrylovSolver &) = delete;
 
         // move assignment operator
-        KrylovSolver & operator=(KrylovSolver &&) = delete;
+        KrylovSolver & operator=(KrylovSolver &&) noexcept;
 
         // destructor
         ~KrylovSolver();
