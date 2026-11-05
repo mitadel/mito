@@ -14,35 +14,35 @@ TEST(Solvers, PETScKSPSolver)
     int N = 10;
     // linear algebra backend
     using backend_t = mito::linalg::petsc::backend_t;
-    // typedef for a linear system of equations
-    using linear_system_t = mito::linalg::linear_system_t<backend_t>;
 
-    // instantiate a PETSc linear system of size {N}
-    auto linear_system = linear_system_t("mysystem", N);
+    // instantiate a PETSc matrix of size {N} and a PETSc vector of size {N}
+    auto LHS = mito::linalg::petsc::matrix("LHS", N);
+    auto RHS = mito::linalg::petsc::vector("RHS", N);
+    auto solution = mito::linalg::petsc::vector("solution", N);
 
     // instantiate a PETSc Krylov solver for the linear system
-    auto solver = mito::linalg::petsc::ksp(linear_system);
+    auto solver = mito::linalg::petsc::ksp("mysystem");
     // set options for the petsc Krylov solver
     solver.set_options("-ksp_monitor");
 
     // set matrix and right-hand side entries
     for (int i = 0; i < N; i++) {
-        linear_system.insert_matrix_value(i, i, 2.0);
+        LHS.insert_value(i, i, 2.0);
         if (i > 0) {
-            linear_system.insert_matrix_value(i, i - 1, -1.0);
+            LHS.insert_value(i, i - 1, -1.0);
         }
         if (i < N - 1) {
-            linear_system.insert_matrix_value(i, i + 1, -1.0);
+            LHS.insert_value(i, i + 1, -1.0);
         }
-        linear_system.insert_rhs_value(i, 1.0);
+        RHS.insert_value(i, 1.0);
     }
 
     // solve the linear system
-    solver.solve();
+    solver.solve(LHS, RHS, solution);
 
     // read the solution
     auto x = std::vector<double>(N);
-    linear_system.read_solution(x);
+    solution.get_vector(x);
 
     // check the solution
     EXPECT_DOUBLE_EQ(x[0], 5.0);
