@@ -86,7 +86,10 @@ TEST(Timesteppers, IMPLICIT_EULER_ASSEMBLE_EFFECTIVE)
     time_stepper.assemble_load_vector();
 
     // assemble the effective stiffness matrix
-    time_stepper.assemble_effective_stiffness_matrix(0.1);
+    time_stepper.compute_effective_stiffness_matrix(0.1);
+
+    // assemble the effective load vector 
+    auto solution = time_stepper.march(0.1, time_stepper.previous_solution());
 
     // all done
     return;

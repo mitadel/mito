@@ -50,6 +50,9 @@ namespace mito::timesteppers {
                 _stiffness_matrix);
 
             _stiffness_matrix.assemble();
+
+            // all done
+            return;
         }
 
         // assemble capacitance matrix
@@ -59,6 +62,9 @@ namespace mito::timesteppers {
                 _capacitance_matrix);
 
             _capacitance_matrix.assemble();
+
+            // all done
+            return;
         }
 
         // assemble load vector
@@ -68,12 +74,15 @@ namespace mito::timesteppers {
                 _load_vector);
 
             _load_vector.assemble();
+
+            // all done
+            return;
         }
 
-        // assemble effective stiffness matrix
-        constexpr auto assemble_effective_stiffness_matrix(const mito::real & dt) -> void
+        // compute effective stiffness matrix
+        constexpr auto compute_effective_stiffness_matrix(const mito::real & dt) -> void
         {
-            // duplicate the stiffness matrix pattern 
+            // duplicate the stiffness matrix pattern
             _effective_stiffness_matrix.duplicate(_stiffness_matrix);
 
             // copy the stiffness matrix
@@ -83,7 +92,23 @@ namespace mito::timesteppers {
             // add the capacitance matrix scaled by 1/dt to the effective stiffness matrix
             _effective_stiffness_matrix.add(
                 1. / dt, _capacitance_matrix, linalg::petsc::sparsity_pattern::same);
+
+            // all done
+            return;
         };
+
+        // compute effective load vector
+        constexpr auto compute_effective_load_vector(
+            const mito::real & dt, const vector_type & previous_solution) -> void
+        {
+            // assemble the effective load vector
+            _effective_load_vector.copy_values(_load_vector, linalg::petsc::sparsity_pattern::same);
+            _effective_load_vector.add(1. / dt, _capacitance_matrix, previous_solution);
+
+            // all done
+            return;
+        }
+
 
       private:
         // the discrete system
