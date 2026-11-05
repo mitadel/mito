@@ -16,9 +16,9 @@ TEST(Solvers, PETScKSPSolver)
     using backend_t = mito::linalg::petsc::backend_t;
 
     // instantiate a PETSc matrix of size {N} and a PETSc vector of size {N}
-    auto LHS = mito::linalg::petsc::matrix("LHS", N);
-    auto RHS = mito::linalg::petsc::vector("RHS", N);
-    auto solution = mito::linalg::petsc::vector("solution", N);
+    auto LHS = backend_t::matrix_type("LHS", N);
+    auto RHS = backend_t::vector_type("RHS", N);
+    auto solution = backend_t::vector_type("solution", N);
 
     // instantiate a PETSc Krylov solver for the linear system
     auto solver = mito::linalg::petsc::ksp("mysystem");
