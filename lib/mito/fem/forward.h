@@ -35,7 +35,8 @@ namespace mito::fem {
     class Weakform;
 
     // class discrete system
-    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
+    template <
+        function_space_c functionSpaceT, class weakformT, linalg::valid_backend_c linalgBackendT>
     class DiscreteSystem;
 
     // class domain field

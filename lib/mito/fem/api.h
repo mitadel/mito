@@ -41,11 +41,11 @@ namespace mito::fem {
     constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block);
 
     // discrete system alias
-    template <class functionSpaceT, class weakformT, class linearSystemT>
-    using discrete_system_t = DiscreteSystem<functionSpaceT, weakformT, linearSystemT>;
+    template <class functionSpaceT, class weakformT, linalg::valid_backend_c linalgBackendT>
+    using discrete_system_t = DiscreteSystem<functionSpaceT, weakformT, linalgBackendT>;
 
     // discrete system factory
-    template <class linearSystemT, class functionSpaceT, class weakformT>
+    template <linalg::valid_backend_c linalgBackendT, class functionSpaceT, class weakformT>
     constexpr auto discrete_system(
         const functionSpaceT & function_space, const weakformT & weakform,
         const std::string & label);

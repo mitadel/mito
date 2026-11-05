@@ -33,12 +33,12 @@ namespace mito::fem {
     }
 
     // discrete system factory
-    template <class linearSystemT, class functionSpaceT, class weakformT>
+    template <linalg::valid_backend_c linalgBackendT, class functionSpaceT, class weakformT>
     constexpr auto discrete_system(
         const std::string & label, const functionSpaceT & function_space,
         const weakformT & weakform)
     {
-        return discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
+        return discrete_system_t<functionSpaceT, weakformT, linalgBackendT>(
             label, function_space, weakform);
     }
 
