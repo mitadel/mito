@@ -10,10 +10,10 @@
 namespace mito::solvers {
 
     // linear factory
-    template <class matrixSolverT, class discreteSystemT>
+    template <linalg::valid_backend_c linalgBackendT, class matrixSolverT, class discreteSystemT>
     constexpr auto linear_solver(discreteSystemT & discrete_system)
     {
-        return linear_solver_t<discreteSystemT, matrixSolverT>(discrete_system);
+        return linear_solver_t<discreteSystemT, matrixSolverT, linalgBackendT>(discrete_system);
     }
 
 }

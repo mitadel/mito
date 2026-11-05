@@ -18,8 +18,8 @@ constexpr int degree = 2;
 // assemble the finite element type
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
-// linear system of equations with petsc backend
-using linear_system_t = mito::linalg::petsc::linear_system_t;
+// petsc backend
+using backend_t = mito::linalg::petsc::backend_t;
 // petsc krylov solver
 using matrix_solver_t = mito::linalg::petsc::ksp_t;
 
@@ -103,10 +103,10 @@ main()
 
     // the discrete system
     auto discrete_system =
-        mito::fem::discrete_system<linear_system_t>("mysystem", function_space, weakform);
+        mito::fem::discrete_system<backend_t>("mysystem", function_space, weakform);
 
     // instantiate a linear solver for the discrete system
-    auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
+    auto solver = mito::solvers::linear_solver<backend_t, matrix_solver_t>(discrete_system);
 
     // set options for the backend {petsc} matrix solver
     solver.set_options("-ksp_type preonly -pc_type lu");

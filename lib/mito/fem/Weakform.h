@@ -51,18 +51,37 @@ namespace mito::fem {
       public:
         // compute the elementary contributions to matrix and right-hand side from the weakform
         template <class elementType>
-        constexpr auto compute_blocks(const elementType & element) const
-            -> std::pair<elementary_matrix_type<elementType>, elementary_vector_type<elementType>>
+        constexpr auto compute_lhs_block(const elementType & element) const
+            -> elementary_matrix_type<elementType>
         {
             // the elementary matrix
             auto elementary_matrix = _lhs_block.compute(element);
 
+            // return the elementary matrix and vector
+            return elementary_matrix;
+        }
+
+        // compute the elementary contributions to matrix and right-hand side from the weakform
+        template <class elementType>
+        constexpr auto compute_rhs_block(const elementType & element) const
+            -> elementary_vector_type<elementType>
+        {
             // the elementary vector
             auto elementary_vector = _rhs_block.compute(element);
 
             // return the elementary matrix and vector
-            return { elementary_matrix, elementary_vector };
+            return elementary_vector;
         }
+
+        // compute the elementary contributions to matrix and right-hand side from the weakform
+        template <class elementType>
+        constexpr auto compute_blocks(const elementType & element) const
+            -> std::pair<elementary_matrix_type<elementType>, elementary_vector_type<elementType>>
+        {
+            // return the elementary matrix and vector
+            return { compute_lhs_block(), compute_rhs_block() };
+        }
+
 
       private:
         // the left hand side assembly block

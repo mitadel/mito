@@ -9,9 +9,8 @@
 
 namespace mito::solvers {
 
-    template <class discreteSystemT, class matrixSolverT>
+    template <class discreteSystemT, class matrixSolverT, linalg::valid_backend_c linalgBackendT>
     class LinearSolver;
-
 }
 
 

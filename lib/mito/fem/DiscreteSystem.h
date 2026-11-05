@@ -56,10 +56,7 @@ namespace mito::fem {
             _equation_map(),
             _solution_field(
                 function_space.template fem_field<solution_field_type>(label + ".solution")),
-            _n_equations(_build_equation_map()),
-            _lhs_matrix("lhs", _n_equations),
-            _rhs_vector("rhs", _n_equations),
-            _solution_vector("solution", _n_equations)
+            _n_equations(_build_equation_map())
         {
             // make a channel
             journal::info_t channel("discretization.discrete_system");
@@ -139,59 +136,91 @@ namespace mito::fem {
             return equation;
         }
 
-      public:
-        // assemble the discrete system
-        constexpr auto assemble() -> void
+        // emplace the elementary matrix into the global matrix
+        template <class elementaryMatrixT, class matrix_type, class finiteElementT>
+        auto emplace_elementary_matrix(
+            const elementaryMatrixT & elementary_matrix, matrix_type & _matrix,
+            const finiteElementT & element) const -> void
         {
-            // check that the number of equations matches that of the linear system
-            assert(_n_equations == _lhs_matrix.size());
+            // loop on the a-th discretization node of the element
+            tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.connectivity()[a];
+                // get the equation number of {node_a}
+                int eq_a = _equation_map.at(node_a);
+                assert(eq_a < _n_equations);
+                // non boundary nodes
+                if (eq_a != -1) {
+                    // loop on the b-th discretization node of the element
+                    tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
+                        // get the b-th discretization node of the element
+                        const auto & node_b = element.connectivity()[b];
+                        // get the equation number of {node_b}
+                        int eq_b = _equation_map.at(node_b);
+                        assert(eq_b < _n_equations);
+                        // non boundary nodes
+                        if (eq_b != -1) {
+                            // assemble the value in the stiffness matrix
+                            _matrix.add_value(eq_a, eq_b, elementary_matrix[{ a, b }]);
+                        }
+                    });
+                }
+            });
+        }
 
-            // QUESTION: can we flip the element and block loops? What is the expected layout in
-            // memory?
-            //
-            // loop on all the cells of the mesh
+        // emplace the elementary vector into the global vector
+        template <class elementaryVectorT, class vector_type, class finiteElementT>
+        auto emplace_elementary_vector(
+            const elementaryVectorT & elementary_vector, vector_type & _vector,
+            const finiteElementT & element) const -> void
+        {
+            // loop on the a-th discretization node of the element
+            tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
+                // get the a-th discretization node of the element
+                const auto & node_a = element.connectivity()[a];
+                // get the equation number of {node_a}
+                int eq_a = _equation_map.at(node_a);
+                assert(eq_a < _n_equations);
+                // non boundary nodes
+                if (eq_a != -1) {
+                    // assemble the value in the right hand side
+                    _vector.add_value(eq_a, elementary_vector[{ a }]);
+                }
+            });
+        }
+
+
+      public:
+        // assemble the lhs matrix
+        template <linalg::valid_backend_c backendT>
+        auto assemble_lhs_matrix(typename backendT::matrix_type & _matrix) const -> void
+        {
             for (const auto & element : _function_space.elements()) {
-                // get the elementary contributions to matrix and right-hand side from the weakform
-                auto [elementary_matrix, elementary_vector] = _weakform.compute_blocks(element);
+                auto elementary_matrix = _weakform.compute_lhs_block(element);
+                emplace_elementary_matrix(elementary_matrix, _matrix, element);
+            }
+        }
 
-                // assemble the elementary blocks into the linear system of equations
-                tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
-                    // get the a-th discretization node of the element
-                    const auto & node_a = element.connectivity()[a];
-                    // get the equation number of {node_a}
-                    int eq_a = _equation_map.at(node_a);
-                    assert(eq_a < _n_equations);
-                    // non boundary nodes
-                    if (eq_a != -1) {
-                        // assemble the value in the right hand side
-                        _rhs_vector.add_value(eq_a, elementary_vector[{ a }]);
-                        // loop on the b-th discretization node of the element
-                        tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
-                            // get the b-th discretization node of the element
-                            const auto & node_b = element.connectivity()[b];
-                            // get the equation number of {node_b}
-                            int eq_b = _equation_map.at(node_b);
-                            assert(eq_b < _n_equations);
-                            // non boundary nodes
-                            if (eq_b != -1) {
-                                // assemble the value in the stiffness matrix
-                                _lhs_matrix.add_value(eq_a, eq_b, elementary_matrix[{ a, b }]);
-                            }
-                        });
-                    }
-                });
+        // assemble the rhs vector
+        template <linalg::valid_backend_c backendT>
+        auto assemble_rhs_vector(typename backendT::vector_type & _vector) const -> void
+        {
+            for (const auto & element : _function_space.elements()) {
+                auto elementary_vector = _weakform.compute_rhs_block(element);
+                emplace_elementary_vector(elementary_vector, _vector, element);
             }
         }
 
         // read the solution nodal field
-        constexpr void read_solution()
+        constexpr void read_solution(
+            const typename linalg_backend_type::vector_type & _solution_vector)
         {
             // check that the number of equations matches that of the linear system
-            assert(_n_equations == _lhs_matrix.size());
+            assert(_n_equations == _solution_vector.size());
 
             // read the solution
             auto u = std::vector<double>(_n_equations);
-            _solution_vector.read_vector(u);
+            _solution_vector.get_vector(u);
 
             // TODO: ask the function space to populate the constrained nodes appropriately
 
@@ -233,15 +262,6 @@ namespace mito::fem {
 
         // the number of equations in the linear system
         int _n_equations = 0;
-
-        // the left-hand side matrix
-        matrix_type _lhs_matrix;
-
-        // the right-hand side vector
-        vector_type _rhs_vector;
-
-        // the solution vector
-        vector_type _solution_vector;
     };
 
 }    // namespace mito
