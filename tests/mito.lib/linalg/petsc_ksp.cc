@@ -15,9 +15,9 @@ TEST(Solvers, PETScKSPSolver)
     // linear algebra backend
     using backend_t = mito::linalg::petsc::backend_t;
 
-    // instantiate a PETSc matrix of size {N} and a PETSc vector of size {N}
-    auto LHS = backend_t::matrix_type("LHS", N);
-    auto RHS = backend_t::vector_type("RHS", N);
+    // instantiate a PETSc matrix of size {N} and PETSc vectors of size {N}
+    auto lhs = backend_t::matrix_type("LHS", N);
+    auto rhs = backend_t::vector_type("RHS", N);
     auto solution = backend_t::vector_type("solution", N);
 
     // instantiate a PETSc Krylov solver for the linear system
@@ -27,18 +27,22 @@ TEST(Solvers, PETScKSPSolver)
 
     // set matrix and right-hand side entries
     for (int i = 0; i < N; i++) {
-        LHS.insert_value(i, i, 2.0);
+        lhs.insert_value(i, i, 2.0);
         if (i > 0) {
-            LHS.insert_value(i, i - 1, -1.0);
+            lhs.insert_value(i, i - 1, -1.0);
         }
         if (i < N - 1) {
-            LHS.insert_value(i, i + 1, -1.0);
+            lhs.insert_value(i, i + 1, -1.0);
         }
-        RHS.insert_value(i, 1.0);
+        rhs.insert_value(i, 1.0);
     }
 
+    // assemble the matrix and the right-hand side
+    lhs.assemble();
+    rhs.assemble();
+
     // solve the linear system
-    solver.solve(LHS, RHS, solution);
+    solver.solve(lhs, rhs, solution);
 
     // read the solution
     auto x = std::vector<double>(N);
