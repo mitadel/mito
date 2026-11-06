@@ -9,7 +9,7 @@
 
 namespace mito::timesteppers {
 
-    template <class semiDiscreteModelT, class matrixSolverT, linalg::valid_backend_c linalgBackendT>
+    template <class semiDiscreteModelT, linalg::valid_backend_c linalgBackendT>
     class ImplicitEuler {
 
       private:
@@ -41,13 +41,15 @@ namespace mito::timesteppers {
             _effective_load_vector("effective_load", semiDiscreteModel.n_equations()),
             _previous_solution("previous_solution", semiDiscreteModel.n_equations())
         {
-            ;
+            _previous_solution =
+                _semi_discrete_model.template transform_field_to_vector<linalg_backend_type>(
+                    initial_condition);
         }
 
         // assemble stiffness matrix
         constexpr auto assemble_stiffness_matrix() -> void
         {
-            _semiDiscreteModel.template assemble_matrix<stiffness_term_type, linalg_backend_type>(
+            _semi_discrete_model.template assemble_matrix<stiffness_term_type, linalg_backend_type>(
                 _stiffness_matrix);
 
             _stiffness_matrix.assemble();
@@ -59,8 +61,9 @@ namespace mito::timesteppers {
         // assemble capacitance matrix
         constexpr auto assemble_capacitance_matrix() -> void
         {
-            _semiDiscreteModel.template assemble_matrix<capacitance_term_type, linalg_backend_type>(
-                _capacitance_matrix);
+            _semi_discrete_model
+                .template assemble_matrix<capacitance_term_type, linalg_backend_type>(
+                    _capacitance_matrix);
 
             _capacitance_matrix.assemble();
 
@@ -71,7 +74,7 @@ namespace mito::timesteppers {
         // assemble load vector
         constexpr auto assemble_load_vector() -> void
         {
-            _semiDiscreteModel.template assemble_vector<load_term_type, linalg_backend_type>(
+            _semi_discrete_model.template assemble_vector<load_term_type, linalg_backend_type>(
                 _load_vector);
 
             _load_vector.assemble();
@@ -112,7 +115,7 @@ namespace mito::timesteppers {
 
       private:
         // the discrete system
-        const semi_discrete_model_type & _semiDiscreteModel;
+        const semi_discrete_model_type & _semi_discrete_model;
         // the stiffness matrix
         matrix_type _stiffness_matrix;
         // the capacitance matrix

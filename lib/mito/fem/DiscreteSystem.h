@@ -225,6 +225,7 @@ namespace mito::fem {
             // TODO: ask the function space to populate the constrained nodes appropriately
 
             // get the node map from the function space
+            // TOFIX: remove it since it seems unneeded
             auto node_map = _function_space.node_map();
             // fill information in finite element field
             for (auto & [node, eq] : _equation_map) {

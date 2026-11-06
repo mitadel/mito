@@ -11,9 +11,11 @@ namespace mito::timesteppers {
 
     // implicit euler factory
     template <linalg::valid_backend_c linalgBackendT, class semiDiscreteModelT>
-    constexpr auto implicit_euler(const semiDiscreteModelT & semi_discrete_model)
+    constexpr auto implicit_euler(
+        const semiDiscreteModelT & semi_discrete_model, fields::field_c auto initial_condition)
     {
-        return implicit_euler_t<semiDiscreteModelT, linalgBackendT>(semi_discrete_model);
+        return implicit_euler_t<semiDiscreteModelT, linalgBackendT>(
+            semi_discrete_model, initial_condition);
     }
 
 }

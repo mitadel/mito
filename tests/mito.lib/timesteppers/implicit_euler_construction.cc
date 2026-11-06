@@ -73,8 +73,12 @@ TEST(Timesteppers, IMPLICIT_EULER_CONSTRUCTION)
     // the semi-discrete model
     auto semi_discrete_model = mito::fem::semi_discrete_model(function_space, model);
 
+    // the initial condition field
+    auto initial_condition_field = mito::functions::one<coordinates_t>;
+
     // the time stepper
-    auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(semi_discrete_model);
+    auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(
+        semi_discrete_model, initial_condition_field);
 
     // all done
     return;

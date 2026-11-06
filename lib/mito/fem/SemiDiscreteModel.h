@@ -30,6 +30,10 @@ namespace mito::fem {
         // QUESTION: is std::map the best choice for {equation_map_type}?
         // the equation map type (map associating an equation number to each node degree of freedom)
         using equation_map_type = std::map<node_type, int>;
+        // the solution field type
+        using solution_field_type = tensor::scalar_t;
+        // the fem field type
+        using fem_field_type = fem_field_t<solution_field_type>;
         // the element type
         using finite_element_type = typename function_space_type::finite_element_type;
         // the number of nodes per element
@@ -88,6 +92,54 @@ namespace mito::fem {
                 auto elementary_vector = _weakform.template compute_block<tagT>(element);
                 emplace_elementary_vector(elementary_vector, _vector, element);
             }
+        }
+
+        // transform a data vector into a finite element field
+        template <linalg::valid_backend_c linalgBackendT>
+        constexpr auto transform_vector_to_field(
+            const typename linalgBackendT::vector_type & solution_vector) -> fem_field_type
+        {
+            // the solution finite element field
+            fem_field_type solution_field =
+                _function_space.template fem_field<solution_field_type>("solution_field");
+
+            // check that the number of equations matches that of the linear system
+            assert(_n_equations == solution_vector.size());
+
+            // read the solution
+            auto u = std::vector<double>(_n_equations);
+            solution_vector.get_vector(u);
+
+            // fill information in finite element field
+            for (auto & [node, eq] : _equation_map) {
+                if (eq != -1) {
+                    // note the solution on the solution field
+                    solution_field(node) = u[eq];
+                }
+            }
+
+            // all done
+            return solution_field;
+        }
+
+        // import solution nodal field
+        template <linalg::valid_backend_c linalgBackendT>
+        constexpr auto transform_field_to_vector(const fem_field_type & solution_field)
+            -> linalgBackendT::vector_type
+        {
+            // the solution vector
+            typename linalgBackendT::vector_type solution_vector("solution_vector", _n_equations);
+
+            // fill information in finite element field
+            for (auto & [node, eq] : _equation_map) {
+                if (eq != -1) {
+                    // note the solution on the solution field
+                    solution_vector.insert_value(eq, solution_field(node));
+                }
+            }
+
+            // all done
+            return solution_vector;
         }
 
       private:

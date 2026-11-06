@@ -9,6 +9,7 @@
 
 // support
 #include "../journal.h"
+#include "../fields.h"
 
 
 // end of file
