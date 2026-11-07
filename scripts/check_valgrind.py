@@ -10,14 +10,15 @@ By default, the report includes every error recorded in the XML file. Repeated
 stack frame whose source file is under one of the specified directories. This
 filters the report and its exit status; it does not limit what Valgrind checks.
 Heap and Valgrind summary totals remain process-wide. The report is always
-written to standard output; ``--output`` additionally saves a copy to a file.
+written to standard output. When ``--source-dir`` is used, that output and the
+exit status are filtered; ``--output`` saves the full, unfiltered report.
 
 Examples:
     python3 scripts/check_valgrind.py memcheck.xml
     python3 scripts/check_valgrind.py memcheck.xml \\
         --source-dir /workspace/mito --source-dir /workspace/pyre
     python3 scripts/check_valgrind.py memcheck.xml \\
-        --source-dir /workspace/mito --output memcheck-report.md
+        --source-dir /workspace/mito --output memcheck-full-report.md
 
 The script exits with status 1 when the selected report contains errors, or 0
 when it does not. Use ``--help`` for the complete command-line interface.
@@ -390,7 +391,7 @@ def main():
         "-o",
         "--output",
         type=Path,
-        help="also write the report to this file",
+        help="also save the full, unfiltered report to this file",
     )
     parser.add_argument(
         "--source-dir",
@@ -422,7 +423,15 @@ def main():
     markdown = render_report(report, args.xml_file)
     if args.output:
         try:
-            args.output.write_text(markdown, encoding="utf-8")
+            full_report = parse_report(args.xml_file) if source_dirs else report
+        except (OSError, ET.ParseError) as error:
+            parser.error(f"cannot read {args.xml_file}: {error}")
+
+        try:
+            args.output.write_text(
+                render_report(full_report, args.xml_file),
+                encoding="utf-8",
+            )
         except OSError as error:
             parser.error(f"cannot write {args.output}: {error}")
     sys.stdout.write(markdown)
