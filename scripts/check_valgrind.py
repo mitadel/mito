@@ -95,7 +95,10 @@ def source_path(frame):
         return None
 
     directory = text(frame, "dir")
-    return (Path(directory) / filename).resolve()
+    path = Path(directory) / filename
+    if not path.is_absolute():
+        return None
+    return path.resolve()
 
 
 def has_source_frame(error, source_dirs):
