@@ -23,11 +23,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14]
+        os: [macos-15]
         target: [Debug, Release]
-        python: ["3.12"]
+        python: ["3.14"]
         suite: [gcc]
-        suiteVersion: ["14"]
+        suiteVersion: ["15"]
         include:
           - suite: gcc
             cc: gcc
@@ -40,7 +40,7 @@ jobs:
           brew install make cmake metis open-mpi
 
       - name: python ${{matrix.python}} setup
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: ${{matrix.python}}
 
@@ -50,7 +50,7 @@ jobs:
           pip3 install distro 'numpy<2.0' pybind11 pytest
 
       - name: checkout gtest
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           repository: google/googletest
           path: googletest
@@ -75,7 +75,7 @@ jobs:
         working-directory: ${{runner.temp}}
 
       - name: checkout google-benchmark
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: google/benchmark
           path: google-benchmark
@@ -100,7 +100,7 @@ jobs:
         working-directory: ${{runner.temp}}
 
       - name: checkout pyre
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           repository: pyre/pyre
           fetch-depth: 0
@@ -115,7 +115,7 @@ jobs:
 
       - name: cache pyre
         id: cache-pyre
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ${{runner.temp}}/pyre_install
           key: pyre-${{steps.pyre-sha.outputs.PYRE-SHA}}-${{matrix.os}}+python-${{matrix.python}}+${{matrix.suite}}-${{matrix.suiteVersion}}
@@ -180,7 +180,7 @@ jobs:
           pythonVersion: ${{matrix.python}}
 
       - name: checkout mito
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           ref: ${{github.event.pull_request.head.sha}}
           path: mito
@@ -226,7 +226,7 @@ jobs:
 
       - name: create artifact
         if: ${{!cancelled()}}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mito_build_${{matrix.target}}
           path: ${{runner.temp}}/build
