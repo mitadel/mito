@@ -9,7 +9,8 @@ By default, the report includes every error recorded in the XML file. Repeated
 ``--source-dir`` options restrict the reported errors to those with at least one
 stack frame whose source file is under one of the specified directories. This
 filters the report and its exit status; it does not limit what Valgrind checks.
-Heap and Valgrind summary totals remain process-wide.
+Heap and Valgrind summary totals remain process-wide. The report is always
+written to standard output; ``--output`` additionally saves a copy to a file.
 
 Examples:
     python3 scripts/check_valgrind.py memcheck.xml
@@ -389,7 +390,7 @@ def main():
         "-o",
         "--output",
         type=Path,
-        help="write the report to this file instead of standard output",
+        help="also write the report to this file",
     )
     parser.add_argument(
         "--source-dir",
@@ -424,8 +425,7 @@ def main():
             args.output.write_text(markdown, encoding="utf-8")
         except OSError as error:
             parser.error(f"cannot write {args.output}: {error}")
-    else:
-        sys.stdout.write(markdown)
+    sys.stdout.write(markdown)
 
     return 1 if report["errors"] else 0
 
