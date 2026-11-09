@@ -69,8 +69,9 @@ namespace mito::timesteppers {
         // assemble stiffness matrix
         constexpr auto assemble_stiffness_matrix() -> void
         {
-            _semi_discrete_model.template assemble_matrix<stiffness_term_type, linalg_backend_type>(
-                _stiffness_matrix);
+            _semi_discrete_model
+                .template set_matrix_values<stiffness_term_type, linalg_backend_type>(
+                    _stiffness_matrix);
 
             _stiffness_matrix.assemble();
 
@@ -82,7 +83,7 @@ namespace mito::timesteppers {
         constexpr auto assemble_capacitance_matrix() -> void
         {
             _semi_discrete_model
-                .template assemble_matrix<capacitance_term_type, linalg_backend_type>(
+                .template set_matrix_values<capacitance_term_type, linalg_backend_type>(
                     _capacitance_matrix);
 
             _capacitance_matrix.assemble();
@@ -94,7 +95,7 @@ namespace mito::timesteppers {
         // assemble load vector
         constexpr auto assemble_load_vector() -> void
         {
-            _semi_discrete_model.template assemble_vector<load_term_type, linalg_backend_type>(
+            _semi_discrete_model.template set_vector_values<load_term_type, linalg_backend_type>(
                 _load_vector);
 
             _load_vector.assemble();

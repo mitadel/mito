@@ -85,13 +85,13 @@ TEST(Models, SEMI_DISCRETE_MODEL_EFFECTIVE_MATRICES)
 
     // assemble the system matrices
     semi_discrete_model
-        .assemble_matrix<model_t::archetype_type::Stiffness, mito::linalg::petsc::backend_t>(
+        .set_matrix_values<model_t::archetype_type::Stiffness, mito::linalg::petsc::backend_t>(
             stiffness);
     semi_discrete_model
-        .assemble_matrix<model_t::archetype_type::Capacitance, mito::linalg::petsc::backend_t>(
+        .set_matrix_values<model_t::archetype_type::Capacitance, mito::linalg::petsc::backend_t>(
             capacitance);
     semi_discrete_model
-        .assemble_vector<model_t::archetype_type::Load, mito::linalg::petsc::backend_t>(load);
+        .set_vector_values<model_t::archetype_type::Load, mito::linalg::petsc::backend_t>(load);
 
     // assemble the matrices
     stiffness.assemble();

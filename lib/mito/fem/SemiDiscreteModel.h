@@ -107,9 +107,9 @@ namespace mito::fem {
                 { { static_cast<std::size_t>(n_element_nodes), n_elements } });
         }
 
-        // assemble the matrix associated to a tag of the archetype
+        // set the values of the matrix associated to a tag of the archetype
         template <class tagT, linalg::valid_backend_c backendT>
-        auto set_matrix(typename backendT::matrix_type & matrix) const -> void
+        auto set_matrix_values(typename backendT::matrix_type & matrix) const -> void
         {
             // the element values, in the same order as the pattern
             std::vector<typename backendT::scalar_type> values;
@@ -127,9 +127,9 @@ namespace mito::fem {
             matrix.set_values(values);
         }
 
-        // assemble the vector associated to a tag of the archetype
+        // set the values of the vector associated to a tag of the archetype
         template <class tagT, linalg::valid_backend_c backendT>
-        auto assemble_vector(typename backendT::vector_type & vector) const -> void
+        auto set_vector_values(typename backendT::vector_type & vector) const -> void
         {
             for (const auto & element : _function_space.elements()) {
                 auto elementary_vector = _weakform.template compute_block<tagT>(element);
