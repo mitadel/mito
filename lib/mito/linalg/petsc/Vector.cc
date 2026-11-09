@@ -26,6 +26,50 @@ mito::linalg::petsc::Vector::~Vector()
     PetscCallVoid(VecDestroy(&_vector));
 }
 
+// copy constructor
+mito::linalg::petsc::Vector::Vector(const Vector & other) : _vector(nullptr)
+{
+    // duplicate vector
+    PetscCallVoid(VecDuplicate(other._vector, &_vector));
+}
+
+// move constructor
+mito::linalg::petsc::Vector::Vector(Vector && other) noexcept :
+    _vector(std::exchange(other._vector, nullptr))
+{}
+
+// copy assignment operator
+auto
+mito::linalg::petsc::Vector::operator=(const Vector & other) -> Vector &
+{
+    // prevent self-copy
+    if (this == &other) {
+        return *this;
+    }
+
+    // copy and swap
+    Vector tmp(other);
+    _swap(tmp);
+
+    // returning deletes {tmp}
+    return *this;
+}
+
+// move assignment operator
+auto
+mito::linalg::petsc::Vector::operator=(Vector && other) noexcept -> Vector &
+{
+    // prevent self-move
+    if (this != &other) {
+        // free the vector
+        VecDestroy(&_vector);
+        // swap the contents
+        _swap(other);
+    }
+
+    return *this;
+}
+
 // set the vector entry at {row} to {value}
 auto
 mito::linalg::petsc::Vector::insert_value(index_type row, const scalar_type & value) -> void
@@ -103,5 +147,17 @@ mito::linalg::petsc::Vector::get() const -> vector_type const &
 {
     return _vector;
 }
+
+// swap the contents of two vectors
+auto
+mito::linalg::petsc::Vector::_swap(Vector & other) noexcept -> void
+{
+    // swap the vector handles
+    std::swap(_vector, other._vector);
+
+    // all done
+    return;
+}
+
 
 // end of file

@@ -73,6 +73,9 @@ namespace mito::manifolds {
         // accessor for the mesh
         constexpr auto mesh() const noexcept -> const mesh_type & { return _mesh; }
 
+        // accessor to the atlas
+        constexpr auto atlas() const noexcept -> const atlas_type & { return _atlas; }
+
         // return an iterable view of the manifold elements
         constexpr auto elements() const noexcept { return manifold_elements_view_type{ *this }; }
 

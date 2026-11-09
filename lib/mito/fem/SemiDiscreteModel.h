@@ -97,7 +97,7 @@ namespace mito::fem {
         // transform a data vector into a finite element field
         template <linalg::valid_backend_c linalgBackendT>
         constexpr auto transform_vector_to_field(
-            const typename linalgBackendT::vector_type & solution_vector) -> fem_field_type
+            const typename linalgBackendT::vector_type & solution_vector) const -> fem_field_type
         {
             // the solution finite element field
             fem_field_type solution_field =
@@ -122,9 +122,35 @@ namespace mito::fem {
             return solution_field;
         }
 
-        // import solution nodal field
+        // import continuous field
         template <linalg::valid_backend_c linalgBackendT>
-        constexpr auto transform_field_to_vector(const fem_field_type & solution_field)
+        constexpr auto transform_field_to_vector(
+            const fields::field_c auto & continuous_field) const -> linalgBackendT::vector_type
+        {
+            // the vertex field
+            auto vertex_field = discrete::mesh_field(
+                _function_space.manifold().mesh(),
+                _function_space.manifold().atlas().coordinate_system(), continuous_field,
+                "discrete_field");
+
+            // the solution vector
+            typename linalgBackendT::vector_type solution_vector("solution_vector", _n_equations);
+
+            // fill information in finite element field
+            for (auto & [mesh_node, node] : _function_space.node_map()) {
+                if (int eq = _equation_map.at(node); eq != -1) {
+                    // note the solution on the solution field
+                    solution_vector.insert_value(eq, vertex_field(mesh_node));
+                }
+            }
+
+            // all done
+            return solution_vector;
+        }
+
+        // import discrete field
+        template <linalg::valid_backend_c linalgBackendT>
+        constexpr auto transform_field_to_vector(const fem_field_type & discrete_field) const
             -> linalgBackendT::vector_type
         {
             // the solution vector
@@ -134,7 +160,7 @@ namespace mito::fem {
             for (auto & [node, eq] : _equation_map) {
                 if (eq != -1) {
                     // note the solution on the solution field
-                    solution_vector.insert_value(eq, solution_field(node));
+                    solution_vector.insert_value(eq, discrete_field(node));
                 }
             }
 

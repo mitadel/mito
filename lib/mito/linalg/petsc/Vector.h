@@ -23,16 +23,16 @@ namespace mito::linalg::petsc {
         Vector(index_type);
 
         // copy constructor
-        Vector(const Vector &) = delete;
+        Vector(const Vector &);
 
         // move constructor
-        Vector(Vector &&) = delete;
+        Vector(Vector &&) noexcept;
 
         // copy assignment operator
-        Vector & operator=(const Vector &) = delete;
+        Vector & operator=(const Vector &);
 
         // move assignment operator
-        Vector & operator=(Vector &&) = delete;
+        Vector & operator=(Vector &&) noexcept;
 
         // destructor
         ~Vector();
@@ -62,6 +62,10 @@ namespace mito::linalg::petsc {
 
         // get petsc vector
         auto get() const -> vector_type const &;
+
+      private:
+        // swap the contents of two vectors
+        auto _swap(Vector &) noexcept -> void;
 
       private:
         // the vector
