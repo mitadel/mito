@@ -49,6 +49,23 @@ namespace mito::timesteppers {
             ;
         }
 
+        constexpr auto initialise() -> void
+        {
+            // set the patterns
+            _semi_discrete_model.template set_matrix_pattern<linalg_backend_type>(
+                _stiffness_matrix);
+            _semi_discrete_model.template set_matrix_pattern<linalg_backend_type>(
+                _capacitance_matrix);
+
+            // set the values
+            assemble_stiffness_matrix();
+            assemble_capacitance_matrix();
+            assemble_load_vector();
+
+            // initialise the effective stiffness matrix and load vector
+            initialise_effective_stiffness_matrix();
+        }
+
         // assemble stiffness matrix
         constexpr auto assemble_stiffness_matrix() -> void
         {
@@ -86,12 +103,19 @@ namespace mito::timesteppers {
             return;
         }
 
-        // compute effective stiffness matrix
-        constexpr auto compute_effective_stiffness_matrix(const mito::real & dt) -> void
+        // initialise effective stiffness matrix
+        constexpr auto initialise_effective_stiffness_matrix() -> void
         {
             // duplicate the stiffness matrix pattern
             _effective_stiffness_matrix.duplicate(_stiffness_matrix);
 
+            // all done
+            return;
+        }
+
+        // compute effective stiffness matrix
+        constexpr auto compute_effective_stiffness_matrix(const mito::real & dt) -> void
+        {
             // copy the stiffness matrix
             _effective_stiffness_matrix.copy_values(
                 _stiffness_matrix, linalg::petsc::sparsity_pattern::same);

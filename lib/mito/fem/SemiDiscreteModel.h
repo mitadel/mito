@@ -74,23 +74,66 @@ namespace mito::fem {
         // delete move assignment operator
         constexpr SemiDiscreteModel & operator=(SemiDiscreteModel &&) noexcept = delete;
 
+        // set the matrix pattern
+        template <linalg::valid_backend_c backendT>
+        auto set_matrix_pattern(typename backendT::matrix_type & matrix) const -> void
+        {
+            // the index type
+            using index_type = typename backendT::index_type;
+
+            // the row and column indices of all element entries
+            std::vector<index_type> row_indices, col_indices;
+
+            // the number of elements
+            std::size_t n_elements = 0;
+
+            // loop on all the elements
+            for (const auto & element : _function_space.elements()) {
+                tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
+                    const index_type eq_a = _equation_map.at(element.connectivity()[a]);
+                    tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
+                        const index_type eq_b = _equation_map.at(element.connectivity()[b]);
+                        row_indices.push_back(eq_a);
+                        col_indices.push_back(eq_b);
+                    });
+                });
+
+                ++n_elements;
+            }
+
+            // one segment as every element has the same number of nodes
+            matrix.set_pattern(
+                std::move(row_indices), std::move(col_indices),
+                { { static_cast<std::size_t>(n_element_nodes), n_elements } });
+        }
+
         // assemble the matrix associated to a tag of the archetype
         template <class tagT, linalg::valid_backend_c backendT>
-        auto assemble_matrix(typename backendT::matrix_type & _matrix) const -> void
+        auto set_matrix(typename backendT::matrix_type & matrix) const -> void
         {
+            // the element values, in the same order as the pattern
+            std::vector<typename backendT::scalar_type> values;
+
+            // loop on all the elements
             for (const auto & element : _function_space.elements()) {
                 auto elementary_matrix = _weakform.template compute_block<tagT>(element);
-                emplace_elementary_matrix(elementary_matrix, _matrix, element);
+                tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
+                    tensor::constexpr_for_1<n_element_nodes>(
+                        [&]<int b>() { values.push_back(elementary_matrix[{ a, b }]); });
+                });
             }
+
+            // set the values in the matrix
+            matrix.set_values(values);
         }
 
         // assemble the vector associated to a tag of the archetype
         template <class tagT, linalg::valid_backend_c backendT>
-        auto assemble_vector(typename backendT::vector_type & _vector) const -> void
+        auto assemble_vector(typename backendT::vector_type & vector) const -> void
         {
             for (const auto & element : _function_space.elements()) {
                 auto elementary_vector = _weakform.template compute_block<tagT>(element);
-                emplace_elementary_vector(elementary_vector, _vector, element);
+                emplace_elementary_vector(elementary_vector, vector, element);
             }
         }
 
@@ -219,38 +262,6 @@ namespace mito::fem {
 
             // return the number of equations
             return equation;
-        }
-
-        // emplace the elementary matrix into the global matrix
-        template <class elementaryMatrixT, class matrix_type, class finiteElementT>
-        auto emplace_elementary_matrix(
-            const elementaryMatrixT & elementary_matrix, matrix_type & _matrix,
-            const finiteElementT & element) const -> void
-        {
-            // loop on the a-th discretization node of the element
-            tensor::constexpr_for_1<n_element_nodes>([&]<int a>() {
-                // get the a-th discretization node of the element
-                const auto & node_a = element.connectivity()[a];
-                // get the equation number of {node_a}
-                int eq_a = _equation_map.at(node_a);
-                assert(eq_a < _n_equations);
-                // non boundary nodes
-                if (eq_a != -1) {
-                    // loop on the b-th discretization node of the element
-                    tensor::constexpr_for_1<n_element_nodes>([&]<int b>() {
-                        // get the b-th discretization node of the element
-                        const auto & node_b = element.connectivity()[b];
-                        // get the equation number of {node_b}
-                        int eq_b = _equation_map.at(node_b);
-                        assert(eq_b < _n_equations);
-                        // non boundary nodes
-                        if (eq_b != -1) {
-                            // assemble the value in the stiffness matrix
-                            _matrix.add_value(eq_a, eq_b, elementary_matrix[{ a, b }]);
-                        }
-                    });
-                }
-            });
         }
 
         // emplace the elementary vector into the global vector

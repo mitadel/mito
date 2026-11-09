@@ -80,19 +80,13 @@ TEST(Timesteppers, IMPLICIT_EULER_ASSEMBLE_EFFECTIVE)
     auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(
         semi_discrete_model, initial_condition_field);
 
-    // assemble the stiffness matrix
-    time_stepper.assemble_stiffness_matrix();
-
-    // assemble the capacitance matrix
-    time_stepper.assemble_capacitance_matrix();
-
-    // assemble the load vector
-    time_stepper.assemble_load_vector();
+    // initialise the time stepper
+    time_stepper.initialise();
 
     // assemble the effective stiffness matrix
     time_stepper.compute_effective_stiffness_matrix(0.1);
 
-    // // assemble the effective load vector 
+    // // assemble the effective load vector
     // time_stepper.compute_effective_load_vector(0.1, time_stepper.solution());
 
     // all done

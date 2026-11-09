@@ -79,6 +79,10 @@ TEST(Models, SEMI_DISCRETE_MODEL_EFFECTIVE_MATRICES)
         mito::linalg::petsc::matrix("capacitance", semi_discrete_model.n_equations());
     auto load = mito::linalg::petsc::vector("load", semi_discrete_model.n_equations());
 
+    // set the pattern of the system matrices
+    semi_discrete_model.set_matrix_pattern<backend_t>(stiffness);
+    semi_discrete_model.set_matrix_pattern<backend_t>(capacitance);
+
     // assemble the system matrices
     semi_discrete_model
         .assemble_matrix<model_t::archetype_type::Stiffness, mito::linalg::petsc::backend_t>(
@@ -88,6 +92,11 @@ TEST(Models, SEMI_DISCRETE_MODEL_EFFECTIVE_MATRICES)
             capacitance);
     semi_discrete_model
         .assemble_vector<model_t::archetype_type::Load, mito::linalg::petsc::backend_t>(load);
+
+    // assemble the matrices
+    stiffness.assemble();
+    capacitance.assemble();
+    load.assemble();
 
     // all done
     return;
