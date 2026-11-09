@@ -133,8 +133,8 @@ namespace mito::timesteppers {
         constexpr auto compute_effective_load_vector(const mito::real & dt) -> void
         {
             // assemble the effective load vector
-            _effective_load_vector.copy_values(_load_vector, linalg::petsc::sparsity_pattern::same);
-            _effective_load_vector.add(1. / dt, _capacitance_matrix, _previous_solution);
+            // _effective_load_vector.copy_values(_load_vector, linalg::petsc::sparsity_pattern::same);
+            // _effective_load_vector.add(1. / dt, _capacitance_matrix);
 
             // all done
             return;

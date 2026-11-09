@@ -47,6 +47,9 @@ namespace mito::linalg::petsc {
         // add a value to a vector entry
         auto add_value(index_type, const scalar_type &) -> void;
 
+        // add scaled vector using VecAXPY
+        auto add(const scalar_type &, const Vector &) -> void;
+
         // get the size of the vector
         auto size(index_type &) const -> void;
 
