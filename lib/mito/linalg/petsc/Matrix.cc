@@ -117,12 +117,16 @@ mito::linalg::petsc::Matrix::set_pattern(
     std::vector<block_segment_type> segments) -> void
 {
     // ensure the row and column vectors have the same size
-    assert(
-        std::size(rows) == std::size(cols)
-        && "row and column index vectors must have the same size");
+    if (std::size(rows) != std::size(cols)) {
+        journal::error_t channel("mito.linalg.petsc.Matrix.set_pattern");
+        channel << "row and column index vectors must have the same size" << journal::endl;
+    }
 
     // ensure the pattern has not been set yet
-    assert(!_pattern_set && "set_pattern can only be called once on this matrix");
+    if (_pattern_set) {
+        journal::error_t channel("mito.linalg.petsc.Matrix.set_pattern");
+        channel << "set_pattern can only be called once" << journal::endl;
+    }
 
     // store the number of entries
     _n_entries = std::size(rows);
@@ -132,11 +136,14 @@ mito::linalg::petsc::Matrix::set_pattern(
                                        std::move(segments);
 
     // ensure the number of segments is consistent with the number of entries
-    assert(
-        std::transform_reduce(
+    if (std::transform_reduce(
             _segments.begin(), _segments.end(), std::size_t{ 0 }, std::plus<>{},
             [](const auto & s) { return s.n_blocks * s.block_size * s.block_size; })
-        == _n_entries);
+        != _n_entries) {
+        journal::error_t channel("mito.linalg.petsc.Matrix.set_pattern");
+        channel << "number of segments is not consistent with the number of entries"
+                << journal::endl;
+    }
 
     switch (_format) {
         case assembly_format::hash:
@@ -152,7 +159,8 @@ mito::linalg::petsc::Matrix::set_pattern(
             break;
 
         default:
-            throw std::runtime_error("Unknown assembly format");
+            journal::firewall_t channel("mito.linalg.petsc.Matrix.set_pattern");
+            channel << "unknown assembly format" << journal::endl;
     }
 
     // set the pattern set flag
@@ -165,13 +173,17 @@ mito::linalg::petsc::Matrix::set_pattern(
 auto
 mito::linalg::petsc::Matrix::set_values(const std::vector<scalar_type> & values) -> void
 {
-    // one value per entry of the index lists
-    assert(
-        std::size(values) == _n_entries
-        && "number of values must match number of entries in the matrix");
+    // the pattern must be set first
+    if (!_pattern_set) {
+        journal::error_t channel("mito.linalg.petsc.Matrix.set_values");
+        channel << "set_values requires set_pattern to be called first" << journal::endl;
+    }
 
-    // ensure that the pattern has been set before setting values
-    assert(_pattern_set > 0 && "set_values requires set_pattern on this matrix");
+    // one value per entry of the index lists
+    if (std::size(values) != _n_entries) {
+        journal::error_t channel("mito.linalg.petsc.Matrix.set_values");
+        channel << "number of values must match number of entries in the matrix" << journal::endl;
+    }
 
     switch (_format) {
         case assembly_format::hash:
@@ -187,7 +199,8 @@ mito::linalg::petsc::Matrix::set_values(const std::vector<scalar_type> & values)
             break;
 
         default:
-            throw std::runtime_error("Unknown assembly format");
+            journal::firewall_t channel("mito.linalg.petsc.Matrix.set_values");
+            channel << "unknown assembly format" << journal::endl;
     }
     return;
 }
