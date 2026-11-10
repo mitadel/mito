@@ -41,6 +41,7 @@ namespace mito::timesteppers {
             _load_vector("load", _semi_discrete_model.n_equations()),
             _effective_stiffness_matrix("effective_stiffness", _semi_discrete_model.n_equations()),
             _effective_load_vector("effective_load", _semi_discrete_model.n_equations()),
+            _temp_vector("temp", _semi_discrete_model.n_equations()),
             _previous_solution(
                 "previous_solution",
                 _semi_discrete_model.template transform_field_to_vector<linalg_backend_type>(
@@ -132,9 +133,14 @@ namespace mito::timesteppers {
         // compute effective load vector
         constexpr auto compute_effective_load_vector(const mito::real & dt) -> void
         {
-            // assemble the effective load vector
-            // _effective_load_vector.copy_values(_load_vector, linalg::petsc::sparsity_pattern::same);
-            // _effective_load_vector.add(1. / dt, _capacitance_matrix);
+            // compute M * u_n and store it in the temporary vector
+            _capacitance_matrix.mult_vector(_previous_solution, _temp_vector);
+
+            // initialize the effective load vector with the load vector
+            _effective_load_vector.copy_values(_load_vector);
+
+            // add the temporary vector scaled by 1/dt to the effective load vector
+            _effective_load_vector.add(1. / dt, _temp_vector);
 
             // all done
             return;
@@ -154,6 +160,8 @@ namespace mito::timesteppers {
         matrix_type _effective_stiffness_matrix;
         // the effective load vector
         vector_type _effective_load_vector;
+        // the temporary vector, representing M * u_n, needed to compute the effective load vector
+        vector_type _temp_vector;
         // the previous solution vector
         vector_type _previous_solution;
     };

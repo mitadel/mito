@@ -273,7 +273,8 @@ mito::linalg::petsc::Matrix::duplicate(const Matrix & X, duplicate_policy policy
     _rows = X._rows;
     _cols = X._cols;
     _segments = X._segments;
-    _pattern_set = true;
+    _pattern_set = X._pattern_set;
+    _format = X._format;
 
     // duplicate {X}'s structure without its values
     PetscCallVoid(MatDuplicate(X._matrix, static_cast<MatDuplicateOption>(policy), &_matrix));
@@ -297,6 +298,17 @@ mito::linalg::petsc::Matrix::add(
 {
     // delegate to PETsc
     PetscCallVoid(MatAXPY(_matrix, alpha, X._matrix, static_cast<MatStructure>(pattern)));
+}
+
+// multiply matrix with vector
+auto
+mito::linalg::petsc::Matrix::mult_vector(const Vector & x, Vector & y) const -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(MatMult(_matrix, x.get(), y.get()));
+
+    // all done
+    return;
 }
 
 // get the number of rows/columns of the matrix

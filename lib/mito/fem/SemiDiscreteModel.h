@@ -187,6 +187,9 @@ namespace mito::fem {
                 }
             }
 
+            // assemble the vector
+            solution_vector.assemble();
+
             // all done
             return solution_vector;
         }
@@ -206,6 +209,9 @@ namespace mito::fem {
                     solution_vector.insert_value(eq, discrete_field(node));
                 }
             }
+
+            // assemble the vector
+            solution_vector.assemble();
 
             // all done
             return solution_vector;

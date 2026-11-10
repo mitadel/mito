@@ -31,6 +31,9 @@ mito::linalg::petsc::Vector::Vector(const Vector & other) : _vector(nullptr)
 {
     // duplicate vector
     PetscCallVoid(VecDuplicate(other._vector, &_vector));
+
+    // copy values
+    PetscCallVoid(VecCopy(other._vector, _vector));
 }
 
 // move constructor
@@ -99,6 +102,17 @@ mito::linalg::petsc::Vector::add_value(index_type row, const scalar_type & value
 {
     // delegate to PETSc
     PetscCallVoid(VecSetValue(_vector, row, value, ADD_VALUES));
+
+    // all done
+    return;
+}
+
+// copy the values of {X} into this vector
+auto
+mito::linalg::petsc::Vector::copy_values(const Vector & X) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecCopy(X._vector, _vector));
 
     // all done
     return;
