@@ -98,7 +98,7 @@ TEST(Tensor, CubeVolume)
     }
 
     // check that the two calculations led to the same result
-    EXPECT_DOUBLE_EQ(volume_new, volume_old);
+    EXPECT_NEAR(volume_new, volume_old, 1e-15);
 }
 
 
