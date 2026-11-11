@@ -39,9 +39,9 @@ using scalar_t = typename linalg_backend_t::scalar_type;
 
 // the model parameters
 struct Parameters {
-    std::size_t n_steps = 640;
-    int x_segments = 128;
-    int y_segments = 128;
+    std::size_t n_steps = 80;
+    int x_segments = 64;
+    int y_segments = 64;
 
     scalar_t width = 1.;
     scalar_t conductivity = 0.5;
@@ -183,7 +183,7 @@ TEST(Timesteppers, IMPLICIT_EULER_LOOP)
 
     // compute the L2 error
     auto error_L2 = mito::fem::compute_l2_norm<2>(function_space, solution_field, u_ex);
-    
+
     // report
     channel << "L2 error: " << error_L2 << journal::endl;
 

@@ -9,16 +9,28 @@
 
 namespace mito::timesteppers {
 
-    // linear solver alias
+    // implicit euler alias
     template <class semiDiscreteModelT, class solverT, linalg::valid_backend_c linalgBackendT>
     using implicit_euler_t = ImplicitEuler<semiDiscreteModelT, solverT, linalgBackendT>;
 
-    // linear solver factory
+    // implicit euler factory
     template <linalg::valid_backend_c linalgBackendT, class semiDiscreteModelT, class solverT>
     constexpr auto implicit_euler(
         const semiDiscreteModelT & semi_discrete_model, solverT && solver,
         const fields::field_c auto & initial_condition, typename linalgBackendT::scalar_type dt)
         -> implicit_euler_t<semiDiscreteModelT, solverT, linalgBackendT>;
+
+    // crank-nicholson alias
+    template <class semiDiscreteModelT, class solverT, linalg::valid_backend_c linalgBackendT>
+    using crank_nicholson_t = CrankNicholson<semiDiscreteModelT, solverT, linalgBackendT>;
+
+    // crank-nicholson factory
+    template <linalg::valid_backend_c linalgBackendT, class semiDiscreteModelT, class solverT>
+    constexpr auto crank_nicholson(
+        const semiDiscreteModelT & semi_discrete_model, solverT && solver,
+        const fields::field_c auto & initial_condition, typename linalgBackendT::scalar_type dt)
+        -> crank_nicholson_t<semiDiscreteModelT, solverT, linalgBackendT>;
+
 }
 
 

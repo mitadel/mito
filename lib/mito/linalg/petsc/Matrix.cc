@@ -299,12 +299,35 @@ mito::linalg::petsc::Matrix::add(
     PetscCallVoid(MatAXPY(_matrix, alpha, X._matrix, static_cast<MatStructure>(pattern)));
 }
 
+// scale the matrix by a scalar
+auto
+mito::linalg::petsc::Matrix::scale(const scalar_type & alpha) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(MatScale(_matrix, alpha));
+
+    // all done
+    return;
+}
+
 // multiply matrix with vector
 auto
 mito::linalg::petsc::Matrix::mult_vector(const Vector & x, Vector & y) const -> void
 {
-    // delegate to PETSc
+    // delegate to PETSc, return y = this * x
     PetscCallVoid(MatMult(_matrix, x.get(), y.get()));
+
+    // all done
+    return;
+}
+
+// multiply matrix with vector and add to another vector
+auto
+mito::linalg::petsc::Matrix::mult_add_vector(const Vector & x, const Vector & y, Vector & z) const
+    -> void
+{
+    // delegate to PETSc, return z = this * x + y
+    PetscCallVoid(MatMultAdd(_matrix, x.get(), y.get(), z.get()));
 
     // all done
     return;

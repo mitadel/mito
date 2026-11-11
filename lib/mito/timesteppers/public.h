@@ -17,6 +17,7 @@
 #include "api.h"
 
 // classes implementation
+#include "CrankNicholson.h"
 #include "ImplicitEuler.h"
 
 // factories implementation

@@ -92,8 +92,14 @@ namespace mito::linalg::petsc {
             const scalar_type & alpha, const Matrix & X,
             sparsity_pattern pattern = sparsity_pattern::unknown) -> void;
 
+        // scale the matrix using MatScale
+        auto scale(const scalar_type & alpha) -> void;
+
         // multiply matrix with vector
         auto mult_vector(const Vector & x, Vector & y) const -> void;
+
+        // multiply matrix with vector and add to another vector
+        auto mult_add_vector(const Vector & x, const Vector & y, Vector & z) const -> void;
 
         // get the number of rows/columns
         auto size(index_type &) const -> void;
