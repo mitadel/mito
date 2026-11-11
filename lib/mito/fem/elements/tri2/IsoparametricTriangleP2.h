@@ -90,7 +90,7 @@ namespace mito::fem {
             return _element.parametrization();
         }
 
-        // get the parmetrized element
+        // get the parametrized element
         constexpr auto element() const noexcept
         {
             // all done

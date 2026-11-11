@@ -73,21 +73,24 @@ TEST(Timesteppers, IMPLICIT_EULER_ASSEMBLE_EFFECTIVE)
     // the semi-discrete model
     auto semi_discrete_model = mito::fem::semi_discrete_model(function_space, model);
 
+    // instantiate a PETSc Krylov solver for the time stepper
+    auto solver = mito::linalg::petsc::ksp("time_stepper");
+
     // the initial condition field
     auto initial_condition_field = mito::functions::one<coordinates_t>;
 
     // the time stepper
     auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(
-        semi_discrete_model, initial_condition_field);
+        semi_discrete_model, std::move(solver), initial_condition_field, 0.01);
 
     // initialise the time stepper
     time_stepper.initialise();
 
     // assemble the effective stiffness matrix
-    time_stepper.compute_effective_stiffness_matrix(0.1);
+    time_stepper.compute_effective_stiffness_matrix();
 
     // assemble the effective load vector
-    time_stepper.compute_effective_load_vector(0.1);
+    time_stepper.compute_effective_load_vector();
 
     // all done
     return;

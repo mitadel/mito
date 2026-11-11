@@ -9,7 +9,7 @@
 
 namespace mito::timesteppers {
 
-    template <class semiDiscreteModelT, linalg::valid_backend_c linalgBackendT>
+    template <class semiDiscreteModelT, class solverT, linalg::valid_backend_c linalgBackendT>
     class ImplicitEuler;
 }
 

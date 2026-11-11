@@ -267,8 +267,7 @@ mito::linalg::petsc::Matrix::duplicate(const Matrix & X, duplicate_policy policy
     // release the matrix we currently own
     PetscCallVoid(MatDestroy(&_matrix));
 
-    // reset the matrix properties; note that this means that one has to first call set_pattern and
-    // then set_values on the new matrix, if one wants to use those methods
+    // copy the assembly format and pattern information
     _n_entries = X._n_entries;
     _rows = X._rows;
     _cols = X._cols;

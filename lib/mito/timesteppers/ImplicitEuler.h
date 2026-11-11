@@ -9,7 +9,7 @@
 
 namespace mito::timesteppers {
 
-    template <class semiDiscreteModelT, linalg::valid_backend_c linalgBackendT>
+    template <class semiDiscreteModelT, class solverT, linalg::valid_backend_c linalgBackendT>
     class ImplicitEuler {
 
       private:
@@ -17,10 +17,14 @@ namespace mito::timesteppers {
         using semi_discrete_model_type = semiDiscreteModelT;
         // the linear algebra backend type
         using linalg_backend_type = linalgBackendT;
+        // the matrix solver type
+        using solver_type = solverT;
         // the matrix type
         using matrix_type = typename linalg_backend_type::matrix_type;
         // the vector type
         using vector_type = typename linalg_backend_type::vector_type;
+        // the scalar type
+        using scalar_type = typename linalg_backend_type::scalar_type;
         // the archetype type
         using archetype_type = typename semi_discrete_model_type::archetype_type;
         // the stiffness term type
@@ -33,17 +37,19 @@ namespace mito::timesteppers {
       public:
         // the default constructor
         constexpr ImplicitEuler(
-            const semi_discrete_model_type & semi_discrete_model,
-            const fields::field_c auto & initial_condition) :
+            const semi_discrete_model_type & semi_discrete_model, solver_type && solver,
+            const fields::field_c auto & initial_condition, scalar_type dt) :
             _semi_discrete_model(semi_discrete_model),
+            _solver(std::move(solver)),
+            _dt(dt),
             _stiffness_matrix("stiffness", _semi_discrete_model.n_equations()),
             _capacitance_matrix("capacitance", _semi_discrete_model.n_equations()),
             _load_vector("load", _semi_discrete_model.n_equations()),
             _effective_stiffness_matrix("effective_stiffness", _semi_discrete_model.n_equations()),
             _effective_load_vector("effective_load", _semi_discrete_model.n_equations()),
             _temp_vector("temp", _semi_discrete_model.n_equations()),
-            _previous_solution(
-                "previous_solution",
+            _solution(
+                "solution",
                 _semi_discrete_model.template transform_field_to_vector<linalg_backend_type>(
                     initial_condition))
         {
@@ -65,6 +71,10 @@ namespace mito::timesteppers {
 
             // initialise the effective stiffness matrix and load vector
             initialise_effective_stiffness_matrix();
+
+            // compute the effective stiffness matrix and load vector
+            compute_effective_stiffness_matrix();
+            compute_effective_load_vector();
         }
 
         // assemble stiffness matrix
@@ -116,7 +126,7 @@ namespace mito::timesteppers {
         }
 
         // compute effective stiffness matrix
-        constexpr auto compute_effective_stiffness_matrix(const mito::real & dt) -> void
+        constexpr auto compute_effective_stiffness_matrix() -> void
         {
             // copy the stiffness matrix
             _effective_stiffness_matrix.copy_values(
@@ -124,23 +134,49 @@ namespace mito::timesteppers {
 
             // add the capacitance matrix scaled by 1/dt to the effective stiffness matrix
             _effective_stiffness_matrix.add(
-                1. / dt, _capacitance_matrix, linalg::petsc::sparsity_pattern::same);
+                1. / _dt, _capacitance_matrix, linalg::petsc::sparsity_pattern::same);
 
             // all done
             return;
         };
 
         // compute effective load vector
-        constexpr auto compute_effective_load_vector(const mito::real & dt) -> void
+        constexpr auto compute_effective_load_vector() -> void
         {
             // compute M * u_n and store it in the temporary vector
-            _capacitance_matrix.mult_vector(_previous_solution, _temp_vector);
+            _capacitance_matrix.mult_vector(_solution, _temp_vector);
 
             // initialize the effective load vector with the load vector
             _effective_load_vector.copy_values(_load_vector);
 
             // add the temporary vector scaled by 1/dt to the effective load vector
-            _effective_load_vector.add(1. / dt, _temp_vector);
+            _effective_load_vector.add(1. / _dt, _temp_vector);
+
+            // all done
+            return;
+        }
+
+        // set the time step size
+        constexpr auto set_dt(scalar_type dt) -> void
+        {
+            // set the time step size
+            _dt = dt;
+
+            // reassemble the effective stiffness matrix with the new time step size
+            compute_effective_stiffness_matrix();
+
+            // all done
+            return;
+        }
+
+        // march one time step
+        constexpr auto march() -> void
+        {
+            // compute the effective load vector
+            compute_effective_load_vector();
+
+            // solve the linear system
+            _solver.solve(_effective_stiffness_matrix, _effective_load_vector, _solution);
 
             // all done
             return;
@@ -150,6 +186,10 @@ namespace mito::timesteppers {
       private:
         // the discrete system
         const semi_discrete_model_type & _semi_discrete_model;
+        // the solver
+        solver_type _solver;
+        // the time step size
+        scalar_type _dt;
         // the stiffness matrix
         matrix_type _stiffness_matrix;
         // the capacitance matrix
@@ -163,7 +203,7 @@ namespace mito::timesteppers {
         // the temporary vector, representing M * u_n, needed to compute the effective load vector
         vector_type _temp_vector;
         // the previous solution vector
-        vector_type _previous_solution;
+        vector_type _solution;
     };
 
 

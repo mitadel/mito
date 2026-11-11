@@ -137,6 +137,7 @@ if(WITH_PETSC)
     mito_test_driver(tests/mito.lib/linalg/petsc_ksp.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_matrix_add.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix_duplicate.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
 endif()
 
@@ -184,6 +185,7 @@ mito_test_driver(tests/mito.lib/operators/gradient_non_square.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_construction.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_assemble_system.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_assemble_effective.cc)
+mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_loop.cc)
 
 # topology
 mito_test_driver(tests/mito.lib/topology/cell_edges.cc)
