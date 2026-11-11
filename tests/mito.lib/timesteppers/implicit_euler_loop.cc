@@ -34,6 +34,9 @@ TEST(Timesteppers, IMPLICIT_EULER_LOOP)
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();
 
+    // make a channel
+    journal::info_t channel("tests.timesteppers.implicit_euler_loop");
+
     // the coordinate system
     auto coord_system = mito::geometry::coordinate_system<coordinates_t>();
 
@@ -90,6 +93,25 @@ TEST(Timesteppers, IMPLICIT_EULER_LOOP)
     for (std::size_t i = 0; i < 100; i++) {
         time_stepper.march();
     }
+
+    // the solution field
+    const auto & solution_field = time_stepper.solution_field();
+
+    // the exact solution field
+    auto u_ex =
+        mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y)
+        * mito::functions::exp(
+            -2.0 * specific_heat / density * std::numbers::pi * std::numbers::pi * 0.01 * 100);
+
+    // compute the L2 error
+    auto error_L2 = mito::fem::compute_l2_norm<2>(function_space, solution_field, u_ex);
+    // report
+    channel << "L2 error: " << error_L2 << journal::endl;
+
+    // compute the H1 error
+    auto error_H1 = mito::fem::compute_h1_norm<2, 2>(function_space, solution_field, u_ex);
+    // report
+    channel << "H1 error: " << error_H1 << journal::endl;
 
     // all done
     return;

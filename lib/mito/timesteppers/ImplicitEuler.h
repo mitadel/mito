@@ -182,6 +182,13 @@ namespace mito::timesteppers {
             return;
         }
 
+        // get the solution as a finite element field
+        constexpr auto solution_field() const -> semi_discrete_model_type::fem_field_type
+        {
+            return _semi_discrete_model.template transform_vector_to_field<linalg_backend_type>(
+                _solution);
+        }
+
 
       private:
         // the discrete system
@@ -207,7 +214,7 @@ namespace mito::timesteppers {
     };
 
 
-}    // namespace mito::fem
+}    // namespace mito::timesteppers
 
 
 // end of file

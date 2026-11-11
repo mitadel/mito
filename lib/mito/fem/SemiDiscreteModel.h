@@ -19,6 +19,10 @@ namespace mito::fem {
       public:
         // the archetype type of the physical model
         using archetype_type = typename physicalModelT::archetype_type;
+        // the solution field type
+        using solution_field_type = tensor::scalar_t;
+        // the fem field type
+        using fem_field_type = fem_field_t<solution_field_type>;
 
       private:
         // the function space type
@@ -30,10 +34,6 @@ namespace mito::fem {
         // QUESTION: is std::map the best choice for {equation_map_type}?
         // the equation map type (map associating an equation number to each node degree of freedom)
         using equation_map_type = std::map<node_type, int>;
-        // the solution field type
-        using solution_field_type = tensor::scalar_t;
-        // the fem field type
-        using fem_field_type = fem_field_t<solution_field_type>;
         // the element type
         using finite_element_type = typename function_space_type::finite_element_type;
         // the number of nodes per element
