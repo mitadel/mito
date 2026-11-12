@@ -53,6 +53,10 @@ namespace mito::linalg::petsc {
         // add scaled vector using VecAXPY
         auto add(const scalar_type &, const Vector &) -> void;
 
+        // add scaled vectors using VecMAXPY
+        auto mito::linalg::petsc::Vector::add(
+            std::span<const scalar_type> alphas, std::span<const Vector * const> vectors) -> void;
+
         // get the size of the vector
         auto size(index_type &) const -> void;
 
