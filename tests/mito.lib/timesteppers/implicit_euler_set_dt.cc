@@ -29,7 +29,7 @@ using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the linear algebra backend type
 using linalg_backend_t = mito::linalg::petsc::backend_t;
 
-TEST(Timesteppers, IMPLICIT_EULER_ASSEMBLE_SYSTEM)
+TEST(Timesteppers, IMPLICIT_EULER_SET_DT)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();
@@ -85,6 +85,9 @@ TEST(Timesteppers, IMPLICIT_EULER_ASSEMBLE_SYSTEM)
 
     // initialise the time stepper
     time_stepper.initialise();
+
+    // change the time step size
+    time_stepper.set_dt(0.02);
 
     // all done
     return;

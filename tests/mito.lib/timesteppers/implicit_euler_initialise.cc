@@ -29,7 +29,7 @@ using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the linear algebra backend type
 using linalg_backend_t = mito::linalg::petsc::backend_t;
 
-TEST(Timesteppers, IMPLICIT_EULER_ASSEMBLE_EFFECTIVE)
+TEST(Timesteppers, IMPLICIT_EULER_INITIALISE)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();
@@ -85,12 +85,6 @@ TEST(Timesteppers, IMPLICIT_EULER_ASSEMBLE_EFFECTIVE)
 
     // initialise the time stepper
     time_stepper.initialise();
-
-    // assemble the effective stiffness matrix
-    time_stepper.compute_effective_stiffness_matrix();
-
-    // assemble the effective load vector
-    time_stepper.compute_effective_load_vector();
 
     // all done
     return;
