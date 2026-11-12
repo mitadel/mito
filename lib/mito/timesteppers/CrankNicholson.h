@@ -42,16 +42,15 @@ namespace mito::timesteppers {
             _semi_discrete_model(semi_discrete_model),
             _solver(std::move(solver)),
             _dt(dt),
-            _stiffness_matrix("stiffness", _semi_discrete_model.n_equations()),
-            _capacitance_matrix("capacitance", _semi_discrete_model.n_equations()),
-            _load_vector("load", _semi_discrete_model.n_equations()),
-            _effective_stiffness_matrix("effective_stiffness", _semi_discrete_model.n_equations()),
-            _effective_rhs_matrix("effective_rhs", _semi_discrete_model.n_equations()),
-            _effective_load_vector("effective_load", _semi_discrete_model.n_equations()),
-            _solution(
-                "solution",
-                _semi_discrete_model.template transform_field_to_vector<linalg_backend_type>(
-                    initial_condition))
+            _K("stiffness", _semi_discrete_model.n_equations()),
+            _M("capacitance", _semi_discrete_model.n_equations()),
+            _f("load", _semi_discrete_model.n_equations()),
+            _Keff("effective_stiffness", _semi_discrete_model.n_equations()),
+            _B("effective_rhs", _semi_discrete_model.n_equations()),
+            _feff("effective_load", _semi_discrete_model.n_equations()),
+            _u("solution",
+               _semi_discrete_model.template transform_field_to_vector<linalg_backend_type>(
+                   initial_condition))
         {
             ;
         }
@@ -59,10 +58,8 @@ namespace mito::timesteppers {
         constexpr auto initialise() -> void
         {
             // set the patterns
-            _semi_discrete_model.template set_matrix_pattern<linalg_backend_type>(
-                _stiffness_matrix);
-            _semi_discrete_model.template set_matrix_pattern<linalg_backend_type>(
-                _capacitance_matrix);
+            _semi_discrete_model.template set_matrix_pattern<linalg_backend_type>(_K);
+            _semi_discrete_model.template set_matrix_pattern<linalg_backend_type>(_M);
 
             // set the values
             assemble_stiffness_matrix();
@@ -96,7 +93,7 @@ namespace mito::timesteppers {
             compute_effective_load_vector();
 
             // solve the linear system
-            _solver.solve(_effective_stiffness_matrix, _effective_load_vector, _solution);
+            _solver.solve(_Keff, _feff, _u);
 
             // all done
             return;
@@ -105,8 +102,7 @@ namespace mito::timesteppers {
         // get the solution as a finite element field
         constexpr auto solution_field() const -> semi_discrete_model_type::fem_field_type
         {
-            return _semi_discrete_model.template transform_vector_to_field<linalg_backend_type>(
-                _solution);
+            return _semi_discrete_model.template transform_vector_to_field<linalg_backend_type>(_u);
         }
 
       private:
@@ -114,10 +110,9 @@ namespace mito::timesteppers {
         constexpr auto assemble_stiffness_matrix() -> void
         {
             _semi_discrete_model
-                .template set_matrix_values<stiffness_term_type, linalg_backend_type>(
-                    _stiffness_matrix);
+                .template set_matrix_values<stiffness_term_type, linalg_backend_type>(_K);
 
-            _stiffness_matrix.assemble();
+            _K.assemble();
 
             // all done
             return;
@@ -127,10 +122,9 @@ namespace mito::timesteppers {
         constexpr auto assemble_capacitance_matrix() -> void
         {
             _semi_discrete_model
-                .template set_matrix_values<capacitance_term_type, linalg_backend_type>(
-                    _capacitance_matrix);
+                .template set_matrix_values<capacitance_term_type, linalg_backend_type>(_M);
 
-            _capacitance_matrix.assemble();
+            _M.assemble();
 
             // all done
             return;
@@ -140,9 +134,9 @@ namespace mito::timesteppers {
         constexpr auto assemble_load_vector() -> void
         {
             _semi_discrete_model.template set_vector_values<load_term_type, linalg_backend_type>(
-                _load_vector);
+                _f);
 
-            _load_vector.assemble();
+            _f.assemble();
 
             // all done
             return;
@@ -152,10 +146,10 @@ namespace mito::timesteppers {
         constexpr auto initialise_effective_stiffness_matrix() -> void
         {
             // duplicate the stiffness matrix pattern
-            _effective_stiffness_matrix.duplicate(_stiffness_matrix);
+            _Keff.duplicate(_K);
 
             // duplicate the stiffness matrix pattern
-            _effective_rhs_matrix.duplicate(_stiffness_matrix);
+            _B.duplicate(_K);
 
             // all done
             return;
@@ -165,26 +159,22 @@ namespace mito::timesteppers {
         constexpr auto compute_effective_stiffness_matrix() -> void
         {
             // copy the stiffness matrix
-            _effective_stiffness_matrix.copy_values(
-                _stiffness_matrix, linalg::petsc::sparsity_pattern::same);
+            _Keff.copy_values(_K, linalg::petsc::sparsity_pattern::same);
 
             // scale the effective stiffness matrix by 1/2
-            _effective_stiffness_matrix.scale(0.5);
+            _Keff.scale(0.5);
 
             // add the capacitance matrix scaled by 1/dt to the effective stiffness matrix
-            _effective_stiffness_matrix.add(
-                1. / _dt, _capacitance_matrix, linalg::petsc::sparsity_pattern::same);
+            _Keff.add(1. / _dt, _M, linalg::petsc::sparsity_pattern::same);
 
             // copy the stiffness matrix into the effective RHS matrix
-            _effective_rhs_matrix.copy_values(
-                _stiffness_matrix, linalg::petsc::sparsity_pattern::same);
+            _B.copy_values(_K, linalg::petsc::sparsity_pattern::same);
 
             // scale the effective rhs matrix by -1/2
-            _effective_rhs_matrix.scale(-0.5);
+            _B.scale(-0.5);
 
             // add the capacitance matrix scaled by 1/dt to the effective RHS matrix
-            _effective_rhs_matrix.add(
-                1. / _dt, _capacitance_matrix, linalg::petsc::sparsity_pattern::same);
+            _B.add(1. / _dt, _M, linalg::petsc::sparsity_pattern::same);
 
             // all done
             return;
@@ -194,7 +184,7 @@ namespace mito::timesteppers {
         constexpr auto compute_effective_load_vector() -> void
         {
             // compute B * u_n and store it in the effective load vector
-            _effective_rhs_matrix.mult_add_vector(_solution, _load_vector, _effective_load_vector);
+            _B.mult_add_vector(_u, _f, _feff);
 
             // all done
             return;
@@ -209,19 +199,19 @@ namespace mito::timesteppers {
         // the time step size
         scalar_type _dt;
         // the stiffness matrix, stores K
-        matrix_type _stiffness_matrix;
+        matrix_type _K;
         // the capacitance matrix, stores M
-        matrix_type _capacitance_matrix;
+        matrix_type _M;
         // the load vector, stores f
-        vector_type _load_vector;
+        vector_type _f;
         // the effective stiffness matrix, stores Keff = K + 1/dt * M
-        matrix_type _effective_stiffness_matrix;
+        matrix_type _Keff;
         // the effective RHS matrix, stores B = -1/2 * K + 1/dt * M
-        matrix_type _effective_rhs_matrix;
-        // the effective load vector, stores f + B * u_n
-        vector_type _effective_load_vector;
+        matrix_type _B;
+        // the effective load vector, stores feff = f + B * u_n
+        vector_type _feff;
         // the solution vector
-        vector_type _solution;
+        vector_type _u;
     };
 
 
