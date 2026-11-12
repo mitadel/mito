@@ -76,7 +76,40 @@ namespace mito::timesteppers {
             compute_effective_stiffness_matrix();
             compute_effective_load_vector();
         }
+        // set the time step size
+        constexpr auto set_dt(scalar_type dt) -> void
+        {
+            // set the time step size
+            _dt = dt;
 
+            // reassemble the effective stiffness matrix with the new time step size
+            compute_effective_stiffness_matrix();
+
+            // all done
+            return;
+        }
+
+        // march one time step
+        constexpr auto march() -> void
+        {
+            // compute the effective load vector
+            compute_effective_load_vector();
+
+            // solve the linear system
+            _solver.solve(_effective_stiffness_matrix, _effective_load_vector, _solution);
+
+            // all done
+            return;
+        }
+
+        // get the solution as a finite element field
+        constexpr auto solution_field() const -> semi_discrete_model_type::fem_field_type
+        {
+            return _semi_discrete_model.template transform_vector_to_field<linalg_backend_type>(
+                _solution);
+        }
+
+      private:
         // assemble stiffness matrix
         constexpr auto assemble_stiffness_matrix() -> void
         {
@@ -167,39 +200,6 @@ namespace mito::timesteppers {
             return;
         }
 
-        // set the time step size
-        constexpr auto set_dt(scalar_type dt) -> void
-        {
-            // set the time step size
-            _dt = dt;
-
-            // reassemble the effective stiffness matrix with the new time step size
-            compute_effective_stiffness_matrix();
-
-            // all done
-            return;
-        }
-
-        // march one time step
-        constexpr auto march() -> void
-        {
-            // compute the effective load vector
-            compute_effective_load_vector();
-
-            // solve the linear system
-            _solver.solve(_effective_stiffness_matrix, _effective_load_vector, _solution);
-
-            // all done
-            return;
-        }
-
-        // get the solution as a finite element field
-        constexpr auto solution_field() const -> semi_discrete_model_type::fem_field_type
-        {
-            return _semi_discrete_model.template transform_vector_to_field<linalg_backend_type>(
-                _solution);
-        }
-
 
       private:
         // the discrete system
@@ -220,7 +220,7 @@ namespace mito::timesteppers {
         matrix_type _effective_rhs_matrix;
         // the effective load vector, stores f + B * u_n
         vector_type _effective_load_vector;
-        // the previous solution vector
+        // the solution vector
         vector_type _solution;
     };
 
