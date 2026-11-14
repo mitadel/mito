@@ -11,6 +11,9 @@
 #ifdef WITH_MPI
 #include <mpi.h>
 #endif
+#include <cmath>
+#include <stdexcept>
+#include <type_traits>
 
 // support
 #include "../utilities.h"
