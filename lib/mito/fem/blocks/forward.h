@@ -35,6 +35,18 @@ namespace mito::fem::blocks {
     // concept of {T} being a finite element of type {elementT}
     template <class T, class finiteElementT>
     concept element_of_type_c = std::same_as<typename T::traits, finiteElementT>;
+
+    // the two interface trace operators: the jump [[u]] = u_left - u_right and the average
+    // {u} = (u_left + u_right) / 2, with the sides named after the interface tangent
+    enum class trace_operator_t { jump, average };
+
+    // the view of an interface element through a trace operator
+    template <class baseElementT, trace_operator_t opT>
+    class InterfaceTraceElement;
+
+    // a block computed on the trace of an interface element
+    template <class blockT, trace_operator_t opT>
+    class InterfaceBlock;
 }
 
 

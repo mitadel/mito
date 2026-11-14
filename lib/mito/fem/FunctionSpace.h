@@ -38,8 +38,11 @@ namespace mito::fem {
 
         // the discretization node type
         using discretization_node_type = typename finite_element_type::discretization_node_type;
-        // the constrained nodes type
-        using constrained_nodes_type = std::set<discretization_node_type>;
+        // the type of the values prescribed by the constraints
+        using constraint_value_type = typename constraints_type::value_type;
+        // the constrained values type (map from constrained node to prescribed value)
+        using constrained_values_type =
+            std::map<discretization_node_type, constraint_value_type>;
         // the type of a map between the mesh nodes and discretization nodes
         using map_type = std::unordered_map<
             mesh_node_type, discretization_node_type, utilities::hash_function<mesh_node_type>>;
@@ -68,7 +71,24 @@ namespace mito::fem {
             // TODO: merge the discretization type with the finite element type
             // discretize the manifold subject to the constraints
             discretize<finite_element_type, discretizationT>(
-                manifold, constraints, _connectivity_table, _node_map, _constrained_nodes);
+                manifold, constraints, _connectivity_table, _node_map, _constrained_values);
+        }
+
+        // the constructor with a pre-populated node map (for coupled problems that share
+        // discretization nodes with another function space)
+        template <discretization_t discretizationT = discretization_t::CG>
+        constexpr FunctionSpace(
+            const manifold_type & manifold, const constraints_type & constraints,
+            const map_type & shared_node_map) :
+            _manifold(manifold),
+            _constraints(constraints),
+            _connectivity_table(),
+            _node_map(shared_node_map)
+        {
+            // discretize the manifold subject to the constraints; mesh nodes already present in
+            // the node map reuse their discretization nodes
+            discretize<finite_element_type, discretizationT>(
+                manifold, constraints, _connectivity_table, _node_map, _constrained_values);
         }
 
         // destructor
@@ -113,10 +133,10 @@ namespace mito::fem {
             return _constraints;
         }
 
-        // get the constrained nodes
-        constexpr auto constrained_nodes() const noexcept -> const constrained_nodes_type &
+        // get the constrained nodes and their prescribed values
+        constexpr auto constrained_values() const noexcept -> const constrained_values_type &
         {
-            return _constrained_nodes;
+            return _constrained_values;
         }
 
         // accessor for the node map
@@ -156,8 +176,8 @@ namespace mito::fem {
         // the constraints
         const constraints_type & _constraints;
 
-        // the constrained nodes
-        constrained_nodes_type _constrained_nodes;
+        // the constrained nodes and their prescribed values
+        constrained_values_type _constrained_values;
 
         // the connectivity table of the finite elements
         connectivity_table_type _connectivity_table;

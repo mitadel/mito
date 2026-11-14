@@ -73,6 +73,12 @@ namespace mito::manifolds {
         // accessor for the mesh
         constexpr auto mesh() const noexcept -> const mesh_type & { return _mesh; }
 
+        // accessor for the coordinate system
+        constexpr auto coordinate_system() const noexcept -> const coordinate_system_type &
+        {
+            return _atlas.coordinate_system();
+        }
+
         // return an iterable view of the manifold elements
         constexpr auto elements() const noexcept { return manifold_elements_view_type{ *this }; }
 
