@@ -182,11 +182,11 @@ mito_test_driver(tests/mito.lib/operators/calculus_vector_field.cc)
 mito_test_driver(tests/mito.lib/operators/gradient_non_square.cc)
 
 # timesteppers
-mito_test_driver(tests/mito.lib/timesteppers/crank_nicholson_loop.cc)
+mito_test_driver(tests/mito.lib/timesteppers/crank_nicholson_convergence.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_construction.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_set_dt.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_initialise.cc)
-mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_loop.cc)
+mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_convergence.cc)
 mito_test_driver(tests/mito.lib/timesteppers/sdirk3s3o_convergence.cc)
 
 # topology

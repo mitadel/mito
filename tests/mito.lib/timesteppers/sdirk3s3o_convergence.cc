@@ -39,7 +39,6 @@ using scalar_t = typename linalg_backend_t::scalar_type;
 
 // the model parameters
 struct Parameters {
-    std::size_t n_steps = 20;
     int x_segments = 16;
     int y_segments = 16;
 
@@ -177,9 +176,9 @@ TEST(Timesteppers, SDIRK3S3O_CONVERGENCE_LOOP)
     };
 
     // three runs, each halving the time step
-    const auto u_1 = run(40);
-    const auto u_2 = run(80);
-    const auto u_3 = run(160);
+    const auto u_1 = run(80);
+    const auto u_2 = run(160);
+    const auto u_3 = run(320);
 
     const auto diff_1_2 = mito::fem::compute_l2_norm<2>(function_space, u_1, u_2);
     const auto diff_2_3 = mito::fem::compute_l2_norm<2>(function_space, u_2, u_3);
