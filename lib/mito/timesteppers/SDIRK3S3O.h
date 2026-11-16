@@ -187,10 +187,10 @@ namespace mito::timesteppers {
         constexpr auto compute_effective_stiffness_matrix() -> void
         {
             // copy the stiffness matrix
-            _Keff.copy_values(_K, linalg::petsc::sparsity_pattern::same);
+            _Keff.copy_values(_K, linalg::sparsity_pattern::same);
 
             // add the capacitance matrix scaled by 1/(gamma*dt) to the effective stiffness matrix
-            _Keff.add(1. / (gamma * _dt), _M, linalg::petsc::sparsity_pattern::same);
+            _Keff.add(1. / (gamma * _dt), _M, linalg::sparsity_pattern::same);
 
             // all done
             return;

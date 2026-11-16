@@ -14,6 +14,12 @@ namespace mito::linalg {
 
     // enumeration for the assembly format
     enum class assembly_format { hash, csr, coo };
+
+    // enumeration indicating how the sparsity pattern of a matrix compares to another matrix
+    enum class sparsity_pattern { same, subset, different, unknown };
+
+    // enumeration indicating the duplication policy for a matrix or vector
+    enum class duplication_policy { copy_pattern };
 }
 
 

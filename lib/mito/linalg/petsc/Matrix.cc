@@ -8,6 +8,38 @@
 #include "public.h"
 
 
+// map the backend-neutral sparsity pattern relation to PETSc's
+constexpr auto
+to_petsc(mito::linalg::sparsity_pattern pattern) -> MatStructure
+{
+    switch (pattern) {
+        case mito::linalg::sparsity_pattern::same:
+            return SAME_NONZERO_PATTERN;
+        case mito::linalg::sparsity_pattern::subset:
+            return SUBSET_NONZERO_PATTERN;
+        case mito::linalg::sparsity_pattern::different:
+            return DIFFERENT_NONZERO_PATTERN;
+        case mito::linalg::sparsity_pattern::unknown:
+            return UNKNOWN_NONZERO_PATTERN;
+    }
+
+    // unreachable for valid values; unknown lets PETSc check the patterns itself
+    return UNKNOWN_NONZERO_PATTERN;
+}
+
+// map the backend-neutral duplication policy to PETSc's
+constexpr auto
+to_petsc(mito::linalg::duplication_policy policy) -> MatDuplicateOption
+{
+    switch (policy) {
+        case mito::linalg::duplication_policy::copy_pattern:
+            return MAT_DO_NOT_COPY_VALUES;
+    }
+
+    // unreachable for valid values
+    return MAT_DO_NOT_COPY_VALUES;
+}
+
 // constructor
 mito::linalg::petsc::Matrix::Matrix(index_type size, assembly_format format) :
     _matrix(nullptr),
@@ -257,7 +289,7 @@ mito::linalg::petsc::Matrix::get_value(index_type row, index_type col) const -> 
 
 // duplicate another matrix
 auto
-mito::linalg::petsc::Matrix::duplicate(const Matrix & X, duplicate_policy policy) -> void
+mito::linalg::petsc::Matrix::duplicate(const Matrix & X, duplication_policy policy) -> void
 {
     // check if we are not duplicating ourselves
     if (this == &X) {
@@ -276,7 +308,7 @@ mito::linalg::petsc::Matrix::duplicate(const Matrix & X, duplicate_policy policy
     _format = X._format;
 
     // duplicate {X}'s structure without its values
-    PetscCallVoid(MatDuplicate(X._matrix, static_cast<MatDuplicateOption>(policy), &_matrix));
+    PetscCallVoid(MatDuplicate(X._matrix, to_petsc(policy), &_matrix));
 }
 
 // copy values from another matrix
@@ -284,7 +316,7 @@ auto
 mito::linalg::petsc::Matrix::copy_values(const Matrix & X, sparsity_pattern pattern) -> void
 {
     // delegate to PETSc
-    PetscCallVoid(MatCopy(X._matrix, _matrix, static_cast<MatStructure>(pattern)));
+    PetscCallVoid(MatCopy(X._matrix, _matrix, to_petsc(pattern)));
 
     // all done
     return;
@@ -296,7 +328,7 @@ mito::linalg::petsc::Matrix::add(
     const scalar_type & alpha, const Matrix & X, sparsity_pattern pattern) -> void
 {
     // delegate to PETsc
-    PetscCallVoid(MatAXPY(_matrix, alpha, X._matrix, static_cast<MatStructure>(pattern)));
+    PetscCallVoid(MatAXPY(_matrix, alpha, X._matrix, to_petsc(pattern)));
 }
 
 // scale the matrix by a scalar

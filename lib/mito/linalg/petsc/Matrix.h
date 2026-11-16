@@ -9,19 +9,6 @@
 
 namespace mito::linalg::petsc {
 
-    // enum for sparsity pattern
-    enum class sparsity_pattern : std::underlying_type_t<MatStructure> {
-        same = SAME_NONZERO_PATTERN,
-        subset = SUBSET_NONZERO_PATTERN,
-        different = DIFFERENT_NONZERO_PATTERN,
-        unknown = UNKNOWN_NONZERO_PATTERN
-    };
-
-    // enum for duplicate policy
-    enum class duplicate_policy : std::underlying_type_t<MatDuplicateOption> {
-        copy_pattern = MAT_DO_NOT_COPY_VALUES
-    };
-
     class Matrix {
       private:
         // the index type
@@ -80,8 +67,8 @@ namespace mito::linalg::petsc {
         auto get_value(index_type, index_type) const -> scalar_type;
 
         // duplicate another matrix's pattern
-        auto duplicate(const Matrix & X, duplicate_policy policy = duplicate_policy::copy_pattern)
-            -> void;
+        auto duplicate(
+            const Matrix & X, duplication_policy policy = duplication_policy::copy_pattern) -> void;
 
         // copy values from another matrix
         auto copy_values(const Matrix & X, sparsity_pattern pattern = sparsity_pattern::unknown)
