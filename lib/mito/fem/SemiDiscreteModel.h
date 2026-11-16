@@ -20,9 +20,9 @@ namespace mito::fem {
         // the archetype type of the physical model
         using archetype_type = typename physicalModelT::archetype_type;
         // the solution field type
-        using solution_field_type = tensor::scalar_t;
+        using solution_type = tensor::scalar_t;
         // the fem field type
-        using fem_field_type = fem_field_t<solution_field_type>;
+        using solution_field_type = fem_field_t<solution_type>;
 
       private:
         // the function space type
@@ -140,11 +140,12 @@ namespace mito::fem {
         // transform a data vector into a finite element field
         template <linalg::valid_backend_c linalgBackendT>
         constexpr auto transform_vector_to_field(
-            const typename linalgBackendT::vector_type & solution_vector) const -> fem_field_type
+            const typename linalgBackendT::vector_type & solution_vector) const
+            -> solution_field_type
         {
             // the solution finite element field
-            fem_field_type solution_field =
-                _function_space.template fem_field<solution_field_type>("solution_field");
+            solution_field_type solution_field =
+                _function_space.template fem_field<solution_type>("solution_field");
 
             // check that the number of equations matches that of the linear system
             assert(_n_equations == solution_vector.size());
@@ -196,7 +197,7 @@ namespace mito::fem {
 
         // import discrete field
         template <linalg::valid_backend_c linalgBackendT>
-        constexpr auto transform_field_to_vector(const fem_field_type & discrete_field) const
+        constexpr auto transform_field_to_vector(const solution_field_type & discrete_field) const
             -> linalgBackendT::vector_type
         {
             // the solution vector

@@ -31,6 +31,17 @@ namespace mito::timesteppers {
             semi_discrete_model, std::forward<solverT>(solver), initial_condition, dt);
     }
 
+    // sdirk3s3o factory
+    template <linalg::valid_backend_c linalgBackendT, class semiDiscreteModelT, class solverT>
+    constexpr auto sdirk3s3o(
+        const semiDiscreteModelT & semi_discrete_model, solverT && solver,
+        const fields::field_c auto & initial_condition, typename linalgBackendT::scalar_type dt)
+        -> sdirk3s3o_t<semiDiscreteModelT, solverT, linalgBackendT>
+    {
+        return sdirk3s3o_t<semiDiscreteModelT, solverT, linalgBackendT>(
+            semi_discrete_model, std::forward<solverT>(solver), initial_condition, dt);
+    }
+
 }
 
 

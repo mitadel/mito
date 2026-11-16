@@ -16,12 +16,15 @@
 // published type factories; this is the file you are looking for...
 #include "api.h"
 
+// scheme utilities
+#include "utilities.h"
+
 // classes implementation
 #include "CrankNicholson.h"
 #include "ImplicitEuler.h"
+#include "SDIRK3S3O.h"
 
 // factories implementation
 #include "factories.h"
-
 
 // end of file

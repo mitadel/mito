@@ -50,18 +50,27 @@ namespace mito::linalg::petsc {
         // copy values from another vector
         auto copy_values(const Vector & X) -> void;
 
+        // zero the vector
+        auto zero() -> void;
+
         // add scaled vector using VecAXPY
         auto add(const scalar_type &, const Vector &) -> void;
 
         // add scaled vectors using VecMAXPY
-        auto mito::linalg::petsc::Vector::add(
-            std::span<const scalar_type> alphas, std::span<const Vector * const> vectors) -> void;
+        template <std::ranges::input_range vectorsT>
+        auto add(std::span<const scalar_type> alphas, const vectorsT & vectors) -> void;
 
         // get the size of the vector
         auto size(index_type &) const -> void;
 
         // return the size of the vector
         auto size() const -> index_type;
+
+        // get the norm of the vector
+        auto norm(scalar_type &) const -> void;
+
+        // return the norm of the vector
+        auto norm() const -> scalar_type;
 
         // get the vector
         template <class vectorT>

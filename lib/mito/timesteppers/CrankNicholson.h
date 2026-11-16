@@ -100,7 +100,7 @@ namespace mito::timesteppers {
         }
 
         // get the solution as a finite element field
-        constexpr auto solution_field() const -> semi_discrete_model_type::fem_field_type
+        constexpr auto solution_field() const -> semi_discrete_model_type::solution_field_type
         {
             return _semi_discrete_model.template transform_vector_to_field<linalg_backend_type>(_u);
         }

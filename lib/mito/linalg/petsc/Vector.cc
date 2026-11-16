@@ -118,40 +118,23 @@ mito::linalg::petsc::Vector::copy_values(const Vector & X) -> void
     return;
 }
 
+// zero the vector
+auto
+mito::linalg::petsc::Vector::zero() -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecZeroEntries(_vector));
+
+    // all done
+    return;
+}
+
 // add scaled vector using VecAXPY
 auto
 mito::linalg::petsc::Vector::add(const scalar_type & alpha, const Vector & X) -> void
 {
     // delegate to PETSc
     PetscCallVoid(VecAXPY(_vector, alpha, X._vector));
-
-    // all done
-    return;
-}
-
-// add a linear combination: this <- this + sum_i alphas[i] * vectors[i]
-auto
-mito::linalg::petsc::Vector::add(
-    std::span<const scalar_type> alphas, std::span<const Vector * const> vectors) -> void
-{
-    // one coefficient per vector
-    if (std::size(alphas) != std::size(vectors)) {
-        journal::error_t channel("mito.linalg.petsc.Vector.add");
-        channel << std::size(alphas) << " coefficients but " << std::size(vectors) << " vectors"
-                << journal::endl;
-        return;
-    }
-
-    // collect the PETSc handles
-    std::vector<Vec> handles;
-    handles.reserve(std::size(vectors));
-    for (const auto * vector : vectors) {
-        handles.push_back(vector->_vector);
-    }
-
-    // delegate to PETSc
-    PetscCallVoid(VecMAXPY(
-        _vector, static_cast<PetscInt>(std::size(handles)), alphas.data(), handles.data()));
 
     // all done
     return;
@@ -177,6 +160,28 @@ mito::linalg::petsc::Vector::size() const -> index_type
 
     // all done
     return vector_size;
+}
+
+// get the norm of the vector
+auto
+mito::linalg::petsc::Vector::norm(scalar_type & norm) const -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecNorm(_vector, NORM_2, &norm));
+}
+
+// return the norm of the vector
+auto
+mito::linalg::petsc::Vector::norm() const -> scalar_type
+{
+    // the value to return
+    scalar_type vector_norm;
+
+    // delegate to PETSc
+    norm(vector_norm);
+
+    // all done
+    return vector_norm;
 }
 
 // print the vector
