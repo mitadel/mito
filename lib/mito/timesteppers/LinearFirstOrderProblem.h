@@ -9,8 +9,9 @@
 
 namespace mito::timesteppers {
 
-    // A class representing a linear first-order problem
-    template <class semiDiscreteModelT, linalg::valid_backend_c linalgBackendT>
+    // a linear first-order problem M du/dt + K u = f, described by a semi-discrete model; the
+    // linear algebra backend is chosen by the caller, per call
+    template <class semiDiscreteModelT>
     requires parabolic_archetype_c<typename semiDiscreteModelT::archetype_type>
     class LinearFirstOrderProblem {
 
@@ -21,42 +22,40 @@ namespace mito::timesteppers {
         using archetype_type = typename semiDiscreteModelT::archetype_type;
 
       public:
-        // the linear algebra backend type
-        using linalg_backend_type = linalgBackendT;
-        // the matrix type
-        using matrix_type = typename linalg_backend_type::matrix_type;
-        // the vector type
-        using vector_type = typename linalg_backend_type::vector_type;
-
-      public:
-        // the default constructor
-        constexpr LinearFirstOrderProblem(const semiDiscreteModelT & model) : _model(model) {}
+        // constructor
+        constexpr explicit LinearFirstOrderProblem(const semi_discrete_model_type & model) :
+            _model(model)
+        {}
 
         // the number of equations
         constexpr auto n_equations() const -> int { return _model.n_equations(); }
 
         // set the sparsity pattern of a system matrix
-        auto set_pattern(matrix_type & A) const -> void
+        template <linalg::valid_backend_c backendT>
+        auto set_pattern(typename backendT::matrix_type & A) const -> void
         {
             _model.template set_matrix_pattern<backendT>(A);
         }
 
         // the mass matrix M: the capacitance term of the archetype
-        auto assemble_mass(matrix_type & M) const -> void
+        template <linalg::valid_backend_c backendT>
+        auto assemble_mass(typename backendT::matrix_type & M) const -> void
         {
             _model.template set_matrix_values<typename archetype_type::Capacitance, backendT>(M);
             M.assemble();
         }
 
         // the stiffness matrix K: the stiffness term of the archetype
-        auto assemble_stiffness(matrix_type & K) const -> void
+        template <linalg::valid_backend_c backendT>
+        auto assemble_stiffness(typename backendT::matrix_type & K) const -> void
         {
             _model.template set_matrix_values<typename archetype_type::Stiffness, backendT>(K);
             K.assemble();
         }
 
         // the load vector f: the load term of the archetype
-        auto assemble_load(vector_type & f) const -> void
+        template <linalg::valid_backend_c backendT>
+        auto assemble_load(typename backendT::vector_type & f) const -> void
         {
             _model.template set_vector_values<typename archetype_type::Load, backendT>(f);
             f.assemble();
