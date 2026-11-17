@@ -10,6 +10,9 @@
 // external packages
 #include "externals.h"
 
+// get the concepts
+#include "concepts.h"
+
 // get the forward declarations
 #include "forward.h"
 
@@ -20,6 +23,7 @@
 #include "utilities.h"
 
 // classes implementation
+#include "LinearFirstOrderProblem.h"
 #include "CrankNicholson.h"
 #include "ImplicitEuler.h"
 #include "SDIRK3S3O.h"

@@ -7,9 +7,13 @@
 #pragma once
 
 
+// externals
+#include <concepts>
+
 // support
 #include "../journal.h"
 #include "../fields.h"
+#include "../models.h"
 
 
 // end of file
