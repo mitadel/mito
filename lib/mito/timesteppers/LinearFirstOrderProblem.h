@@ -11,6 +11,7 @@ namespace mito::timesteppers {
 
     // A class representing a linear first-order problem
     template <class semiDiscreteModelT, linalg::valid_backend_c linalgBackendT>
+    requires parabolic_archetype_c<typename semiDiscreteModelT::archetype_type>
     class LinearFirstOrderProblem {
 
       private:
