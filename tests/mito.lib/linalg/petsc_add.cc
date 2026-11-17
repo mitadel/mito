@@ -37,7 +37,7 @@ TEST(Math, PETScMatrix)
     B.assemble();  
 
     auto C = mito::linalg::petsc::matrix ("C", A);
-    C.add ( 1.0/10.0, B, mito::linalg::petsc::sparsity_pattern::different);  
+    C.add ( 1.0/10.0, B, mito::linalg::sparsity_pattern::different);  
 
     // check the solution
     EXPECT_DOUBLE_EQ(C.get_value(0, 0), 1.0);

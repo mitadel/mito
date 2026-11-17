@@ -46,10 +46,11 @@ main(int argc, char ** argv)
     const scalar_t alpha = 10.0;
 
     // create a std::array mapping the declared sparsity pattern relations to their names
-    const std::array<std::pair<std::string, mito::linalg::petsc::sparsity_pattern>, 3>
-        copy_cases = { { { "same", mito::linalg::petsc::sparsity_pattern::same },
-                         { "different", mito::linalg::petsc::sparsity_pattern::different },
-                         { "unknown", mito::linalg::petsc::sparsity_pattern::unknown } } };
+    const std::array<std::pair<std::string, mito::linalg::sparsity_pattern>, 3> copy_cases = {
+        { { "same", mito::linalg::sparsity_pattern::same },
+          { "different", mito::linalg::sparsity_pattern::different },
+          { "unknown", mito::linalg::sparsity_pattern::unknown } }
+    };
 
     // loop over the declared sparsity pattern relations
     for (const auto & [case_name, pattern] : copy_cases) {
@@ -66,7 +67,7 @@ main(int argc, char ** argv)
                 auto Keff = mito::linalg::petsc::matrix("Keff", N);
 
                 // copy the structure of K into Keff (not timed)
-                Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
+                Keff.duplicate(K, mito::linalg::duplication_policy::copy_pattern);
 
                 // time the copy of the values from K into Keff
                 state.SetIterationTime(timed([&] { Keff.copy_values(K, declared); }));
@@ -78,16 +79,16 @@ main(int argc, char ** argv)
     struct case_t {
         std::string name;
         const mito::linalg::petsc::Matrix & matrix;
-        mito::linalg::petsc::sparsity_pattern pattern;
+        mito::linalg::sparsity_pattern pattern;
     };
 
     const std::array<case_t, 6> axpy_cases = {
-        { { "same", M, mito::linalg::petsc::sparsity_pattern::same },
-          { "different", M, mito::linalg::petsc::sparsity_pattern::different },
-          { "unknown", M, mito::linalg::petsc::sparsity_pattern::unknown },
-          { "subset_lumped", L, mito::linalg::petsc::sparsity_pattern::subset },
-          { "different_lumped", L, mito::linalg::petsc::sparsity_pattern::different },
-          { "unknown_lumped", L, mito::linalg::petsc::sparsity_pattern::unknown } }
+        { { "same", M, mito::linalg::sparsity_pattern::same },
+          { "different", M, mito::linalg::sparsity_pattern::different },
+          { "unknown", M, mito::linalg::sparsity_pattern::unknown },
+          { "subset_lumped", L, mito::linalg::sparsity_pattern::subset },
+          { "different_lumped", L, mito::linalg::sparsity_pattern::different },
+          { "unknown_lumped", L, mito::linalg::sparsity_pattern::unknown } }
     };
 
     // loop over the declared sparsity pattern relations for MatAXPY
@@ -106,10 +107,10 @@ main(int argc, char ** argv)
                     auto Keff = mito::linalg::petsc::matrix("Keff", N);
 
                     // copy the structure of K into Keff (not timed)
-                    Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
+                    Keff.duplicate(K, mito::linalg::duplication_policy::copy_pattern);
 
                     // copy the values of K into Keff (not timed)
-                    Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
+                    Keff.copy_values(K, mito::linalg::sparsity_pattern::same);
 
                     // time the addition
                     state.SetIterationTime(timed([&] { Keff.add(alpha, matrix, declared); }));

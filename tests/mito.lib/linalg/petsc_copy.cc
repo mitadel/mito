@@ -25,7 +25,7 @@ TEST(Math, PETScMatrix)
     A.insert_value(2, 0, 5.0);
     A.insert_value(2, 1, 7.0);
 
-    B.copy_values(A, mito::linalg::petsc::sparsity_pattern::different);
+    B.copy_values(A, mito::linalg::sparsity_pattern::different);
 
     // check the solution
     EXPECT_DOUBLE_EQ(B.get_value(0, 0), A.get_value(0, 0));

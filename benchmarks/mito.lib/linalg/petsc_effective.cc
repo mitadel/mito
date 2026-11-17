@@ -41,13 +41,13 @@ main(int argc, char ** argv)
         auto M = mito::linalg::petsc::matrix("M", N, format_t::coo);
         assemble_from(M, listsM);
         auto Keff = mito::linalg::petsc::matrix("Keff", N);
-        Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
+        Keff.duplicate(K, mito::linalg::duplication_policy::copy_pattern);
 
         for (auto _ : state) {
             // time one update of Keff
             state.SetIterationTime(timed([&] {
-                Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
-                Keff.add(1.0 / dt, M, mito::linalg::petsc::sparsity_pattern::same);
+                Keff.copy_values(K, mito::linalg::sparsity_pattern::same);
+                Keff.add(1.0 / dt, M, mito::linalg::sparsity_pattern::same);
             }));
         }
     });
@@ -99,7 +99,7 @@ main(int argc, char ** argv)
                 auto M = mito::linalg::petsc::matrix("M", N, fmt);
                 assemble_from(M, listsM);
                 auto Keff = mito::linalg::petsc::matrix("Keff", N);
-                Keff.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
+                Keff.duplicate(K, mito::linalg::duplication_policy::copy_pattern);
 
                 // the value arrays of K and M
                 std::vector<scalar_t> valsK(std::size(listsK.vals));
@@ -114,8 +114,8 @@ main(int argc, char ** argv)
                         K.assemble();
                         M.set_values(valsM);
                         M.assemble();
-                        Keff.copy_values(K, mito::linalg::petsc::sparsity_pattern::same);
-                        Keff.add(1.0 / dt, M, mito::linalg::petsc::sparsity_pattern::same);
+                        Keff.copy_values(K, mito::linalg::sparsity_pattern::same);
+                        Keff.add(1.0 / dt, M, mito::linalg::sparsity_pattern::same);
                     }));
                 }
             });

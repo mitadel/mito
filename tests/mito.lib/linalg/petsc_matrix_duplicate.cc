@@ -27,7 +27,7 @@ check_duplicate_set_values(format_t format) -> void
 
     // a duplicate of K, refilled through set_values with different values
     auto D = mito::linalg::petsc::matrix_t("D", N, format);
-    D.duplicate(K, mito::linalg::petsc::duplicate_policy::copy_pattern);
+    D.duplicate(K, mito::linalg::duplication_policy::copy_pattern);
     auto listsD = flatten(local, 3.0);
     D.set_values(listsD.vals);
     D.assemble();
