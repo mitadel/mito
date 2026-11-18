@@ -9,13 +9,19 @@
 
 namespace mito::timesteppers {
 
-    template <class semiDiscreteModelT, class solverT, linalg::valid_backend_c linalgBackendT>
+    template <
+        linalg::valid_backend_c linalgBackendT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
     class ImplicitEuler;
 
-    template <class semiDiscreteModelT, class solverT, linalg::valid_backend_c linalgBackendT>
+    template <
+        linalg::valid_backend_c linalgBackendT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
     class CrankNicholson;
 
-    template <class semiDiscreteModelT, class solverT, linalg::valid_backend_c linalgBackendT>
+    template <
+        linalg::valid_backend_c linalgBackendT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
     class SDIRK3S3O;
 }
 

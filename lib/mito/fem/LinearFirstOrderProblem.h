@@ -7,12 +7,12 @@
 #pragma once
 
 
-namespace mito::timesteppers {
+namespace mito::fem {
 
     // a linear first-order problem M du/dt + K u = f, described by a semi-discrete model; the
     // linear algebra backend is chosen by the caller, per call
     template <class semiDiscreteModelT>
-    requires parabolic_archetype_c<typename semiDiscreteModelT::archetype_type>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
     class LinearFirstOrderProblem {
 
       private:
@@ -61,12 +61,20 @@ namespace mito::timesteppers {
             f.assemble();
         }
 
+        // transform a field to a vector, usable with the backend {backendT}
+        template <linalg::valid_backend_c backendT>
+        auto transform_field_to_vector(const fields::field_c auto & field) const ->
+            typename backendT::vector_type
+        {
+            return _model.template transform_field_to_vector<backendT>(field);
+        }
+
       private:
         // the semi-discrete model
         const semi_discrete_model_type & _model;
     };
 
-}    // namespace mito::timesteppers
+}    // namespace mito::fem
 
 
 // end of file

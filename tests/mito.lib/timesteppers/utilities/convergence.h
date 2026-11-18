@@ -147,6 +147,9 @@ namespace mito::tests::timesteppers {
         // the semi-discrete model
         auto semi_discrete_model = mito::fem::semi_discrete_model(function_space, model);
 
+        // the problem
+        auto problem = mito::fem::linear_first_order_problem(semi_discrete_model);
+
         // the initial condition field
         auto initial_condition_field =
             mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
@@ -159,7 +162,7 @@ namespace mito::tests::timesteppers {
 
             // the time stepper
             auto time_stepper = make_time_stepper(
-                semi_discrete_model, std::move(solver), initial_condition_field,
+                problem, std::move(solver), initial_condition_field,
                 parameters.t_final / static_cast<scalar_t>(steps));
             time_stepper.initialise();
 

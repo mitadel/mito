@@ -17,9 +17,9 @@ TEST(Timesteppers, IMPLICIT_EULER_CONVERGENCE)
 
     // the observed order of accuracy of implicit Euler
     const auto p = observed_order(
-        [](const auto & model, auto && solver, const auto & initial_condition, scalar_t dt) {
+        [](const auto & problem, auto && solver, const auto & initial_condition, scalar_t dt) {
             return mito::timesteppers::implicit_euler<linalg_backend_t>(
-                model, std::move(solver), initial_condition, dt);
+                problem, std::move(solver), initial_condition, dt);
         });
 
     // report

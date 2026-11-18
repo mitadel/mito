@@ -73,6 +73,9 @@ TEST(Timesteppers, IMPLICIT_EULER_SET_DT)
     // the semi-discrete model
     auto semi_discrete_model = mito::fem::semi_discrete_model(function_space, model);
 
+    // the problem
+    auto problem = mito::fem::linear_first_order_problem(semi_discrete_model);
+
     // instantiate a PETSc Krylov solver for the time stepper
     auto solver = mito::linalg::petsc::ksp("time_stepper");
 
@@ -81,7 +84,7 @@ TEST(Timesteppers, IMPLICIT_EULER_SET_DT)
 
     // the time stepper
     auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(
-        semi_discrete_model, std::move(solver), initial_condition_field, 0.01);
+        problem, std::move(solver), initial_condition_field, 0.01);
 
     // initialise the time stepper
     time_stepper.initialise();

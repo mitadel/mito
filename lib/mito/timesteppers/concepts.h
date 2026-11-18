@@ -9,10 +9,6 @@
 
 namespace mito::timesteppers {
 
-    // an archetype of a first-order system M du/dt + K u = f
-    template <class archetypeT>
-    concept parabolic_archetype_c = std::same_as<archetypeT, models::ParabolicPDE>;
-
     // a linear first-order problem M du/dt + K u = f, usable with the backend {backendT}
     template <class problemT, class backendT>
     concept linear_first_order_problem_c =

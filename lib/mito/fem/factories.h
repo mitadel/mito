@@ -83,6 +83,14 @@ namespace mito::fem {
         return semi_discrete_model_t<functionSpaceT, physicalModelT>(
             function_space, physical_model);
     }
+
+    // linear first order problem factory
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    constexpr auto linear_first_order_problem(const semiDiscreteModelT & model)
+    {
+        return linear_first_order_problem_t<semiDiscreteModelT>(model);
+    }
 }
 
 

@@ -23,7 +23,6 @@
 #include "utilities.h"
 
 // classes implementation
-#include "LinearFirstOrderProblem.h"
 #include "CrankNicholson.h"
 #include "ImplicitEuler.h"
 #include "SDIRK3S3O.h"

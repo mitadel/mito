@@ -67,6 +67,11 @@ namespace mito::fem {
     // class semi-discrete model
     template <function_space_c functionSpaceT, class physicalModelT>
     class SemiDiscreteModel;
+
+    // class linear first order problem
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    class LinearFirstOrderProblem;
 }
 
 

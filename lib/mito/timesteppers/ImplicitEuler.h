@@ -52,11 +52,11 @@ namespace mito::timesteppers {
         {
             // set the patterns
             _problem.template set_pattern<linalg_backend_type>(_K);
-            _problem.template set_matrix_pattern<linalg_backend_type>(_M);
+            _problem.template set_pattern<linalg_backend_type>(_M);
 
             // set the values
             _problem.template assemble_stiffness<linalg_backend_type>(_K);
-            _problem.template assemble_capacitance<linalg_backend_type>(_M);
+            _problem.template assemble_mass<linalg_backend_type>(_M);
             _problem.template assemble_load<linalg_backend_type>(_f);
 
             // initialise the effective stiffness matrix by duplicating the stiffness matrix pattern
@@ -92,59 +92,7 @@ namespace mito::timesteppers {
             return;
         }
 
-        // get the solution as a finite element field
-        constexpr auto solution_field() const -> semi_discrete_model_type::solution_field_type
-        {
-            return _semi_discrete_model.template transform_vector_to_field<linalg_backend_type>(_u);
-        }
-
       private:
-        // assemble stiffness matrix
-        constexpr auto assemble_stiffness_matrix() -> void
-        {
-            _semi_discrete_model
-                .template set_matrix_values<stiffness_term_type, linalg_backend_type>(_K);
-
-            _K.assemble();
-
-            // all done
-            return;
-        }
-
-        // assemble capacitance matrix
-        constexpr auto assemble_capacitance_matrix() -> void
-        {
-            _semi_discrete_model
-                .template set_matrix_values<capacitance_term_type, linalg_backend_type>(_M);
-
-            _M.assemble();
-
-            // all done
-            return;
-        }
-
-        // assemble load vector
-        constexpr auto assemble_load_vector() -> void
-        {
-            _semi_discrete_model.template set_vector_values<load_term_type, linalg_backend_type>(
-                _f);
-
-            _f.assemble();
-
-            // all done
-            return;
-        }
-
-        // initialise effective stiffness matrix
-        constexpr auto initialise_effective_stiffness_matrix() -> void
-        {
-            // duplicate the stiffness matrix pattern
-            _Keff.duplicate(_K);
-
-            // all done
-            return;
-        }
-
         // compute effective stiffness matrix
         constexpr auto compute_effective_stiffness_matrix() -> void
         {

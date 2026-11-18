@@ -70,6 +70,16 @@ namespace mito::fem {
     // semi discrete model alias
     template <function_space_c functionSpaceT, class physicalModelT>
     using semi_discrete_model_t = SemiDiscreteModel<functionSpaceT, physicalModelT>;
+
+    // the linear first order problem alias
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    using linear_first_order_problem_t = LinearFirstOrderProblem<semiDiscreteModelT>;
+
+    // the linear first order problem factory
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    constexpr auto linear_first_order_problem(const semiDiscreteModelT & model);
 }
 
 
