@@ -23,11 +23,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04]
+        os: [ubuntu-26.04]
         target: [Debug, Release]
-        python: ["3.12"]
+        python: ["3.14"]
         suite: [gcc]
-        suiteVersion: ["14"]
+        suiteVersion: ["15"]
         include:
           - suite: gcc
             cc: gcc
@@ -198,7 +198,7 @@ jobs:
           echo " -- run valgrind on benchmark test"
           valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --xml=yes --xml-file=memcheck.xml --leak-resolution=high --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes --gen-suppressions=all --suppressions=${{github.workspace}}/mito/.valgrind.supp --log-file='valgrind.txt' -v ./benchmarks/benchmarks.mito.lib.integration.integration
           echo " -- check valgrind output"
-          python3 ${{github.workspace}}/mito/scripts/check_valgrind.py
+          ${{github.workspace}}/mito/scripts/check_valgrind.py memcheck.xml --source-dir "${{github.workspace}}/mito" --source-dir "${{github.workspace}}/pyre" --output memcheck-full-report.md
         working-directory: ${{runner.temp}}/build
 
       - name: create artifact
