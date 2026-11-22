@@ -97,6 +97,12 @@ if(WITH_VTK)
     endif()
 endif()
 
+# simulation
+mito_test_driver(tests/mito.lib/simulation/communication_manager.cc)
+if(WITH_MPI)
+    mito_test_driver_mpi(tests/mito.lib/simulation/communication_manager_mpi.cc 2)
+endif()
+
 # tensor
 mito_test_driver(tests/mito.lib/tensor/one_forms.cc)
 mito_test_driver(tests/mito.lib/tensor/contractions.cc)

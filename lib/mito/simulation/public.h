@@ -18,6 +18,7 @@
 
 // classes implementation
 #include "Context.h"
+#include "CommunicationManager.h"
 #include "Simulation.h"
 
 // factories implementation

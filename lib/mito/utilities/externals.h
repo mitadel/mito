@@ -20,6 +20,7 @@
 #include <typeinfo>
 #include <cxxabi.h>
 #include <unordered_map>
+#include <algorithm>
 
 // support
 #include "../journal.h"

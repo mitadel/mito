@@ -1,0 +1,242 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
+//
+
+
+#if !defined(mito_simulation_CommunicationManager_icc)
+#error This header file contains implementation details of class mito::simulation::CommunicationManager
+#else
+
+
+mito::simulation::CommunicationManager::CommunicationManager(const Context & context) :
+    _task_id(context.task_id()),
+    _n_tasks(context.n_tasks())
+#if (WITH_MPI)
+    ,
+    _communicator(MPI_COMM_WORLD)
+#endif
+{
+    // all done
+    return;
+}
+
+auto
+mito::simulation::CommunicationManager::task_id() const -> int
+{
+    return _task_id;
+}
+
+auto
+mito::simulation::CommunicationManager::n_tasks() const -> int
+{
+    return _n_tasks;
+}
+
+auto
+mito::simulation::CommunicationManager::barrier() const -> void
+{
+#if (WITH_MPI)
+    MPI_Barrier(_communicator);
+#endif
+    return;
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::reduce_sum(valueT local) const -> valueT
+{
+#if (WITH_MPI)
+    return _reduce(local, MPI_SUM);
+#else
+    return local;
+#endif
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::reduce_min(valueT local) const -> valueT
+{
+#if (WITH_MPI)
+    return _reduce(local, MPI_MIN);
+#else
+    return local;
+#endif
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::reduce_max(valueT local) const -> valueT
+{
+#if (WITH_MPI)
+    return _reduce(local, MPI_MAX);
+#else
+    return local;
+#endif
+}
+
+auto
+mito::simulation::CommunicationManager::reduce_norm(double local_norm) const -> double
+{
+    auto global_sum = reduce_sum(local_norm * local_norm);
+    return std::sqrt(global_sum);
+}
+
+auto
+mito::simulation::CommunicationManager::reduce_min_location(double local) const
+    -> std::pair<double, int>
+{
+#if (WITH_MPI)
+    struct {
+        double value;
+        int task_id;
+    } local_pair{ local, _task_id }, global_pair{};
+
+    MPI_Allreduce(&local_pair, &global_pair, 1, MPI_DOUBLE_INT, MPI_MINLOC, _communicator);
+    return { global_pair.value, global_pair.task_id };
+#else
+    return { local, _task_id };
+#endif
+}
+
+auto
+mito::simulation::CommunicationManager::reduce_max_location(double local) const
+    -> std::pair<double, int>
+{
+#if (WITH_MPI)
+    struct {
+        double value;
+        int task_id;
+    } local_pair{ local, _task_id }, global_pair{};
+
+    MPI_Allreduce(&local_pair, &global_pair, 1, MPI_DOUBLE_INT, MPI_MAXLOC, _communicator);
+    return { global_pair.value, global_pair.task_id };
+#else
+    return { local, _task_id };
+#endif
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::send(const valueT & value, int destination, int tag) const
+    -> void
+{
+#if (WITH_MPI)
+    MPI_Send(&value, 1, _mpi_datatype<valueT>(), destination, tag, _communicator);
+    return;
+#else
+    throw std::logic_error("CommunicationManager::send requires WITH_MPI=ON and an MPI runtime.");
+#endif
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::receive(int source, int tag) const -> valueT
+{
+#if (WITH_MPI)
+    valueT value{};
+    MPI_Recv(&value, 1, _mpi_datatype<valueT>(), source, tag, _communicator, MPI_STATUS_IGNORE);
+    return value;
+#else
+    throw std::logic_error(
+        "CommunicationManager::receive requires WITH_MPI=ON and an MPI runtime.");
+#endif
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::send(
+    const std::vector<valueT> & values, int destination, int tag) const -> void
+{
+#if (WITH_MPI)
+    MPI_Send(
+        values.data(), static_cast<int>(values.size()), _mpi_datatype<valueT>(), destination, tag,
+        _communicator);
+    return;
+#else
+    throw std::logic_error(
+        "CommunicationManager::send(vector) requires WITH_MPI=ON and an MPI runtime.");
+#endif
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::receive(std::size_t count, int source, int tag) const
+    -> std::vector<valueT>
+{
+#if (WITH_MPI)
+    auto values = std::vector<valueT>(count);
+    MPI_Recv(
+        values.data(), static_cast<int>(count), _mpi_datatype<valueT>(), source, tag, _communicator,
+        MPI_STATUS_IGNORE);
+    return values;
+#else
+    throw std::logic_error(
+        "CommunicationManager::receive(vector) requires WITH_MPI=ON and an MPI runtime.");
+#endif
+}
+
+auto
+mito::simulation::CommunicationManager::encode_tag(int origin, int destination) -> int
+{
+    return tag_multiplier * origin + destination;
+}
+
+auto
+mito::simulation::CommunicationManager::decode_tag(int tag) -> std::pair<int, int>
+{
+    auto origin = tag / tag_multiplier;
+    auto destination = tag - tag_multiplier * origin;
+    return { origin, destination };
+}
+
+#if (WITH_MPI)
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::_throw_invalid_mpi_type() -> MPI_Datatype
+{
+    throw std::invalid_argument(
+        "CommunicationManager received an unsupported value type for MPI communication.");
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::_mpi_datatype() -> MPI_Datatype
+{
+    if constexpr (std::is_same_v<valueT, int>) {
+        return MPI_INT;
+    } else if constexpr (std::is_same_v<valueT, long>) {
+        return MPI_LONG;
+    } else if constexpr (std::is_same_v<valueT, long long>) {
+        return MPI_LONG_LONG;
+    } else if constexpr (std::is_same_v<valueT, unsigned int>) {
+        return MPI_UNSIGNED;
+    } else if constexpr (std::is_same_v<valueT, unsigned long>) {
+        return MPI_UNSIGNED_LONG;
+    } else if constexpr (std::is_same_v<valueT, unsigned long long>) {
+        return MPI_UNSIGNED_LONG_LONG;
+    } else if constexpr (std::is_same_v<valueT, float>) {
+        return MPI_FLOAT;
+    } else if constexpr (std::is_same_v<valueT, double>) {
+        return MPI_DOUBLE;
+    } else {
+        return _throw_invalid_mpi_type<valueT>();
+    }
+}
+
+template <class valueT>
+auto
+mito::simulation::CommunicationManager::_reduce(valueT local, MPI_Op op) const -> valueT
+{
+    valueT global{};
+    MPI_Allreduce(&local, &global, 1, _mpi_datatype<valueT>(), op, _communicator);
+    return global;
+}
+
+#endif    // WITH_MPI
+
+#endif    // mito_simulation_CommunicationManager_icc
+
+
+// end of file

@@ -23,15 +23,8 @@ namespace mito::discrete {
     template <class Y, mesh::mesh_c meshT>
     constexpr auto mesh_field(const meshT & mesh, std::string name)
     {
-        // assemble the node type
-        using node_type = geometry::node_t<meshT::dim>;
-
-        // get the nodes in the mesh
-        std::unordered_set<node_type, utilities::hash_function<node_type>> nodes;
-        mesh::get_nodes(mesh, nodes);
-
         // build a mesh field on the nodes collected from the mesh
-        return mesh_field_t<meshT::dim, Y>(nodes, name);
+        return mesh_field_t<meshT::dim, Y>(mesh.nodes(), name);
     }
 
     // mesh field factory from a continuous field

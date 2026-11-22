@@ -12,6 +12,9 @@ namespace mito::simulation {
     // class simulation
     class Context;
 
+    // class communication manager
+    class CommunicationManager;
+
     // class simulation
     class Simulation;
 

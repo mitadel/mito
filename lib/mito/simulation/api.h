@@ -12,6 +12,9 @@ namespace mito::simulation {
     // context alias
     using context_t = Context;
 
+    // communication manager alias
+    using communication_manager_t = CommunicationManager;
+
     // simulation alias
     using simulation_t = Simulation;
 
