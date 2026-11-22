@@ -17,9 +17,9 @@ TEST(Timesteppers, SDIRK3S3O_CONVERGENCE)
 
     // the observed order of accuracy of SDIRK3S3O
     const auto p = observed_order(
-        [](const auto & problem, auto && solver, const auto & initial_condition, scalar_t dt) {
-            return mito::timesteppers::sdirk3s3o<linalg_backend_t>(
-                problem, std::move(solver), initial_condition, dt);
+        [](const auto & problem, auto & solver, const auto & initial_condition, scalar_t dt) {
+            return mito::timesteppers::sdirk3s3o<linalg_backend_t, stage_solver_t>(
+                problem, solver, initial_condition, dt);
         });
 
     // report

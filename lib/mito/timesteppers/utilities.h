@@ -21,6 +21,23 @@ namespace mito::timesteppers {
         }
         return x;
     }
+
+    // the rate of a stage solved with shift {alpha} and predictor {beta}: U_dot = alpha (U - beta)
+    template <class vectorT, class scalarT>
+    auto stage_rate(scalarT alpha, const vectorT & U, const vectorT & beta, vectorT & U_dot) -> void
+    {
+        // U_dot = U
+        U_dot.copy_values(U);
+
+        // U_dot = U - beta
+        U_dot.add(-1.0, beta);
+
+        // U_dot = alpha (U - beta)
+        U_dot.scale(alpha);
+
+        // all done
+        return;
+    }
 }
 
 

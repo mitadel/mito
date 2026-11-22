@@ -17,9 +17,9 @@ TEST(Timesteppers, CRANK_NICHOLSON_CONVERGENCE)
 
     // the observed order of accuracy of crank-Nicholson
     const auto p = observed_order(
-        [](const auto & problem, auto && solver, const auto & initial_condition, scalar_t dt) {
-            return mito::timesteppers::crank_nicholson<linalg_backend_t>(
-                problem, std::move(solver), initial_condition, dt);
+        [](const auto & problem, auto & solver, const auto & initial_condition, scalar_t dt) {
+            return mito::timesteppers::crank_nicholson<linalg_backend_t, stage_solver_t>(
+                problem, solver, initial_condition, dt);
         });
 
     // report

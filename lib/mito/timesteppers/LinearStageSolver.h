@@ -31,7 +31,7 @@ namespace mito::timesteppers {
       public:
         // the default constructor
         constexpr LinearStageSolver(
-            const problem_type & problem, const solver_type & solver, scalar_type alpha) :
+            const problem_type & problem, solver_type & solver, scalar_type alpha) :
             _problem(problem),
             _solver(solver),
             _alpha(alpha),
@@ -90,7 +90,7 @@ namespace mito::timesteppers {
             _M.mult_vector(beta, _rhs);
 
             // rhs = f + alpha * rhs
-            _rhs.add(_alpha, _f);
+            _rhs.scale_and_add(_alpha, _f);
 
             // solve the linear system
             _solver.solve(_Keff, _rhs, u);
@@ -119,7 +119,7 @@ namespace mito::timesteppers {
         // the problem
         const problem_type & _problem;
         // the solver
-        const solver_type & _solver;
+        solver_type & _solver;
         // alpha
         scalar_type _alpha;
         // the stiffness matrix

@@ -33,6 +33,10 @@ namespace mito::tests::timesteppers {
     using linalg_backend_t = mito::linalg::petsc::backend_t;
     // the scalar type
     using scalar_t = typename linalg_backend_t::scalar_type;
+    // the linear stage solver type
+    template <class linalgBackendT, class problemT, class solverT>
+    using stage_solver_t =
+        mito::timesteppers::linear_stage_solver_t<linalgBackendT, problemT, solverT>;
 
     // the model parameters
     struct Parameters {
@@ -154,6 +158,10 @@ namespace mito::tests::timesteppers {
         auto initial_condition_field =
             mito::functions::sin(std::numbers::pi * x) * mito::functions::sin(std::numbers::pi * y);
 
+        // the initial condition vector
+        auto initial_condition_vector =
+            problem.template transform_field_to_vector<linalg_backend_t>(initial_condition_field);
+
         // run the time stepper up to {t_final} in {steps} steps; return the final solution field
         auto run = [&](std::size_t steps) {
             // a direct solver, so the solver error is far below the time discretization error
@@ -162,9 +170,8 @@ namespace mito::tests::timesteppers {
 
             // the time stepper
             auto time_stepper = make_time_stepper(
-                problem, std::move(solver), initial_condition_field,
+                problem, solver, initial_condition_vector,
                 parameters.t_final / static_cast<scalar_t>(steps));
-            time_stepper.initialise();
 
             // march to the final time
             for (std::size_t i = 0; i < steps; ++i) {

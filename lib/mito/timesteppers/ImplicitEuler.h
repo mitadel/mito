@@ -33,7 +33,7 @@ namespace mito::timesteppers {
       public:
         // the default constructor
         constexpr ImplicitEuler(
-            const problemT & problem, const solver_type & solver,
+            const problemT & problem, solver_type & solver,
             const vector_type & initial_condition, scalar_type dt) :
             _stage_solver(problem, solver, 1.0 / dt),
             _dt(dt),
