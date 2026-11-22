@@ -54,7 +54,7 @@ namespace mito::linalg::petsc {
         auto zero() -> void;
 
         // scale the vector using VecScale
-        auto scale(const scalar_type & alpha) -> void;
+        auto scale(const scalar_type &) -> void;
 
         // add scaled vector using VecAXPY
         auto add(const scalar_type &, const Vector &) -> void;

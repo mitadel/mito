@@ -20,6 +20,12 @@ namespace mito::fem {
         using semi_discrete_model_type = semiDiscreteModelT;
         // the archetype type
         using archetype_type = typename semiDiscreteModelT::archetype_type;
+        // time invariance flag
+        // TOFIX: check this based on the provided semiDiscreteModelT
+        static constexpr bool is_time_invariant = true;
+        // constant load flag
+        // TOFIX: check this based on the provided semiDiscreteModelT
+        static constexpr bool constant_load = true;
 
       public:
         // constructor
