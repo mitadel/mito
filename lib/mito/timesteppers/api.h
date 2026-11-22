@@ -9,20 +9,26 @@
 
 namespace mito::timesteppers {
 
+    // linear stage solver alias
+    template <
+        linalg::valid_backend_c linalgBackendT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
+    using linear_stage_solver_t = LinearStageSolver<linalgBackendT, problemT, solverT>;
+
     // implicit euler alias
     template <
-        linalg::valid_backend_c linalgBackendT,
-        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
-    using implicit_euler_t = ImplicitEuler<linalgBackendT, problemT, solverT>;
+        linalg::valid_backend_c linalgBackendT, class problemT, class solverT,
+        template <class, class, class> class stageSolverT>
+    using implicit_euler_t = ImplicitEuler<linalgBackendT, problemT, solverT, stageSolverT>;
 
-    // implicit euler factory
     template <
-        linalg::valid_backend_c linalgBackendT,
+        linalg::valid_backend_c linalgBackendT, template <class, class, class> class stageSolverT,
         linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
     constexpr auto implicit_euler(
-        const problemT & problem, solverT && solver, const fields::field_c auto & initial_condition,
+        const problemT & problem, const solverT & solver,
+        const typename linalgBackendT::vector_type & initial_condition,
         typename linalgBackendT::scalar_type dt)
-        -> implicit_euler_t<linalgBackendT, problemT, solverT>;
+        -> implicit_euler_t<linalgBackendT, problemT, solverT, stageSolverT>;
 
     // crank-nicholson alias
     template <

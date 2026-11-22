@@ -11,15 +11,16 @@ namespace mito::timesteppers {
 
     // implicit euler factory
     template <
-        linalg::valid_backend_c linalgBackendT,
+        linalg::valid_backend_c linalgBackendT, template <class, class, class> class stageSolverT,
         linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
     constexpr auto implicit_euler(
-        const problemT & problem, solverT && solver, const fields::field_c auto & initial_condition,
+        const problemT & problem, const solverT & solver,
+        const typename linalgBackendT::vector_type & initial_condition,
         typename linalgBackendT::scalar_type dt)
-        -> implicit_euler_t<linalgBackendT, problemT, solverT>
+        -> implicit_euler_t<linalgBackendT, problemT, solverT, stageSolverT>
     {
-        return implicit_euler_t<linalgBackendT, problemT, solverT>(
-            problem, std::forward<solverT>(solver), initial_condition, dt);
+        return implicit_euler_t<linalgBackendT, problemT, solverT, stageSolverT>(
+            problem, solver, initial_condition, dt);
     }
 
     // crank-nicholson factory

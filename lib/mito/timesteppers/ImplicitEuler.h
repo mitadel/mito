@@ -10,15 +10,15 @@
 namespace mito::timesteppers {
 
     template <
-        linalg::valid_backend_c linalgBackendT,
-        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
+        linalg::valid_backend_c linalgBackendT, class problemT, class solverT,
+        template <class, class, class> class stageSolverT>
     class ImplicitEuler {
 
       private:
-        // the problem type
-        using problem_type = problemT;
         // the linear algebra backend type
         using linalg_backend_type = linalgBackendT;
+        // the problem type
+        using problem_type = problemT;
         // the matrix solver type
         using solver_type = solverT;
         // the matrix type
@@ -27,43 +27,20 @@ namespace mito::timesteppers {
         using vector_type = typename linalg_backend_type::vector_type;
         // the scalar type
         using scalar_type = typename linalg_backend_type::scalar_type;
+        // the stage solver type, built from the types of this time stepper
+        using stage_solver_type = stageSolverT<linalg_backend_type, problem_type, solver_type>;
 
       public:
         // the default constructor
         constexpr ImplicitEuler(
-            const problemT & problem, solver_type && solver,
-            const fields::field_c auto & initial_condition, scalar_type dt) :
-            _problem(problem),
-            _solver(std::move(solver)),
+            const problemT & problem, const solver_type & solver,
+            const vector_type & initial_condition, scalar_type dt) :
+            _stage_solver(problem, solver, 1.0 / dt),
             _dt(dt),
-            _K("stiffness", _problem.n_equations()),
-            _M("capacitance", _problem.n_equations()),
-            _f("load", _problem.n_equations()),
-            _Keff("effective_stiffness", _problem.n_equations()),
-            _feff("effective_load", _problem.n_equations()),
-            _b("temp", _problem.n_equations()),
-            _u("solution",
-               _problem.template transform_field_to_vector<linalg_backend_type>(initial_condition))
+            _beta("predictor", problem.n_equations()),
+            _u(initial_condition)
         {
             ;
-        }
-
-        constexpr auto initialise() -> void
-        {
-            // set the patterns
-            _problem.template set_pattern<linalg_backend_type>(_K);
-            _problem.template set_pattern<linalg_backend_type>(_M);
-
-            // set the values
-            _problem.template assemble_stiffness<linalg_backend_type>(_K);
-            _problem.template assemble_mass<linalg_backend_type>(_M);
-            _problem.template assemble_load<linalg_backend_type>(_f);
-
-            // initialise the effective stiffness matrix by duplicating the stiffness matrix pattern
-            _Keff.duplicate(_K);
-
-            // compute the effective stiffness matrix for the provided time step size
-            compute_effective_stiffness_matrix();
         }
 
         // set the time step size
@@ -72,9 +49,6 @@ namespace mito::timesteppers {
             // set the time step size
             _dt = dt;
 
-            // reassemble the effective stiffness matrix with the new time step size
-            compute_effective_stiffness_matrix();
-
             // all done
             return;
         }
@@ -82,69 +56,30 @@ namespace mito::timesteppers {
         // march one time step
         constexpr auto march() -> void
         {
-            // compute the effective load vector
-            compute_effective_load_vector();
+            // the predictor beta = u_n
+            _beta.copy_values(_u);
 
-            // solve the linear system
-            _solver.solve(_Keff, _feff, _u);
+            // the stage solve, with alpha = 1.0/dt and beta = u_n, into u_{n+1}
+            _stage_solver.solve(1.0 / _dt, _beta, _u);
 
             // all done
             return;
         }
+
+        // the problem
+        constexpr auto problem() const -> const problem_type & { return _stage_solver.problem(); }
 
         // the solution vector
         constexpr auto solution() const -> const vector_type & { return _u; }
 
-      private:
-        // compute effective stiffness matrix
-        constexpr auto compute_effective_stiffness_matrix() -> void
-        {
-            // copy the stiffness matrix
-            _Keff.copy_values(_K, linalg::sparsity_pattern::same);
-
-            // add the capacitance matrix scaled by 1/dt to the effective stiffness matrix
-            _Keff.add(1. / _dt, _M, linalg::sparsity_pattern::same);
-
-            // all done
-            return;
-        };
-
-        // compute effective load vector
-        constexpr auto compute_effective_load_vector() -> void
-        {
-            // compute M * u_n and store it in the temporary vector
-            _M.mult_vector(_u, _b);
-
-            // initialize the effective load vector with the load vector
-            _feff.copy_values(_f);
-
-            // add the temporary vector scaled by 1/dt to the effective load vector
-            _feff.add(1. / _dt, _b);
-
-            // all done
-            return;
-        }
-
 
       private:
-        // the discrete system
-        const problem_type & _problem;
         // the solver
-        solver_type _solver;
+        stage_solver_type _stage_solver;
         // the time step size
         scalar_type _dt;
-        // the stiffness matrix, stores K
-        matrix_type _K;
-        // the capacitance matrix, stores M
-        matrix_type _M;
-        // the load vector, stores f
-        vector_type _f;
-        // the effective stiffness matrix, stores Keff = K + 1/dt * M
-        matrix_type _Keff;
-        // the effective load vector, stores feff = f + 1/dt * M * u_n
-        vector_type _feff;
-        // the temporary vector, stores b = M * u_n
-        vector_type _b;
+        // the predictor vector
+        vector_type _beta;
         // the solution vector
         vector_type _u;
     };

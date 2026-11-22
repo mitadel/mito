@@ -12,6 +12,11 @@ namespace mito::timesteppers {
     template <
         linalg::valid_backend_c linalgBackendT,
         linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
+    class LinearStageSolver;
+
+    template <
+        linalg::valid_backend_c linalgBackendT, class problemT, class solverT,
+        template <class, class, class> class stageSolverT>
     class ImplicitEuler;
 
     template <

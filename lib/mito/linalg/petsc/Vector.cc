@@ -151,13 +151,23 @@ mito::linalg::petsc::Vector::add(const scalar_type & alpha, const Vector & X) ->
     return;
 }
 
+// scale and then add another vector using VecAXPY
+auto
+mito::linalg::petsc::Vector::scale_and_add(const scalar_type & alpha, const Vector & X) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecAYPX(_vector, alpha, X._vector));
+
+    // all done
+    return;
+}
+
 // get the number of entries in the vector
 auto
 mito::linalg::petsc::Vector::size(index_type & vector_size) const -> void
 {
-    6
-        // delegate to PETSc
-        PetscCallVoid(VecGetSize(_vector, &vector_size));
+    // delegate to PETSc
+    PetscCallVoid(VecGetSize(_vector, &vector_size));
 }
 
 // return the number of entries in the vector

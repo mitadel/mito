@@ -31,9 +31,10 @@ namespace mito::timesteppers {
       public:
         // the default constructor
         constexpr LinearStageSolver(
-            const problem_type & problem, const solver_type & solver, scalar_type shift) :
+            const problem_type & problem, const solver_type & solver, scalar_type alpha) :
+            _problem(problem),
             _solver(solver),
-            _shift(shift),
+            _alpha(alpha),
             _K("stiffness", _problem.n_equations()),
             _M("capacitance", _problem.n_equations()),
             _f("load", _problem.n_equations()),
@@ -56,15 +57,16 @@ namespace mito::timesteppers {
             // initialise the effective stiffness matrix by duplicating the stiffness matrix pattern
             _Keff.duplicate(_K);
 
-            // compute Keff = K + shift * M
-            _Keff.copy_values(_K, linalg::sparsity_pattern::same);
-            _Keff.add(_shift, _M, linalg::sparsity_pattern::same);
+            // compute Keff = K + alpha * M
+            if constexpr (problemT::time_invariant) {
+                _compute_effective_stiffness_matrix();
+            }
         }
 
-        // solve (K + a * M) * u = f + a * M * w for {u}
-        auto solve(scalar_type a, const vector_type & w, vector_type & u) -> void
+        // solve (K + alpha * M) * u = f + alpha * M * beta for {u}
+        auto solve(scalar_type alpha, const vector_type & beta, vector_type & u) -> void
         {
-            bool rebuild = (a != _shift);
+            bool rebuild = (alpha != _alpha);
 
             // set the values
             if constexpr (!problemT::time_invariant) {
@@ -76,19 +78,19 @@ namespace mito::timesteppers {
                 _problem.template assemble_load<linalg_backend_type>(_f);
             }
 
-            // rebuild the effective stiffness matrix if the shift has changed
+            // rebuild the effective stiffness matrix if alpha has changed
             if (rebuild) {
-                // update the shift
-                _shift = a;
-                // compute Keff = K + shift * M
-                _Keff.copy_values(_K, linalg::sparsity_pattern::same);
-                _Keff.add(_shift, _M, linalg::sparsity_pattern::same);
+                // update alpha
+                _alpha = alpha;
+                // compute Keff = K + alpha * M
+                _compute_effective_stiffness_matrix();
             }
 
-            // rhs = M * w
-            _M.mult_vector(w, _rhs);
-            // rhs = f + shift * rhs
-            _rhs.add(_shift, _f);
+            // rhs = M * beta
+            _M.mult_vector(beta, _rhs);
+
+            // rhs = f + alpha * rhs
+            _rhs.add(_alpha, _f);
 
             // solve the linear system
             _solver.solve(_Keff, _rhs, u);
@@ -97,13 +99,16 @@ namespace mito::timesteppers {
             return;
         }
 
+        // the problem
+        constexpr auto problem() const -> const problem_type & { return _problem; }
+
       private:
-        // compute the effective stiffness matrix a
-        auto _compute_effective_stiffness_matrix(const vector_type & w) -> void
+        // compute the effective stiffness matrix K + alpha * M
+        auto _compute_effective_stiffness_matrix() -> void
         {
             // compute the effective load vector
             _Keff.copy_values(_K, linalg::sparsity_pattern::same);
-            _Keff.add(_shift, _M, linalg::sparsity_pattern::same);
+            _Keff.add(_alpha, _M, linalg::sparsity_pattern::same);
 
             // all done
             return;
@@ -111,10 +116,12 @@ namespace mito::timesteppers {
 
 
       private:
+        // the problem
+        const problem_type & _problem;
         // the solver
         const solver_type & _solver;
-        // the shift
-        scalar_type _shift;
+        // alpha
+        scalar_type _alpha;
         // the stiffness matrix
         matrix_type _K;
         // the capacitance matrix

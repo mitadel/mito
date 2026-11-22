@@ -28,6 +28,9 @@ using model_t = mito::models::HeatDiffusion<material_t>;
 using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the linear algebra backend type
 using linalg_backend_t = mito::linalg::petsc::backend_t;
+// the stage solver for linear problems
+template <class linalgBackendT, class problemT, class solverT>
+using stage_solver_t = mito::timesteppers::linear_stage_solver_t<linalgBackendT, problemT, solverT>;
 
 TEST(Timesteppers, IMPLICIT_EULER_SET_DT)
 {
@@ -82,12 +85,14 @@ TEST(Timesteppers, IMPLICIT_EULER_SET_DT)
     // the initial condition field
     auto initial_condition_field = mito::functions::one<coordinates_t>;
 
-    // the time stepper
-    auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(
-        problem, std::move(solver), initial_condition_field, 0.01);
+    // the initial condition vector
+    auto initial_condition_vector =
+        problem.transform_field_to_vector<linalg_backend_t>(initial_condition_field);
 
-    // initialise the time stepper
-    time_stepper.initialise();
+    // the time stepper
+    auto time_stepper = mito::timesteppers::implicit_euler<
+        linalg_backend_t, mito::timesteppers::linear_stage_solver_t>(
+        problem, solver, initial_condition_vector, 0.01);
 
     // change the time step size
     time_stepper.set_dt(0.02);

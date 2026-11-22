@@ -82,9 +82,14 @@ TEST(Timesteppers, IMPLICIT_EULER_CONSTRUCTION)
     // the initial condition field
     auto initial_condition_field = mito::functions::one<coordinates_t>;
 
+    // the initial condition vector
+    auto initial_condition_vector =
+        problem.transform_field_to_vector<linalg_backend_t>(initial_condition_field);
+
     // the time stepper
-    auto time_stepper = mito::timesteppers::implicit_euler<linalg_backend_t>(
-        problem, std::move(solver), initial_condition_field, 0.01);
+    auto time_stepper = mito::timesteppers::implicit_euler<
+        linalg_backend_t, mito::timesteppers::linear_stage_solver_t>(
+        problem, solver, initial_condition_vector, 0.01);
 
     // all done
     return;

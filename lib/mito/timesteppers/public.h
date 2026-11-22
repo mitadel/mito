@@ -23,6 +23,7 @@
 #include "utilities.h"
 
 // classes implementation
+#include "LinearStageSolver.h"
 #include "CrankNicholson.h"
 #include "ImplicitEuler.h"
 #include "SDIRK3S3O.h"

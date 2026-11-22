@@ -63,6 +63,9 @@ namespace mito::linalg::petsc {
         template <std::ranges::input_range vectorsT>
         auto add(std::span<const scalar_type> alphas, const vectorsT & vectors) -> void;
 
+        // scale and then add another vector using VecAXPY
+        auto scale_and_add(const scalar_type &, const Vector &) -> void;
+
         // get the size of the vector
         auto size(index_type &) const -> void;
 
