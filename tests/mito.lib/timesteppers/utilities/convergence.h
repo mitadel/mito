@@ -172,7 +172,8 @@ namespace mito::tests::timesteppers {
             }
 
             // the solution field, which outlives the time stepper
-            return time_stepper.solution_field();
+            return problem.template transform_vector_to_field<linalg_backend_t>(
+                time_stepper.solution());
         };
 
         // three runs, each halving the time step

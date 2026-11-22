@@ -92,6 +92,9 @@ namespace mito::timesteppers {
             return;
         }
 
+        // the solution vector
+        constexpr auto solution() const -> const vector_type & { return _u; }
+
       private:
         // compute effective stiffness matrix
         constexpr auto compute_effective_stiffness_matrix() -> void

@@ -95,19 +95,10 @@ namespace mito::timesteppers {
             return;
         }
 
-        // initialise effective stiffness matrix
-        constexpr auto initialise_effective_stiffness_matrix() -> void
-        {
-            // duplicate the stiffness matrix pattern
-            _Keff.duplicate(_K);
+        // the solution vector
+        constexpr auto solution() const -> const vector_type & { return _u; }
 
-            // duplicate the stiffness matrix pattern
-            _B.duplicate(_K);
-
-            // all done
-            return;
-        }
-
+      private:
         // compute effective stiffness matrix
         constexpr auto compute_effective_stiffness_matrix() -> void
         {

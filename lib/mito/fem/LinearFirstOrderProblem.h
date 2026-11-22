@@ -69,6 +69,14 @@ namespace mito::fem {
             return _model.template transform_field_to_vector<backendT>(field);
         }
 
+        // transform a vector to a field, usable with the backend {backendT}
+        template <linalg::valid_backend_c backendT>
+        auto transform_vector_to_field(const typename backendT::vector_type & vector) const ->
+            typename semi_discrete_model_type::solution_field_type
+        {
+            return _model.template transform_vector_to_field<backendT>(vector);
+        }
+
       private:
         // the semi-discrete model
         const semi_discrete_model_type & _model;
