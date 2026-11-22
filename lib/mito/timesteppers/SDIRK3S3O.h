@@ -80,7 +80,7 @@ namespace mito::timesteppers {
             _stage_solver.solve(alpha, _beta, _U);
             stage_rate(alpha, _U, _beta, _U2_dot);
 
-            // stage 3: bet_3 = u_n + dt * (a31 * U1_dot + a32 * U2_dot);
+            // stage 3: beta_3 = u_n + dt * (a31 * U1_dot + a32 * U2_dot);
             _beta.copy_values(_u);
             _beta.add(_dt * a31, _U1_dot);
             _beta.add(_dt * a32, _U2_dot);
