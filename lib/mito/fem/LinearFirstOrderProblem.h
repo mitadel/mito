@@ -23,10 +23,8 @@ namespace mito::fem {
 
       public:
         // time invariance flag
-        // TOFIX: check this based on the provided semiDiscreteModelT
         static constexpr bool time_invariant = true;
         // constant load flag
-        // TOFIX: check this based on the provided semiDiscreteModelT
         static constexpr bool constant_load = true;
 
       public:
