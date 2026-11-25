@@ -49,7 +49,7 @@ TEST(Models, SEMI_DISCRETE_WEAKFORM_COMPUTE_BLOCK)
 
     // the degree of the finite element
     constexpr int degree = 2;
-    
+
     // assemble the finite element type
     using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
@@ -75,7 +75,7 @@ TEST(Models, SEMI_DISCRETE_WEAKFORM_COMPUTE_BLOCK)
     auto expected_matrix = reference_grad_grad.compute(element_p2);
 
     // `element` is built the same way as in your other FEM tests
-    auto weakform_matrix = reference_grad_grad.compute(element_p2);
+    auto weakform_matrix = weakform.compute_block<Stiffness>(element_p2);
 
     // the semi-discrete weakform's own dispatch should agree too
     EXPECT_NEAR(mito::tensor::norm(expected_matrix - weakform_matrix), 0.0, 1e-14);
