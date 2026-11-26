@@ -73,6 +73,14 @@ mito_test_driver(tests/mito.lib/fem/shape_functions_segment_p1.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_segment.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_embedded_segment.cc)
 mito_test_driver(tests/mito.lib/fem/isoparametric_embedded_triangle.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_model_construction.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_model_matrices.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform_compute_block.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform_direct_construction.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform_duplicate_tags.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform_factory.cc)
+mito_test_driver(tests/mito.lib/fem/semi_discrete_weakform_get.cc)
+mito_test_driver(tests/mito.lib/fem/linear_first_order_problem.cc)
 
 # io
 mito_test_driver(tests/mito.lib/io/summit_mesh_reader_2D.cc)
@@ -123,10 +131,19 @@ mito_test_driver(tests/mito.lib/materials/linear_elastic.cc)
 
 # linalg
 if(WITH_PETSC)
+    mito_test_driver(tests/mito.lib/linalg/petsc_add.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_assembly.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_copy.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_environment.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_ksp.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_matrix.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix_add.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix_algebra.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix_copy.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_matrix_duplicate.cc)
     mito_test_driver(tests/mito.lib/linalg/petsc_vector.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_vector_algebra.cc)
+    mito_test_driver(tests/mito.lib/linalg/petsc_vector_copy.cc)
 endif()
 
 # mesh
@@ -160,11 +177,23 @@ if(WITH_METIS)
     endif()
 endif()
 
+# models
+mito_test_driver(tests/mito.lib/models/thermal_heat_diffusion_constant_isotropic.cc)
+
 # operators
 mito_test_driver(tests/mito.lib/operators/calculus_identities.cc)
 mito_test_driver(tests/mito.lib/operators/calculus_scalar_field.cc)
 mito_test_driver(tests/mito.lib/operators/calculus_vector_field.cc)
 mito_test_driver(tests/mito.lib/operators/gradient_non_square.cc)
+
+# timesteppers
+mito_test_driver(tests/mito.lib/timesteppers/linear_stage_solver.cc)
+mito_test_driver(tests/mito.lib/timesteppers/crank_nicholson_convergence.cc)
+mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_construction.cc)
+mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_set_dt.cc)
+mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_convergence.cc)
+mito_test_driver(tests/mito.lib/timesteppers/sdirk3s3o_convergence.cc)
+mito_test_driver(tests/mito.lib/timesteppers/sdirk3s3o_ode_convergence.cc)
 
 # topology
 mito_test_driver(tests/mito.lib/topology/cell_edges.cc)

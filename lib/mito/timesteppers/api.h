@@ -1,0 +1,68 @@
+// -*- c++ -*-
+//
+// Copyright (c) 2020-2026, the MiTo Authors, all rights reserved
+//
+
+// code guard
+#pragma once
+
+
+namespace mito::timesteppers {
+
+    // linear stage solver alias
+    template <
+        linalg::valid_backend_c linalgBackendT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
+    using linear_stage_solver_t = LinearStageSolver<linalgBackendT, problemT, solverT>;
+
+    // implicit euler alias
+    template <
+        linalg::valid_backend_c linalgBackendT, class problemT, class solverT,
+        template <class, class, class> class stageSolverT>
+    using implicit_euler_t = ImplicitEuler<linalgBackendT, problemT, solverT, stageSolverT>;
+
+    // implicit euler factory
+    template <
+        linalg::valid_backend_c linalgBackendT, template <class, class, class> class stageSolverT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
+    constexpr auto implicit_euler(
+        const problemT & problem, solverT & solver,
+        const typename linalgBackendT::vector_type & initial_condition,
+        typename linalgBackendT::scalar_type dt)
+        -> implicit_euler_t<linalgBackendT, problemT, solverT, stageSolverT>;
+
+    // crank-nicholson alias
+    template <
+        linalg::valid_backend_c linalgBackendT, class problemT, class solverT,
+        template <class, class, class> class stageSolverT>
+    using crank_nicholson_t = CrankNicholson<linalgBackendT, problemT, solverT, stageSolverT>;
+
+    // crank-nicholson factory
+    template <
+        linalg::valid_backend_c linalgBackendT, template <class, class, class> class stageSolverT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
+    constexpr auto crank_nicholson(
+        const problemT & problem, solverT & solver,
+        const typename linalgBackendT::vector_type & initial_condition,
+        typename linalgBackendT::scalar_type dt)
+        -> crank_nicholson_t<linalgBackendT, problemT, solverT, stageSolverT>;
+
+    // sdirk3s3o alias
+    template <
+        linalg::valid_backend_c linalgBackendT, class problemT, class solverT,
+        template <class, class, class> class stageSolverT>
+    using sdirk3s3o_t = SDIRK3S3O<linalgBackendT, problemT, solverT, stageSolverT>;
+
+    // sdirk3s3o factory
+    template <
+        linalg::valid_backend_c linalgBackendT, template <class, class, class> class stageSolverT,
+        linear_first_order_problem_c<linalgBackendT> problemT, class solverT>
+    constexpr auto sdirk3s3o(
+        const problemT & problem, solverT & solver,
+        const typename linalgBackendT::vector_type & initial_condition,
+        typename linalgBackendT::scalar_type dt)
+        -> sdirk3s3o_t<linalgBackendT, problemT, solverT, stageSolverT>;
+}
+
+
+// end of file

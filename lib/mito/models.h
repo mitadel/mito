@@ -7,8 +7,9 @@
 #pragma once
 
 
-// linear system implementation
-#include "linear_system/public.h"
+// publish the interface
+// the api is in "models/api.h"
+#include "models/public.h"
 
 
 // end of file

@@ -26,6 +26,53 @@ mito::linalg::petsc::Vector::~Vector()
     PetscCallVoid(VecDestroy(&_vector));
 }
 
+// copy constructor
+mito::linalg::petsc::Vector::Vector(const Vector & other) : _vector(nullptr)
+{
+    // duplicate vector
+    PetscCallVoid(VecDuplicate(other._vector, &_vector));
+
+    // copy values
+    PetscCallVoid(VecCopy(other._vector, _vector));
+}
+
+// move constructor
+mito::linalg::petsc::Vector::Vector(Vector && other) noexcept :
+    _vector(std::exchange(other._vector, nullptr))
+{}
+
+// copy assignment operator
+auto
+mito::linalg::petsc::Vector::operator=(const Vector & other) -> Vector &
+{
+    // prevent self-copy
+    if (this == &other) {
+        return *this;
+    }
+
+    // copy and swap
+    Vector tmp(other);
+    _swap(tmp);
+
+    // returning deletes {tmp}
+    return *this;
+}
+
+// move assignment operator
+auto
+mito::linalg::petsc::Vector::operator=(Vector && other) noexcept -> Vector &
+{
+    // prevent self-move
+    if (this != &other) {
+        // free the vector
+        VecDestroy(&_vector);
+        // swap the contents
+        _swap(other);
+    }
+
+    return *this;
+}
+
 // set the vector entry at {row} to {value}
 auto
 mito::linalg::petsc::Vector::insert_value(index_type row, const scalar_type & value) -> void
@@ -60,6 +107,61 @@ mito::linalg::petsc::Vector::add_value(index_type row, const scalar_type & value
     return;
 }
 
+// copy the values of {X} into this vector
+auto
+mito::linalg::petsc::Vector::copy_values(const Vector & X) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecCopy(X._vector, _vector));
+
+    // all done
+    return;
+}
+
+// zero the vector
+auto
+mito::linalg::petsc::Vector::zero() -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecZeroEntries(_vector));
+
+    // all done
+    return;
+}
+
+// scale the vector using VecScale
+auto
+mito::linalg::petsc::Vector::scale(const scalar_type & alpha) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecScale(_vector, alpha));
+
+    // all done
+    return;
+}
+
+// add scaled vector using VecAXPY
+auto
+mito::linalg::petsc::Vector::add(const scalar_type & alpha, const Vector & X) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecAXPY(_vector, alpha, X._vector));
+
+    // all done
+    return;
+}
+
+// scale and then add another vector using VecAXPY
+auto
+mito::linalg::petsc::Vector::scale_and_add(const scalar_type & alpha, const Vector & X) -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecAYPX(_vector, alpha, X._vector));
+
+    // all done
+    return;
+}
+
 // get the number of entries in the vector
 auto
 mito::linalg::petsc::Vector::size(index_type & vector_size) const -> void
@@ -80,6 +182,28 @@ mito::linalg::petsc::Vector::size() const -> index_type
 
     // all done
     return vector_size;
+}
+
+// get the norm of the vector
+auto
+mito::linalg::petsc::Vector::norm(scalar_type & norm) const -> void
+{
+    // delegate to PETSc
+    PetscCallVoid(VecNorm(_vector, NORM_2, &norm));
+}
+
+// return the norm of the vector
+auto
+mito::linalg::petsc::Vector::norm() const -> scalar_type
+{
+    // the value to return
+    scalar_type vector_norm;
+
+    // delegate to PETSc
+    norm(vector_norm);
+
+    // all done
+    return vector_norm;
 }
 
 // print the vector
@@ -103,5 +227,17 @@ mito::linalg::petsc::Vector::get() const -> vector_type const &
 {
     return _vector;
 }
+
+// swap the contents of two vectors
+auto
+mito::linalg::petsc::Vector::_swap(Vector & other) noexcept -> void
+{
+    // swap the vector handles
+    std::swap(_vector, other._vector);
+
+    // all done
+    return;
+}
+
 
 // end of file

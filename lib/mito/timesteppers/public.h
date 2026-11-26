@@ -10,17 +10,25 @@
 // external packages
 #include "externals.h"
 
+// get the concepts
+#include "concepts.h"
+
 // get the forward declarations
 #include "forward.h"
 
-// published types factories; this is the file you are looking for...
+// published type factories; this is the file you are looking for...
 #include "api.h"
 
+// scheme utilities
+#include "utilities.h"
+
 // classes implementation
-#include "LinearSystem.h"
+#include "LinearStageSolver.h"
+#include "CrankNicholson.h"
+#include "ImplicitEuler.h"
+#include "SDIRK3S3O.h"
 
 // factories implementation
 #include "factories.h"
-
 
 // end of file

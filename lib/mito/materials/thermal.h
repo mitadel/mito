@@ -7,11 +7,8 @@
 #pragma once
 
 
-// external
-
-
-// support
-#include "../concepts.h"
+// publish the interface
+#include "thermal/public.h"
 
 
 // end of file

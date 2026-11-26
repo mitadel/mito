@@ -26,26 +26,17 @@ namespace mito::fem {
     template <class functionSpaceT>
     class FunctionSpaceElementsView;
 
-    // concept of blocks with the same finite element type
-    template <class firstBlockT, class... blockTs>
-    concept same_finite_element_blocks_c =
-        // require the same underlying element type
-        (std::same_as<typename firstBlockT::element_type, typename blockTs::element_type> && ...);
-
-    // concept of blocks with the same elementary shape
-    template <class firstBlockT, class... blockTs>
-    concept same_elementary_shape_blocks_c =
-        // require the same elementary shape
-        (std::same_as<typename firstBlockT::elementary_shape, typename blockTs::elementary_shape>
-         && ...);
+    // class term
+    template <typename tagT, typename blockT>
+    class Term;
 
     // weakform alias
     template <class lhsBlockT, class rhsBlockT>
-    requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform;
 
     // class discrete system
-    template <function_space_c functionSpaceT, class weakformT, class linearSystemT>
+    template <
+        function_space_c functionSpaceT, class weakformT, linalg::valid_backend_c linalgBackendT>
     class DiscreteSystem;
 
     // class domain field
@@ -63,6 +54,24 @@ namespace mito::fem {
         []<class fieldValueT>(const FemField<fieldValueT> &) {
         }(c);
     };
+
+    // a pack of terms with pairwise distinct tags
+    template <typename... termTs>
+    concept distinct_tags_c = utilities::distinct_c<typename termTs::tag_type...>;
+
+    // class semi-discrete weakform
+    template <class... termTs>
+    requires distinct_tags_c<termTs...>
+    class SemiDiscreteWeakform;
+
+    // class semi-discrete model
+    template <function_space_c functionSpaceT, class physicalModelT>
+    class SemiDiscreteModel;
+
+    // class linear first order problem
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    class LinearFirstOrderProblem;
 }
 
 

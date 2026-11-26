@@ -41,14 +41,45 @@ namespace mito::fem {
     constexpr auto weakform(const lhsBlockT & lhs_block, const rhsBlockT & rhs_block);
 
     // discrete system alias
-    template <class functionSpaceT, class weakformT, class linearSystemT>
-    using discrete_system_t = DiscreteSystem<functionSpaceT, weakformT, linearSystemT>;
+    template <class functionSpaceT, class weakformT, linalg::valid_backend_c linalgBackendT>
+    using discrete_system_t = DiscreteSystem<functionSpaceT, weakformT, linalgBackendT>;
 
     // discrete system factory
-    template <class linearSystemT, class functionSpaceT, class weakformT>
+    template <linalg::valid_backend_c linalgBackendT, class functionSpaceT, class weakformT>
     constexpr auto discrete_system(
         const functionSpaceT & function_space, const weakformT & weakform,
         const std::string & label);
+
+    // term alias
+    template <typename tagT, typename blockT>
+    using term_t = Term<tagT, blockT>;
+
+    // term factory
+    template <typename tagT, typename blockT>
+    constexpr auto term(blockT && block);
+
+    // semi discrete weakform alias
+    template <class... termTs>
+    requires distinct_tags_c<termTs...>
+    using semi_discrete_weakform_t = SemiDiscreteWeakform<termTs...>;
+
+    // semi discrete weakform factory
+    template <typename modelT>
+    constexpr auto semi_discrete_weakform(const modelT & model);
+
+    // semi discrete model alias
+    template <function_space_c functionSpaceT, class physicalModelT>
+    using semi_discrete_model_t = SemiDiscreteModel<functionSpaceT, physicalModelT>;
+
+    // the linear first order problem alias
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    using linear_first_order_problem_t = LinearFirstOrderProblem<semiDiscreteModelT>;
+
+    // the linear first order problem factory
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    constexpr auto linear_first_order_problem(const semiDiscreteModelT & model);
 }
 
 

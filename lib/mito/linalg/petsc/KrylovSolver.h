@@ -11,8 +11,6 @@ namespace mito::linalg::petsc {
 
     class KrylovSolver {
       private:
-        // the linear system type
-        using linear_system_type = linear_system_t;
         // the solver type
         using solver_type = KSP;
         // the options type
@@ -20,19 +18,21 @@ namespace mito::linalg::petsc {
 
       public:
         // constructor
-        KrylovSolver(linear_system_type &);
+        KrylovSolver(std::string name = "krylov");
 
-        // copy constructor
+        // copy constructor is deleted because PETSc cannot duplicate a Krylov solver; copying the
+        // handle would lead to double destruction of the same Krylov solver
         KrylovSolver(const KrylovSolver &) = delete;
 
         // move constructor
-        KrylovSolver(KrylovSolver &&) = delete;
+        KrylovSolver(KrylovSolver &&) noexcept;
 
-        // copy assignment operator
+        // copy assignment operator is deleted because PETSc cannot duplicate a Krylov solver;
+        // copying the handle would lead to double destruction of the same Krylov solver
         KrylovSolver & operator=(const KrylovSolver &) = delete;
 
         // move assignment operator
-        KrylovSolver & operator=(KrylovSolver &&) = delete;
+        KrylovSolver & operator=(KrylovSolver &&) noexcept;
 
         // destructor
         ~KrylovSolver();
@@ -41,15 +41,13 @@ namespace mito::linalg::petsc {
         // set petsc options
         auto set_options(const options_type &) -> void;
 
-        // solve the linear system
-        auto solve() -> void;
+        // solve A x = b
+        auto solve(const matrix_t & A, const vector_t & b, vector_t & x) -> void;
 
         // print the linear system of equations of the petsc solver
         auto print() const -> void;
 
       private:
-        // the linear system
-        linear_system_type & _linear_system;
         // the prefix for the PETSc options
         options_type _options_prefix;
         // the Krylov solver

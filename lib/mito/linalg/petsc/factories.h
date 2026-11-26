@@ -16,9 +16,16 @@ namespace mito::linalg::petsc {
     }
 
     // matrix
-    inline auto matrix(const std::string & name, index_t size)
+    inline auto matrix(
+        const std::string & name, index_t size, assembly_format format = assembly_format::csr)
     {
-        return matrix_t(name, size);
+        return matrix_t(name, size, format);
+    }
+
+    // matrix copy
+    inline auto matrix(const std::string & name, const matrix_t & other)
+    {
+        return matrix_t(name, other);
     }
 
     // vector
@@ -28,9 +35,9 @@ namespace mito::linalg::petsc {
     }
 
     // Krylov solver
-    inline auto ksp(linear_system_t & linear_system)
+    inline auto ksp(std::string name = "krylov")
     {
-        return ksp_t(linear_system);
+        return ksp_t(name);
     }
 }
 

@@ -6,9 +6,14 @@
 // code guard
 #pragma once
 
+// get the concepts
+#include "concepts.h"
 
-// linear system implementation
-#include "linear_system.h"
+// class implementations
+#include "BlockSegment.h"
+
+// published types factories; this is the file you are looking for...
+#include "api.h"
 
 // backend implementations
 #if WITH_PETSC

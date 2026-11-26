@@ -14,9 +14,6 @@ namespace mito::fem {
     constexpr auto compute_l2_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
-        // get the element type
-        using finite_element_type = typename functionSpaceT::finite_element_type;
-
         // initialize the norm
         auto norm = tensor::scalar_t{ 0.0 };
 
@@ -27,7 +24,7 @@ namespace mito::fem {
             // localize {u2} on this element
             auto u2_local = localize(u2, element);
             // compute the elementary contribution to the norm
-            norm += blocks::l2_norm<finite_element_type, doe>(u1_local - u2_local).compute(element);
+            norm += blocks::l2_norm(u1_local - u2_local).template compute<doe>(element);
         }
 
         // take the square root of the accumulated norm
@@ -40,9 +37,6 @@ namespace mito::fem {
     constexpr auto compute_h1_norm(
         const functionSpaceT & function_space, const F1 & u1, const F2 & u2) -> tensor::scalar_t
     {
-        // get the element type
-        using finite_element_type = typename functionSpaceT::finite_element_type;
-
         // initialize the norm
         auto norm = tensor::scalar_t{ 0.0 };
 
@@ -57,10 +51,9 @@ namespace mito::fem {
             // localize the gradient of the exact solution on this element
             auto u2_local_gradient = operators::gradient(u2_local);
             // compute the elementary contributions to the H1 norm
-            norm +=
-                blocks::l2_norm<finite_element_type, doe1>(u1_local - u2_local).compute(element)
-                + blocks::l2_norm<finite_element_type, doe2>(u1_local_gradient - u2_local_gradient)
-                      .compute(element);
+            norm += blocks::l2_norm(u1_local - u2_local).template compute<doe1>(element)
+                  + blocks::l2_norm(u1_local_gradient - u2_local_gradient)
+                        .template compute<doe2>(element);
         }
 
         // take the square root of the accumulated norm

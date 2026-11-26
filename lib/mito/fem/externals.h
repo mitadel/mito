@@ -8,6 +8,7 @@
 
 
 // externals
+#include <concepts>
 #include <string>
 
 // support
@@ -16,6 +17,8 @@
 #include "../constraints.h"
 #include "../discrete.h"
 #include "../utilities.h"
+#include "../linalg.h"
+#include "../models.h"
 
 
 // end of file

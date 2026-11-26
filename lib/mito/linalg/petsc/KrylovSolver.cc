@@ -9,18 +9,38 @@
 
 
 // constructor
-mito::linalg::petsc::KrylovSolver::KrylovSolver(linear_system_type & linear_system) :
-    _linear_system(linear_system),
-    _options_prefix(linear_system.name() + "_")
+mito::linalg::petsc::KrylovSolver::KrylovSolver(std::string name) : _options_prefix(name + "_")
 {
     // create the Krylov solver
     PetscCallVoid(KSPCreate(PETSC_COMM_WORLD, &_ksp));
-    PetscCallVoid(KSPSetOperators(
-        _ksp, _linear_system.get_matrix().get(), _linear_system.get_matrix().get()));
     PetscCallVoid(KSPSetOptionsPrefix(_ksp, _options_prefix.c_str()));
 
     // all done
     return;
+}
+
+// move constructor
+mito::linalg::petsc::KrylovSolver::KrylovSolver(KrylovSolver && other) noexcept :
+    _options_prefix(std::move(other._options_prefix)),
+    _ksp(std::exchange(other._ksp, nullptr))
+{}
+
+// move assignment operator
+mito::linalg::petsc::KrylovSolver &
+mito::linalg::petsc::KrylovSolver::operator=(KrylovSolver && other) noexcept
+{
+    // check for self-assignment
+    if (this != &other) {
+        // destroy the current Krylov solver
+        KSPDestroy(&_ksp);
+
+        // move the Krylov solver and the options prefix from {other} to {this}
+        _ksp = std::exchange(other._ksp, nullptr);
+        _options_prefix = std::move(other._options_prefix);
+    }
+
+    // all done
+    return *this;
 }
 
 // destructor
@@ -89,14 +109,14 @@ mito::linalg::petsc::KrylovSolver::set_options(const options_type & options) -> 
 
 // solve the linear system
 auto
-mito::linalg::petsc::KrylovSolver::solve() -> void
+mito::linalg::petsc::KrylovSolver::solve(const matrix_t & A, const vector_t & b, vector_t & x)
+    -> void
 {
-    // assemble the linear system
-    _linear_system.assemble();
+    // set the matrix and vectors for the linear system
+    PetscCallVoid(KSPSetOperators(_ksp, A.get(), A.get()));
 
     // solve the linear system
-    PetscCallVoid(
-        KSPSolve(_ksp, _linear_system.get_rhs().get(), _linear_system.get_solution().get()));
+    PetscCallVoid(KSPSolve(_ksp, b.get(), x.get()));
 
     // all done
     return;
@@ -108,9 +128,6 @@ mito::linalg::petsc::KrylovSolver::print() const -> void
 {
     // create a reporting channel
     journal::info_t channel("mito.solvers.petsc.KrylovSolver");
-
-    // print the linear system
-    _linear_system.print();
 
     // all done
     return;

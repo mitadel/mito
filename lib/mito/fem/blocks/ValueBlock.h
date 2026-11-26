@@ -11,16 +11,13 @@ namespace mito::fem::blocks {
 
     // TOFIX: the source does not need to be necessarily a scalar field, it can be some other field
     // see if we can use {field_c} instead of {scalar_field_c}
-    template <class finiteElementT, class quadratureRuleT, fields::scalar_field_c coefficientFieldT>
+    template <fields::scalar_field_c coefficientFieldT>
     class ValueBlock {
 
       public:
-        // my finite element type
-        using element_type = finiteElementT;
-        // my quadrature rule
-        using quadrature_rule_type = quadratureRuleT;
-        // my elementary shape
-        using elementary_shape = tensor::vector_t<element_type::n_nodes>;
+        // the type of the elementary shape matrix for an element of type {elementT}
+        template <class elementT>
+        using elementary_shape_t = tensor::vector_t<elementT::n_nodes>;
 
         // the type of the coefficient field
         using coefficient_field_type = coefficientFieldT;
@@ -31,21 +28,24 @@ namespace mito::fem::blocks {
 
       public:
         // compute the elementary contribution of this block
-        template <class elementT>
-        requires(element_of_type_c<elementT, element_type>)
-        auto compute(const elementT & element) const -> elementary_shape
+        template <int doe, class elementT>
+        auto compute(const elementT & element) const -> elementary_shape_t<elementT>
         {
             // the parametric coordinates type
             using parametric_coordinates_type = typename elementT::parametric_coordinates_type;
+            // the quadrature rule type
+            using quadrature_rule_type = gauss_rule_t<elementT, doe>;
+            // the elementary shape matrix type
+            using elementary_shape_type = elementary_shape_t<elementT>;
 
             // the elementary vector
             return manifolds::cell_integrator<quadrature_rule_type>(element.element())
                 .integrate(mito::functions::function([&](const parametric_coordinates_type & xi) {
                     // the elementary contribution at quadrature point {xi}
-                    elementary_shape elementary_vector{};
+                    elementary_shape_type elementary_vector{};
 
                     // the number of nodes per element
-                    constexpr int n_nodes = element_type::n_nodes;
+                    constexpr int n_nodes = elementT::n_nodes;
 
                     // the coordinates of the quadrature point
                     auto x = element.parametrization()(xi);
@@ -64,6 +64,13 @@ namespace mito::fem::blocks {
                     // all done
                     return elementary_vector;
                 }));
+        }
+
+        // compute the elementary contribution of this block
+        template <class elementT>
+        auto compute(const elementT & element) const -> elementary_shape_t<elementT>
+        {
+            return compute<elementT::degree>(element);
         }
 
       private:

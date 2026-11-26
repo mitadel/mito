@@ -55,16 +55,14 @@ TEST(Fem, BlockSum)
     auto density = mito::functions::one<coordinates_t>;
 
     // a mass matrix block
-    constexpr int doe_mass = 2 * finite_element_t::degree;
-    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
+    auto mass_block = mito::fem::blocks::value_value_block(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
     // a grad grad matrix block
-    constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
     auto diffusion_block =
-        mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+        mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = mass_block + diffusion_block;
@@ -124,8 +122,7 @@ TEST(Fem, BlockProduct)
     auto density = mito::functions::one<coordinates_t>;
 
     // a mass matrix block
-    constexpr int doe_mass = 2 * finite_element_t::degree;
-    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
+    auto mass_block = mito::fem::blocks::value_value_block(density);
 
     // add them up
     auto product_block = 2.0 * mass_block;
@@ -185,16 +182,14 @@ TEST(Fem, BlockProductSum)
     auto density = mito::functions::one<coordinates_t>;
 
     // a mass matrix block
-    constexpr int doe_mass = 2 * finite_element_t::degree;
-    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
+    auto mass_block = mito::fem::blocks::value_value_block(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
     // a grad grad matrix block
-    constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
     auto diffusion_block =
-        mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+        mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = 2.0 * mass_block + (-1.0) * diffusion_block;
@@ -255,16 +250,14 @@ TEST(Fem, BlockProductTwoSums)
     auto density = mito::functions::one<coordinates_t>;
 
     // a mass matrix block
-    constexpr int doe_mass = 2 * finite_element_t::degree;
-    auto mass_block = mito::fem::blocks::value_value_block<finite_element_t, doe_mass>(density);
+    auto mass_block = mito::fem::blocks::value_value_block(density);
 
     // the diffusivity field
     auto diffusivity = mito::functions::identity<coordinates_t, 2>();
 
     // a grad grad matrix block
-    constexpr int doe_diffusion = 2 * (finite_element_t::degree - 1);
     auto diffusion_block =
-        mito::fem::blocks::grad_grad_block<finite_element_t, doe_diffusion>(diffusivity);
+        mito::fem::blocks::grad_grad_block(diffusivity);
 
     // add them up
     auto sum_block = mass_block + mass_block + (-1.0) * diffusion_block;

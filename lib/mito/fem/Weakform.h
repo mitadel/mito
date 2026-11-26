@@ -10,7 +10,6 @@
 namespace mito::fem {
 
     template <class lhsBlockT, class rhsBlockT>
-    requires same_finite_element_blocks_c<lhsBlockT, rhsBlockT>
     class Weakform {
 
       private:
@@ -19,9 +18,13 @@ namespace mito::fem {
         // the type of the right hand side assembly block
         using rhs_block_type = rhsBlockT;
         // the elementary matrix type
-        using elementary_matrix_type = typename lhs_block_type::elementary_shape;
+        template <class elementType>
+        using elementary_matrix_type =
+            typename lhs_block_type::template elementary_shape_t<elementType>;
         // the elementary vector type
-        using elementary_vector_type = typename rhs_block_type::elementary_shape;
+        template <class elementType>
+        using elementary_vector_type =
+            typename rhs_block_type::template elementary_shape_t<elementType>;
 
       public:
         // constructor
@@ -48,18 +51,37 @@ namespace mito::fem {
       public:
         // compute the elementary contributions to matrix and right-hand side from the weakform
         template <class elementType>
-        constexpr auto compute_blocks(const elementType & element) const
-            -> std::pair<elementary_matrix_type, elementary_vector_type>
+        constexpr auto compute_lhs_block(const elementType & element) const
+            -> elementary_matrix_type<elementType>
         {
             // the elementary matrix
             auto elementary_matrix = _lhs_block.compute(element);
 
+            // return the elementary matrix and vector
+            return elementary_matrix;
+        }
+
+        // compute the elementary contributions to matrix and right-hand side from the weakform
+        template <class elementType>
+        constexpr auto compute_rhs_block(const elementType & element) const
+            -> elementary_vector_type<elementType>
+        {
             // the elementary vector
             auto elementary_vector = _rhs_block.compute(element);
 
             // return the elementary matrix and vector
-            return { elementary_matrix, elementary_vector };
+            return elementary_vector;
         }
+
+        // compute the elementary contributions to matrix and right-hand side from the weakform
+        template <class elementType>
+        constexpr auto compute_blocks(const elementType & element) const
+            -> std::pair<elementary_matrix_type<elementType>, elementary_vector_type<elementType>>
+        {
+            // return the elementary matrix and vector
+            return { compute_lhs_block(), compute_rhs_block() };
+        }
+
 
       private:
         // the left hand side assembly block

@@ -18,8 +18,8 @@ constexpr int degree = 2;
 // assemble the finite element type
 using finite_element_t = mito::fem::finite_element_family<cell_t, degree>;
 
-// linear system of equations with petsc backend
-using linear_system_t = mito::linalg::petsc::linear_system_t;
+// petsc backend
+using backend_t = mito::linalg::petsc::backend_t;
 // petsc krylov solver
 using matrix_solver_t = mito::linalg::petsc::ksp_t;
 
@@ -70,7 +70,7 @@ main()
     constexpr auto diffusivity = k * mito::functions::identity<coordinates_t, 2>();
 
     // a grad grad matrix block
-    auto fem_lhs_block = mito::fem::blocks::diffusion<finite_element_t>(diffusivity);
+    auto fem_lhs_block = mito::fem::blocks::diffusion(diffusivity);
 
     // the right hand side
     auto f = 2.0 * std::numbers::pi * std::numbers::pi * mito::functions::sin(std::numbers::pi * x)
@@ -78,17 +78,17 @@ main()
     // channel << "Right hand side: " << f(coordinates_t{ 0.5, 0.5 }) << journal::endl;
 
     // a source term block
-    auto fem_rhs_block = mito::fem::blocks::source<finite_element_t, 2>(f);
+    auto fem_rhs_block = mito::fem::blocks::source(f);
 
     // create the weak form and populate it with the blocks
     auto weakform = mito::fem::weakform(fem_lhs_block, fem_rhs_block);
 
     // the discrete system
     auto discrete_system =
-        mito::fem::discrete_system<linear_system_t>("mysystem", function_space, weakform);
+        mito::fem::discrete_system<backend_t>("mysystem", function_space, weakform);
 
     // instantiate a linear solver for the discrete system
-    auto solver = mito::solvers::linear_solver<matrix_solver_t>(discrete_system);
+    auto solver = mito::solvers::linear_solver<backend_t, matrix_solver_t>(discrete_system);
 
     // set options for the backend {petsc} matrix solver
     solver.set_options("-ksp_type preonly -pc_type cholesky");

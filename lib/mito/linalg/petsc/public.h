@@ -24,9 +24,6 @@
 #include "Matrix.h"
 #include "Vector.h"
 
-// petsc linear system of equations
-#include "petsc_linear_system.h"
-
 // linear algebra solvers
 #include "KrylovSolver.h"
 

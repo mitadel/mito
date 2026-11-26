@@ -10,7 +10,14 @@
 
 namespace mito::utilities {
 
-    // TODO: interface with {libuuid} to generate unique identifiers instead of "unnamed"
+
+    // a pack of exactly one argument whose type is {T}, or a class derived from {T}
+    template <class T, class... Args>
+    concept single_derived_from_c =
+        sizeof...(Args) == 1 && (std::derived_from<std::remove_cvref_t<Args>, T> && ...);
+
+    // TODO: interface with {libuuid} to generate
+    // unique identifiers instead of "unnamed"
     //
     // Class {NamedClass} is meant to attach a string name identifier to a given class
     // {classToName}. After implementing class {classToName}, you can define the alias
@@ -33,9 +40,11 @@ namespace mito::utilities {
 
         // meta methods
       public:
-        // default constructor
+        // unnamed constructor; it does not accept a single {NamedClass}, so that copies and moves
+        // go through the implicit copy and move constructors, which keep the name
         template <class... Args>
         requires std::constructible_from<class_to_name_type, Args...>
+                  && (!single_derived_from_c<NamedClass, Args...>)
         constexpr NamedClass(Args &&... args) :
             class_to_name_type(std::forward<Args>(args)...),
             _name("unnamed")
@@ -48,9 +57,6 @@ namespace mito::utilities {
             class_to_name_type(std::forward<Args>(args)...),
             _name(name)
         {}
-
-        // destructor
-        constexpr ~NamedClass() = default;
 
       public:
         // accessor to name

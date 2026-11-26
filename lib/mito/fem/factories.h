@@ -33,13 +33,63 @@ namespace mito::fem {
     }
 
     // discrete system factory
-    template <class linearSystemT, class functionSpaceT, class weakformT>
+    template <linalg::valid_backend_c linalgBackendT, class functionSpaceT, class weakformT>
     constexpr auto discrete_system(
         const std::string & label, const functionSpaceT & function_space,
         const weakformT & weakform)
     {
-        return discrete_system_t<functionSpaceT, weakformT, linearSystemT>(
+        return discrete_system_t<functionSpaceT, weakformT, linalgBackendT>(
             label, function_space, weakform);
+    }
+
+    // term factory
+    template <typename tagT, typename blockT>
+    constexpr auto term(blockT && block)
+    {
+        return Term<tagT, std::decay_t<blockT>>{ std::forward<blockT>(block) };
+    }
+
+    // semi discrete weakform tuple factory
+    template <typename modelT>
+    constexpr auto semi_discrete_weakform_tuple(const modelT & model)
+    {
+        using archetype_type = typename modelT::archetype_type;
+
+        return std::apply(
+            [&](auto... tag) {
+                return std::make_tuple(
+                    term<decltype(tag)>(model.template getBlock<decltype(tag)>())...);
+            },
+            typename archetype_type::Terms{});
+    }
+
+    // semi discrete weakform factory
+    template <typename modelT>
+    constexpr auto semi_discrete_weakform(const modelT & model)
+    {
+        return std::apply(
+            [](auto &&... terms) {
+                return SemiDiscreteWeakform<std::decay_t<decltype(terms)>...>(
+                    std::forward<decltype(terms)>(terms)...);
+            },
+            semi_discrete_weakform_tuple(model));
+    }
+
+    // semi discrete model factory
+    template <function_space_c functionSpaceT, class physicalModelT>
+    constexpr auto semi_discrete_model(
+        const functionSpaceT & function_space, const physicalModelT & physical_model)
+    {
+        return semi_discrete_model_t<functionSpaceT, physicalModelT>(
+            function_space, physical_model);
+    }
+
+    // linear first order problem factory
+    template <class semiDiscreteModelT>
+    requires(std::same_as<typename semiDiscreteModelT::archetype_type, models::ParabolicPDE>)
+    constexpr auto linear_first_order_problem(const semiDiscreteModelT & model)
+    {
+        return linear_first_order_problem_t<semiDiscreteModelT>(model);
     }
 }
 

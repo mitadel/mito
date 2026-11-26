@@ -7,11 +7,8 @@
 #pragma once
 
 
-namespace mito::linalg {
+namespace mito::models {
 
-    // class for linear system
-    template <valid_backend_c backendT>
-    class LinearSystem;
 }
 
 

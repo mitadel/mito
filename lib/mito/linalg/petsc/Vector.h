@@ -23,16 +23,16 @@ namespace mito::linalg::petsc {
         Vector(index_type);
 
         // copy constructor
-        Vector(const Vector &) = delete;
+        Vector(const Vector &);
 
         // move constructor
-        Vector(Vector &&) = delete;
+        Vector(Vector &&) noexcept;
 
         // copy assignment operator
-        Vector & operator=(const Vector &) = delete;
+        Vector & operator=(const Vector &);
 
         // move assignment operator
-        Vector & operator=(Vector &&) = delete;
+        Vector & operator=(Vector &&) noexcept;
 
         // destructor
         ~Vector();
@@ -47,11 +47,36 @@ namespace mito::linalg::petsc {
         // add a value to a vector entry
         auto add_value(index_type, const scalar_type &) -> void;
 
+        // copy values from another vector
+        auto copy_values(const Vector & X) -> void;
+
+        // zero the vector
+        auto zero() -> void;
+
+        // scale the vector using VecScale
+        auto scale(const scalar_type &) -> void;
+
+        // add scaled vector using VecAXPY
+        auto add(const scalar_type &, const Vector &) -> void;
+
+        // add scaled vectors using VecMAXPY
+        template <std::ranges::input_range vectorsT>
+        auto add(std::span<const scalar_type> alphas, const vectorsT & vectors) -> void;
+
+        // scale and then add another vector using VecAXPY
+        auto scale_and_add(const scalar_type &, const Vector &) -> void;
+
         // get the size of the vector
         auto size(index_type &) const -> void;
 
         // return the size of the vector
         auto size() const -> index_type;
+
+        // get the norm of the vector
+        auto norm(scalar_type &) const -> void;
+
+        // return the norm of the vector
+        auto norm() const -> scalar_type;
 
         // get the vector
         template <class vectorT>
@@ -62,6 +87,10 @@ namespace mito::linalg::petsc {
 
         // get petsc vector
         auto get() const -> vector_type const &;
+
+      private:
+        // swap the contents of two vectors
+        auto _swap(Vector &) noexcept -> void;
 
       private:
         // the vector
