@@ -100,7 +100,7 @@ namespace mito::timesteppers {
             _stage_solver.solve(alpha, _beta, _u);
 
             // the stage rate at u_{n+1}: u_dot_{n+1} = alpha * (u_{n+1} - beta)
-            stage_rate(alpha, _u, _beta, _u_dot);
+            stage_rate(alpha, _beta, _u, _u_dot);
 
             // the rate at the current solution is known
             _has_rate = true;
