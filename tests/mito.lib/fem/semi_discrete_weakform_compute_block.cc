@@ -16,7 +16,7 @@ using discretization_node_t = mito::discrete::discretization_node_t;
 // the type of cell
 using cell_t = mito::geometry::triangle_t<2>;
 
-TEST(Models, SEMI_DISCRETE_WEAKFORM_COMPUTE_BLOCK)
+TEST(Models, Semi_Discrete_Weakform_Compute_Block)
 {
     // define the tags for the semi-discrete weakform
     struct Stiffness {};

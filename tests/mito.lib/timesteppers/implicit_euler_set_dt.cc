@@ -32,7 +32,8 @@ using linalg_backend_t = mito::linalg::petsc::backend_t;
 template <class linalgBackendT, class problemT, class solverT>
 using stage_solver_t = mito::timesteppers::linear_stage_solver_t<linalgBackendT, problemT, solverT>;
 
-TEST(Timesteppers, IMPLICIT_EULER_SET_DT)
+
+TEST(Timesteppers, Implicit_Euler_Set_Dt)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();

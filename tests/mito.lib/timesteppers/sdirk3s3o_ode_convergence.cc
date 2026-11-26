@@ -128,7 +128,7 @@ error(mito::real dt) -> mito::real
 }
 
 
-TEST(Timesteppers, SDIRK3S3O_ODE_CONVERGENCE)
+TEST(Timesteppers, SDIRK3S3O_ODE_Convergence)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();

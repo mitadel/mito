@@ -10,7 +10,7 @@
 // cartesian coordinates in 2D
 using coordinates_t = mito::geometry::cartesian<2>::coordinates_t;
 
-TEST(Models, SEMI_DISCRETE_WEAKFORM_DIRECT_CONSTRUCTION)
+TEST(Models, Semi_Discrete_Weakform_Direct_Construction)
 {
     // define the tags for the semi-discrete weakform
     struct Stiffness {};

@@ -29,7 +29,7 @@ constexpr auto y = mito::geometry::cartesian<2>::y;
 // the backend type
 using backend_t = mito::linalg::petsc::backend_t;
 
-TEST(Models, SEMI_DISCRETE_MODEL_EFFECTIVE_MATRICES)
+TEST(Models, Semi_Discrete_Model_Matrices)
 {
     // create petsc environment
     auto environment = mito::linalg::petsc::environment();

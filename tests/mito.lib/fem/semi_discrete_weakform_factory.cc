@@ -14,7 +14,7 @@ using material_t = mito::materials::thermal::ConstantIsotropic<2>;
 // the model type
 using model_t = mito::models::HeatDiffusion<material_t>;
 
-TEST(Models, SEMI_DISCRETE_WEAKFORM_FACTORY)
+TEST(Models, Semi_Discrete_Weakform_Factory)
 {
     // constant isotropic material with density = 1.25, conductivity = 0.5, specific heat = 2,
     constexpr auto conductivity = mito::real(0.5);

@@ -15,7 +15,7 @@ template <typename... termTs>
 concept can_form_weakform = requires { typename mito::fem::semi_discrete_weakform_t<termTs...>; };
 
 
-TEST(Models, SEMI_DISCRETE_WEAKFORM_DUPLICATE_TAGS)
+TEST(Models, Semi_Discrete_Weakform_Duplicate_Tags)
 {
     // define the tags for the semi-discrete weakform
     struct Stiffness {};

@@ -29,7 +29,7 @@ using metric_space_t = mito::geometry::euclidean_metric_space<coordinates_t>;
 // the linear algebra backend type
 using linalg_backend_t = mito::linalg::petsc::backend_t;
 
-TEST(Timesteppers, IMPLICIT_EULER_CONSTRUCTION)
+TEST(Timesteppers, Implicit_Euler_Construction)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();

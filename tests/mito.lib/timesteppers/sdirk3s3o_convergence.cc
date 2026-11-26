@@ -10,7 +10,7 @@
 using namespace mito::tests::timesteppers;
 
 
-TEST(Timesteppers, SDIRK3S3O_CONVERGENCE)
+TEST(Timesteppers, SDIRK3S3O_Convergence)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();

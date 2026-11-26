@@ -55,7 +55,7 @@ expect_same_action(
 }
 
 
-TEST(Problems, LINEAR_FIRST_ORDER_PROBLEM)
+TEST(Problems, Linear_First_Order_Problem)
 {
     // create petsc environment
     auto environment = mito::linalg::petsc::environment();

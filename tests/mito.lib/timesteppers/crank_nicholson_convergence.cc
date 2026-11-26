@@ -10,7 +10,7 @@
 using namespace mito::tests::timesteppers;
 
 
-TEST(Timesteppers, CRANK_NICHOLSON_CONVERGENCE)
+TEST(Timesteppers, Crank_Nicholson_Convergence)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();

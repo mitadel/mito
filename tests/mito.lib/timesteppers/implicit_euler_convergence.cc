@@ -10,7 +10,7 @@
 using namespace mito::tests::timesteppers;
 
 
-TEST(Timesteppers, IMPLICIT_EULER_CONVERGENCE)
+TEST(Timesteppers, Implicit_Euler_Convergence)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();
