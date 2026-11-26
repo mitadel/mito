@@ -193,6 +193,7 @@ mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_construction.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_set_dt.cc)
 mito_test_driver(tests/mito.lib/timesteppers/implicit_euler_convergence.cc)
 mito_test_driver(tests/mito.lib/timesteppers/sdirk3s3o_convergence.cc)
+mito_test_driver(tests/mito.lib/timesteppers/sdirk3s3o_ode_convergence.cc)
 
 # topology
 mito_test_driver(tests/mito.lib/topology/cell_edges.cc)

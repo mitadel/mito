@@ -69,7 +69,7 @@ using linear_stage_solver_t =
     mito::timesteppers::LinearStageSolver<linalg_backend_t, ode_problem_t, matrix_solver_t>;
 
 
-TEST(Timesteppers, IMPLICIT_EULER_SET_DT)
+TEST(Timesteppers, LINEAR_STAGE_SOLVER)
 {
     // initialise PETSc environment
     auto petsc_env = mito::linalg::petsc::environment();
